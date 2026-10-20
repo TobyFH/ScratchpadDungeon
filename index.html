@@ -1,0 +1,2179 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#29291f" />
+    <title>Scratchpad Dungeon · A little adventure in the margins</title>
+    <style>
+      :root {
+        --ink: #363c35;
+        --muted: #78796c;
+        --paper: #f2edda;
+        --red: #ad5540;
+        --green: #4d6b54;
+        --gold: #a17b37;
+        --line: #c8c5ae;
+        --shadow: #1b211c;
+        --hand: "Segoe Print", "Bradley Hand", "Chalkboard SE", cursive;
+        --serif: Georgia, "Times New Roman", serif;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #292c25;
+        color: var(--ink);
+        font-family: var(--serif);
+        font-size: 15px;
+        background-image:
+          radial-gradient(ellipse at 8% 25%, #8a643b40, transparent 50%),
+          repeating-linear-gradient(
+            91deg,
+            #ffffff03 0 1px,
+            transparent 1px 55px
+          );
+        min-height: 100vh;
+      }
+      button,
+      input {
+        font: inherit;
+      }
+      button {
+        color: inherit;
+        cursor: pointer;
+        border: 1px solid #8e927d;
+        background: #f5f0de;
+        padding: 9px 13px;
+        border-radius: 3px 5px 3px 6px;
+        transition:
+          background 0.15s,
+          transform 0.15s;
+      }
+      button:hover:not(:disabled) {
+        background: #e8dfc3;
+        transform: translateY(-1px);
+      }
+      button:focus-visible,
+      a:focus-visible {
+        outline: 3px solid #ac7736;
+        outline-offset: 3px;
+      }
+      button:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+      .primary {
+        background: var(--green);
+        color: #fff8e6;
+        border-color: var(--green);
+      }
+      .primary:hover:not(:disabled) {
+        background: #3c5742;
+      }
+      .quiet {
+        background: transparent;
+        border-color: transparent;
+      }
+      .small {
+        font-size: 12px;
+        padding: 6px 9px;
+      }
+      .eyebrow {
+        text-transform: uppercase;
+        letter-spacing: 2.5px;
+        font:
+          10px/1.5 system-ui,
+          sans-serif;
+        color: var(--muted);
+      }
+      .hand {
+        font-family: var(--hand);
+        font-style: italic;
+      }
+      .muted {
+        color: var(--muted);
+      }
+      .desk {
+        max-width: 1440px;
+        margin: auto;
+        padding: 35px 45px 25px;
+      }
+      .masthead {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: #eee9d6;
+        margin-bottom: 24px;
+      }
+      .brand {
+        display: flex;
+        gap: 14px;
+        align-items: center;
+      }
+      .brand-mark {
+        width: 43px;
+        height: 43px;
+        transform: rotate(-8deg);
+        border: 1px solid #aaa792;
+        border-radius: 4px 8px 3px 7px;
+        display: grid;
+        place-items: center;
+        color: #e7d3a0;
+      }
+      .brand h1 {
+        font-size: 27px;
+        letter-spacing: -1px;
+        font-weight: normal;
+        margin: 0;
+      }
+      .brand p {
+        font-size: 12px;
+        color: #b6b7a4;
+        margin: 5px 0 0;
+      }
+      .masthead nav {
+        display: flex;
+        gap: 8px;
+      }
+      .masthead button {
+        background: transparent;
+        color: #dedfca;
+        border-color: #656c59;
+        font-size: 12px;
+      }
+      .book {
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+        background: var(--paper);
+        border-radius: 7px 13px 9px 4px;
+        box-shadow:
+          0 20px 70px #0006,
+          0 5px 0 #b7b29a,
+          0 8px 0 #666951;
+        min-height: 770px;
+      }
+      .book:before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 4;
+        border-radius: inherit;
+        opacity: 0.22;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23897858' opacity='.2' filter='url(%23n)' d='M0 0h180v180H0z'/%3E%3C/svg%3E");
+      }
+      .page {
+        padding: 30px 34px;
+        min-width: 0;
+        position: relative;
+      }
+      .left-page {
+        border-right: 1px solid #b6b49e;
+        box-shadow: inset -15px 0 23px -20px #413c25;
+      }
+      .right-page {
+        box-shadow: inset 13px 0 23px -20px #413c25;
+        background-image: repeating-linear-gradient(
+          transparent 0 27px,
+          #9baf9c18 27px 28px
+        );
+        padding-left: 30px;
+      }
+      .page-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 22px;
+      }
+      .page-heading h2 {
+        font-size: 23px;
+        font-weight: normal;
+        margin: 3px 0 0;
+        letter-spacing: -0.6px;
+      }
+      .floor-tag {
+        font: italic 14px var(--serif);
+        border: 1px solid #9c9e87;
+        padding: 7px 11px;
+        transform: rotate(3deg);
+      }
+      .expedition-stats {
+        display: flex;
+        gap: 22px;
+        padding: 0 0 17px;
+        border-bottom: 1px solid var(--line);
+        margin-bottom: 18px;
+        font-size: 13px;
+      }
+      .expedition-stats b {
+        font-size: 18px;
+        font-weight: normal;
+        margin-right: 5px;
+      }
+      .map-wrap {
+        position: relative;
+        padding: 13px;
+        background: #e5e1cf;
+        border: 1px solid #989d88;
+        border-radius: 4px 2px 8px 3px;
+        box-shadow: inset 0 0 25px #57573a15;
+      }
+      .map {
+        display: grid;
+        grid-template-columns: repeat(11, minmax(0, 1fr));
+        gap: 3px;
+      }
+      .tile {
+        aspect-ratio: 1;
+        padding: 0;
+        display: grid;
+        place-items: center;
+        position: relative;
+        min-width: 0;
+        background: #ede9d6;
+        border: 1px solid #b8bba5;
+        border-radius: 2px 4px 2px 3px;
+        color: #777e68;
+        overflow: hidden;
+        transition: background 0.3s;
+      }
+      .tile:hover:not(:disabled) {
+        z-index: 2;
+        outline: 2px solid #809079;
+        outline-offset: 0;
+        background: #e4e9ce;
+      }
+      .tile.wall {
+        background: repeating-linear-gradient(
+          45deg,
+          #9a9d864d 0 2px,
+          #c2c4af 2px 5px
+        );
+        border-color: #a1a58f;
+        opacity: 0.7;
+        cursor: default;
+      }
+      .tile.fog:after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-color: #b2b5a0;
+        background-image:
+          repeating-linear-gradient(
+            34deg,
+            transparent 0 2px,
+            #747e6c7a 2px 3px,
+            transparent 3px 5px
+          ),
+          repeating-linear-gradient(
+            -38deg,
+            transparent 0 4px,
+            #79816b88 4px 5px,
+            transparent 5px 7px
+          );
+        border: 2px solid #a7ad96;
+        transform: rotate(-2deg) scale(1.08);
+      }
+      .tile.erasing:after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: repeating-linear-gradient(
+          34deg,
+          #a5ad91 0 2px,
+          #7f8b70 2px 3px
+        );
+        animation: erase 0.18s ease-out forwards;
+      }
+      .tile.player {
+        background: #506b50 !important;
+        border-color: #2c4a33;
+        color: #fff9df;
+        box-shadow: 0 0 14px #d3ad6266;
+      }
+      .tile.player svg {
+        width: 27px;
+        height: 27px;
+      }
+      .tile.event {
+        color: #8d6f35;
+      }
+      .tile svg {
+        width: 23px;
+        height: 23px;
+      }
+      .tile.visited {
+        background: #e4e7d2;
+      }
+      .tile.beacon {
+        box-shadow: inset 0 0 12px #e9c65a;
+      }
+      .map-wrap:after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          ellipse at var(--torch-x, 20%) var(--torch-y, 80%),
+          #ffcd6a22,
+          transparent 65%
+        );
+        pointer-events: none;
+        animation: torch 4s infinite;
+      }
+      .map-caption {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 13px 0 20px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .map-caption span:first-child {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+      }
+      .legend {
+        display: flex;
+        gap: 13px;
+        flex-wrap: wrap;
+        font-size: 11px;
+        color: #717765;
+        margin: 14px 0;
+      }
+      .legend span {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .legend svg {
+        width: 14px;
+        height: 14px;
+      }
+      .note {
+        font: italic 15px/1.6 var(--serif);
+        color: #7b795e;
+        transform: rotate(-1deg);
+        margin: 19px 3px 23px;
+      }
+      .journal {
+        border-top: 1px solid var(--line);
+        padding-top: 17px;
+      }
+      .journal-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .journal h3 {
+        font-size: 15px;
+        font-weight: normal;
+        margin: 0;
+      }
+      .journal ol {
+        list-style: none;
+        margin: 10px 0 0;
+        padding: 0;
+        font-size: 12px;
+        line-height: 1.6;
+        height: 94px;
+        overflow: auto;
+      }
+      .journal li {
+        margin-bottom: 4px;
+        padding-left: 16px;
+        position: relative;
+      }
+      .journal li:before {
+        content: "—";
+        position: absolute;
+        left: 0;
+        color: #9b9e86;
+      }
+      .journal li:first-child {
+        color: var(--green);
+      }
+      .team-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 13px;
+      }
+      .team-head h2 {
+        font-weight: normal;
+        font-size: 23px;
+        letter-spacing: -0.5px;
+        margin: 0;
+      }
+      .pill {
+        font:
+          10px system-ui,
+          sans-serif;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        border: 1px solid #a5ab91;
+        border-radius: 30px;
+        padding: 6px 10px;
+        display: inline-flex;
+        gap: 5px;
+        align-items: center;
+      }
+      .team-block {
+        background: #d9e0cd;
+        color: #4d674f;
+      }
+      .hero {
+        position: relative;
+        border: 1px solid #b2b59d;
+        border-radius: 5px 2px 7px 3px;
+        margin-bottom: 11px;
+        background: #f5f1e1cc;
+        padding: 13px;
+        transition: box-shadow 0.2s;
+      }
+      .hero.selected {
+        border-color: #526e52;
+        box-shadow: inset 3px 0 #526e52;
+      }
+      .hero.downed {
+        filter: grayscale(1);
+        background: #dedccf;
+      }
+      .hero-top {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .portrait {
+        height: 46px;
+        width: 43px;
+        flex-shrink: 0;
+        border: 1px solid #8f9b80;
+        background: #dce2cc;
+        border-radius: 40% 48% 25% 30%;
+        display: grid;
+        place-items: center;
+        color: #475c40;
+        transform: rotate(-3deg);
+      }
+      .portrait svg {
+        height: 35px;
+        width: 35px;
+      }
+      .hero-name {
+        flex: 1;
+      }
+      .hero h3 {
+        font-size: 16px;
+        font-weight: normal;
+        margin: 0 0 3px;
+      }
+      .hero .sub {
+        font:
+          10px system-ui,
+          sans-serif;
+        letter-spacing: 0.5px;
+        color: var(--muted);
+      }
+      .hp-info {
+        text-align: right;
+        font-size: 12px;
+      }
+      .injury {
+        display: block;
+        font-style: italic;
+        font-size: 11px;
+        color: var(--green);
+        margin-top: 2px;
+      }
+      .injury.wounded,
+      .injury.downed {
+        color: var(--red);
+      }
+      .bars {
+        margin: 10px 0;
+        display: flex;
+        gap: 5px;
+        align-items: center;
+      }
+      .healthbar {
+        height: 5px;
+        background: #d8d9c6;
+        border-radius: 2px;
+        overflow: hidden;
+        flex: 1;
+      }
+      .healthbar i {
+        display: block;
+        height: 100%;
+        background: #748962;
+        transition: width 0.4s;
+      }
+      .healthbar.exp {
+        height: 3px;
+        flex: 0.5;
+      }
+      .healthbar.exp i {
+        background: #b79a54;
+      }
+      .hero-actions {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .reels {
+        display: flex;
+        gap: 4px;
+        flex: 1;
+      }
+      .reel {
+        width: 43px;
+        height: 43px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: #eeead7;
+        border: 1px solid #9da58e;
+        border-bottom: 3px solid #929c84;
+        border-radius: 4px 3px 6px 3px;
+        color: var(--green);
+        font-size: 10px;
+        position: relative;
+      }
+      .reel svg {
+        height: 22px;
+        width: 22px;
+      }
+      .reel small {
+        font:
+          8px system-ui,
+          sans-serif;
+        letter-spacing: 2px;
+        color: #939b80;
+      }
+      .reel.spinning {
+        animation: spin 0.13s infinite;
+      }
+      .spin-button {
+        font-size: 12px;
+        min-width: 77px;
+      }
+      .edit-button {
+        font-size: 10px;
+        padding: 7px 6px;
+        background: transparent;
+      }
+      .empty-slot {
+        border: 1px dashed #b1b79c;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        color: #92987e;
+        padding: 12px;
+        font-style: italic;
+        font-size: 12px;
+        border-radius: 4px;
+        margin-bottom: 11px;
+      }
+      .empty-slot svg {
+        width: 24px;
+        height: 24px;
+      }
+      .encounter {
+        margin-top: 20px;
+        border-top: 1px solid var(--line);
+        padding-top: 16px;
+        min-height: 180px;
+      }
+      .encounter-label {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 11px;
+      }
+      .encounter-label h3 {
+        font:
+          10px system-ui,
+          sans-serif;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin: 0;
+        color: var(--muted);
+      }
+      .enemy-box {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+      .enemy-art {
+        width: 96px;
+        height: 104px;
+        color: #645d49;
+        flex-shrink: 0;
+        animation: bob 3s ease-in-out infinite;
+      }
+      .enemy-art svg {
+        height: 100%;
+        width: 100%;
+      }
+      .enemy-info {
+        flex: 1;
+      }
+      .enemy-info h4 {
+        font-size: 21px;
+        margin: 0 0 6px;
+        font-weight: normal;
+      }
+      .enemy-info p {
+        font-size: 12px;
+        margin: 7px 0;
+        line-height: 1.6;
+      }
+      .enemy-hp {
+        margin: 9px 0;
+      }
+      .enemy-hp i {
+        background: #a26b51;
+      }
+      .battle-target {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 11px;
+        margin-top: 11px;
+        flex-wrap: wrap;
+      }
+      .target-button {
+        padding: 4px 8px;
+        font-size: 11px;
+      }
+      .target-button.active {
+        background: #dce3cc;
+        border-color: #718266;
+      }
+      .peace {
+        display: flex;
+        align-items: center;
+        gap: 17px;
+        color: #82866d;
+        font-size: 13px;
+        line-height: 1.7;
+        padding: 12px 0;
+      }
+      .peace svg {
+        width: 70px;
+        height: 70px;
+        flex-shrink: 0;
+        opacity: 0.7;
+      }
+      .supplies {
+        margin-top: 14px;
+        padding-top: 13px;
+        border-top: 1px solid var(--line);
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 11px;
+      }
+      .supplies button {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 11px;
+      }
+      .supplies svg {
+        width: 16px;
+        height: 16px;
+      }
+      .footer {
+        display: flex;
+        justify-content: space-between;
+        color: #a7ad97;
+        margin: 20px 5px 0;
+        font-size: 11px;
+      }
+      .footer .hand {
+        color: #c6c3a3;
+        font-size: 13px;
+      }
+      .toast {
+        position: fixed;
+        bottom: 25px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 30;
+        background: #354b37;
+        color: #fff4d7;
+        padding: 12px 20px;
+        box-shadow: 0 4px 20px #0004;
+        border-radius: 5px;
+        max-width: 90%;
+        font-size: 13px;
+        pointer-events: none;
+      }
+      .toast[hidden] {
+        display: none;
+      }
+      .fx {
+        position: absolute;
+        top: 25%;
+        left: 50%;
+        font: bold 25px var(--serif);
+        color: var(--red);
+        z-index: 8;
+        pointer-events: none;
+        animation: float 1s forwards;
+        text-shadow: 0 1px #fff;
+      }
+      .fx.heal {
+        color: #4e8458;
+      }
+      .hit {
+        animation: hit 0.4s;
+      }
+      .heal-flash {
+        animation: heal 0.6s;
+      }
+      .overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 20;
+        background: #20271ec2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        backdrop-filter: blur(3px);
+      }
+      .overlay[hidden] {
+        display: none;
+      }
+      .modal {
+        position: relative;
+        background: var(--paper);
+        padding: 29px 33px;
+        width: min(590px, 100%);
+        max-height: 87vh;
+        overflow: auto;
+        box-shadow: 0 20px 80px #0005;
+        border: 1px solid #aaa58b;
+        border-radius: 5px 9px 4px 8px;
+      }
+      .modal h2 {
+        font-weight: normal;
+        font-size: 28px;
+        margin: 6px 0 16px;
+      }
+      .modal p,
+      .modal li {
+        font-size: 14px;
+        line-height: 1.7;
+      }
+      .modal .close {
+        position: absolute;
+        right: 12px;
+        top: 10px;
+      }
+      .modal-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 20px;
+      }
+      .critical {
+        text-align: center;
+        padding: 25px 0;
+      }
+      .critical strong {
+        display: block;
+        font-size: 66px;
+        color: #a47632;
+        line-height: 1.4;
+      }
+      .critical .hand {
+        font-size: 24px;
+      }
+      .editor-row {
+        padding: 13px 0;
+        border-top: 1px solid var(--line);
+      }
+      .editor-slots {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 5px;
+        margin: 8px 0;
+      }
+      .editor-slot {
+        text-align: center;
+        background: #e9e6d1;
+        padding: 7px 2px;
+        border: 1px solid #b3baa0;
+        border-radius: 4px;
+      }
+      .editor-slot svg {
+        width: 22px;
+        height: 22px;
+      }
+      .editor-slot small {
+        display: block;
+        font-size: 9px;
+        margin: 4px 0;
+      }
+      .editor-slot button {
+        font-size: 9px;
+        padding: 4px 2px;
+        display: block;
+        width: 100%;
+        margin-top: 4px;
+      }
+      .setting {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+      }
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+      }
+      .hero.wounded .portrait {
+        background: #e4c8b4;
+        border-color: #af684c;
+      }
+      .hero.bruised .portrait {
+        border-color: #aa935d;
+      }
+      .hero.wounded .portrait:after {
+        content: "×";
+        position: absolute;
+        bottom: 2px;
+        right: 3px;
+        color: #a6533c;
+        font-size: 15px;
+      }
+      .enemy-box {
+        animation: encounter-in 0.4s ease-out;
+      }
+      .critical > svg {
+        width: 85px;
+        height: 85px;
+        color: var(--gold);
+      }
+      .modal p > svg {
+        width: 28px;
+        height: 28px;
+        vertical-align: middle;
+      }
+      @keyframes encounter-in {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes erase {
+        0% {
+          clip-path: inset(0);
+        }
+        100% {
+          clip-path: inset(0 0 100% 0);
+          opacity: 0;
+        }
+      }
+      @keyframes torch {
+        0%,
+        100% {
+          opacity: 0.65;
+        }
+        18% {
+          opacity: 0.95;
+        }
+        24% {
+          opacity: 0.6;
+        }
+        46% {
+          opacity: 0.85;
+        }
+        51% {
+          opacity: 0.5;
+        }
+        72% {
+          opacity: 1;
+        }
+      }
+      @keyframes bob {
+        50% {
+          transform: translateY(-4px) rotate(2deg);
+        }
+      }
+      @keyframes spin {
+        50% {
+          transform: translateY(-3px);
+          filter: blur(1px);
+        }
+      }
+      @keyframes float {
+        to {
+          transform: translateY(-48px);
+          opacity: 0;
+        }
+      }
+      @keyframes hit {
+        25%,
+        75% {
+          transform: translateX(-4px);
+          background-color: #d2987955;
+        }
+        50% {
+          transform: translateX(4px);
+        }
+      }
+      @keyframes heal {
+        50% {
+          box-shadow: 0 0 25px #7ba46488;
+        }
+      }
+      .no-motion *,
+      .no-motion *:before,
+      .no-motion *:after {
+        animation: none !important;
+        transition: none !important;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *:before,
+        *:after {
+          animation: none !important;
+          transition: none !important;
+        }
+      }
+      @media (min-width: 1300px) {
+        .desk {
+          padding-top: 45px;
+        }
+        .page {
+          padding: 35px 40px;
+        }
+        .book {
+          min-height: 810px;
+        }
+        .tile {
+          min-height: 38px;
+        }
+        .hero {
+          padding: 15px;
+        }
+        .reel {
+          width: 47px;
+          height: 45px;
+        }
+        .encounter {
+          margin-top: 25px;
+        }
+      }
+      @media (max-width: 1050px) {
+        .desk {
+          padding: 25px 22px;
+        }
+        .page {
+          padding: 25px 20px;
+        }
+        .reel {
+          width: 34px;
+          height: 38px;
+        }
+        .spin-button {
+          min-width: 59px;
+          padding: 8px;
+        }
+        .edit-button {
+          padding: 6px 3px;
+        }
+        .hero-actions {
+          gap: 4px;
+        }
+        .expedition-stats {
+          gap: 13px;
+        }
+        .tile svg {
+          width: 20px;
+          height: 20px;
+        }
+        .supplies {
+          flex-wrap: wrap;
+        }
+        .hero {
+          padding: 10px;
+        }
+      }
+      @media (max-width: 760px) {
+        .desk {
+          padding: 20px 12px;
+        }
+        .masthead {
+          gap: 16px;
+          align-items: flex-start;
+          margin-bottom: 20px;
+        }
+        .brand h1 {
+          font-size: 23px;
+        }
+        .brand-mark {
+          display: none;
+        }
+        .brand p {
+          max-width: 200px;
+          line-height: 1.5;
+        }
+        .masthead nav {
+          gap: 3px;
+          flex-wrap: wrap;
+          justify-content: flex-end;
+          max-width: 170px;
+        }
+        .masthead button {
+          padding: 6px 8px;
+          font-size: 11px;
+        }
+        .book {
+          grid-template-columns: 1fr;
+        }
+        .left-page {
+          border-right: 0;
+          border-bottom: 1px solid #b9b69d;
+        }
+        .page {
+          padding: 25px 23px;
+        }
+        .right-page {
+          box-shadow: none;
+        }
+        .tile {
+          max-height: 50px;
+        }
+        .map-wrap {
+          padding: 10px;
+        }
+        .journal ol {
+          height: 70px;
+        }
+        .note {
+          margin: 15px 0;
+        }
+        .reel {
+          width: 46px;
+          height: 43px;
+        }
+        .hero-actions {
+          gap: 8px;
+        }
+        .spin-button {
+          min-width: 80px;
+        }
+        .hero {
+          padding: 13px;
+        }
+        .footer {
+          font-size: 9px;
+        }
+        .footer .hand {
+          font-size: 11px;
+        }
+        .modal {
+          padding: 24px 20px;
+        }
+        .editor-slots {
+          gap: 3px;
+        }
+        .enemy-art {
+          width: 82px;
+          height: 90px;
+        }
+        .book:before {
+          opacity: 0.15;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="desk">
+      <header class="masthead">
+        <div class="brand">
+          <div class="brand-mark" data-icon="sword"></div>
+          <div>
+            <h1>Scratchpad Dungeon</h1>
+            <p>A little adventure in the margins.</p>
+          </div>
+        </div>
+        <nav aria-label="Game tools">
+          <button id="help">Field guide</button
+          ><button id="download">↓ Save HTML</button
+          ><button id="new-game">New run</button>
+        </nav>
+      </header>
+      <main class="book">
+        <section class="page left-page" aria-label="Dungeon exploration">
+          <div class="page-heading">
+            <div>
+              <div class="eyebrow">
+                The expedition / <span id="chapter">chapter 01</span>
+              </div>
+              <h2 id="floor-name">The overgrown cellar</h2>
+            </div>
+            <div class="floor-tag" id="floor-tag">Depth I</div>
+          </div>
+          <div class="expedition-stats">
+            <span><b id="gold">0</b> gold</span
+            ><span><b id="explored">0</b> uncovered</span
+            ><span><b id="steps">0</b> steps</span
+            ><span id="relic-status">◇ Seek the Sunseed</span>
+          </div>
+          <div class="map-wrap" id="map-wrap">
+            <div
+              class="map"
+              id="map"
+              role="group"
+              aria-label="Dungeon tiles"
+            ></div>
+          </div>
+          <div class="map-caption">
+            <span
+              ><span style="color: #4d6b54">●</span>
+              <span id="map-status">Click a tile to find your way.</span></span
+            ><button
+              class="quiet small"
+              id="reveal-help"
+              aria-label="Explain exploration"
+            >
+              ? Exploration
+            </button>
+          </div>
+          <div class="legend" id="legend"></div>
+          <p class="note" id="field-note">
+            “A sword, a stubborn heart, and a very questionable map.”
+          </p>
+          <section class="journal">
+            <div class="journal-head">
+              <h3>Notes from below</h3>
+              <span class="eyebrow">ink still wet</span>
+            </div>
+            <ol
+              id="log"
+              aria-live="polite"
+              aria-label="Expedition journal"
+            ></ol>
+          </section>
+        </section>
+        <section class="page right-page" aria-label="Party and combat">
+          <div class="team-head">
+            <div>
+              <div class="eyebrow">Three names at most</div>
+              <h2>Your little company</h2>
+            </div>
+            <span
+              class="pill team-block"
+              id="block"
+              title="Team block persists between encounters and is consumed by damage."
+              >0 block</span
+            >
+          </div>
+          <div id="party"></div>
+          <section
+            class="encounter"
+            id="encounter"
+            aria-label="Current encounter"
+          ></section>
+          <div class="supplies">
+            <button
+              id="potion"
+              title="Heal or revive the selected healing target for 16 HP."
+            ></button
+            ><label class="setting"
+              ><input type="checkbox" id="skip-animations" /> Skip
+              animations</label
+            ><span id="save-status">Saved locally</span>
+          </div>
+        </section>
+      </main>
+      <footer class="footer">
+        <span
+          >FIELD NOTES № 001 <span aria-hidden="true"> · </span> Made of paper.
+          Played with courage.</span
+        ><span class="hand">Keep a little light with you. ✧</span>
+      </footer>
+    </div>
+    <div class="toast" id="toast" role="status" hidden></div>
+    <div class="overlay" id="overlay" hidden>
+      <section
+        class="modal"
+        id="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+        tabindex="-1"
+      ></section>
+    </div>
+    <script>
+      "use strict";
+      // No assets, libraries, servers, or network requests are needed.
+      const HTML_BACKUP =
+        "<!doctype html>\n" + document.documentElement.outerHTML;
+      const $ = (s) => document.querySelector(s),
+        SAVE_KEY = "scratchpad-dungeon-v1",
+        W = 11,
+        H = 9;
+      const paths = {
+        sword: "M6 23 23 6l3-1-1 3L9 26M5 19l8 8M7 25l-3 3m1-4 3 3",
+        heal: "M13 5h6v8h8v6h-8v8h-6v-8H5v-6h8z",
+        block: "m16 3 11 5v8c0 7-11 13-11 13S5 23 5 16V8z M16 8v15",
+        stun: "m18 2-11 16h8l-1 12 12-18h-9z",
+        treasure:
+          "M4 13h24v15H4z M4 13V9c0-6 24-6 24 0v4 M4 18h24 M14 15h4v7h-4z",
+        trap: "m3 26 6-14 6 14 5-18 9 18z M5 7l3-3m17 1 3 3",
+        well: "M5 17c0-5 22-5 22 0v10H5z M5 17c0 5 22 5 22 0 M8 15V7h16v8 M4 7l12-5 12 5 M16 8v12",
+        beacon:
+          "M12 27h8M16 23v4M10 12h12l-3 12h-6z M15 11c-9-6 2-10 1-10 9 7 3 10 3 10 M5 9 2 7m24 1 4-2",
+        recruit:
+          "M16 4a5 5 0 1 0 0 10 5 5 0 0 0 0-10 M6 28v-5c0-10 20-10 20 0v5 M4 17v8m-4-4h8",
+        stairs: "M3 28h9v-7h7v-7h7V6h4 M4 5h12m-5-4 5 4-5 4",
+        hero: "M8 12c0-13 16-13 16 0l-4 4v6H12v-6z M7 10h18M16 4v7M5 29l3-8 8 5 8-5 3 8 M13 15h1m4 0h1",
+        rogue:
+          "M5 15C4-1 28-1 27 15l-5-3-6 3-6-3z M10 14v6l6 4 6-4v-6 M7 29l3-7m12 0 3 7 M12 17h2m4 0h2",
+        healer:
+          "M7 12C7 0 25 0 25 12l-5 2-4-4-4 4z M10 13v7l6 5 6-5v-7 M6 29l4-6m12 0 4 6 M15 3v6m-3-3h6",
+        skull:
+          "M5 15c-6-17 28-17 22 0l-4 6v6H9v-6z M10 12l4 3-4 2zm12 0-4 3 4 2z M15 20h2M13 24v3m6-3v3",
+        rat: "M4 22 7 12l6 3 9-1 6 8-8 5H9z M8 13C-3 1 17 1 12 14 M22 14C16 1 35 4 26 17 M3 22c-8 0 0 9 4 7 M13 20h1m6 0h1 M14 25l3-2 3 2",
+        ghost:
+          "M5 29V13c0-15 22-15 22 0v16l-6-4-5 4-6-4z M10 12v5m11-5v5 M14 21h4",
+        slime:
+          "M3 26C-1 21 6 17 8 11c4-13 13-5 15 3 3 4 9 8 6 12z M11 17h1m7 0h1 M12 22c3 3 6 2 7-1",
+        potion:
+          "M12 3h8v5l5 9c8 15-26 15-18 0l5-9z M11 3h10 M8 18h16 M13 21h6m-3-3v6",
+        seed: "M16 28V15 M16 20C-2 18 4 0 16 12c11-13 20 5 0 8 M16 12V5",
+        camp: "m3 27 13-22 13 22z M11 27l5-13 5 13 M16 5V1 M5 8l-3-3m26 5 3-3",
+        eye: "M2 16s6-10 14-10 14 10 14 10-6 10-14 10S2 16 2 16z M16 11a5 5 0 1 0 0 10 5 5 0 0 0 0-10",
+      };
+      function icon(name) {
+        return `<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${paths[name] || paths.sword}"/></svg>`;
+      }
+      const TYPES = ["attack", "heal", "block", "stun"],
+        ICONS = { attack: "sword", heal: "heal", block: "block", stun: "stun" },
+        POWER = { attack: 3, heal: 3, block: 2, stun: 1 };
+      let state,
+        busy = false,
+        skip = false,
+        animationVersion = 0,
+        modalKind = "",
+        modalPrevious = null,
+        toastTimer;
+      const rand = (n) => Math.floor(Math.random() * n),
+        pick = (a) => a[rand(a.length)],
+        pos = (x, y) => y * W + x;
+      function makeHero(name, job) {
+        let types =
+          job === "healer"
+            ? ["heal", "attack", "heal", "block", "stun", "attack"]
+            : job === "rogue"
+              ? ["attack", "stun", "attack", "heal", "attack", "block"]
+              : ["attack", "attack", "block", "attack", "heal", "stun"];
+        return {
+          id: Date.now() + Math.random(),
+          name,
+          job,
+          level: 1,
+          xp: 0,
+          hp: job === "fighter" ? 36 : 30,
+          maxHp: job === "fighter" ? 36 : 30,
+          points: 2,
+          reels: [0, 1, 2].map((_, r) =>
+            types.map((type, i) => ({ type, tier: 1 })),
+          ),
+          last: [
+            { type: "attack", tier: 1 },
+            { type: "block", tier: 1 },
+            { type: "heal", tier: 1 },
+          ],
+        };
+      }
+      function generateFloor(depth) {
+        let map = Array.from({ length: W * H }, (_, i) => ({
+          wall: i % W === 0 || i % W === W - 1 || i < W || i >= W * (H - 1),
+          seen: false,
+          visited: false,
+          event: null,
+        }));
+        for (let y = 1; y < H - 1; y++)
+          for (let x = 1; x < W - 1; x++)
+            if (rand(100) < 16 && !(y === 7 || x === 9 || x === 1))
+              map[pos(x, y)].wall = true;
+        // Remove isolated pockets: all walkable destinations must be reachable.
+        let reachable = new Set([pos(1, 7)]),
+          queue = [pos(1, 7)];
+        while (queue.length) {
+          let n = queue.shift();
+          for (let j of neighbors(n))
+            if (!map[j].wall && !reachable.has(j)) {
+              reachable.add(j);
+              queue.push(j);
+            }
+        }
+        map.forEach((c, i) => {
+          if (!c.wall && !reachable.has(i)) c.wall = true;
+        });
+        const place = (i, event) => {
+          map[i].wall = false;
+          map[i].event = event;
+        };
+        place(pos(2, 7), "treasure");
+        place(pos(3, 7), "trap");
+        place(pos(4, 7), "well");
+        place(pos(5, 7), "beacon");
+        place(pos(6, 7), depth < 3 ? "recruit" : "treasure");
+        place(pos(7, 7), "enemy");
+        place(pos(9, 1), "stairs");
+        let free = map
+          .map((c, i) => (!c.wall && !c.event && i !== pos(1, 7) ? i : -1))
+          .filter((i) => i >= 0);
+        for (let e of [
+          "enemy",
+          "enemy",
+          "enemy",
+          "enemy",
+          "treasure",
+          "treasure",
+          "trap",
+          "well",
+          "beacon",
+          ...(depth > 1 ? ["enemy", "recruit"] : []),
+        ])
+          if (free.length) {
+            let k = rand(free.length);
+            place(free.splice(k, 1)[0], e);
+          }
+        if (depth === 3) {
+          let i = pos(9, 2);
+          place(i, "guardian");
+        }
+        map[pos(1, 7)].seen = true;
+        map[pos(1, 7)].visited = true;
+        neighbors(pos(1, 7)).forEach((i) => {
+          if (map[i].wall) map[i].seen = true;
+        });
+        return map;
+      }
+      function neighbors(i) {
+        let x = i % W,
+          y = Math.floor(i / W);
+        return [
+          [x + 1, y],
+          [x - 1, y],
+          [x, y + 1],
+          [x, y - 1],
+        ]
+          .filter(([a, b]) => a >= 0 && a < W && b >= 0 && b < H)
+          .map(([a, b]) => pos(a, b));
+      }
+      function newRun() {
+        state = {
+          version: 1,
+          depth: 1,
+          map: generateFloor(1),
+          position: pos(1, 7),
+          party: [makeHero("Alden", "fighter")],
+          gold: 0,
+          steps: 0,
+          block: 0,
+          potions: 2,
+          enemy: null,
+          target: 0,
+          logs: ["Alden opens the notebook. A new expedition begins."],
+          relic: false,
+          over: false,
+          skip: matchMedia("(prefers-reduced-motion: reduce)").matches,
+        };
+        skip = state.skip;
+        busy = false;
+        animationVersion++;
+        closeModal();
+        render();
+        save();
+      }
+      function save() {
+        try {
+          localStorage.setItem(SAVE_KEY, JSON.stringify(state));
+          $("#save-status").textContent = "Saved locally";
+        } catch {
+          $("#save-status").textContent = "Saving unavailable";
+        }
+      }
+      function load() {
+        try {
+          let s = JSON.parse(localStorage.getItem(SAVE_KEY));
+          if (
+            s &&
+            s.version === 1 &&
+            Array.isArray(s.map) &&
+            s.map.length === 99 &&
+            Array.isArray(s.party) &&
+            s.party.length > 0 &&
+            s.party.length <= 3
+          ) {
+            state = s;
+            skip = !!s.skip;
+            return true;
+          }
+        } catch {}
+        return false;
+      }
+      function log(msg) {
+        state.logs.unshift(msg);
+        state.logs = state.logs.slice(0, 50);
+        $("#log").innerHTML = state.logs.map((x) => `<li>${x}</li>`).join("");
+      }
+      function toast(msg) {
+        $("#toast").textContent = msg;
+        $("#toast").hidden = false;
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => ($("#toast").hidden = true), 3000);
+      }
+      async function pause(ms) {
+        if (skip) return;
+        let version = animationVersion;
+        await new Promise((resolve) => {
+          let elapsed = 0;
+          const tick = () => {
+            if (skip || version !== animationVersion || elapsed >= ms)
+              return resolve();
+            elapsed += 25;
+            setTimeout(tick, 25);
+          };
+          tick();
+        });
+      }
+      function injury(h) {
+        return h.hp === 0
+          ? "downed"
+          : h.hp / h.maxHp < 0.35
+            ? "wounded"
+            : h.hp / h.maxHp < 0.7
+              ? "bruised"
+              : "steady";
+      }
+      function render() {
+        document.body.classList.toggle("no-motion", skip);
+        $("#skip-animations").checked = skip;
+        $("#gold").textContent = state.gold;
+        $("#steps").textContent = state.steps;
+        $("#explored").textContent = state.map.filter(
+          (c) => c.seen && !c.wall,
+        ).length;
+        $("#chapter").textContent =
+          "chapter " + String(state.depth).padStart(2, "0");
+        $("#floor-name").textContent =
+          [
+            "The overgrown cellar",
+            "The whispering archive",
+            "The sunken sanctuary",
+          ][Math.min(state.depth - 1, 2)] +
+          (state.depth > 3 ? " · " + state.depth : "");
+        $("#floor-tag").textContent = "Depth " + state.depth;
+        $("#relic-status").textContent = state.relic
+          ? "✧ Sunseed recovered"
+          : "◇ Seek the Sunseed";
+        $("#block").innerHTML = icon("block") + state.block + " block";
+        $("#block svg").style.cssText = "width:13px;height:13px";
+        $("#potion").innerHTML = icon("potion") + "Tonic ×" + state.potions;
+        $("#potion").disabled = busy || state.over || !state.potions;
+        $("#map-status").textContent = state.over
+          ? "This expedition is closed."
+          : state.enemy
+            ? "An encounter blocks the way."
+            : busy
+              ? "Following the pencil line…"
+              : "Click a tile to find your way.";
+        renderMap();
+        renderParty();
+        renderEncounter();
+        $("#log").innerHTML = state.logs.map((x) => `<li>${x}</li>`).join("");
+      }
+      function renderMap(erasing = -1) {
+        $("#map").innerHTML = state.map
+          .map((c, i) => {
+            let player = i === state.position;
+            let label = player
+              ? "Your company"
+              : c.wall
+                ? "Stone wall"
+                : !c.seen
+                  ? "Pencil-covered tile"
+                  : c.event
+                    ? c.event === "enemy"
+                      ? "Encounter"
+                      : c.event === "guardian"
+                        ? "Sunseed guardian"
+                        : c.event
+                    : "Empty passage";
+            return `<button class="tile ${c.wall ? "wall" : ""} ${!c.seen && !c.wall ? "fog" : ""} ${c.visited ? "visited" : ""} ${c.seen && c.event ? "event" : ""} ${player ? "player" : ""} ${i === erasing ? "erasing" : ""} ${c.seen && c.event === "beacon" ? "beacon" : ""}" data-tile="${i}" aria-label="${label}, column ${(i % W) + 1}, row ${Math.floor(i / W) + 1}" ${c.wall || busy || state.enemy || state.over ? "disabled" : ""} title="${label}">${player ? icon("hero") : c.seen && c.event ? icon(c.event === "enemy" || c.event === "guardian" ? "skull" : c.event) : c.visited ? "·" : ""}</button>`;
+          })
+          .join("");
+        $("#map-wrap").style.setProperty(
+          "--torch-x",
+          ((state.position % W) / W) * 100 + "%",
+        );
+        $("#map-wrap").style.setProperty(
+          "--torch-y",
+          (Math.floor(state.position / W) / H) * 100 + "%",
+        );
+      }
+      function renderParty() {
+        let markup = state.party
+          .map((h, i) => {
+            let status = injury(h);
+            return `<article class="hero ${state.target === i ? "selected" : ""} ${status}" id="hero-${i}"><div class="hero-top"><div class="portrait">${icon(h.job === "fighter" ? "hero" : h.job)}</div><div class="hero-name"><h3>${h.name} <span class="muted" style="font-size:11px">Lv. ${h.level}</span></h3><div class="sub">${h.job.toUpperCase()} · ${h.xp}/${h.level * 12} EXP</div></div><div class="hp-info">${h.hp} / ${h.maxHp} HP<span class="injury ${status}">${status}</span></div></div><div class="bars"><div class="healthbar" aria-label="${h.hp} of ${h.maxHp} health"><i style="width:${(100 * h.hp) / h.maxHp}%"></i></div><div class="healthbar exp" title="Experience"><i style="width:${(100 * h.xp) / (h.level * 12)}%"></i></div></div><div class="hero-actions"><div class="reels" aria-label="${h.name}'s last spin">${h.last.map((s) => `<div class="reel" title="${s.type} tier ${s.tier}">${icon(ICONS[s.type])}<small>${"•".repeat(s.tier)}</small></div>`).join("")}</div><button class="edit-button" data-edit="${i}" ${busy || state.over ? "disabled" : ""} aria-label="Edit ${h.name}'s reels">✎ ${h.points} pts</button><button class="spin-button primary" data-spin="${i}" ${!state.enemy || busy || !h.hp || state.over ? "disabled" : ""}>${h.hp ? "Spin ↗" : "Downed"}</button></div></article>`;
+          })
+          .join("");
+        for (let i = state.party.length; i < 3; i++)
+          markup += `<div class="empty-slot">${icon("recruit")}A stranger may yet join the story.</div>`;
+        $("#party").innerHTML = markup;
+      }
+      function renderEncounter() {
+        let e = state.enemy;
+        $("#encounter").innerHTML = e
+          ? `<div class="encounter-label"><h3>In the margins / encounter</h3><span class="pill">${e.stun ? "Stunned · " + e.stun : "Attacks in " + e.countdown + " spin" + (e.countdown === 1 ? "" : "s")}</span></div><div class="enemy-box" id="enemy"><div class="enemy-art">${icon(e.art)}</div><div class="enemy-info"><h4>${e.name}</h4><div class="healthbar enemy-hp"><i style="width:${(e.hp / e.maxHp) * 100}%"></i></div><div style="font-size:11px">${e.hp} / ${e.maxHp} HP</div><p>${e.strikes} strike${e.strikes > 1 ? "s" : ""} × ${e.damage} damage · every ${e.frequency} spins<br><i>${e.flavor}</i></p></div></div><div class="battle-target"><span>Healing target:</span>${targetButtons()}</div>`
+          : `<div class="encounter-label"><h3>A moment between monsters</h3><span class="eyebrow">Breathe.</span></div><div class="peace">${icon(state.relic ? "seed" : "camp")}<div>${state.over ? "Every expedition leaves a story. Begin again when you’re ready." : state.relic ? "The Sunseed glows in your pocket. Reach any stairs to bring it home, or venture deeper." : "Erase the unknown, one square at a time.<br>Find the Sunseed on depth 3 and return by the stairs."}</div></div><div class="battle-target"><span>Tonic target:</span>${targetButtons()}</div>`;
+      }
+      function targetButtons() {
+        return state.party
+          .map(
+            (h, i) =>
+              `<button class="target-button ${state.target === i ? "active" : ""}" data-target="${i}" aria-pressed="${state.target === i}" ${busy ? "disabled" : ""}>${h.name}${h.hp === 0 ? " (downed)" : ""}</button>`,
+          )
+          .join("");
+      }
+      function shortestPath(goal) {
+        let queue = [state.position],
+          came = new Map([[state.position, null]]);
+        for (let at = 0; at < queue.length; at++) {
+          let n = queue[at];
+          if (n === goal) {
+            let p = [];
+            while (came.get(n) !== null) {
+              p.unshift(n);
+              n = came.get(n);
+            }
+            return p;
+          }
+          for (let j of neighbors(n))
+            if (!state.map[j].wall && !came.has(j)) {
+              came.set(j, n);
+              queue.push(j);
+            }
+        }
+        return null;
+      }
+      async function move(goal) {
+        if (busy || state.enemy || state.over) return;
+        if (goal === state.position) {
+          if (state.map[goal].event === "stairs") stairs();
+          return;
+        }
+        let route = shortestPath(goal);
+        if (!route) {
+          toast("No pencil path reaches that square.");
+          return;
+        }
+        busy = true;
+        render();
+        for (let i of route) {
+          state.position = i;
+          state.steps++;
+          let c = state.map[i],
+            fresh = !c.seen;
+          c.seen = true;
+          c.visited = true;
+          neighbors(i).forEach((j) => {
+            if (state.map[j].wall) state.map[j].seen = true;
+          });
+          renderMap(fresh ? i : -1);
+          await pause(185);
+          if (c.event) {
+            busy = false;
+            let stop = await resolveTile(c);
+            render();
+            save();
+            if (stop || state.over) return;
+            busy = true;
+          }
+        }
+        busy = false;
+        render();
+        save();
+      }
+      async function resolveTile(c) {
+        let e = c.event;
+        if (e !== "stairs") c.event = null;
+        if (e === "treasure") {
+          let n = 8 + rand(12) + state.depth * 3;
+          state.gold += n;
+          let h = pick(state.party);
+          h.points++;
+          if (rand(3) === 0) state.potions++;
+          log(`Treasure! ${n} gold; ${h.name} finds a reel-editing point.`);
+          toast("A little treasure, a little hope.");
+          return true;
+        }
+        if (e === "trap") {
+          let h = pick(state.party.filter((h) => h.hp > 0));
+          damageHero(
+            state.party.indexOf(h),
+            5 + state.depth * 2,
+            "A hidden snare",
+          );
+          log("A pencil-thin tripwire. The trap snaps shut.");
+          if (checkDefeat()) return true;
+          return true;
+        }
+        if (e === "well") {
+          state.party.forEach((h, i) => healHero(i, Math.ceil(h.maxHp * 0.55)));
+          log(
+            "A healing well restores the whole company, including the fallen.",
+          );
+          toast("Cool water. Steadier hands.");
+          return true;
+        }
+        if (e === "beacon") {
+          let count = 0,
+            x = state.position % W,
+            y = Math.floor(state.position / W);
+          state.map.forEach((t, i) => {
+            if (
+              Math.abs((i % W) - x) + Math.abs(Math.floor(i / W) - y) <= 4 &&
+              !t.seen
+            ) {
+              t.seen = true;
+              count++;
+            }
+          });
+          state.block += 4;
+          log(
+            `A beacon uncovers ${count} tiles and grants 4 persistent team block.`,
+          );
+          toast("The dark gives back a few of its secrets.");
+          return true;
+        }
+        if (e === "recruit") {
+          if (state.party.length < 3) {
+            let job = state.party.length === 1 ? "healer" : "rogue";
+            let h = makeHero(job === "healer" ? "Mira" : "Wren", job);
+            state.party.push(h);
+            log(`${h.name}, a wandering ${job}, joins the company.`);
+            openModal(
+              "A name in the margins",
+              `<p>${icon("recruit")} <b>${h.name} the ${job}</b> has been keeping a light alive down here. There is room at your fire.</p><p>Every hero has personal reels and editing points. Any living hero may spin repeatedly; the company shares the enemy countdown and block.</p><div class="modal-actions"><button class="primary" data-close>Welcome, ${h.name}</button></div>`,
+              "recruit",
+            );
+          } else {
+            state.potions++;
+            state.party.forEach((h) => h.points++);
+            log(
+              "Your company is full. The wanderer leaves a tonic and one point for each hero.",
+            );
+          }
+          return true;
+        }
+        if (e === "enemy" || e === "guardian") {
+          beginEncounter(e === "guardian");
+          return true;
+        }
+        if (e === "stairs") {
+          stairs();
+          return true;
+        }
+        return false;
+      }
+      function beginEncounter(boss = false) {
+        let choices = [
+          {
+            name: "The ink rat",
+            art: "rat",
+            flavor: "A hungry smudge with too many teeth.",
+            strikes: 1,
+            frequency: 2,
+          },
+          {
+            name: "Margin wraith",
+            art: "ghost",
+            flavor: "It remembers a story you never wrote.",
+            strikes: 2,
+            frequency: 3,
+          },
+          {
+            name: "Blotling",
+            art: "slime",
+            flavor: "An accident in the inkwell. Now with opinions.",
+            strikes: 2,
+            frequency: 2,
+          },
+        ];
+        let base = boss
+          ? {
+              name: "The Sunseed keeper",
+              art: "skull",
+              flavor: "One last shadow around a little light.",
+              strikes: 3,
+              frequency: 3,
+            }
+          : pick(choices);
+        let hp = boss ? 90 : 18 + state.depth * 8;
+        state.enemy = {
+          ...base,
+          hp,
+          maxHp: hp,
+          damage: boss ? 6 : 3 + state.depth,
+          countdown: base.frequency,
+          stun: 0,
+          boss,
+        };
+        log(`${base.name} steps out of the pencil dust.`);
+        $("#field-note").textContent =
+          "“Be brave. Or be lucky. Preferably both.”";
+      }
+      function addXP(h, n) {
+        h.xp += n;
+        while (h.xp >= h.level * 12) {
+          h.xp -= h.level * 12;
+          h.level++;
+          h.maxHp += 6;
+          h.hp = Math.min(h.maxHp, h.hp + 6);
+          h.points += 2;
+          log(
+            `${h.name} reaches level ${h.level}: +6 maximum HP, +2 personal points.`,
+          );
+        }
+      }
+      function effect(selector, label, healing = false) {
+        let el = $(selector);
+        if (!el) return;
+        el.classList.remove("hit", "heal-flash");
+        void el.offsetWidth;
+        el.classList.add(healing ? "heal-flash" : "hit");
+        let node = document.createElement("span");
+        node.className = "fx" + (healing ? " heal" : "");
+        node.textContent = label;
+        el.append(node);
+        setTimeout(() => {
+          node.remove();
+          el.classList.remove("hit", "heal-flash");
+        }, 900);
+      }
+      function healHero(i, n) {
+        let h = state.party[i],
+          actual = Math.min(n, h.maxHp - h.hp);
+        h.hp += actual;
+        if (actual) {
+          effect("#hero-" + i, "+" + actual, true);
+          log(
+            `${h.name} recovers ${actual} HP${h.hp === actual ? " and gets back up" : ""}.`,
+          );
+        }
+        return actual;
+      }
+      function damageHero(i, n, source) {
+        let blocked = Math.min(state.block, n);
+        state.block -= blocked;
+        let actual = Math.min(state.party[i].hp, n - blocked);
+        state.party[i].hp -= actual;
+        effect("#hero-" + i, actual ? "-" + actual : "Blocked");
+        log(
+          `${source} → ${state.party[i].name}: ${actual} damage${blocked ? " (" + blocked + " blocked)" : ""}.`,
+        );
+      }
+      function checkDefeat() {
+        if (state.party.some((h) => h.hp > 0)) return false;
+        state.over = true;
+        state.enemy = null;
+        busy = false;
+        save();
+        openModal(
+          "The light goes out.",
+          `<p>The company falls on depth ${state.depth}. Your notebook keeps the story: ${state.steps} steps, ${state.gold} gold, and a few very brave names.</p><p>A fresh page is waiting.</p><div class="modal-actions"><button class="primary" data-restart>Begin a new expedition</button><button data-close>Read the final notes</button></div>`,
+          "defeat",
+        );
+        return true;
+      }
+      async function spin(i) {
+        let h = state.party[i];
+        if (busy || !state.enemy || !h || h.hp <= 0 || state.over) return;
+        busy = true;
+        let e = state.enemy;
+        render();
+        document
+          .querySelectorAll(`#hero-${i} .reel`)
+          .forEach((r) => r.classList.add("spinning"));
+        let rollTimer;
+        if (!skip)
+          rollTimer = setInterval(() => {
+            document
+              .querySelectorAll(`#hero-${i} .reel`)
+              .forEach(
+                (r, k) => (r.innerHTML = icon(ICONS[pick(h.reels[k]).type])),
+              );
+          }, 70);
+        await pause(550);
+        clearInterval(rollTimer);
+        let symbols = h.reels.map((r) => ({ ...pick(r) }));
+        h.last = symbols;
+        render();
+        let counts = {};
+        symbols.forEach((s) => {
+          let key = s.type + s.tier;
+          counts[key] = (counts[key] || 0) + 1;
+        });
+        let matches = Math.max(...Object.values(counts)),
+          multiplier = matches === 3 ? 2.5 : matches === 2 ? 1.5 : 1;
+        if (multiplier > 1) {
+          log(
+            `${h.name}: ${matches === 3 ? "triple" : "pair"} match! ×${multiplier} critical.`,
+          );
+          if (!skip) {
+            openModal(
+              "The reels agree.",
+              `<div class="critical"><div class="eyebrow">${matches === 3 ? "Three of a kind" : "A matching pair"}</div><strong>×${multiplier}</strong><div class="hand">A very lucky margin.</div><p>Attack, healing, block, and stun are multiplied.</p><button class="primary" id="skip-critical">Continue ↗</button></div>`,
+              "critical",
+            );
+            await new Promise((resolve) => {
+              let done = false;
+              const finish = () => {
+                if (done) return;
+                done = true;
+                clearTimeout(timer);
+                criticalResolve = null;
+                closeModal();
+                resolve();
+              };
+              const timer = setTimeout(finish, 1400);
+              $("#skip-critical").onclick = finish;
+              criticalResolve = finish;
+            });
+          }
+        }
+        criticalResolve = null;
+        let sums = { attack: 0, heal: 0, block: 0, stun: 0 };
+        symbols.forEach((s) => (sums[s.type] += POWER[s.type] * s.tier));
+        for (let t of TYPES) sums[t] = Math.ceil(sums[t] * multiplier);
+        if (sums.attack) {
+          e.hp = Math.max(0, e.hp - sums.attack);
+          effect("#enemy", "-" + sums.attack);
+          log(`${h.name} strikes ${e.name} for ${sums.attack}.`);
+        }
+        if (sums.heal) healHero(state.target, sums.heal);
+        if (sums.block) {
+          state.block += sums.block;
+          log(`${h.name} stores ${sums.block} team block.`);
+        }
+        if (sums.stun) {
+          e.stun += sums.stun;
+          log(
+            `${e.name} is stunned for ${sums.stun} enemy turn${sums.stun > 1 ? "s" : ""}.`,
+          );
+        }
+        addXP(h, 2);
+        await pause(450);
+        if (e.hp <= 0) {
+          await victory(e);
+          busy = false;
+          render();
+          save();
+          return;
+        }
+        e.countdown--;
+        if (e.countdown <= 0) {
+          if (e.stun > 0) {
+            e.stun--;
+            log(`${e.name} loses its attack to stun.`);
+          } else {
+            for (let k = 0; k < e.strikes; k++) {
+              let living = state.party
+                .map((h, j) => (h.hp > 0 ? j : -1))
+                .filter((j) => j >= 0);
+              if (!living.length) break;
+              let target = pick(living);
+              damageHero(target, e.damage, e.name);
+              await pause(370);
+            }
+          }
+          e.countdown = e.frequency;
+        }
+        checkDefeat();
+        busy = false;
+        render();
+        save();
+      }
+      let criticalResolve = null;
+      async function victory(e) {
+        let reward = 6 + state.depth * 4;
+        state.gold += reward;
+        state.party.forEach((h) => {
+          addXP(h, 8 + state.depth * 2);
+          h.points++;
+        });
+        state.enemy = null;
+        log(
+          `${e.name} is erased. +${reward} gold, EXP and a personal point for every hero.`,
+        );
+        if (e.boss) {
+          state.relic = true;
+          log("The Sunseed is yours. Take the stairs home, or keep exploring.");
+          openModal(
+            "A little light, at last.",
+            `<div class="critical">${icon("seed")}<h2 style="font-size:25px">The Sunseed is yours.</h2><p>What was lost can grow again. Reach the stairs to bring it home, or carry your light farther into the notebook.</p><button class="primary" data-close>Keep it safe</button></div>`,
+            "relic",
+          );
+        } else toast("Encounter won · reels, rest, then onward.");
+        $("#field-note").textContent =
+          "“Even the darkest corners have an edge you can turn.”";
+        await pause(200);
+      }
+      function stairs() {
+        if (busy || state.enemy || state.over) return;
+        let locked = state.depth === 3 && !state.relic;
+        openModal(
+          "A stairway in the paper",
+          `<p>You have reached the edge of depth ${state.depth}. Stairs are optional: explore what remains, turn the page, or bring the company home.</p>${locked ? "<p>The Sunseed keeper still waits on this floor. Seek the skull in the chamber immediately below these stairs before descending.</p>" : ""}<p><b>${state.gold} gold</b> · ${state.party.length} adventurer${state.party.length > 1 ? "s" : ""} · ${state.relic ? "Sunseed recovered" : "Sunseed still missing"}</p><div class="modal-actions"><button class="primary" id="descend" ${locked ? "disabled" : ""}>Descend to depth ${state.depth + 1}</button><button id="retire">${state.relic ? "Bring the Sunseed home" : "Return to camp"}</button><button data-close>Keep exploring</button></div>`,
+          "stairs",
+        );
+        $("#descend").onclick = () => {
+          state.depth++;
+          state.map = generateFloor(state.depth);
+          state.position = pos(1, 7);
+          state.party.forEach((h, i) => healHero(i, 5));
+          log(
+            `The company descends to depth ${state.depth}. Five HP restored to everyone.`,
+          );
+          closeModal();
+          render();
+          save();
+        };
+        $("#retire").onclick = () => {
+          state.over = true;
+          closeModal();
+          log(
+            state.relic
+              ? "The Sunseed is home. The expedition is a triumph."
+              : "The company returns safely. Some stories can wait.",
+          );
+          openModal(
+            state.relic ? "Something green, again." : "Home by torchlight.",
+            `<p>${state.relic ? "You bring the Sunseed back to the world above. The notebook has a happy ending." : "You return with your company and the treasures you could carry. The Sunseed awaits another expedition."}</p><p>Depth ${state.depth} · ${state.steps} steps · ${state.gold} gold</p><div class="modal-actions"><button class="primary" data-restart>A fresh page</button><button data-close>Keep the notebook</button></div>`,
+            "end",
+          );
+          render();
+          save();
+        };
+      }
+      function usePotion() {
+        if (busy || !state.potions || state.over) return;
+        let h = state.party[state.target];
+        if (h.hp === h.maxHp) {
+          toast(h.name + " is already at full health.");
+          return;
+        }
+        state.potions--;
+        let actual = healHero(state.target, 16);
+        render();
+        save();
+        effect("#hero-" + state.target, "+" + actual, true);
+      }
+      function openModal(title, body, kind) {
+        if ($("#overlay").hidden) modalPrevious = document.activeElement;
+        modalKind = kind;
+        $("#modal").innerHTML =
+          `<button class="quiet close" data-close aria-label="Close dialog">✕</button><div class="eyebrow">Scratchpad / field notes</div><h2 id="modal-title">${title}</h2>${body}`;
+        $("#overlay").hidden = false;
+        $("#modal").focus();
+      }
+      function closeModal() {
+        if (modalKind === "critical" && criticalResolve) {
+          let f = criticalResolve;
+          criticalResolve = null;
+          f();
+          return;
+        }
+        $("#overlay").hidden = true;
+        modalKind = "";
+        if (modalPrevious?.isConnected) modalPrevious.focus();
+      }
+      function editor(i) {
+        if (busy || state.over) return;
+        let h = state.party[i];
+        openModal(
+          h.name + "’s lucky machinery",
+          `<p>Spend <b>${h.points} personal point${h.points === 1 ? "" : "s"}</b> to change a symbol’s type or raise its tier. Each reel draws one of its six faces with equal odds. Tier I / II / III multiply the base effect by 1 / 2 / 3.</p><p style="font-size:12px">Attack 3 · Heal 3 · Block 2 · Stun 1 per tier. Matching <em>type and tier</em> gives ×1.5 for a pair or ×2.5 for a triple.</p>${h.reels.map((r, k) => `<div class="editor-row"><span class="eyebrow">Reel ${k + 1} · six equally likely faces</span><div class="editor-slots">${r.map((s, j) => `<div class="editor-slot">${icon(ICONS[s.type])}<small>${s.type} ${"I".repeat(s.tier)}</small><button data-cycle="${i},${k},${j}" ${h.points < 1 ? "disabled" : ""}>Change · 1pt</button><button data-upgrade="${i},${k},${j}" ${h.points < 1 || s.tier >= 3 ? "disabled" : ""}>${s.tier >= 3 ? "Max tier" : "Tier ↑ · 1pt"}</button></div>`).join("")}</div></div>`).join("")}<div class="modal-actions"><button class="primary" data-close>Back to the adventure</button></div>`,
+          "editor",
+        );
+      }
+      function editFace(data, upgrade) {
+        if (busy || state.over) return;
+        let [i, r, f] = data.split(",").map(Number),
+          h = state.party[i],
+          s = h.reels[r][f];
+        if (h.points < 1 || (upgrade && s.tier >= 3)) return;
+        h.points--;
+        if (upgrade) s.tier++;
+        else s.type = TYPES[(TYPES.indexOf(s.type) + 1) % TYPES.length];
+        renderParty();
+        save();
+        editor(i);
+      }
+      function help() {
+        openModal(
+          "A field guide for the brave",
+          `<p><b>Your quest.</b> Find the Sunseed keeper on depth 3, win its encounter, and carry the Sunseed home using the stairs. Or simply explore. Stairs never force you onward.</p><p><b>Scratch &amp; wander.</b> Click any walkable tile. The company follows the shortest route, erasing pencil as it goes. Finds and encounters interrupt travel. Arrow keys or WASD move one tile. Walls are crosshatched stone.</p><p><b>Spin to survive.</b> Each living hero can act repeatedly. Three reels resolve attack, heal, block, and stun together. Their dots mark tier I–III. Matching type AND tier gives a critical popup: two = ×1.5, three = ×2.5, rounded up.</p><p><b>Read your enemy.</b> The countdown ticks once per spin, regardless of hero. At zero, the enemy makes its listed strikes, each targeting a random living hero. Block absorbs damage and persists across fights. Stun cancels whole enemy turns.</p><p><b>Look after each other.</b> Choose a healing target before spinning or drinking a tonic. Healing can revive fallen heroes. Injury labels track remaining health. Wells heal everyone; beacons reveal nearby tiles and add block. Rare wanderers join until you have three heroes.</p><p><b>Make your own luck.</b> Spins and victories give EXP. Each level raises maximum HP by 6 and awards two personal points. Treasure and victories also grant points. Use ✎ to edit individual reel faces for one point each.</p><p><b>Your notebook.</b> Progress saves automatically in this browser when storage is available. “Save HTML” downloads a complete offline game file; it does not export your run. Skip animations takes effect immediately. Escape closes dialogs; Space skips an active critical popup.</p><div class="modal-actions"><button class="primary" data-close>Into the margins ↗</button></div>`,
+          "help",
+        );
+      }
+      $("#map").addEventListener("click", (e) => {
+        let b = e.target.closest("[data-tile]");
+        if (b) move(Number(b.dataset.tile));
+      });
+      document.addEventListener("click", (e) => {
+        let b = e.target.closest("button");
+        if (!b || b.disabled) return;
+        if (b.hasAttribute("data-spin")) spin(Number(b.dataset.spin));
+        if (b.hasAttribute("data-edit")) editor(Number(b.dataset.edit));
+        if (b.hasAttribute("data-target")) {
+          state.target = Number(b.dataset.target);
+          renderParty();
+          renderEncounter();
+          save();
+        }
+        if (b.hasAttribute("data-close")) closeModal();
+        if (b.hasAttribute("data-restart")) newRun();
+        if (b.hasAttribute("data-cycle")) editFace(b.dataset.cycle, false);
+        if (b.hasAttribute("data-upgrade")) editFace(b.dataset.upgrade, true);
+      });
+      $("#help").onclick = help;
+      $("#reveal-help").onclick = help;
+      $("#potion").onclick = usePotion;
+      $("#skip-animations").onchange = (e) => {
+        skip = e.target.checked;
+        state.skip = skip;
+        document.body.classList.toggle("no-motion", skip);
+        if (skip && criticalResolve) criticalResolve();
+        save();
+      };
+      $("#new-game").onclick = () => {
+        if (busy) {
+          toast("Finish the current action first.");
+          return;
+        }
+        openModal(
+          "Turn to a fresh page?",
+          `<p>This will replace the current expedition and its local save. Your existing HTML file will stay the same.</p><div class="modal-actions"><button class="primary" data-restart>Start a new expedition</button><button data-close>Keep this story</button></div>`,
+          "restart",
+        );
+      };
+      $("#download").onclick = () => {
+        let blob = new Blob([HTML_BACKUP], { type: "text/html;charset=utf-8" }),
+          url = URL.createObjectURL(blob),
+          a = document.createElement("a");
+        a.href = url;
+        a.download = "Scratchpad-Dungeon.html";
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        toast("Your complete, offline dungeon is downloading.");
+      };
+      document.addEventListener("keydown", (e) => {
+        if (!$("#overlay").hidden) {
+          if (e.key === "Escape") {
+            e.preventDefault();
+            closeModal();
+          }
+          if (e.code === "Space" && modalKind === "critical") {
+            e.preventDefault();
+            closeModal();
+          }
+          if (e.key === "Tab") {
+            let nodes = [
+              ...$("#modal").querySelectorAll("button:not(:disabled),input"),
+            ];
+            if (nodes.length) {
+              let first = nodes[0],
+                last = nodes.at(-1);
+              if (
+                e.shiftKey &&
+                (document.activeElement === first ||
+                  document.activeElement === $("#modal"))
+              ) {
+                e.preventDefault();
+                last.focus();
+              } else if (
+                !e.shiftKey &&
+                (document.activeElement === last ||
+                  document.activeElement === $("#modal"))
+              ) {
+                e.preventDefault();
+                first.focus();
+              }
+            }
+          }
+          return;
+        }
+        if (
+          ["INPUT", "BUTTON"].includes(document.activeElement.tagName) &&
+          !e.key.startsWith("Arrow")
+        )
+          return;
+        let dirs = {
+          ArrowUp: -W,
+          ArrowDown: W,
+          ArrowLeft: -1,
+          ArrowRight: 1,
+          w: -W,
+          s: W,
+          a: -1,
+          d: 1,
+        };
+        if (dirs[e.key] !== undefined) {
+          e.preventDefault();
+          let n = state.position + dirs[e.key];
+          if (neighbors(state.position).includes(n) && !state.map[n].wall)
+            move(n);
+        }
+      });
+      document
+        .querySelectorAll("[data-icon]")
+        .forEach((el) => (el.innerHTML = icon(el.dataset.icon)));
+      $("#legend").innerHTML = [
+        ["treasure", "Treasure"],
+        ["trap", "Trap"],
+        ["well", "Well"],
+        ["beacon", "Beacon"],
+        ["recruit", "Wanderer"],
+        ["stairs", "Stairs"],
+      ]
+        .map(([i, t]) => `<span>${icon(i)}${t}</span>`)
+        .join("");
+      if (!load()) newRun();
+      else {
+        render();
+        if (state.over)
+          toast("A finished expedition. Start a new run when you’re ready.");
+        else toast("Your notebook remembers. Welcome back.");
+      }
+    </script>
+  </body>
+</html>
