@@ -60,7 +60,7 @@ async function autoEvents(page) {
   await page.evaluate(() => {
     window.autoEventObserver = new MutationObserver(() => {
       let button = document.querySelector(
-        "#stage-confirm:not(:disabled),#recruit-accept:not(:disabled),#recruit-decline:not(:disabled),#well-use:not(:disabled),#ruin-examine:not(:disabled),#death-confirm:not(:disabled),#burial-confirm:not(:disabled),#revive-use:not(:disabled)",
+        "#stage-confirm:not(:disabled),#recruit-accept:not(:disabled),#recruit-decline:not(:disabled),#well-use:not(:disabled),#ruin-examine:not(:disabled),#death-confirm:not(:disabled),#burial-confirm:not(:disabled),#revive-use:not(:disabled),#item-leave:not(:disabled)",
       );
       if (button && !document.querySelector("#spotlight").hidden)
         button.click();
@@ -115,6 +115,9 @@ function blankFloor() {
     seen: i % W === 0 || i % W === W - 1 || i < W || i >= W * (H - 1),
     event: null,
     feature: null,
+    room: null,
+    fogged: false,
+    fogSince: Date.now(),
   }));
   state.position = pos(1, 7);
   state.map[state.position].seen = true;
@@ -361,6 +364,7 @@ test("beacon reveals only eight neighbours and does not activate their events", 
       c.seen = false;
       c.event = null;
       c.feature = null;
+      c.room = null;
     });
     state.position = pos(5, 4);
     state.map[state.position].seen = true;
@@ -538,7 +542,7 @@ test("EXP is unchanged by repeated spins and granted only for a successful battl
   await p.locator('[data-spin="0"]').click();
   await finish(p);
   assert.equal(await p.evaluate(() => state.battlesWon), 1);
-  assert.equal(await p.evaluate(() => state.party[0].xp), 10);
+  assert.equal(await p.evaluate(() => state.party[0].xp), 9);
   assert.equal(await p.evaluate(() => state.lastLoot.source), "battle");
 });
 
@@ -550,14 +554,13 @@ test("loot is mostly gold, rare items and rarer artefacts; coin particles scale 
       sum = r.reduce((n, s) => n + s.weight, 0);
     return {
       items:
-        r
-          .filter((s) => ["potion", "bomb", "ward"].includes(s.type))
-          .reduce((n, s) => n + s.weight, 0) / sum,
+        r.filter((s) => ITEM_DEFS[s.type]).reduce((n, s) => n + s.weight, 0) /
+        sum,
       artefact: r.find((s) => s.type === "artefact").weight / sum,
     };
   });
   assert.ok(chances.items < 0.025);
-  assert.equal(chances.artefact, 0.018);
+  assert.ok(Math.abs(chances.artefact - 0.018) < 1e-12);
   await startEval(
     p,
     "(async()=>{let old=Math.random;Math.random=()=>0;try{await treasureRoll()}finally{Math.random=old}})()",
@@ -913,7 +916,7 @@ test("victory levels grant HP and personal editing points; weighted editing pres
   await p.locator('[data-edit="0"]').click();
   let points = await p.evaluate(() => state.party[0].points);
   await p.locator('[data-upgrade="0,0,0"]').click();
-  assert.equal(await p.evaluate(() => state.party[0].points), points - 3);
+  assert.equal(await p.evaluate(() => state.party[0].points), points - 4);
   assert.equal(await p.evaluate(() => state.party[0].reels[0][0].tier), 2);
 });
 
@@ -986,9 +989,28 @@ test("save restores speed and artefacts and migrates the earlier Sunseed-era not
   await fast(p);
   await p.locator('[data-tile="79"]').click();
   await finish(p);
-  let snapshot = await p.evaluate(() => JSON.stringify(state));
+  const snapshot = await p.evaluate(() => ({
+    depth: state.depth,
+    position: state.position,
+    gold: state.gold,
+    speed: state.speed,
+    party: JSON.stringify(state.party),
+    bag: JSON.stringify(state.bag),
+    artefacts: JSON.stringify(state.artefacts),
+  }));
   await p.reload();
-  assert.equal(await p.evaluate(() => JSON.stringify(state)), snapshot);
+  assert.deepEqual(
+    await p.evaluate(() => ({
+      depth: state.depth,
+      position: state.position,
+      gold: state.gold,
+      speed: state.speed,
+      party: JSON.stringify(state.party),
+      bag: JSON.stringify(state.bag),
+      artefacts: JSON.stringify(state.artefacts),
+    })),
+    snapshot,
+  );
   await p.evaluate(() => {
     let old = {
       ...state,
@@ -1003,7 +1025,7 @@ test("save restores speed and artefacts and migrates the earlier Sunseed-era not
     localStorage.setItem("scratchpad-dungeon-v2", JSON.stringify(old));
   });
   await p.reload();
-  assert.equal(await p.evaluate(() => state.version), 7);
+  assert.equal(await p.evaluate(() => state.version), 8);
   assert.equal(await p.evaluate(() => state.speed), "skip");
   assert.equal(await p.evaluate(() => state.relic), undefined);
   assert.doesNotMatch(await p.locator("body").textContent(), /Sunseed/);
@@ -1651,7 +1673,7 @@ test("starting blanks are actual editable reel faces with an icon; inscription r
   assert.equal(await p.locator("#machine-hero-0 .blank-face").count(), 0);
   const after = await p.evaluate(() => state.party[0].reels);
   for (let r = 0; r < 3; r++) {
-    assert.equal(after[r].length, 6);
+    assert.equal(after[r].length, 7);
     assert.equal(
       after[r].some((s) => s.type === "blank"),
       false,
@@ -2046,7 +2068,7 @@ test("route repair uses a bridge when a connected river separates spawn from the
   );
 });
 
-test("a shop map animates discovery without prompting descent; first arrival prompts once", async (t) => {
+test("a shop map animates discovery without prompting descent; selecting the stair destination prompts again", async (t) => {
   const p = await game(t);
   await fast(p);
   await p.evaluate(() => {
@@ -2086,7 +2108,8 @@ test("a shop map animates discovery without prompting descent; first arrival pro
     await move(next);
     await move(original);
   });
-  assert.equal(await p.evaluate(() => modalKind), "");
+  assert.equal(await p.evaluate(() => modalKind), "stairs");
+  await p.getByRole("button", { name: "Keep exploring", exact: true }).click();
   assert.equal(await p.locator("#exit-found").isEnabled(), true);
 });
 
@@ -2128,6 +2151,8 @@ test("old visited rooms fog over and can generate a wandering fight on reentry",
       visited: true,
       seen: true,
       lastVisitedStep: 0,
+      fogged: true,
+      fogSince: Date.now() - FOG_DELAY - 100,
       event: null,
     });
     render();
@@ -2161,6 +2186,8 @@ test("an unactivated well in old fog resolves its own event and never rolls a wa
       visited: true,
       seen: true,
       lastVisitedStep: 0,
+      fogged: true,
+      fogSince: Date.now() - FOG_DELAY - 100,
       event: "well",
       feature: "well",
     });
@@ -2321,7 +2348,7 @@ test("killing one of two enemies gives no victory reward; defeating both awards 
   await p.locator('[data-spin="0"]').click();
   await finish(p);
   assert.equal(await p.evaluate(() => state.battlesWon), 1);
-  assert.equal(await p.evaluate(() => state.party[0].stats.xpEarned), 40);
+  assert.equal(await p.evaluate(() => state.party[0].stats.xpEarned), 34);
   assert.equal(await p.evaluate(() => state.party[0].stats.kills), 2);
   assert.equal(await p.evaluate(() => state.enemy), null);
 });
@@ -2474,7 +2501,7 @@ async function panelFits(page, selector, holder, flow, title) {
   );
 }
 
-test("long adventurer titles and all eighteen editor faces fit without clipping or scrolling on desktop and mobile", async (t) => {
+test("long adventurer titles and all twenty-one editor faces fit without clipping or scrolling on desktop and mobile", async (t) => {
   const p = await game(t);
   await fast(p);
   for (const [width, height] of [
@@ -2495,7 +2522,7 @@ test("long adventurer titles and all eighteen editor faces fit without clipping 
     await p.locator("#recruit-decline").click();
     await p.evaluate(() => window.testAction);
     await p.evaluate(() => editor(0));
-    assert.equal(await p.locator("[data-cycle]").count(), 18);
+    assert.equal(await p.locator("[data-cycle]").count(), 21);
     await panelFits(p, "#modal", ".modal-body", ".modal-flow", "#modal-title");
     await p.locator("#modal [data-close]").first().click();
   }
@@ -2658,7 +2685,7 @@ test("tier IV attacks can be bought, saved and used as area damage with clear pe
     editor(0);
   });
   await p.locator('[data-upgrade="0,0,0"]').click();
-  assert.equal(await p.evaluate(() => state.party[0].points), 10);
+  assert.equal(await p.evaluate(() => state.party[0].points), 4);
   assert.equal(await p.locator(".editor-slot .tier-4 svg").count(), 4);
   await p.locator("#modal [data-close]").first().click();
   await p.reload();
@@ -2961,17 +2988,18 @@ test("final death opens a scrollable complete memorial roster instead of a buria
   }
 });
 
-test("fog darkens the existing drawing, never covers barriers or nearby rooms, and refreshes neighbours", async (t) => {
+test("timed fog preserves drawings, excludes unseen and impassable tiles, and refreshes nearby un-fogged tiles", async (t) => {
   const p = await game(t);
   await fast(p);
   await p.evaluate(blankFloor);
   const r = await p.evaluate(() => {
-    state.steps = 30;
+    const now = Date.now();
     state.map.forEach((c) =>
       Object.assign(c, {
         seen: true,
-        visited: true,
-        lastVisitedStep: 0,
+        visited: false,
+        fogged: false,
+        fogSince: now - FOG_DELAY - 10,
         event: null,
         feature: null,
       }),
@@ -2979,36 +3007,36 @@ test("fog darkens the existing drawing, never covers barriers or nearby rooms, a
     state.position = pos(1, 7);
     Object.assign(state.map[pos(7, 2)], { wall: true, terrain: "river" });
     Object.assign(state.map[pos(8, 2)], { wall: true, terrain: "stone" });
-    const distant = pos(8, 3);
-    state.map[distant].terrain = "floor";
+    state.map[pos(9, 3)].seen = false;
+    refreshStaleMap(now);
     render();
-    refreshStaleMap();
     return {
-      distant,
-      near2: isStale(state.map[pos(3, 5)]),
+      distant: pos(8, 3),
+      near: isStale(state.map[pos(2, 6)]),
+      far: isStale(state.map[pos(8, 3)]),
+      unseen: isStale(state.map[pos(9, 3)]),
       river: isStale(state.map[pos(7, 2)]),
       wall: isStale(state.map[pos(8, 2)]),
-      nearClock: state.map[pos(2, 6)].lastVisitedStep,
-      farClock: state.map[distant].lastVisitedStep,
-      pending: state.map[distant].wanderPending,
+      clock: state.map[pos(2, 6)].fogSince,
+      now,
     };
   });
   assert.deepEqual(
     {
-      near2: r.near2,
+      near: r.near,
+      far: r.far,
+      unseen: r.unseen,
       river: r.river,
       wall: r.wall,
-      nearClock: r.nearClock,
-      farClock: r.farClock,
-      pending: r.pending,
+      clock: r.clock,
     },
     {
-      near2: false,
+      near: false,
+      far: true,
+      unseen: false,
       river: false,
       wall: false,
-      nearClock: 30,
-      farClock: 0,
-      pending: true,
+      clock: r.now,
     },
   );
   assert.equal(
@@ -3063,7 +3091,7 @@ test("older saved fights migrate to the gentler curve without losing wounds or e
       face: state.party[0].reels[0][0].tier,
     })),
     {
-      version: 7,
+      version: 8,
       hp: 18,
       max: 36,
       damage: 3,
@@ -3071,5 +3099,912 @@ test("older saved fights migrate to the gentler curve without losing wounds or e
       frequency: 2,
       face: 3,
     },
+  );
+});
+
+test("long travel crosses stairs and fog without opening the stairs menu; selecting stairs always opens it", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await p.evaluate(blankFloor);
+  await p.evaluate(() => {
+    for (let x = 1; x <= 8; x++)
+      Object.assign(state.map[pos(x, 7)], {
+        seen: true,
+        fogged: x > 1,
+        event: null,
+      });
+    Object.assign(state.map[80], { event: "stairs", feature: "stairs" });
+    Object.assign(state.map[81 - W], { seen: true, fogged: true });
+    Math.random = () => 0.999;
+    render();
+  });
+  await p.locator('[data-tile="85"]').click();
+  await finish(p);
+  assert.deepEqual(
+    await p.evaluate(() => ({
+      position: state.position,
+      modal: modalKind,
+      reached: state.exitReached,
+      walkingFog: [79, 80, 81, 82, 83, 84, 85].some((i) => state.map[i].fogged),
+      neighbourFog: state.map[81 - W].fogged,
+    })),
+    {
+      position: 85,
+      modal: "",
+      reached: true,
+      walkingFog: false,
+      neighbourFog: true,
+    },
+  );
+  await p.locator('[data-tile="80"]').click();
+  await p.waitForSelector("#descend");
+  await p.getByRole("button", { name: "Keep exploring", exact: true }).click();
+  await p.locator('[data-tile="85"]').click();
+  await finish(p);
+  await p.locator('[data-tile="78"]').click();
+  await finish(p);
+  assert.equal(await p.evaluate(() => state.position), 78);
+  assert.equal(await p.locator("#overlay").isVisible(), false);
+  await p.locator('[data-tile="80"]').click();
+  await p.waitForSelector("#descend");
+});
+
+test("fog uses elapsed time since proximity, resets before spawning, persists after spawning and survives reload", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await p.evaluate(blankFloor);
+  const r = await p.evaluate(() => {
+    const now = Date.now(),
+      index = pos(5, 4),
+      c = state.map[index];
+    Object.assign(c, {
+      seen: true,
+      visited: false,
+      fogSince: now - FOG_DELAY / 2,
+      fogged: false,
+    });
+    state.position = pos(1, 7);
+    refreshStaleMap(now);
+    const initial = c.fogged;
+    state.position = pos(4, 4);
+    refreshStaleMap(now + 1000);
+    const refreshed = c.fogSince;
+    state.position = pos(1, 7);
+    refreshStaleMap(refreshed + FOG_DELAY - 1);
+    const before = c.fogged;
+    refreshStaleMap(refreshed + FOG_DELAY);
+    const spawned = c.fogged;
+    state.position = pos(4, 4);
+    refreshStaleMap(refreshed + FOG_DELAY + 100);
+    const nearby = c.fogged;
+    render();
+    save();
+    return { initial, refreshed, before, spawned, nearby, index };
+  });
+  assert.equal(r.initial, false);
+  assert.equal(r.before, false);
+  assert.equal(r.spawned, true);
+  assert.equal(r.nearby, true);
+  await p.reload();
+  assert.equal(
+    await p.evaluate((index) => state.map[index].fogged, r.index),
+    true,
+  );
+  await p.evaluate(() => (Math.random = () => 0.999));
+  await p.locator(`[data-tile="${r.index}"]`).click();
+  await finish(p);
+  assert.equal(
+    await p.evaluate((index) => state.map[index].fogged, r.index),
+    false,
+  );
+});
+
+test("fog ambushes have smoke and a banner; winning clears adjacent fog without revealing or activating anything", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await p.evaluate(blankFloor);
+  await p.evaluate(() => {
+    [79, 80, 81, 69, 91].forEach((i) =>
+      Object.assign(state.map[i], { seen: true, fogged: true }),
+    );
+    state.map[81].event = "treasure";
+    state.map[69].seen = false;
+    state.map[69].event = "enemy";
+    Math.random = () => 0;
+    render();
+  });
+  await p.locator('[data-tile="79"]').click();
+  await p.waitForSelector("#stage-confirm");
+  assert.match(await p.locator("#stage-title").textContent(), /Ambush/);
+  assert.match(
+    await p.locator(".ambush-banner").textContent(),
+    /SURPRISE|AMBUSH/,
+  );
+  assert.equal(
+    await p.evaluate(() => particles.some((p) => p.kind === "smoke")),
+    true,
+  );
+  await p.locator("#stage-confirm").click();
+  await finish(p);
+  await p.evaluate(() => {
+    state.enemy.hp = 1;
+    render();
+  });
+  await faces(p, [
+    ["attack", 1],
+    ["attack", 2],
+    ["blank", 1],
+  ]);
+  await p.locator('[data-spin="0"]').click();
+  await p.waitForFunction(() => state.lastFogClear?.length > 0);
+  assert.equal(
+    await p.evaluate(() => particles.some((p) => p.kind === "smoke")),
+    true,
+  );
+  assert.deepEqual(
+    await p.evaluate(() => ({
+      fog: state.map[80].fogged,
+      seen: state.map[69].seen,
+      event: state.map[81].event,
+    })),
+    { fog: false, seen: false, event: "treasure" },
+  );
+  await p.waitForSelector("#stage-confirm");
+  await p.locator("#stage-confirm").click();
+  await finish(p);
+  await p.evaluate(() => {
+    Math.random = () => 0;
+    state.map[80].event = null;
+    render();
+  });
+  await p.locator('[data-tile="80"]').click();
+  await finish(p);
+  assert.equal(await p.evaluate(() => state.enemy), null);
+});
+
+test("cave rooms reveal connected contents together without triggering treasure or wells; distribution averages one room", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await p.evaluate(blankFloor);
+  await p.evaluate(() => {
+    state.map[67].seen = true;
+    [57, 58, 68, 69].forEach((i) => (state.map[i].room = 9));
+    state.map[57].event = "treasure";
+    state.map[58].event = "well";
+    render();
+  });
+  await p.locator('[data-tile="68"]').click();
+  await finish(p);
+  assert.deepEqual(
+    await p.evaluate(() => ({
+      seen: [57, 58, 68, 69].every((i) => state.map[i].seen),
+      gold: state.gold,
+      enemy: state.enemy,
+      treasure: state.map[57].event,
+      well: state.map[58].event,
+      outside: state.map[70].seen,
+    })),
+    {
+      seen: true,
+      gold: 0,
+      enemy: null,
+      treasure: "treasure",
+      well: "well",
+      outside: false,
+    },
+  );
+  const distribution = await p.evaluate(() => {
+    const counts = [0, 0, 0, 0];
+    for (let n = 0; n < 1000; n++) {
+      const map = generateFloor((n % 10) + 1),
+        ids = [...new Set(map.filter((c) => c.room).map((c) => c.room))];
+      if (ids.length > 3) return { invalid: true };
+      counts[ids.length]++;
+      for (const id of ids) {
+        const cells = map
+            .map((c, i) => (c.room === id ? i : -1))
+            .filter((i) => i >= 0),
+          seen = new Set([cells[0]]),
+          q = [cells[0]];
+        for (const i of q)
+          for (const j of neighbors(i))
+            if (cells.includes(j) && !seen.has(j)) {
+              seen.add(j);
+              q.push(j);
+            }
+        if (
+          seen.size !== cells.length ||
+          cells.some(
+            (i) =>
+              map[i].wall ||
+              ["enemy", "guardian", "stronghold", "trap"].includes(
+                map[i].event,
+              ),
+          )
+        )
+          return { invalid: true };
+      }
+    }
+    return {
+      counts,
+      mean: counts.reduce((sum, n, i) => sum + n * i, 0) / 1000,
+    };
+  });
+  assert.equal(distribution.invalid, undefined);
+  assert.ok(distribution.counts[0] > 200);
+  assert.ok(distribution.counts[3] > 10);
+  assert.ok(
+    distribution.mean > 0.85 && distribution.mean < 1.15,
+    JSON.stringify(distribution),
+  );
+});
+
+test("player token stays centred on its actual tile through desktop zoom, resizing, reload and mobile", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  for (const viewport of [
+    { width: 1920, height: 1080 },
+    { width: 1366, height: 768 },
+    { width: 2560, height: 1440 },
+    { width: 1440, height: 900 },
+    { width: 390, height: 844 },
+  ]) {
+    await p.setViewportSize(viewport);
+    await p.waitForTimeout(100);
+    const r = await p.evaluate(() => {
+      const tile = document
+          .querySelector('[data-tile="' + state.position + '"]')
+          .getBoundingClientRect(),
+        player = document.querySelector("#map-player").getBoundingClientRect();
+      return {
+        dx: Math.abs(
+          tile.left + tile.width / 2 - player.left - player.width / 2,
+        ),
+        dy: Math.abs(
+          tile.top + tile.height / 2 - player.top - player.height / 2,
+        ),
+      };
+    });
+    assert.ok(r.dx < 1 && r.dy < 1, JSON.stringify({ viewport, ...r }));
+  }
+  await p.reload();
+  await p.waitForTimeout(120);
+  assert.ok(
+    await p.evaluate(() => {
+      const a = document
+          .querySelector('[data-tile="' + state.position + '"]')
+          .getBoundingClientRect(),
+        b = document.querySelector("#map-player").getBoundingClientRect();
+      return Math.abs(a.top - b.top) < 1;
+    }),
+  );
+});
+
+test("each class starts with one class seal per reel; a seal completes a matching pair and executes its own ability", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  for (const job of ["fighter", "healer", "rogue", "mage"]) {
+    await p.evaluate((job) => {
+      state.party = [makeHero("Caster", job), makeHero("Ally", "fighter")];
+      state.party.forEach((h) => (h.hp = 5));
+      state.target = 1;
+      beginEncounter(false, { count: job === "mage" ? 2 : 1 });
+      state.enemies.forEach((e) =>
+        Object.assign(e, { hp: 1000, maxHp: 1000, countdown: 100 }),
+      );
+      const type =
+        job === "healer" ? "heal" : job === "mage" ? "magic" : "attack";
+      state.party[0].reels = [
+        [{ type: "class", tier: 1, job }],
+        [{ type, tier: 1 }],
+        [{ type, tier: 1 }],
+      ];
+      Math.random = () => 0;
+      render();
+    }, job);
+    await p.locator('[data-spin="0"]').click();
+    await finish(p);
+    assert.equal(await p.evaluate(() => state.lastPlayerRoll.multiplier), 2);
+    if (job === "fighter") {
+      assert.equal(await p.evaluate(() => state.party[0].rage), 2);
+      assert.equal(
+        await p.evaluate(() => state.lastPlayerRoll.actualDamage),
+        8,
+      );
+      assert.equal(await p.locator("#hero-0.powered-up").count(), 1);
+    }
+    if (job === "healer") {
+      assert.equal(await p.evaluate(() => state.block), 8);
+      assert.deepEqual(
+        await p.evaluate(() => state.party.map((h) => h.hp)),
+        [13, 21],
+      );
+    }
+    if (job === "rogue") {
+      assert.equal(await p.evaluate(() => state.lastFlurry.symbols.length), 3);
+      assert.equal(
+        await p.evaluate(() => state.lastPlayerRoll.actualDamage),
+        20,
+      );
+    }
+    if (job === "mage") {
+      assert.deepEqual(
+        await p.evaluate(() => state.enemies.map((e) => e.hp)),
+        [984, 984],
+      );
+    }
+  }
+  assert.equal(
+    await p.evaluate(() =>
+      ["fighter", "healer", "rogue", "mage"].every((job) =>
+        makeHero("Test", job).reels.every(
+          (r) => r.filter((s) => s.type === "class").length === 1,
+        ),
+      ),
+    ),
+    true,
+  );
+  assert.equal(
+    await p.evaluate(() =>
+      matchCount([
+        { type: "class", tier: 1 },
+        { type: "blank", tier: 1 },
+        { type: "blank", tier: 1 },
+      ]),
+    ),
+    1,
+  );
+  assert.equal(
+    await p.evaluate(() =>
+      matchCount([
+        { type: "class", tier: 1 },
+        { type: "attack", tier: 1 },
+        { type: "attack", tier: 2 },
+      ]),
+    ),
+    1,
+  );
+});
+
+test("poison ticks for one armour-piercing damage per action, expires, and can win a battle with proper credit", async (t) => {
+  const p = await game(t, { auto: true });
+  await fast(p);
+  await encounter(p);
+  await p.evaluate(() => {
+    applyPoison(state.enemy, 2, state.party[0]);
+    applyPoison(state.party[0], 2, state.enemy);
+    state.block = 50;
+    render();
+  });
+  await faces(p, [
+    ["blank", 1],
+    ["blank", 1],
+    ["blank", 1],
+  ]);
+  await p.locator('[data-spin="0"]').click();
+  await finish(p);
+  assert.deepEqual(
+    await p.evaluate(() => ({
+      hp: state.party[0].hp,
+      enemy: state.enemy.hp,
+      block: state.block,
+      turns: state.enemy.poison.turns,
+    })),
+    { hp: 43, enemy: 999, block: 50, turns: 2 },
+  );
+  assert.equal(await p.locator("#portrait-0 .poison-badge").count(), 1);
+  for (let n = 0; n < 2; n++) {
+    await p.locator('[data-spin="0"]').click();
+    await finish(p);
+  }
+  assert.equal(await p.evaluate(() => state.party[0].poison), null);
+  assert.equal(await p.evaluate(() => state.enemy.poison), null);
+  await p.evaluate(() => {
+    state.enemy.hp = 1;
+    applyPoison(state.enemy, 1, state.party[0]);
+    render();
+  });
+  await p.locator('[data-spin="0"]').click();
+  await finish(p);
+  assert.equal(await p.evaluate(() => state.battlesWon), 1);
+  assert.equal(await p.evaluate(() => state.party[0].stats.kills), 1);
+  assert.equal(await p.evaluate(() => state.party[0].xp), 9);
+});
+
+test("stimulants target allies, boost damage and defence with visible fire, persist in saves and clear after combat", async (t) => {
+  const p = await game(t, { auto: true });
+  await fast(p);
+  await encounter(p);
+  await p.evaluate(() => {
+    state.party.push(makeHero("Ally", "fighter"));
+    state.target = 1;
+    render();
+  });
+  await faces(p, [
+    ["magic", 1],
+    ["stimulant", 2],
+    ["blank", 1],
+  ]);
+  await p.locator('[data-spin="0"]').click();
+  await finish(p);
+  assert.equal(await p.locator("#hero-1.powered-up .buff-badge").count(), 1);
+  assert.equal(await p.evaluate(() => state.party[1].stimulant.turns), 5);
+  await faces(
+    p,
+    [
+      ["attack", 1],
+      ["attack", 2],
+      ["blank", 1],
+    ],
+    1,
+  );
+  await p.locator('[data-spin="1"]').click();
+  await finish(p);
+  assert.equal(await p.evaluate(() => state.lastPlayerRoll.actualDamage), 7);
+  assert.equal(await p.evaluate(() => damageHero(1, 5, "A jab")), 4);
+  await p.evaluate(() => save());
+  await p.reload();
+  assert.equal(await p.locator("#hero-1.powered-up").count(), 1);
+  await autoEvents(p);
+  await p.evaluate(() => {
+    state.enemy.hp = 1;
+    state.party[0].rage = 2;
+    applyPoison(state.party[1], 3, state.enemy);
+    render();
+  });
+  await p.locator('[data-spin="1"]').click();
+  await finish(p);
+  assert.equal(
+    await p.evaluate(() =>
+      state.party.every((h) => !h.poison && !h.stimulant && !h.rage),
+    ),
+    true,
+  );
+});
+
+test("critical result button remains enabled and skips the hold; event criticals still require the event confirmation", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await encounter(p);
+  await faces(p, [
+    ["attack", 1],
+    ["attack", 1],
+    ["attack", 1],
+  ]);
+  await p.locator('[data-spin="0"]').click();
+  await p.waitForFunction(() => !!criticalHoldResolver);
+  assert.equal(await p.locator("#stage-skip").isEnabled(), true);
+  assert.match(await p.locator("#stage-skip").textContent(), /Strike now/);
+  const start = Date.now();
+  await p.locator("#stage-skip").click();
+  await finish(p);
+  assert.ok(Date.now() - start < 850);
+  await p.evaluate(() => {
+    state.enemy = null;
+    state.enemies = [];
+    Math.random = () => 0;
+    render();
+  });
+  await startEval(p, "treasureRoll()");
+  await p.waitForFunction(() => !!criticalHoldResolver);
+  assert.match(await p.locator("#stage-skip").textContent(), /Take the result/);
+  await p.locator("#stage-skip").click();
+  await p.waitForSelector("#stage-confirm");
+  assert.equal(await p.locator("#spotlight").isVisible(), true);
+  await p.locator("#stage-confirm").click();
+  await p.evaluate(() => window.testAction);
+});
+
+test("ink bombs roll damage and poison, show an inline critical when matched and leave enemy clocks unchanged", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await encounter(p);
+  await p.evaluate(() => {
+    state.bombs = 2;
+    let draws = 0;
+    Math.random = () => [0, 0.6, 0.999][draws++ % 3];
+    render();
+  });
+  await startEval(p, "useBomb()");
+  await p.waitForSelector("#stage-confirm");
+  assert.equal(await p.evaluate(() => state.enemy.hp), 1000);
+  assert.deepEqual(
+    await p.evaluate(() => state.lastItemRoll.symbols.map((s) => s.type)),
+    ["attack", "poison", "blank"],
+  );
+  await p.locator("#stage-confirm").click();
+  await p.evaluate(() => window.testAction);
+  assert.equal(await p.evaluate(() => state.enemy.hp), 998);
+  assert.equal(await p.evaluate(() => state.enemy.poison.turns), 2);
+  assert.equal(await p.evaluate(() => state.enemy.countdown), 20);
+  await p.evaluate(() => (Math.random = () => 0));
+  await startEval(p, "useBomb()");
+  await p.waitForSelector("#event-critical #critical-math");
+  assert.equal(await p.locator("#stage-title").textContent(), "Ink bomb!");
+  await p.waitForSelector("#stage-confirm");
+  await p.locator("#stage-confirm").click();
+  await p.evaluate(() => window.testAction);
+  assert.equal(await p.evaluate(() => state.bombs), 0);
+});
+
+test("bag stacks matching items but limits types to six; overflow can replace a whole stack and survives reload", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await p.evaluate(() => {
+    state.bag = {
+      potion: 2,
+      bomb: 3,
+      ward: 4,
+      antidote: 5,
+      bandage: 2,
+      salve: 1,
+    };
+    state.pendingItems = [{ type: "potion", count: 3 }];
+    render();
+  });
+  await p.evaluate(() => processPendingItems());
+  assert.equal(await p.evaluate(() => state.potions), 5);
+  await p.evaluate(() => {
+    state.pendingItems = [{ type: "ration", count: 2 }];
+    save();
+  });
+  await p.reload();
+  await p.waitForSelector("#item-leave");
+  assert.equal(await p.locator(".bag-card").count(), 6);
+  await p.locator('[data-stage-choice="swap:antidote"]').click();
+  await finish(p);
+  assert.deepEqual(
+    await p.evaluate(() => ({
+      types: Object.keys(state.bag).length,
+      antidote: state.bag.antidote || 0,
+      ration: state.bag.ration,
+      pending: state.pendingItems.length,
+    })),
+    { types: 6, antidote: 0, ration: 2, pending: 0 },
+  );
+  await p.reload();
+  assert.equal(await p.evaluate(() => state.bag.ration), 2);
+  assert.equal(await p.evaluate(() => Object.keys(ITEM_DEFS).length), 13);
+});
+
+test("full bag lets the player use a new item immediately, use an existing last item to free a pocket, or decline the find", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await p.evaluate(() => {
+    state.bag = {
+      potion: 1,
+      bomb: 1,
+      ward: 1,
+      antidote: 1,
+      bandage: 1,
+      salve: 1,
+    };
+    state.party[0].hp = 1;
+    render();
+    state.pendingItems = [{ type: "ration", count: 1 }];
+  });
+  await startEval(p, "processPendingItems()");
+  await p.waitForSelector("#item-use-found");
+  await p.locator("#item-use-found").click();
+  await p.evaluate(() => window.testAction);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 15);
+  assert.equal(await p.evaluate(() => state.bag.ration || 0), 0);
+  assert.equal(await p.evaluate(() => Object.keys(state.bag).length), 6);
+  await p.evaluate(() => (state.pendingItems = [{ type: "ration", count: 1 }]));
+  await startEval(p, "processPendingItems()");
+  await p.waitForSelector('[data-stage-choice="use:potion"]');
+  await p.locator('[data-stage-choice="use:potion"]').click();
+  await p.evaluate(() => window.testAction);
+  assert.equal(await p.evaluate(() => state.bag.potion || 0), 0);
+  assert.equal(await p.evaluate(() => state.bag.ration), 1);
+  await p.evaluate(() => (state.pendingItems = [{ type: "chalk", count: 2 }]));
+  await startEval(p, "processPendingItems()");
+  await p.waitForSelector("#item-leave");
+  await p.locator("#item-leave").click();
+  await p.evaluate(() => window.testAction);
+  assert.equal(await p.evaluate(() => state.bag.chalk || 0), 0);
+});
+
+test("ten new consumables have usable effects and respect targets and combat restrictions", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await encounter(p);
+  const result = await p.evaluate(async () => {
+    const h = state.party[0];
+    state.party.push(makeHero("Mira", "healer"));
+    render();
+    const give = async (type) => {
+      state.bag[type] = 1;
+      renderInventory();
+      return useItem(type);
+    };
+    h.hp = 10;
+    await give("bandage");
+    const bandage = h.hp;
+    h.hp = state.party[1].hp = 1;
+    await give("salve");
+    const salve = state.party.map((h) => h.hp);
+    applyPoison(h, 3, state.enemy);
+    await give("antidote");
+    const cured = !h.poison;
+    await give("ember");
+    const buff = h.stimulant.power;
+    await give("oil");
+    const rage = h.rage;
+    await give("frost");
+    const stunned = state.enemy.stun;
+    await give("venom");
+    const poison = state.enemy.poison.turns;
+    const before = state.enemy.hp;
+    await give("firebomb");
+    const fire = before - state.enemy.hp;
+    h.hp = 1;
+    await give("ration");
+    const ration = h.hp;
+    state.bag.chalk = 1;
+    const prevented = !(await useItem("chalk")) && state.bag.chalk === 1;
+    state.enemy = null;
+    state.enemies = [];
+    clearBattleStatuses();
+    await useItem("chalk");
+    return {
+      bandage,
+      salve,
+      cured,
+      buff,
+      rage,
+      stunned,
+      poison,
+      fire,
+      ration,
+      prevented,
+      chalk: state.bag.chalk || 0,
+      revealed: neighbors(state.position, true).every((i) => state.map[i].seen),
+    };
+  });
+  assert.deepEqual(result, {
+    bandage: 18,
+    salve: [7, 7],
+    cured: true,
+    buff: 2,
+    rage: 2,
+    stunned: 1,
+    poison: 5,
+    fire: 8,
+    ration: 15,
+    prevented: true,
+    chalk: 0,
+    revealed: true,
+  });
+});
+
+test("satchel and full-bag choices fit six types on desktop and mobile without internal scrolling", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await p.evaluate(() => {
+    state.bag = {
+      potion: 12,
+      bomb: 2,
+      ward: 3,
+      antidote: 1,
+      bandage: 1,
+      firebomb: 1,
+    };
+    state.party.push(makeHero("Mira", "healer"), makeHero("Ivo", "mage"));
+    beginEncounter(false, { count: 2 });
+    render();
+  });
+  for (const viewport of [
+    { width: 1920, height: 1080 },
+    { width: 1366, height: 768 },
+    { width: 390, height: 844 },
+  ]) {
+    await p.setViewportSize(viewport);
+    await p.waitForTimeout(150);
+    assert.equal(await p.locator(".inventory-items button").count(), 6);
+    const fits = await p.evaluate(() => {
+      const panel = document
+        .querySelector(".inventory")
+        .getBoundingClientRect();
+      return [...document.querySelectorAll(".inventory-items button")].every(
+        (b) => {
+          const r = b.getBoundingClientRect();
+          return (
+            r.bottom <= panel.bottom + 2 &&
+            r.left >= panel.left &&
+            r.right <= panel.right
+          );
+        },
+      );
+    });
+    assert.equal(fits, true, JSON.stringify(viewport));
+    await p.evaluate(() => {
+      state.pendingItems = [{ type: "ration", count: 1 }];
+    });
+    await startEval(p, "processPendingItems()");
+    await p.waitForSelector("#item-leave");
+    await panelFits(
+      p,
+      "#stage-card",
+      ".stage-content",
+      ".scene-layout",
+      "#stage-title",
+    );
+    await p.screenshot({
+      path: path.join(root, `test-results/bag-overflow-${viewport.width}.png`),
+    });
+    await p.locator("#item-leave").click();
+    await p.evaluate(() => window.testAction);
+  }
+});
+
+test("older saves gain one class seal per reel and migrate consumables into the six-type bag", async (t) => {
+  const p = await game(t);
+  await p.evaluate(() => {
+    const old = JSON.parse(JSON.stringify(state));
+    old.version = 7;
+    delete old.bag;
+    delete old.pendingItems;
+    old.potions = 2;
+    old.bombs = 3;
+    old.wards = 4;
+    old.party[0].reels.forEach((r) => {
+      const i = r.findIndex((s) => s.type === "class");
+      if (i >= 0) r.splice(i, 1);
+    });
+    localStorage.setItem("scratchpad-dungeon-v7", JSON.stringify(old));
+    localStorage.removeItem(SAVE_KEY);
+  });
+  await p.reload();
+  assert.deepEqual(await p.evaluate(() => state.bag), {
+    potion: 2,
+    bomb: 3,
+    ward: 4,
+  });
+  assert.equal(
+    await p.evaluate(() =>
+      state.party[0].reels.every(
+        (r) => r.filter((s) => s.type === "class").length === 1,
+      ),
+    ),
+    true,
+  );
+  await p.evaluate(() => save());
+  await p.reload();
+  assert.equal(await p.evaluate(() => state.party[0].reels[0].length), 7);
+});
+
+test("new item loot stays in its original event until claimed, then offers a full-bag swap with the correct quantity", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await p.evaluate(() => {
+    state.bag = { potion: 1, bomb: 1, ward: 1, antidote: 1, salve: 1, oil: 1 };
+    const faces = lootFaces(),
+      index = faces.findIndex((f) => f.type === "bandage"),
+      sum = faces.reduce((n, f) => n + f.weight, 0),
+      draw =
+        (faces.slice(0, index).reduce((n, f) => n + f.weight, 0) +
+          faces[index].weight / 2) /
+        sum;
+    Math.random = () => draw;
+    render();
+  });
+  await startEval(p, "treasureRoll()");
+  await p.waitForSelector("#stage-confirm");
+  assert.equal(await p.locator("#stage-title").textContent(), "Treasure!");
+  assert.equal(await p.evaluate(() => state.bag.bandage || 0), 0);
+  await p.locator("#stage-confirm").click();
+  await p.waitForSelector("#item-leave");
+  const quantity = await p.evaluate(() => state.pendingItems[0].count);
+  assert.equal(quantity, 12);
+  await p.locator('[data-stage-choice="swap:antidote"]').click();
+  await p.evaluate(() => window.testAction);
+  assert.equal(await p.evaluate(() => state.bag.bandage), 12);
+  assert.equal(await p.evaluate(() => Object.keys(state.bag).length), 6);
+});
+
+test("shop purchases can resolve a full bag by using the new tonic, then return to the same shop", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await p.evaluate(() => {
+    state.bag = { bomb: 1, ward: 1, antidote: 1, bandage: 1, salve: 1, oil: 1 };
+    state.gold = 100;
+    state.party[0].hp = 1;
+    render();
+  });
+  await startEval(p, "shopEncounter({shop:{potion:1}})");
+  await p.locator('[data-buy="potion"]').click();
+  await p.waitForSelector("#item-use-found");
+  await p.locator("#item-use-found").click();
+  await p.waitForSelector('#modal [data-buy="potion"]:disabled');
+  assert.equal(await p.evaluate(() => state.party[0].hp), 17);
+  assert.equal(await p.evaluate(() => state.gold), 84);
+  assert.equal(await p.evaluate(() => state.potions), 0);
+  assert.equal(await p.evaluate(() => Object.keys(state.bag).length), 6);
+  assert.equal(await p.evaluate(() => modalKind), "shop");
+  await p.locator("#modal [data-close]").last().click();
+  await p.evaluate(() => window.testAction);
+});
+
+test("critical impacts use a distinct beam colour and a burst of successive hits even at Skip speed", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await encounter(p);
+  await faces(p, [
+    ["attack", 1],
+    ["attack", 1],
+    ["attack", 1],
+  ]);
+  await p.locator('[data-spin="0"]').click();
+  await p.waitForFunction(() => !!criticalHoldResolver);
+  await p.locator("#stage-skip").click();
+  await p.waitForSelector(".critical-impact");
+  await p.waitForTimeout(100);
+  assert.ok((await p.locator(".critical-impact").count()) >= 2);
+  const color = await p
+    .locator(".fx-beam.critical-hit")
+    .evaluate((el) => getComputedStyle(el).backgroundColor);
+  assert.equal(color, "rgb(188, 88, 202)");
+  assert.ok(
+    (await p.evaluate(
+      () =>
+        particles.filter((p) => p.kind === "damage" || p.kind === "paper")
+          .length,
+    )) > 45,
+  );
+  await finish(p);
+});
+
+test("mixed blade and magic criticals show correct rounded components and tier IV mage upgrades persist", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await p.evaluate(() => {
+    state.party = [makeHero("Ivo", "mage")];
+    state.party[0].points = 20;
+    state.party[0].reels[0][0].tier = 3;
+    render();
+    editor(0);
+  });
+  await p.locator('[data-upgrade="0,0,0"]').click();
+  assert.equal(await p.evaluate(() => state.party[0].points), 4);
+  await p.locator("#modal [data-close]").first().click();
+  await p.reload();
+  assert.equal(await p.evaluate(() => state.party[0].reels[0][0].tier), 4);
+  assert.equal(
+    await p.evaluate(() => state.party[0].reels[0][0].type),
+    "magic",
+  );
+  await encounter(p);
+  await p.evaluate(() => {
+    const h = state.party[0];
+    h.level = 2;
+    h.rage = 1;
+    h.reels = [
+      [{ type: "class", tier: 1, job: "mage" }],
+      [{ type: "attack", tier: 1 }],
+      [{ type: "attack", tier: 1 }],
+    ];
+    Math.random = () => 0.3;
+    render();
+  });
+  await p.locator('[data-spin="0"]').click();
+  await p.waitForFunction(() => !!criticalHoldResolver);
+  assert.deepEqual(
+    await p
+      .locator("#critical-math [data-before]")
+      .evaluateAll((nodes) =>
+        nodes.map((n) => [+n.dataset.before, +n.dataset.after]),
+      ),
+    [
+      [5, 13],
+      [5, 13],
+    ],
+  );
+  await p.locator("#stage-skip").click();
+  await finish(p);
+  assert.equal(await p.evaluate(() => state.lastPlayerRoll.actualDamage), 26);
+  assert.match(
+    await p.locator("#result-ribbon").textContent(),
+    /13 blade \+ 13 magic/,
   );
 });
