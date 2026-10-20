@@ -158,9 +158,44 @@ const Production = (() => {
     }
     return a;
   }
+  const imageURLs = new Map();
+  let atlasSerial = 0;
+  function imageURL(a) {
+    const key = a.sha256 || a.path;
+    if (imageURLs.has(key)) return imageURLs.get(key);
+    const bytes = Uint8Array.from(atob(a.url.split(",")[1]), (c) =>
+      c.charCodeAt(0),
+    );
+    const url = URL.createObjectURL(new Blob([bytes], { type: a.mime }));
+    imageURLs.set(key, url);
+    return url;
+  }
+  function atlasArt(a, context) {
+    const entity = context?.entity,
+      ratio = entity ? entity.hp / entity.maxHp : 1;
+    const health =
+      ratio < 0.35 ? "wounded" : ratio < 0.7 ? "bruised" : "steady";
+    const frame = a.states?.[health] || a.atlas,
+      sheet = asset(frame.asset);
+    if (!sheet) return "";
+    const corpse = a.id.startsWith("corpse."),
+      hero = /^portrait\.(fighter|healer|rogue|mage)$/.test(a.id),
+      monster = a.id.startsWith("portrait.") && !hero;
+    const clip = "pencil-crop-" + atlasSerial++;
+    const classes =
+      "manifest-image pencil-art" +
+      (corpse ? " corpse-art" : "") +
+      (monster ? " horror-art" : "");
+    const marks =
+      entity && ratio < 0.7 && !corpse
+        ? `<g class="injury-marks" transform="translate(${frame.x} ${frame.y}) scale(${frame.width / 120} ${frame.height / 150})" fill="none" stroke="#55463d" stroke-width="${health === "wounded" ? 1.8 : 1}" opacity=".65"><path d="m33 87 8 6m-9-2 7 6m39 18 5-7m-4 11 6-7"/>${health === "wounded" ? '<path d="m42 52 11 6m-11-2 9 6M69 126l10-8m-6 11 9-7"/>' : ""}</g>`
+        : "";
+    return `<svg class="${classes}" data-asset="${a.id}" data-art-state="${health}" ${corpse ? `data-corpse="${a.id.slice(7)}"` : ""} ${monster ? `data-horror="${a.id.slice(9)}"` : ""} viewBox="${frame.x} ${frame.y} ${frame.width} ${frame.height}" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><defs><clipPath id="${clip}"><rect x="${frame.x}" y="${frame.y}" width="${frame.width}" height="${frame.height}"/></clipPath></defs><g clip-path="url(#${clip})"><image href="${imageURL(sheet)}" x="0" y="0" width="${sheet.dimensions[0]}" height="${sheet.dimensions[1]}"/>${marks}</g></svg>`;
+  }
   function render(id, context, fallback) {
     const a = asset(id);
     if (!a) return fallback?.() || "";
+    if (a.renderMode === "atlas") return atlasArt(a, context);
     if (
       a.replacementStatus === "placeholder" &&
       ["icon", "procedural"].includes(a.renderMode)

@@ -2,6 +2,8 @@
 
 A hand-drawn notebook dungeon crawler in **one self-contained `index.html`**. Its handwriting font, illustrations, reels and effects are embedded. The game needs no network connection or runtime dependencies.
 
+The graphite illustration set covers every hero, enemy, corpse, map marker, item and reel symbol, with separate injured portraits, cross-hatching and rubbed pencil shading. Paper, scratch-covered tiles and reel handles follow the same sketchbook style. [Artwork provenance and replacement notes](assets/PENCIL-ART.md).
+
 ## Play
 
 Download `index.html` and open it in a modern browser, or serve this folder:
