@@ -3356,6 +3356,512 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           height: 57px;
         }
       }
+      /* Fit the open notebook on desktop; compact screens retain the stacked pages. */
+      @media (min-width: 1260px) and (min-height: 560px) {
+        .desk.fit-notebook {
+          width: 1800px;
+          max-width: none;
+          padding: 12px 20px 8px;
+          zoom: var(--desk-scale, 0.85);
+        }
+        .fit-notebook .desk-top {
+          height: 38px;
+          margin-bottom: 8px;
+        }
+        .fit-notebook .page {
+          padding: 20px 25px 15px;
+        }
+        .fit-notebook h1 {
+          font-size: 40px;
+        }
+        .fit-notebook .floor-heading {
+          margin-top: 14px;
+          font-size: 25px;
+        }
+        .fit-notebook .floor-subtitle {
+          margin-bottom: 10px;
+        }
+        .fit-notebook .legend {
+          height: 42px;
+          margin-bottom: 7px;
+          font-size: 15px;
+        }
+        .fit-notebook .map-wrap {
+          max-width: 540px;
+          margin: 0 auto;
+        }
+        .fit-notebook .map-caption {
+          height: 36px;
+          min-height: 36px;
+        }
+        .fit-notebook #map-status {
+          height: 48px;
+          font-size: 17px;
+          padding-top: 5px;
+        }
+        .fit-notebook .field-note {
+          height: 42px;
+          margin: 6px 0;
+          padding: 4px 8px;
+        }
+        .fit-notebook .margin-doodle {
+          display: none;
+        }
+        .fit-notebook .expedition-boxes {
+          min-height: 190px;
+          margin-top: 12px;
+        }
+        .fit-notebook .expedition-boxes > div {
+          padding: 12px;
+        }
+        .fit-notebook .expedition-boxes h3 {
+          font-size: 21px;
+        }
+        .fit-notebook .artefact-slot {
+          height: 118px;
+          padding: 8px;
+        }
+        .fit-notebook .combat-heading {
+          height: 65px;
+          min-height: 65px;
+          margin-bottom: 8px;
+        }
+        .fit-notebook .battle-stage,
+        .fit-notebook .enemy-side {
+          height: 580px;
+          min-height: 580px;
+        }
+        .fit-notebook .hero,
+        .fit-notebook .empty-slot {
+          height: 164px;
+          min-height: 164px;
+          max-height: 164px;
+          margin-bottom: 9px;
+        }
+        .fit-notebook .enemy-art {
+          height: 175px;
+        }
+        .fit-notebook .enemy-info h4 {
+          height: 40px;
+        }
+        .fit-notebook .enemy-stats {
+          height: 52px;
+        }
+        .fit-notebook .hero {
+          grid-template-columns: 85px 1fr;
+        }
+        .fit-notebook .portrait {
+          height: 94px;
+        }
+        .fit-notebook .portrait > svg {
+          height: 92px;
+          width: 78px;
+        }
+        .fit-notebook .hero-dossier {
+          width: 85px;
+        }
+        .fit-notebook .hero-name {
+          height: 38px;
+          font-size: 19px;
+        }
+        .fit-notebook .hero-name small {
+          font-size: 13px;
+        }
+        .fit-notebook .machine-shell {
+          padding-right: calc(43px / var(--desk-scale, 1));
+        }
+        .fit-notebook .lever {
+          width: calc(46px / var(--desk-scale, 1));
+        }
+        .fit-notebook .hero .machine-face {
+          height: 73px;
+        }
+        .fit-notebook .hero .lever {
+          height: 78px;
+        }
+        .fit-notebook .hero .edit-line {
+          font-size: 13px;
+        }
+        .fit-notebook .battle-target {
+          height: 32px;
+          min-height: 32px;
+          margin-top: 0;
+        }
+        .fit-notebook .result-ribbon {
+          height: 58px;
+          min-height: 58px;
+          max-height: 58px;
+          margin: 7px 0;
+        }
+        .fit-notebook .journal {
+          height: 115px;
+          padding: 8px 13px;
+        }
+        .fit-notebook .journal ol {
+          height: 68px;
+          max-height: 68px;
+        }
+        .fit-notebook .inventory {
+          height: 126px;
+          margin-top: 8px;
+          padding: 8px 12px;
+        }
+        .fit-notebook .inventory-items button {
+          height: 78px;
+          padding: 4px;
+        }
+        .fit-notebook .inventory-items button svg {
+          height: 25px;
+          width: 27px;
+        }
+        .fit-notebook .inventory-items button > span {
+          min-height: 26px;
+        }
+        .fit-notebook .inventory-items button small {
+          height: 19px;
+        }
+        .fit-notebook .save-line {
+          height: 25px;
+          padding-top: 7px;
+        }
+        .fit-notebook .footer {
+          margin-top: 10px;
+        }
+      }
+      .exit-button {
+        height: 38px;
+        border: 2px double #8b602d;
+        background: #d0b45d77;
+        color: #594017;
+        font-weight: bold;
+      }
+      .exit-button[hidden] {
+        display: flex !important;
+        visibility: hidden;
+        pointer-events: none;
+      }
+      .tile.wall {
+        background: repeating-linear-gradient(
+          135deg,
+          #70695755 0 2px,
+          #5a554154 2px 5px
+        );
+        box-shadow:
+          inset 0 0 0 2px #5b5347b0,
+          inset 0 0 10px #3c342955;
+      }
+      .tile.wall > svg {
+        opacity: 0.96;
+        color: #514b40;
+        width: 88%;
+        height: 88%;
+        stroke-width: 1.8px;
+      }
+      .terrain-stop {
+        position: absolute;
+        right: 1px;
+        bottom: -2px;
+        width: 13px;
+        height: 15px;
+        border: 1px solid #655740;
+        border-radius: 50%;
+        background: #c7b99b;
+        color: #635341;
+        font: bold 13px/12px Georgia;
+      }
+      .tile.water-block {
+        background: repeating-linear-gradient(
+          0deg,
+          #668e9566 0 5px,
+          #91adb166 5px 9px
+        );
+        box-shadow: inset 0 0 0 2px #527981b0;
+      }
+      .tile.water-block > svg {
+        color: #3d6873;
+      }
+      .tile.water-block .terrain-stop {
+        color: #3d6570;
+        border-color: #527781;
+        background: #bdc8bd;
+      }
+      .tile.puddle {
+        background: #789a9d66;
+      }
+      .tile.active-stairs {
+        background: #e0bd5688;
+        box-shadow: inset 0 0 0 3px #927135;
+      }
+      .tile.active-stairs > svg {
+        color: #594017;
+        width: 84%;
+        height: 84%;
+        stroke-width: 1.8px;
+        filter: drop-shadow(0 0 3px #f8df8c);
+      }
+      .tile.active-stairs .tile-status {
+        color: #5e4118;
+        font-size: 20px;
+        top: -2px;
+        right: 1px;
+      }
+      .tile.travel-goal {
+        box-shadow: inset 0 0 0 3px #d6bb67;
+      }
+      .tile.travel-goal:after {
+        outline: 2px solid #ddc681;
+        outline-offset: -5px;
+      }
+      .tile.has-hint {
+        box-shadow: inset 0 0 0 2px #c5b575;
+      }
+      .tile-whisper {
+        position: absolute;
+        z-index: 5;
+        inset: 12%;
+        display: grid;
+        place-items: center;
+        background: #e1d4a6e8;
+        border: 1px dashed #9f8751;
+        border-radius: 50%;
+        pointer-events: none;
+      }
+      .tile-whisper > svg {
+        width: 66%;
+        height: 66%;
+        color: #6d572f;
+        opacity: 1;
+      }
+      .discovery-whisper {
+        position: fixed;
+        z-index: 47;
+        max-width: 175px;
+        pointer-events: none;
+        padding: 6px 9px;
+        background: #e8ddbd;
+        border: 1px dashed #8d774c;
+        box-shadow: 2px 3px #30291b44;
+        border-radius: 5px 7px 4px 9px;
+        font: 17px/1.15 var(--hand);
+        text-align: center;
+        animation: whispered-hint 4.2s both;
+      }
+      @keyframes whispered-hint {
+        0% {
+          opacity: 0;
+          transform: translate(-50%, -80%) scale(0.85);
+        }
+        12%,
+        80% {
+          opacity: 1;
+          transform: translate(-50%, -105%) scale(1);
+        }
+        100% {
+          opacity: 0;
+          transform: translate(-50%, -115%);
+        }
+      }
+      .blank-face {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 1px;
+        opacity: 0.9;
+        color: #82765d;
+      }
+      .blank-face > svg {
+        width: 30px;
+        height: 30px;
+      }
+      .blank-face small {
+        font: 10px/1 var(--hand);
+        letter-spacing: 1px;
+      }
+      .editor-slot .blank-face {
+        height: 48px;
+      }
+      .corpse-art {
+        transform-origin: center bottom;
+      }
+      .tile.has-corpse > .corpse-art {
+        width: 95%;
+        height: 95%;
+        opacity: 0.92;
+      }
+      .corpse-mark {
+        position: absolute;
+        color: #87543d;
+        bottom: 1px;
+        left: 2px;
+        font-size: 13px;
+      }
+      .hero.dead .portrait {
+        filter: none;
+      }
+      .shielded-overlay {
+        position: fixed;
+        z-index: 48;
+        pointer-events: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: #446346;
+        transform: translate(-50%, -50%);
+        animation: shielded-impact 1.05s both;
+      }
+      .shielded-overlay svg {
+        width: 100%;
+        height: 80px;
+        fill: #d2dfbcdf;
+        stroke-width: 2px;
+        filter: drop-shadow(0 0 7px #a7c38c);
+      }
+      .shielded-overlay b {
+        font: bold 13px var(--hand);
+        letter-spacing: 1px;
+        background: #d8e0c7e8;
+        padding: 2px 5px;
+        border: 1px solid #75946b;
+      }
+      @keyframes shielded-impact {
+        0% {
+          opacity: 0;
+          transform: translate(-50%, -50%) scale(1.5);
+        }
+        15% {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(0.92);
+        }
+        30%,
+        75% {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(1);
+        }
+        100% {
+          opacity: 0;
+          transform: translate(-50%, -65%) scale(1.05);
+        }
+      }
+      .event-critical {
+        min-height: 150px;
+        margin: 7px 0;
+        border: 1px dashed #aa936336;
+        border-radius: 7px 3px 8px 4px;
+        display: grid;
+        place-items: center;
+      }
+      .critical-placeholder {
+        color: #97876c;
+        font-size: 15px;
+        text-align: center;
+      }
+      .event-critical.active-critical {
+        display: block;
+        border: 2px double #a58139;
+        padding: 5px 8px;
+        background: #deca8036;
+      }
+      .inline-critical-title {
+        font-size: 15px;
+        text-align: center;
+        letter-spacing: 1px;
+        color: #846022;
+      }
+      .inline-critical-body {
+        display: grid;
+        grid-template-columns: 110px minmax(0, 1fr);
+        gap: 10px;
+        align-items: center;
+      }
+      .stage-card .event-critical .machine-shell {
+        width: 110px;
+        max-width: 110px;
+        margin: 0;
+        padding-right: 30px;
+      }
+      .stage-card .event-critical .machine-title {
+        font-size: 12px;
+        height: 17px;
+      }
+      .stage-card .event-critical .machine-face {
+        height: 63px;
+      }
+      .stage-card .event-critical .lever {
+        width: 44px;
+        height: 68px;
+        padding: 0 8px;
+        right: -6px;
+      }
+      .stage-card .event-critical .machine-footnote {
+        height: 17px;
+        font-size: 10px;
+      }
+      .stage-card .event-critical .multiplier-value {
+        font-size: 33px;
+      }
+      .stage-card .event-critical .stage-result {
+        min-height: 26px;
+        margin: 0 0 3px;
+        font-size: 15px;
+      }
+      .stage-card .event-critical .stage-result .multiplier-value {
+        font-size: 23px;
+      }
+      .stage-card .event-critical .critical-math {
+        grid-template-columns: 1fr;
+        gap: 3px;
+      }
+      .event-critical .critical-math > div {
+        min-height: 36px;
+        padding: 3px 6px;
+        font-size: 16px;
+        gap: 5px;
+      }
+      .event-critical .critical-math svg {
+        width: 20px;
+        height: 22px;
+      }
+      .event-critical .critical-math strong {
+        font-size: 23px;
+      }
+      .well-heal-total {
+        padding: 5px 0;
+        font-size: 20px;
+      }
+      @media (max-width: 760px) {
+        .inline-critical-body {
+          grid-template-columns: 90px minmax(0, 1fr);
+          gap: 4px;
+        }
+        .stage-card .event-critical .machine-shell {
+          width: 90px;
+          max-width: 90px;
+          padding-right: 27px;
+        }
+        .stage-card .event-critical .lever {
+          width: 44px;
+        }
+        .stage-card .event-critical .machine-title {
+          font-size: 10px;
+        }
+        .event-critical .critical-math > div {
+          font-size: 14px;
+          padding: 2px 3px;
+        }
+        .event-critical .critical-math strong {
+          font-size: 20px;
+        }
+        .inline-critical-title {
+          font-size: 13px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .shielded-overlay,
+        .discovery-whisper {
+          animation: none;
+        }
+      }
     </style>
   </head>
   <body>
@@ -3524,7 +4030,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       const HTML_BACKUP =
         "<!doctype html>\n" + document.documentElement.outerHTML;
       const $ = (s) => document.querySelector(s),
-        SAVE_KEY = "scratchpad-dungeon-v4",
+        SAVE_KEY = "scratchpad-dungeon-v5",
         W = 11,
         H = 9;
       const paths = {
@@ -3585,9 +4091,21 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         artefact:
           "M10 5h12l5 10-11 15L5 15z M10 5l6 10 6-10M5 15h22M16 15v15M2 3l4 3m22-3-3 3",
       });
-      paths.blank = "M7 16h18";
+      Object.assign(paths, {
+        blank: "M16 3a13 13 0 1 0 0 26 13 13 0 1 0 0-26 M7 7l18 18",
+        river:
+          "M2 4q7-4 14 0t14 0M2 12q7-5 14 0t14 0M2 20q7-5 14 0t14 0M2 28q7-4 14 0t14 0M8 7l3 1m10 8 5-1",
+        puddle:
+          "M4 19q-6-10 7-11 8-13 14 1 12 4 3 15-9 10-24-5z M8 17q7-7 16 0M10 22q5-3 10 0",
+        sound: "M3 19v-6h6l7-6v18l-7-6z M21 10q8 6 0 12m4-16q13 10 0 20",
+        glimmer: "m16 1 4 11 11 4-11 4-4 11-4-11-11-4 11-4z M27 2v6m-3-3h6",
+        water:
+          "M16 2C9 12 4 17 7 24c4 9 19 7 20-3 0-5-5-12-11-19z M11 19q-3 5 3 7",
+        draft: "M2 10h20q11 0 6-7-4-4-7 1M2 16h14q10 0 8 9-2 6-7 2M3 22h7",
+      });
       let artSerial = 0;
       function portraitArt(kind, entity = { hp: 1, maxHp: 1 }) {
+        if (entity.hp <= 0 || entity.dead) return corpseArt(kind);
         const id = "hatch-" + artSerial++,
           health = entity.hp / entity.maxHp,
           hurt = health < 0.35,
@@ -3625,7 +4143,10 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         return `<svg viewBox="0 0 120 150" fill="none" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><defs><pattern id="${id}" width="5" height="5" patternUnits="userSpaceOnUse"><rect width="5" height="5" fill="${fill}"/><path d="m-1 5 6-6m-1 7 3-3" stroke="#72664e" stroke-width=".65" opacity=".55"/></pattern></defs>${body}${bruised ? `<path d="${kind === "fighter" || kind === "hero" ? "m40 24 10 9m-9-4 10 10m24 11-8 7" : kind === "skull" || kind === "skeleton" ? "m39 17 10 7m21 15 8 5" : kind === "rat" ? "m38 77 10 6m35 25-8 7" : kind === "ghost" ? "m38 34 10 8m24 25-6 8" : "m34 77 10 8m39 26-9 7"}" stroke="#945740" stroke-width="1.5"/>` : ""}${hurt ? '<path d="m38 34 8 2m-8 2 8 2m20 11 11 4m-12 0 11 4" stroke="#8c4b39"/><path d="m72 59-2 10m3-5-1 8" stroke="#854736" stroke-width="2"/>' : ""}${dead ? `<g stroke="${paper}" stroke-width="2"><path d="${kind === "skull" || kind === "skeleton" ? "m48 23 7 6m0-6-7 6m19-6 7 6m0-6-7 6" : kind === "rat" || kind === "slime" ? "m47 80 7 6m0-6-7 6m16-6 7 6m0-6-7 6" : "m47 41 7 6m0-6-7 6m14-6 7 6m0-6-7 6"}"/></g>` : ""}</svg>`;
       }
       function floorArt(c, i) {
-        if (c.wall) return icon("wall");
+        if (c.wall)
+          return icon(
+            ["river", "puddle"].includes(c.terrain) ? c.terrain : "wall",
+          );
         const variants = [
           paths.floor,
           "M4 26h24M8 25l-2-9m4 9 3-14m4 14 6-9M5 17l-3-4m12 0 3-4",
@@ -3638,7 +4159,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       }
       function symbolMarkup(s) {
         if (s.type === "blank")
-          return `<span class="blank-face" aria-label="Empty reel face">·</span>`;
+          return `<span class="blank-face" aria-label="Empty reel face" title="Empty face · replace it with personal points">${icon("blank")}<small>EMPTY</small></span>`;
         if (s.type === "multiplier")
           return `<span class="multiplier-value">×${s.value}</span>`;
         let type = ICONS[s.type] || s.type;
@@ -3785,12 +4306,32 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             event: null,
             feature: null,
             doodle: rand(5),
+            terrain: wall ? "stone" : "floor",
+            corpses: [],
+            hint: null,
+            hintChecked: false,
           };
         });
         for (let y = 1; y < H - 1; y++)
           for (let x = 1; x < W - 1; x++)
             if (rand(100) < 13 && !(y === 7 || x === 9 || x === 1))
               map[pos(x, y)].wall = true;
+        // Water is impassable terrain, just like stone; protect the outer
+        // corridor so every floor retains a route to its staircase.
+        let riverX = 3 + rand(4),
+          riverY = 2 + rand(3);
+        for (let k = 0; k < 4; k++) {
+          const c = map[pos(riverX, riverY)];
+          c.wall = true;
+          c.terrain = "river";
+          riverX = Math.max(2, Math.min(8, riverX + (k % 2 ? 0 : 1)));
+          riverY = Math.min(6, riverY + 1);
+        }
+        map.forEach((c, i) => {
+          if (c.wall && !c.seen && c.terrain !== "river" && Math.random() < 0.3)
+            c.terrain = "puddle";
+          else if (c.wall && c.terrain === "floor") c.terrain = "stone";
+        });
         let seen = new Set([pos(1, 7)]),
           q = [pos(1, 7)];
         for (let n of q)
@@ -3803,7 +4344,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           if (!c.wall && !seen.has(i)) c.wall = true;
         });
         const place = (i, e) => {
-          Object.assign(map[i], { wall: false, event: e, feature: e });
+          Object.assign(map[i], {
+            wall: false,
+            terrain: "floor",
+            event: e,
+            feature: e,
+          });
         };
         place(pos(2, 7), "treasure");
         place(pos(3, 7), "trap");
@@ -3850,7 +4396,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         travel = null;
         document.querySelectorAll(".speech-bubble").forEach((e) => e.remove());
         state = {
-          version: 4,
+          version: 5,
           depth: 1,
           map: generateFloor(1, 1),
           position: pos(1, 7),
@@ -3898,13 +4444,14 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         try {
           let s = JSON.parse(
             localStorage.getItem(SAVE_KEY) ||
+              localStorage.getItem("scratchpad-dungeon-v4") ||
               localStorage.getItem("scratchpad-dungeon-v3") ||
               localStorage.getItem("scratchpad-dungeon-v2") ||
               localStorage.getItem("scratchpad-dungeon-v1"),
           );
           if (
             !s ||
-            ![1, 2, 3, 4].includes(s.version) ||
+            ![1, 2, 3, 4, 5].includes(s.version) ||
             s.map?.length !== W * H ||
             !Array.isArray(s.party) ||
             !s.party.length ||
@@ -3926,7 +4473,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             return false;
           let migrated = s.version < 4;
           state = s;
-          state.version = 4;
+          state.version = 5;
           state.bombs ??= 0;
           state.wards ??= 0;
           state.potions ??= 0;
@@ -3953,6 +4500,10 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           state.map.forEach((c, i) => {
             c.feature ??= c.event;
             c.doodle ??= i % 5;
+            c.terrain ??= c.wall ? "stone" : "floor";
+            c.corpses ??= [];
+            c.hint ??= null;
+            c.hintChecked ??= false;
             if (migrated && c.event === "guardian" && state.depth !== 10) {
               c.event = "enemy";
               c.feature = "enemy";
@@ -4124,10 +4675,21 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         renderLog();
         renderMemorialButton();
         if (state.lastResult) renderResult(state.lastResult, false);
+        fitNotebook();
       }
       function tileName(c) {
-        if (!c.seen) return "Unknown / pencil-covered tile";
-        if (c.wall) return "Stone wall / impassable";
+        if (!c.seen)
+          return c.hint
+            ? "Unknown / " + c.hint.text
+            : "Unknown / pencil-covered tile";
+        if (c.wall)
+          return c.terrain === "river"
+            ? "Underground river / impassable"
+            : c.terrain === "puddle"
+              ? "Deep puddle / impassable"
+              : "Stone wall / impassable";
+        if (c.corpses?.length && !c.event)
+          return "Remains of " + c.corpses.map((c) => c.name).join(", ");
         let names = {
           treasure: "Treasure",
           trap: "Trap",
@@ -4148,9 +4710,22 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         const locked = (busy && !travel) || !!state.enemy || state.over;
         $("#map").innerHTML = state.map
           .map((c, i) => {
-            let active = c.seen && !!c.event,
-              battle = active && ["enemy", "guardian"].includes(c.event);
-            return `<button class="tile ${c.seen ? "" : "fog"} ${c.wall && c.seen ? "wall" : ""} ${c.visited ? "visited" : ""} ${c.feature && !c.event ? "spent" : ""} ${active ? "active-event" : ""} ${battle ? "active-battle" : ""} ${active && c.event === "well" ? "active-well" : ""} ${i === state.position ? "player-cell" : ""}" data-tile="${i}" data-state="${!c.seen ? "unknown" : active ? "active" : c.feature ? "used" : "empty"}" aria-label="${tileName(c)}, column ${(i % W) + 1}, row ${Math.floor(i / W) + 1}" ${locked || (c.seen && c.wall) ? "disabled" : ""}>${c.seen ? (c.event || c.feature ? icon(["enemy", "guardian"].includes(c.event || c.feature) ? "skull" : c.event || c.feature) : floorArt(c, i)) : ""}${active ? '<span class="tile-status" aria-hidden="true">!</span>' : c.seen && c.feature ? '<span class="tile-status used" aria-hidden="true">✓</span>' : ""}</button>`;
+            const active = c.seen && !!c.event,
+              battle = active && ["enemy", "guardian"].includes(c.event),
+              water = c.wall && ["river", "puddle"].includes(c.terrain),
+              corpse = c.seen && c.corpses?.length ? c.corpses.at(-1) : null,
+              art = !c.seen
+                ? ""
+                : corpse && !c.event
+                  ? corpseArt(corpse.kind)
+                  : c.event || c.feature
+                    ? icon(
+                        ["enemy", "guardian"].includes(c.event || c.feature)
+                          ? "skull"
+                          : c.event || c.feature,
+                      )
+                    : floorArt(c, i);
+            return `<button class="tile ${c.seen ? "" : "fog"} ${c.wall && c.seen ? "wall" : ""} ${water && c.seen ? "water-block " + c.terrain : ""} ${c.visited ? "visited" : ""} ${c.feature && !c.event ? "spent" : ""} ${active ? "active-event" : ""} ${battle ? "active-battle" : ""} ${active && c.event === "well" ? "active-well" : ""} ${active && c.event === "stairs" ? "active-stairs" : ""} ${corpse ? "has-corpse" : ""} ${!c.seen && c.hint ? "has-hint" : ""} ${i === state.position ? "player-cell" : ""} ${travel?.goal === i ? "travel-goal" : ""}" data-tile="${i}" data-state="${!c.seen ? "unknown" : active ? "active" : c.feature ? "used" : "empty"}" aria-label="${escapeHTML(tileName(c))}, column ${(i % W) + 1}, row ${Math.floor(i / W) + 1}" ${locked || (c.seen && c.wall) ? "disabled" : ""}>${art}${c.seen && c.wall ? '<span class="terrain-stop" aria-hidden="true">×</span>' : ""}${active ? `<span class="tile-status" aria-hidden="true">${c.event === "stairs" ? "↓" : "!"}</span>` : c.seen && c.feature ? '<span class="tile-status used" aria-hidden="true">✓</span>' : ""}${!c.seen && c.hint ? `<span class="tile-whisper" title="${escapeHTML(c.hint.text)}" aria-hidden="true">${icon(c.hint.kind)}</span>` : ""}${corpse && c.event ? '<span class="corpse-mark" aria-hidden="true">†</span>' : ""}</button>`;
           })
           .join("");
         let leader = state.party.find(alive) || state.party[0];
@@ -4159,6 +4734,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           '<span class="walk-boots"><i></i><i></i></span>';
         positionPlayer(false);
       }
+
       function positionPlayer(animate = true) {
         let cell = $(`[data-tile="${state.position}"]`),
           p = $("#map-player");
@@ -4317,13 +4893,14 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       }
       async function move(goal) {
         if (travel) {
-          if (!shortestPath(goal)) {
+          const path = shortestPath(goal);
+          if (path === null) {
             toast("That destination has no uncovered route.");
             return;
           }
           travel.goal = goal;
           travel.revision++;
-          let path = shortestPath(goal);
+          markTravelGoal(goal);
           travel.boost = distanceBoost(path?.length || 0);
           $("#map-status").textContent =
             "New destination marked. Turning at the next step…";
@@ -4372,10 +4949,17 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
               c = state.map[i],
               fresh = !c.seen,
               revision = travel.revision;
-            if (fresh) await revealTile(i);
+            if (fresh) {
+              await revealTile(i);
+              renderMap();
+            }
             if (revision !== travel.revision) continue;
             if (c.wall) {
-              log("Stone beneath the pencil. There is another way through.");
+              log(
+                ["river", "puddle"].includes(c.terrain)
+                  ? "Deep water beneath the pencil. There is no safe crossing here."
+                  : "Stone beneath the pencil. There is another way through.",
+              );
               break;
             }
             state.position = i;
@@ -4387,10 +4971,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             positionPlayer(true);
             await waitMovement(fresh ? 205 : 180, travel.boost);
             $("#map-player").classList.remove("walking");
+            if (!c.event) maybeDiscoveryHint(i);
             if (c.event) {
               travel = null;
               renderMap();
               let stop = await resolveTile(c);
+              maybeDiscoveryHint(i);
               if (stop || state.over) break;
             }
           }
@@ -4737,18 +5323,27 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       }
       async function rollCritical(owner, symbols, enemy = false, options = {}) {
         if (matchCount(symbols) !== 3) return 1;
-        const parent = captureStage(),
+        const inline = !!options.context && !$("#spotlight").hidden,
           pool = [2, 2.5, 3, 4].map((value) => ({
             type: "multiplier",
             value,
             tier: 1,
           })),
           rolled = { ...pick(pool) },
-          details = options.details || effectDetails(calculate(symbols)),
+          details = (options.details || effectDetails(calculate(symbols))).map(
+            (d) => ({ ...d }),
+          ),
           final = details.map((d) => ({
             ...d,
             value: Math.ceil(d.value * rolled.value),
-          }));
+          })),
+          body =
+            drawMachine(
+              "critical",
+              [{ type: "multiplier", value: "?", tier: 1 }],
+              { one: true, title: "Critical multiplier" },
+            ) +
+            '<div class="critical-summary"><div class="stage-result" id="critical-result">Three of a kind!</div><div class="critical-math" id="critical-math"></div></div>';
         state.lastCritical = {
           owner,
           matches: 3,
@@ -4758,44 +5353,46 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           context: options.context || "combat",
         };
         log(`${owner}: triple match! ×${rolled.value} critical.`);
-        showSpotlight(
-          enemy
-            ? "Enemy critical!"
-            : options.context === "treasure"
-              ? "Fortune critical!"
-              : options.context === "well"
-                ? "Fountain critical!"
-                : options.context === "trap"
-                  ? "Trap critical!"
-                  : "Critical!",
-          "Three identical symbols · every mark matters.",
-          drawMachine(
+        let region;
+        if (inline) {
+          region = $("#event-critical");
+          if (!region) {
+            region = document.createElement("div");
+            region.id = "event-critical";
+            $("#stage-card .stage-content").append(region);
+          }
+          region.className = "event-critical active-critical";
+          region.innerHTML =
+            '<div class="inline-critical-title">✧ THREE OF A KIND · CRITICAL! ✧</div><div class="inline-critical-body">' +
+            body +
+            "</div>";
+          $("#stage-card").classList.add("celebrating-critical");
+          region.scrollIntoView({ block: "nearest", behavior: "instant" });
+        } else {
+          showSpotlight(
+            enemy ? "Enemy critical!" : "Critical!",
+            "Three identical symbols · every mark matters.",
+            body,
             "critical",
-            [{ type: "multiplier", value: "?", tier: 1 }],
-            { one: true, title: owner + " rolls the multiplier" },
-          ) +
-            '<div class="stage-result" id="critical-result">A little more anticipation…</div><div class="critical-math" id="critical-math"></div>',
-          "critical",
-        );
+          );
+          region = $("#stage-card");
+        }
         await runMachine("critical", [pool], { results: [rolled] });
         $("#critical-result").innerHTML =
-          `<strong class="multiplier-value">×${rolled.value}</strong> ${options.context ? "A margin full of possibility." : "to the original roll"}`;
-        $("#critical-math").innerHTML = details.length
-          ? details
-              .map(
-                (d, i) =>
-                  `<div>${icon(d.icon || "stun")}<span>${escapeHTML(d.label)}<br><b>${d.value}</b> × ${rolled.value} = <strong>${final[i].value}</strong></span></div>`,
-              )
-              .join("")
-          : "<div>Three marks. A spectacular match.</div>";
-        $("#stage-skip").textContent = "Result locked · closing shortly";
+          `<strong class="multiplier-value">×${rolled.value}</strong> ${inline ? "Critical locked!" : "to the original roll"}`;
+        $("#critical-math").innerHTML = criticalMath(details, rolled.value);
+        if (inline)
+          region.scrollIntoView({ block: "nearest", behavior: "instant" });
+        $("#stage-skip").textContent = inline
+          ? "Critical locked · tallying the reward…"
+          : "Result locked · closing shortly";
         burst(
-          $("#stage-card"),
+          region,
           options.context ? "confetti" : "gold",
           options.context ? 110 : 55,
         );
         shakeBook(options.context ? 6 : 4);
-        shakeElement($("#stage-card"), options.context ? 6 : 4);
+        shakeElement(region, options.context ? 6 : 4);
         if (options.context === "treasure")
           startCoinRain(
             Math.ceil(
@@ -4807,10 +5404,11 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         await feedbackPause(
           skip ? 950 : pace() >= 5 ? 1150 : pace() >= 2 ? 1400 : 1850,
         );
-        closeSpotlight();
-        restoreStage(parent);
+        if (inline) $("#stage-card").classList.remove("celebrating-critical");
+        else closeSpotlight();
         return rolled.value;
       }
+
       function calculate(symbols, multiplier = 1) {
         let total = { attack: 0, heal: 0, block: 0, stun: 0, blank: 0 };
         for (let s of symbols)
@@ -4900,6 +5498,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         syncHero(i);
         renderBlock();
         if (blocked) armourFX(blocked, "Damage blocked");
+        if (blocked && !actual) shieldedFX($("#portrait-" + i));
         floatAt(
           $("#portrait-" + i),
           actual ? "-" + actual + " HP" : "Team protected",
@@ -4925,7 +5524,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         e.block -= blocked;
         let actual = Math.min(e.hp, n - blocked);
         e.hp -= actual;
+        if (e.hp === 0 && !e.corpseRecorded) {
+          e.corpseRecorded = true;
+          leaveCorpse(e.art, e.name, true);
+        }
         syncEnemy();
+        if (blocked && !actual) shieldedFX($("#enemy-art"));
         floatAt(
           $("#enemy-art"),
           actual ? "-" + actual + " HP" : "Blocked",
@@ -5185,6 +5789,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         await treasureRoll("battle");
         $("#field-note").textContent =
           "“The only way to write the ending is to keep turning pages.”";
+        maybeDiscoveryHint();
       }
       async function treasureRoll(source = "chest") {
         let faces = lootFaces(),
@@ -5202,7 +5807,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
               { type: "coin", tier: 3 },
             ],
             { title: "Fortune favours the curious" },
-          )}<div class="stage-result" id="treasure-result">What did the dungeon leave you?</div><div id="artefact-loot"></div>`,
+          )}${criticalSpace()}<div class="stage-result" id="treasure-result">What did the dungeon leave you?</div><div id="artefact-loot"></div>`,
           "treasure",
         );
         let symbols = await runMachine("treasure", [faces, faces, faces]),
@@ -5276,6 +5881,10 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
               `<div class="artefact-card">${icon("artefact")}<div><b>${a.name}</b><p>${artefactText(a)}</p><button class="small" data-equip="${a.id}">${state.equippedArtefact === a.id ? "Equipped" : "Equip instead"}</button></div></div>`,
           )
           .join("");
+        $("#treasure-result").scrollIntoView({
+          block: "nearest",
+          behavior: "instant",
+        });
         state.lastLoot = {
           source,
           symbols,
@@ -5322,7 +5931,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           "A hidden trap",
           title,
           trapArt(kind) +
-            '<p class="stage-subtitle">Something clicks beneath your feet…</p><div id="trap-machine"></div><div class="stage-result" id="trap-result">Hold very, very still.</div>',
+            '<p class="stage-subtitle">Something clicks beneath your feet…</p><div id="trap-machine"></div>' +
+            criticalSpace() +
+            '<div class="stage-result" id="trap-result">Hold very, very still.</div>',
           "trap",
         );
         shakeBook(5);
@@ -5364,6 +5975,10 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         $("#trap-result").innerHTML = n
           ? `${name}: ${baseDamage}${multiplier > 1 ? " × " + multiplier + " = " + n : ""} incoming damage<br>${guard} temporary guard`
           : `A narrow escape. No damage!<br>${guard} temporary guard`;
+        $("#trap-result").scrollIntoView({
+          block: "nearest",
+          behavior: "instant",
+        });
         await eventChoice([
           { id: "stage-confirm", label: "Carry on ↗", value: true },
         ]);
@@ -5529,7 +6144,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         let h = state.party[i];
         openModal(
           h.name + "’s lucky machinery",
-          `<p><b>${h.points} personal points.</b> Class faces have different odds, shown below. Editing a face preserves its probability. Three identical type-and-tier symbols trigger a critical. Blank faces have no effect.</p><p>Weak faces cost <b>1</b> point, tier II <b>3</b>, tier III <b>6</b>. Changing a face costs its current tier’s price; an upgrade costs its new tier’s price. Weakening to tier I costs 1.</p><p class="muted">Per icon: attack 3 · heal 3 · block 1 · stun 1. Successful battles award EXP. Levels give +6 maximum HP and +4 personal points.</p>${h.reels.map((r, k) => `<div class="editor-row"><span class="eyebrow">Reel ${k + 1} / weighted class faces</span><div class="editor-slots">${r.map((s, j) => `<div class="editor-slot">${symbolMarkup(s)}<small>${s.type} ${"I".repeat(s.tier)}<br>${Math.round((100 * (s.weight || 1)) / r.reduce((n, s) => n + (s.weight || 1), 0))}% chance</small><button data-cycle="${i},${k},${j}" ${h.points < FACE_COST[s.tier] ? "disabled" : ""}>Change · ${FACE_COST[s.tier]}pt</button><button data-upgrade="${i},${k},${j}" ${h.points < (FACE_COST[s.tier + 1] || Infinity) || s.tier === 3 ? "disabled" : ""}>${s.tier === 3 ? "Max tier" : "Tier ↑ · " + FACE_COST[s.tier + 1] + "pt"}</button>${s.tier > 1 ? `<button data-weaken="${i},${k},${j}" ${h.points < 1 ? "disabled" : ""}>Weak · 1pt</button>` : ""}</div>`).join("")}</div></div>`).join("")}<div class="modal-actions"><button class="primary" data-close>Back to the adventure</button></div>`,
+          `<p><b>${h.points} personal points.</b> Class faces have different odds, shown below. Editing a face preserves its probability. Three identical type-and-tier symbols trigger a critical. Blank faces are real, permanent entries on each starting reel. They have no effect; inscribe one for 1 personal point to replace it with your class’s basic attack or heal.</p><p>Weak faces cost <b>1</b> point, tier II <b>3</b>, tier III <b>6</b>. Changing a face costs its current tier’s price; an upgrade costs its new tier’s price. Weakening to tier I costs 1.</p><p class="muted">Per icon: attack 3 · heal 3 · block 1 · stun 1. Successful battles award EXP. Levels give +6 maximum HP and +4 personal points.</p>${h.reels.map((r, k) => `<div class="editor-row"><span class="eyebrow">Reel ${k + 1} / weighted class faces</span><div class="editor-slots">${r.map((s, j) => `<div class="editor-slot">${symbolMarkup(s)}<small>${s.type} ${"I".repeat(s.tier)}<br>${Math.round((100 * (s.weight || 1)) / r.reduce((n, s) => n + (s.weight || 1), 0))}% chance</small><button data-cycle="${i},${k},${j}" ${h.points < FACE_COST[s.tier] ? "disabled" : ""}>Change · ${FACE_COST[s.tier]}pt</button><button data-upgrade="${i},${k},${j}" ${h.points < (faceUpgradeCost(s) || Infinity) || (s.type !== "blank" && s.tier === 3) ? "disabled" : ""}>${s.type === "blank" ? "Inscribe " + (h.job === "healer" ? "heal" : "attack") + " I · 1pt" : s.tier === 3 ? "Max tier" : "Tier ↑ · " + FACE_COST[s.tier + 1] + "pt"}</button>${s.tier > 1 ? `<button data-weaken="${i},${k},${j}" ${h.points < 1 ? "disabled" : ""}>Weak · 1pt</button>` : ""}</div>`).join("")}</div></div>`).join("")}<div class="modal-actions"><button class="primary" data-close>Back to the adventure</button></div>`,
           "editor",
         );
       }
@@ -5547,21 +6162,25 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                 : operation,
           cost =
             op === "upgrade"
-              ? FACE_COST[s.tier + 1]
+              ? faceUpgradeCost(s)
               : op === "weaken"
                 ? 1
                 : FACE_COST[s.tier];
         if (
           !cost ||
           h.points < cost ||
-          (op === "upgrade" && s.tier === 3) ||
+          (op === "upgrade" && s.type !== "blank" && s.tier === 3) ||
           (op === "weaken" && s.tier === 1)
         )
           return;
         h.points -= cost;
-        if (op === "upgrade") s.tier++;
+        if (op === "upgrade" && s.type === "blank") {
+          s.type = h.job === "healer" ? "heal" : "attack";
+          s.tier = 1;
+        } else if (op === "upgrade") s.tier++;
         else if (op === "weaken") s.tier = 1;
         else s.type = TYPES[(TYPES.indexOf(s.type) + 1) % TYPES.length];
+        h.last[r] = { type: s.type, tier: s.tier };
         renderParty();
         save();
         editor(i);
@@ -5569,7 +6188,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       function help() {
         openModal(
           "A field guide for the brave",
-          `<p><b>Only forward.</b> Descend through ten floors, defeat The Last Redaction, then choose the final stairs to win. Discovering stairs unlocks their button from anywhere on the floor; you can decline and keep exploring.</p><p><b>Mark another destination.</b> Click a reachable tile to follow uncovered rooms. Routes avoid revealed active battles when a safe detour exists. An unknown tile may be a destination, never a shortcut. You can click a new goal while walking; the company turns at its next step. Longer routes get a modest speed bonus. Empty rooms never shake the notebook.</p><p><b>Active marks.</b> Bright tiles with an exclamation mark still have an event. Active battles have a red border, unused wells glow green, and used tiles are faded with a checkmark. Wall generation always leaves a route to the stairs. Arrow keys / WASD take a step.</p><p><b>Names can be lost.</b> Death is permanent. No item, fountain, shop or level can revive a hero. A fatal hit records the cause immediately, then asks you to acknowledge their death. Surviving companions hold a burial with their statistics, origin, time in the party and final resting place. Visit Names remembered beneath the map to read the memorials.</p><p><b>Machines and empty faces.</b> Any living hero can spin repeatedly. Tanks mostly attack and protect; healers mostly heal; rogues have 26 starting HP, strong damage faces and very little shield generation. New run lets you start as a tank or rogue. Every class has blank faces that do nothing. Face probabilities are listed in the editor.</p><p><b>Three of a kind.</b> Only three identical type-and-tier symbols crit; blanks and misses do not. Hero, enemy, treasure, fountain and trap reels can all crit. The multiplier wheel rolls ×2, ×2.5, ×3 or ×4 and shows the original value and final calculation. Popup criticals celebrate with extra effects, then restore the original event for confirmation. Instant mode skips spinning, but still shows critical results.</p><p><b>Armour and stun.</b> Each shield icon grants one shared team armour. Damage consumes armour before health; it expires after battle. Any positive amount can block a stun, consuming up to six armour per stun power—even a single remaining armour point protects the target and is then lost. A stunned hero misses one go without rolling or changing the enemy countdown. They can then act again. Enemies can also spend armour to resist stun.</p><p><b>Fountains.</b> Leave a well untouched to return later, or roll its healing wheel. Every living hero receives 30% maximum HP plus the rolled bonus. Triple matches multiply the whole potential heal. Actual healing is capped by maximum HP.</p><p><b>Treasure and company.</b> Chests and defeated enemies roll mostly gold, with rare items and much rarer artefacts. Gold bursts and pours from their popup. Rare adventurers join only if invited, up to three living heroes; meetings are only slightly more likely with a solo party. Shops have a 30% chance per floor and sell limited items, full healing for survivors, and a stairs map.</p><p><b>Grow after victory.</b> EXP comes only from successful battles. Levels give +6 maximum HP and +4 personal points. Edit faces for 1 / 3 / 6 points by tier. One equipped artefact grants a passive bonus; swap freely between actions. Its power scales with discovery depth.</p><p><b>Choose the pace.</b> The main toolbar offers 1×, 2×, 3×, 5× and instant cinematics. Movement scales more gently: 1× / 1.5× / 2× / 3×, with instant using the fastest movement pace. Click a machine or press Space to land its preselected result. Impact feedback remains. Events require a confirmation click; crits linger and close automatically. The final enemy’s damage is shown before victory loot appears.</p><p><b>Keep the notebook.</b> Progress and deaths save locally. Save HTML downloads the offline game, not a run export. M folds the log; Escape closes ordinary dialogs or speeds a scene without confirming it.</p><div class="modal-actions"><button class="primary" data-close>Into the margins ↗</button></div>`,
+          `<p><b>Only forward.</b> Descend through ten floors, defeat The Last Redaction, then choose the final stairs to win. Discovering stairs unlocks their button from anywhere on the floor; you can decline and keep exploring.</p><p><b>Mark another destination.</b> Click a reachable tile to follow uncovered rooms. Routes avoid revealed active battles when a safe detour exists. An unknown tile may be a destination, never a shortcut. You can click a new goal while walking or erasing, including a valid hidden destination; the company turns at its next step. Longer routes get a modest speed bonus. Empty rooms never shake the notebook.</p><p><b>Active marks.</b> Bright tiles with an exclamation mark still have an event. Active battles have a red border, unused wells glow green, and used tiles are faded with a checkmark. Dark stone and blue rivers or deep puddles block movement. Golden stairs stay highlighted until you descend. Wall and water generation always leaves a route to the stairs. A resolved room can occasionally hint at a nearby sound, glimmer or draft without revealing its tile. Arrow keys / WASD take a step.</p><p><b>Names can be lost.</b> Death is permanent. No item, fountain, shop or level can revive a hero. A fatal hit records the cause immediately, then asks you to acknowledge their death. Killed heroes and enemies collapse into corpses, leaving remains on the floor. Surviving companions hold a burial with their statistics, origin, time in the party and final resting place. Visit Names remembered beneath the map to read the memorials.</p><p><b>Machines and empty faces.</b> Any living hero can spin repeatedly. Tanks mostly attack and protect; healers mostly heal; rogues have 26 starting HP, strong damage faces and very little shield generation. New run lets you start as a tank or rogue. Every class starts with a permanent blank face on each reel, marked EMPTY. Inscribe it for 1 personal point to replace it with your class’s basic attack or heal; the probability stays the same. Faces never gain random extra blanks during a roll.</p><p><b>Three of a kind.</b> Only three identical type-and-tier symbols crit; blanks and misses do not. Hero, enemy, treasure, fountain and trap reels can all crit. The multiplier wheel rolls ×2, ×2.5, ×3 or ×4 and shows the original value and final calculation. Loot, fountain and trap criticals roll their multiplier inside the original event panel, keeping both the first roll and the final calculation visible until confirmation. Instant mode skips spinning, but still shows critical results.</p><p><b>Armour and stun.</b> Each shield icon grants one shared team armour. Damage consumes armour before health; it expires after battle. A fully absorbed hit displays a shield over its protected target. Any positive amount can block a stun, consuming up to six armour per stun power—even a single remaining armour point protects the target and is then lost. A stunned hero misses one go without rolling or changing the enemy countdown. They can then act again. Enemies can also spend armour to resist stun.</p><p><b>Fountains.</b> Leave a well untouched to return later, or roll its healing wheel. Every living hero receives 30% maximum HP plus the rolled bonus. Triple matches multiply the whole potential heal. Potential healing is listed before and after any multiplier, even at full health. Only applied healing is capped by maximum HP.</p><p><b>Treasure and company.</b> Chests and defeated enemies roll mostly gold, with rare items and much rarer artefacts. Gold bursts and pours from their popup. Rare adventurers join only if invited, up to three living heroes; a floor has a 28% meeting chance while solo or 24% with companions. Shops have a 30% chance per floor and sell limited items, full healing for survivors, and a stairs map.</p><p><b>Grow after victory.</b> EXP comes only from successful battles. Levels give +6 maximum HP and +4 personal points. Edit faces for 1 / 3 / 6 points by tier. One equipped artefact grants a passive bonus; swap freely between actions. Its power scales with discovery depth.</p><p><b>Fit the page.</b> The full notebook automatically fits a 1920×1080 desktop and resizes for other desktop resolutions. Small screens stack the pages with scrolling.</p><p><b>Choose the pace.</b> The main toolbar offers 1×, 2×, 3×, 5× and instant cinematics. Movement scales more gently: 1× / 1.5× / 2× / 3×, with instant using the fastest movement pace. Click a machine or press Space to land its preselected result. Impact feedback remains. Events require a confirmation click; crits linger and close automatically. The final enemy’s damage is shown before victory loot appears.</p><p><b>Keep the notebook.</b> Progress and deaths save locally. Save HTML downloads the offline game, not a run export. M folds the log; Escape closes ordinary dialogs or speeds a scene without confirming it.</p><div class="modal-actions"><button class="primary" data-close>Into the margins ↗</button></div>`,
           "help",
         );
       }
@@ -6200,6 +6819,130 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         return true;
       }
 
+      function corpseArt(kind) {
+        const animal = kind === "rat",
+          spectral = kind === "ghost",
+          blob = kind === "slime";
+        const remains = animal
+          ? '<path d="M22 119q-25 15-16-8m16 8q-7-34 33-34l30 6 22 20-12 17H38z" fill="#c6b99b"/><path d="m83 93 5-18 10 21M77 105l8 7m0-7-8 7M38 118l-9 14m30-10 8 12M95 114l12 4"/>'
+          : spectral
+            ? '<path d="m12 125 14-22 22 8 15-27 17 26 26-7-12 22-23 9-31-4z" fill="#d9cfb4"/><path d="m43 112 8 6m0-6-8 6m19-6 8 6m0-6-8 6M11 137h90"/>'
+            : blob
+              ? '<path d="M12 128q-8-13 22-14 5-17 25-7 21-16 28 6 30 3 20 18-51 10-95-3z" fill="#c3b392"/><path d="m43 116 8 7m0-7-8 7m18-7 8 7m0-7-8 7"/>'
+              : `<path d="m9 135 16-7 22 4 20-8 25 6 19-5M42 116l17 6 28-13 13 7m-40 4 17 12 19-2M43 108l20-10 21 5-10 18-28 4z" fill="#cbbd9f"/><path d="m55 109 18 1m-15 8 12-12m-6-5 2 20M36 116l-12 14m38-8 17 13M9 143h102"/><ellipse cx="28" cy="110" rx="17" ry="16" fill="#e7dcc0"/><path d="m18 106 7 6m0-6-7 6m13-8 7 6m0-6-7 6M24 119h9"/>${kind === "fighter" || kind === "hero" ? '<path d="m12 102 7-11 19 2 9 13-9 7-25-2z M13 104l31 1M15 137l64-5m-63 1 1 8"/>' : kind === "skeleton" || kind === "skull" ? '<path d="m52 103 2 18m4-17 3 16m4-17 4 13m5-12 3 10M24 116h10m-7-2v7m4-7v7"/>' : '<path d="M10 110q-3-29 27-20l15 20-15 19H15z M15 113q5-28 22-14"/>'}`;
+        return `<svg class="corpse-art" data-corpse="${kind}" viewBox="0 0 120 150" fill="none" stroke="#625343" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="62" cy="133" rx="52" ry="8" fill="#80715b20"/>${remains}<path d="m11 145 14-1m74-2 13 1m-44-7 8 1" opacity=".55"/></svg>`;
+      }
+      function leaveCorpse(kind, name, enemy = false) {
+        const cell = state.map[state.position];
+        cell.corpses ??= [];
+        cell.corpses.push({ kind, name, enemy });
+        renderMap();
+      }
+      function shieldedFX(el) {
+        if (!el) return;
+        let r = el.getBoundingClientRect(),
+          node = document.createElement("div");
+        node.className = "shielded-overlay";
+        node.dataset.target = el.id;
+        node.innerHTML = icon("block") + "<b>SHIELDED</b>";
+        node.style.left = r.left + r.width / 2 + "px";
+        node.style.top = r.top + r.height / 2 + "px";
+        node.style.width = Math.max(58, Math.min(115, r.width + 12)) + "px";
+        document.body.append(node);
+        setTimeout(() => node.remove(), 1050);
+      }
+      function faceUpgradeCost(face) {
+        return face.type === "blank" ? 1 : FACE_COST[face.tier + 1];
+      }
+      function criticalSpace() {
+        return '<div class="event-critical" id="event-critical"><span class="critical-placeholder">Three matching marks may awaken a critical.</span></div>';
+      }
+      function criticalMath(details, multiplier) {
+        return (
+          details
+            .map(
+              (d) =>
+                `<div data-before="${d.value}" data-after="${Math.ceil(d.value * multiplier)}">${icon(d.icon || "stun")}<span>${escapeHTML(d.label)}<br><b>${d.value}</b> × ${multiplier} = <strong>${Math.ceil(d.value * multiplier)}</strong></span></div>`,
+            )
+            .join("") || "<div>Three safe marks. A spectacular escape.</div>"
+        );
+      }
+      const DISCOVERY_HINTS = {
+        enemy: ["sound", "A scratching sound behind the graphite…"],
+        guardian: ["sound", "Something enormous is breathing…"],
+        treasure: ["glimmer", "A glimmer catches the torchlight…"],
+        trap: ["sound", "A tiny metallic click…"],
+        well: ["water", "A gentle trickle of water…"],
+        beacon: ["glimmer", "A warm light seeps through the paper…"],
+        recruit: ["sound", "Quiet footsteps. Almost human…"],
+        shop: ["sound", "The soft clink of traded coins…"],
+        stairs: ["draft", "A cold draft rises from below…"],
+        river: ["water", "Running water beyond the pencil…"],
+        puddle: ["water", "A drop echoes in the darkness…"],
+      };
+      function maybeDiscoveryHint(from = state.position) {
+        const room = state.map[from];
+        if (
+          room.hintChecked ||
+          state.over ||
+          state.enemy ||
+          !room.visited ||
+          (room.event && !["stairs", "shop"].includes(room.event))
+        )
+          return;
+        room.hintChecked = true;
+        if (Math.random() >= 0.25) return;
+        const candidates = neighbors(from, true).filter((i) => {
+          const c = state.map[i];
+          return !c.seen && !c.hint && DISCOVERY_HINTS[c.event || c.terrain];
+        });
+        if (!candidates.length) return;
+        let i = pick(candidates),
+          c = state.map[i],
+          [kind, text] = DISCOVERY_HINTS[c.event || c.terrain];
+        c.hint = { kind, text, atStep: state.steps };
+        state.lastHint = { tile: i, ...c.hint };
+        $("#field-note").textContent = text;
+        log(
+          `A hint from column ${(i % W) + 1}, row ${Math.floor(i / W) + 1}: ${text}`,
+        );
+        renderMap();
+        const cell = $(`[data-tile="${i}"]`),
+          r = cell.getBoundingClientRect(),
+          note = document.createElement("div");
+        note.className = "discovery-whisper";
+        note.textContent = text;
+        note.style.left =
+          Math.max(90, Math.min(innerWidth - 90, r.left + r.width / 2)) + "px";
+        note.style.top = Math.max(22, r.top) + "px";
+        document.body.append(note);
+        setTimeout(() => note.remove(), 4200);
+      }
+      function markTravelGoal(goal) {
+        document
+          .querySelectorAll(".travel-goal")
+          .forEach((el) => el.classList.remove("travel-goal"));
+        $(`[data-tile="${goal}"]`)?.classList.add("travel-goal");
+      }
+      function fitNotebook() {
+        const desk = $(".desk"),
+          fit = innerWidth >= 1260 && innerHeight >= 560;
+        desk.classList.toggle("fit-notebook", fit);
+        if (!fit) {
+          desk.style.removeProperty("--desk-scale");
+          return;
+        }
+        const scale = Math.min(
+          1.12,
+          (innerWidth - 24) / 1800,
+          (innerHeight - 12) / desk.offsetHeight,
+        );
+        desk.style.setProperty(
+          "--desk-scale",
+          Math.max(0.35, scale).toFixed(4),
+        );
+      }
+
       let travel = null,
         coinRain = null;
       const alive = (h) => !!h && !h.dead && h.hp > 0;
@@ -6275,6 +7018,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         };
         h.death = record;
         state.pendingDeaths.push(record);
+        leaveCorpse(h.job, h.name);
         log(
           `${h.name} dies on floor ${state.depth}: ${cause}. There is no resurrection.`,
         );
@@ -6385,6 +7129,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           h.stats.damageBlocked += cost;
           renderBlock();
           armourFX(cost, "STUN BLOCKED");
+          shieldedFX($("#portrait-" + i));
           log(
             `Team armour blocks a stun on ${h.name}, consuming ${cost} armour.`,
           );
@@ -6403,6 +7148,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         if (e.block > 0) {
           let cost = Math.min(e.block, 6 * Math.max(1, power));
           e.block -= cost;
+          shieldedFX($("#enemy-art"));
           floatAt($("#enemy-art"), "Stun blocked · −" + cost, false, true);
           log(`${e.name} blocks stun, spending ${cost} armour.`);
           return "stun blocked · −" + cost + " enemy armour";
@@ -6432,34 +7178,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             value,
           }));
       }
-      function captureStage() {
-        if ($("#spotlight").hidden) return null;
-        let nodes = document.createDocumentFragment(),
-          card = $("#stage-card"),
-          snapshot = {
-            nodes,
-            className: card.className,
-            previous: stagePrevious,
-            focus: document.activeElement,
-          };
-        while (card.firstChild) nodes.append(card.firstChild);
-        return snapshot;
-      }
-      function restoreStage(snapshot) {
-        if (!snapshot) return;
-        let card = $("#stage-card");
-        card.replaceChildren(snapshot.nodes);
-        card.className = snapshot.className;
-        $("#spotlight").hidden = false;
-        stagePrevious = snapshot.previous;
-        if (snapshot.focus?.isConnected) snapshot.focus.focus();
-        else card.focus();
-        animate(
-          card,
-          [{ transform: "scale(1.025)" }, { transform: "scale(1)" }],
-          { duration: 250, juice: true },
-        );
-      }
+
       function moveRate() {
         let speed = skip ? 5 : Number(state?.speed) || 1;
         return 1 + 0.5 * (speed - 1);
@@ -6485,7 +7204,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       function recruitChance(
         partySize = state?.party.filter(alive).length || 1,
       ) {
-        return partySize === 1 ? 0.17 : 0.14;
+        return partySize === 1 ? 0.28 : 0.24;
       }
       function ensureStairsPath(map) {
         let start = pos(1, 7),
@@ -6500,9 +7219,11 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         let stairs = map.findIndex((c) => c.event === "stairs");
         if (stairs < 0) throw Error("A dungeon floor requires stairs");
         if (seen.has(stairs)) return map;
-        for (let x = 1; x <= 9; x++) map[pos(x, 7)].wall = false;
-        for (let y = 1; y <= 7; y++) map[pos(9, y)].wall = false;
-        map[stairs].wall = false;
+        for (let x = 1; x <= 9; x++)
+          Object.assign(map[pos(x, 7)], { wall: false, terrain: "floor" });
+        for (let y = 1; y <= 7; y++)
+          Object.assign(map[pos(9, y)], { wall: false, terrain: "floor" });
+        Object.assign(map[stairs], { wall: false, terrain: "floor" });
         return map;
       }
       async function wellEncounter(c) {
@@ -6534,13 +7255,13 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         showSpotlight(
           "The water wheel turns",
           "A little mercy, rolled into the margins.",
-          `<div class="trap-art">${icon("well")}</div>${drawMachine("fountain", [faces[0], faces[1], faces[3]], { title: "30% maximum HP + this roll" })}<div class="stage-result" id="fountain-result">What will the water remember?</div>`,
+          `<div class="trap-art">${icon("well")}</div>${drawMachine("fountain", [faces[0], faces[1], faces[3]], { title: "30% maximum HP + this roll" })}${criticalSpace()}<div class="stage-result" id="fountain-result">What will the water remember?</div>`,
           "well",
         );
         let symbols = await runMachine("fountain", [faces, faces, faces]),
           bonus = calculate(symbols).heal,
           details = state.party.filter(alive).map((h) => ({
-            label: h.name + " potential HP",
+            label: h.name + " · potential healing",
             icon: "heal",
             value: Math.ceil(h.maxHp * 0.3) + bonus,
           })),
@@ -6552,12 +7273,18 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           ...d,
           value: Math.ceil(d.value * multiplier),
         }));
-        $("#fountain-result").innerHTML = planned
-          .map(
-            (d, i) =>
-              `${escapeHTML(d.label)}: ${details[i].value}${multiplier > 1 ? " × " + multiplier + " = " : " → "}<b>${d.value}</b>`,
-          )
-          .join("<br>");
+        $("#fountain-result").innerHTML =
+          planned
+            .map(
+              (d, i) =>
+                `<div class="well-heal-total" data-before="${details[i].value}" data-after="${d.value}">${escapeHTML(d.label)}: ${multiplier > 1 ? `<b>${details[i].value}</b> × ${multiplier} = ` : ""}<strong>${d.value} HP</strong></div>`,
+            )
+            .join("") +
+          "<small>Potential total before the maximum-health cap.</small>";
+        $("#fountain-result").scrollIntoView({
+          block: "nearest",
+          behavior: "instant",
+        });
         state.lastWellRoll = {
           symbols,
           bonus,
@@ -6844,8 +7571,10 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       });
       addEventListener("resize", () => {
         sizeCanvas();
+        fitNotebook();
         positionPlayer(false);
       });
+      document.fonts.ready.then(fitNotebook);
       sizeCanvas();
       setInterval(() => {
         if (fxRandom() < 0.3) idleChatter();
@@ -6860,6 +7589,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         ["well", "Well"],
         ["beacon", "Beacon"],
         ["stairs", "Stairs"],
+        ["wall", "Wall"],
+        ["river", "Deep water"],
       ]
         .map(([i, t]) => `<span>${icon(i)}${t}</span>`)
         .join("");
