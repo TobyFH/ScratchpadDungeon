@@ -18,7 +18,7 @@ jobs:
         shell: bash
         run: |
           mkdir -p test-results
-          npm test 2>&1 | tee test-results/browser-tests.log
+          npm run test:ci 2>&1 | tee test-results/browser-tests.log
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7, Node 24
         if: always()
         with:

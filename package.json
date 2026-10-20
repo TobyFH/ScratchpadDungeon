@@ -4,7 +4,7 @@
   "private": true,
   "description": "Standalone notebook dungeon with validated production data, assets, audio and controller support.",
   "scripts": {
-    "test": "node --test tests/game.test.cjs tests/production.test.cjs",
+    "test": "node --test tests/game.test.cjs tests/production.test.cjs tests/ci-reporter.test.cjs",
     "build": "node tools/build.cjs",
     "balance:export": "node tools/balance.cjs export",
     "balance:validate": "node tools/balance.cjs validate",
@@ -20,11 +20,13 @@
     "desktop:dist:linux": "node tools/desktop.cjs package linux zip",
     "desktop:dist:win": "node tools/desktop.cjs package win zip",
     "test:production": "node --test tests/production.test.cjs",
-    "test:all": "node --test tests/game.test.cjs tests/production.test.cjs",
+    "test:all": "node --test tests/game.test.cjs tests/production.test.cjs tests/ci-reporter.test.cjs",
     "validate": "node tools/validate.cjs",
     "test:game": "node --test tests/game.test.cjs",
     "pretest": "node tools/build.cjs",
-    "format": "prettier --write src tools desktop tests/production.test.cjs docs"
+    "format": "prettier --write src tools desktop tests/production.test.cjs docs",
+    "pretest:ci": "node tools/build.cjs",
+    "test:ci": "node --test --test-reporter=spec --test-reporter=./tools/ci-reporter.cjs --test-reporter-destination=stdout --test-reporter-destination=stdout tests/game.test.cjs tests/production.test.cjs tests/ci-reporter.test.cjs"
   },
   "devDependencies": {
     "acorn": "8.17.0",
