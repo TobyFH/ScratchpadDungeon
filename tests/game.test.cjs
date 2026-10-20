@@ -29,12 +29,14 @@ after(async () => {
   if (server) await new Promise((resolve) => server.close(resolve));
 });
 
-async function game(t, viewport = { width: 1440, height: 1100 }) {
-  const context = await browser.newContext({ viewport, acceptDownloads: true });
-  const page = await context.newPage();
-  const errors = [];
+async function game(t, { auto = false, width = 1440 } = {}) {
+  const context = await browser.newContext({
+      viewport: { width, height: 1100 },
+      acceptDownloads: true,
+    }),
+    page = await context.newPage(),
+    errors = [];
   page.on("pageerror", (e) => errors.push(e.message));
-  // Seed only randomness. Gameplay assertions still exercise the real game code.
   await page.addInitScript(() => {
     let seed = 107;
     Math.random = () => {
@@ -47,26 +49,38 @@ async function game(t, viewport = { width: 1440, height: 1100 }) {
     localStorage.clear();
     newRun();
   });
+  if (auto) await autoEvents(page);
   t.after(async () => {
-    assert.deepEqual(errors, [], "no browser runtime errors");
+    assert.deepEqual(errors, [], "no browser errors");
     await context.close();
   });
   return page;
 }
-async function fast(page) {
-  await page.locator("#skip-animations").check();
-}
-async function forcedReels(page, type, tier = 1, hero = 0) {
-  await page.evaluate(
-    ({ type, tier, hero }) => {
-      state.party[hero].reels = [0, 1, 2].map(() =>
-        Array.from({ length: 6 }, () => ({ type, tier })),
+async function autoEvents(page) {
+  await page.evaluate(() => {
+    window.autoEventObserver = new MutationObserver(() => {
+      let button = document.querySelector(
+        "#stage-confirm:not(:disabled),#recruit-accept:not(:disabled),#recruit-decline:not(:disabled)",
       );
-    },
-    { type, tier, hero },
-  );
+      if (button && !document.querySelector("#spotlight").hidden)
+        button.click();
+      if (!document.querySelector("#overlay").hidden && modalKind === "shop")
+        document.querySelector("#modal [data-close]")?.click();
+    });
+    window.autoEventObserver.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ["disabled", "hidden"],
+    });
+  });
 }
-
+async function fast(page) {
+  await page.locator("#animation-speed").selectOption("skip");
+}
+async function finish(page) {
+  await page.waitForFunction(() => !busy, null, { timeout: 30000 });
+}
 async function encounter(page, { hp = 1000, countdown = 20 } = {}) {
   await page.evaluate(
     ({ hp, countdown }) => {
@@ -78,19 +92,23 @@ async function encounter(page, { hp = 1000, countdown = 20 } = {}) {
     { hp, countdown },
   );
 }
-async function mixedReels(page, hero = 0) {
-  await page.evaluate((hero) => {
-    state.party[hero].reels = [
-      [{ type: "attack", tier: 1 }],
-      [{ type: "attack", tier: 2 }],
-      [{ type: "heal", tier: 1 }],
-    ];
-  }, hero);
+async function faces(
+  page,
+  types = [
+    ["attack", 1],
+    ["attack", 2],
+    ["heal", 1],
+  ],
+  hero = 0,
+) {
+  await page.evaluate(
+    ({ types, hero }) => {
+      state.party[hero].reels = types.map(([type, tier]) => [{ type, tier }]);
+    },
+    { types, hero },
+  );
 }
-async function finish(page) {
-  await page.waitForFunction(() => !busy, {}, { timeout: 30000 });
-}
-function clearFloorScript() {
+function blankFloor() {
   state.map = state.map.map((c, i) => ({
     ...c,
     wall: i % W === 0 || i % W === W - 1 || i < W || i >= W * (H - 1),
@@ -102,73 +120,200 @@ function clearFloorScript() {
   state.map[state.position].seen = true;
   render();
 }
+async function startEval(page, source) {
+  await page.evaluate((source) => {
+    window.testAction = eval(source);
+  }, source);
+}
 
-test("notebook renders detailed art, tiered symbols, and desktop/mobile layouts", async (t) => {
-  const page = await game(t);
-  assert.equal(await page.locator(".tile").count(), 99);
-  assert.equal(await page.locator(".hero").count(), 1);
-  assert.equal(await page.evaluate(() => state.party[0].job), "fighter");
+test("starts with one tank, no items, the trap key, and an always-available pace selector", async (t) => {
+  let p = await game(t);
+  assert.deepEqual(
+    await p.evaluate(() => ({
+      party: state.party.length,
+      potions: state.potions,
+      bombs: state.bombs,
+      wards: state.wards,
+      block: state.block,
+    })),
+    { party: 1, potions: 0, bombs: 0, wards: 0, block: 0 },
+  );
+  assert.equal(await p.locator("#animation-speed option").count(), 4);
+  assert.match(await p.locator("#legend").textContent(), /Trap/);
+  assert.ok(
+    (await p.evaluate(
+      () => state.map.filter((c) => c.event === "trap").length,
+    )) >= 2,
+  );
   assert.equal(
-    await page.evaluate(() => document.fonts.check("18px Notebook")),
+    await p.evaluate(() => document.fonts.check("18px Notebook")),
     true,
   );
-  assert.equal(await page.locator("#portrait-0 svg pattern").count(), 1);
-  assert.equal(
-    await page
-      .locator('#machine-hero-0 [data-reel="2"] .tier-symbol svg')
-      .count(),
-    2,
-  );
-  await page.screenshot({
+  assert.doesNotMatch(await p.locator("body").textContent(), /Sunseed/);
+  await p.screenshot({
     path: path.join(root, "test-results/desktop.png"),
     fullPage: true,
   });
-  for (let width of [1440, 1024, 768, 390, 320]) {
-    await page.setViewportSize({ width, height: 900 });
+});
+
+test("notebook and three-hero machines fit desktop, tablet, and small phones", async (t) => {
+  let p = await game(t);
+  await p.evaluate(() => {
+    state.party.push(makeHero("Mira", "healer"), makeHero("Wren", "rogue"));
+    beginEncounter();
+    render();
+  });
+  for (let width of [1536, 1024, 768, 390, 320]) {
+    await p.setViewportSize({ width, height: 900 });
     assert.equal(
-      await page.evaluate(
-        () => document.documentElement.scrollWidth > innerWidth,
-      ),
+      await p.evaluate(() => document.documentElement.scrollWidth > innerWidth),
       false,
-      "no horizontal overflow at " + width,
+      "no overflow at " + width,
     );
   }
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.screenshot({
+  await p.setViewportSize({ width: 390, height: 844 });
+  await p.screenshot({
     path: path.join(root, "test-results/mobile.png"),
     fullPage: true,
   });
-  await page.getByRole("button", { name: "Field guide", exact: true }).click();
-  await page.keyboard.press("Tab");
-  assert.equal(
-    await page
-      .locator("#modal button")
-      .first()
-      .evaluate((el) => document.activeElement === el),
-    true,
-  );
-  await page.keyboard.press("Escape");
-  assert.equal(await page.locator("#overlay").isVisible(), false);
 });
 
-test("hover reports unknown until a tile is revealed; erasing happens before movement and its event", async (t) => {
-  const page = await game(t);
-  await page.locator('[data-tile="79"]').hover();
+test("treasure waits for explicit confirmation even in Skip and Escape does not dismiss it", async (t) => {
+  let p = await game(t);
+  await fast(p);
+  await p.locator('[data-tile="79"]').click();
+  await p.waitForSelector("#stage-confirm");
+  assert.equal(await p.evaluate(() => busy), true);
+  await p.waitForTimeout(1400);
+  assert.equal(await p.locator("#spotlight").isVisible(), true);
+  await p.keyboard.press("Escape");
+  assert.equal(await p.locator("#spotlight").isVisible(), true);
   assert.equal(
-    await page.locator("#hover-name").textContent(),
-    "Unknown / pencil-covered tile",
+    await p.locator("#stage-card input,#stage-card select").count(),
+    0,
   );
-  // Capture the short eraser phase at the DOM mutation itself. Polling after
-  // click() can miss a 200ms animation on a busy browser worker.
-  await page.evaluate(() => {
+  await p.locator("#animation-speed").selectOption("2");
+  assert.equal(await p.evaluate(() => skip), false);
+  await p.locator("#stage-confirm").click();
+  await finish(p);
+  assert.equal(await p.locator("#spotlight").isVisible(), false);
+  assert.ok((await p.evaluate(() => state.gold)) > 0);
+});
+
+test("enemy entrance requires confirmation before shrinking into the right page", async (t) => {
+  let p = await game(t);
+  await fast(p);
+  await p.evaluate(() => {
+    state.map[79].event = "enemy";
+    render();
+  });
+  await p.locator('[data-tile="79"]').click();
+  await p.waitForSelector("#stage-confirm");
+  assert.equal(
+    await p.locator("#stage-title").textContent(),
+    "An unwelcome scribble",
+  );
+  await p.waitForTimeout(1200);
+  assert.equal(await p.locator("#entrance-art").isVisible(), true);
+  assert.equal(await p.evaluate(() => busy), true);
+  await p.locator("#animation-speed").selectOption("2");
+  await p.locator("#stage-confirm").click();
+  await p.waitForSelector(".encounter-ghost");
+  await finish(p);
+  assert.equal(await p.locator("#enemy-art").isVisible(), true);
+});
+
+test("a matching pair does not crit; three identical symbols roll an automatic, lingering multiplier", async (t) => {
+  let p = await game(t);
+  await fast(p);
+  await encounter(p);
+  await faces(p, [
+    ["attack", 1],
+    ["attack", 1],
+    ["heal", 1],
+  ]);
+  await p.locator('[data-spin="0"]').click();
+  await finish(p);
+  assert.equal(await p.evaluate(() => state.lastCritical), undefined);
+  assert.equal(await p.evaluate(() => state.enemy.hp), 994);
+  await faces(p, [
+    ["attack", 1],
+    ["attack", 1],
+    ["attack", 1],
+  ]);
+  await p.locator('[data-spin="0"]').click();
+  await p.waitForSelector("#critical-result strong");
+  let info = await p.evaluate(() => ({
+    hp: state.enemy.hp,
+    m: state.lastCritical.multiplier,
+  }));
+  assert.equal(await p.locator("#stage-confirm").count(), 0);
+  await p.waitForTimeout(250);
+  assert.equal(await p.locator("#spotlight").isVisible(), true);
+  await finish(p);
+  assert.equal(await p.locator("#spotlight").isVisible(), false);
+  assert.equal(
+    await p.evaluate(() => state.enemy.hp),
+    info.hp - Math.ceil(9 * info.m),
+  );
+});
+
+test("pace supports 1×, 2×, 5×, and Skip; Skip retains particles and impact shakes", async (t) => {
+  let p = await game(t);
+  for (let speed of ["2", "5", "skip", "1"]) {
+    await p.locator("#animation-speed").selectOption(speed);
+    assert.equal(await p.evaluate(() => state.speed), speed);
+  }
+  await fast(p);
+  let fx = await p.evaluate(() => {
+    shakeElement(document.querySelector("#machine-hero-0"), 3);
+    burst(document.querySelector("#machine-hero-0"), "paper", 12);
+    return {
+      shakes: [...liveAnimations].filter((a) => a.juice).length,
+      particles: particles.length,
+    };
+  });
+  assert.ok(fx.shakes > 0);
+  assert.ok(fx.particles >= 12);
+  assert.equal(
+    await p
+      .locator("body")
+      .evaluate((el) => el.classList.contains("skip-cinematics")),
+    true,
+  );
+});
+
+test("slot handles have stationary, generous hitboxes while their artwork swings", async (t) => {
+  let p = await game(t);
+  await encounter(p);
+  await faces(p);
+  let lever = p.locator('[data-spin="0"]'),
+    before = await lever.boundingBox();
+  assert.ok(before.width >= 44);
+  await lever.click();
+  await p.waitForFunction(() => currentRoll?.id === "hero-0");
+  let during = await lever.boundingBox();
+  assert.ok(Math.abs(before.x - during.x) < 1);
+  assert.ok(Math.abs(before.y - during.y) < 1);
+  await lever.click();
+  await finish(p);
+  assert.equal(await p.evaluate(() => state.enemy.hp), 991);
+  assert.equal(await p.evaluate(() => state.enemy.countdown), 19);
+});
+
+test("unknown hover, erasing before stepping, and revealed-only shortest routes preserve fog", async (t) => {
+  let p = await game(t, { auto: true });
+  await p.evaluate(blankFloor);
+  await p.locator('[data-tile="79"]').hover();
+  assert.match(await p.locator("#hover-name").textContent(), /Unknown/);
+  await p.evaluate(() => {
     window.eraseSnapshot = null;
-    const observer = new MutationObserver(() => {
+    let observer = new MutationObserver(() => {
       if (
         document.querySelector('[data-tile="79"]').classList.contains("erasing")
       ) {
         window.eraseSnapshot = {
           position: state.position,
-          gold: state.gold,
           seen: state.map[79].seen,
         };
         observer.disconnect();
@@ -180,70 +325,29 @@ test("hover reports unknown until a tile is revealed; erasing happens before mov
       subtree: true,
     });
   });
-  await page.locator('[data-tile="79"]').click();
-  await page.waitForFunction(() => window.eraseSnapshot);
-  assert.deepEqual(await page.evaluate(() => window.eraseSnapshot), {
+  await p.locator('[data-tile="79"]').click();
+  await finish(p);
+  assert.deepEqual(await p.evaluate(() => window.eraseSnapshot), {
     position: 78,
-    gold: 0,
     seen: false,
   });
-  await page.waitForSelector("#machine-treasure");
-  assert.equal(await page.evaluate(() => state.position), 79);
-  assert.equal(await page.evaluate(() => state.map[79].seen), true);
-  await page.locator("#stage-card input").check();
-  await finish(page);
-  assert.ok((await page.evaluate(() => state.gold)) > 0);
-  await page.locator('[data-tile="79"]').hover();
-  assert.equal(
-    await page.locator("#hover-name").textContent(),
-    "Treasure / explored",
-  );
-});
-
-test("unknown tiles cannot be intermediate path cells; revealed routes use the shortest path", async (t) => {
-  const page = await game(t);
-  await fast(page);
-  await page.evaluate(clearFloorScript);
-  assert.equal(await page.evaluate(() => shortestPath(pos(3, 7))), null);
-  assert.deepEqual(await page.evaluate(() => shortestPath(pos(2, 7))), [79]);
-  await page.locator('[data-tile="81"]').click();
-  assert.equal(await page.evaluate(() => state.position), 78);
-  await page.evaluate(() => {
+  assert.equal(await p.evaluate(() => shortestPath(pos(4, 7))), null);
+  await fast(p);
+  await p.evaluate(() => {
     for (let x = 1; x <= 8; x++) state.map[pos(x, 7)].seen = true;
     render();
   });
-  assert.equal(await page.evaluate(() => shortestPath(pos(8, 7)).length), 7);
-  await page.locator('[data-tile="85"]').click();
-  await finish(page);
-  assert.equal(await page.evaluate(() => state.position), 85);
-  assert.equal(await page.evaluate(() => state.steps), 7);
-  assert.equal(
-    await page.evaluate(() => state.map[pos(5, 6)].seen),
-    false,
-    "route did not reveal neighbouring rooms",
-  );
+  let length = await p.evaluate(() => shortestPath(pos(8, 7)).length);
+  await p.locator('[data-tile="85"]').click();
+  await finish(p);
+  assert.equal(await p.evaluate(() => state.steps), length + 1);
+  assert.equal(await p.evaluate(() => state.map[pos(5, 6)].seen), false);
 });
 
-test("a hidden interior wall erases but the party does not walk into it", async (t) => {
-  const page = await game(t);
-  await fast(page);
-  await page.evaluate(clearFloorScript);
-  await page.evaluate(() => {
-    state.map[79].wall = true;
-    render();
-  });
-  await page.locator('[data-tile="79"]').click();
-  await finish(page);
-  assert.equal(await page.evaluate(() => state.position), 78);
-  assert.equal(await page.evaluate(() => state.map[79].seen), true);
-  assert.equal(await page.evaluate(() => state.steps), 0);
-  assert.equal(await page.locator('[data-tile="79"]').isDisabled(), true);
-});
-
-test("beacons reveal exactly eight adjacent/diagonal cells without activating their events", async (t) => {
-  const page = await game(t);
-  await fast(page);
-  const result = await page.evaluate(async () => {
+test("beacon reveals only eight neighbours and does not activate their events", async (t) => {
+  let p = await game(t, { auto: true });
+  await fast(p);
+  let r = await p.evaluate(async () => {
     state.map.forEach((c) => {
       c.seen = false;
       c.event = null;
@@ -251,283 +355,58 @@ test("beacons reveal exactly eight adjacent/diagonal cells without activating th
     });
     state.position = pos(5, 4);
     state.map[state.position].seen = true;
-    state.map[state.position].event = "beacon";
     state.map[pos(6, 5)].event = "enemy";
     render();
-    await resolveTile(state.map[state.position]);
+    await resolveTile({ event: "beacon" });
     return {
-      revealed: state.map
-        .map((c, i) => (c.seen ? i : -1))
-        .filter((i) => i >= 0),
+      seen: state.map.map((c, i) => (c.seen ? i : -1)).filter((i) => i >= 0),
       expected: [state.position, ...neighbors(state.position, true)].sort(
         (a, b) => a - b,
       ),
       enemy: state.enemy,
-      block: state.block,
     };
   });
-  assert.deepEqual(result.revealed, result.expected);
-  assert.equal(result.enemy, null);
-  assert.equal(result.block, 0);
+  assert.deepEqual(r.seen, r.expected);
+  assert.equal(r.enemy, null);
 });
 
-test("well healing is partial and revives the fallen; portraits visibly track injury", async (t) => {
-  const page = await game(t);
-  await fast(page);
-  await page.evaluate(() => {
+test("healing well requires a click, partially revives the team, and emits green healing icons even in Skip", async (t) => {
+  let p = await game(t);
+  await fast(p);
+  await p.evaluate(() => {
     state.party.push(makeHero("Mira", "healer"));
     state.party[0].hp = 1;
     state.party[1].hp = 0;
+    state.map[79].event = "well";
     render();
   });
-  const wounded = await page.locator("#portrait-0").innerHTML();
-  await page.evaluate(async () => {
-    await resolveTile({ event: "well" });
-    render();
-  });
+  await p.locator('[data-tile="79"]').click();
+  await p.waitForSelector("#stage-confirm");
   assert.deepEqual(
-    await page.evaluate(() => state.party.map((h) => h.hp)),
-    [13, 10],
+    await p.evaluate(() => state.party.map((h) => h.hp)),
+    [1, 0],
   );
-  assert.equal(await page.locator("#hero-1 .injury").textContent(), "wounded");
-  await page.evaluate(() => {
-    state.party[0].hp = 40;
-    syncHero(0);
-  });
-  assert.notEqual(await page.locator("#portrait-0").innerHTML(), wounded);
-  assert.equal(await page.locator("#hero-0 .injury").textContent(), "steady");
-});
-
-test("treasure reels can award gold and items; traps roll danger or a safe escape", async (t) => {
-  const page = await game(t);
-  await fast(page);
-  await page.evaluate(async () => {
-    let random = Math.random;
-    Math.random = () => 4.5 / 8;
-    await treasureRoll();
-    Math.random = random;
-  });
-  assert.equal(await page.evaluate(() => state.potions), 5);
-  assert.ok((await page.evaluate(() => state.gold)) > 0);
-  assert.match(await page.locator("#result-ribbon").textContent(), /tonic/);
-  await page.evaluate(async () => {
-    let random = Math.random;
-    Math.random = () => 0;
-    await trapRoll();
-    Math.random = random;
-  });
-  assert.equal(await page.evaluate(() => state.party[0].hp), 40);
-  assert.match(await page.locator("#result-ribbon").textContent(), /no damage/);
-  await page.evaluate(async () => {
-    let random = Math.random;
-    Math.random = () => 0.55;
-    await trapRoll();
-    Math.random = random;
-  });
-  assert.equal(await page.evaluate(() => state.party[0].hp), 31);
-  assert.match(await page.locator("#result-ribbon").textContent(), /9 HP/);
-});
-
-test("rare wanderers recruit at most three heroes with class-specific machines", async (t) => {
-  const page = await game(t);
-  await fast(page);
-  assert.equal(
-    await page.evaluate(
-      () => state.map.filter((c) => c.event === "recruit").length,
-    ),
-    1,
+  await p.locator("#stage-confirm").click();
+  await p.waitForFunction(
+    () => document.querySelectorAll(".healing-glyph").length >= 8,
   );
-  assert.equal(
-    await page.evaluate(
-      () => state.map.filter((c) => c.event === "beacon").length,
-    ),
-    1,
+  assert.deepEqual(
+    await p.evaluate(() => state.party.map((h) => h.hp)),
+    [15, 10],
   );
-  await page.evaluate(async () => {
-    await resolveTile({ event: "recruit" });
-    await resolveTile({ event: "recruit" });
-    await resolveTile({ event: "recruit" });
-    render();
-  });
-  assert.deepEqual(await page.evaluate(() => state.party.map((h) => h.job)), [
-    "fighter",
-    "healer",
-    "rogue",
-  ]);
-  assert.equal(await page.evaluate(() => state.potions), 3);
-  assert.equal(await page.locator(".hero").count(), 3);
   assert.ok(
-    (await page.evaluate(
-      () => state.party[1].reels[0].filter((s) => s.type === "heal").length,
-    )) >
-      (await page.evaluate(
-        () => state.party[0].reels[0].filter((s) => s.type === "heal").length,
-      )),
-  );
-  await encounter(page);
-  await page.screenshot({
-    path: path.join(root, "test-results/combat.png"),
-    fullPage: true,
-  });
-});
-
-test("normal combat rolls on-page, animates its handle, and clicking lands the same preselected result", async (t) => {
-  const page = await game(t);
-  await encounter(page);
-  await mixedReels(page);
-  await page.locator('[data-spin="0"]').click();
-  await page.waitForFunction(() => currentRoll?.id === "hero-0");
-  assert.equal(
-    await page
-      .locator("#machine-hero-0 .lever")
-      .evaluate((el) => el.classList.contains("pulling")),
-    true,
-  );
-  assert.equal(await page.locator("#spotlight").isVisible(), false);
-  assert.equal(await page.locator(".tile:not(:disabled)").count(), 0);
-  await page.locator("#machine-hero-0 .machine-face").click();
-  await finish(page);
-  assert.equal(await page.evaluate(() => state.enemy.hp), 991);
-  assert.equal(await page.evaluate(() => state.enemy.countdown), 19);
-  assert.equal(await page.locator("#spotlight").isVisible(), false);
-  assert.match(await page.locator("#result-ribbon").textContent(), /9 damage/);
-  await fast(page);
-  await page.locator('[data-spin="0"]').click();
-  await finish(page);
-  assert.equal(await page.evaluate(() => state.enemy.hp), 982);
-  assert.equal(
-    await page.evaluate(() => state.enemy.countdown),
-    18,
-    "same hero may act twice",
-  );
-});
-
-test("matching symbols open a second multiplier machine and apply its roll to the first", async (t) => {
-  const page = await game(t);
-  await encounter(page);
-  await forcedReels(page, "attack");
-  await page.locator('[data-spin="0"]').click();
-  await page.waitForFunction(() => currentRoll?.id === "hero-0");
-  await page.locator("#machine-hero-0 .machine-face").click();
-  await page.waitForFunction(() => currentRoll?.id === "critical");
-  assert.equal(await page.locator("#stage-title").textContent(), "Critical!");
-  assert.equal(await page.locator("#machine-critical .slot-window").count(), 1);
-  let multiplier = await page.evaluate(() => state.lastCritical.multiplier);
-  assert.ok([2, 2.5, 3, 4].includes(multiplier));
-  await page.locator("#machine-critical .machine-face").click();
-  await finish(page);
-  assert.equal(
-    await page.evaluate(() => state.enemy.hp),
-    1000 - Math.ceil(9 * multiplier),
-  );
-  assert.equal(await page.locator("#spotlight").isVisible(), false);
-  assert.match(await page.locator("#result-ribbon").textContent(), /critical/);
-});
-
-test("critical machines slow down and close automatically; skip-all can interrupt a live roll", async (t) => {
-  const page = await game(t);
-  await encounter(page);
-  await forcedReels(page, "attack");
-  await page.locator('[data-spin="0"]').click();
-  await page.waitForFunction(() => currentRoll?.id === "hero-0");
-  await page.locator("#machine-hero-0 .machine-face").click();
-  await page.waitForFunction(() => currentRoll?.id === "critical");
-  await finish(page);
-  assert.equal(await page.locator("#spotlight").isVisible(), false);
-  await page.locator('[data-spin="0"]').click();
-  await page.waitForFunction(() => !!currentRoll);
-  await page.locator("#skip-animations").check();
-  await finish(page);
-  assert.equal(await page.locator("#spotlight").isVisible(), false);
-  assert.equal(await page.evaluate(() => particles.length), 0);
-  assert.equal(await page.evaluate(() => state.skip), true);
-});
-
-test("different tiers do not match; double actions are rejected while rolling", async (t) => {
-  const page = await game(t);
-  await fast(page);
-  await encounter(page);
-  await page.evaluate(() => {
-    state.party[0].reels = [1, 2, 3].map((tier) => [{ type: "attack", tier }]);
-  });
-  await page.evaluate(async () => {
-    let first = spin(0);
-    await spin(0);
-    await first;
-  });
-  assert.equal(await page.evaluate(() => state.enemy.hp), 982);
-  assert.equal(await page.evaluate(() => state.enemy.countdown), 19);
-  assert.equal(await page.evaluate(() => state.lastCritical), undefined);
-});
-
-test("persistent team block wears away across multiple independently rolled enemy strikes", async (t) => {
-  const page = await game(t);
-  await fast(page);
-  await encounter(page);
-  await forcedReels(page, "block");
-  await page.locator('[data-spin="0"]').click();
-  await finish(page);
-  let stored = await page.evaluate(() => state.block);
-  assert.ok(stored >= 12);
-  await page.evaluate(async () => {
-    await victory(state.enemy);
-    render();
-  });
-  assert.equal(await page.evaluate(() => state.block), stored);
-  await encounter(page, { countdown: 1 });
-  await page.evaluate(() => {
-    state.block = 15;
-    state.enemy.frequency = 2;
-    state.enemy.strikes = 3;
-    state.enemy.damage = 3;
-    state.enemy.reels = [1, 2, 3].map((tier) => [{ type: "attack", tier }]);
-    state.party[0].reels = [1, 2, 3].map((tier) => [{ type: "attack", tier }]);
-    render();
-  });
-  let hp = await page.evaluate(() => state.party[0].hp);
-  await page.locator('[data-spin="0"]').click();
-  await finish(page);
-  assert.equal(await page.evaluate(() => state.block), 0);
-  assert.equal(await page.evaluate(() => state.party[0].hp), hp - 3);
-  assert.equal(await page.evaluate(() => state.enemy.countdown), 2);
-  assert.equal(
-    await page.evaluate(
-      () =>
-        state.logs.filter((s) => s.includes("damage") && s.includes("→"))
-          .length,
+    await p.evaluate(() =>
+      [...liveAnimations].some(
+        (a) => a.juice && a.effect.target.id === "portrait-1",
+      ),
     ),
-    3,
   );
+  await finish(p);
 });
 
-test("enemy machines can heal, block, and stun; enemy scaling increases speed and multi-strikes", async (t) => {
-  const page = await game(t);
-  await fast(page);
-  await encounter(page, { countdown: 1 });
-  await mixedReels(page);
-  await page.evaluate(() => {
-    state.enemy.hp = 30;
-    state.enemy.reels = [
-      [{ type: "heal", tier: 1 }],
-      [{ type: "block", tier: 2 }],
-      [{ type: "stun", tier: 1 }],
-    ];
-  });
-  await page.locator('[data-spin="0"]').click();
-  await finish(page);
-  assert.equal(await page.evaluate(() => state.enemy.hp), 23);
-  assert.equal(await page.evaluate(() => state.enemy.block), 4);
-  assert.equal(await page.evaluate(() => state.party[0].stun), 1);
-  let xp = await page.evaluate(() => state.party[0].xp);
-  await page.locator('[data-spin="0"]').click();
-  await finish(page);
-  assert.equal(await page.evaluate(() => state.party[0].stun), 0);
-  assert.equal(
-    await page.evaluate(() => state.party[0].xp),
-    xp,
-    "recovering consumes an action without awarding a spin",
-  );
-  const scaling = await page.evaluate(() => {
+test("floor-one enemies attack every two actions and scale to faster multi-strikes", async (t) => {
+  let p = await game(t);
+  let scaling = await p.evaluate(() => {
     let old = Math.random;
     Math.random = () => 0;
     state.depth = 1;
@@ -538,401 +417,607 @@ test("enemy machines can heal, block, and stun; enemy scaling increases speed an
     let b = { ...state.enemy };
     Math.random = old;
     return {
-      health: b.maxHp > a.maxHp,
-      damage: b.damage > a.damage,
-      frequency: b.frequency < a.frequency,
+      start: a.frequency,
+      hp: a.hp,
+      dmg: a.damage,
+      speed: b.frequency < a.frequency,
       strikes: b.strikes > a.strikes,
+      health: b.hp > a.hp,
     };
   });
-  assert.deepEqual(scaling, {
-    health: true,
-    damage: true,
-    frequency: true,
-    strikes: true,
-  });
+  assert.equal(scaling.start, 2);
+  assert.ok(scaling.hp > 30);
+  assert.ok(scaling.dmg >= 6);
+  assert.ok(scaling.speed && scaling.strikes && scaling.health);
 });
 
-test("hero stun cancels an enemy turn; targeted healing and tonics revive only their chosen hero", async (t) => {
-  const page = await game(t);
-  await fast(page);
-  await encounter(page, { countdown: 1 });
-  await forcedReels(page, "stun");
-  await page.locator('[data-spin="0"]').click();
-  await finish(page);
-  assert.equal(await page.evaluate(() => state.party[0].hp), 40);
-  assert.ok(
-    await page.evaluate(() =>
-      state.logs.some((s) => s.includes("loses its attack to stun")),
+test("weighted class reels keep tank heals rare, healer attacks rare, and rogue heals absent", async (t) => {
+  let p = await game(t);
+  let odds = await p.evaluate(() =>
+    Object.fromEntries(
+      ["fighter", "healer", "rogue"].map((job) => {
+        let r = makeHero("Test", job).reels[0],
+          sum = r.reduce((n, s) => n + s.weight, 0);
+        return [
+          job,
+          Object.fromEntries(
+            ["attack", "heal", "block", "stun"].map((type) => [
+              type,
+              r
+                .filter((s) => s.type === type)
+                .reduce((n, s) => n + s.weight, 0) / sum,
+            ]),
+          ),
+        ];
+      }),
     ),
   );
-  await page.evaluate(() => {
+  assert.ok(odds.fighter.heal < 0.04);
+  assert.ok(odds.healer.heal > 0.7);
+  assert.ok(odds.healer.attack < 0.08);
+  assert.equal(odds.rogue.heal, 0);
+  assert.ok(odds.rogue.attack > 0.7);
+});
+
+test("shared block absorbs multi-strikes, animates protection, and clears after victory and before the next fight", async (t) => {
+  let p = await game(t, { auto: true });
+  await fast(p);
+  await encounter(p);
+  let protectedHit = await p.evaluate(() => {
+    state.block = 8;
+    let hp = state.party[0].hp;
+    damageHero(0, 6, "Test strike");
+    return {
+      hp: state.party[0].hp,
+      expected: hp,
+      block: state.block,
+      fx: [...liveAnimations].some(
+        (a) => a.juice && a.effect.target.id === "block",
+      ),
+      shield: particles.some((p) => p.kind === "shield"),
+    };
+  });
+  assert.equal(protectedHit.hp, protectedHit.expected);
+  assert.equal(protectedHit.block, 2);
+  assert.ok(protectedHit.fx && protectedHit.shield);
+  await p.evaluate(async () => {
+    await victory(state.enemy);
+    render();
+  });
+  assert.equal(await p.evaluate(() => state.block), 0);
+  await p.evaluate(() => {
+    state.block = 30;
+    beginEncounter();
+    render();
+  });
+  assert.equal(await p.evaluate(() => state.block), 0);
+  assert.match(await p.locator("#block").textContent(), /TEAM BLOCK/);
+});
+
+test("EXP is unchanged by repeated spins and granted only for a successful battle", async (t) => {
+  let p = await game(t, { auto: true });
+  await fast(p);
+  await encounter(p);
+  await faces(p);
+  await p.evaluate(async () => {
+    await spin(0);
+    await spin(0);
+  });
+  assert.equal(await p.evaluate(() => state.party[0].xp), 0);
+  await p.evaluate(() => {
+    state.enemy.hp = 1;
+  });
+  await p.locator('[data-spin="0"]').click();
+  await finish(p);
+  assert.equal(await p.evaluate(() => state.battlesWon), 1);
+  assert.equal(await p.evaluate(() => state.party[0].xp), 10);
+  assert.equal(await p.evaluate(() => state.lastLoot.source), "battle");
+});
+
+test("loot is mostly gold, rare items and rarer artefacts; coin particles scale with the reward", async (t) => {
+  let p = await game(t);
+  await fast(p);
+  let chances = await p.evaluate(() => {
+    let r = lootFaces(),
+      sum = r.reduce((n, s) => n + s.weight, 0);
+    return {
+      items:
+        r
+          .filter((s) => ["potion", "bomb", "ward"].includes(s.type))
+          .reduce((n, s) => n + s.weight, 0) / sum,
+      artefact: r.find((s) => s.type === "artefact").weight / sum,
+    };
+  });
+  assert.ok(chances.items < 0.025);
+  assert.ok(chances.artefact <= 0.004);
+  await startEval(
+    p,
+    "(async()=>{let old=Math.random;Math.random=()=>0;try{await treasureRoll()}finally{Math.random=old}})()",
+  );
+  await p.waitForSelector("#stage-confirm");
+  let counts = await p.evaluate(() => ({
+    gold: state.lastLoot.gold,
+    coins: particles.filter((p) => p.kind === "coin").length,
+  }));
+  assert.equal(counts.coins, Math.min(140, counts.gold));
+  await p.locator("#stage-confirm").click();
+  await p.evaluate(() => window.testAction);
+});
+
+test("rare adventurers preview class, art and dialogue; decline, accept, and the cap all work", async (t) => {
+  let p = await game(t);
+  await fast(p);
+  await startEval(p, "recruitEncounter()");
+  await p.waitForSelector("#recruit-accept");
+  assert.match(
+    await p.locator("#stage-card").textContent(),
+    /Healer|Rogue|Tank/,
+  );
+  assert.equal(await p.locator("#stage-card .stage-art svg").count(), 1);
+  assert.ok((await p.locator(".encounter-quote").textContent()).length > 10);
+  await p.locator("#recruit-decline").click();
+  await p.evaluate(() => window.testAction);
+  assert.equal(await p.evaluate(() => state.party.length), 1);
+  await startEval(p, "recruitEncounter()");
+  await p.locator("#recruit-accept").click();
+  await p.evaluate(() => window.testAction);
+  assert.equal(await p.evaluate(() => state.party.length), 2);
+  await startEval(p, "recruitEncounter()");
+  await p.locator("#recruit-accept").click();
+  await p.evaluate(() => window.testAction);
+  await startEval(p, "recruitEncounter()");
+  await p.waitForSelector("#recruit-decline");
+  assert.equal(await p.locator("#recruit-accept").count(), 0);
+  await p.locator("#recruit-decline").click();
+  assert.equal(await p.evaluate(() => state.party.length), 3);
+});
+
+test("shop spawns at roughly 30% per floor and adventurers are substantially rarer", async (t) => {
+  let p = await game(t);
+  let rates = await p.evaluate(() => {
+    let shops = 0,
+      recruits = 0;
+    for (let i = 0; i < 1000; i++) {
+      let m = generateFloor(1);
+      shops += m.some((c) => c.event === "shop");
+      recruits += m.some((c) => c.event === "recruit");
+    }
+    return { shops: shops / 1000, recruits: recruits / 1000 };
+  });
+  assert.ok(rates.shops > 0.25 && rates.shops < 0.35, JSON.stringify(rates));
+  assert.ok(
+    rates.recruits > 0.1 && rates.recruits < 0.22,
+    JSON.stringify(rates),
+  );
+});
+
+test("shop purchases deduct gold, enforce stock and funds, heal the team, and reveal stairs", async (t) => {
+  let p = await game(t);
+  await fast(p);
+  await p.evaluate(() => {
+    state.gold = 300;
     state.party.push(makeHero("Mira", "healer"));
-    state.party[0].hp = 10;
+    state.party[0].hp = 1;
     state.party[1].hp = 0;
-    state.enemy.countdown = 20;
-    state.party[0].reels = [
-      [{ type: "heal", tier: 1 }],
-      [{ type: "heal", tier: 2 }],
-      [{ type: "block", tier: 1 }],
+    render();
+  });
+  await startEval(
+    p,
+    "shopEncounter({shop:{potion:1,bomb:1,ward:1,heal:1,reveal:1}})",
+  );
+  await p.waitForSelector('[data-buy="potion"]');
+  let cost = await p.evaluate(() => shopPrices().potion);
+  await p.locator('[data-buy="potion"]').click();
+  assert.equal(await p.evaluate(() => state.gold), 300 - cost);
+  assert.equal(await p.evaluate(() => state.potions), 1);
+  assert.equal(await p.locator('[data-buy="potion"]').isDisabled(), true);
+  await p.locator('[data-buy="heal"]').click();
+  assert.deepEqual(
+    await p.evaluate(() => state.party.map((h) => h.hp)),
+    [44, 32],
+  );
+  await p.locator('[data-buy="reveal"]').click();
+  assert.equal(await p.evaluate(() => state.exitFound), true);
+  assert.equal(
+    await p.evaluate(() => state.map.find((c) => c.event === "stairs").seen),
+    true,
+  );
+  let gold = await p.evaluate(() => state.gold);
+  await p.evaluate(() => {
+    state.gold = 0;
+    drawShop();
+  });
+  assert.equal(await p.locator('[data-buy="bomb"]').isDisabled(), true);
+  await p.locator("#modal [data-close]").first().click();
+  await p.evaluate(() => window.testAction);
+  assert.equal(await p.evaluate(() => shopCell), null);
+  assert.ok(gold >= 0);
+});
+
+test("artefacts can roll from battle spoils, occupy one slot, and scale with floor depth", async (t) => {
+  let p = await game(t, { auto: true });
+  await fast(p);
+  await p.evaluate(async () => {
+    let old = Math.random;
+    Math.random = () => 0.999;
+    try {
+      await treasureRoll("battle");
+    } finally {
+      Math.random = old;
+    }
+    render();
+  });
+  assert.equal(await p.evaluate(() => state.artefacts.length), 3);
+  assert.equal(
+    await p.evaluate(() => state.equippedArtefact),
+    await p.evaluate(() => state.artefacts[0].id),
+  );
+  assert.equal(await p.locator("#artefact-slot").count(), 1);
+  let powers = await p.evaluate(() => {
+    let old = Math.random;
+    Math.random = () => 0;
+    let a = makeArtefact(1),
+      b = makeArtefact(9);
+    Math.random = old;
+    return [a.power, b.power];
+  });
+  assert.ok(powers[1] > powers[0]);
+  await p.locator("#artefact-slot").click();
+  let second = await p.evaluate(() => state.artefacts[1].id);
+  await p.locator('#modal [data-equip="' + second + '"]').click();
+  assert.equal(await p.evaluate(() => state.equippedArtefact), second);
+});
+
+test("only equipped artefact affects rolls; guard artefacts generate fresh battle block", async (t) => {
+  let p = await game(t);
+  await fast(p);
+  await p.evaluate(() => {
+    state.artefacts = [
+      { id: "a", key: "attack", power: 5, depth: 1, name: "Fang" },
+      { id: "b", key: "heal", power: 7, depth: 2, name: "Tear" },
+      { id: "c", key: "guard", power: 9, depth: 3, name: "Seal" },
     ];
+    state.equippedArtefact = "a";
     render();
   });
-  await page.locator('[data-target="1"]').click();
-  await page.locator('[data-spin="0"]').click();
-  await finish(page);
-  assert.equal(await page.evaluate(() => state.party[1].hp), 9);
-  assert.equal(await page.evaluate(() => state.party[0].hp), 10);
-  await page.locator('[data-target="0"]').click();
-  await page.locator("#potion").click();
-  assert.equal(await page.evaluate(() => state.party[0].hp), 26);
-  assert.equal(await page.evaluate(() => state.potions), 1);
+  await encounter(p);
+  await faces(p);
+  await p.locator('[data-spin="0"]').click();
+  await finish(p);
+  assert.equal(await p.evaluate(() => state.enemy.hp), 986);
+  assert.equal(await p.evaluate(() => passive("heal")), 0);
+  await p.evaluate(() => {
+    equipArtefact("c");
+    state.block = 80;
+    beginEncounter();
+    render();
+  });
+  assert.equal(await p.evaluate(() => state.block), 9);
 });
 
-test("leveling increases max HP and personal points; weak/strong reel editing has different costs", async (t) => {
-  const page = await game(t);
-  await fast(page);
-  await page.evaluate(() => {
-    state.party.push(makeHero("Mira", "healer"));
-    addXP(state.party[0], 12);
-    render();
-  });
-  assert.equal(await page.evaluate(() => state.party[0].level), 2);
-  assert.equal(await page.evaluate(() => state.party[0].maxHp), 46);
-  assert.equal(await page.evaluate(() => state.party[0].points), 7);
-  await page.locator('[data-edit="0"]').click();
-  await page.locator('[data-cycle="0,0,0"]').click();
-  assert.equal(
-    await page.evaluate(() => state.party[0].reels[0][0].type),
-    "heal",
+test("speech is class/species appropriate in battle and casual chatter pauses during fights", async (t) => {
+  let p = await game(t);
+  await p.evaluate(() => idleChatter());
+  assert.equal(await p.locator(".speech-bubble").count(), 1);
+  await encounter(p);
+  assert.equal(await p.evaluate(() => idleChatter()), false);
+  await p.evaluate(() => sayEnemy("attack"));
+  assert.ok(
+    (await p.locator('.speech-bubble[data-speaker="enemy-art"]').textContent())
+      .length > 1,
   );
-  assert.equal(await page.evaluate(() => state.party[0].points), 6);
-  await page.locator('[data-upgrade="0,0,0"]').click();
-  assert.equal(await page.evaluate(() => state.party[0].points), 3);
-  assert.equal(await page.evaluate(() => state.party[0].reels[0][0].tier), 2);
-  assert.equal(await page.locator('[data-upgrade="0,0,0"]').isDisabled(), true);
-  await page.locator('[data-weaken="0,0,0"]').click();
-  assert.equal(await page.evaluate(() => state.party[0].points), 2);
-  assert.equal(await page.evaluate(() => state.party[0].reels[0][0].tier), 1);
-  assert.equal(await page.evaluate(() => state.party[1].points), 3);
-});
-
-test("discovering stairs prompts a choice and keeps a usable exit button anywhere on the floor", async (t) => {
-  const page = await game(t);
-  await fast(page);
-  await page.evaluate(clearFloorScript);
-  await page.evaluate(() => {
-    state.map[79].event = "stairs";
-    state.map[79].feature = "stairs";
-    render();
+  await p.evaluate(() => {
+    state.party[0].hp = 8;
+    damageHero(0, 1, "Test");
   });
-  await page.locator('[data-tile="79"]').click();
-  await finish(page);
-  assert.equal(
-    await page.locator("#modal-title").textContent(),
-    "A stairway in the paper",
-  );
-  assert.equal(await page.evaluate(() => state.depth), 1);
-  assert.equal(await page.evaluate(() => state.over), false);
-  await page
-    .getByRole("button", { name: "Keep exploring", exact: true })
-    .click();
-  await page.locator('[data-tile="78"]').click();
-  await finish(page);
-  assert.equal(await page.evaluate(() => state.position), 78);
-  await page.locator("#exit-found").click();
-  assert.equal(await page.locator("#descend").isEnabled(), true);
-  await page.locator("#descend").click();
-  assert.equal(await page.evaluate(() => state.depth), 2);
-  assert.equal(await page.locator("#exit-found").isVisible(), false);
-});
-
-test("beacon-discovered stairs unlock exit without moving to the exit cell", async (t) => {
-  const page = await game(t);
-  await fast(page);
-  await page.evaluate(async () => {
-    state.position = pos(5, 4);
-    state.map[state.position].wall = false;
-    state.map[state.position].seen = true;
-    state.map[pos(6, 5)].wall = false;
-    state.map[pos(6, 5)].event = "stairs";
-    state.map[pos(6, 5)].seen = false;
-    render();
-    await resolveTile({ event: "beacon" });
-    render();
-  });
-  assert.equal(await page.evaluate(() => state.exitFound), true);
-  assert.equal(await page.evaluate(() => state.position), 49);
-  await page.locator("#exit-found").click();
-  assert.equal(
-    await page.locator("#modal-title").textContent(),
-    "A stairway in the paper",
+  assert.ok(
+    (await p.locator('.speech-bubble[data-speaker="portrait-0"]').textContent())
+      .length > 1,
   );
 });
 
-test("generated floors remain connected and floor three requires its keeper before descending", async (t) => {
-  const page = await game(t);
-  await fast(page);
+test("boulder stays clipped inside its drawing area and trap results wait for a button", async (t) => {
+  let p = await game(t);
+  await fast(p);
+  await startEval(
+    p,
+    "(async()=>{let old=Math.random;Math.random=()=>.9;try{await trapRoll()}finally{Math.random=old}})()",
+  );
+  await p.waitForSelector("#stage-confirm");
+  assert.equal(await p.locator(".trap-art.boulder").count(), 1);
   assert.equal(
-    await page.evaluate(() => {
-      for (let depth = 1; depth <= 80; depth++) {
-        let map = generateFloor(depth),
-          seen = new Set([pos(1, 7)]),
+    await p
+      .locator(".trap-art")
+      .evaluate((el) => getComputedStyle(el).overflow),
+    "hidden",
+  );
+  await p.waitForTimeout(1100);
+  assert.equal(await p.locator("#spotlight").isVisible(), true);
+  await p.locator("#stage-confirm").click();
+  await p.evaluate(() => window.testAction);
+  assert.equal(await p.evaluate(() => state.block), 0);
+});
+
+test("stairs permit only optional descent and floor ten requires its final guardian to win", async (t) => {
+  let p = await game(t, { auto: true });
+  await fast(p);
+  await p.evaluate(() => {
+    state.exitFound = true;
+    render();
+    stairs();
+  });
+  assert.equal(await p.locator("#retire").count(), 0);
+  await p.getByRole("button", { name: "Keep exploring", exact: true }).click();
+  assert.equal(await p.evaluate(() => state.depth), 1);
+  await p.locator("#exit-found").click();
+  await p.locator("#descend").click();
+  assert.equal(await p.evaluate(() => state.depth), 2);
+  await p.evaluate(() => {
+    state.depth = 10;
+    state.map = generateFloor(10);
+    state.exitFound = true;
+    render();
+    stairs();
+  });
+  assert.equal(await p.locator("#descend").isDisabled(), true);
+  await p.getByRole("button", { name: "Keep exploring", exact: true }).click();
+  await p.evaluate(async () => {
+    beginEncounter(true);
+    state.enemy.hp = 0;
+    await victory(state.enemy);
+    render();
+  });
+  assert.equal(await p.evaluate(() => state.floorBossDefeated), true);
+  await p.locator("#exit-found").click();
+  await p.locator("#descend").click();
+  assert.equal(await p.evaluate(() => state.won && state.over), true);
+  assert.equal(
+    await p.locator("#modal-title").textContent(),
+    "You wrote the ending.",
+  );
+});
+
+test("generated maps remain connected, with no mid-dungeon quest guardian", async (t) => {
+  let p = await game(t);
+  assert.equal(
+    await p.evaluate(() => {
+      for (let d = 1; d <= 80; d++) {
+        let m = generateFloor(Math.min(d, 10)),
+          s = new Set([pos(1, 7)]),
           q = [pos(1, 7)];
         for (let n of q)
           for (let j of neighbors(n))
-            if (!map[j].wall && !seen.has(j)) {
-              seen.add(j);
+            if (!m[j].wall && !s.has(j)) {
+              s.add(j);
               q.push(j);
             }
-        if (map.some((c, i) => !c.wall && !seen.has(i))) return false;
-        if (map.filter((c) => c.event === "stairs").length !== 1) return false;
+        if (m.some((c, i) => !c.wall && !s.has(i))) return false;
       }
       return true;
     }),
     true,
   );
-  await page.evaluate(() => {
-    state.depth = 3;
-    state.map = generateFloor(3);
-    state.exitFound = true;
-    stairs();
-  });
-  assert.equal(await page.locator("#descend").isDisabled(), true);
-  await page
-    .getByRole("button", { name: "Keep exploring", exact: true })
-    .click();
-  assert.equal(await page.evaluate(() => state.depth), 3);
+  assert.equal(
+    await p.evaluate(() =>
+      generateFloor(3).some((c) => c.event === "guardian"),
+    ),
+    false,
+  );
+  assert.equal(
+    await p.evaluate(
+      () => generateFloor(10).filter((c) => c.event === "guardian").length,
+    ),
+    1,
+  );
 });
 
-test("an expedition plays through revealed-path travel, encounters, the Sunseed, and voluntary return", async (t) => {
-  const page = await game(t);
-  await fast(page);
-  await page.evaluate(() => {
-    state.party[0].maxHp = state.party[0].hp = 1000;
+test("targeted healing, battle items, enemy machines, and XP on defeat obey the new rules", async (t) => {
+  let p = await game(t, { auto: true });
+  await fast(p);
+  await encounter(p, { countdown: 1 });
+  await p.evaluate(() => {
+    state.party.push(makeHero("Mira", "healer"));
+    state.party[0].hp = 10;
+    state.party[1].hp = 0;
+    state.potions = 1;
+    state.wards = 1;
+    state.bombs = 1;
+    state.enemy.reels = [1, 2, 3].map((tier) => [{ type: "attack", tier }]);
+    state.enemy.damage = 3;
+    render();
   });
-  await forcedReels(page, "attack", 3);
+  await p.locator('[data-target="1"]').click();
+  await faces(p, [
+    ["heal", 1],
+    ["heal", 2],
+    ["block", 1],
+  ]);
+  await p.locator('[data-spin="0"]').click();
+  await finish(p);
+  assert.ok((await p.evaluate(() => state.party[1].hp)) > 0);
+  assert.equal(await p.evaluate(() => state.party[0].xp), 0);
+  await p.locator("#ward").click();
+  assert.equal(await p.evaluate(() => state.wards), 0);
+  await p.locator("#bomb").click();
+  await finish(p);
+  assert.equal(await p.evaluate(() => state.bombs), 0);
+  await p.evaluate(() => {
+    state.party.forEach((h) => (h.hp = 0));
+    checkDefeat();
+    render();
+  });
+  assert.equal(await p.evaluate(() => state.party[0].xp), 0);
+  assert.equal(await p.evaluate(() => state.block), 0);
+  assert.equal(
+    await p.locator("#modal-title").textContent(),
+    "The light goes out.",
+  );
+});
+
+test("victory levels grant HP and personal editing points; weighted editing preserves odds and cost", async (t) => {
+  let p = await game(t, { auto: true });
+  await fast(p);
+  await encounter(p);
+  await p.evaluate(() => {
+    state.party[0].xp = 10;
+    state.enemy.hp = 1;
+  });
+  await faces(p);
+  await p.locator('[data-spin="0"]').click();
+  await finish(p);
+  assert.equal(await p.evaluate(() => state.party[0].level), 2);
+  assert.equal(await p.evaluate(() => state.party[0].maxHp), 50);
+  assert.equal((await p.evaluate(() => state.party[0].points)) >= 8, true);
+  await p.locator('[data-edit="0"]').click();
+  let points = await p.evaluate(() => state.party[0].points);
+  await p.locator('[data-upgrade="0,0,0"]').click();
+  assert.equal(await p.evaluate(() => state.party[0].points), points - 3);
+  assert.equal(await p.evaluate(() => state.party[0].reels[0][0].tier), 2);
+});
+
+test("full ten-floor expedition can progress through fog, loot confirmations, battles and final descent", async (t) => {
+  let p = await game(t, { auto: true });
+  await fast(p);
+  await p.evaluate(() => {
+    state.party[0].hp = state.party[0].maxHp = 10000;
+  });
+  await faces(p, [
+    ["attack", 3],
+    ["attack", 2],
+    ["attack", 1],
+  ]);
   let actions = 0;
-  while (actions++ < 260) {
-    let status = await page.evaluate(() => ({
+  while (actions++ < 650) {
+    let s = await p.evaluate(() => ({
       enemy: !!state.enemy,
       exit: state.exitFound,
       depth: state.depth,
-      relic: state.relic,
+      boss: state.floorBossDefeated,
       modal: modalKind,
       over: state.over,
     }));
-    if (status.over) break;
-    if (status.enemy) {
-      await page.locator('[data-spin="0"]').click();
-      await finish(page);
-    } else if (status.modal === "stairs") {
-      if (status.relic) {
-        await page.locator("#retire").click();
-        break;
-      } else if (status.depth < 3) await page.locator("#descend").click();
+    if (s.over) break;
+    if (s.enemy) {
+      await p.evaluate(() => spin(0));
+    } else if (s.modal === "stairs") {
+      if (await p.locator("#descend").isEnabled())
+        await p.locator("#descend").click();
       else
-        await page
+        await p
           .getByRole("button", { name: "Keep exploring", exact: true })
           .click();
-    } else if (status.exit && status.depth < 3) {
-      await page.locator("#exit-found").click();
-    } else if (status.exit && status.relic) {
-      await page.locator("#exit-found").click();
-    } else {
-      await page.evaluate(async () => {
+    } else if (s.exit && (s.depth < 10 || s.boss)) {
+      await p.locator("#exit-found").click();
+    } else
+      await p.evaluate(async () => {
         let goal =
-            state.depth === 3 && state.exitFound && !state.relic
+            state.depth === 10 && state.exitFound && !state.floorBossDefeated
               ? pos(9, 2)
               : pos(9, 1),
           route = shortestPath(goal, true);
-        if (!route?.length) throw Error("Campaign has no route");
+        if (!route?.length) throw Error("No campaign route");
         await move(route[0]);
       });
-      await finish(page);
-    }
   }
-  assert.ok(actions < 260, "campaign terminates");
-  assert.equal(await page.evaluate(() => state.relic && state.over), true);
-  assert.equal(
-    await page.locator("#modal-title").textContent(),
-    "Something green, again.",
+  assert.ok(
+    actions < 650,
+    JSON.stringify(
+      await p.evaluate(() => ({
+        depth: state.depth,
+        position: state.position,
+        enemy: state.enemy && {
+          hp: state.enemy.hp,
+          block: state.enemy.block,
+          name: state.enemy.name,
+        },
+        stun: state.party[0].stun,
+      })),
+    ),
   );
+  assert.equal(await p.evaluate(() => state.depth), 10);
+  assert.equal(await p.evaluate(() => state.won), true);
 });
 
-test("party wipe ends the run; restarting restores a single fighter and fresh machines", async (t) => {
-  const page = await game(t);
-  await fast(page);
-  await encounter(page, { countdown: 1 });
-  await page.evaluate(() => {
-    state.party[0].hp = 1;
-    state.enemy.damage = 50;
-    state.party[0].reels = [1, 2, 3].map((tier) => [{ type: "attack", tier }]);
-    state.enemy.reels = [1, 2, 3].map((tier) => [{ type: "attack", tier }]);
-    render();
-  });
-  await page.locator('[data-spin="0"]').click();
-  await finish(page);
-  assert.equal(await page.evaluate(() => state.over), true);
-  assert.equal(
-    await page.locator("#modal-title").textContent(),
-    "The light goes out.",
-  );
-  await page
-    .getByRole("button", { name: "Begin a new expedition", exact: true })
-    .click();
-  assert.equal(await page.evaluate(() => state.over), false);
-  assert.equal(await page.evaluate(() => state.party.length), 1);
-  assert.equal(await page.evaluate(() => state.party[0].hp), 40);
-});
-
-test("items heal, consume resources, generate persistent block, and damage the enemy", async (t) => {
-  const page = await game(t);
-  await fast(page);
-  await page.locator("#ward").click();
-  assert.equal(await page.evaluate(() => state.block), 8);
-  assert.equal(await page.evaluate(() => state.wards), 0);
-  await encounter(page);
-  await page.locator("#bomb").click();
-  await finish(page);
-  assert.equal(await page.evaluate(() => state.enemy.hp), 987);
-  assert.equal(await page.evaluate(() => state.bombs), 0);
-  assert.equal(await page.evaluate(() => state.block), 8);
-});
-
-test("autosave restores exact progress and migrates the previous notebook version", async (t) => {
-  const page = await game(t);
-  await fast(page);
-  await page.locator('[data-tile="79"]').click();
-  await finish(page);
-  let snapshot = await page.evaluate(() => JSON.stringify(state));
-  await page.reload();
-  assert.equal(await page.evaluate(() => JSON.stringify(state)), snapshot);
-  await page.evaluate(() => {
-    let old = { ...state, version: 1 };
-    delete old.exitFound;
-    delete old.bombs;
-    delete old.wards;
+test("save restores speed and artefacts and migrates the earlier Sunseed-era notebook safely", async (t) => {
+  let p = await game(t, { auto: true });
+  await fast(p);
+  await p.locator('[data-tile="79"]').click();
+  await finish(p);
+  let snapshot = await p.evaluate(() => JSON.stringify(state));
+  await p.reload();
+  assert.equal(await p.evaluate(() => JSON.stringify(state)), snapshot);
+  await p.evaluate(() => {
+    let old = {
+      ...state,
+      version: 2,
+      skip: true,
+      relic: true,
+      logs: ["The Sunseed is home."],
+    };
+    delete old.speed;
+    delete old.artefacts;
     localStorage.removeItem(SAVE_KEY);
-    localStorage.setItem("scratchpad-dungeon-v1", JSON.stringify(old));
+    localStorage.setItem("scratchpad-dungeon-v2", JSON.stringify(old));
   });
-  await page.reload();
-  assert.equal(await page.evaluate(() => state.version), 2);
-  assert.equal(await page.evaluate(() => state.party.length), 1);
-  assert.equal(await page.evaluate(() => state.bombs), 0);
+  await p.reload();
+  assert.equal(await p.evaluate(() => state.version), 3);
+  assert.equal(await p.evaluate(() => state.speed), "skip");
+  assert.equal(await p.evaluate(() => state.relic), undefined);
+  assert.doesNotMatch(await p.locator("body").textContent(), /Sunseed/);
 });
 
-test("the HTML backup embeds all art and the font and plays with networking disabled", async (t) => {
-  const page = await game(t);
-  let next = page.waitForEvent("download");
-  await page.locator("#download").click();
-  let download = await next;
-  assert.equal(download.suggestedFilename(), "Scratchpad-Dungeon.html");
-  let backup = path.join(root, "test-results/Scratchpad-Dungeon.html");
-  await download.saveAs(backup);
+test("downloaded HTML remains self-contained and playable offline with mandatory confirmations", async (t) => {
+  let p = await game(t);
+  let next = p.waitForEvent("download");
+  await p.locator("#download").click();
+  let d = await next,
+    backup = path.join(root, "test-results/Scratchpad-Dungeon.html");
+  await d.saveAs(backup);
   let html = await readFile(backup, "utf8");
   assert.ok(html.includes("data:font/ttf;base64,"));
-  assert.ok(html.includes("function spin("));
   assert.ok(html.includes("SIL OPEN FONT LICENSE"));
-  const offline = await page.context().newPage(),
+  let offline = await p.context().newPage(),
     requests = [],
     errors = [];
-  offline.on("pageerror", (e) => errors.push(e.message));
   offline.on("request", (r) => {
     if (/^https?:/.test(r.url())) requests.push(r.url());
   });
-  await page.context().setOffline(true);
+  offline.on("pageerror", (e) => errors.push(e.message));
+  await p.context().setOffline(true);
   await offline.setContent(html);
-  assert.deepEqual(errors, []);
-  assert.deepEqual(requests, []);
   assert.equal(await offline.locator(".tile").count(), 99);
-  await offline.locator("#skip-animations").check();
+  await fast(offline);
   await offline.locator('[data-tile="79"]').click();
+  await offline.waitForSelector("#stage-confirm");
+  await offline.locator("#stage-confirm").click();
   await finish(offline);
   assert.ok((await offline.evaluate(() => state.gold)) > 0);
-  await offline
-    .getByRole("button", { name: "Field guide", exact: true })
-    .click();
-  assert.equal(
-    await offline.locator("#modal-title").textContent(),
-    "A field guide for the brave",
-  );
+  assert.deepEqual(requests, []);
+  assert.deepEqual(errors, []);
 });
 
-test("enemy encounter bursts into view then flies to its position on the right page", async (t) => {
-  const page = await game(t);
-  await page.evaluate(() => {
-    state.map[79].event = "enemy";
-    state.map[79].feature = "enemy";
-    render();
-  });
-  await page.locator('[data-tile="79"]').click();
-  await page.waitForSelector("#entrance-art");
-  assert.equal(
-    await page.locator("#stage-title").textContent(),
-    "An unwelcome scribble",
-  );
-  assert.equal(
-    await page.evaluate(() => particles.some((p) => p.kind === "scary")),
-    true,
-  );
-  await page.waitForSelector(".encounter-ghost");
-  await finish(page);
-  assert.equal(await page.locator("#spotlight").isVisible(), false);
-  assert.equal(await page.locator("#enemy-art").isVisible(), true);
-  assert.equal(await page.locator(".tile:not(:disabled)").count(), 0);
-});
-
-test("trap warning and drawn trap animate before the trap machine appears", async (t) => {
-  const page = await game(t);
-  await page.evaluate(() => {
-    state.map[79].event = "trap";
-    state.map[79].feature = "trap";
-    render();
-  });
-  await page.locator('[data-tile="79"]').click();
-  await page.waitForSelector("#trap-machine");
-  assert.equal(
-    await page.locator("#stage-title").textContent(),
-    "A hidden trap",
-  );
-  assert.equal(await page.locator(".trap-art svg").count(), 1);
-  assert.equal(await page.locator("#machine-trap").count(), 0);
-  await page.locator("#stage-card [data-fast]").click();
-  await finish(page);
-  assert.match(
-    await page.locator("#result-ribbon").textContent(),
-    /HP|no damage/,
-  );
-});
-
-test("enemy attack reels roll on the page and fast-forward into targeted damage", async (t) => {
-  const page = await game(t);
-  await encounter(page, { countdown: 1 });
-  await page.evaluate(() => {
-    state.party[0].reels = [
-      [{ type: "attack", tier: 1 }],
-      [{ type: "heal", tier: 1 }],
-      [{ type: "block", tier: 1 }],
-    ];
-    state.enemy.damage = 4;
+test("recovering from stun guarantees a real action before another stun can stick", async (t) => {
+  let p = await game(t);
+  await fast(p);
+  await encounter(p, { countdown: 1 });
+  await faces(p);
+  await p.evaluate(() => {
+    state.party[0].stun = 1;
+    state.enemy.frequency = 1;
     state.enemy.reels = [
-      [{ type: "attack", tier: 1 }],
-      [{ type: "attack", tier: 2 }],
+      [{ type: "stun", tier: 1 }],
+      [{ type: "block", tier: 1 }],
       [{ type: "miss", tier: 1 }],
     ];
+    render();
   });
-  await page.locator('[data-spin="0"]').click();
-  await page.waitForFunction(() => currentRoll?.id === "hero-0");
-  await page.locator("#machine-hero-0 .machine-face").click();
-  await page.waitForFunction(() => currentRoll?.id === "enemy");
-  assert.equal(await page.locator("#spotlight").isVisible(), false);
-  await page.locator("#machine-enemy .machine-face").click();
-  await finish(page);
-  assert.equal(await page.evaluate(() => state.party[0].hp), 38);
-  assert.equal(await page.evaluate(() => state.block), 0);
-  assert.equal(await page.evaluate(() => state.lastEnemyRoll.target), 0);
-  assert.match(
-    await page.locator("#result-ribbon").textContent(),
-    /2 damage to Alden/,
-  );
+  await p.locator('[data-spin="0"]').click();
+  await finish(p);
+  assert.equal(await p.evaluate(() => state.party[0].stun), 0);
+  assert.equal(await p.evaluate(() => state.party[0].stunGrace), 1);
+  let hp = await p.evaluate(() => state.enemy.hp);
+  await p.locator('[data-spin="0"]').click();
+  await finish(p);
+  assert.ok((await p.evaluate(() => state.enemy.hp)) < hp);
+  assert.equal(await p.evaluate(() => state.party[0].stun), 1);
 });

@@ -1806,13 +1806,6 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           scale: 1 0;
         }
       }
-      .no-motion *,
-      .no-motion *:before,
-      .no-motion *:after {
-        animation: none !important;
-        transition: none !important;
-        scroll-behavior: auto !important;
-      }
       @media (prefers-reduced-motion: reduce) {
         *,
         *:before,
@@ -2229,6 +2222,487 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           font-size: 10px;
         }
       }
+      /* Cinematic pacing and short impact feedback are intentionally separate. */
+      .desk-top {
+        position: sticky;
+        top: 0;
+        z-index: 80;
+        background: #2c2c24ed;
+        padding: 7px 8px;
+        border-radius: 5px;
+        backdrop-filter: blur(6px);
+      }
+      .pace-control {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        color: #e7dfc7;
+        font-size: 14px;
+      }
+      .pace-control select {
+        border: 1px solid #b1a88c;
+        color: #e7dfc7;
+        background: #35372c;
+        padding: 3px 6px;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      .pace-control option {
+        background: #35372c;
+      }
+      .combat-heading {
+        flex-wrap: wrap;
+      }
+      .team-block {
+        border: 2px solid #6c7955;
+        border-radius: 5px 9px 4px 7px;
+        background: #d6dbba88;
+        padding: 5px 9px;
+        gap: 7px;
+        line-height: 1;
+        min-width: 150px;
+        margin-left: auto;
+      }
+      .team-block > svg {
+        width: 29px;
+        height: 33px;
+      }
+      .team-block strong {
+        font-size: 30px;
+        font-weight: normal;
+      }
+      .team-block > span {
+        font-size: 15px;
+        letter-spacing: 0.5px;
+      }
+      .team-block small {
+        display: block;
+        font-size: 11px;
+        color: #68704e;
+        margin-top: 4px;
+        letter-spacing: 0;
+      }
+      .machine-shell {
+        padding-right: 43px;
+      }
+      .lever {
+        width: 46px;
+        right: -3px;
+        padding: 0 7px;
+        transform: none !important;
+        transform-origin: 50% 78%;
+      }
+      .lever:hover:not(:disabled) {
+        transform: none !important;
+      }
+      .lever.pulling {
+        animation: none;
+      }
+      .lever svg {
+        transform-origin: 50% 78%;
+        pointer-events: none;
+      }
+      .lever.pulling svg {
+        animation: pull-handle calc(0.6s / var(--speed, 1)) ease-in-out;
+      }
+      .stage-card .machine-shell {
+        padding-right: 48px;
+      }
+      .stage-card .lever {
+        width: 51px;
+        padding: 0 6px;
+        right: -3px;
+      }
+      .stage-card {
+        overflow: auto;
+        scrollbar-width: thin;
+      }
+      .trap-art {
+        overflow: hidden;
+        contain: paint;
+        height: 105px;
+        isolation: isolate;
+      }
+      .trap-art .rolling-boulder {
+        transform-box: fill-box;
+        transform-origin: center;
+      }
+      .stage-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 18px;
+        padding-bottom: 3px;
+      }
+      .stage-actions .stage-skip {
+        margin: 0;
+      }
+      .stage-actions button {
+        font-size: 18px;
+        min-height: 40px;
+      }
+      .encounter-quote {
+        font-size: 20px;
+        font-style: italic;
+        color: #716144;
+        margin: 13px auto;
+        max-width: 330px;
+      }
+      .paper-tear {
+        pointer-events: none;
+        position: absolute;
+        inset: 3px;
+        border: 2px dashed #9e8e6c66;
+        border-radius: 3px;
+        z-index: 0;
+      }
+      .stage-card > *:not(.paper-tear) {
+        position: relative;
+      }
+      .stage-card .one-reel .multiplier-value {
+        font-size: 65px;
+      }
+      .artefact-slot {
+        display: flex;
+        align-items: flex-start;
+        text-align: left;
+        gap: 8px;
+        border: 1px dashed #897951;
+        background: #dfd4b055;
+        padding: 9px;
+        width: 100%;
+        font-size: 15px;
+        box-shadow: none;
+      }
+      .artefact-slot > svg {
+        width: 35px;
+        height: 40px;
+        flex-shrink: 0;
+        color: #8b6c35;
+      }
+      .artefact-slot small,
+      .artefact-slot em {
+        display: block;
+        font-size: 13px;
+        line-height: 1.4;
+        margin-top: 4px;
+      }
+      .artefact-slot em {
+        color: #7d7159;
+      }
+      .artefact-card {
+        display: flex;
+        gap: 12px;
+        border: 1px dashed #a4884b;
+        background: #d6bf7a22;
+        border-radius: 5px;
+        padding: 12px;
+        margin: 10px 0;
+        text-align: left;
+        align-items: center;
+      }
+      .artefact-card > svg {
+        width: 43px;
+        height: 48px;
+        flex-shrink: 0;
+        color: #90702e;
+      }
+      .artefact-card b {
+        font-weight: normal;
+        font-size: 20px;
+      }
+      .artefact-card p {
+        font-size: 16px;
+        line-height: 1.4;
+        margin: 5px 0;
+      }
+      .artefact-card button {
+        font-size: 15px;
+      }
+      .shop-keeper {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        margin: 10px 0;
+      }
+      .shop-keeper > svg {
+        width: 110px;
+        height: 130px;
+        flex-shrink: 0;
+      }
+      .shop-offers {
+        display: grid;
+        gap: 8px;
+      }
+      .shop-offers button {
+        display: flex;
+        gap: 12px;
+        text-align: left;
+        align-items: center;
+        background: #e7ddc388;
+        padding: 9px 12px;
+      }
+      .shop-offers button svg {
+        width: 31px;
+        height: 34px;
+        flex-shrink: 0;
+      }
+      .shop-offers small {
+        display: block;
+        font-size: 14px;
+        color: #7f6b47;
+      }
+      .speech-bubble {
+        position: fixed;
+        z-index: 55;
+        max-width: 190px;
+        min-width: 70px;
+        transform: translate(-50%, -100%) rotate(-2deg);
+        background: #f5ecd6f5;
+        color: #413b2d;
+        border: 1.5px solid #6e6046;
+        border-radius: 8px 12px 5px 10px;
+        box-shadow: 2px 3px #5b4a2829;
+        padding: 6px 11px;
+        font-size: 17px;
+        text-align: center;
+        line-height: 1.25;
+        pointer-events: none;
+        animation: speech-pop 0.2s cubic-bezier(0.2, 1.5, 0.4, 1) both;
+      }
+      .speech-bubble:after {
+        content: "";
+        position: absolute;
+        left: 42%;
+        bottom: -7px;
+        width: 10px;
+        height: 10px;
+        background: #f5ecd6;
+        border-bottom: 1.5px solid #6e6046;
+        border-right: 1.5px solid #6e6046;
+        transform: rotate(45deg);
+      }
+      .healing-glyph {
+        position: fixed;
+        z-index: 57;
+        pointer-events: none;
+        width: 17px;
+        height: 19px;
+        color: #638349;
+        animation: healing-rise 0.8s ease-out both;
+        filter: drop-shadow(0 0 3px #bcd598);
+      }
+      .healing-glyph svg {
+        height: 100%;
+        width: 100%;
+      }
+      .walk-boots {
+        position: absolute;
+        left: 31%;
+        right: 31%;
+        bottom: -1px;
+        height: 9px;
+        display: flex;
+        justify-content: space-between;
+        pointer-events: none;
+      }
+      .walk-boots i {
+        display: block;
+        width: 6px;
+        height: 7px;
+        background: #544e3c;
+        border-radius: 0 0 3px 3px;
+        border: 1px solid #302f27;
+        transform: rotate(6deg);
+      }
+      .map-player.walking .walk-boots i:first-child {
+        animation: boot-step calc(0.2s / var(--speed, 1)) infinite;
+      }
+      .map-player.walking .walk-boots i:last-child {
+        animation: boot-step calc(0.2s / var(--speed, 1)) -0.1s infinite;
+      }
+      .map-player.walking > svg {
+        animation: jaunty-walk calc(0.2s / var(--speed, 1)) infinite;
+      }
+      .map-player:after {
+        content: "";
+        position: absolute;
+        left: 25%;
+        right: 25%;
+        bottom: -2px;
+        border-radius: 50%;
+        height: 4px;
+        background: #6a604140;
+        z-index: -1;
+      }
+      .tile.erasing:after {
+        animation-duration: calc(0.2s / var(--speed, 1));
+      }
+      .tile.erasing:before {
+        animation-duration: calc(0.2s / var(--speed, 1));
+      }
+      .stage-card {
+        animation-duration: calc(0.4s / var(--speed, 1));
+      }
+      .stage-title {
+        animation-duration: calc(0.5s / var(--speed, 1));
+      }
+      .skip-cinematics .tile.erasing:after,
+      .skip-cinematics .tile.erasing:before,
+      .skip-cinematics .map-player,
+      .skip-cinematics .map-player svg,
+      .skip-cinematics .walk-boots i,
+      .skip-cinematics .stage-card,
+      .skip-cinematics .stage-title,
+      .skip-cinematics .lever svg,
+      .skip-cinematics .trap-art *,
+      .skip-cinematics .scare-lines {
+        animation: none !important;
+        transition: none !important;
+      }
+      .skip-cinematics .stage-card {
+        opacity: 1;
+        transform: none;
+      }
+      .skip-cinematics .tile.erasing:after {
+        opacity: 0;
+      }
+      .skip-cinematics .tile.erasing:before {
+        display: none;
+      }
+      @keyframes jaunty-walk {
+        0%,
+        100% {
+          transform: translate(0, 0) rotate(-4deg);
+        }
+        25% {
+          transform: translate(1px, -5px) rotate(5deg);
+        }
+        50% {
+          transform: translate(0, -1px) rotate(0);
+        }
+        75% {
+          transform: translate(-1px, -4px) rotate(-5deg);
+        }
+      }
+      @keyframes boot-step {
+        0%,
+        100% {
+          transform: translateY(0) rotate(-12deg);
+        }
+        50% {
+          transform: translateY(-5px) rotate(18deg);
+        }
+      }
+      @keyframes speech-pop {
+        from {
+          opacity: 0;
+          scale: 0.75;
+        }
+        to {
+          opacity: 1;
+          scale: 1;
+        }
+      }
+      @keyframes healing-rise {
+        0% {
+          opacity: 0;
+          transform: translateY(10px) scale(0.6);
+        }
+        20% {
+          opacity: 1;
+          transform: translateY(0) scale(1.1);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-55px) rotate(12deg);
+        }
+      }
+      @media (max-width: 760px) {
+        .pace-control {
+          font-size: 12px;
+          gap: 4px;
+        }
+        .pace-control select {
+          font-size: 13px;
+          padding: 3px;
+        }
+        .desk-top {
+          margin: 0 0 10px;
+          padding: 5px;
+        }
+        .desk-top nav {
+          gap: 5px;
+          justify-content: center;
+          width: 100%;
+        }
+        .team-block {
+          min-width: 136px;
+          padding: 4px 7px;
+        }
+        .team-block strong {
+          font-size: 26px;
+        }
+        .team-block > span {
+          font-size: 13px;
+        }
+        .team-block small {
+          font-size: 10px;
+        }
+        .team-block > svg {
+          width: 24px;
+          height: 27px;
+        }
+        .combat-heading h2 {
+          font-size: 29px;
+        }
+        .combat-heading .round-tag {
+          font-size: 13px;
+        }
+        .stage-actions button {
+          font-size: 17px;
+        }
+        .speech-bubble {
+          font-size: 15px;
+          max-width: 165px;
+        }
+        .artefact-slot {
+          font-size: 14px;
+          padding: 7px;
+          flex-direction: column;
+        }
+        .artefact-slot > svg {
+          width: 26px;
+          height: 27px;
+        }
+        .artefact-slot small,
+        .artefact-slot em {
+          font-size: 12px;
+        }
+        .shop-keeper > svg {
+          width: 86px;
+          height: 100px;
+        }
+        .shop-keeper {
+          gap: 12px;
+        }
+        .shop-keeper p {
+          font-size: 16px;
+        }
+        .shop-offers button {
+          font-size: 16px;
+        }
+        .save-line {
+          gap: 14px;
+        }
+        .stage-card .artefact-card b {
+          font-size: 18px;
+        }
+        .stage-card .artefact-card p {
+          font-size: 15px;
+        }
+      }
     </style>
   </head>
   <body>
@@ -2239,10 +2713,14 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           ><i class="torch-dot"></i>A little adventure in the margins.</span
         >
         <nav aria-label="Game tools">
-          <label class="setting"
-            ><input type="checkbox" id="skip-animations" /><span
-              >Skip animations</span
-            ></label
+          <label class="pace-control"
+            >Animation speed
+            <select id="animation-speed" aria-label="Animation speed">
+              <option value="1">1×</option>
+              <option value="2">2×</option>
+              <option value="5">5×</option>
+              <option value="skip">Skip cinematics</option>
+            </select></label
           ><button id="help">Field guide</button
           ><button id="download">↓ Save HTML</button
           ><button id="new-game">New run</button>
@@ -2294,7 +2772,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
               <div class="floor-dots" id="floor-dots" aria-hidden="true"></div>
             </section>
             <section class="sketch-box">
-              <h3>Little treasures</h3>
+              <h3>Run treasures</h3>
               <p><b id="gold">0</b> gold in the satchel</p>
               <div class="relic-state" id="relic-status"></div>
             </section>
@@ -2356,7 +2834,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         </section>
       </main>
       <footer class="footer">
-        <span>FIELD NOTES № 002 · Made of paper. Played with courage.</span
+        <span>FIELD NOTES № 003 · Made of paper. Played with courage.</span
         ><span>Keep a little light with you. ✧</span>
       </footer>
     </div>
@@ -2389,7 +2867,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       const HTML_BACKUP =
         "<!doctype html>\n" + document.documentElement.outerHTML;
       const $ = (s) => document.querySelector(s),
-        SAVE_KEY = "scratchpad-dungeon-v2",
+        SAVE_KEY = "scratchpad-dungeon-v3",
         W = 11,
         H = 9;
       const paths = {
@@ -2444,6 +2922,11 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         well: "M4 19c1-5 23-5 24 0v9H4z M4 19c2 5 22 5 24 0 M8 16V8h16v8 M3 8 16 2l13 6z M16 9v12 M11 25v3m10-6v6 M18 12h5v8h-5z",
         beacon:
           "M10 28h12M12 24h8l3-11H9z M16 25v3M15 12c-8-5 1-9 1-12 9 9 6 11 2 12 M6 5l-3-3m23 4 4-3M3 13H0m29 0h3 M10 15l2 6m8-6-2 6",
+      });
+      Object.assign(paths, {
+        shop: "M3 14 7 4h18l4 10M3 14q3 7 6 0 4 7 7 0 4 7 7 0 4 7 6 0M5 18v11h22V18 M10 29V19h8v10m4-8h3M6 4h20",
+        artefact:
+          "M10 5h12l5 10-11 15L5 15z M10 5l6 10 6-10M5 15h22M16 15v15M2 3l4 3m22-3-3 3",
       });
       let artSerial = 0;
       function portraitArt(kind, entity = { hp: 1, maxHp: 1 }) {
@@ -2531,30 +3014,30 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             })[c],
         );
       function makeHero(name, job) {
-        let loadouts = {
+        const faces = {
           fighter: [
-            ["attack", 1],
-            ["attack", 1],
-            ["attack", 2],
-            ["block", 1],
-            ["block", 2],
-            ["heal", 1],
+            ["attack", 1, 8],
+            ["attack", 2, 4],
+            ["block", 1, 8],
+            ["block", 2, 4],
+            ["stun", 1, 1],
+            ["heal", 1, 1],
           ],
           healer: [
-            ["heal", 1],
-            ["heal", 1],
-            ["heal", 2],
-            ["attack", 1],
-            ["block", 1],
-            ["stun", 1],
+            ["heal", 1, 12],
+            ["heal", 2, 10],
+            ["block", 1, 4],
+            ["stun", 1, 2],
+            ["attack", 1, 1],
+            ["attack", 1, 1],
           ],
           rogue: [
-            ["attack", 1],
-            ["attack", 1],
-            ["attack", 2],
-            ["stun", 1],
-            ["stun", 2],
-            ["heal", 1],
+            ["attack", 1, 10],
+            ["attack", 2, 8],
+            ["attack", 1, 5],
+            ["stun", 1, 4],
+            ["stun", 2, 2],
+            ["block", 1, 1],
           ],
         };
         return {
@@ -2563,12 +3046,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           job,
           level: 1,
           xp: 0,
-          hp: job === "fighter" ? 40 : 32,
-          maxHp: job === "fighter" ? 40 : 32,
+          hp: job === "fighter" ? 44 : 32,
+          maxHp: job === "fighter" ? 44 : 32,
           points: 3,
           stun: 0,
           reels: [0, 1, 2].map(() =>
-            loadouts[job].map(([type, tier]) => ({ type, tier })),
+            faces[job].map(([type, tier, weight]) => ({ type, tier, weight })),
           ),
           last:
             job === "healer"
@@ -2577,17 +3060,11 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                   { type: "heal", tier: 2 },
                   { type: "block", tier: 1 },
                 ]
-              : job === "rogue"
-                ? [
-                    { type: "attack", tier: 1 },
-                    { type: "stun", tier: 1 },
-                    { type: "attack", tier: 2 },
-                  ]
-                : [
-                    { type: "attack", tier: 1 },
-                    { type: "block", tier: 1 },
-                    { type: "attack", tier: 2 },
-                  ],
+              : [
+                  { type: "attack", tier: 1 },
+                  { type: job === "rogue" ? "stun" : "block", tier: 1 },
+                  { type: "attack", tier: 2 },
+                ],
         };
       }
       function neighbors(i, diagonal = false) {
@@ -2617,11 +3094,11 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       }
       function generateFloor(depth) {
         let map = Array.from({ length: W * H }, (_, i) => {
-          let boundary =
+          let wall =
             i % W === 0 || i % W === W - 1 || i < W || i >= W * (H - 1);
           return {
-            wall: boundary,
-            seen: boundary,
+            wall,
+            seen: wall,
             visited: false,
             event: null,
             feature: null,
@@ -2632,62 +3109,65 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           for (let x = 1; x < W - 1; x++)
             if (rand(100) < 13 && !(y === 7 || x === 9 || x === 1))
               map[pos(x, y)].wall = true;
-        let visited = new Set([pos(1, 7)]),
+        let seen = new Set([pos(1, 7)]),
           q = [pos(1, 7)];
         for (let n of q)
           for (let j of neighbors(n))
-            if (!map[j].wall && !visited.has(j)) {
-              visited.add(j);
+            if (!map[j].wall && !seen.has(j)) {
+              seen.add(j);
               q.push(j);
             }
         map.forEach((c, i) => {
-          if (!c.wall && !visited.has(i)) c.wall = true;
+          if (!c.wall && !seen.has(i)) c.wall = true;
         });
         const place = (i, e) => {
-          map[i].wall = false;
-          map[i].event = e;
-          map[i].feature = e;
+          Object.assign(map[i], { wall: false, event: e, feature: e });
         };
         place(pos(2, 7), "treasure");
         place(pos(3, 7), "trap");
         place(pos(4, 7), "well");
         place(pos(7, 7), "enemy");
         place(pos(9, 1), "stairs");
+        if (depth === 10) place(pos(9, 2), "guardian");
         let free = map
-          .map((c, i) => (!c.wall && !c.event && i !== pos(1, 7) ? i : -1))
-          .filter((i) => i >= 0);
-        let events = [
-          "enemy",
-          "enemy",
-          "enemy",
-          "enemy",
-          "treasure",
-          "treasure",
-          "trap",
-          "well",
-          "beacon",
-        ];
-        if (depth < 3 || rand(3) === 0) events.push("recruit");
-        // A single beacon and usually one wanderer among more than sixty cells.
+            .map((c, i) => (!c.wall && !c.event && i !== pos(1, 7) ? i : -1))
+            .filter((i) => i >= 0),
+          events = [
+            "enemy",
+            "enemy",
+            "enemy",
+            "enemy",
+            "treasure",
+            "treasure",
+            "trap",
+            "well",
+            "beacon",
+          ];
+        if (Math.random() < 0.16) events.push("recruit");
+        if (Math.random() < 0.3) events.push("shop");
         for (let e of events) {
           if (!free.length) break;
           let k = rand(free.length);
           place(free.splice(k, 1)[0], e);
         }
-        if (depth === 3) place(pos(9, 2), "guardian");
         map[pos(1, 7)].seen = true;
         map[pos(1, 7)].visited = true;
         return map;
       }
       function newRun() {
         animationVersion++;
+        if (stageResolver) {
+          stageResolver("cancel");
+          stageResolver = null;
+        }
         closeSpotlight();
         closeModal();
         busy = false;
         currentRoll = null;
         sceneFast = false;
+        document.querySelectorAll(".speech-bubble").forEach((e) => e.remove());
         state = {
-          version: 2,
+          version: 3,
           depth: 1,
           map: generateFloor(1),
           position: pos(1, 7),
@@ -2695,21 +3175,28 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           gold: 0,
           steps: 0,
           block: 0,
-          potions: 2,
-          bombs: 1,
-          wards: 1,
+          potions: 0,
+          bombs: 0,
+          wards: 0,
+          artefacts: [],
+          equippedArtefact: null,
+          artefactSerial: 0,
           enemy: null,
           target: 0,
           round: 1,
           exitFound: false,
           exitPromptPending: false,
-          logs: ["Alden opens the notebook. A new expedition begins."],
-          relic: false,
+          floorBossDefeated: false,
+          battlesWon: 0,
+          logs: ["Alden opens the notebook. Only the way down leads forward."],
           over: false,
+          won: false,
           lastResult: null,
-          skip: matchMedia("(prefers-reduced-motion: reduce)").matches,
+          speed: matchMedia("(prefers-reduced-motion: reduce)").matches
+            ? "skip"
+            : "1",
         };
-        skip = state.skip;
+        skip = state.speed === "skip";
         render();
         save();
       }
@@ -2717,14 +3204,15 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         try {
           let s = JSON.parse(
             localStorage.getItem(SAVE_KEY) ||
+              localStorage.getItem("scratchpad-dungeon-v2") ||
               localStorage.getItem("scratchpad-dungeon-v1"),
           );
           if (
             !s ||
-            ![1, 2].includes(s.version) ||
+            ![1, 2, 3].includes(s.version) ||
             s.map?.length !== W * H ||
             !Array.isArray(s.party) ||
-            s.party.length < 1 ||
+            !s.party.length ||
             s.party.length > 3 ||
             !s.party.every(
               (h) =>
@@ -2732,26 +3220,43 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                 h.reels?.length === 3 &&
                 h.reels.every(
                   (r) =>
-                    r.length > 0 &&
+                    r.length &&
                     r.every(
-                      (s) =>
-                        TYPES.includes(s.type) && [1, 2, 3].includes(s.tier),
+                      (f) =>
+                        TYPES.includes(f.type) && [1, 2, 3].includes(f.tier),
                     ),
                 ),
             )
           )
             return false;
+          let migrated = s.version < 3;
           state = s;
-          state.version = 2;
+          state.version = 3;
           state.bombs ??= 0;
           state.wards ??= 0;
+          state.potions ??= 0;
           state.round ??= 1;
+          state.battlesWon ??= 0;
+          state.artefacts ??= [];
+          state.equippedArtefact ??= null;
+          state.artefactSerial ??= 0;
+          state.floorBossDefeated ??= false;
+          state.won ??= false;
+          state.speed = ["1", "2", "5", "skip"].includes(state.speed)
+            ? state.speed
+            : state.skip
+              ? "skip"
+              : "1";
           state.exitFound ??= s.map.some((c) => c.seen && c.event === "stairs");
           state.exitPromptPending = false;
           state.party.forEach((h) => (h.stun ??= 0));
           state.map.forEach((c, i) => {
             c.feature ??= c.event;
             c.doodle ??= i % 5;
+            if (migrated && c.event === "guardian" && state.depth !== 10) {
+              c.event = "enemy";
+              c.feature = "enemy";
+            }
           });
           if (state.enemy) {
             state.enemy.reels ??= enemyReels(state.enemy.art);
@@ -2761,8 +3266,23 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
               { type: "attack", tier: 1 },
             ];
             state.enemy.block ??= 0;
+            if (migrated) {
+              state.enemy.name = state.enemy.boss
+                ? "Margin sentinel"
+                : state.enemy.name;
+              state.enemy.boss = false;
+            }
           }
-          skip = !!state.skip;
+          if (migrated) {
+            state.block = 0;
+            state.logs = [
+              "The notebook has changed. Ten floors, and only forward from here.",
+            ];
+            state.lastResult = null;
+          }
+          delete state.relic;
+          delete state.skip;
+          skip = state.speed === "skip";
           return true;
         } catch {
           return false;
@@ -2795,19 +3315,23 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       }
       async function pause(ms, context = null) {
         if (skip || context?.fast || sceneFast) return;
-        let start = performance.now(),
+        let elapsed = 0,
+          last = performance.now(),
           version = animationVersion;
         await new Promise((resolve) => {
           const tick = () => {
+            let now = performance.now();
+            elapsed += (now - last) * pace();
+            last = now;
             if (
               skip ||
               context?.fast ||
               sceneFast ||
               version !== animationVersion ||
-              performance.now() - start >= ms
+              elapsed >= ms
             )
               return resolve();
-            setTimeout(tick, 16);
+            setTimeout(tick, 12);
           };
           tick();
         });
@@ -2845,8 +3369,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         return `<div class="machine-shell ${one ? "one-reel" : ""}" id="machine-${id}" data-machine="${id}">${title ? `<div class="machine-title">${title}</div>` : ""}<button class="machine-face" data-roll-area="${id}" aria-label="${label}" ${disabled ? "disabled" : ""}>${last.map((s, k) => `<span class="slot-window" data-reel="${k}"><span class="symbol-track single"><span class="slot-symbol">${symbolMarkup(s)}</span></span></span>`).join("")}</button><button class="lever" ${active ? `data-spin="${hero}"` : `data-fast-machine="${id}"`} ${disabled ? "disabled" : ""} aria-label="${active ? "Pull " + state.party[hero].name + "’s slot handle" : "Fast-forward " + (enemy ? "enemy" : "event") + " reels"}"><svg viewBox="0 0 35 100" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M7 77h11v14H7z M15 78l7-57h5l-7 61z" fill="#a99b7e"/><path d="m18 29 3-9m-2 18 2-7M14 79l6-1M8 85h8"/><circle cx="25" cy="13" r="11" fill="#d4c8a9"/><circle cx="25" cy="13" r="8"/><path d="m18 13 5-6m-5 10 11-11m-7 14 9-9M7 95h18"/></svg></button><div class="machine-footnote">${active ? (state.enemy ? (state.party[hero].stun ? "Pull to shake off stun" : "Pull handle to spin") : "Waiting for an encounter") : enemy ? "The enemy rolls here" : "Click during the roll to land it"}</div></div>`;
       }
       function render() {
-        document.body.classList.toggle("no-motion", skip);
-        $("#skip-animations").checked = skip;
+        document.body.classList.toggle("skip-cinematics", skip);
+        document.body.style.setProperty("--speed", pace());
+        $("#animation-speed").value = state.speed;
         $("#gold").textContent = state.gold;
         $("#steps").textContent = state.steps;
         $("#explored").textContent = state.map.filter(
@@ -2854,36 +3379,46 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         ).length;
         $("#depth-stat").textContent = state.depth;
         $("#floor-tag").textContent = "Floor " + state.depth + " / 10";
-        $("#floor-name").textContent =
-          [
-            "The overgrown cellar",
-            "The whispering archive",
-            "The sunken sanctuary",
-          ][Math.min(state.depth - 1, 2)] +
-          (state.depth > 3 ? " · the deeper margins" : "");
+        $("#floor-name").textContent = [
+          "The overgrown cellar",
+          "The whispering archive",
+          "The sunken sanctuary",
+          "The bonebound stacks",
+          "The iron undercroft",
+          "The hollow gallery",
+          "The drowned scriptorium",
+          "The ash-veiled vault",
+          "The forgotten margins",
+          "The last page",
+        ][Math.min(9, state.depth - 1)];
         $("#floor-dots").innerHTML = Array.from(
           { length: 10 },
           (_, i) => `<i class="${i < state.depth ? "filled" : ""}"></i>`,
         ).join("");
-        $("#relic-status").innerHTML =
-          icon(state.relic ? "seed" : "eye") +
-          `<div>${state.relic ? "Sunseed recovered" : "Seek the Sunseed"}<div class="muted">${state.relic ? "Take any discovered stairs home." : "A little light, lost on floor 3."}</div></div>`;
+        renderArtefactSlot();
         $("#combat-title").textContent = state.enemy
           ? "Combat!"
-          : "Your company";
+          : state.won
+            ? "The last word"
+            : "Your company";
         $("#round").textContent = "Round " + state.round;
-        $("#block").innerHTML = icon("block") + state.block + " block";
+        renderBlock();
         $("#map-status").innerHTML = state.over
-          ? "This expedition has a final page."
+          ? state.won
+            ? "All ten floors conquered. The last page is yours."
+            : "The expedition ends here. A fresh page awaits."
           : state.enemy
             ? "An enemy blocks the way. Pull any living hero’s handle."
             : busy
               ? "Pencil dust, little footsteps…"
-              : "Scratch a neighbouring tile to see what’s there.<br>Click across uncovered tiles to retrace a shortest path.";
+              : "Scratch a neighbouring tile. Click uncovered rooms to retrace a shortest path.<br>The only way to finish is to keep descending.";
         $("#exit-found").hidden = !state.exitFound;
         $("#exit-found").disabled = busy || !!state.enemy || state.over;
         $("#exit-found").innerHTML =
-          icon("stairs") + "Stairs found · leave or descend from here";
+          icon("stairs") +
+          (state.depth === 10
+            ? "Final stairway discovered"
+            : "Stairs found · descend when you choose");
         renderMap();
         renderParty();
         renderEncounter();
@@ -2901,9 +3436,10 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           well: "Healing well",
           beacon: "Beacon",
           recruit: "Wandering adventurer",
-          stairs: "Stairway / exit",
+          stairs: "Stairway / descend",
           enemy: "Enemy",
-          guardian: "Sunseed keeper",
+          guardian: "The Last Redaction",
+          shop: "Rare shop",
         };
         let type = c.event || c.feature;
         return names[type]
@@ -2918,14 +3454,19 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
               `<button class="tile ${c.seen ? "" : "fog"} ${c.wall && c.seen ? "wall" : ""} ${c.visited ? "visited" : ""} ${c.feature && !c.event ? "spent" : ""} ${i === state.position ? "player-cell" : ""}" data-tile="${i}" aria-label="${tileName(c)}, column ${(i % W) + 1}, row ${Math.floor(i / W) + 1}" ${locked || (c.seen && c.wall) ? "disabled" : ""}>${c.seen ? (c.event || c.feature ? icon(c.event === "guardian" || c.event === "enemy" || c.feature === "enemy" || c.feature === "guardian" ? "skull" : c.event || c.feature) : floorArt(c, i)) : ""}</button>`,
           )
           .join("");
-        $("#map-player").innerHTML = portraitArt("fighter", state.party[0]);
+        $("#map-player").innerHTML =
+          portraitArt("fighter", state.party[0]) +
+          '<span class="walk-boots"><i></i><i></i></span>';
         positionPlayer(false);
       }
       function positionPlayer(animate = true) {
         let cell = $(`[data-tile="${state.position}"]`),
           p = $("#map-player");
         if (!cell) return;
-        p.style.setProperty("--move-ms", animate && !skip ? "135ms" : "0ms");
+        p.style.setProperty(
+          "--move-ms",
+          animate && !skip ? 180 / pace() + "ms" : "0ms",
+        );
         p.style.width = cell.offsetWidth + "px";
         p.style.height = cell.offsetHeight + "px";
         p.style.transform = `translate(${cell.offsetLeft}px,${cell.offsetTop}px)`;
@@ -2935,7 +3476,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           state.party
             .map((h, i) => {
               let status = injury(h);
-              return `<article class="hero ${status} ${state.target === i ? "selected" : ""}" id="hero-${i}"><div class="hero-dossier"><div class="portrait" id="portrait-${i}">${portraitArt(h.job, h)}</div><div class="hero-name">${h.name}<small>${h.job} · Lv.${h.level}</small></div></div><div class="hero-controls"><div class="hero-title-line"><span class="hp-info">HP ${h.hp} / ${h.maxHp}</span><span class="injury ${status}">${h.stun ? "stunned" : status}</span></div>${drawMachine("hero-" + i, h.last, { hero: i, disabled: busy || !state.enemy || !h.hp || state.over })}<div class="bars"><div class="healthbar" aria-label="${h.hp} of ${h.maxHp} health"><i style="width:${(h.hp / h.maxHp) * 100}%"></i></div><div class="healthbar exp" title="Experience"><i style="width:${(h.xp / (h.level * 12)) * 100}%"></i></div></div><div class="edit-line"><span>${h.xp}/${h.level * 12} EXP</span><button class="edit-button" data-edit="${i}" ${busy || state.over ? "disabled" : ""} aria-label="Edit ${h.name}'s reels">✎ ${h.points} points</button></div></div></article>`;
+              return `<article class="hero ${status} ${state.target === i ? "selected" : ""}" id="hero-${i}"><div class="hero-dossier"><div class="portrait" id="portrait-${i}">${portraitArt(h.job, h)}</div><div class="hero-name">${h.name}<small>${h.job === "fighter" ? "tank" : h.job} · Lv.${h.level}</small></div></div><div class="hero-controls"><div class="hero-title-line"><span class="hp-info">HP ${h.hp} / ${h.maxHp}</span><span class="injury ${status}">${h.stun ? "stunned" : status}</span></div>${drawMachine("hero-" + i, h.last, { hero: i, disabled: busy || !state.enemy || !h.hp || state.over })}<div class="bars"><div class="healthbar" aria-label="${h.hp} of ${h.maxHp} health"><i style="width:${(h.hp / h.maxHp) * 100}%"></i></div><div class="healthbar exp" title="Experience"><i style="width:${(h.xp / (h.level * 12)) * 100}%"></i></div></div><div class="edit-line"><span>${h.xp}/${h.level * 12} EXP</span><button class="edit-button" data-edit="${i}" ${busy || state.over ? "disabled" : ""} aria-label="Edit ${h.name}'s reels">✎ ${h.points} points</button></div></div></article>`;
             })
             .join("") +
           Array.from(
@@ -2948,7 +3489,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         let e = state.enemy;
         $("#encounter").innerHTML = e
           ? `<h3 class="enemy-label">Enemy</h3><div class="enemy-box" id="enemy"><div class="enemy-art" id="enemy-art">${portraitArt(e.art, e)}</div><div class="enemy-info"><h4>${e.name}</h4><span class="enemy-health-label">HP ${e.hp} / ${e.maxHp} · <span class="injury ${injury(e)}">${injury(e)}</span></span><div class="healthbar enemy-hp"><i style="width:${(e.hp / e.maxHp) * 100}%"></i></div><span class="enemy-clock">${e.stun ? "Stunned · " + e.stun + " turns" : "Attacks in " + e.countdown + (e.countdown === 1 ? " spin" : " spins")}</span><p class="enemy-stats">${e.strikes} strike${e.strikes > 1 ? "s" : ""} · base ${e.damage} damage<br>Every ${e.frequency} spins${e.block ? " · " + e.block + " block" : ""}</p></div>${drawMachine("enemy", e.last, { enemy: true, title: "The enemy prepares its attack…", disabled: true })}</div>`
-          : `<h3 class="enemy-label">The margins</h3><div class="peace">${portraitArt(state.relic ? "healer" : "fighter", state.party[0])}<p>${state.over ? "Every expedition leaves a story. A fresh page is waiting." : state.relic ? "The Sunseed glows in your pocket. Bring it home by any discovered stairs." : "A moment between monsters.<br>Scratch carefully. There are things hiding in the paper."}</p></div>`;
+          : `<h3 class="enemy-label">The margins</h3><div class="peace">${portraitArt("fighter", state.party[0])}<p>${state.over ? (state.won ? "Ten floors, one very stubborn company. You wrote the ending." : "Every expedition leaves a story. A fresh page is waiting.") : "A moment between monsters.<br>Gather your nerve. The next floor is waiting."}</p></div>`;
       }
       function renderTargets() {
         $("#targets").innerHTML =
@@ -2972,8 +3513,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           busy || state.over || !state.enemy || !state.bombs;
         $("#ward").innerHTML =
           icon("ward") +
-          `<span>Paper ward × ${state.wards}</span><small>Store 8 team block</small>`;
-        $("#ward").disabled = busy || state.over || !state.wards;
+          `<span>Paper ward × ${state.wards}</span><small>8 shared block · this battle</small>`;
+        $("#ward").disabled =
+          busy || state.over || !state.enemy || !state.wards;
       }
       function renderResult(result, fresh = true) {
         $("#result-ribbon").innerHTML = result;
@@ -3084,7 +3626,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             c.visited = true;
             $("#map-player").classList.add("walking");
             positionPlayer(true);
-            await pause(fresh ? 155 : 75);
+            await pause(fresh ? 205 : 130);
             $("#map-player").classList.remove("walking");
             if (fresh) {
               burst($(`[data-tile="${i}"]`), "dust", 5);
@@ -3111,7 +3653,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         let type = c.event;
         if (!type) return false;
         c.feature = type;
-        if (type !== "stairs") c.event = null;
+        if (!["stairs", "shop"].includes(type)) c.event = null;
         if (type === "treasure") {
           await treasureRoll();
           return true;
@@ -3124,36 +3666,45 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           showSpotlight(
             "A healing well",
             "A little mercy in the margins.",
-            `<div class="stage-art">${icon("well")}</div><div class="stage-result">Cool water. Steadier hands.</div>`,
+            `<div class="stage-art">${icon("well")}</div><div class="stage-result">Restore 30% maximum HP to every hero.<br>Fallen companions can stand again.</div>`,
             "well",
           );
-          burst($("#stage-card"), "water", 24);
-          await pause(500);
+          burst($("#stage-card"), "water", 22);
+          await eventChoice([
+            { id: "stage-confirm", label: "Drink from the well", value: true },
+          ]);
           closeSpotlight();
           state.party.forEach((h, i) => healHero(i, Math.ceil(h.maxHp * 0.3)));
-          log(
-            "The well restores 30% of maximum HP to the company, including the fallen.",
+          log("The well restores 30% maximum HP to everyone.");
+          result(
+            icon("well") +
+              " The whole company drinks. A little strength returns.",
           );
-          result(icon("well") + " A little strength returns to every hero.");
-          await pause(550);
+          await feedbackPause(500);
           return true;
         }
         if (type === "beacon") {
-          result(
-            icon("beacon") +
-              " The beacon sends a little light through the paper.",
+          showSpotlight(
+            "A rare beacon",
+            "Eight little squares of light.",
+            `<div class="stage-art">${icon("beacon")}</div><div class="stage-result">Reveal covered cells within one tile,<br>including the diagonals.</div>`,
+            "beacon",
           );
+          await eventChoice([
+            { id: "stage-confirm", label: "Wake the beacon", value: true },
+          ]);
+          closeSpotlight();
+          result(icon("beacon") + " A little light spreads through the paper.");
           shakeBook(2);
           burst($(`[data-tile="${state.position}"]`), "gold", 20);
           let around = neighbors(state.position, true).filter(
             (i) => !state.map[i].seen,
           );
           pulseBeacon();
-          let cardinal = around.filter((i) =>
-              neighbors(state.position).includes(i),
-            ),
-            diagonal = around.filter((i) => !cardinal.includes(i));
-          for (let ring of [cardinal, diagonal])
+          for (let ring of [
+            around.filter((i) => neighbors(state.position).includes(i)),
+            around.filter((i) => !neighbors(state.position).includes(i)),
+          ])
             await Promise.all(
               ring.map(async (i, k) => {
                 await pause(k * 45);
@@ -3166,35 +3717,11 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           return true;
         }
         if (type === "recruit") {
-          if (state.party.length < 3) {
-            let job = state.party.some((h) => h.job === "healer")
-                ? "rogue"
-                : "healer",
-              h = makeHero(job === "healer" ? "Mira" : "Wren", job);
-            state.party.push(h);
-            renderParty();
-            log(`${h.name}, a wandering ${job}, joins the company.`);
-            showSpotlight(
-              "A wandering soul",
-              `${h.name} the ${job} joins your little company.`,
-              `<div class="stage-art">${portraitArt(job, h)}</div><div class="stage-result">Room for one more by the fire.</div>`,
-              "recruit",
-            );
-            burst($("#stage-card"), "paper", 25);
-            await pause(1300);
-            closeSpotlight();
-            result(
-              icon("recruit") +
-                `${h.name} joins the company. Any hero may act repeatedly.`,
-            );
-          } else {
-            state.potions++;
-            state.party.forEach((h) => h.points++);
-            log(
-              "The company is full. A wanderer leaves a tonic and one personal point for everyone.",
-            );
-            toast("Three names already. A kindness, and a tonic.");
-          }
+          await recruitEncounter();
+          return true;
+        }
+        if (type === "shop") {
+          await shopEncounter(c);
           return true;
         }
         if (type === "enemy" || type === "guardian") {
@@ -3254,32 +3781,36 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       }
       function beginEncounter(boss = false) {
         let options = [
-          { name: "The ink rat", art: "rat", frequency: 3, strikes: 1 },
-          { name: "Margin wraith", art: "ghost", frequency: 3, strikes: 1 },
-          { name: "Blotling", art: "slime", frequency: 2, strikes: 1 },
-          { name: "Skeletal warrior", art: "skull", frequency: 3, strikes: 1 },
-        ];
-        let b = boss
-          ? {
-              name: "The Sunseed keeper",
+            { name: "The ink rat", art: "rat", frequency: 2, strikes: 1 },
+            { name: "Margin wraith", art: "ghost", frequency: 2, strikes: 1 },
+            { name: "Blotling", art: "slime", frequency: 2, strikes: 1 },
+            {
+              name: "Skeletal warrior",
               art: "skull",
               frequency: 2,
-              strikes: 2,
-            }
-          : pick(options);
-        let hp = boss
-          ? 90 + Math.max(0, state.depth - 3) * 16
-          : 20 + state.depth * 10;
+              strikes: 1,
+            },
+          ],
+          b = boss
+            ? {
+                name: "The Last Redaction",
+                art: "skull",
+                frequency: 1,
+                strikes: 3,
+              }
+            : pick(options),
+          hp = boss ? 250 : 26 + state.depth * 12;
+        state.block = passive("guard");
         state.enemy = {
           ...b,
           hp,
           maxHp: hp,
-          damage: boss ? 6 : 3 + Math.floor(state.depth * 1.4),
+          damage: boss ? 12 : 4 + Math.ceil(state.depth * 1.3),
           frequency: Math.max(
             1,
             b.frequency - Math.floor((state.depth - 1) / 4),
           ),
-          strikes: b.strikes + Math.floor((state.depth - 1) / 4),
+          strikes: b.strikes + (boss ? 0 : Math.floor((state.depth - 1) / 4)),
           countdown: Math.max(
             1,
             b.frequency - Math.floor((state.depth - 1) / 4),
@@ -3295,7 +3826,10 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           ],
         };
         state.round = 1;
-        log(`${b.name} steps out of the pencil dust.`);
+        log(
+          `${b.name} appears. Team block resets for this battle${state.block ? " · artefact grants " + state.block + " opening block" : ""}.`,
+        );
+        renderBlock();
       }
       async function encounterEntrance() {
         if (innerWidth <= 760)
@@ -3307,12 +3841,15 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         showSpotlight(
           "An unwelcome scribble",
           e.name,
-          `<div class="stage-art" id="entrance-art">${portraitArt(e.art, e)}<div class="scare-lines"></div></div><div class="stage-result">${e.strikes} strike${e.strikes > 1 ? "s" : ""} · attacks every ${e.frequency} spins</div>`,
+          `<div class="stage-art" id="entrance-art">${portraitArt(e.art, e)}<div class="scare-lines"></div></div><div class="stage-result">${e.strikes} strike${e.strikes > 1 ? "s" : ""} · attacks every ${e.frequency} spins</div><p class="encounter-quote">“${enemyLine(e, "entrance")}”</p>`,
           "enemy-intro",
         );
         burst($("#entrance-art"), "scary", 36);
         shakeBook(4);
-        await pause(900);
+        await pause(600);
+        await eventChoice([
+          { id: "stage-confirm", label: "Face " + e.name + " ↗", value: true },
+        ]);
         let from = $("#entrance-art")?.getBoundingClientRect(),
           target = $("#enemy-art"),
           to = target?.getBoundingClientRect();
@@ -3336,22 +3873,22 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           document.body.append(ghost);
           target.style.visibility = "hidden";
           closeSpotlight();
-          let anim = ghost.animate(
+          let a = animate(
+            ghost,
             [
-              { transform: "translate(0,0) scale(1)", opacity: 1 },
+              { transform: "translate(0,0) scale(1)" },
               {
                 transform: `translate(${to.left - from.left}px,${to.top - from.top}px) scale(${to.width / from.width},${to.height / from.height})`,
-                opacity: 1,
               },
             ],
             {
-              duration: 500,
+              duration: 450,
               easing: "cubic-bezier(.4,0,.2,1)",
               fill: "forwards",
             },
           );
-          await pause(500);
-          anim.cancel();
+          await pause(450);
+          a?.cancel();
           ghost.remove();
           target.style.visibility = "";
           burst(target, "dust", 12);
@@ -3359,17 +3896,29 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         result(
           icon("skull") + `${e.name} blocks the way. Choose any living hero.`,
         );
+        sayEnemy("entrance");
       }
       const liveAnimations = new Set();
-      function animate(el, frames, options) {
-        if (skip || !el) return null;
-        let a = el.animate(frames, options);
+      function animate(el, frames, options = {}) {
+        const { juice = false, ...settings } = options;
+        if (
+          !el ||
+          (!juice && (skip || sceneFast)) ||
+          (juice && matchMedia("(prefers-reduced-motion: reduce)").matches)
+        )
+          return null;
+        let a = el.animate(frames, {
+          ...settings,
+          duration:
+            (settings.duration || 250) / (juice ? Math.min(pace(), 2) : pace()),
+        });
+        a.juice = juice;
         liveAnimations.add(a);
         a.finished.catch(() => {}).finally(() => liveAnimations.delete(a));
         return a;
       }
       async function runMachine(id, reels, { results = null } = {}) {
-        let symbols = results || reels.map((r) => ({ ...pick(r) })),
+        let symbols = results || reels.map((r) => ({ ...weightedPick(r) })),
           root = $("#machine-" + id);
         if (!root) return symbols;
         let ctx = { id, fast: false };
@@ -3389,12 +3938,13 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           symbols.map(async (final, k) => {
             let win = root.querySelector(`[data-reel="${k}"]`),
               track = win.querySelector(".symbol-track"),
-              previous = visualPick(reels[k]),
+              previous = weightedPick(reels[k], fxRandom),
               steps = 10 + k * 2;
             win.classList.remove("locked");
             for (let t = 0; t < steps; t++) {
               if (skip || ctx.fast || sceneFast) break;
-              let next = t === steps - 1 ? final : visualPick(reels[k]);
+              let next =
+                t === steps - 1 ? final : weightedPick(reels[k], fxRandom);
               let duration = 45 + Math.pow(t / (steps - 1), 2.2) * 420;
               track.classList.remove("single");
               track.innerHTML = `<span class="slot-symbol">${symbolMarkup(previous)}</span><span class="slot-symbol">${symbolMarkup(next)}</span>`;
@@ -3445,45 +3995,45 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         return Math.max(1, ...Object.values(counts));
       }
       async function rollCritical(owner, symbols, enemy = false) {
-        let matches = matchCount(symbols);
-        if (matches < 2) return 1;
-        let pool = (matches === 3 ? [2, 2.5, 3, 4] : [1.25, 1.5, 1.75, 2]).map(
-            (value) => ({ type: "multiplier", value, tier: 1 }),
-          ),
+        if (matchCount(symbols) !== 3) return 1;
+        let pool = [2, 2.5, 3, 4].map((value) => ({
+            type: "multiplier",
+            value,
+            tier: 1,
+          })),
           rolled = { ...pick(pool) };
-        state.lastCritical = { owner, matches, multiplier: rolled.value };
+        state.lastCritical = { owner, matches: 3, multiplier: rolled.value };
         log(
-          `${owner}: ${matches === 3 ? "three of a kind" : "matching pair"}! The critical reel rolls ×${rolled.value}.`,
+          `${owner}: three identical symbols! Critical multiplier ×${rolled.value}.`,
         );
-        let root = $(
+        $(
           "#machine-" +
             (enemy
               ? "enemy"
               : "hero-" + state.party.findIndex((h) => h.name === owner)),
-        );
-        root?.classList.add("match");
-        if (!skip) {
-          showSpotlight(
-            enemy ? "Enemy critical!" : "Critical!",
-            "A matching " +
-              (matches === 3 ? "triple" : "pair") +
-              " · roll the multiplier.",
-            drawMachine(
-              "critical",
-              [{ type: "multiplier", value: "?", tier: 1 }],
-              { one: true, title: owner + " pushes their luck" },
-            ) +
-              '<div class="stage-result" id="critical-result">One more turn of the reel…</div>',
+        )?.classList.add("match");
+        showSpotlight(
+          enemy ? "Enemy critical!" : "Critical!",
+          "Three identical symbols · push your luck.",
+          drawMachine(
             "critical",
-          );
-          await runMachine("critical", [pool], { results: [rolled] });
-          $("#critical-result").innerHTML =
-            `<span class="multiplier-value">×${rolled.value}</span> to the original roll`;
-          burst($("#stage-card"), "gold", 42);
-          shakeBook(4);
-          await pause(700);
-          closeSpotlight();
-        }
+            [{ type: "multiplier", value: "?", tier: 1 }],
+            { one: true, title: owner + " rolls the multiplier" },
+          ) +
+            '<div class="stage-result" id="critical-result">One more turn of fate…</div>',
+          "critical",
+        );
+        await runMachine("critical", [pool], { results: [rolled] });
+        $("#critical-result").innerHTML =
+          `<strong class="multiplier-value">×${rolled.value}</strong> to the original roll`;
+        $("#stage-skip").textContent = "Take it in · closing shortly";
+        burst($("#stage-card"), "gold", 50);
+        shakeBook(4);
+        shakeElement($("#stage-card"), 4);
+        await feedbackPause(
+          skip ? 800 : pace() >= 5 ? 1000 : pace() >= 2 ? 1300 : 1800,
+        );
+        closeSpotlight();
         return rolled.value;
       }
       function calculate(symbols, multiplier = 1) {
@@ -3524,7 +4074,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             : "Attacks in " +
               e.countdown +
               (e.countdown === 1 ? " spin" : " spins");
-        $("#block").innerHTML = icon("block") + state.block + " block";
+        renderBlock();
       }
       function addXP(h, n) {
         h.xp += n;
@@ -3548,8 +4098,10 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         h.hp += actual;
         syncHero(i);
         if (actual) {
+          healingFX($("#portrait-" + i));
           floatAt($("#portrait-" + i), "+" + actual + " HP", true);
-          burst($("#portrait-" + i), "heal", 14);
+          burst($("#portrait-" + i), "heal", 16);
+          if (actual > 4) sayHero(i, "relief");
           log(
             `${h.name} recovers ${actual} HP${h.hp === actual ? " and gets back up" : ""}.`,
           );
@@ -3563,18 +4115,36 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         let actual = Math.min(h.hp, n - blocked);
         h.hp -= actual;
         syncHero(i);
-        $("#block").innerHTML = icon("block") + state.block + " block";
+        renderBlock();
+        if (blocked) {
+          floatAt($("#block"), "TEAM −" + blocked + " blocked", false, true);
+          burst($("#block"), "shield", 16);
+          shakeElement($("#block"), 4);
+          animate(
+            $("#block"),
+            [
+              { background: "#bed0a0", boxShadow: "0 0 0 0 #71865f" },
+              { background: "#e6ddc2", boxShadow: "0 0 0 12px #71865f00" },
+            ],
+            { duration: 480, juice: true },
+          );
+          beam($("#block"), $("#portrait-" + i), "block");
+        }
         floatAt(
           $("#portrait-" + i),
-          actual ? "-" + actual + " HP" : "Blocked",
+          actual ? "-" + actual + " HP" : "Team protected",
           false,
           !actual,
         );
-        burst($("#portrait-" + i), actual ? "damage" : "paper", 18);
+        burst($("#portrait-" + i), actual ? "damage" : "shield", 16);
         shakeElement($("#hero-" + i), actual ? 5 : 2);
         shakeBook(actual ? 3 : 1);
+        sayHero(
+          i,
+          actual ? (h.hp / h.maxHp < 0.35 ? "panic" : "hurt") : "block",
+        );
         log(
-          `${source} → ${h.name}: ${actual} damage${blocked ? " (" + blocked + " block consumed)" : ""}.`,
+          `${source} → ${h.name}: ${actual} damage${blocked ? " (" + blocked + " shared team block consumed)" : ""}.`,
         );
         return actual;
       }
@@ -3594,6 +4164,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         burst($("#enemy-art"), actual ? "damage" : "paper", 22);
         shakeElement($("#enemy-art"), 6);
         shakeBook(2.5);
+        sayEnemy("hurt");
         log(
           `${source} strikes ${e.name} for ${actual}${blocked ? " (" + blocked + " blocked)" : ""}.`,
         );
@@ -3603,6 +4174,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         if (state.party.some((h) => h.hp > 0)) return false;
         state.over = true;
         state.enemy = null;
+        state.block = 0;
+        renderBlock();
         log("The last torch falls. A fresh page is waiting.");
         openModal(
           "The light goes out.",
@@ -3629,16 +4202,22 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         try {
           if (h.stun) {
             h.stun--;
+            // Recovery must allow a real action before the next stun can land.
+            h.stunGrace = 1;
             log(`${h.name} spends an action shaking off stun.`);
             actionLabel($("#portrait-" + i), "Shaking it off");
             await pause(450);
           } else {
+            sayHero(i, "attack");
+            h.stunGrace = 0;
             actionLabel($("#portrait-" + i), h.name + " rolls!");
             lunge($("#portrait-" + i), false);
             let symbols = await runMachine("hero-" + i, h.reels);
             h.last = symbols;
             let multiplier = await rollCritical(h.name, symbols),
               sums = calculate(symbols, multiplier);
+            for (let key of ["attack", "heal", "block"])
+              if (sums[key]) sums[key] += passive(key);
             state.lastPlayerRoll = {
               actor: i,
               symbols,
@@ -3666,11 +4245,11 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             }
             if (sums.block) {
               state.block += sums.block;
-              $("#block").innerHTML = icon("block") + state.block + " block";
+              renderBlock();
               floatAt($("#block"), "+" + sums.block + " block", false, true);
               burst($("#block"), "paper", 18);
               parts.push(`<span>${icon("block")}+${sums.block} block</span>`);
-              log(`${h.name} stores ${sums.block} persistent team block.`);
+              log(`${h.name} stores ${sums.block} shared team block.`);
             }
             if (sums.stun) {
               let turns = Math.max(1, Math.ceil(sums.stun / 3));
@@ -3685,7 +4264,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
               `<span>${h.name}${multiplier > 1 ? " · ×" + multiplier + " critical" : ""}:</span>` +
                 parts.join(""),
             );
-            addXP(h, 2);
+
             syncHero(i);
             syncEnemy();
             await pause(280);
@@ -3711,6 +4290,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           busy = false;
           sceneFast = false;
           render();
+          // Rebuilt reel windows still get a short impact in Skip mode.
+          if (skip && !state.over) shakeElement($("#machine-hero-" + i), 2);
           save();
         }
       }
@@ -3722,6 +4303,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           if (!alive.length) break;
           let target = pick(alive);
           actionLabel($("#enemy-art"), e.name + " · strike " + (strike + 1));
+          sayEnemy("attack");
           lunge($("#enemy-art"), true);
           let symbols = await runMachine("enemy", e.reels);
           e.last = symbols;
@@ -3756,11 +4338,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             notes.push("+" + totals.block + " enemy block");
             log(`${e.name} stores ${totals.block} block.`);
           }
-          if (totals.stun && state.party[target].hp > 0) {
-            state.party[target].stun = Math.min(
-              2,
-              (state.party[target].stun || 0) + 1,
-            );
+          if (
+            totals.stun &&
+            state.party[target].hp > 0 &&
+            !state.party[target].stunGrace
+          ) {
+            state.party[target].stun = 1;
             syncHero(target);
             floatAt($("#portrait-" + target), "Stunned", false, true);
             log(
@@ -3780,57 +4363,61 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         }
       }
       async function victory(e) {
-        lunge($("#enemy-art"), true);
-        burst($("#enemy-art"), "paper", 42);
-        await pause(450);
-        let reward = 6 + state.depth * 4;
-        state.gold += reward;
+        sayEnemy("defeat");
+        burst($("#enemy-art"), "paper", 46);
+        shakeElement($("#enemy-art"), 5);
+        await pause(400);
         state.party.forEach((h) => {
           addXP(h, 8 + state.depth * 2);
           h.points++;
         });
+        state.battlesWon++;
         state.enemy = null;
-        log(
-          `${e.name} is erased. +${reward} gold, EXP and a personal point for every hero.`,
-        );
-        result(
-          `<span class="gold">${icon("coin")}Encounter won · +${reward} gold · EXP & personal points</span>`,
-        );
+        state.block = 0;
         if (e.boss) {
-          state.relic = true;
-          log(
-            "The Sunseed is yours. Use any discovered stairs to bring it home.",
-          );
-          toast("The Sunseed is yours. Bring a little light home.");
-        } else toast("The enemy is erased. A little braver, a little richer.");
+          state.floorBossDefeated = true;
+          log("The Last Redaction is erased. The final stairs are open.");
+        }
+        log(
+          `${e.name} is defeated. EXP and a personal point for every hero. Team block expires.`,
+        );
+        renderBlock();
+        await treasureRoll("battle");
         $("#field-note").textContent =
-          "“Even the darkest corners have an edge you can turn.”";
+          "“The only way to write the ending is to keep turning pages.”";
       }
-      async function treasureRoll() {
-        let faces = [
-            { type: "coin", tier: 1 },
-            { type: "coin", tier: 1 },
-            { type: "coin", tier: 2 },
-            { type: "coin", tier: 3 },
-            { type: "potion", tier: 1 },
-            { type: "point", tier: 1 },
-            { type: "bomb", tier: 1 },
-            { type: "ward", tier: 1 },
-          ],
-          reels = [faces, faces, faces];
+      async function treasureRoll(source = "chest") {
+        let faces = lootFaces(),
+          enemyLoot = source === "battle";
         showSpotlight(
-          "Treasure!",
-          "Something rattles inside the little wooden chest.",
-          `<div class="trap-art">${icon("treasure")}</div>${drawMachine("treasure", faces.slice(0, 3), { title: "Fortune favours the curious" })}<div class="stage-result" id="treasure-result">What did the dungeon leave you?</div>`,
+          enemyLoot ? "Spoils of battle" : "Treasure!",
+          enemyLoot
+            ? "The enemy leaves a few scraps worth keeping."
+            : "Something rattles inside the little wooden chest.",
+          `<div class="trap-art">${icon(enemyLoot ? "skull" : "treasure")}</div>${drawMachine(
+            "treasure",
+            [
+              { type: "coin", tier: 1 },
+              { type: "coin", tier: 2 },
+              { type: "coin", tier: 3 },
+            ],
+            {
+              title: enemyLoot
+                ? "Victory has its little rewards"
+                : "Fortune favours the curious",
+            },
+          )}<div class="stage-result" id="treasure-result">What did the dungeon leave you?</div><div id="artefact-loot"></div>`,
           "treasure",
         );
-        let symbols = await runMachine("treasure", reels),
-          gold = 3 + state.depth,
+        let symbols = await runMachine("treasure", [faces, faces, faces]),
+          gold = 2 + state.depth,
           notes = [],
-          counts = {};
+          counts = {},
+          found = [];
         for (let s of symbols) {
           counts[s.type] = (counts[s.type] || 0) + 1;
-          if (s.type === "coin") gold += s.tier * (4 + state.depth);
+          if (s.type === "coin")
+            gold += s.tier * (enemyLoot ? 2 + state.depth : 4 + state.depth);
           if (s.type === "potion") state.potions++;
           if (s.type === "bomb") state.bombs++;
           if (s.type === "ward") state.wards++;
@@ -3839,9 +4426,16 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             h.points++;
             notes.push("+1 point for " + h.name);
           }
+          if (s.type === "artefact") {
+            let item = makeArtefact(state.depth);
+            state.artefacts.push(item);
+            found.push(item);
+            if (!state.equippedArtefact) state.equippedArtefact = item.id;
+          }
         }
         let jackpot = matchCount(symbols) === 3;
         if (jackpot) gold *= 2;
+        gold = Math.ceil(gold * (1 + passive("gold") / 100));
         state.gold += gold;
         notes.unshift("+" + gold + " gold");
         for (let [type, name] of [
@@ -3855,14 +4449,36 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             );
         $("#treasure-result").textContent =
           (jackpot ? "JACKPOT! " : "") + notes.join(" · ");
-        result(
-          `<span class="gold">${icon("treasure")}${notes.join(" · ")}</span>`,
+        $("#artefact-loot").innerHTML = found
+          .map(
+            (a) =>
+              `<div class="artefact-card">${icon("artefact")}<div><b>${a.name}</b><p>${artefactText(a)}</p><button class="small" data-equip="${a.id}">${state.equippedArtefact === a.id ? "Equipped" : "Equip instead"}</button></div></div>`,
+          )
+          .join("");
+        for (let a of found) notes.push("Rare artefact: " + a.name);
+        state.lastLoot = {
+          source,
+          symbols,
+          gold,
+          found: found.map((a) => a.id),
+        };
+        result(`<span class="gold">${icon("coin")}${notes.join(" · ")}</span>`);
+        log(
+          (enemyLoot ? "Battle spoils: " : "Treasure: ") +
+            notes.join(", ") +
+            ".",
         );
-        log("Treasure: " + notes.join(", ") + ".");
-        burst($("#stage-card"), "gold", 40);
+        burst($("#treasure-result"), "coin", Math.min(140, gold));
         shakeBook(jackpot ? 5 : 2);
-        await pause(1000);
+        await eventChoice([
+          {
+            id: "stage-confirm",
+            label: enemyLoot ? "Claim the spoils ↗" : "Pocket the treasure ↗",
+            value: true,
+          },
+        ]);
         closeSpotlight();
+        renderArtefactSlot();
       }
       function trapArt(type) {
         let body =
@@ -3915,7 +4531,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         $("#trap-result").textContent = hazard
           ? `${state.party[target].name} takes the danger · ${n} incoming damage${guard ? " · +" + guard + " block" : ""}`
           : "A narrow escape. No damage!";
-        await pause(650);
+        await eventChoice([
+          { id: "stage-confirm", label: "Carry on ↗", value: true },
+        ]);
         closeSpotlight();
         if (n) {
           beam(
@@ -3936,50 +4554,52 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           );
           burst($("#map-player"), "paper", 15);
         }
+        state.block = 0;
+        renderBlock();
         checkDefeat();
         await pause(400);
       }
       function stairs() {
         if (busy || state.enemy || state.over || !state.exitFound) return;
         state.exitPromptPending = false;
-        let locked = state.depth === 3 && !state.relic,
-          finalFloor = state.depth >= 10;
+        let finalFloor = state.depth === 10,
+          locked = finalFloor && !state.floorBossDefeated;
         openModal(
           "A stairway in the paper",
-          `<p>The stairs are marked in your notebook. You can use them <b>from anywhere on this floor</b> once the company is out of combat.</p><p>Stay and explore, descend, or head back to camp. Nothing happens until you choose.</p>${locked ? "<p>The Sunseed keeper still waits on this floor. Seek the skull immediately below the stairs before descending.</p>" : ""}${finalFloor ? "<p>You have reached the last page of the dungeon.</p>" : ""}<p>${state.gold} gold · ${state.party.length} adventurers · ${state.relic ? "Sunseed recovered" : "Sunseed still missing"}</p><div class="modal-actions"><button class="primary" id="descend" ${locked || finalFloor ? "disabled" : ""}>Descend to floor ${state.depth + 1}</button><button id="retire">${state.relic ? "Bring the Sunseed home" : "Return to camp"}</button><button data-close>Keep exploring</button></div>`,
+          `<p>The stairs are marked. Use them from anywhere on this floor, or stay and explore. There is no road back: only the next page.</p>${locked ? "<p><b>The Last Redaction bars the final descent.</b> Defeat the guardian immediately below these stairs to write the ending.</p>" : ""}<p>Floor ${state.depth} / 10 · ${state.gold} gold · ${state.battlesWon} battles won</p><div class="modal-actions"><button class="primary" id="descend" ${locked ? "disabled" : ""}>${finalFloor ? "Write the final page ↗" : "Descend to floor " + (state.depth + 1)}</button><button data-close>Keep exploring</button></div>`,
           "stairs",
         );
-        $("#descend").onclick = async () => {
-          if (busy) return;
+        $("#descend").onclick = () => {
+          if (busy || locked) return;
           closeModal();
+          if (finalFloor) {
+            state.over = true;
+            state.won = true;
+            log("Ten floors conquered. The last page belongs to the company.");
+            openModal(
+              "You wrote the ending.",
+              `<p>Ten floors. ${state.battlesWon} hard-won battles. ${state.gold} gold. The company keeps walking, into a story of its own.</p><div class="modal-actions"><button class="primary" data-restart>A fresh page</button><button data-close>Keep the notebook</button></div>`,
+              "end",
+            );
+            burst($("#book"), "paper", 80);
+            render();
+            save();
+            return;
+          }
           state.depth++;
           state.map = generateFloor(state.depth);
           state.position = pos(1, 7);
           state.exitFound = false;
           state.exitPromptPending = false;
+          state.floorBossDefeated = false;
+          state.block = 0;
           state.party.forEach((h, i) => healHero(i, 5));
           log(
-            `The company descends to floor ${state.depth}. Five HP restored to everyone.`,
+            `The company descends to floor ${state.depth}. Everyone recovers 5 HP.`,
           );
           result(icon("stairs") + " A fresh page. Deeper shadows.");
           render();
           shakeBook(3);
-          save();
-        };
-        $("#retire").onclick = () => {
-          state.over = true;
-          closeModal();
-          log(
-            state.relic
-              ? "The Sunseed comes home. A small triumph in a very dark world."
-              : "The company returns safely. Some stories can wait.",
-          );
-          openModal(
-            state.relic ? "Something green, again." : "Home by torchlight.",
-            `<p>${state.relic ? "You bring the Sunseed back to the world above. The notebook has a happy ending." : "The company and its treasures return to camp. The Sunseed waits for another expedition."}</p><p>Floor ${state.depth} · ${state.steps} steps · ${state.gold} gold</p><div class="modal-actions"><button class="primary" data-restart>A fresh page</button><button data-close>Keep the notebook</button></div>`,
-            "end",
-          );
-          render();
           save();
         };
       }
@@ -4018,10 +4638,10 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         }
       }
       function useWard() {
-        if (busy || state.over || !state.wards) return;
+        if (busy || state.over || !state.enemy || !state.wards) return;
         state.wards--;
         state.block += 8;
-        $("#block").innerHTML = icon("block") + state.block + " block";
+        renderBlock();
         floatAt($("#block"), "+8 block", false, true);
         burst($("#block"), "paper", 20);
         result(icon("ward") + " A paper ward stores 8 team block.");
@@ -4037,17 +4657,25 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         $("#modal").focus();
       }
       function closeModal() {
+        let shop = modalKind === "shop";
         $("#overlay").hidden = true;
         modalKind = "";
+        if (shop && shopResolver) {
+          let done = shopResolver;
+          shopResolver = null;
+          done();
+        }
         if (modalPrevious?.isConnected) modalPrevious.focus();
       }
       function showSpotlight(title, subtitle, body, kind) {
         stagePrevious = document.activeElement;
         $("#stage-card").className = "stage-card " + kind;
         $("#stage-card").innerHTML =
-          `<div class="eyebrow">A turn of fate / ${kind === "critical" ? "push your luck" : kind === "enemy-intro" ? "encounter" : "field notes"}</div><h2 class="stage-title" id="stage-title">${title}</h2><p class="stage-subtitle">${subtitle}</p>${body}<button class="stage-skip" id="${kind === "critical" ? "skip-critical" : "stage-skip"}" data-fast>Click to fast-forward ↗</button><div class="stage-footer"><label><input type="checkbox" data-skip-all ${skip ? "checked" : ""}> Skip all animations</label></div>`;
+          `<div class="paper-tear" aria-hidden="true"></div><div class="eyebrow">A turn of fate / ${kind === "critical" ? "three of a kind" : kind === "enemy-intro" ? "encounter" : "field notes"}</div><h2 class="stage-title" id="stage-title">${title}</h2><p class="stage-subtitle">${subtitle}</p>${body}<div class="stage-actions" id="stage-actions"><button class="stage-skip" id="stage-skip" data-fast>Land the reels now ↗</button></div>`;
         $("#spotlight").hidden = false;
         $("#stage-card").focus();
+        burst($("#stage-card"), "paper", 48);
+        shakeElement($("#stage-card"), 2);
       }
       function closeSpotlight() {
         $("#spotlight").hidden = true;
@@ -4058,7 +4686,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         let h = state.party[i];
         openModal(
           h.name + "’s lucky machinery",
-          `<p><b>${h.points} personal points.</b> Every reel draws one of its six faces with equal odds. Identical type <em>and tier</em> match for a critical multiplier roll.</p><p>Weak faces cost <b>1</b> point, tier II costs <b>3</b>, tier III costs <b>6</b>. Changing a face costs its current tier’s price; upgrading buys the new tier. Weakening a face costs 1 point. A reel full of cheap matching swords can be luckier than a mixed powerful reel.</p><p class="muted">Per icon: attack 3 · heal 3 · block 2 · stun 1. Levels grant +6 maximum HP and +4 personal points.</p>${h.reels.map((r, k) => `<div class="editor-row"><span class="eyebrow">Reel ${k + 1} / six equally likely faces</span><div class="editor-slots">${r.map((s, j) => `<div class="editor-slot">${symbolMarkup(s)}<small>${s.type} ${"I".repeat(s.tier)}</small><button data-cycle="${i},${k},${j}" ${h.points < FACE_COST[s.tier] ? "disabled" : ""}>Change · ${FACE_COST[s.tier]}pt</button><button data-upgrade="${i},${k},${j}" ${h.points < (FACE_COST[s.tier + 1] || Infinity) || s.tier === 3 ? "disabled" : ""}>${s.tier === 3 ? "Max tier" : "Tier ↑ · " + FACE_COST[s.tier + 1] + "pt"}</button>${s.tier > 1 ? `<button data-weaken="${i},${k},${j}" ${h.points < 1 ? "disabled" : ""}>Weak · 1pt</button>` : ""}</div>`).join("")}</div></div>`).join("")}<div class="modal-actions"><button class="primary" data-close>Back to the adventure</button></div>`,
+          `<p><b>${h.points} personal points.</b> Class faces have different odds, shown below. Editing a face preserves its probability. Three identical type-and-tier symbols trigger a critical.</p><p>Weak faces cost <b>1</b> point, tier II <b>3</b>, tier III <b>6</b>. Changing a face costs its current tier’s price; an upgrade costs its new tier’s price. Weakening to tier I costs 1.</p><p class="muted">Per icon: attack 3 · heal 3 · block 2 · stun 1. Successful battles award EXP. Levels give +6 maximum HP and +4 personal points.</p>${h.reels.map((r, k) => `<div class="editor-row"><span class="eyebrow">Reel ${k + 1} / weighted class faces</span><div class="editor-slots">${r.map((s, j) => `<div class="editor-slot">${symbolMarkup(s)}<small>${s.type} ${"I".repeat(s.tier)}<br>${Math.round((100 * (s.weight || 1)) / r.reduce((n, s) => n + (s.weight || 1), 0))}% chance</small><button data-cycle="${i},${k},${j}" ${h.points < FACE_COST[s.tier] ? "disabled" : ""}>Change · ${FACE_COST[s.tier]}pt</button><button data-upgrade="${i},${k},${j}" ${h.points < (FACE_COST[s.tier + 1] || Infinity) || s.tier === 3 ? "disabled" : ""}>${s.tier === 3 ? "Max tier" : "Tier ↑ · " + FACE_COST[s.tier + 1] + "pt"}</button>${s.tier > 1 ? `<button data-weaken="${i},${k},${j}" ${h.points < 1 ? "disabled" : ""}>Weak · 1pt</button>` : ""}</div>`).join("")}</div></div>`).join("")}<div class="modal-actions"><button class="primary" data-close>Back to the adventure</button></div>`,
           "editor",
         );
       }
@@ -4098,7 +4726,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       function help() {
         openModal(
           "A field guide for the brave",
-          `<p><b>A little quest.</b> Find the Sunseed keeper on floor 3, defeat it, and use discovered stairs to bring the Sunseed home. Or continue to the tenth and final floor.</p><p><b>Scratch, reveal, then step.</b> Dark graphite hides rooms and interior walls. Only uncovered tiles can form a route; an unknown tile must touch that route. Click a destination to take a shortest path. Unknown tiles erase before you move. Arrow keys / WASD take a step. Empty rooms have little sketches too. Hover for a tile’s known type.</p><p><b>Read the room.</b> Treasure rolls gold, tonics, bombs, wards, or personal points. Traps roll safe, danger, or block. Wells restore 30% maximum health to everyone and can revive fallen heroes. A rare beacon reveals exactly the surrounding eight cells, including diagonals. It reveals events without activating them.</p><p><b>Stay or go.</b> Discovering stairs unlocks the stairs button below the map. You may decline the prompt, explore, then use that button from anywhere. Moving across a discovered event still activates it; merely seeing it does not.</p><p><b>Your machines.</b> Pull any living hero’s handle, in any order, as often as you wish. One, two, or three copies of an icon mean tier I, II, or III. Attack, heal, block, and stun resolve together. A matching pair or triple of the same type AND tier triggers a separate multiplier machine: pairs roll ×1.25–2, triples ×2–4. Effects round up.</p><p><b>Keep the company alive.</b> Choose a healing target before spinning or drinking a tonic. Healing revives the fallen. Damage and healing fly to their actual targets; portraits change as health falls. Block is shared by the whole team, persists between encounters, and wears away by the amount it absorbs.</p><p><b>Enemies have machines too.</b> Each hero action ticks the enemy’s attack clock. At zero it makes its listed strikes, each with its own roll and target. Its type determines its symbols. Enemy heal and block protect the enemy. Enemy stun affects a hero; pull that hero’s handle to spend an action recovering, or choose another hero. Your stun cancels whole enemy turns.</p><p><b>Grow, then edit.</b> Spins and victories give personal EXP. Levels give +6 maximum health and +4 personal points. Victory grants each hero another point. Edit faces with ✎: weak faces cost 1 point, tier II costs 3, and tier III costs 6. Consistent weak symbols match often; powerful faces take saving. Enemies gain health, damage, speed, and multi-strikes on deeper floors.</p><p><b>Set the pace.</b> Reels slow down and lock one at a time. Click a rolling machine or press Space to fast-forward to its preselected result. Central scenes have their own fast-forward control. Skip animations makes everything instant and honors your initial reduced-motion preference. Critical popups close automatically after their result.</p><p><b>Keep the notebook.</b> Progress saves locally when browser storage is available. Save HTML downloads the entire offline game, not your current run. M folds the log; Escape closes ordinary dialogs or fast-forwards active effects.</p><div class="modal-actions"><button class="primary" data-close>Into the margins ↗</button></div>`,
+          `<p><b>Only forward.</b> Descend through ten floors. On floor 10, defeat The Last Redaction and use the final stairs to win. There is no return-home ending. Discovering stairs unlocks their button from anywhere on that floor; you can decline and keep exploring.</p><p><b>Scratch and wander.</b> Unknown tiles erase before you step into them. Click any destination reachable through already uncovered tiles. An unknown tile may be your destination but never a shortcut. Arrow keys / WASD take a step. Hover to see known tile types.</p><p><b>Read the room.</b> Chests and defeated enemies roll mostly gold, with rare consumables and extremely rare artefacts. Traps roll danger, escape, or temporary trap guard. Wells restore 30% maximum HP to everyone, including the fallen. Beacons reveal exactly eight surrounding cells, including diagonals, without activating their events.</p><p><b>Meetings in the margins.</b> A shop has a 30% chance of appearing on each floor. Spend gold on its limited stock: items, full-team healing, or a map revealing the stairs. Adventurers are very rare and join only if you invite them. You can have three heroes at most.</p><p><b>Your machines.</b> Pull any living hero’s handle repeatedly, in any order. One, two, or three icons indicate tiers I, II, or III. Tanks mostly attack and block, healers mostly heal, rogues attack and stun. Face probabilities are shown in the editor. <b>Only three identical symbols of the same type and tier crit</b>; the separate multiplier machine rolls ×2, ×2.5, ×3, or ×4.</p><p><b>The whole team’s shield.</b> Shields build shared team block. Incoming damage consumes block point for point before hurting its target. Block lasts for this battle and clears after victory or defeat. Choose a target for healing and tonics; healing revives the fallen.</p><p><b>Enemies push back.</b> They attack every two hero actions on floor one, and more often with extra strikes deeper down. Each strike rolls its own reels. Enemy heal and block protect the enemy; enemy stun affects a hero. Spend that hero’s action recovering or choose someone else. Your stun cancels whole enemy turns.</p><p><b>Earn your changes.</b> EXP is awarded only when a battle is won, never for individual spins or failed battles. Levels grant +6 maximum HP and +4 personal editing points. Face changes cost 1 / 3 / 6 points for tiers I / II / III. Consistent weak faces crit more easily than mixed strong ones.</p><p><b>One artefact slot.</b> Artefacts found in loot become part of your collection. Only the equipped one grants its passive bonus. Swap freely between actions using the slot beneath the map. Finds from deeper floors have greater power. The Ember Seal grants opening team block; other artefacts improve damage, healing, shield rolls, or gold.</p><p><b>Your pace, your call.</b> The main toolbar always offers 1×, 2×, 5×, and Skip. Clicking a rolling machine or pressing Space lands its preselected result. Skip bypasses reel travel and cinematic delays but keeps short shakes, particles, healing flashes, and speech. Events wait for a confirmation button even in Skip. Critical results linger and close automatically. The OS reduced-motion preference limits shaking.</p><p><b>Keep the notebook.</b> Progress saves locally when storage is available. Save HTML downloads the offline game, not a run export. M folds the log. Escape closes ordinary dialogs or speeds an active scene; it never confirms an event for you.</p><div class="modal-actions"><button class="primary" data-close>Into the margins ↗</button></div>`,
           "help",
         );
       }
@@ -4122,7 +4750,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         fxContext.setTransform(d, 0, 0, d, 0, 0);
       }
       function burst(el, kind = "paper", count = 15) {
-        if (skip || sceneFast || !el) return;
+        if (!el) return;
         let r = el.getBoundingClientRect(),
           x = r.left + r.width / 2,
           y = r.top + r.height / 2;
@@ -4144,7 +4772,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             kind,
           });
         }
-        particles = particles.slice(-260);
+        particles = particles.slice(-420);
         if (!fxFrame) fxFrame = requestAnimationFrame(drawParticles);
       }
       let fxLast = 0;
@@ -4153,10 +4781,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         let dt = Math.min(35, time - (fxLast || time - 16));
         fxLast = time;
         fxContext.clearRect(0, 0, innerWidth, innerHeight);
-        if (skip) {
-          particles = [];
-          return;
-        }
+
         particles = particles.filter((p) => p.life < p.max);
         for (let p of particles) {
           p.life += dt;
@@ -4174,11 +4799,33 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             damage: "#8d5140",
             heal: "#768759",
             gold: "#b99b55",
+            coin: "#b99b55",
+            shield: "#6b8461",
             water: "#829b91",
             scary: "#423a2e",
           }[p.kind];
           fxContext.strokeStyle = fxContext.fillStyle;
-          if (p.kind === "scary" || p.kind === "heal") {
+          if (p.kind === "coin") {
+            fxContext.beginPath();
+            fxContext.ellipse(0, 0, p.size, p.size * 0.7, 0, 0, Math.PI * 2);
+            fxContext.fill();
+            fxContext.strokeStyle = "#785e30";
+            fxContext.lineWidth = 0.8;
+            fxContext.stroke();
+            fxContext.beginPath();
+            fxContext.moveTo(0, -p.size * 0.4);
+            fxContext.lineTo(0, p.size * 0.4);
+            fxContext.stroke();
+          } else if (p.kind === "shield") {
+            fxContext.beginPath();
+            fxContext.moveTo(-p.size, -p.size);
+            fxContext.lineTo(p.size, -p.size);
+            fxContext.lineTo(p.size * 0.7, p.size * 0.4);
+            fxContext.lineTo(0, p.size);
+            fxContext.lineTo(-p.size * 0.7, p.size * 0.4);
+            fxContext.closePath();
+            fxContext.fill();
+          } else if (p.kind === "scary" || p.kind === "heal") {
             fxContext.lineWidth = 1.3;
             fxContext.beginPath();
             fxContext.moveTo(-p.size, 0);
@@ -4219,7 +4866,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             { transform: `translate(${-amount * 0.4}px,0)` },
             { transform: "translate(0,0) rotate(0)" },
           ],
-          { duration: 260, easing: "ease-out" },
+          { duration: 170, easing: "ease-out", juice: true },
         );
       }
       function pulseBeacon() {
@@ -4237,7 +4884,6 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         setTimeout(() => wave.remove(), 1100);
       }
       function shakeBook(amount = 2) {
-        if (sceneFast) return;
         shakeElement($("#book"), amount);
       }
       function lunge(el, enemy) {
@@ -4255,9 +4901,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       }
       function floatAt(el, label, heal = false, block = false) {
         if (!el) return;
-        if (skip) {
-          return;
-        }
+
         let r = el.getBoundingClientRect(),
           node = document.createElement("span");
         node.className =
@@ -4269,7 +4913,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         setTimeout(() => node.remove(), 1000);
       }
       function actionLabel(el, label) {
-        if (skip || !el) return;
+        if (!el) return;
         let r = el.getBoundingClientRect(),
           node = document.createElement("span");
         node.className = "action-label";
@@ -4280,7 +4924,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         setTimeout(() => node.remove(), 1000);
       }
       function beam(from, to, type) {
-        if (skip || !from || !to) return;
+        if (!from || !to) return;
         let a = from.getBoundingClientRect(),
           b = to.getBoundingClientRect(),
           x = a.left + a.width / 2,
@@ -4299,20 +4943,400 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         setTimeout(() => el.remove(), 400);
       }
       function setSkip(value) {
-        skip = !!value;
-        state.skip = skip;
-        $("#skip-animations").checked = skip;
-        document.body.classList.toggle("no-motion", skip);
-        if (skip) {
-          for (let a of liveAnimations) a.cancel();
-          particles = [];
-          fxContext.clearRect(0, 0, innerWidth, innerHeight);
-          document
-            .querySelectorAll(".combat-float,.action-label,.fx-beam")
-            .forEach((el) => el.remove());
-        }
+        setPace(value ? "skip" : "1");
+      }
+
+      let stageResolver = null,
+        shopResolver = null;
+      function pace() {
+        return skip ? 1 : Number(state?.speed) || 1;
+      }
+      function feedbackPause(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      }
+      function setPace(value) {
+        if (!["1", "2", "5", "skip"].includes(String(value))) return;
+        state.speed = String(value);
+        skip = state.speed === "skip";
+        $("#animation-speed").value = state.speed;
+        document.body.classList.toggle("skip-cinematics", skip);
+        document.body.style.setProperty("--speed", pace());
+        if (skip) for (let a of liveAnimations) if (!a.juice) a.cancel();
         save();
       }
+      function weightedPick(faces, random = Math.random) {
+        let sum = faces.reduce((n, s) => n + (s.weight || 1), 0),
+          n = random() * sum;
+        for (let face of faces) {
+          n -= face.weight || 1;
+          if (n < 0) return face;
+        }
+        return faces.at(-1);
+      }
+      function eventChoice(choices) {
+        $("#stage-actions").innerHTML = choices
+          .map(
+            (c) =>
+              `<button class="${c.value ? "primary" : ""}" id="${c.id}" data-stage-choice="${String(c.value)}">${escapeHTML(c.label)}</button>`,
+          )
+          .join("");
+        return new Promise((resolve) => {
+          stageResolver = resolve;
+          $("#stage-actions button")?.focus();
+        });
+      }
+      function renderBlock() {
+        $("#block").innerHTML =
+          icon("block") +
+          `<strong>${state.block}</strong><span>TEAM BLOCK<small>All heroes · this battle</small></span>`;
+        $("#block").setAttribute(
+          "aria-label",
+          state.block +
+            " team block. Shared by every hero; expires after battle.",
+        );
+      }
+      const ARTEFACT_TYPES = [
+        { key: "attack", name: "Fang of the Margin", base: 2, scale: 2 },
+        { key: "heal", name: "The Glass Tear", base: 2, scale: 1 },
+        { key: "block", name: "Iron Pennant", base: 2, scale: 1 },
+        { key: "gold", name: "Lucky Farthing", base: 10, scale: 3 },
+        { key: "guard", name: "Ember Seal", base: 3, scale: 2 },
+      ];
+      function makeArtefact(depth) {
+        let t = pick(ARTEFACT_TYPES);
+        return {
+          id: "artefact-" + ++state.artefactSerial,
+          name:
+            t.name +
+            " · " +
+            ["I", "II", "III", "IV"][Math.min(3, Math.floor((depth - 1) / 3))],
+          key: t.key,
+          power: t.base + depth * t.scale,
+          depth,
+        };
+      }
+      function passive(key) {
+        let a = state.artefacts.find((a) => a.id === state.equippedArtefact);
+        return a?.key === key ? a.power : 0;
+      }
+      function artefactText(a) {
+        return {
+          attack: `+${a.power} damage when a hero rolls attack.`,
+          heal: `+${a.power} healing when a hero rolls heal.`,
+          block: `+${a.power} team block when a hero rolls shields.`,
+          gold: `+${a.power}% gold from chests and battle spoils.`,
+          guard: `Start every battle with ${a.power} shared team block.`,
+        }[a.key];
+      }
+      function renderArtefactSlot() {
+        let a = state.artefacts.find((a) => a.id === state.equippedArtefact);
+        $("#relic-status").innerHTML =
+          `<button class="artefact-slot" id="artefact-slot" ${busy ? "disabled" : ""}>${icon("artefact")}<span>${a ? escapeHTML(a.name) : "Empty artefact slot"}<small>${a ? artefactText(a) : "Rare finds. One passive bonus at a time."}</small><em>${state.artefacts.length ? "Inspect / swap · " + state.artefacts.length + " owned" : "Very rarely found in loot"}</em></span></button>`;
+      }
+      function equipArtefact(id) {
+        if (!state.artefacts.some((a) => a.id === id)) return;
+        state.equippedArtefact = id;
+        renderArtefactSlot();
+        document.querySelectorAll("[data-equip]").forEach((b) => {
+          b.textContent = b.dataset.equip === id ? "Equipped" : "Equip instead";
+        });
+        save();
+        toast("Artefact equipped. Its passive bonus is active.");
+      }
+      function inspectArtefacts() {
+        if (busy || state.over) return;
+        openModal(
+          "A little power in the paper",
+          `<p>Only one artefact is active at a time. Swapping is free; its bonus applies to future rolls. The power of a find scales with the floor where it was discovered.</p>${state.artefacts.length ? state.artefacts.map((a) => `<div class="artefact-card">${icon("artefact")}<div><b>${escapeHTML(a.name)}</b><p>Found on floor ${a.depth}. ${artefactText(a)}</p><button data-equip="${a.id}">${a.id === state.equippedArtefact ? "Equipped" : "Equip instead"}</button></div></div>`).join("") : "<p>The slot is empty. Artefacts appear very rarely in chests and the spoils of defeated enemies.</p>"}<div class="modal-actions"><button class="primary" data-close>Keep walking</button></div>`,
+          "artefacts",
+        );
+      }
+      function lootFaces() {
+        return [
+          { type: "coin", tier: 1, weight: 550 },
+          { type: "coin", tier: 2, weight: 280 },
+          { type: "coin", tier: 3, weight: 110 },
+          { type: "point", tier: 1, weight: 35 },
+          { type: "potion", tier: 1, weight: 7 },
+          { type: "bomb", tier: 1, weight: 7 },
+          { type: "ward", tier: 1, weight: 7 },
+          { type: "artefact", tier: 1, weight: 4 },
+        ];
+      }
+      async function recruitEncounter() {
+        let job = state.party.some((h) => h.job === "healer")
+            ? pick(["rogue", "fighter"])
+            : pick(["healer", "healer", "rogue"]),
+          name = job === "healer" ? "Mira" : job === "rogue" ? "Wren" : "Bram",
+          h = makeHero(name, job),
+          full = state.party.length >= 3,
+          quote = {
+            fighter: "I’ll take the first hit. You keep the light.",
+            healer: "I can mend more than torn pages.",
+            rogue: "You look like you could use a quieter blade.",
+          }[job];
+        showSpotlight(
+          "A wandering adventurer",
+          `${h.name} · ${job === "fighter" ? "Tank" : job[0].toUpperCase() + job.slice(1)}`,
+          `<div class="stage-art">${portraitArt(job, h)}</div><p class="encounter-quote">“${quote}”</p><div class="stage-result">${h.maxHp} HP · ${job === "healer" ? "Healing specialist" : job === "fighter" ? "Damage & team protection" : "Damage & stuns"}<br>${full ? "Your three-person company is full." : "Invite them to join your company?"}</div>`,
+          "recruit",
+        );
+        let yes = await eventChoice(
+          full
+            ? [
+                {
+                  id: "recruit-decline",
+                  label: "Wish them safe travels",
+                  value: false,
+                },
+              ]
+            : [
+                {
+                  id: "recruit-accept",
+                  label: "Invite " + h.name,
+                  value: true,
+                },
+                { id: "recruit-decline", label: "Leave them be", value: false },
+              ],
+        );
+        closeSpotlight();
+        if (yes === "true" && state.party.length < 3) {
+          state.party.push(h);
+          log(
+            `${h.name} the ${job === "fighter" ? "tank" : job} joins the company.`,
+          );
+          renderParty();
+          sayHero(state.party.length - 1, "idle");
+          result(icon("recruit") + h.name + " joins the company.");
+        } else {
+          log(`The company wishes ${h.name} safe travels.`);
+          result(icon("recruit") + " A brief meeting in the margins.");
+        }
+      }
+      async function shopEncounter(c) {
+        c.shop ??= { potion: 1, bomb: 1, ward: 1, heal: 1, reveal: 1 };
+        shopCell = c;
+        drawShop();
+        await new Promise((resolve) => (shopResolver = resolve));
+        shopCell = null;
+      }
+      let shopCell = null;
+      function shopPrices() {
+        return {
+          potion: 14 + state.depth * 2,
+          bomb: 18 + state.depth * 2,
+          ward: 12 + state.depth * 2,
+          heal: 22 + state.depth * 5,
+          reveal: 18 + state.depth * 3,
+        };
+      }
+      function drawShop() {
+        let prices = shopPrices(),
+          labels = {
+            potion: "Healing tonic · restore 16 HP",
+            bomb: "Ink bomb · damage an enemy",
+            ward: "Paper ward · 8 team block",
+            heal: "Full heal · every hero, including the fallen",
+            reveal: "Old map · reveal the stairs",
+          },
+          c = shopCell;
+        openModal(
+          "A shop between the lines",
+          `<div class="shop-keeper">${portraitArt("rogue")}<p>“No credit. No refunds.<br>Do try to remain alive.”<br><b>${state.gold} gold</b> in the satchel.</p></div><div class="shop-offers">${Object.keys(
+            prices,
+          )
+            .map(
+              (key) =>
+                `<button data-buy="${key}" ${!c.shop[key] || state.gold < prices[key] || (key === "reveal" && state.exitFound) ? "disabled" : ""}>${icon(key === "heal" ? "well" : key === "reveal" ? "stairs" : key === "potion" ? "potion" : key === "bomb" ? "bomb" : "ward")}<span>${labels[key]}<small>${!c.shop[key] ? "Sold out" : key === "reveal" && state.exitFound ? "Stairs already marked" : prices[key] + " gold · one in stock"}</small></span></button>`,
+            )
+            .join(
+              "",
+            )}</div><div class="modal-actions"><button class="primary" data-close>Leave the shop</button></div>`,
+          "shop",
+        );
+      }
+      function buyShop(key) {
+        if (
+          modalKind !== "shop" ||
+          !shopCell ||
+          !Object.hasOwn(shopPrices(), key)
+        )
+          return;
+        let price = shopPrices()[key];
+        if (
+          !shopCell.shop[key] ||
+          state.gold < price ||
+          (key === "reveal" && state.exitFound)
+        )
+          return;
+        state.gold -= price;
+        shopCell.shop[key]--;
+        if (key === "potion") state.potions++;
+        if (key === "bomb") state.bombs++;
+        if (key === "ward") state.wards++;
+        if (key === "heal") state.party.forEach((h, i) => healHero(i, h.maxHp));
+        if (key === "reveal") {
+          let i = state.map.findIndex((c) => c.event === "stairs");
+          if (i >= 0) {
+            markSeen(i);
+            renderMap();
+          }
+        }
+        log(
+          `The shop sells ${key === "reveal" ? "a map to the stairs" : key === "heal" ? "a full team heal" : key} for ${price} gold.`,
+        );
+        render();
+        drawShop();
+        save();
+        burst($("#modal"), "coin", Math.min(price, 30));
+      }
+      function healingFX(el) {
+        if (!el) return;
+        animate(
+          el,
+          [
+            { backgroundColor: "#dbe8b6", boxShadow: "0 0 0 0 #66854d66" },
+            {
+              backgroundColor: "#8fb16b99",
+              boxShadow: "0 0 20px 8px #7d9c5d66",
+            },
+            { backgroundColor: "#e5ddc8", boxShadow: "0 0 0 16px #7d9c5d00" },
+          ],
+          { duration: 700, juice: true },
+        );
+        for (let j = 0; j < 4; j++) {
+          let r = el.getBoundingClientRect(),
+            n = document.createElement("span");
+          n.className = "healing-glyph";
+          n.innerHTML = icon("heal");
+          n.style.left = r.left + r.width * (0.15 + 0.22 * j) + "px";
+          n.style.top = r.top + r.height * (0.6 - 0.1 * (j % 2)) + "px";
+          n.style.animationDelay = j * 70 + "ms";
+          document.body.append(n);
+          setTimeout(() => n.remove(), 1100);
+        }
+      }
+      const HERO_LINES = {
+        fighter: {
+          attack: ["Behind me!", "Steel first!", "Hold the line!"],
+          hurt: ["Just a dent.", "Armour, hold!"],
+          panic: ["That one got through!", "A healer, perhaps?!"],
+          block: ["Not one of you gets past.", "Stay behind the shield!"],
+          relief: ["Still standing.", "Much better."],
+          idle: [
+            "Anyone else hear that?",
+            "I miss chairs.",
+            "This map needs a bigger sword.",
+          ],
+        },
+        healer: {
+          attack: ["Forgive the mess.", "A sharp lesson."],
+          hurt: ["I could use a hand!", "Careful with the hands!"],
+          panic: ["I cannot mend that twice!", "Someone, please!"],
+          block: ["A little protection."],
+          relief: ["Breathe. We’re alright."],
+          idle: [
+            "Hold still. You’re bleeding.",
+            "Even the dark needs tending.",
+            "I packed bandages. Not optimism.",
+          ],
+        },
+        rogue: {
+          attack: [
+            "Never saw me.",
+            "Your margin’s showing.",
+            "Quick and quiet.",
+          ],
+          hurt: ["Rude.", "That was my good side."],
+          panic: ["I vote we move!", "A little help here?!"],
+          block: ["Missed me."],
+          relief: ["Nearly like new."],
+          idle: [
+            "That chest is looking at me.",
+            "I hear a very expensive silence.",
+            "Quiet feet. Loud thoughts.",
+          ],
+        },
+      };
+      function enemyLine(e, mood) {
+        let lines = {
+          rat: {
+            entrance: ["Skkrit. Mine!"],
+            attack: ["Skkree!", "Bite. Bite!"],
+            hurt: ["Krrrk!"],
+            defeat: ["Squeee…"],
+          },
+          ghost: {
+            entrance: ["You will be a footnote."],
+            attack: ["Fade with me.", "Your last word…"],
+            hurt: ["You tear my story!"],
+            defeat: ["Unwritten…"],
+          },
+          slime: {
+            entrance: ["Blorp?"],
+            attack: ["GLORP!", "Plip. Plop."],
+            hurt: ["Blip?!"],
+            defeat: ["…plip."],
+          },
+          skull: {
+            entrance: ["Clack. Clack."],
+            attack: ["RATTLE!", "Krrr… clack!"],
+            hurt: ["Crack?!"],
+            defeat: ["Clatter…"],
+          },
+        };
+        return visualPick(lines[e.art]?.[mood] || ["…"]);
+      }
+      function speech(el, line) {
+        if (!el || document.hidden) return;
+        let id = el.id;
+        if (id)
+          document.querySelectorAll(".speech-bubble").forEach((n) => {
+            if (n.dataset.speaker === id) n.remove();
+          });
+        let r = el.getBoundingClientRect();
+        if (r.bottom < 0 || r.top > innerHeight) return;
+        let node = document.createElement("span");
+        node.className = "speech-bubble";
+        node.dataset.speaker = id;
+        node.textContent = line;
+        node.style.left =
+          Math.min(innerWidth - 105, Math.max(105, r.left + r.width / 2)) +
+          "px";
+        node.style.top = Math.max(12, r.top - 15) + "px";
+        document.body.append(node);
+        setTimeout(() => node.remove(), 2200);
+      }
+      function sayHero(i, mood) {
+        let h = state.party[i];
+        if (!h || (!h.hp && mood !== "panic")) return;
+        speech(
+          $("#portrait-" + i),
+          visualPick(HERO_LINES[h.job]?.[mood] || ["Keep going."]),
+        );
+      }
+      function sayEnemy(mood) {
+        if (state.enemy) speech($("#enemy-art"), enemyLine(state.enemy, mood));
+      }
+      function idleChatter() {
+        if (
+          !state ||
+          busy ||
+          state.enemy ||
+          state.over ||
+          document.hidden ||
+          !$("#overlay").hidden ||
+          !$("#spotlight").hidden
+        )
+          return false;
+        let living = state.party
+          .map((h, i) => (h.hp > 0 ? i : -1))
+          .filter((i) => i >= 0);
+        if (!living.length) return false;
+        sayHero(visualPick(living), "idle");
+        return true;
+      }
+
       $("#map").addEventListener("click", (e) => {
         let b = e.target.closest("[data-tile]");
         if (b) move(Number(b.dataset.tile));
@@ -4360,6 +5384,17 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         )
           fastForward();
         if (b.hasAttribute("data-fast")) fastForward();
+        if (b.hasAttribute("data-stage-choice") && stageResolver) {
+          let done = stageResolver;
+          stageResolver = null;
+          $("#stage-actions")
+            .querySelectorAll("button")
+            .forEach((el) => (el.disabled = true));
+          done(b.dataset.stageChoice);
+        }
+        if (b.hasAttribute("data-buy")) buyShop(b.dataset.buy);
+        if (b.hasAttribute("data-equip")) equipArtefact(b.dataset.equip);
+        if (b.id === "artefact-slot") inspectArtefacts();
         if (b.hasAttribute("data-edit")) editor(Number(b.dataset.edit));
         if (b.hasAttribute("data-target") && !busy) {
           state.target = Number(b.dataset.target);
@@ -4375,10 +5410,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       $("#stage-card").addEventListener("click", (e) => {
         if (!e.target.closest("button,input,label")) fastForward();
       });
-      document.addEventListener("change", (e) => {
-        if (e.target.matches("[data-skip-all]")) setSkip(e.target.checked);
-      });
-      $("#skip-animations").onchange = (e) => setSkip(e.target.checked);
+      $("#animation-speed").onchange = (e) => setPace(e.target.value);
       $("#help").onclick = () => {
         if (busy) {
           toast("Let this moment land, or press Space to hurry it along.");
@@ -4424,6 +5456,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         if (e.key !== "Tab") return;
         let nodes = [
           ...container.querySelectorAll("button:not(:disabled),input,select"),
+          $("#animation-speed"),
         ];
         if (!nodes.length) return;
         let first = nodes[0],
@@ -4450,7 +5483,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           if (
             e.key === "Escape" ||
             (e.code === "Space" &&
-              !["INPUT", "BUTTON"].includes(document.activeElement.tagName))
+              !["INPUT", "BUTTON", "SELECT"].includes(
+                document.activeElement.tagName,
+              ))
           ) {
             e.preventDefault();
             fastForward();
@@ -4505,13 +5540,19 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         positionPlayer(false);
       });
       sizeCanvas();
+      setInterval(() => {
+        if (fxRandom() < 0.7) idleChatter();
+      }, 9000);
       $("#legend").innerHTML = [
         ["eye", "Unknown"],
         ["skull", "Enemy"],
         ["treasure", "Treasure"],
+        ["trap", "Trap"],
+        ["shop", "Shop"],
+        ["recruit", "Wanderer"],
         ["well", "Well"],
         ["beacon", "Beacon"],
-        ["stairs", "Exit"],
+        ["stairs", "Stairs"],
       ]
         .map(([i, t]) => `<span>${icon(i)}${t}</span>`)
         .join("");

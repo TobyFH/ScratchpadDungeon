@@ -1,48 +1,80 @@
 # Scratchpad Dungeon
 
-A hand-drawn notebook dungeon crawler in **one self-contained `index.html`**. It embeds its handwriting font, character illustrations, tile sketches, slot machines, and effects. There are no runtime dependencies or network requests.
+A hand-drawn notebook dungeon crawler in **one self-contained `index.html`**. The handwriting font, SVG illustrations, mechanical reels, speech, and particles are embedded. No runtime dependencies or network requests are needed.
 
 ## Play
 
-Download `index.html` and open it in a modern browser. For devices that restrict local HTML, serve the folder:
+Download `index.html` and open it in a modern browser. If your device restricts local HTML, serve the folder:
 
 ```sh
 python3 -m http.server 8000
 ```
 
-Then open `http://localhost:8000`. **Save HTML** downloads another complete offline game file. It contains the game, not an export of the current expedition. Progress automatically saves in browser local storage when available. Saves belong to that browser and origin; moving the file or changing servers may create a separate save. The game migrates saves from the first Scratchpad Dungeon release.
+Open `http://localhost:8000`. **Save HTML** downloads another complete offline game file, not an export of your current run. Progress saves in local browser storage when available; saves belong to that browser and origin. Earlier saves are migrated without discarding the party or its edited reels. Choose **New run** to begin with the new class loadouts and zero starting items.
 
-## Explore the notebook
+## The only way is down
 
-- Start with Alden, a single fighter. Graphite covers unknown rooms and interior walls. Hover to see a tile's known type without revealing its contents.
-- Scratch an unknown tile next to your uncovered route. Erasing reveals its artwork before the company slides into the room and its event occurs. Empty rooms have stone, mushroom, grass, or crack sketches.
-- Click any reachable destination to follow a shortest route through **already uncovered** tiles. An unknown tile can be the destination, but never an intermediate shortcut. Walls stop travel; discoveries interrupt it. Arrow keys / WASD move one tile.
-- Treasure opens a central machine that awards gold and may award tonics, bombs, wards, or personal editing points. Traps show their warning and drawn spikes, arrow, or boulder before rolling safe, danger, or block symbols.
-- Wells restore **30% of maximum HP** to everyone, including fallen heroes. Rare beacons reveal exactly the eight surrounding cells, including diagonals, in two staggered outward waves. Revealing an event does not activate it.
-- Rare wanderers can join as a healer and rogue. The company has at most three heroes; further wanderers provide supplies instead.
-- Discovering stairs prompts a choice and unlocks a persistent button below the map. Decline to keep exploring, then use the button **from anywhere on that floor**. Stairs never automatically end an expedition.
-- Defeat the Sunseed keeper on floor three, then use any discovered stairs to bring the Sunseed home. Or keep exploring to the tenth and final floor. Returning without the Sunseed retires the expedition safely; a party wipe ends it.
+Start with Alden, a tank, and **zero consumables**. Discover and voluntarily descend through ten floors. On floor ten, defeat **The Last Redaction**, then choose the final descent to win. There is no early retirement or return-home victory.
 
-## Make a little luck
+Graphite hides rooms and interior walls. Hover for a tile's known type. Click to erase a reachable unknown destination, reveal its sketch, then walk into its event. Long routes take a shortest path through **already uncovered** tiles; unknown tiles cannot be shortcuts. Walls stop movement. Arrow keys / WASD move a step. Empty rooms have little stone, grass, mushroom, or crack drawings too.
 
-Every hero has a mechanical three-reel machine with an animated handle on the right page. **Any living hero may act repeatedly, in any order.** Each reel draws one of its six faces with equal odds. Fighter, healer, rogue, and enemy loadouts have different distributions.
+Discovering stairs unlocks a persistent button below the map. Decline the prompt to keep exploring, then use the button from anywhere on that floor. Nothing descends automatically.
 
-- One, two, or three copies of a symbol represent tiers I, II, or III: swords deal damage, crosses heal, shields store block, and lightning stuns.
-- Per icon, heroes gain 3 attack, 3 heal, 2 block, or 1 stun power. All results of a roll resolve together. Every three stun power (rounded up) cancels one enemy turn.
-- A matching **type and tier** triggers a separate central critical multiplier machine: a pair rolls ×1.25, ×1.5, ×1.75, or ×2; a triple rolls ×2, ×2.5, ×3, or ×4. The multiplier applies to the original roll and each effect rounds up. Ordinary combat rolls stay on the page.
-- Choose a healing target before spinning or drinking a tonic. Healing revives fallen heroes. Health bars, injury labels, and illustrated facial injuries show their condition. Damage and healing indicators travel to their actual targets.
-- Team block persists between encounters. Each incoming hit consumes as much block as it absorbs, then damages its target for the remainder.
-- The enemy's attack-frequency stat determines how many hero actions occur before its turn. Each strike has its own on-page slot roll and a randomly chosen living target. Enemy heal and block protect the enemy; enemy stun affects a hero. Pull a stunned hero's handle to spend an action recovering, or use a different hero.
-- Deeper floors increase enemy health, damage, attack speed, and multi-strikes. Each enemy type has its own reel distribution. Enemy matching symbols also roll a critical multiplier.
-- Spins and victories award personal EXP. Levels grant **+6 maximum HP and +4 personal editing points**. Victories grant each hero another point. Treasure can award personal points too.
-- Use ✎ to edit individual faces. Changing a tier I / II / III face costs **1 / 3 / 6 points**. Upgrading costs the destination tier's price; weakening to tier I costs one point. Fill reels with cheap weak symbols to match more often, or save for strong matching faces.
-- Finite consumables do not tick the enemy clock: tonics restore 16 HP, ink bombs deal `10 + 3 × floor` damage, and paper wards add 8 persistent team block.
+## Encounters and discoveries
 
-## Set the pace
+- **Fights:** confirm the illustrated enemy entrance before it shrinks into the combat column. Any living hero may act repeatedly, in any order. Successful battles award EXP, personal editing points, and a separate loot roll.
+- **Treasure:** reels mostly award gold. Consumables and personal points are uncommon; artefacts are extremely rare. Take time to inspect the result, then click to pocket it. Coin particles scale with the gold awarded, capped for performance.
+- **Traps:** a warning and drawn spikes, arrows, or boulder precede the reels. Roll safe, danger, or temporary trap guard, then confirm the result. Trap guard expires after that trap; it cannot be banked for a fight.
+- **Wells:** confirm to restore 30% of maximum HP to everyone, including fallen heroes. Green portrait pulses, floating crosses, and health numbers show who recovered.
+- **Beacons:** confirm to reveal exactly the eight surrounding cells, including diagonals. The reveal spreads outward in staggered waves; seeing an event does not activate it.
+- **Adventurers:** one has a 16% chance to spawn on a floor, making individual meetings very rare. Preview their class, portrait, health, and introduction. Explicitly accept or decline. Three heroes is the maximum; full parties can only wish the visitor safe travels.
+- **Shops:** a shop has an independent **30% spawn chance per floor**. It sells one tonic, bomb, ward, full-team heal, and stairs map, each with limited stock and prices increasing with depth. Full healing revives fallen heroes. The map reveals stairs without teleporting or descending.
 
-The slot windows roll vertically, slow down, and lock separately. Handles swing; symbols pulse; paper particles scatter; portraits lunge; the notebook shakes. Enemy entrances burst into a central illustration, then fly to their place on the right page. A subtle torchlight layer flickers over the notebook.
+Events wait for a confirmation button at every speed, including Skip. Escape and fast-forward never confirm them. Critical popups are the exception: their results linger, shake, and close automatically.
 
-Click a rolling machine, its handle, or press **Space** to land its already-selected result. Central events also have a fast-forward control. **Skip animations** makes all effects instant, including ongoing rolls; it does not change their odds. The initial setting honors reduced-motion preferences. Escape closes ordinary dialogs or fast-forwards active scenes. M folds the log. Both ordinary dialogs and animated scenes trap keyboard focus while open.
+## Class machines and combat
+
+Each hero has three six-face reels. Faces have class-specific weights, shown as percentages in the editor; changing a face preserves its chance.
+
+- **Tank:** mostly damage and shared protection. Its default chance of a heal face is under 4% per reel.
+- **Healer:** over 70% healing faces, with little direct damage.
+- **Rogue:** mostly damage and stuns; no default healing faces.
+
+One, two, or three copies of a symbol mean tiers I, II, or III. Per icon, heroes gain 3 attack, 3 healing, 2 block, or 1 stun power. All effects resolve together. Every three stun power, rounded up, cancels an enemy turn.
+
+**Only three identical symbols of the same type and tier crit.** A pair never does. The separate critical machine rolls ×2, ×2.5, ×3, or ×4; effects round up. Ordinary hero and enemy rolls stay on the page.
+
+Healing and tonics affect the selected target and can revive them. Portrait injuries, health bars, speech, green flashes, beams, and damage values show the actual recipients.
+
+The prominent **TEAM BLOCK** counter protects every hero. Each incoming hit consumes block point for point before damaging its target. Block clears after victory or defeat and resets at the next encounter. Wards can only be used during combat. An equipped Ember Seal creates fresh opening block for each fight rather than carrying unused block forward.
+
+Floor-one enemies attack every two hero actions. Deeper enemies gain HP, damage, speed, and multi-strikes. Every strike rolls its own machine and targets a living hero. Enemy healing and shields protect the enemy. Enemy stun affects a hero; pull that hero's handle to spend an action recovering, or choose someone else. Recovery protects them from immediate re-stunning, guaranteeing a real action before another stun can stick.
+
+**EXP is awarded only on successful battles**, never for spinning or losing. Leveling grants +6 maximum HP and +4 personal editing points; victory adds another personal point per hero. Use ✎ to change faces: tier I / II / III prices are **1 / 3 / 6 points**. An upgrade costs its destination tier's price; weakening costs one point. Cheap consistent symbols crit more often than mixed powerful ones.
+
+Finite items do not tick the enemy clock: tonics restore 16 HP, bombs deal `10 + 3 × floor` damage, and wards add eight shared block for the current battle.
+
+## Rare artefacts
+
+Chests and battle spoils share a weighted loot table: 94% coin faces, 3.5% personal-point faces, 2.1% consumable faces combined, and **0.4% artefact faces** per reel. Three reels resolve per loot roll. These are face odds, not a guarantee that a chest contains a particular item.
+
+Artefacts go into a collection, with **one equipped slot** beneath the map. The first find equips automatically; inspect and swap freely between actions or equip a new find directly from its loot result. Only the equipped artefact grants its passive bonus. Power increases with the floor of discovery:
+
+- **Fang of the Margin:** extra damage on attack rolls.
+- **The Glass Tear:** extra healing on heal rolls.
+- **Iron Pennant:** extra shared block on shield rolls.
+- **Lucky Farthing:** more gold from chests and battle loot.
+- **Ember Seal:** fresh shared block at the start of every fight.
+
+## Pace and game feel
+
+The always-visible main toolbar offers **1×, 2×, 5×, and Skip cinematics**. It remains accessible while a scene is open, so animations can always be reenabled. Popups contain no animation toggle.
+
+Click a rolling machine or its handle, or press Space, to land the already-selected result. Handle buttons have stationary 46px hitboxes while only their artwork swings. Skip bypasses reel travel and cinematic delays but retains short impact shakes, paper and coin particles, speech, healing pulses, and results. Critical results still get a short automatic hold. The OS reduced-motion preference limits shaking.
+
+Machines burst through paper on arrival; reels slow down and lock separately; characters walk with alternating boots and a jaunty bounce. Tanks, healers, rogues, rats, wraiths, skeletons, and blotlings have their own battle cries and reactions. Idle party chatter occurs only outside combat and dialogs. A subtle torchlight overlay flickers across the notebook.
+
+M folds the log. Escape closes ordinary dialogs or fast-forwards an active scene. Dialogs and scenes support keyboard focus trapping.
 
 ## Browser tests
 
@@ -55,12 +87,12 @@ npx playwright install chromium
 npm test
 ```
 
-Tests use `/usr/bin/chromium` if present, otherwise Playwright's installed Chromium. Set `CHROMIUM_PATH` for another executable. The suite starts its own loopback server and writes screenshots and an HTML download to ignored `test-results/`.
+The suite uses `/usr/bin/chromium` if present, otherwise Playwright's installed Chromium. Set `CHROMIUM_PATH` for another executable. It starts a loopback server and writes screenshots and the downloaded game to ignored `test-results/`.
 
-The browser tests cover responsive layouts, embedded artwork/font, erasing before movement, hidden-information routing, walls, beacon radius and nonactivation, partial healing and revival, treasure/trap outcomes, rare recruits and the party cap, on-page machines and handles, fast-forwarding, critical multiplier rolls, repeated actions and action locking, enemy slot effects and scaling, persistent block and multi-strikes, targeted healing, personal EXP and editing costs, persistent exit discovery, generated-map connectivity, a complete expedition, defeat/restart, consumables, save migration, offline HTML playback, animated enemy entrances, trap anticipation, and enemy attack animations.
+Coverage includes desktop/mobile layouts, mandatory event confirmations at Skip speed, automatic critical holds, persistent pace controls, stationary handle hitboxes, hidden-information routing, wells and healing feedback, beacon radius, class weights, stronger enemies, shared block lifecycle, victory-only XP, rare loot and coin particle counts, recruit choices and cap, shop frequency and transactions, artefact drops/scaling/swapping/passives, speech, clipped boulder art, ten-floor victory conditions, connected maps, save migration, offline downloads, and stun recovery.
 
-Controlled random choices and loadouts isolate calculations. The campaign integration test uses a strong loadout and extra health to exercise navigation and event transitions independently of luck; it does not replace movement, enemy, reward, or victory logic. The offline test runs the downloaded bytes with networking disabled because managed cloud Chromium restricts `file://` navigation.
+The complete-campaign integration check uses a controlled attack loadout and extra health to exercise navigation, loot confirmations, enemy turns, and progression independently of luck. It does not replace movement, events, enemy AI, rewards, or victory logic. Other tests isolate actual combat calculations and failure paths. The offline test executes the downloaded bytes with networking disabled because managed cloud Chromium restricts `file://` navigation.
 
 ## Credits
 
-The embedded **Patrick Hand** font is by Patrick Wagesreiter and distributed under the SIL Open Font License 1.1. Its complete license is included in the HTML source. All game illustrations are inline SVG, and every effect runs locally.
+The embedded **Patrick Hand** font is by Patrick Wagesreiter, distributed under the SIL Open Font License 1.1. The complete license is in the HTML source. Illustrations are inline SVG; all effects run locally.
