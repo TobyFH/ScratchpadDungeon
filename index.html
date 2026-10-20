@@ -4170,24 +4170,20 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         inset: 0;
         z-index: 4;
         pointer-events: none;
-        background: repeating-linear-gradient(
-          15deg,
-          #c9c9bd77 0 3px,
-          #b1b7ab77 3px 6px
-        );
-        box-shadow: inset 0 0 15px #bbc2b999;
+        background:
+          radial-gradient(ellipse at 15% 70%, #c0c6bb35, transparent 65%),
+          radial-gradient(ellipse at 80% 25%, #adb8b432, transparent 70%),
+          #202a2e66;
+        box-shadow: inset 0 0 16px #15222e55;
+      }
+      .stale-fog > svg {
+        filter: brightness(0.7);
       }
       .stale-fog.active-event .tile-status {
         z-index: 6;
       }
       .stale-fog:after {
-        content: "↝";
-        position: absolute;
-        left: 2px;
-        top: 0;
-        font-size: 12px;
-        color: #5e6961;
-        z-index: 5;
+        content: none;
       }
       .tile.bridge-tile {
         background: #91b1b15c;
@@ -4531,6 +4527,147 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       body[data-palette="dark"] .machine-face .blank-face {
         color: #786849;
       }
+
+      .tile.fog {
+        border-color: #25261f;
+      }
+      .tile.fog:after {
+        inset: 0;
+        transform: none;
+      }
+      .tier-symbol.tier-4 {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0;
+        width: 90%;
+        height: 88%;
+      }
+      .tier-symbol.tier-4 svg {
+        position: static;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+      .fx-beam.critical-hit {
+        height: 9px;
+        background: #d98329;
+        box-shadow: 0 0 15px 4px #ecaa4c99;
+      }
+      .fx-beam.lethal {
+        height: 13px;
+        background: #dc4935;
+        box-shadow: 0 0 22px 6px #f4b950bb;
+      }
+      .combat-total strong {
+        font-size: 1.5em;
+        line-height: 1;
+      }
+      .combat-number {
+        position: fixed;
+        z-index: 98;
+        font-size: clamp(32px, 3vw, 58px);
+        font-weight: bold;
+        pointer-events: none;
+        line-height: 1;
+        text-shadow:
+          -2px -2px #f4e9cd,
+          2px 2px #f4e9cd,
+          0 2px 8px #35261b88;
+        animation: combat-number 1.4s both;
+      }
+      @keyframes combat-number {
+        0% {
+          opacity: 0;
+          transform: translate(-50%, 0) scale(0.45) rotate(-7deg);
+        }
+        12% {
+          opacity: 1;
+          transform: translate(-50%, -10px) scale(1.3) rotate(4deg);
+        }
+        26%,
+        70% {
+          opacity: 1;
+          transform: translate(-50%, -16px) scale(1);
+        }
+        100% {
+          opacity: 0;
+          transform: translate(-50%, -46px) scale(0.95);
+        }
+      }
+      .stage-card > .stage-title {
+        animation: none;
+      }
+      .field-note > svg {
+        width: 22px;
+        height: 22px;
+        vertical-align: middle;
+      }
+      .run-summary > p {
+        margin: 0 0 12px;
+        text-align: center;
+      }
+      .run-summary > h3 {
+        text-align: center;
+        font-size: 22px;
+        margin: 8px 0;
+      }
+      .fallen-roster {
+        height: 340px;
+        max-height: 38vh;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        padding: 8px 12px;
+        border: 1px solid var(--line);
+        background: #806c4610;
+      }
+      .fallen-entry {
+        display: flex;
+        align-items: start;
+        gap: 12px;
+        padding: 10px 0 16px;
+        border-bottom: 1px dashed var(--line);
+      }
+      .fallen-entry:last-child {
+        border: 0;
+      }
+      .fallen-portrait {
+        flex: 0 0 64px;
+      }
+      .fallen-portrait svg {
+        width: 64px;
+        height: 80px;
+      }
+      .fallen-entry .memorial-stats {
+        flex: 1;
+        min-width: 0;
+        font-size: 15px;
+      }
+      .fallen-entry .memorial-stats dl {
+        font-size: 14px;
+        line-height: 1.3;
+        gap: 6px 12px;
+      }
+      .run-summary .roster-prompt {
+        font-size: 14px;
+        margin: 0 0 6px;
+        opacity: 0.75;
+      }
+      .revive-ready {
+        color: var(--green);
+      }
+      @media (max-width: 760px) {
+        .fallen-roster {
+          height: 300px;
+          max-height: 34vh;
+          padding: 5px;
+        }
+        .fallen-portrait {
+          display: none;
+        }
+        .fallen-entry .memorial-stats dl {
+          font-size: 13px;
+        }
+      }
     </style>
   </head>
   <body>
@@ -4707,7 +4844,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       const HTML_BACKUP =
         "<!doctype html>\n" + document.documentElement.outerHTML;
       const $ = (s) => document.querySelector(s),
-        SAVE_KEY = "scratchpad-dungeon-v6",
+        SAVE_KEY = "scratchpad-dungeon-v7",
         W = 11,
         H = 9;
       const paths = {
@@ -4820,6 +4957,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           body = `<path d="M17 140 26 92l16-14-8-36C28 2 83-12 94 33L84 80l17 18 10 42z" fill="${hatch}"/><path d="M33 80C7 24 73-26 93 29l-10 46-11 13 24 49H25l25-50z" fill="${fill}"/><path d="M40 44C44 8 76 8 82 43l-7 18H45z" fill="${paper}"/>${face}<path d="M36 43q21-8 31-23 9 10 16 23M42 37l-6 40 18 14 5-11m23-43 3 42-16 14-5-13M43 81l-16 55m46-48 24 49M34 110l15-14m36 17-12-17 M29 127l12-9m51 9-13-10"/><path d="m53 91 9-9 9 9-8 12z" fill="${paper}"/><circle cx="62" cy="91" r="3"/>${kind === "healer" ? '<path d="M56 20h10m-5-5v11M53 112h17m-9-8v20" stroke-width="2"/>' : '<path d="m33 122 4-14 13 14-13 10z M75 110l10 17m-7-18 12 12M46 50l11 3m9 0 9-3"/>'}<path d="M17 141h95"/>`;
         else if (kind === "skull" || kind === "skeleton")
           body = `<path d="M25 143h75M51 53l-11 18-12 8-6-8m49-18 11 15 11 7 M54 88l-8 22 5 20-10 11m24-53 10 20-1 24 9 9 M50 109l-5 20m28-18 6 20"/><path d="M45 58h29v29l-14 8-15-9z" fill="${paper}"/><path d="M60 58v35m-14-26 13 4 14-4m-28 7 14 5 14-5m-28 7 14 5 14-5M44 88l15 7 17-7"/><path d="M43 39C25 0 91-1 77 38l-7 12H51z" fill="${fill}"/><path d="M46 24q3-8 10-2l-1 9-9 1zm20-2q9-7 10 3l-3 6h-7z" fill="#4d4637"/><path d="m60 31-3 6h6M52 42h17m-13-3v10m6-9v10m5-9v8M43 15l5-7m29 7-4-6"/>${bruised ? '<path d="m41 12 12 5-5 8m29-9-7 4 4 5M50 73l8 6"/>' : ""}${hurt ? '<path d="m71 33 10 4m-32 6-8 5M67 56l8 10" stroke="#8b5840"/>' : ""}<path d="m22 77-17-49 5-5 18 51M16 74l16-6m-7 9 3 9" fill="${paper}"/><path d="m88 70 20 7-2 32-16 12-14-20 1-24z" fill="${hatch}"/><path d="m89 76 13 5-2 24-10 9-9-15 1-19z M90 79v30m-7-15 18 1"/><circle cx="91" cy="94" r="5" fill="${paper}"/>`;
+        else if (kind === "mimic")
+          body = `<path d="M15 112 20 65h82l6 49-22 24H34z" fill="${hatch}"/><path d="m20 65 10-34 61-3 11 37-39 31z" fill="${fill}"/><path d="m22 62 39 18 38-18-3 39-32 19-37-16z" fill="#463b32"/><path d="m27 68 9 20 7-11 10 21 10-16 10 14 9-21 10 8 7-19M31 103l9-16 8 23 12-16 12 17 12-22 8 13" fill="${paper}"/><path d="M47 44l9 5m13-2 10-6M48 47v8m25-8v8M29 117l-9 17 24-3m40-11 21 16-26-2M19 60h83"/><path d="m61 35-2 32h11l-2-33z" fill="${paper}"/>`;
         else if (kind === "rat")
           body = `<path d="M27 127C-5 139 1 96 24 109M26 123C12 119 12 83 36 68l39-9 28 30-7 30-31 14z" fill="${hatch}"/><path d="M43 73C5 42 24 13 50 48l-1 23m26-10C75 15 108 19 105 56l-14 21" fill="${fill}"/><path d="M42 66C24 45 28 31 43 51m41 8c0-24 17-25 12-4"/><path d="m38 77 36-12 24 22 13 10-12 15-30 4-30-13z" fill="${paper}"/><path d="m50 82 7-4 3 7m20-8 7 5-3 5" fill="#4c4332"/><path d="m98 96 10 2-8 6z M64 99l11 6 15-4m-18 5 2 12 5-1 1-11 M31 113l-6 14 20 2m35-9 5 14h17 M32 91l-14-5m18 13-20 1m71-11 19-7m-17 17 23 6M24 111l5-6m8 14 7-7m17 13 4-6"/>${hurt ? '<path d="m42 80 11 9m-11-5 10 9m28 19 8 8" stroke="#8d4c38"/>' : ""}`;
         else if (kind === "ghost")
@@ -4857,8 +4996,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           stun: "stun",
           blank: "blank",
         },
-        POWER = { attack: 3, heal: 3, block: 1, stun: 1, blank: 0 },
-        FACE_COST = { 1: 1, 2: 3, 3: 6 };
+        POWER = { attack: 2, heal: 2, block: 1, stun: 1, blank: 0 },
+        ATTACK_POWER = [0, 2, 4, 7, 11],
+        FACE_COST = { 1: 1, 2: 3, 3: 6, 4: 10 };
       let state,
         busy = false,
         skip = false,
@@ -4979,6 +5119,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       function generateFloor(
         depth,
         partySize = state?.party.filter(alive).length || 1,
+        missedFloors = state?.recruitPity || 0,
       ) {
         const start = pos(1, 7),
           map = Array.from({ length: W * H }, (_, i) => {
@@ -4999,34 +5140,52 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             };
           });
         for (let y = 1; y < H - 1; y++)
-          for (let x = 2; x < W - 1; x++)
-            if (rand(100) < 11 && y !== 7)
+          for (let x = 1; x < W - 1; x++)
+            if (pos(x, y) !== start && Math.random() < 0.11)
               Object.assign(map[pos(x, y)], { wall: true, terrain: "stone" });
-        // One unbroken river winds from the north edge to the south edge.
-        let x = 4 + rand(3),
-          river = [];
-        for (let y = 1; y <= 7; y++) {
-          let i = pos(x, y);
-          river.push(i);
-          Object.assign(map[i], { wall: true, terrain: "river" });
-          if (y < 7 && Math.random() < 0.55) {
-            x = Math.max(3, Math.min(8, x + (Math.random() < 0.5 ? -1 : 1)));
-            i = pos(x, y);
+        // Most floors are dry. Very occasionally two separate streams cross a floor.
+        const riverRoll = Math.random(),
+          riverCount = riverRoll < 0.012 ? 2 : riverRoll < 0.35 ? 1 : 0;
+        for (let stream = 0; stream < riverCount; stream++) {
+          const horizontal = riverCount === 1 && Math.random() < 0.45,
+            low = riverCount === 2 ? (stream === 0 ? 2 : 6) : 2,
+            high = riverCount === 2 ? low + 1 : horizontal ? 5 : 8,
+            river = [];
+          let offset = low + rand(high - low + 1);
+          const wet = (step, bend) => {
+            const i = horizontal ? pos(step, bend) : pos(bend, step);
             if (!river.includes(i)) river.push(i);
-            Object.assign(map[i], { wall: true, terrain: "river" });
+            Object.assign(map[i], {
+              wall: true,
+              terrain: "river",
+              riverId: stream + 1,
+            });
+          };
+          const length = horizontal ? W - 2 : H - 2;
+          for (let step = 1; step <= length; step++) {
+            wet(step, offset);
+            if (step < length && Math.random() < 0.45) {
+              offset = Math.max(
+                low,
+                Math.min(high, offset + (Math.random() < 0.5 ? -1 : 1)),
+              );
+              wet(step, offset);
+            }
           }
+          const bridge = pick(river),
+            crossing = horizontal ? bridge % W : Math.floor(bridge / W);
+          for (const i of river.filter(
+            (i) => (horizontal ? i % W : Math.floor(i / W)) === crossing,
+          ))
+            Object.assign(map[i], { wall: false, terrain: "bridge" });
         }
-        const bridge = pick(
-          river.filter((i) => Math.floor(i / W) >= 3 && Math.floor(i / W) <= 6),
-        );
-        Object.assign(map[bridge], { wall: false, terrain: "bridge" });
         Object.assign(map[start], {
           wall: false,
           seen: true,
           visited: true,
           lastVisitedStep: state?.steps || 0,
         });
-        // Keep the first few useful discoveries; stairs have no fixed position.
+        // Every discovery is placed afresh, including the rooms nearest camp.
         const place = (i, event) =>
           Object.assign(map[i], {
             wall: false,
@@ -5034,9 +5193,6 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             event,
             feature: event,
           });
-        place(pos(2, 7), "treasure");
-        place(pos(3, 7), "trap");
-        place(pos(2, 6), "well");
         let candidates = map
           .map((c, i) => i)
           .filter(
@@ -5117,11 +5273,15 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             "enemy",
             "treasure",
             "treasure",
+            "treasure",
             "trap",
+            "trap",
+            "well",
             "well",
             "beacon",
           ];
-        if (Math.random() < recruitChance(partySize)) events.push("recruit");
+        if (Math.random() < recruitChance(partySize, missedFloors))
+          events.push("recruit");
         if (Math.random() < 0.3) events.push("shop");
         if (Math.random() < 0.32) events.push("ruin");
         for (const e of events)
@@ -5152,9 +5312,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         travel = null;
         document.querySelectorAll(".speech-bubble").forEach((e) => e.remove());
         state = {
-          version: 6,
+          version: 7,
           depth: 1,
-          map: generateFloor(1, 1),
+          map: generateFloor(1, 1, 0),
+          startedAt: Date.now(),
+          recruitPity: 0,
+          recruitFoundThisFloor: false,
           position: pos(1, 7),
           party: [
             makeHero(job === "rogue" ? "Wren" : "Alden", job, {
@@ -5184,9 +5347,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           battlesWon: 0,
           graveyard: [],
           pendingDeaths: [],
-          logs: [
-            "A fresh company opens the notebook. The names on this page will not return from death.",
-          ],
+          logs: ["A fresh party opens the notebook. Keep the torch burning."],
           over: false,
           won: false,
           lastResult: null,
@@ -5206,6 +5367,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         try {
           let s = JSON.parse(
             localStorage.getItem(SAVE_KEY) ||
+              localStorage.getItem("scratchpad-dungeon-v6") ||
               localStorage.getItem("scratchpad-dungeon-v5") ||
               localStorage.getItem("scratchpad-dungeon-v4") ||
               localStorage.getItem("scratchpad-dungeon-v3") ||
@@ -5214,7 +5376,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           );
           if (
             !s ||
-            ![1, 2, 3, 4, 5, 6].includes(s.version) ||
+            ![1, 2, 3, 4, 5, 6, 7].includes(s.version) ||
             s.map?.length !== W * H ||
             !Array.isArray(s.party) ||
             !s.party.length ||
@@ -5228,20 +5390,29 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                     r.length &&
                     r.every(
                       (f) =>
-                        TYPES.includes(f.type) && [1, 2, 3].includes(f.tier),
+                        TYPES.includes(f.type) &&
+                        Number.isInteger(f.tier) &&
+                        f.tier >= 1 &&
+                        f.tier <= (f.type === "attack" ? 4 : 3),
                     ),
                 ),
             )
           )
             return false;
-          let migrated = s.version < 4;
+          let migrated = s.version < 4,
+            rebalance = s.version < 7;
           state = s;
-          state.version = 6;
+          state.version = 7;
           state.bombs ??= 0;
           state.wards ??= 0;
           state.potions ??= 0;
           state.round ??= 1;
           state.battlesWon ??= 0;
+          state.startedAt ??= Math.min(
+            ...state.party.map((h) => h.joinedAt || Date.now()),
+          );
+          state.recruitPity ??= 0;
+          state.recruitFoundThisFloor ??= false;
           state.artefacts ??= [];
           state.equippedArtefact ??= null;
           state.artefactSerial ??= 0;
@@ -5287,6 +5458,21 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             else state.enemies = [state.enemy];
             state.enemies.forEach((e, k) => {
               e.id ??= "saved-enemy-" + k;
+              if (rebalance) {
+                const ratio = e.hp / e.maxHp,
+                  stats = enemyBalance(state.depth, {
+                    ...e,
+                    pair: state.enemies.length > 1,
+                  });
+                Object.assign(e, stats, {
+                  hp:
+                    e.hp > 0 ? Math.max(1, Math.ceil(stats.maxHp * ratio)) : 0,
+                  countdown: Math.max(
+                    1,
+                    Math.min(e.countdown || stats.frequency, stats.frequency),
+                  ),
+                });
+              }
             });
             state.enemy.reels ??= enemyReels(state.enemy.art);
             state.enemy.last ??= [
@@ -5497,12 +5683,13 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         let type = c.event || c.feature;
         return names[type]
           ? names[type] + (c.event ? " / active" : " / used")
-          : "Quiet room / scattered stone";
+          : "Quiet room";
       }
       function renderMap() {
         const locked = (busy && !travel) || !!state.enemy || state.over;
         $("#map").innerHTML = state.map
           .map((c, i) => {
+            if (isStale(c)) c.wanderPending = true;
             const active = c.seen && !!c.event,
               battle =
                 active && ["enemy", "guardian", "stronghold"].includes(c.event),
@@ -5757,7 +5944,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
               );
               break;
             }
-            const staleEntry = isStale(c);
+            const staleEntry = c.wanderPending || isStale(c);
+            c.wanderPending = false;
             state.position = i;
             state.steps++;
             c.lastVisitedStep = state.steps;
@@ -5779,7 +5967,11 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
               break;
             }
             if (!c.event) maybeDiscoveryHint(i);
-            if (c.event) {
+            const passOptional =
+              !fresh &&
+              i !== travel.goal &&
+              ["well", "shop", "ruin"].includes(c.event);
+            if (c.event && !passOptional) {
               travel = null;
               renderMap();
               let stop = await resolveTile(c);
@@ -5810,6 +6002,13 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           return true;
         }
         if (type === "treasure") {
+          if (Math.random() < 0.025) {
+            beginEncounter(false, { mimic: true, count: 1 });
+            renderEncounter();
+            log("The chest yawns open. Those are teeth!");
+            await encounterEntrance();
+            return true;
+          }
           await treasureRoll();
           return true;
         }
@@ -5927,6 +6126,29 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           base.map(([type, tier]) => ({ type, tier })),
         );
       }
+      function enemyBalance(
+        depth,
+        { boss = false, elite = false, pair = false, mimic = false } = {},
+      ) {
+        return {
+          maxHp: boss
+            ? 140
+            : Math.ceil(
+                (16 + depth * 5) * (elite ? 1.8 : mimic ? 1.2 : pair ? 0.7 : 1),
+              ),
+          damage: boss
+            ? 5
+            : Math.max(
+                1,
+                Math.floor(
+                  (2 + Math.floor((depth - 1) / 3) + (elite ? 1 : 0)) *
+                    (pair ? 0.75 : 1),
+                ),
+              ),
+          frequency: boss || elite ? 2 : depth < 3 ? 3 : depth < 9 ? 2 : 1,
+          strikes: boss || (elite && depth >= 7) ? 2 : 1,
+        };
+      }
       function beginEncounter(boss = false, options = {}) {
         const depth = state.depth,
           elite = !!options.elite,
@@ -5959,37 +6181,26 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
               ? 2
               : 1),
           create = (index) => {
-            const b = boss
-                ? { name: "The Last Redaction", art: "lich" }
-                : elite
-                  ? { name: "The Bastion Butcher", art: "abomination" }
-                  : pick(pools),
-              hp = boss
-                ? 250
-                : Math.ceil(
-                    (26 + depth * 12) * (elite ? 1.85 : count === 2 ? 0.72 : 1),
-                  ),
-              frequency =
-                boss || elite
-                  ? 1
-                  : Math.max(1, 2 - Math.floor((depth - 1) / 4));
+            const b = options.mimic
+                ? { name: "The hungry chest", art: "mimic" }
+                : boss
+                  ? { name: "The Last Redaction", art: "lich" }
+                  : elite
+                    ? { name: "The Bastion Butcher", art: "abomination" }
+                    : pick(pools),
+              stats = enemyBalance(depth, {
+                boss,
+                elite,
+                mimic: options.mimic,
+                pair: count === 2,
+              }),
+              frequency = stats.frequency;
             return {
               ...b,
+              ...stats,
               id: "enemy-" + Date.now() + "-" + index,
-              hp,
-              maxHp: hp,
-              damage: boss
-                ? 12
-                : Math.ceil(
-                    (4 + Math.ceil(depth * 1.3)) *
-                      (elite ? 1.4 : count === 2 ? 0.8 : 1),
-                  ),
-              frequency,
-              strikes: boss
-                ? 3
-                : elite
-                  ? 2 + Math.floor(depth / 5)
-                  : 1 + Math.floor((depth - 1) / 4),
+              hp: stats.maxHp,
+              mimic: !!options.mimic,
               countdown: frequency,
               stun: 0,
               block: 0,
@@ -6022,7 +6233,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           });
         let e = state.enemy;
         showSpotlight(
-          "An unwelcome scribble",
+          e.mimic ? "That chest has teeth!" : "An unwelcome scribble",
           battleEnemies()
             .map((e) => e.name)
             .join(" & "),
@@ -6272,7 +6483,11 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       function calculate(symbols, multiplier = 1) {
         let total = { attack: 0, heal: 0, block: 0, stun: 0, blank: 0 };
         for (let s of symbols)
-          if (TYPES.includes(s.type)) total[s.type] += POWER[s.type] * s.tier;
+          if (TYPES.includes(s.type))
+            total[s.type] +=
+              s.type === "attack"
+                ? ATTACK_POWER[s.tier]
+                : POWER[s.type] * s.tier;
         for (let t of TYPES) total[t] = Math.ceil(total[t] * multiplier);
         return total;
       }
@@ -6351,6 +6566,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           if (actual > 4) sayHero(i, "relief");
           log(`${h.name} recovers ${actual} HP.`);
         }
+        combatNumber($("#portrait-" + i), actual, "heal");
         return actual;
       }
       function damageHero(i, n, source) {
@@ -6383,6 +6599,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         log(
           `${source} → ${h.name}: ${actual} damage${blocked ? " (" + blocked + " team armour consumed)" : ""}.`,
         );
+        combatNumber($("#portrait-" + i), actual, "attack");
         if (h.hp === 0) recordDeath(h, source);
         return actual;
       }
@@ -6398,6 +6615,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         }
         syncEnemy(e);
         const art = enemyArtEl(e);
+        combatNumber(art, actual, "attack");
         if (blocked && !actual) shieldedFX(art);
         floatAt(art, actual ? "-" + actual + " HP" : "Blocked", false, !actual);
         burst(art, actual ? "damage" : "paper", 22);
@@ -6425,7 +6643,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         log("The last torch falls. A fresh page is waiting.");
         openModal(
           "The light goes out.",
-          `<p>The company falls on floor ${state.depth}. ${state.steps} steps, ${state.gold} gold, and a few very brave names.</p><div class="modal-actions"><button class="primary" data-restart>Begin a new expedition</button><button data-close>Read the final notes</button></div>`,
+          runSummaryMarkup() +
+            `<div class="modal-actions"><button class="primary" data-restart>Begin a new expedition</button><button data-close>Read the final notes</button></div>`,
           "defeat",
         );
         return true;
@@ -6479,7 +6698,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             sums = scaleEffects(base, multiplier),
             area =
               multiplier > 1 ||
-              symbols.some((s) => s.type === "attack" && s.tier === 3),
+              symbols.some((s) => s.type === "attack" && s.tier >= 3),
             targets = area ? foes.filter((e) => e.hp > 0) : [selected],
             parts = [];
           state.lastPlayerRoll = {
@@ -6493,18 +6712,25 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             targets: targets.map((e) => e.id),
           };
           if (sums.attack) {
+            let dealt = 0;
             for (const e of targets) {
-              beam($("#portrait-" + i), enemyArtEl(e), "attack");
-              h.stats.damageDealt += damageEnemy(
+              beam($("#portrait-" + i), enemyArtEl(e), "attack", {
+                critical: multiplier > 1,
+                lethal: sums.attack >= e.hp + (e.block || 0),
+              });
+              const actual = damageEnemy(
                 sums.attack,
                 h.name +
                   (multiplier > 1 ? " (×" + multiplier + " critical)" : ""),
                 e,
               );
+              dealt += actual;
+              h.stats.damageDealt += actual;
               if (e.hp === 0) h.stats.kills++;
             }
+            state.lastPlayerRoll.actualDamage = dealt;
             parts.push(
-              `<span class="damage">${icon("sword")}${multiplier > 1 ? base.attack + " × " + multiplier + " = " : ""}${sums.attack} damage${area && foes.length > 1 ? " to ALL enemies" : ""}</span>`,
+              `<span class="damage combat-total">${icon("sword")} <strong>−${dealt}</strong> HP${area && foes.length > 1 ? " across ALL enemies" : ""}${multiplier > 1 ? " · " + base.attack + " × " + multiplier + " = " + sums.attack + " power" : ""}</span>`,
             );
             await pause(380);
           }
@@ -6514,9 +6740,10 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                 : state.party.findIndex(alive),
               n = healHero(target, sums.heal);
             h.stats.healingDone += n;
+            state.lastPlayerRoll.actualHealing = n;
             beam($("#portrait-" + i), $("#portrait-" + target), "heal");
             parts.push(
-              `<span class="healing">${icon("heal")}+${n} ${state.party[target].name}</span>`,
+              `<span class="healing">${icon("heal")}<strong>+${n} HP</strong> ${state.party[target].name}</span>`,
             );
             await pause(300);
           }
@@ -6622,14 +6849,18 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           };
           if (totals.stun) notes.push(stunHero(target, totals.stun));
           if (totals.attack) {
-            beam(enemyArtEl(e), $("#portrait-" + target), "attack");
+            beam(enemyArtEl(e), $("#portrait-" + target), "attack", {
+              critical: multiplier > 1,
+              lethal: totals.attack >= victim.hp + state.block,
+            });
             lunge(enemyArtEl(e), true);
             let n = damageHero(
               target,
               totals.attack,
               `${e.name}${multiplier > 1 ? " (×" + multiplier + " critical)" : ""}`,
             );
-            notes.push(n + " damage to " + victim.name);
+            state.lastEnemyRoll.actualDamage = n;
+            notes.push("<strong>−" + n + " HP</strong> to " + victim.name);
             await pause(380);
           }
           if (totals.heal) {
@@ -6738,7 +6969,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
               icon: type,
               value: counts[type],
             });
-        for (let a of found)
+        for (let a of found.filter((a) => a.key !== "revive"))
           details.push({
             label: a.name + " power",
             icon: "artefact",
@@ -6770,9 +7001,10 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           notes.push("+" + n + " points for " + h.name);
         }
         for (let a of found) {
-          a.power = Math.ceil(a.power * multiplier);
+          if (a.key !== "revive") a.power = Math.ceil(a.power * multiplier);
           state.artefacts.push(a);
-          if (!state.equippedArtefact) state.equippedArtefact = a.id;
+          if (!state.equippedArtefact && a.key !== "revive")
+            state.equippedArtefact = a.id;
           notes.push("Artefact: " + a.name);
         }
         $("#treasure-result").innerHTML =
@@ -6782,7 +7014,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         $("#artefact-loot").innerHTML = found
           .map(
             (a) =>
-              `<div class="artefact-card">${icon("artefact")}<div><b>${a.name}</b><p>${artefactText(a)}</p><button class="small" data-equip="${a.id}">${state.equippedArtefact === a.id ? "Equipped" : "Equip instead"}</button></div></div>`,
+              `<div class="artefact-card">${icon("artefact")}<div><b>${a.name}</b><p>${artefactText(a)}</p>${artefactButton(a)}</div></div>`,
           )
           .join("");
         state.lastLoot = {
@@ -6851,11 +7083,11 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           title: "Escape, guard, or danger",
         });
         let symbols = await runMachine("trap", [faces, faces, faces]),
-          baseDamage =
+          baseDamage = Math.ceil(
             symbols
               .filter((s) => s.type === "trap")
-              .reduce((n, s) => n + s.tier, 0) *
-            (2 + state.depth),
+              .reduce((n, s) => n + s.tier, 0) * trapPower(state.depth),
+          ),
           baseGuard = symbols.filter((s) => s.type === "block").length,
           multiplier = await rollCritical("Trap reels", symbols, false, {
             context: "trap",
@@ -6939,6 +7171,10 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             save();
             return;
           }
+          state.recruitPity = state.recruitFoundThisFloor
+            ? 0
+            : (state.recruitPity || 0) + 1;
+          state.recruitFoundThisFloor = false;
           state.depth++;
           state.map = generateFloor(state.depth);
           state.position = pos(1, 7);
@@ -7018,6 +7254,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           `<button class="quiet close" data-close aria-label="Close dialog">✕</button><div class="eyebrow">Scratchpad / field notes</div><h2 id="modal-title">${title}</h2><div class="modal-body"><div class="modal-flow">${body}</div></div>`;
         $("#overlay").hidden = false;
         $("#modal").focus();
+        popTitle($("#modal-title"));
         updateKeyboardBar();
         fitDialogs();
         requestFitUI();
@@ -7041,6 +7278,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           `<div class="paper-tear" aria-hidden="true"></div><div class="eyebrow">A turn of fate / ${kind === "critical" ? "three of a kind" : kind === "enemy-intro" ? "encounter" : "field notes"}</div><h2 class="stage-title" id="stage-title">${title}</h2><p class="stage-subtitle">${subtitle}</p><div class="stage-content"><div class="scene-layout">${body}</div></div><div class="stage-actions" id="stage-actions"><button class="stage-skip" id="stage-skip" data-fast>Land the reels now ↗</button></div>`;
         $("#spotlight").hidden = false;
         $("#stage-card").focus();
+        popTitle($("#stage-title"));
         burst($("#stage-card"), "paper", 48);
         shakeElement($("#stage-card"), 2);
         updateKeyboardBar();
@@ -7059,7 +7297,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         if (!h) return;
         openModal(
           h.name + "’s lucky machinery",
-          `<p><b>${h.points} personal points.</b> Each column is one reel; all six weighted faces are shown. Change a symbol for its tier cost. Inscribe an EMPTY face for 1 point. Upgrade I → II for 3 points, II → III for 6. Weaken for 1.</p><div class="reel-editor">${h.reels.map((r, k) => `<section class="editor-row"><b>Reel ${k + 1}</b><div class="editor-slots">${r.map((s, j) => `<div class="editor-slot">${symbolMarkup(s)}<small>${s.type} ${"I".repeat(s.tier)} · ${Math.round((100 * (s.weight || 1)) / r.reduce((n, f) => n + (f.weight || 1), 0))}%</small><div class="face-actions"><button data-cycle="${i},${k},${j}" ${h.points < FACE_COST[s.tier] ? "disabled" : ""}>Change ${FACE_COST[s.tier]}pt</button><button data-upgrade="${i},${k},${j}" ${h.points < (faceUpgradeCost(s) || Infinity) ? "disabled" : ""}>${s.type === "blank" ? "Inscribe " + (h.job === "healer" ? "heal" : "attack") + " I · 1pt" : s.tier === 3 ? "Max" : "↑ " + FACE_COST[s.tier + 1] + "pt"}</button>${s.tier > 1 ? `<button data-weaken="${i},${k},${j}" ${h.points < 1 ? "disabled" : ""}>↓ 1pt</button>` : ""}</div></div>`).join("")}</div></section>`).join("")}</div><div class="modal-actions"><button class="primary" data-close>Back to the adventure</button></div>`,
+          `<p><b>${h.points} personal points.</b> Each column is one reel; all six weighted faces are shown. Change a symbol for its tier cost. Inscribe an EMPTY face for 1 point. Upgrade I → II for 3 points, II → III for 6, attack III → IV for 10. Weaken for 1.</p><div class="reel-editor">${h.reels.map((r, k) => `<section class="editor-row"><b>Reel ${k + 1}</b><div class="editor-slots">${r.map((s, j) => `<div class="editor-slot">${symbolMarkup(s)}<small>${s.type} ${tierName(s.tier)} · ${Math.round((100 * (s.weight || 1)) / r.reduce((n, f) => n + (f.weight || 1), 0))}%</small><div class="face-actions"><button data-cycle="${i},${k},${j}" ${h.points < FACE_COST[s.tier] ? "disabled" : ""}>Change ${FACE_COST[s.tier]}pt</button><button data-upgrade="${i},${k},${j}" ${h.points < (faceUpgradeCost(s) || Infinity) ? "disabled" : ""}>${s.type === "blank" ? "Inscribe " + (h.job === "healer" ? "heal" : "attack") + " I · 1pt" : s.tier >= maxFaceTier(s.type) ? "Max" : "↑ " + FACE_COST[s.tier + 1] + "pt"}</button>${s.tier > 1 ? `<button data-weaken="${i},${k},${j}" ${h.points < 1 ? "disabled" : ""}>↓ 1pt</button>` : ""}</div></div>`).join("")}</div></section>`).join("")}</div><div class="modal-actions"><button class="primary" data-close>Back to the adventure</button></div>`,
           "editor",
         );
       }
@@ -7085,7 +7323,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         if (
           !cost ||
           h.points < cost ||
-          (op === "upgrade" && s.type !== "blank" && s.tier === 3) ||
+          (op === "upgrade" &&
+            s.type !== "blank" &&
+            s.tier >= maxFaceTier(s.type)) ||
           (op === "weaken" && s.tier === 1)
         )
           return;
@@ -7095,7 +7335,10 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           s.tier = 1;
         } else if (op === "upgrade") s.tier++;
         else if (op === "weaken") s.tier = 1;
-        else s.type = TYPES[(TYPES.indexOf(s.type) + 1) % TYPES.length];
+        else {
+          s.type = TYPES[(TYPES.indexOf(s.type) + 1) % TYPES.length];
+          s.tier = Math.min(s.tier, maxFaceTier(s.type));
+        }
         h.last[r] = { type: s.type, tier: s.tier };
         renderParty();
         save();
@@ -7105,17 +7348,17 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         openModal(
           "A field guide for the brave",
           `<div class="guide-grid">
-          <p><b>Explore.</b> Click a frontier tile, or follow known rooms. Routes avoid active fights and traps. Click a new goal while walking or erasing. Walls and rivers block movement; bridges cross rivers. Stairs are random, reachable, and at least eight steps from camp.</p>
+          <p><b>Explore.</b> Click a frontier tile, or follow known rooms. Routes avoid active fights and traps, and pass through known wells, shops and ruins unless selected. Click a new goal while walking or erasing. Walls and rivers block movement; bridges cross rivers. Stairs are random, reachable, and at least eight steps from camp.</p>
           <p><b>Descend.</b> A shop map only marks the stairs. Reach them for the first prompt, then descend from anywhere or keep exploring. Defeat the final guardian on floor ten to win.</p>
-          <p><b>Old fog.</b> After sixteen steps away, visited rooms become misty. Reentering a resolved room can trigger a wandering fight. An active event resolves normally instead.</p>
-          <p><b>Act freely.</b> Any living hero can spin repeatedly. Click a hero portrait to select healing; click an enemy portrait to select damage. On deep floors two enemies may attack with independent clocks. Tier III damage and attack criticals hit ALL enemies.</p>
+          <p><b>Old fog.</b> After sixteen steps away, distant visited rooms darken with fog. Walls and rivers stay clear; your torch keeps nearby rooms fresh. Reentering a resolved room can trigger a wandering fight. An active event resolves normally instead.</p>
+          <p><b>Act freely.</b> Any living hero can spin repeatedly. Click a hero portrait to select healing; click an enemy portrait to select damage. On deep floors two enemies may attack with independent clocks. Tier III / IV damage and attack criticals hit ALL enemies.</p>
           <p><b>Three of a kind.</b> Three identical type-and-tier symbols roll a ×2–×4 critical. Blanks never crit. Event criticals stay in their original panel. Click rolling reels or press Space to land them. Confirm event results with a button.</p>
           <p><b>Armour and stun.</b> Shared team armour absorbs damage and clears after battle. Any armour blocks a stun, consuming up to six armour per power. A stunned hero misses one go without advancing enemy clocks.</p>
           <p><b>Live and learn.</b> Victory gives EXP and editing points. Each level adds 6 maximum HP and 4 personal points. Edit all three reels with ✎. Classes start with actual EMPTY faces, removable for one point.</p>
-          <p><b>No resurrection.</b> Dead heroes leave corpses. Survivors confirm a burial with their cause, origin, time and statistics. Names remembered keeps those records. Healing never revives the dead.</p>
+          <p><b>The fallen.</b> A Revive Stone in your pack can be consumed once to restore a fallen hero at 75% health. Otherwise dead heroes leave corpses. Survivors confirm a burial with their cause, origin, time and statistics. Names remembered keeps those records. Healing never revives the dead.</p>
           <p><b>Discoveries.</b> Wells can be left for later; they roll 30% HP plus a bonus. Ruins can be ignored or examined for loot against trap damage. Rare walled strongholds house very hard bosses with a guaranteed artefact and rich loot.</p>
           <p><b>Supplies.</b> Chests and battles roll gold, rare items and artefacts. Equip one artefact’s passive bonus at a time. Shops sell limited supplies and full healing. Adventurers join only if invited, up to three heroes.</p>
-          <p><b>Read the page.</b> Health bars move from green through yellow to red and flash below 25%. Faint hints suggest neighbouring discoveries without revealing them. Only the field log scrolls; panels fit their content.</p>
+          <p><b>Read the page.</b> Health bars move from green through yellow to red and flash below 25%. Faint hints suggest neighbouring discoveries without revealing them. The field log and final memorial roster scroll; other panels fit their content.</p>
           <p><b>Controls.</b> The bottom bar lists keyboard and mouse actions. Tab and Enter reach every control. Animation speed and palette persist into new runs. Save HTML downloads the complete offline game; progress stays in this browser.</p>
         </div><div class="modal-actions"><button class="primary" data-close>Into the margins ↗</button></div>`,
           "help",
@@ -7321,7 +7564,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         document.body.append(node);
         setTimeout(() => node.remove(), 1000);
       }
-      function beam(from, to, type) {
+      function beam(from, to, type, impact = {}) {
         if (!from || !to) return;
         let a = from.getBoundingClientRect(),
           b = to.getBoundingClientRect(),
@@ -7337,8 +7580,16 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         el.style.top = y + "px";
         el.style.width = Math.hypot(dx, dy) + "px";
         el.style.transform = "rotate(" + Math.atan2(dy, dx) + "rad)";
+        if (impact.critical || impact.lethal) {
+          el.classList.add(impact.lethal ? "lethal" : "critical-hit");
+          el.dataset.impact = impact.lethal ? "lethal" : "critical";
+          shakeElement(to, impact.lethal ? 9 : 7);
+          shakeBook(impact.lethal ? 5 : 4);
+          burst(to, "damage", impact.lethal ? 42 : 30);
+          burst(from, "paper", 15);
+        }
         document.body.append(el);
-        setTimeout(() => el.remove(), 400);
+        setTimeout(() => el.remove(), 550);
       }
       function setSkip(value) {
         setPace(value ? "skip" : "1");
@@ -7395,11 +7646,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         );
       }
       const ARTEFACT_TYPES = [
-        { key: "attack", name: "Fang of the Margin", base: 2, scale: 2 },
-        { key: "heal", name: "The Glass Tear", base: 2, scale: 1 },
+        { key: "attack", name: "Fang of the Margin", base: 1, scale: 0.6 },
+        { key: "heal", name: "The Glass Tear", base: 1, scale: 0.5 },
         { key: "block", name: "Iron Pennant", base: 1, scale: 0.5 },
         { key: "gold", name: "Lucky Farthing", base: 10, scale: 3 },
-        { key: "guard", name: "Ember Seal", base: 2, scale: 1 },
+        { key: "guard", name: "Ember Seal", base: 1, scale: 0.5 },
+        { key: "revive", name: "Revive Stone", base: 1, scale: 0 },
       ];
       function makeArtefact(depth) {
         let t = pick(ARTEFACT_TYPES);
@@ -7416,10 +7668,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       }
       function passive(key) {
         let a = state.artefacts.find((a) => a.id === state.equippedArtefact);
-        return a?.key === key ? a.power : 0;
+        return a?.key === key && key !== "revive" ? a.power : 0;
       }
       function artefactText(a) {
         return {
+          revive:
+            "Keep in your pack. Consume once to bring a fallen companion back at 75% health.",
           attack: `+${a.power} damage when a hero rolls attack.`,
           heal: `+${a.power} healing when a hero rolls heal.`,
           block: `+${a.power} team block when a hero rolls shields.`,
@@ -7427,13 +7681,19 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           guard: `Start every battle with ${a.power} shared team block.`,
         }[a.key];
       }
+      function artefactButton(a) {
+        return a.key === "revive"
+          ? '<small class="revive-ready">Ready in your pack · no slot needed</small>'
+          : `<button class="small" data-equip="${a.id}">${state.equippedArtefact === a.id ? "Equipped" : "Equip instead"}</button>`;
+      }
       function renderArtefactSlot() {
         let a = state.artefacts.find((a) => a.id === state.equippedArtefact);
         $("#relic-status").innerHTML =
           `<button class="artefact-slot" id="artefact-slot" ${busy ? "disabled" : ""}>${icon("artefact")}<span>${a ? escapeHTML(a.name) : "Empty artefact slot"}<small>${a ? artefactText(a) : "Rare finds. One passive bonus at a time."}</small><em>${state.artefacts.length ? "Inspect / swap · " + state.artefacts.length + " owned" : "Very rarely found in loot"}</em></span></button>`;
       }
       function equipArtefact(id) {
-        if (!state.artefacts.some((a) => a.id === id)) return;
+        if (!state.artefacts.some((a) => a.id === id && a.key !== "revive"))
+          return;
         state.equippedArtefact = id;
         renderArtefactSlot();
         document.querySelectorAll("[data-equip]").forEach((b) => {
@@ -7446,28 +7706,30 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         if (busy || state.over) return;
         openModal(
           "A little power in the paper",
-          `<p>Only one artefact is active at a time. Swapping is free; its bonus applies to future rolls. The power of a find scales with the floor where it was discovered.</p>${state.artefacts.length ? state.artefacts.map((a) => `<div class="artefact-card">${icon("artefact")}<div><b>${escapeHTML(a.name)}</b><p>Found on floor ${a.depth}. ${artefactText(a)}</p><button data-equip="${a.id}">${a.id === state.equippedArtefact ? "Equipped" : "Equip instead"}</button></div></div>`).join("") : "<p>The slot is empty. Artefacts appear very rarely in chests and the spoils of defeated enemies.</p>"}<div class="modal-actions"><button class="primary" data-close>Keep walking</button></div>`,
+          `<p>Only one artefact is active at a time. Swapping is free; its bonus applies to future rolls. The power of a find scales with the floor where it was discovered.</p>${state.artefacts.length ? state.artefacts.map((a) => `<div class="artefact-card">${icon("artefact")}<div><b>${escapeHTML(a.name)}</b><p>Found on floor ${a.depth}. ${artefactText(a)}</p>${artefactButton(a)}</div></div>`).join("") : "<p>The slot is empty. Artefacts appear very rarely in chests and the spoils of defeated enemies.</p>"}<div class="modal-actions"><button class="primary" data-close>Keep walking</button></div>`,
           "artefacts",
         );
       }
       function lootFaces() {
         return [
-          { type: "coin", tier: 1, weight: 550 },
+          { type: "coin", tier: 1, weight: 536 },
           { type: "coin", tier: 2, weight: 280 },
           { type: "coin", tier: 3, weight: 110 },
           { type: "point", tier: 1, weight: 35 },
           { type: "potion", tier: 1, weight: 7 },
           { type: "bomb", tier: 1, weight: 7 },
           { type: "ward", tier: 1, weight: 7 },
-          { type: "artefact", tier: 1, weight: 4 },
+          { type: "artefact", tier: 1, weight: 18 },
         ];
       }
       async function recruitEncounter() {
+        state.recruitPity = 0;
+        state.recruitFoundThisFloor = true;
         let job = state.party.some((h) => h.job === "healer")
             ? pick(["rogue", "fighter"])
             : pick(["healer", "healer", "rogue"]),
           name = uniqueRecruitName(job),
-          h = makeHero(name, job),
+          h = prepareRecruit(makeHero(name, job)),
           full = state.party.length >= 3,
           quote = {
             fighter: "I’ll take the first hit. You keep the light.",
@@ -7477,7 +7739,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         showSpotlight(
           "A wandering adventurer",
           `${h.name} · ${job === "fighter" ? "Tank" : job[0].toUpperCase() + job.slice(1)}`,
-          `<div class="stage-art">${portraitArt(job, h)}</div><p class="encounter-quote">“${quote}”</p><div class="stage-result">${h.maxHp} HP · ${job === "healer" ? "Healing specialist" : job === "fighter" ? "Damage & team protection" : "Damage & stuns"}<br>${full ? "Your three-person company is full." : "Invite them to join your company?"}</div>`,
+          `<div class="stage-art">${portraitArt(job, h)}</div><p class="encounter-quote">“${quote}”</p><div class="stage-result">${h.maxHp} HP · level ${h.level} · ${job === "healer" ? "Healing specialist" : job === "fighter" ? "Damage & team protection" : "Damage & stuns"}<br>${full ? "Your three-person company is full." : "Invite them to join your company?"}</div>`,
           "recruit",
         );
         let yes = await eventChoice(
@@ -7698,6 +7960,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             hurt: ["MORE THREAD!"],
             defeat: ["Unstitched…"],
           },
+          mimic: {
+            entrance: ["Just a little closer…"],
+            attack: ["CHOMP!"],
+            hurt: ["Splinters!"],
+            defeat: ["Crrreak…"],
+          },
           rat: {
             entrance: ["Skkrit. Mine!"],
             attack: ["Skkree!", "Bite. Bite!"],
@@ -7787,19 +8055,31 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         return true;
       }
 
+      function tileDistance(a, b = state.position) {
+        return Math.max(
+          Math.abs((a % W) - (b % W)),
+          Math.abs(Math.floor(a / W) - Math.floor(b / W)),
+        );
+      }
       function isStale(c) {
+        const i = state.map.indexOf(c);
         return (
           c.seen &&
           c.visited &&
           !c.wall &&
+          i >= 0 &&
+          tileDistance(i) > 2 &&
           c.lastVisitedStep != null &&
           state.steps - c.lastVisitedStep >= 16
         );
       }
       function refreshStaleMap() {
         state.map.forEach((c, i) => {
-          const b = $(`[data-tile="${i}"]`);
-          b?.classList.toggle("stale-fog", isStale(c));
+          if (isStale(c)) c.wanderPending = true;
+          // Keep the neighbouring rooms fresh while the torch is beside them.
+          if (c.seen && c.visited && !c.wall && tileDistance(i) <= 1)
+            c.lastVisitedStep = state.steps;
+          $(`[data-tile="${i}"]`)?.classList.toggle("stale-fog", isStale(c));
         });
       }
       function announceStairs() {
@@ -7848,7 +8128,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         ];
         showSpotlight(
           "The ruin’s mechanism",
-          "Every golden mark is a reward. Every spike has a price.",
+          "A glint of gold. A click beneath the dust.",
           `${drawMachine("ruin", faces.slice(0, 3), { title: "Loot against danger" })}${criticalSpace()}<div class="stage-result" id="ruin-result">Ancient gears turn…</div>`,
           "ruin",
         );
@@ -7856,9 +8136,11 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           baseGold = symbols
             .filter((s) => s.type === "coin")
             .reduce((n, s) => n + s.tier * (6 + state.depth * 2), 0),
-          baseDamage = symbols
-            .filter((s) => s.type === "trap")
-            .reduce((n, s) => n + s.tier * (2 + state.depth), 0),
+          baseDamage = Math.ceil(
+            symbols
+              .filter((s) => s.type === "trap")
+              .reduce((n, s) => n + s.tier * trapPower(state.depth), 0),
+          ),
           multiplier = await rollCritical("Ruin mechanism", symbols, false, {
             context: "ruin",
             details: [
@@ -7869,13 +8151,13 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           gold = Math.ceil(baseGold * multiplier),
           damage = Math.ceil(baseDamage * multiplier);
         $("#ruin-result").innerHTML =
-          `<b>+${gold} gold</b> · ${damage} incoming damage<br>Loot and danger both resolve after confirmation.`;
+          `<b>+${gold} gold</b> · ${damage} incoming damage<br>Gold in the rubble. Watch your step.`;
         state.lastRuinRoll = { symbols, gold, damage, multiplier };
         if (gold) goldCelebration(gold, multiplier > 1);
         await eventChoice([
           {
             id: "stage-confirm",
-            label: "Accept the consequences",
+            label: "Gather what remains ↗",
             value: true,
           },
         ]);
@@ -8137,20 +8419,30 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         const animal = kind === "rat",
           spectral = kind === "ghost",
           blob = kind === "slime";
-        const remains = animal
-          ? '<path d="M22 119q-25 15-16-8m16 8q-7-34 33-34l30 6 22 20-12 17H38z" fill="#c6b99b"/><path d="m83 93 5-18 10 21M77 105l8 7m0-7-8 7M38 118l-9 14m30-10 8 12M95 114l12 4"/>'
-          : spectral
-            ? '<path d="m12 125 14-22 22 8 15-27 17 26 26-7-12 22-23 9-31-4z" fill="#d9cfb4"/><path d="m43 112 8 6m0-6-8 6m19-6 8 6m0-6-8 6M11 137h90"/>'
-            : blob
-              ? '<path d="M12 128q-8-13 22-14 5-17 25-7 21-16 28 6 30 3 20 18-51 10-95-3z" fill="#c3b392"/><path d="m43 116 8 7m0-7-8 7m18-7 8 7m0-7-8 7"/>'
-              : `<path d="m9 135 16-7 22 4 20-8 25 6 19-5M42 116l17 6 28-13 13 7m-40 4 17 12 19-2M43 108l20-10 21 5-10 18-28 4z" fill="#cbbd9f"/><path d="m55 109 18 1m-15 8 12-12m-6-5 2 20M36 116l-12 14m38-8 17 13M9 143h102"/><ellipse cx="28" cy="110" rx="17" ry="16" fill="#e7dcc0"/><path d="m18 106 7 6m0-6-7 6m13-8 7 6m0-6-7 6M24 119h9"/>${kind === "fighter" || kind === "hero" ? '<path d="m12 102 7-11 19 2 9 13-9 7-25-2z M13 104l31 1M15 137l64-5m-63 1 1 8"/>' : kind === "skeleton" || kind === "skull" ? '<path d="m52 103 2 18m4-17 3 16m4-17 4 13m5-12 3 10M24 116h10m-7-2v7m4-7v7"/>' : '<path d="M10 110q-3-29 27-20l15 20-15 19H15z M15 113q5-28 22-14"/>'}`;
+        const remains =
+          kind === "mimic"
+            ? '<path d="m10 118 19-22 34 13 32-12 16 25-37 19-49-4z" fill="#ad9872"/><path d="m18 116 36 15 50-12M29 98l20 18 16-5 27-11M26 117l10 9 8-8 9 13 8-8 10 11 9-12 10 5M16 142h92M53 107l7 20"/><path d="m39 103 6 4m-5 0 5-4m28 0 7 3m-7 0 7-3"/>'
+            : animal
+              ? '<path d="M22 119q-25 15-16-8m16 8q-7-34 33-34l30 6 22 20-12 17H38z" fill="#c6b99b"/><path d="m83 93 5-18 10 21M77 105l8 7m0-7-8 7M38 118l-9 14m30-10 8 12M95 114l12 4"/>'
+              : spectral
+                ? '<path d="m12 125 14-22 22 8 15-27 17 26 26-7-12 22-23 9-31-4z" fill="#d9cfb4"/><path d="m43 112 8 6m0-6-8 6m19-6 8 6m0-6-8 6M11 137h90"/>'
+                : blob
+                  ? '<path d="M12 128q-8-13 22-14 5-17 25-7 21-16 28 6 30 3 20 18-51 10-95-3z" fill="#c3b392"/><path d="m43 116 8 7m0-7-8 7m18-7 8 7m0-7-8 7"/>'
+                  : `<path d="m9 135 16-7 22 4 20-8 25 6 19-5M42 116l17 6 28-13 13 7m-40 4 17 12 19-2M43 108l20-10 21 5-10 18-28 4z" fill="#cbbd9f"/><path d="m55 109 18 1m-15 8 12-12m-6-5 2 20M36 116l-12 14m38-8 17 13M9 143h102"/><ellipse cx="28" cy="110" rx="17" ry="16" fill="#e7dcc0"/><path d="m18 106 7 6m0-6-7 6m13-8 7 6m0-6-7 6M24 119h9"/>${kind === "fighter" || kind === "hero" ? '<path d="m12 102 7-11 19 2 9 13-9 7-25-2z M13 104l31 1M15 137l64-5m-63 1 1 8"/>' : kind === "skeleton" || kind === "skull" ? '<path d="m52 103 2 18m4-17 3 16m4-17 4 13m5-12 3 10M24 116h10m-7-2v7m4-7v7"/>' : '<path d="M10 110q-3-29 27-20l15 20-15 19H15z M15 113q5-28 22-14"/>'}`;
         return `<svg class="corpse-art" data-corpse="${kind}" viewBox="0 0 120 150" fill="none" stroke="#625343" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="62" cy="133" rx="52" ry="8" fill="#80715b20"/>${remains}<path d="m11 145 14-1m74-2 13 1m-44-7 8 1" opacity=".55"/></svg>`;
       }
       function leaveCorpse(kind, name, enemy = false) {
         const cell = state.map[state.position];
         cell.corpses ??= [];
-        cell.corpses.push({ kind, name, enemy });
+        cell.corpses.push({
+          kind,
+          name,
+          enemy,
+          id: "corpse-" + Date.now() + "-" + cell.corpses.length,
+        });
+        const corpse = cell.corpses.at(-1);
         renderMap();
+        return corpse.id;
       }
       function shieldedFX(el) {
         if (!el) return;
@@ -8165,11 +8457,17 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         document.body.append(node);
         setTimeout(() => node.remove(), 1050);
       }
+      const tierName = (tier) => ["", "I", "II", "III", "IV"][tier];
+      const maxFaceTier = (type) => (type === "attack" ? 4 : 3);
       function faceUpgradeCost(face) {
-        return face.type === "blank" ? 1 : FACE_COST[face.tier + 1];
+        return face.type === "blank"
+          ? 1
+          : face.tier < maxFaceTier(face.type)
+            ? FACE_COST[face.tier + 1]
+            : undefined;
       }
       function criticalSpace() {
-        return '<div class="event-critical" id="event-critical"><span class="critical-placeholder">Three matching marks may awaken a critical.</span></div>';
+        return '<div class="event-critical" id="event-critical"><span class="critical-placeholder">Fortune is listening.</span></div>';
       }
       function criticalMath(details, multiplier) {
         return (
@@ -8335,10 +8633,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         };
         h.death = record;
         state.pendingDeaths.push(record);
-        leaveCorpse(h.job, h.name);
-        log(
-          `${h.name} dies on floor ${state.depth}: ${cause}. There is no resurrection.`,
-        );
+        record.corpseId = leaveCorpse(h.job, h.name);
+        log(`${h.name} falls on floor ${state.depth}: ${cause}.`);
         save();
       }
       function elapsedText(ms) {
@@ -8357,16 +8653,65 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           : `${origin.description || "Met in the dungeon"} · floor ${origin.depth}${origin.tile != null ? ", column " + ((origin.tile % W) + 1) + ", row " + (Math.floor(origin.tile / W) + 1) : ""}`;
       }
       function memorialMarkup(d) {
-        return `<div class="memorial-stats"><p><b>${escapeHTML(d.name)}</b> · ${d.job === "fighter" ? "Tank" : d.job} · level ${d.level}</p><dl><dt>Cause of death</dt><dd>${escapeHTML(d.cause)}</dd><dt>Final resting place</dt><dd>Floor ${d.depth}, column ${(d.tile % W) + 1}, row ${Math.floor(d.tile / W) + 1}</dd><dt>Found</dt><dd>${escapeHTML(foundText(d.origin))}</dd><dt>Time with the party</dt><dd>${elapsedText(d.diedAt - d.joinedAt)} · ${d.stepsWithParty} steps</dd><dt>Battles / kills</dt><dd>${d.stats.battles} / ${d.stats.kills}</dd><dt>Damage dealt / taken</dt><dd>${d.stats.damageDealt} / ${d.stats.damageTaken}</dd><dt>Armour absorbed</dt><dd>${d.stats.damageBlocked}</dd><dt>Healing given / received</dt><dd>${d.stats.healingDone} / ${d.stats.healingReceived}</dd><dt>Spins / missed turns</dt><dd>${d.stats.spins} / ${d.stats.turnsMissed}</dd><dt>Experience earned</dt><dd>${d.stats.xpEarned}</dd></dl></div>`;
+        return `<div class="memorial-stats"><p><b>${escapeHTML(d.name)}</b> · ${d.job === "fighter" ? "Tank" : d.job[0].toUpperCase() + d.job.slice(1)} · level ${d.level}</p><dl><dt>Cause of death</dt><dd>${escapeHTML(d.cause)}</dd><dt>Final resting place</dt><dd>Floor ${d.depth}, column ${(d.tile % W) + 1}, row ${Math.floor(d.tile / W) + 1}</dd><dt>Found</dt><dd>${escapeHTML(foundText(d.origin))}</dd><dt>Time with the party</dt><dd>${elapsedText(d.diedAt - d.joinedAt)} · ${d.stepsWithParty} steps</dd><dt>Battles / kills</dt><dd>${d.stats.battles} / ${d.stats.kills}</dd><dt>Damage dealt / taken</dt><dd>${d.stats.damageDealt} / ${d.stats.damageTaken}</dd><dt>Armour absorbed</dt><dd>${d.stats.damageBlocked}</dd><dt>Healing given / received</dt><dd>${d.stats.healingDone} / ${d.stats.healingReceived}</dd><dt>Spins / missed turns</dt><dd>${d.stats.spins} / ${d.stats.turnsMissed}</dd><dt>Experience earned</dt><dd>${d.stats.xpEarned}</dd></dl></div>`;
       }
       async function processDeaths() {
         while (state.pendingDeaths.length) {
           const d = state.pendingDeaths[0],
             h = state.party.find((h) => h.id === d.id);
+          const stone = state.artefacts.find((a) => a.key === "revive");
+          if (stone && h && !d.reviveDeclined) {
+            showSpotlight(
+              "A light inside the stone",
+              `${d.name} is slipping away.`,
+              `<div class="stage-art">${icon("artefact")}</div><div class="stage-result">Consume your Revive Stone to bring ${escapeHTML(d.name)} back with <b>${Math.ceil(h.maxHp * 0.75)} / ${h.maxHp} HP</b>?<br><small>The stone will be lost. Their story can continue.</small></div>`,
+              "revive",
+            );
+            const choice = await eventChoice([
+              { id: "revive-use", label: "Use the Revive Stone", value: true },
+              { id: "revive-decline", label: "Let them rest", value: false },
+            ]);
+            closeSpotlight();
+            if (choice === "true") {
+              state.artefacts = state.artefacts.filter(
+                (a) => a.id !== stone.id,
+              );
+              if (state.equippedArtefact === stone.id)
+                state.equippedArtefact = null;
+              h.dead = false;
+              h.hp = Math.ceil(h.maxHp * 0.75);
+              h.stun = 0;
+              h.stats.revives = (h.stats.revives || 0) + 1;
+              delete h.death;
+              const cell = state.map[d.tile];
+              if (cell)
+                cell.corpses = cell.corpses.filter((c) =>
+                  d.corpseId
+                    ? c.id !== d.corpseId
+                    : c.name !== h.name || c.enemy,
+                );
+              state.pendingDeaths.shift();
+              render();
+              burst($("#portrait-" + state.party.indexOf(h)), "heal", 36);
+              floatAt(
+                $("#portrait-" + state.party.indexOf(h)),
+                "Returned · " + h.hp + " HP",
+                true,
+              );
+              log(
+                `${h.name} returns at ${h.hp} HP. The Revive Stone crumbles to dust.`,
+              );
+              save();
+              continue;
+            }
+            d.reviveDeclined = true;
+            if (h.death) h.death.reviveDeclined = true;
+            save();
+          }
           showSpotlight(
             "A name falls silent",
             `${d.name} is dead. Forever.`,
-            `<div class="stage-art death-portrait">${portraitArt(d.job, { hp: 0, maxHp: d.maxHp })}</div><div class="stage-result">${escapeHTML(d.cause)}<br><small>Floor ${d.depth}. No spell, well, or item can bring them back.</small></div>`,
+            `<div class="stage-art death-portrait">${portraitArt(d.job, { hp: 0, maxHp: d.maxHp })}</div><div class="stage-result">${escapeHTML(d.cause)}<br><small>Floor ${d.depth}. The party will carry their memory.</small></div>`,
             "death",
           );
           await eventChoice([
@@ -8517,10 +8862,160 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           tick();
         });
       }
+      function trapPower(depth) {
+        return 0.5 + depth * 0.15;
+      }
+      function prepareRecruit(h) {
+        const party = state.party.filter(alive);
+        h.level = Math.max(
+          1,
+          Math.round(
+            party.reduce((sum, p) => sum + p.level, 0) /
+              Math.max(1, party.length),
+          ),
+        );
+        h.maxHp += (h.level - 1) * 6;
+        h.hp = h.maxHp;
+        const earned = (h.level - 1) * 4,
+          budget = Math.floor(earned / 2);
+        let remaining = budget;
+        // Prefer the class's specialty; fill blanks when the remaining budget is small.
+        const specialty = h.job === "healer" ? "heal" : "attack";
+        while (remaining > 0) {
+          const upgrades = h.reels
+            .flatMap((r, reel) => r.map((f, index) => ({ f, reel, index })))
+            .filter(
+              ({ f }) =>
+                f.type === specialty && faceUpgradeCost(f) <= remaining,
+            )
+            .sort((a, b) => a.f.tier - b.f.tier);
+          const candidate =
+            upgrades[0]?.f || h.reels.flat().find((f) => f.type === "blank");
+          if (!candidate) break;
+          const cost = faceUpgradeCost(candidate);
+          if (!cost || cost > remaining) break;
+          if (candidate.type === "blank") {
+            candidate.type = specialty;
+            candidate.tier = 1;
+          } else candidate.tier++;
+          remaining -= cost;
+        }
+        h.inheritedUpgradeSpent = budget - remaining;
+        h.points = 3 + earned - h.inheritedUpgradeSpent;
+        h.last = h.reels.map((r) => ({ type: r[0].type, tier: r[0].tier }));
+        return h;
+      }
+      function runSummaryMarkup() {
+        const fallen = [...state.graveyard];
+        for (const h of state.party)
+          if (h.death && !fallen.some((d) => d.id === h.id))
+            fallen.push(h.death);
+        const totals = [
+          ...fallen.map((d) => d.stats),
+          ...state.party.filter(alive).map((h) => h.stats),
+        ].reduce((out, stats) => {
+          for (const key of Object.keys(emptyStats()))
+            out[key] += stats?.[key] || 0;
+          return out;
+        }, emptyStats());
+        return `<div class="run-summary"><p>Floor <b>${state.depth} / 10</b> · <b>${state.battlesWon}</b> battles won · <b>${state.gold}</b> gold<br>${state.steps} steps · ${elapsedText(Date.now() - (state.startedAt || Date.now()))}<br>${totals.damageDealt} damage dealt · ${totals.healingDone} healing · ${totals.kills} enemies slain</p><h3>The names we remember · ${fallen.length}</h3><p class="roster-prompt">Scroll through their stories ↓</p><div class="fallen-roster" tabindex="0" role="region" aria-label="All fallen party members">${fallen.map((d) => `<article class="fallen-entry"><div class="fallen-portrait">${corpseArt(d.job)}</div>${memorialMarkup(d)}</article>`).join("") || "<p>No names have been lost.</p>"}</div></div>`;
+      }
+      function combatNumber(el, value, type) {
+        if (!el || (type === "heal" && !value)) return;
+        const rect = el.getBoundingClientRect(),
+          node = document.createElement("div");
+        node.className =
+          "combat-number " + (type === "heal" ? "healing" : "damage");
+        node.dataset.target = el.id;
+        node.dataset.value = value;
+        node.textContent = (type === "heal" ? "+" : "−") + value;
+        node.style.left = rect.left + rect.width / 2 + "px";
+        node.style.top = rect.top + rect.height * 0.3 + "px";
+        document.body.append(node);
+        setTimeout(() => node.remove(), 1450);
+      }
+      function popTitle(el) {
+        animate(
+          el,
+          [
+            { opacity: 0, transform: "translateY(12px) scale(.9)" },
+            {
+              opacity: 1,
+              transform: "translateY(-2px) scale(1.045)",
+              offset: 0.68,
+            },
+            { opacity: 1, transform: "translateY(0) scale(1)" },
+          ],
+          { duration: 520, juice: true },
+        );
+      }
+      const MARGIN_HINTS = [
+        "A beacon lights all eight neighbouring rooms.",
+        "Leave a well untouched and return when you need it.",
+        "Three alike on the reels can turn a battle.",
+        "Mark a new destination at any time while walking.",
+        "A cold draft may lead you to the stairs.",
+        "Keep a Revive Stone close. Some stories deserve another page.",
+      ];
+      let marginHintIndex = 0,
+        hintChanging = false;
+      async function cycleMarginHint() {
+        if (
+          hintChanging ||
+          busy ||
+          state.enemy ||
+          state.over ||
+          !$("#spotlight").hidden ||
+          !$("#overlay").hidden
+        )
+          return false;
+        hintChanging = true;
+        const el = $("#field-note"),
+          doodle = $("#margin-doodle"),
+          currentState = state;
+        const fade = async (from, to, duration) => {
+          await Promise.all(
+            [el, doodle].map((node) =>
+              animate(node, [{ opacity: from }, { opacity: to }], {
+                duration,
+                juice: true,
+              })?.finished.catch(() => {}),
+            ),
+          );
+        };
+        await fade(1, 0, 350);
+        if (
+          state !== currentState ||
+          busy ||
+          state.enemy ||
+          state.over ||
+          !$("#spotlight").hidden ||
+          !$("#overlay").hidden
+        ) {
+          hintChanging = false;
+          return false;
+        }
+        marginHintIndex = (marginHintIndex + 1) % MARGIN_HINTS.length;
+        el.innerHTML =
+          icon("beacon") + " " + escapeHTML(MARGIN_HINTS[marginHintIndex]);
+        $("#margin-doodle").innerHTML =
+          icon("beacon") +
+          "<span>" +
+          escapeHTML(MARGIN_HINTS[marginHintIndex]) +
+          "</span>";
+        await fade(0, 1, 500);
+        hintChanging = false;
+        return true;
+      }
       function recruitChance(
         partySize = state?.party.filter(alive).length || 1,
+        missedFloors = state?.recruitPity || 0,
       ) {
-        return partySize === 1 ? 0.28 : 0.24;
+        return Math.min(
+          partySize === 1 ? 0.85 : 0.7,
+          (partySize === 1 ? 0.35 : 0.28) +
+            missedFloors * (partySize === 1 ? 0.07 : 0.05),
+        );
       }
       function mapDistances(map, start = pos(1, 7)) {
         const distances = new Map([[start, 0]]),
@@ -8605,7 +9100,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         let symbols = await runMachine("fountain", [faces, faces, faces]),
           bonus = calculate(symbols).heal,
           details = state.party.filter(alive).map((h) => ({
-            label: h.name + " · potential healing",
+            label: h.name + " · healing offered",
             icon: "heal",
             value: Math.ceil(h.maxHp * 0.3) + bonus,
           })),
@@ -8624,7 +9119,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                 `<div class="well-heal-total" data-before="${details[i].value}" data-after="${d.value}">${escapeHTML(d.label)}: ${multiplier > 1 ? `<b>${details[i].value}</b> × ${multiplier} = ` : ""}<strong>${d.value} HP</strong></div>`,
             )
             .join("") +
-          "<small>Potential total before the maximum-health cap.</small>";
+          "<small>The water mends wounds up to full health.</small>";
         state.lastWellRoll = {
           symbols,
           bonus,
@@ -8944,6 +9439,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       setInterval(() => {
         if (fxRandom() < 0.3) idleChatter();
       }, 24000);
+      setInterval(() => {
+        if (fxRandom() < 0.65) cycleMarginHint();
+      }, 19000);
       $("#legend").innerHTML = [
         ["eye", "Unknown"],
         ["skull", "Enemy"],

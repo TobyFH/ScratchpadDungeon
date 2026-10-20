@@ -60,7 +60,7 @@ async function autoEvents(page) {
   await page.evaluate(() => {
     window.autoEventObserver = new MutationObserver(() => {
       let button = document.querySelector(
-        "#stage-confirm:not(:disabled),#recruit-accept:not(:disabled),#recruit-decline:not(:disabled),#well-use:not(:disabled),#ruin-examine:not(:disabled),#death-confirm:not(:disabled),#burial-confirm:not(:disabled)",
+        "#stage-confirm:not(:disabled),#recruit-accept:not(:disabled),#recruit-decline:not(:disabled),#well-use:not(:disabled),#ruin-examine:not(:disabled),#death-confirm:not(:disabled),#burial-confirm:not(:disabled),#revive-use:not(:disabled)",
       );
       if (button && !document.querySelector("#spotlight").hidden)
         button.click();
@@ -181,6 +181,15 @@ test("notebook and three-hero machines fit desktop, tablet, and small phones", a
 test("treasure waits for explicit confirmation even in Skip and Escape does not dismiss it", async (t) => {
   let p = await game(t);
   await fast(p);
+  await p.evaluate(() => {
+    Object.assign(state.map[79], {
+      wall: false,
+      event: "treasure",
+      terrain: "floor",
+    });
+    Math.random = () => 0.5;
+    render();
+  });
   await p.locator('[data-tile="79"]').click();
   await p.waitForSelector("#stage-confirm");
   assert.equal(await p.evaluate(() => busy), true);
@@ -235,7 +244,7 @@ test("a matching pair does not crit; three identical symbols roll an automatic, 
   await p.locator('[data-spin="0"]').click();
   await finish(p);
   assert.equal(await p.evaluate(() => state.lastCritical), undefined);
-  assert.equal(await p.evaluate(() => state.enemy.hp), 994);
+  assert.equal(await p.evaluate(() => state.enemy.hp), 996);
   await faces(p, [
     ["attack", 1],
     ["attack", 1],
@@ -254,7 +263,7 @@ test("a matching pair does not crit; three identical symbols roll an automatic, 
   assert.equal(await p.locator("#spotlight").isVisible(), false);
   assert.equal(
     await p.evaluate(() => state.enemy.hp),
-    info.hp - Math.ceil(9 * info.m),
+    info.hp - Math.ceil(6 * info.m),
   );
 });
 
@@ -297,7 +306,7 @@ test("slot handles have stationary, generous hitboxes while their artwork swings
   assert.ok(Math.abs(before.y - during.y) < 1);
   await lever.click();
   await finish(p);
-  assert.equal(await p.evaluate(() => state.enemy.hp), 991);
+  assert.equal(await p.evaluate(() => state.enemy.hp), 994);
   assert.equal(await p.evaluate(() => state.enemy.countdown), 19);
 });
 
@@ -405,14 +414,14 @@ test("well can be declined and revisited; the rolled heal affects only living he
   });
   await p.locator("#well-use").click();
   await p.waitForSelector("#stage-confirm");
-  assert.equal(await p.evaluate(() => state.lastWellRoll.bonus), 9);
+  assert.equal(await p.evaluate(() => state.lastWellRoll.bonus), 6);
   await p.locator("#stage-confirm").click();
   await p.waitForFunction(
     () => document.querySelectorAll(".healing-glyph").length >= 8,
   );
   assert.deepEqual(
     await p.evaluate(() => state.party.map((h) => h.hp)),
-    [24, 20],
+    [21, 17],
   );
   await finish(p);
   await p.evaluate(() => (Math.random = window.savedRandom));
@@ -423,7 +432,7 @@ test("well can be declined and revisited; the rolled heal affects only living he
   assert.equal(await p.evaluate(() => state.map[79].event), null);
 });
 
-test("floor-one enemies attack every two actions and scale to faster multi-strikes", async (t) => {
+test("floor-one enemies attack every three actions and scale gradually to faster clocks", async (t) => {
   let p = await game(t);
   let scaling = await p.evaluate(() => {
     let old = Math.random;
@@ -440,13 +449,13 @@ test("floor-one enemies attack every two actions and scale to faster multi-strik
       hp: a.hp,
       dmg: a.damage,
       speed: b.frequency < a.frequency,
-      strikes: b.strikes > a.strikes,
+      strikes: b.strikes >= a.strikes && b.strikes <= 2,
       health: b.hp > a.hp,
     };
   });
-  assert.equal(scaling.start, 2);
-  assert.ok(scaling.hp > 30);
-  assert.ok(scaling.dmg >= 6);
+  assert.equal(scaling.start, 3);
+  assert.equal(scaling.hp, 21);
+  assert.equal(scaling.dmg, 2);
   assert.ok(scaling.speed && scaling.strikes && scaling.health);
 });
 
@@ -548,7 +557,7 @@ test("loot is mostly gold, rare items and rarer artefacts; coin particles scale 
     };
   });
   assert.ok(chances.items < 0.025);
-  assert.ok(chances.artefact <= 0.004);
+  assert.equal(chances.artefact, 0.018);
   await startEval(
     p,
     "(async()=>{let old=Math.random;Math.random=()=>0;try{await treasureRoll()}finally{Math.random=old}})()",
@@ -594,7 +603,7 @@ test("rare adventurers preview class, art and dialogue; decline, accept, and the
   assert.equal(await p.evaluate(() => state.party.length), 3);
 });
 
-test("shops retain their 30% floor chance and solo adventurers have the increased 28% chance", async (t) => {
+test("shops retain their 30% floor chance and solo adventurers have the increased 35% chance", async (t) => {
   let p = await game(t);
   let rates = await p.evaluate(() => {
     let shops = 0,
@@ -608,7 +617,7 @@ test("shops retain their 30% floor chance and solo adventurers have the increase
   });
   assert.ok(rates.shops > 0.25 && rates.shops < 0.35, JSON.stringify(rates));
   assert.ok(
-    rates.recruits > 0.23 && rates.recruits < 0.33,
+    rates.recruits > 0.3 && rates.recruits < 0.4,
     JSON.stringify(rates),
   );
 });
@@ -661,7 +670,8 @@ test("artefacts can roll from battle spoils, occupy one slot, and scale with flo
   await fast(p);
   await p.evaluate(async () => {
     let old = Math.random;
-    Math.random = () => 0.999;
+    let draws = 0;
+    Math.random = () => (draws++ < 3 ? 0.999 : 0);
     try {
       await treasureRoll("battle");
     } finally {
@@ -706,7 +716,7 @@ test("only equipped artefact affects rolls; guard artefacts generate fresh battl
   await faces(p);
   await p.locator('[data-spin="0"]').click();
   await finish(p);
-  assert.equal(await p.evaluate(() => state.enemy.hp), 986);
+  assert.equal(await p.evaluate(() => state.enemy.hp), 989);
   assert.equal(await p.evaluate(() => passive("heal")), 0);
   await p.evaluate(() => {
     equipArtefact("c");
@@ -875,7 +885,7 @@ test("targeted healing and battle items affect survivors without awarding spin X
   ]);
   await p.locator('[data-spin="0"]').click();
   await finish(p);
-  assert.equal(await p.evaluate(() => state.party[1].hp), 10);
+  assert.equal(await p.evaluate(() => state.party[1].hp), 7);
   assert.equal(await p.evaluate(() => state.party[0].hp), 10);
   assert.equal(await p.evaluate(() => state.party[0].xp), 0);
   await p.locator("#ward").click();
@@ -993,7 +1003,7 @@ test("save restores speed and artefacts and migrates the earlier Sunseed-era not
     localStorage.setItem("scratchpad-dungeon-v2", JSON.stringify(old));
   });
   await p.reload();
-  assert.equal(await p.evaluate(() => state.version), 6);
+  assert.equal(await p.evaluate(() => state.version), 7);
   assert.equal(await p.evaluate(() => state.speed), "skip");
   assert.equal(await p.evaluate(() => state.relic), undefined);
   assert.doesNotMatch(await p.locator("body").textContent(), /Sunseed/);
@@ -1020,6 +1030,15 @@ test("downloaded HTML remains self-contained and playable offline with mandatory
   await offline.setContent(html);
   assert.equal(await offline.locator(".tile").count(), 99);
   await fast(offline);
+  await offline.evaluate(() => {
+    Object.assign(state.map[79], {
+      wall: false,
+      event: "treasure",
+      terrain: "floor",
+    });
+    Math.random = () => 0.5;
+    render();
+  });
   await offline.locator('[data-tile="79"]').click();
   await offline.waitForSelector("#stage-confirm");
   await offline.locator("#stage-confirm").click();
@@ -1048,7 +1067,7 @@ test("a stunned hero misses one go without rolling or changing the enemy countdo
   await p.locator('[data-spin="0"]').click();
   await finish(p);
   assert.equal(await p.evaluate(() => state.enemy.countdown), 2);
-  assert.equal(await p.evaluate(() => state.enemy.hp), 991);
+  assert.equal(await p.evaluate(() => state.enemy.hp), 994);
 });
 
 test("retargeting a long walk changes direction without shaking empty rooms", async (t) => {
@@ -1315,7 +1334,7 @@ test("enemy multi-strikes pause for death and burial, then retarget a surviving 
   await p.locator("#burial-confirm").click();
   await p.evaluate(() => window.testAction);
   assert.equal(await p.evaluate(() => state.party.length), 1);
-  assert.equal(await p.evaluate(() => state.party[0].hp), 41);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 42);
   assert.equal(
     await p.evaluate(() => state.lastEnemyRoll.heroId),
     await p.evaluate(() => state.party[0].id),
@@ -1427,7 +1446,7 @@ test("fountain triple heals crit within the same popup at instant speed and show
     await p.locator("#stage-title").textContent(),
     "The water wheel turns",
   );
-  assert.match(await p.locator("#critical-math").textContent(), /23.*2.*46/);
+  assert.match(await p.locator("#critical-math").textContent(), /20.*2.*40/);
   await p.waitForSelector("#stage-confirm");
   assert.equal(
     await p.locator("#stage-title").textContent(),
@@ -1436,7 +1455,7 @@ test("fountain triple heals crit within the same popup at instant speed and show
   assert.equal(await p.evaluate(() => state.lastWellRoll.multiplier), 2);
   await p.locator("#stage-confirm").click();
   await finish(p);
-  assert.equal(await p.evaluate(() => state.party[0].hp), 44);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 41);
   await p.evaluate(() => (Math.random = window.previousRandom));
 });
 
@@ -1469,6 +1488,8 @@ test("a lethal critical is visibly dealt before the victory popup opens", async 
   await p.waitForSelector("#critical-result strong");
   assert.equal(await p.evaluate(() => state.enemy.hp), 10);
   await p.waitForFunction(() => state.enemy?.hp === 0);
+  assert.equal(await p.locator(".fx-beam.lethal").count(), 1);
+  assert.equal(await p.locator('.combat-number[data-value="10"]').count(), 1);
   assert.equal(await p.locator("#spotlight").isVisible(), false);
   assert.equal(await p.locator("#enemy-art").isVisible(), true);
   await p.waitForSelector("#treasure-result");
@@ -1556,9 +1577,9 @@ test("all 1000 generated floors have a path to the stairs; the safety carve repa
     return seen.has(broken.findIndex((c) => c.event === "stairs"));
   });
   assert.equal(valid, true);
-  assert.equal(await p.evaluate(() => recruitChance(1)), 0.28);
-  assert.equal(await p.evaluate(() => recruitChance(2)), 0.24);
-  assert.equal(await p.evaluate(() => recruitChance(3)), 0.24);
+  assert.equal(await p.evaluate(() => recruitChance(1)), 0.35);
+  assert.equal(await p.evaluate(() => recruitChance(2)), 0.28);
+  assert.equal(await p.evaluate(() => recruitChance(3)), 0.28);
 });
 
 test("the complete notebook fits 1080p and other desktop resolutions without overlaps or page scrolling", async (t) => {
@@ -1732,6 +1753,12 @@ test("fully blocked damage puts a persistent shield overlay over the specific he
 test("rivers and stone are blocked, bridges are traversable, and marked stairs stay highlighted", async (t) => {
   const p = await game(t);
   const positions = await p.evaluate(() => {
+    do {
+      state.map = generateFloor(1);
+    } while (
+      !state.map.some((c) => c.terrain === "river") ||
+      !state.map.some((c) => c.terrain === "bridge")
+    );
     const river = state.map.findIndex((c) => c.terrain === "river"),
       bridge = state.map.findIndex((c) => c.terrain === "bridge"),
       stairs = state.map.findIndex((c) => c.event === "stairs");
@@ -1797,9 +1824,9 @@ test("a fountain critical lists uncapped before and after healing for every hero
       nodes.map((n) => [+n.dataset.before, +n.dataset.after]),
     );
   assert.deepEqual(math, [
-    [23, 46],
-    [19, 38],
-    [17, 34],
+    [20, 40],
+    [16, 32],
+    [14, 28],
   ]);
   await panelFits(
     p,
@@ -1828,7 +1855,7 @@ test("a fountain critical lists uncapped before and after healing for every hero
   );
   assert.deepEqual(
     await p.evaluate(() => state.lastWellRoll.planned.map((h) => h.value)),
-    [46, 38, 34],
+    [40, 32, 28],
   );
   await p.evaluate(() => (Math.random = window.oldRandom));
 });
@@ -1918,64 +1945,77 @@ test("retargeting to another hidden tile during erasure cancels the original enc
   assert.equal(await p.locator('[data-tile="79"].active-battle').count(), 1);
 });
 
-test("random distant stairs, connected rivers and bridges remain reachable across 1000 floors", async (t) => {
+test("1000 distinct random floors have distant reachable stairs, optional connected rivers and rare double streams", async (t) => {
   const p = await game(t);
   const r = await p.evaluate(() => {
     let locations = new Set(),
-      bridges = 0,
+      layouts = new Set(),
+      firstRooms = new Set(),
+      riverFloors = 0,
+      doubleRivers = 0,
       ruins = 0,
       strongholds = 0;
     for (let n = 0; n < 1000; n++) {
-      let map = generateFloor((n % 10) + 1),
+      const map = generateFloor((n % 10) + 1, 1, 0),
         stair = map.findIndex((c) => c.event === "stairs"),
         dist = mapDistances(map),
-        water = map
-          .map((c, i) => (["river", "bridge"].includes(c.terrain) ? i : -1))
-          .filter((i) => i >= 0),
-        wet = new Set([water[0]]),
-        q = [water[0]];
-      for (const i of q)
-        for (const j of neighbors(i))
-          if (water.includes(j) && !wet.has(j)) {
-            wet.add(j);
-            q.push(j);
-          }
+        ids = new Set(map.filter((c) => c.riverId).map((c) => c.riverId));
       if (
         !dist.has(stair) ||
         dist.get(stair) < 8 ||
-        water.length < 7 ||
-        wet.size !== water.length ||
-        map.some((c) => c.terrain === "puddle")
+        map.some((c, i) => !c.wall && !dist.has(i))
       )
-        return {
-          invalid: n,
-          distance: dist.get(stair),
-          water: water.length,
-          connected: wet.size,
-        };
-      if (map.some((c, i) => !c.wall && !dist.has(i)))
-        return { unreachable: n };
+        return { invalid: n };
+      for (const id of ids) {
+        const water = map
+            .map((c, i) => (c.riverId === id ? i : -1))
+            .filter((i) => i >= 0),
+          wet = new Set([water[0]]),
+          queue = [water[0]];
+        for (const i of queue)
+          for (const j of neighbors(i))
+            if (water.includes(j) && !wet.has(j)) {
+              wet.add(j);
+              queue.push(j);
+            }
+        if (wet.size !== water.length || water.length < 7)
+          return { invalidRiver: n };
+      }
+      riverFloors += ids.size > 0;
+      doubleRivers += ids.size > 1;
       locations.add(stair);
-      bridges += map.some((c) => c.terrain === "bridge" && !c.wall);
+      layouts.add(map.map((c) => c.event || c.terrain).join(","));
+      firstRooms.add(map[79].event || map[79].terrain);
       ruins += map.some((c) => c.event === "ruin");
       const boss = map.findIndex((c) => c.event === "stronghold");
       if (boss >= 0) {
         strongholds++;
         if (
-          neighbors(boss, true).filter((i) => map[i].wall).length < 6 ||
-          !dist.has(boss)
+          !dist.has(boss) ||
+          neighbors(boss, true).filter((i) => map[i].wall).length < 6
         )
           return { badStronghold: n };
       }
     }
-    return { locations: locations.size, bridges, ruins, strongholds };
+    return {
+      locations: locations.size,
+      layouts: layouts.size,
+      firstRooms: firstRooms.size,
+      riverFloors,
+      doubleRivers,
+      ruins,
+      strongholds,
+    };
   });
   assert.equal(r.invalid, undefined, JSON.stringify(r));
-  assert.equal(r.unreachable, undefined, JSON.stringify(r));
+  assert.equal(r.invalidRiver, undefined, JSON.stringify(r));
   assert.equal(r.badStronghold, undefined, JSON.stringify(r));
-  assert.ok(r.locations >= 12, JSON.stringify(r));
-  assert.ok(r.bridges >= 900, JSON.stringify(r));
-  assert.ok(r.ruins > 200 && r.ruins < 420, JSON.stringify(r));
+  assert.equal(r.layouts, 1000);
+  assert.ok(r.locations >= 12);
+  assert.ok(r.firstRooms >= 8);
+  assert.ok(r.riverFloors > 290 && r.riverFloors < 410, JSON.stringify(r));
+  assert.ok(r.doubleRivers > 0 && r.doubleRivers < 30, JSON.stringify(r));
+  assert.ok(r.ruins > 220 && r.ruins < 420, JSON.stringify(r));
   assert.ok(r.strongholds > 0 && r.strongholds < 60, JSON.stringify(r));
 });
 
@@ -2078,6 +2118,12 @@ test("old visited rooms fog over and can generate a wandering fight on reentry",
   await p.evaluate(blankFloor);
   await p.evaluate(() => {
     state.steps = 20;
+    state.position = pos(5, 7);
+    for (let x = 2; x <= 5; x++) {
+      state.map[pos(x, 7)].seen = true;
+      state.map[pos(x, 7)].visited = true;
+      state.map[pos(x, 7)].lastVisitedStep = 20;
+    }
     Object.assign(state.map[79], {
       visited: true,
       seen: true,
@@ -2157,7 +2203,7 @@ test("paired encounters use portrait targeting; tier III damage and critical att
   await finish(p);
   assert.deepEqual(
     await p.evaluate(() => state.enemies.map((e) => e.hp)),
-    [100, 91],
+    [100, 94],
   );
   await faces(p, [
     ["attack", 3],
@@ -2168,9 +2214,9 @@ test("paired encounters use portrait targeting; tier III damage and critical att
   await finish(p);
   assert.deepEqual(
     await p.evaluate(() => state.enemies.map((e) => e.hp)),
-    [91, 82],
+    [93, 87],
   );
-  assert.equal(await p.evaluate(() => state.party[1].hp), 13);
+  assert.equal(await p.evaluate(() => state.party[1].hp), 12);
   assert.equal(await p.evaluate(() => state.lastPlayerRoll.area), true);
   await faces(p, [
     ["attack", 1],
@@ -2182,8 +2228,8 @@ test("paired encounters use portrait targeting; tier III damage and critical att
   const m = await p.evaluate(() => state.lastPlayerRoll.multiplier);
   assert.ok(m >= 2);
   assert.deepEqual(await p.evaluate(() => state.enemies.map((e) => e.hp)), [
-    91 - 9 * m,
-    82 - 9 * m,
+    93 - 6 * m,
+    87 - 6 * m,
   ]);
   await p.evaluate(() => save());
   const selected = await p.evaluate(() => state.enemy.id);
@@ -2223,14 +2269,14 @@ test("each enemy has its own countdown and a stunned hero advances neither enemy
   ]);
   await p.locator('[data-spin="0"]').click();
   await finish(p);
-  assert.equal(await p.evaluate(() => state.party[0].hp), 41);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 42);
   assert.deepEqual(
     await p.evaluate(() => state.enemies.map((e) => e.countdown)),
     [3, 1],
   );
   await p.locator('[data-spin="0"]').click();
   await finish(p);
-  assert.equal(await p.evaluate(() => state.party[0].hp), 38);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 40);
   assert.deepEqual(
     await p.evaluate(() => state.enemies.map((e) => e.countdown)),
     [2, 4],
@@ -2295,8 +2341,8 @@ test("deep floors use new horror art and a rare stronghold boss guarantees an ar
     render();
   });
   assert.equal(await p.evaluate(() => state.enemy.elite), true);
-  assert.ok((await p.evaluate(() => state.enemy.maxHp)) > 200);
-  assert.equal(await p.evaluate(() => state.enemy.frequency), 1);
+  assert.ok((await p.evaluate(() => state.enemy.maxHp)) >= 100);
+  assert.equal(await p.evaluate(() => state.enemy.frequency), 2);
   await faces(p, [
     ["attack", 1],
     ["attack", 2],
@@ -2346,12 +2392,12 @@ test("ruins can be ignored, revisited, then roll a real balance of loot and dama
       gold: state.lastRuinRoll.gold,
       damage: state.lastRuinRoll.damage,
     })),
-    { gold: 12, damage: 5 },
+    { gold: 12, damage: 1 },
   );
   await p.locator("#stage-confirm").click();
   await finish(p);
   assert.equal(await p.evaluate(() => state.gold), 12);
-  assert.equal(await p.evaluate(() => state.party[0].hp), 39);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 43);
   assert.equal(await p.evaluate(() => state.map[79].event), null);
   await p.evaluate(() => (Math.random = window.oldRandom));
 });
@@ -2548,4 +2594,482 @@ test("pace and palette survive a new run and reload; the full UI can be reached 
   assert.equal(await p.evaluate(() => document.activeElement.id), "log");
   assert.match(await p.locator("#keyboard-bar").textContent(), /Mouse: click/);
   assert.match(await p.locator("#keyboard-bar").textContent(), /Tab/);
+});
+
+test("early full enemy criticals cannot one-shot any starter and individual enemies scale gently", async (t) => {
+  const p = await game(t);
+  const r = await p.evaluate(() => {
+    const curve = [];
+    for (let depth = 1; depth <= 10; depth++) {
+      const normal = enemyBalance(depth),
+        elite = enemyBalance(depth, { elite: true }),
+        pair = enemyBalance(depth, { pair: true });
+      const raw = calculate(
+        [0, 1, 2].map(() => ({ type: "attack", tier: 2 })),
+      ).attack;
+      curve.push({
+        depth,
+        ...normal,
+        maxCrit: Math.ceil((raw * normal.damage) / 9) * 4,
+        eliteCrit: Math.ceil((raw * elite.damage) / 9) * 4,
+        pairDamage: pair.damage,
+      });
+    }
+    return {
+      curve,
+      minHP: Math.min(
+        ...["fighter", "healer", "rogue"].map((j) => makeHero("Test", j).maxHp),
+      ),
+      trapMax: Math.ceil(6 * trapPower(1)) * 4,
+    };
+  });
+  assert.ok(r.curve[0].maxCrit < r.minHP / 2);
+  assert.ok(r.curve[3].maxCrit < r.minHP);
+  assert.ok(r.curve[3].eliteCrit < r.minHP);
+  assert.ok(r.trapMax < r.minHP);
+  for (let i = 1; i < r.curve.length; i++) {
+    assert.ok(r.curve[i].damage - r.curve[i - 1].damage <= 1);
+    assert.ok(r.curve[i].maxHp - r.curve[i - 1].maxHp <= 5);
+    assert.ok(r.curve[i].pairDamage <= r.curve[i].damage);
+  }
+  assert.ok(r.curve[9].maxCrit <= 28);
+  await fast(p);
+  await p.evaluate(() => {
+    beginEncounter();
+    state.enemy.reels = [0, 1, 2].map(() => [{ type: "attack", tier: 2 }]);
+    state.enemy.countdown = 1;
+    state.party[0].reels = [0, 1, 2].map(() => [{ type: "blank", tier: 1 }]);
+    Math.random = () => 0.999;
+    render();
+  });
+  await p.locator('[data-spin="0"]').click();
+  await finish(p);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 32);
+  assert.equal(await p.evaluate(() => state.lastEnemyRoll.damage), 12);
+});
+
+test("tier IV attacks can be bought, saved and used as area damage with clear per-target numbers", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await p.evaluate(() => {
+    const h = state.party[0];
+    h.points = 20;
+    h.reels[0][0] = { type: "attack", tier: 3, weight: 9 };
+    editor(0);
+  });
+  await p.locator('[data-upgrade="0,0,0"]').click();
+  assert.equal(await p.evaluate(() => state.party[0].points), 10);
+  assert.equal(await p.locator(".editor-slot .tier-4 svg").count(), 4);
+  await p.locator("#modal [data-close]").first().click();
+  await p.reload();
+  assert.equal(await p.evaluate(() => state.party[0].reels[0][0].tier), 4);
+  await p.evaluate(() => {
+    state.depth = 5;
+    beginEncounter(false, { count: 2 });
+    state.enemies.forEach((e) =>
+      Object.assign(e, { hp: 100, maxHp: 100, countdown: 20 }),
+    );
+    render();
+  });
+  await faces(p, [
+    ["attack", 4],
+    ["attack", 1],
+    ["heal", 1],
+  ]);
+  await p.locator('[data-spin="0"]').click();
+  await finish(p);
+  assert.deepEqual(
+    await p.evaluate(() => state.enemies.map((e) => e.hp)),
+    [87, 87],
+  );
+  assert.equal(await p.evaluate(() => state.lastPlayerRoll.actualDamage), 26);
+  assert.match(await p.locator("#result-ribbon").textContent(), /−26/);
+  assert.ok((await p.locator('.combat-number[data-value="13"]').count()) >= 2);
+});
+
+test("known optional wells, shops and ruins do not interrupt travel but a selected well still offers a choice", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await p.evaluate(blankFloor);
+  await p.evaluate(() => {
+    for (let x = 1; x <= 8; x++) state.map[pos(x, 7)].seen = true;
+    ["well", "shop", "ruin"].forEach((event, k) =>
+      Object.assign(state.map[pos(k + 2, 7)], { event, feature: event }),
+    );
+    render();
+  });
+  await p.locator('[data-tile="85"]').click();
+  await finish(p);
+  assert.equal(await p.evaluate(() => state.position), 85);
+  assert.equal(await p.locator("#spotlight").isVisible(), false);
+  assert.equal(await p.locator("#overlay").isVisible(), false);
+  assert.deepEqual(
+    await p.evaluate(() => [79, 80, 81].map((i) => state.map[i].event)),
+    ["well", "shop", "ruin"],
+  );
+  await p.locator('[data-tile="79"]').click();
+  await p.waitForSelector("#well-decline");
+  await p.locator("#well-decline").click();
+  await finish(p);
+  assert.equal(await p.evaluate(() => state.map[79].event), "well");
+});
+
+test("recruit pity increases after missed floors, resets on meeting even if declined, and recruits inherit half-spent level points", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  const rates = await p.evaluate(() => [
+    recruitChance(1, 0),
+    recruitChance(2, 0),
+    recruitChance(1, 3),
+    recruitChance(2, 3),
+  ]);
+  assert.ok(rates[0] > rates[1] && rates[2] > rates[0] && rates[3] > rates[1]);
+  await p.evaluate(() => {
+    state.exitFound = state.exitReached = true;
+    stairs();
+  });
+  await p.locator("#descend").click();
+  assert.equal(await p.evaluate(() => state.recruitPity), 1);
+  await startEval(p, "recruitEncounter()");
+  await p.waitForSelector("#recruit-decline");
+  await p.locator("#recruit-decline").click();
+  await p.evaluate(() => window.testAction);
+  assert.equal(await p.evaluate(() => state.recruitPity), 0);
+  assert.equal(await p.evaluate(() => state.recruitFoundThisFloor), true);
+  await p.evaluate(() => {
+    state.party[0].level = 5;
+    state.party.push(makeHero("Mira", "healer"));
+    state.party[1].level = 3;
+    state.exitFound = state.exitReached = true;
+    stairs();
+  });
+  await p.locator("#descend").click();
+  assert.equal(await p.evaluate(() => state.recruitPity), 0);
+  await startEval(p, "recruitEncounter()");
+  await p.waitForSelector("#recruit-accept");
+  assert.match(await p.locator(".stage-result").textContent(), /level 4/);
+  await p.locator("#recruit-accept").click();
+  await p.evaluate(() => window.testAction);
+  assert.deepEqual(
+    await p.evaluate(() => {
+      const h = state.party[2];
+      return {
+        level: h.level,
+        spent: h.inheritedUpgradeSpent,
+        points: h.points,
+        hp: h.hp,
+        expected:
+          (h.job === "fighter" ? 44 : h.job === "healer" ? 32 : 26) + 18,
+      };
+    }),
+    await p.evaluate(() => ({
+      level: 4,
+      spent: 6,
+      points: 9,
+      hp: state.party[2].maxHp,
+      expected: state.party[2].maxHp,
+    })),
+  );
+  assert.equal(
+    await p.evaluate(() =>
+      ["fighter", "healer", "rogue"].every((job) =>
+        Array.from({ length: 12 }, (_, i) => i + 1).every((level) => {
+          state.party[0].level = level;
+          state.party = state.party.slice(0, 1);
+          const h = prepareRecruit(makeHero("Test", job));
+          return (
+            h.level === level &&
+            h.inheritedUpgradeSpent === (level - 1) * 2 &&
+            h.points === 3 + (level - 1) * 2
+          );
+        }),
+      ),
+    ),
+    true,
+  );
+});
+
+test("a very rare treasure mimic introduces a chest with teeth and awards loot only after victory", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await p.evaluate(() => {
+    Object.assign(state.map[79], {
+      event: "treasure",
+      wall: false,
+      terrain: "floor",
+    });
+    Math.random = () => 0;
+    render();
+  });
+  await p.locator('[data-tile="79"]').click();
+  await p.waitForSelector("#stage-confirm");
+  assert.equal(
+    await p.locator("#stage-title").textContent(),
+    "That chest has teeth!",
+  );
+  assert.equal(await p.evaluate(() => state.enemy.mimic), true);
+  assert.equal(await p.evaluate(() => state.gold), 0);
+  await p.locator("#stage-confirm").click();
+  await finish(p);
+  await autoEvents(p);
+  await faces(p, [
+    ["attack", 4],
+    ["attack", 4],
+    ["attack", 4],
+  ]);
+  await p.locator('[data-spin="0"]').click();
+  await finish(p);
+  assert.equal(await p.evaluate(() => state.battlesWon), 1);
+  assert.equal(await p.evaluate(() => state.lastLoot.source), "battle");
+  assert.ok((await p.evaluate(() => state.gold)) > 0);
+});
+
+test("Revive Stone is held without an equipment slot, revives at 75%, consumes once and persists across reload", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await p.evaluate(() => {
+    state.artefacts = [
+      { id: "stone", name: "Revive Stone", key: "revive", power: 1, depth: 1 },
+      { id: "fang", name: "Fang", key: "attack", power: 2, depth: 1 },
+    ];
+    state.equippedArtefact = "fang";
+    damageHero(0, 999, "The hungry chest");
+  });
+  await p.reload();
+  await p.waitForSelector("#revive-use");
+  assert.match(await p.locator("#stage-card").textContent(), /33 \/ 44 HP/);
+  await p.locator("#revive-use").click();
+  await finish(p);
+  assert.deepEqual(
+    await p.evaluate(() => ({
+      hp: state.party[0].hp,
+      dead: state.party[0].dead,
+      death: !!state.party[0].death,
+      graveyard: state.graveyard.length,
+      pending: state.pendingDeaths.length,
+      stone: state.artefacts.some((a) => a.key === "revive"),
+      equipped: state.equippedArtefact,
+      corpse: state.map[state.position].corpses.length,
+    })),
+    {
+      hp: 33,
+      dead: false,
+      death: false,
+      graveyard: 0,
+      pending: 0,
+      stone: false,
+      equipped: "fang",
+      corpse: 0,
+    },
+  );
+  await p.reload();
+  assert.equal(await p.evaluate(() => state.party[0].hp), 33);
+  await startEval(
+    p,
+    "(async()=>{damageHero(0,999,'A second fall');await processDeaths();checkDefeat();render()})()",
+  );
+  await p.waitForSelector("#death-confirm");
+  assert.equal(await p.locator("#revive-use").count(), 0);
+  await p.locator("#death-confirm").click();
+  await p.evaluate(() => window.testAction);
+  assert.equal(await p.evaluate(() => state.over), true);
+});
+
+test("declining a Revive Stone keeps it and respects permanent death and the survivor's burial", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await p.evaluate(() => {
+    state.party.push(makeHero("Mira", "healer"));
+    state.artefacts = [
+      { id: "stone", name: "Revive Stone", key: "revive", power: 1, depth: 1 },
+    ];
+    render();
+  });
+  await startEval(
+    p,
+    "(async()=>{damageHero(1,999,'The hollow cantor');await processDeaths()})()",
+  );
+  await p.waitForSelector("#revive-decline");
+  await p.locator("#revive-decline").click();
+  await p.waitForSelector("#death-confirm");
+  await p.locator("#death-confirm").click();
+  await p.waitForSelector("#burial-confirm");
+  await p.locator("#burial-confirm").click();
+  await p.evaluate(() => window.testAction);
+  assert.equal(await p.evaluate(() => state.party.length), 1);
+  assert.equal(await p.evaluate(() => state.artefacts[0].key), "revive");
+  assert.equal(await p.evaluate(() => state.graveyard[0].name), "Mira");
+});
+
+test("final death opens a scrollable complete memorial roster instead of a burial, on desktop and mobile", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await p.evaluate(() => {
+    for (let i = 0; i < 5; i++) {
+      const h = makeHero("Fallen " + i, "rogue");
+      state.party.push(h);
+      damageHero(state.party.length - 1, 999, "Lost in the archive");
+      state.graveyard.push(h.death);
+      state.pendingDeaths = [];
+      state.party.pop();
+    }
+    state.party[0].stats.kills = 8;
+    state.party[0].stats.damageDealt = 123;
+    render();
+  });
+  await startEval(
+    p,
+    "(async()=>{damageHero(0,999,'The last torch');await processDeaths();checkDefeat();render()})()",
+  );
+  await p.waitForSelector("#death-confirm");
+  await p.locator("#death-confirm").click();
+  await p.evaluate(() => window.testAction);
+  assert.equal(await p.locator("#burial-confirm").count(), 0);
+  assert.equal(await p.locator(".fallen-entry").count(), 6);
+  assert.match(
+    await p.locator(".run-summary").textContent(),
+    /123 damage dealt/,
+  );
+  for (const viewport of [
+    { width: 1920, height: 1080 },
+    { width: 390, height: 844 },
+  ]) {
+    await p.setViewportSize(viewport);
+    await p.waitForTimeout(150);
+    const r = await p.locator(".fallen-roster").evaluate((el) => {
+      el.scrollTop = el.scrollHeight;
+      const b = el.getBoundingClientRect();
+      return {
+        scroll: el.scrollTop,
+        overflow: getComputedStyle(el).overflowY,
+        bottom: b.bottom,
+        top: b.top,
+        height: innerHeight,
+      };
+    });
+    assert.equal(r.overflow, "auto");
+    assert.ok(r.scroll > 200);
+    assert.ok(r.top > 0 && r.bottom < r.height);
+    assert.equal(await p.locator(".fallen-entry:last-child").isVisible(), true);
+    assert.match(
+      await p.locator(".fallen-entry:last-child").textContent(),
+      /The last torch/,
+    );
+    await p.screenshot({
+      path: path.join(root, `test-results/final-roster-${viewport.width}.png`),
+    });
+  }
+});
+
+test("fog darkens the existing drawing, never covers barriers or nearby rooms, and refreshes neighbours", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await p.evaluate(blankFloor);
+  const r = await p.evaluate(() => {
+    state.steps = 30;
+    state.map.forEach((c) =>
+      Object.assign(c, {
+        seen: true,
+        visited: true,
+        lastVisitedStep: 0,
+        event: null,
+        feature: null,
+      }),
+    );
+    state.position = pos(1, 7);
+    Object.assign(state.map[pos(7, 2)], { wall: true, terrain: "river" });
+    Object.assign(state.map[pos(8, 2)], { wall: true, terrain: "stone" });
+    const distant = pos(8, 3);
+    state.map[distant].terrain = "floor";
+    render();
+    refreshStaleMap();
+    return {
+      distant,
+      near2: isStale(state.map[pos(3, 5)]),
+      river: isStale(state.map[pos(7, 2)]),
+      wall: isStale(state.map[pos(8, 2)]),
+      nearClock: state.map[pos(2, 6)].lastVisitedStep,
+      farClock: state.map[distant].lastVisitedStep,
+      pending: state.map[distant].wanderPending,
+    };
+  });
+  assert.deepEqual(
+    {
+      near2: r.near2,
+      river: r.river,
+      wall: r.wall,
+      nearClock: r.nearClock,
+      farClock: r.farClock,
+      pending: r.pending,
+    },
+    {
+      near2: false,
+      river: false,
+      wall: false,
+      nearClock: 30,
+      farClock: 0,
+      pending: true,
+    },
+  );
+  assert.equal(
+    await p.locator(`[data-tile="${r.distant}"].stale-fog > svg`).count(),
+    1,
+  );
+  await p.screenshot({ path: path.join(root, "test-results/fog-drawing.png") });
+});
+
+test("relic odds average roughly four finds in ten fully explored floors; beacon hints fade between useful messages", async (t) => {
+  const p = await game(t);
+  const result = await p.evaluate(() => {
+    let found = 0;
+    for (let run = 0; run < 1000; run++)
+      for (let floor = 0; floor < 10; floor++)
+        for (let loot = 0; loot < 7; loot++)
+          for (let reel = 0; reel < 3; reel++)
+            found += weightedPick(lootFaces()).type === "artefact";
+    return found / 1000;
+  });
+  assert.ok(result > 3.4 && result < 4.2, String(result));
+  const before = await p.locator("#field-note").textContent();
+  await p.evaluate(() => cycleMarginHint());
+  assert.notEqual(await p.locator("#field-note").textContent(), before);
+  assert.equal(await p.locator("#field-note > svg").count(), 1);
+});
+
+test("older saved fights migrate to the gentler curve without losing wounds or edited reels", async (t) => {
+  const p = await game(t);
+  await p.evaluate(() => {
+    state.depth = 4;
+    beginEncounter();
+    state.enemy.maxHp = 74;
+    state.enemy.hp = 37;
+    state.enemy.damage = 10;
+    state.enemy.strikes = 3;
+    state.enemy.frequency = 1;
+    state.party[0].reels[0][0] = { type: "attack", tier: 3, weight: 9 };
+    const old = { ...state, version: 6 };
+    localStorage.setItem("scratchpad-dungeon-v6", JSON.stringify(old));
+    localStorage.removeItem(SAVE_KEY);
+  });
+  await p.reload();
+  assert.deepEqual(
+    await p.evaluate(() => ({
+      version: state.version,
+      hp: state.enemy.hp,
+      max: state.enemy.maxHp,
+      damage: state.enemy.damage,
+      strikes: state.enemy.strikes,
+      frequency: state.enemy.frequency,
+      face: state.party[0].reels[0][0].tier,
+    })),
+    {
+      version: 7,
+      hp: 18,
+      max: 36,
+      damage: 3,
+      strikes: 1,
+      frequency: 2,
+      face: 3,
+    },
+  );
 });
