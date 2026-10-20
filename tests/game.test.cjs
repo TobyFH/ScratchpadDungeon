@@ -60,7 +60,7 @@ async function autoEvents(page) {
   await page.evaluate(() => {
     window.autoEventObserver = new MutationObserver(() => {
       let button = document.querySelector(
-        "#stage-confirm:not(:disabled),#recruit-accept:not(:disabled),#recruit-decline:not(:disabled),#well-use:not(:disabled),#death-confirm:not(:disabled),#burial-confirm:not(:disabled)",
+        "#stage-confirm:not(:disabled),#recruit-accept:not(:disabled),#recruit-decline:not(:disabled),#well-use:not(:disabled),#ruin-examine:not(:disabled),#death-confirm:not(:disabled),#burial-confirm:not(:disabled)",
       );
       if (button && !document.querySelector("#spotlight").hidden)
         button.click();
@@ -784,6 +784,7 @@ test("stairs permit only optional descent and floor ten requires its final guard
   await fast(p);
   await p.evaluate(() => {
     state.exitFound = true;
+    state.exitReached = true;
     render();
     stairs();
   });
@@ -797,6 +798,7 @@ test("stairs permit only optional descent and floor ten requires its final guard
     state.depth = 10;
     state.map = generateFloor(10);
     state.exitFound = true;
+    state.exitReached = true;
     render();
     stairs();
   });
@@ -865,7 +867,7 @@ test("targeted healing and battle items affect survivors without awarding spin X
     state.bombs = 1;
     render();
   });
-  await p.locator('[data-target="1"]').click();
+  await p.locator('#targets [data-target="1"]').click();
   await faces(p, [
     ["heal", 1],
     ["heal", 2],
@@ -921,6 +923,7 @@ test("full ten-floor expedition can progress through fog, loot confirmations, ba
     let s = await p.evaluate(() => ({
       enemy: !!state.enemy,
       exit: state.exitFound,
+      reached: state.exitReached,
       depth: state.depth,
       boss: state.floorBossDefeated,
       modal: modalKind,
@@ -936,14 +939,14 @@ test("full ten-floor expedition can progress through fog, loot confirmations, ba
         await p
           .getByRole("button", { name: "Keep exploring", exact: true })
           .click();
-    } else if (s.exit && (s.depth < 10 || s.boss)) {
+    } else if (s.exit && s.reached && (s.depth < 10 || s.boss)) {
       await p.locator("#exit-found").click();
     } else
       await p.evaluate(async () => {
         let goal =
-            state.depth === 10 && state.exitFound && !state.floorBossDefeated
-              ? pos(9, 2)
-              : pos(9, 1),
+            state.depth === 10 && state.exitReached && !state.floorBossDefeated
+              ? state.map.findIndex((c) => c.event === "guardian")
+              : state.map.findIndex((c) => c.event === "stairs"),
           route = shortestPath(goal, true);
         if (!route?.length) throw Error("No campaign route");
         await move(route[0]);
@@ -990,7 +993,7 @@ test("save restores speed and artefacts and migrates the earlier Sunseed-era not
     localStorage.setItem("scratchpad-dungeon-v2", JSON.stringify(old));
   });
   await p.reload();
-  assert.equal(await p.evaluate(() => state.version), 5);
+  assert.equal(await p.evaluate(() => state.version), 6);
   assert.equal(await p.evaluate(() => state.speed), "skip");
   assert.equal(await p.evaluate(() => state.relic), undefined);
   assert.doesNotMatch(await p.locator("body").textContent(), /Sunseed/);
@@ -1550,7 +1553,7 @@ test("all 1000 generated floors have a path to the stairs; the safety carve repa
           seen.add(j);
           q.push(j);
         }
-    return seen.has(pos(9, 1));
+    return seen.has(broken.findIndex((c) => c.event === "stairs"));
   });
   assert.equal(valid, true);
   assert.equal(await p.evaluate(() => recruitChance(1)), 0.28);
@@ -1563,7 +1566,7 @@ test("the complete notebook fits 1080p and other desktop resolutions without ove
   await p.evaluate(() => {
     state.party.push(makeHero("Mira", "healer"), makeHero("Wren", "rogue"));
     beginEncounter();
-    markSeen(pos(9, 1));
+    markSeen(state.map.findIndex((c) => c.event === "stairs"));
     render();
   });
   for (const [width, height] of [
@@ -1726,46 +1729,39 @@ test("fully blocked damage puts a persistent shield overlay over the specific he
   assert.equal(await p.evaluate(() => state.party[0].hp), 40);
 });
 
-test("water and stone are visibly blocking and discovered unused stairs remain highlighted", async (t) => {
-  let p = await game(t);
-  let positions = await p.evaluate(() => {
-    const river = state.map.findIndex((c) => c.terrain === "river");
+test("rivers and stone are blocked, bridges are traversable, and marked stairs stay highlighted", async (t) => {
+  const p = await game(t);
+  const positions = await p.evaluate(() => {
+    const river = state.map.findIndex((c) => c.terrain === "river"),
+      bridge = state.map.findIndex((c) => c.terrain === "bridge"),
+      stairs = state.map.findIndex((c) => c.event === "stairs");
     state.map[river].seen = true;
-    state.map[pos(2, 6)].wall = true;
-    state.map[pos(2, 6)].terrain = "puddle";
-    state.map[pos(2, 6)].event = null;
-    state.map[pos(2, 6)].feature = null;
-    state.map[pos(2, 6)].seen = true;
-    markSeen(pos(9, 1));
+    state.map[bridge].seen = true;
+    markSeen(stairs);
     render();
-    return { river, puddle: pos(2, 6), stairs: pos(9, 1) };
+    return { river, bridge, stairs };
   });
-  for (let i of [positions.river, positions.puddle, 0]) {
-    assert.equal(await p.locator(`[data-tile="${i}"]`).isDisabled(), true);
-    assert.equal(await p.evaluate((i) => shortestPath(i), i), null);
-    assert.equal(
-      await p.locator(`[data-tile="${i}"] .terrain-stop`).count(),
-      1,
-    );
-  }
-  assert.equal(await p.locator(".water-block").count(), 2);
-  assert.match(
+  assert.equal(
+    await p.locator(`[data-tile="${positions.river}"]`).isDisabled(),
+    true,
+  );
+  assert.equal(
+    await p.locator(`[data-tile="${positions.bridge}"]`).isEnabled(),
+    true,
+  );
+  assert.equal(
     await p
-      .locator(`[data-tile="${positions.river}"]`)
-      .getAttribute("aria-label"),
-    /river \/ impassable/,
+      .locator(`[data-tile="${positions.bridge}"].bridge-tile svg`)
+      .count(),
+    1,
   );
   assert.equal(
     await p.locator(`[data-tile="${positions.stairs}"].active-stairs`).count(),
     1,
   );
   assert.equal(await p.locator("#exit-found").isVisible(), true);
-  await p.evaluate(() => {
-    stairs();
-  });
-  await p.locator("#modal [data-close]").first().click();
-  assert.equal(await p.locator(".active-stairs").count(), 1);
-  assert.equal(await p.evaluate(() => state.depth), 1);
+  assert.equal(await p.locator("#exit-found").isDisabled(), true);
+  assert.equal(await p.evaluate(() => state.exitPromptPending), false);
 });
 
 test("a fountain critical lists uncapped before and after healing for every hero even near full health", async (t) => {
@@ -1805,6 +1801,13 @@ test("a fountain critical lists uncapped before and after healing for every hero
     [19, 38],
     [17, 34],
   ]);
+  await panelFits(
+    p,
+    "#stage-card",
+    ".stage-content",
+    ".scene-layout",
+    "#stage-title",
+  );
   await p.screenshot({
     path: path.join(root, "test-results/fountain-mobile.png"),
   });
@@ -1913,4 +1916,636 @@ test("retargeting to another hidden tile during erasure cancels the original enc
   assert.equal(await p.evaluate(() => state.map[79].event), "enemy");
   assert.equal(await p.evaluate(() => state.enemy), null);
   assert.equal(await p.locator('[data-tile="79"].active-battle').count(), 1);
+});
+
+test("random distant stairs, connected rivers and bridges remain reachable across 1000 floors", async (t) => {
+  const p = await game(t);
+  const r = await p.evaluate(() => {
+    let locations = new Set(),
+      bridges = 0,
+      ruins = 0,
+      strongholds = 0;
+    for (let n = 0; n < 1000; n++) {
+      let map = generateFloor((n % 10) + 1),
+        stair = map.findIndex((c) => c.event === "stairs"),
+        dist = mapDistances(map),
+        water = map
+          .map((c, i) => (["river", "bridge"].includes(c.terrain) ? i : -1))
+          .filter((i) => i >= 0),
+        wet = new Set([water[0]]),
+        q = [water[0]];
+      for (const i of q)
+        for (const j of neighbors(i))
+          if (water.includes(j) && !wet.has(j)) {
+            wet.add(j);
+            q.push(j);
+          }
+      if (
+        !dist.has(stair) ||
+        dist.get(stair) < 8 ||
+        water.length < 7 ||
+        wet.size !== water.length ||
+        map.some((c) => c.terrain === "puddle")
+      )
+        return {
+          invalid: n,
+          distance: dist.get(stair),
+          water: water.length,
+          connected: wet.size,
+        };
+      if (map.some((c, i) => !c.wall && !dist.has(i)))
+        return { unreachable: n };
+      locations.add(stair);
+      bridges += map.some((c) => c.terrain === "bridge" && !c.wall);
+      ruins += map.some((c) => c.event === "ruin");
+      const boss = map.findIndex((c) => c.event === "stronghold");
+      if (boss >= 0) {
+        strongholds++;
+        if (
+          neighbors(boss, true).filter((i) => map[i].wall).length < 6 ||
+          !dist.has(boss)
+        )
+          return { badStronghold: n };
+      }
+    }
+    return { locations: locations.size, bridges, ruins, strongholds };
+  });
+  assert.equal(r.invalid, undefined, JSON.stringify(r));
+  assert.equal(r.unreachable, undefined, JSON.stringify(r));
+  assert.equal(r.badStronghold, undefined, JSON.stringify(r));
+  assert.ok(r.locations >= 12, JSON.stringify(r));
+  assert.ok(r.bridges >= 900, JSON.stringify(r));
+  assert.ok(r.ruins > 200 && r.ruins < 420, JSON.stringify(r));
+  assert.ok(r.strongholds > 0 && r.strongholds < 60, JSON.stringify(r));
+});
+
+test("route repair uses a bridge when a connected river separates spawn from the stairs", async (t) => {
+  const p = await game(t);
+  assert.equal(
+    await p.evaluate(() => {
+      const map = generateFloor(1);
+      map.forEach((c, i) =>
+        Object.assign(c, {
+          wall: i % W === 0 || i % W === 10 || i < W || i >= W * 8,
+          terrain: "floor",
+          event: null,
+          feature: null,
+        }),
+      );
+      for (let y = 1; y <= 7; y++)
+        Object.assign(map[pos(5, y)], { wall: true, terrain: "river" });
+      map[pos(9, 1)].event = "stairs";
+      ensureStairsPath(map);
+      return (
+        mapDistances(map).has(pos(9, 1)) &&
+        map.some((c) => c.terrain === "bridge" && !c.wall) &&
+        map.filter((c) => ["river", "bridge"].includes(c.terrain)).length === 7
+      );
+    }),
+    true,
+  );
+});
+
+test("a shop map animates discovery without prompting descent; first arrival prompts once", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await p.evaluate(() => {
+    state.gold = 1000;
+  });
+  await startEval(p, "shopEncounter({shop:{reveal:1}})");
+  await p.locator('[data-buy="reveal"]').click();
+  assert.equal(await p.evaluate(() => state.exitFound), true);
+  assert.equal(await p.evaluate(() => state.exitReached), false);
+  assert.equal(await p.evaluate(() => state.exitPromptPending), false);
+  assert.equal(
+    await p.locator("#modal-title").textContent(),
+    "The stairway is marked!",
+  );
+  assert.equal(await p.locator("#exit-found").isDisabled(), true);
+  assert.ok(await p.evaluate(() => liveAnimations.size > 0));
+  await p.locator("#modal [data-close]").first().click();
+  await p.evaluate(() => window.testAction);
+  assert.equal(await p.evaluate(() => modalKind), "");
+  const stairs = await p.evaluate(() => {
+    const stair = state.map.findIndex((c) => c.event === "stairs");
+    state.map.forEach((c, i) => {
+      if (i !== stair) c.event = null;
+      c.seen = true;
+    });
+    render();
+    return stair;
+  });
+  await p.locator(`[data-tile="${stairs}"]`).click();
+  await p.waitForSelector("#descend");
+  assert.equal(await p.evaluate(() => state.exitReached), true);
+  assert.equal(await p.evaluate(() => state.depth), 1);
+  await p.getByRole("button", { name: "Keep exploring", exact: true }).click();
+  await p.evaluate(async () => {
+    const next = neighbors(state.position).find((i) => !state.map[i].wall);
+    const original = state.position;
+    await move(next);
+    await move(original);
+  });
+  assert.equal(await p.evaluate(() => modalKind), "");
+  assert.equal(await p.locator("#exit-found").isEnabled(), true);
+});
+
+test("visible active traps receive the same safe-detour treatment as battles", async (t) => {
+  const p = await game(t);
+  await p.evaluate(blankFloor);
+  const r = await p.evaluate(() => {
+    for (let x = 1; x <= 4; x++) {
+      state.map[pos(x, 7)].seen = true;
+      state.map[pos(x, 6)].seen = true;
+    }
+    state.map[79].event = "trap";
+    const safe = shortestPath(pos(4, 7));
+    for (let x = 1; x <= 4; x++) state.map[pos(x, 6)].seen = false;
+    return {
+      safe,
+      forced: shortestPath(pos(4, 7)),
+      explicit: shortestPath(79),
+    };
+  });
+  assert.equal(r.safe.includes(79), false);
+  assert.equal(r.forced.includes(79), true);
+  assert.deepEqual(r.explicit, [79]);
+});
+
+test("old visited rooms fog over and can generate a wandering fight on reentry", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await p.evaluate(blankFloor);
+  await p.evaluate(() => {
+    state.steps = 20;
+    Object.assign(state.map[79], {
+      visited: true,
+      seen: true,
+      lastVisitedStep: 0,
+      event: null,
+    });
+    render();
+    window.oldRandom = Math.random;
+    Math.random = () => 0;
+  });
+  assert.equal(await p.locator('[data-tile="79"].stale-fog').count(), 1);
+  await p.locator('[data-tile="79"]').click();
+  await p.waitForSelector("#stage-confirm");
+  assert.equal(await p.evaluate(() => battleEnemies().length), 1);
+  assert.equal(await p.evaluate(() => state.map[79].event), null);
+  assert.equal(
+    await p.evaluate(() =>
+      state.logs.some((l) => l.includes("wandering enemy")),
+    ),
+    true,
+  );
+  await p.locator("#stage-confirm").click();
+  await finish(p);
+  assert.equal(await p.evaluate(() => isStale(state.map[79])), false);
+  await p.evaluate(() => (Math.random = window.oldRandom));
+});
+
+test("an unactivated well in old fog resolves its own event and never rolls a wandering ambush", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await p.evaluate(blankFloor);
+  await p.evaluate(() => {
+    state.steps = 20;
+    Object.assign(state.map[79], {
+      visited: true,
+      seen: true,
+      lastVisitedStep: 0,
+      event: "well",
+      feature: "well",
+    });
+    render();
+    window.oldRandom = Math.random;
+    Math.random = () => 0;
+  });
+  await p.locator('[data-tile="79"]').click();
+  await p.waitForSelector("#well-use");
+  assert.equal(await p.evaluate(() => state.enemy), null);
+  await p.locator("#well-decline").click();
+  await finish(p);
+  assert.equal(await p.evaluate(() => state.map[79].event), "well");
+  await p.evaluate(() => (Math.random = window.oldRandom));
+});
+
+test("paired encounters use portrait targeting; tier III damage and critical attacks hit both enemies", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await p.evaluate(() => {
+    state.depth = 6;
+    state.party.push(makeHero("Mira", "healer"));
+    state.party[1].hp = 10;
+    beginEncounter(false, { count: 2 });
+    state.enemies.forEach((e) =>
+      Object.assign(e, { hp: 100, maxHp: 100, countdown: 20, block: 0 }),
+    );
+    render();
+  });
+  await p.locator("#enemy-art-2").click();
+  await p.locator("#portrait-1").click();
+  assert.equal(await p.evaluate(() => state.enemy === state.enemies[1]), true);
+  assert.equal(await p.evaluate(() => state.target), 1);
+  await faces(p, [
+    ["attack", 1],
+    ["attack", 2],
+    ["blank", 1],
+  ]);
+  await p.locator('[data-spin="0"]').click();
+  await finish(p);
+  assert.deepEqual(
+    await p.evaluate(() => state.enemies.map((e) => e.hp)),
+    [100, 91],
+  );
+  await faces(p, [
+    ["attack", 3],
+    ["heal", 1],
+    ["blank", 1],
+  ]);
+  await p.locator('[data-spin="0"]').click();
+  await finish(p);
+  assert.deepEqual(
+    await p.evaluate(() => state.enemies.map((e) => e.hp)),
+    [91, 82],
+  );
+  assert.equal(await p.evaluate(() => state.party[1].hp), 13);
+  assert.equal(await p.evaluate(() => state.lastPlayerRoll.area), true);
+  await faces(p, [
+    ["attack", 1],
+    ["attack", 1],
+    ["attack", 1],
+  ]);
+  await p.locator('[data-spin="0"]').click();
+  await finish(p);
+  const m = await p.evaluate(() => state.lastPlayerRoll.multiplier);
+  assert.ok(m >= 2);
+  assert.deepEqual(await p.evaluate(() => state.enemies.map((e) => e.hp)), [
+    91 - 9 * m,
+    82 - 9 * m,
+  ]);
+  await p.evaluate(() => save());
+  const selected = await p.evaluate(() => state.enemy.id);
+  await p.reload();
+  assert.equal(await p.evaluate(() => state.enemies.length), 2);
+  assert.equal(await p.evaluate(() => state.enemy.id), selected);
+  assert.equal(
+    await p.evaluate(() => state.enemies.includes(state.enemy)),
+    true,
+  );
+});
+
+test("each enemy has its own countdown and a stunned hero advances neither enemy clock", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await p.evaluate(() => {
+    beginEncounter(false, { count: 2 });
+    state.enemies.forEach((e, k) =>
+      Object.assign(e, {
+        countdown: k + 1,
+        frequency: k + 3,
+        strikes: 1,
+        damage: 9,
+        reels: [
+          [{ type: "attack", tier: 1 }],
+          [{ type: "blank", tier: 1 }],
+          [{ type: "blank", tier: 1 }],
+        ],
+      }),
+    );
+    render();
+  });
+  await faces(p, [
+    ["blank", 1],
+    ["blank", 1],
+    ["blank", 1],
+  ]);
+  await p.locator('[data-spin="0"]').click();
+  await finish(p);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 41);
+  assert.deepEqual(
+    await p.evaluate(() => state.enemies.map((e) => e.countdown)),
+    [3, 1],
+  );
+  await p.locator('[data-spin="0"]').click();
+  await finish(p);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 38);
+  assert.deepEqual(
+    await p.evaluate(() => state.enemies.map((e) => e.countdown)),
+    [2, 4],
+  );
+  await p.evaluate(() => {
+    state.party[0].stun = 1;
+    render();
+  });
+  await p.locator('[data-spin="0"]').click();
+  await finish(p);
+  assert.deepEqual(
+    await p.evaluate(() => state.enemies.map((e) => e.countdown)),
+    [2, 4],
+  );
+});
+
+test("killing one of two enemies gives no victory reward; defeating both awards encounter EXP once", async (t) => {
+  const p = await game(t, { auto: true });
+  await fast(p);
+  await p.evaluate(() => {
+    state.depth = 6;
+    beginEncounter(false, { count: 2 });
+    state.enemies.forEach((e, k) =>
+      Object.assign(e, { hp: k ? 100 : 1, maxHp: 100, countdown: 20 }),
+    );
+    render();
+  });
+  await faces(p, [
+    ["attack", 1],
+    ["attack", 2],
+    ["blank", 1],
+  ]);
+  await p.locator('[data-spin="0"]').click();
+  await finish(p);
+  assert.equal(await p.evaluate(() => state.party[0].xp), 0);
+  assert.equal(await p.evaluate(() => state.battlesWon), 0);
+  assert.equal(await p.evaluate(() => livingEnemies().length), 1);
+  assert.equal(await p.locator("#enemy-art .corpse-art").count(), 1);
+  await p.evaluate(() => {
+    state.enemy.hp = 1;
+  });
+  await p.locator('[data-spin="0"]').click();
+  await finish(p);
+  assert.equal(await p.evaluate(() => state.battlesWon), 1);
+  assert.equal(await p.evaluate(() => state.party[0].stats.xpEarned), 40);
+  assert.equal(await p.evaluate(() => state.party[0].stats.kills), 2);
+  assert.equal(await p.evaluate(() => state.enemy), null);
+});
+
+test("deep floors use new horror art and a rare stronghold boss guarantees an artefact and rich loot", async (t) => {
+  const p = await game(t, { auto: true });
+  await fast(p);
+  await p.evaluate(() => {
+    state.depth = 8;
+    beginEncounter(false, { count: 1 });
+    render();
+  });
+  assert.equal(await p.locator("#enemy-art .horror-art").count(), 1);
+  await p.evaluate(() => {
+    beginEncounter(false, { elite: true });
+    state.enemy.hp = 1;
+    render();
+  });
+  assert.equal(await p.evaluate(() => state.enemy.elite), true);
+  assert.ok((await p.evaluate(() => state.enemy.maxHp)) > 200);
+  assert.equal(await p.evaluate(() => state.enemy.frequency), 1);
+  await faces(p, [
+    ["attack", 1],
+    ["attack", 2],
+    ["blank", 1],
+  ]);
+  await p.locator('[data-spin="0"]').click();
+  await finish(p);
+  assert.equal(await p.evaluate(() => state.lastLoot.source), "stronghold");
+  assert.ok(
+    await p.evaluate(() =>
+      state.lastLoot.found.every(
+        (id) => state.artefacts.find((a) => a.id === id).depth === state.depth,
+      ),
+    ),
+  );
+  assert.ok((await p.evaluate(() => state.lastLoot.found.length)) >= 1);
+  assert.ok((await p.evaluate(() => state.lastLoot.baseGold)) >= 30);
+  assert.equal(await p.evaluate(() => state.floorBossDefeated), false);
+});
+
+test("ruins can be ignored, revisited, then roll a real balance of loot and damage", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await p.evaluate(() => {
+    state.depth = 3;
+    state.map[79].event = "ruin";
+    state.map[79].feature = "ruin";
+    render();
+  });
+  await p.locator('[data-tile="79"]').click();
+  await p.waitForSelector("#ruin-leave");
+  await p.locator("#ruin-leave").click();
+  await finish(p);
+  assert.equal(await p.evaluate(() => state.map[79].event), "ruin");
+  await p.locator('[data-tile="79"]').click();
+  await p.waitForSelector("#ruin-examine");
+  await p.evaluate(() => {
+    window.oldRandom = Math.random;
+    let k = 0;
+    Math.random = () => [0, 0.6, 0.95][k++ % 3];
+  });
+  await p.locator("#ruin-examine").click();
+  await p.waitForSelector("#stage-confirm");
+  assert.equal(await p.evaluate(() => state.party[0].hp), 44);
+  assert.deepEqual(
+    await p.evaluate(() => ({
+      gold: state.lastRuinRoll.gold,
+      damage: state.lastRuinRoll.damage,
+    })),
+    { gold: 12, damage: 5 },
+  );
+  await p.locator("#stage-confirm").click();
+  await finish(p);
+  assert.equal(await p.evaluate(() => state.gold), 12);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 39);
+  assert.equal(await p.evaluate(() => state.map[79].event), null);
+  await p.evaluate(() => (Math.random = window.oldRandom));
+});
+
+test("ruin triple matches keep their critical inside the original ruin panel", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await startEval(p, "ruinEncounter(state.map[state.position])");
+  await p.waitForSelector("#ruin-examine");
+  await p.evaluate(() => {
+    window.oldRandom = Math.random;
+    Math.random = () => 0;
+  });
+  await p.locator("#ruin-examine").click();
+  await p.waitForSelector("#critical-result strong");
+  assert.equal(
+    await p.locator("#stage-title").textContent(),
+    "The ruin’s mechanism",
+  );
+  assert.equal(await p.locator("#event-critical #critical-math").count(), 1);
+  await p.waitForSelector("#stage-confirm");
+  assert.equal(await p.evaluate(() => state.lastRuinRoll.gold), 48);
+  await p.locator("#stage-confirm").click();
+  await p.evaluate(() => window.testAction);
+  await p.evaluate(() => (Math.random = window.oldRandom));
+});
+
+async function panelFits(page, selector, holder, flow, title) {
+  await page.waitForTimeout(120);
+  const metrics = await page.evaluate(
+    ({ selector, holder, flow, title }) => {
+      const box = (s) => document.querySelector(s).getBoundingClientRect(),
+        p = box(selector),
+        h = box(holder),
+        f = box(flow),
+        t = box(title),
+        range = document.createRange();
+      range.selectNodeContents(document.querySelector(title));
+      const text = range.getBoundingClientRect();
+      return {
+        panel: [p.top, p.bottom],
+        viewport: innerHeight,
+        contained:
+          f.top >= h.top - 3 &&
+          f.bottom <= h.bottom + 3 &&
+          f.left >= h.left - 3 &&
+          f.right <= h.right + 3,
+        title:
+          text.top >= t.top - 3 &&
+          text.bottom <= t.bottom + 3 &&
+          text.left >= t.left - 3 &&
+          text.right <= t.right + 3,
+        scroll: [...document.querySelectorAll("*")]
+          .filter(
+            (el) =>
+              el.getClientRects().length &&
+              ["auto", "scroll"].includes(getComputedStyle(el).overflowY) &&
+              el.scrollHeight > el.clientHeight + 1,
+          )
+          .map((el) => el.id || el.className),
+      };
+    },
+    { selector, holder, flow, title },
+  );
+  assert.equal(metrics.contained, true, JSON.stringify(metrics));
+  assert.equal(metrics.title, true, JSON.stringify(metrics));
+  assert.ok(
+    metrics.panel[0] >= 0 && metrics.panel[1] <= metrics.viewport,
+    JSON.stringify(metrics),
+  );
+  assert.ok(
+    metrics.scroll.every((id) => id === "log"),
+    JSON.stringify(metrics),
+  );
+}
+
+test("long adventurer titles and all eighteen editor faces fit without clipping or scrolling on desktop and mobile", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  for (const [width, height] of [
+    [1920, 1080],
+    [1366, 768],
+    [390, 844],
+  ]) {
+    await p.setViewportSize({ width, height });
+    await startEval(p, "recruitEncounter()");
+    await p.waitForSelector("#recruit-decline");
+    await panelFits(
+      p,
+      "#stage-card",
+      ".stage-content",
+      ".scene-layout",
+      "#stage-title",
+    );
+    await p.locator("#recruit-decline").click();
+    await p.evaluate(() => window.testAction);
+    await p.evaluate(() => editor(0));
+    assert.equal(await p.locator("[data-cycle]").count(), 18);
+    await panelFits(p, "#modal", ".modal-body", ".modal-flow", "#modal-title");
+    await p.locator("#modal [data-close]").first().click();
+  }
+});
+
+test("only the field log scrolls; health bars and capitalised class names communicate injury", async (t) => {
+  const p = await game(t, { width: 1920 });
+  await p.setViewportSize({ width: 1920, height: 1080 });
+  await p.evaluate(() => {
+    state.party.push(makeHero("Mira", "healer"), makeHero("Wren", "rogue"));
+    state.logs = Array.from(
+      { length: 60 },
+      (_, i) => "An expedition note " + i,
+    );
+    render();
+  });
+  assert.deepEqual(await p.locator(".hero-name small").allTextContents(), [
+    "Tank · Lv.1",
+    "Healer · Lv.1",
+    "Rogue · Lv.1",
+  ]);
+  assert.equal(await p.locator("#combat-title").textContent(), "Your Party");
+  for (const [hp, tone] of [
+    [44, "green"],
+    [22, "yellow"],
+    [15, "red"],
+    [5, "critical"],
+  ]) {
+    await p.evaluate((hp) => {
+      state.party[0].hp = hp;
+      syncHero(0);
+    }, hp);
+    assert.equal(await p.locator(`#hero-0 .hp-bar.${tone}`).count(), 1);
+  }
+  assert.notEqual(
+    await p
+      .locator("#hero-0 .hp-bar")
+      .evaluate((el) => getComputedStyle(el).animationName),
+    "none",
+  );
+  const scroll = await p.evaluate(() =>
+    [...document.querySelectorAll("*")]
+      .filter(
+        (el) =>
+          el.getClientRects().length &&
+          ["auto", "scroll"].includes(getComputedStyle(el).overflowY) &&
+          el.scrollHeight > el.clientHeight + 1,
+      )
+      .map((el) => el.id || el.className),
+  );
+  assert.deepEqual(scroll, ["log"]);
+});
+
+test("pace and palette survive a new run and reload; the full UI can be reached by keyboard", async (t) => {
+  const p = await game(t);
+  await p.locator("#animation-speed").selectOption("5");
+  await p.locator("#palette").selectOption("warm");
+  await p.evaluate(() => newRun("rogue"));
+  assert.equal(await p.evaluate(() => state.speed), "5");
+  assert.equal(await p.evaluate(() => state.palette), "warm");
+  await p.reload();
+  assert.equal(await p.locator("#animation-speed").inputValue(), "5");
+  assert.equal(await p.locator("#palette").inputValue(), "warm");
+  await p.evaluate(() => {
+    state.party.push(makeHero("Mira", "healer"));
+    beginEncounter(false, { count: 2 });
+    state.enemies.forEach((e) => (e.countdown = 20));
+    render();
+    document.activeElement.blur();
+  });
+  await p.keyboard.press("Shift+2");
+  assert.equal(await p.evaluate(() => state.target), 1);
+  await p.keyboard.press("]");
+  assert.equal(await p.evaluate(() => state.enemy === state.enemies[1]), true);
+  await p.keyboard.press("t");
+  assert.equal(await p.evaluate(() => state.speed), "skip");
+  await p.keyboard.press("c");
+  assert.equal(await p.evaluate(() => state.palette), "default");
+  await faces(
+    p,
+    [
+      ["attack", 1],
+      ["heal", 1],
+      ["blank", 1],
+    ],
+    1,
+  );
+  await p.keyboard.press("2");
+  await finish(p);
+  assert.equal(await p.evaluate(() => state.lastPlayerRoll.actor), 1);
+  await p.keyboard.press("f");
+  await p.waitForSelector("#modal-title");
+  await panelFits(p, "#modal", ".modal-body", ".modal-flow", "#modal-title");
+  await p.keyboard.press("Escape");
+  await p.keyboard.press("m");
+  assert.equal(await p.evaluate(() => document.activeElement.id), "log");
+  assert.match(await p.locator("#keyboard-bar").textContent(), /Mouse: click/);
+  assert.match(await p.locator("#keyboard-bar").textContent(), /Tab/);
 });
