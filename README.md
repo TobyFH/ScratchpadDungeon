@@ -1,171 +1,118 @@
 # Scratchpad Dungeon
 
-A hand-drawn notebook dungeon crawler in **one self-contained `index.html`**. The handwriting font, SVG illustrations, mechanical reels, speech, and particles are embedded. No runtime dependencies or network requests are needed.
+A hand-drawn notebook dungeon crawler in **one self-contained `index.html`**. Its handwriting font, illustrations, reels and effects are embedded. The game needs no network connection or runtime dependencies.
 
 ## Play
 
-Download `index.html` and open it in a modern browser. If your device restricts local HTML, serve the folder:
+Download `index.html` and open it in a modern browser, or serve this folder:
 
 ```sh
 python3 -m http.server 8000
 ```
 
-Open `http://localhost:8000`. **Save HTML** downloads another complete offline game file, not an export of your current run. Progress saves in local browser storage when available; saves belong to that browser and origin. Earlier saves are migrated without discarding the party or its edited reels; existing enemies are rescaled to the new curve while retaining their proportion of missing health. Older consumables migrate into the satchel and each old reel gains one class seal without losing edited faces. Choose **New run** to begin with the new class loadouts and zero starting items.
+Open `http://localhost:8000`. **Save HTML** downloads a complete offline copy of the game. Progress stays in this browser's local storage; the HTML download does not export a saved expedition. Older saves preserve edited faces and migrate to one middle-reel class seal. Surplus inventory types wait for explicit keep, use or discard decisions.
 
-The complete notebook automatically scales to fit a **1920×1080** desktop, with no page scrolling. It also fits other desktop resolutions, including 1366×768 and 2560×1440. On tablets and phones, pages use a stacked document layout. The **Battle & field notes** log and the final run’s **fallen-companion roster** have their own scrolling areas; event panels, full reel editors, shops, guides, and memorials fit their available space without clipped text or expanding sections.
+The notebook opens with a choice of **Tank, Healer, Rogue or Mage**. A new expedition turns to fresh pages. Start with one hero and no items; keep at most three heroes. Every staircase has an elite guardian. Defeat it to descend when you choose. **Defeating the tenth guardian wins immediately**, with a celebration and a scrollable record of every survivor, fallen companion and retired adventurer.
 
-## The only way is down
+## Explore
 
-Choose Alden, a tank, or Wren, a fragile damage-focused rogue, and start with **zero consumables**. Discover and voluntarily descend through ten floors. On floor ten, defeat **The Last Redaction**, then choose the final descent to win. There is no early retirement or return-home victory.
+Click a reachable pencil-covered tile to erase it and walk into its discovery. Click a distant revealed tile to follow a shortest route across known ground. Routes avoid untouched fights and traps when possible. Click another valid destination while walking or erasing to redirect the party. Known wells, shops and ruins are ignored when merely passing through. Once its guardian is defeated, a staircase also permits uninterrupted passage; selecting it opens the descent menu again.
 
-Graphite hides rooms and interior walls. Hover for a tile's known type. Click to erase a reachable unknown destination, reveal its sketch, then walk into its event. Long routes use **already uncovered** tiles and go around revealed, untriggered fights and traps whenever a safe route exists. Click a new destination during travel or erasing to reroute; valid hidden destinations work too. Longer trips get a modest walking-speed boost. Unknown tiles cannot be shortcuts. Passing through known wells, shops, ruins, or stairs leaves the route uninterrupted; select one as your destination to open its event. Dark brick walls and blue underground rivers stop movement. Every floor randomises its walls and discovery positions, including the rooms nearest camp. About 65% of floors are dry, 34% have one connected river, and 1.2% have two separate rivers. Traversable wooden bridges cross the streams. Ponds and puddles are no longer generated. Stair positions are random and their shortest valid route is always at least eight moves from spawn. Generation verifies connectivity and can add bridge crossings to repair a blocked route. Active events have an exclamation mark; untouched wells glow green, and discovered stairs keep a golden border and downward marker. Quiet rooms without encounters never shake the notebook. Arrow keys / WASD move a step. Empty rooms have little stone, grass, mushroom, or crack drawings too.
+Walls and connected underground rivers block movement. Wooden bridges cross rivers. Every floor randomises its layout and events. Stairs are reachable and at least eight steps from camp; generation can carve a route and bridge a river when necessary. Most floors have no river; a second river is very rare. Connected cave rooms reveal together without activating their contents.
 
-Occasionally, a resolved room hints at a neighbouring tile: scratching for an enemy, a glimmer for treasure, trickling water, voices, or a cold draft. A small marker and hover description remain on the pencil-covered tile. Hints neither uncover the room nor activate its event. Each room gets only one chance to produce a hint.
+- **Fights:** any living hero can act repeatedly. Deeper floors increasingly contain two enemies with independent attack clocks. Rare elite variants retain their species and gain an Ironbound, Frenzied or Venomous modifier, with an animated aura. Five additional species appear in successive floor pairs: Candle Gnawer, Blind Bellkeeper, Thorn Widow, Gutter Oracle and Page Eater.
+- **Treasure:** roll gold, occasional supplies or equipment, personal points and rare artefacts. A rare chest is a mimic. Items pulse in the reward panel before claiming; coin showers scale with the gold awarded.
+- **Traps:** a warning and illustrated spikes, arrows or boulder precede a danger check. Early damage is restrained. Confirm the outcome before it resolves.
+- **Wells:** use one now or leave it active for later. Each hero receives 30% maximum HP plus a healing roll; criticals multiply the complete offered amount. Portrait effects show actual healing.
+- **Beacons:** reveal adjacent cells in staggered waves. Sometimes another one to five cells in the next ring are lit. Stone blocks sight, including closed diagonal corners; rivers do not. Revealed events remain untriggered.
+- **Wanderers:** preview a companion's class, level, health and introduction before accepting. Discovery odds rise after missed floors, with a small solo and early-floor bonus. Newcomers match the rounded average party level and arrive with some level-earned points spent on upgrades. With a full party, accepting opens a replacement choice. Companions who leave alive remain in the final records.
+- **Shops:** a 30% chance per floor. Buy limited supplies, a full-party heal or a map marking the stairs. Buying a map never opens a descent prompt.
+- **Ruins and strongholds:** optional mechanisms balance trap damage against loot. Rare walled strongholds hold a dangerous champion with rich spoils and a guaranteed stronger artefact.
+- **Travel discoveries:** rare rockfalls roll a danger check; a forgotten traveller may have a satchel worth searching. Such discoveries can occasionally hold something valuable. Quiet movement itself never shakes the book.
 
-A revealed staircase stays highlighted, but its descent control unlocks only after the party **reaches it once**. Selecting it as the movement destination opens the stairs menu on every visit, including clicking the current stair tile. Passing over it on the way to another goal never stops movement or opens a menu. Once reached, the persistent stairs button works from anywhere on the floor. Buying a shop map only marks the stairs. Nothing descends automatically.
+Old passages can hide an ambush after **one minute of exploration time** away from the party's immediate neighbourhood. Battles, popups, menus and hidden browser tabs pause that clock. There is **no visible fog overlay**. Entering an aged, resolved tile has a 12% encounter chance. Ambushes arrive in a smoke poof with a banner; victory clears adjacent ambush age without revealing or activating anything.
 
-**Cave rooms** are small connected groups of four to six non-combat tiles. Revealing any member uncovers the entire room with a pulse of torchlight; treasure, wells and other contents remain untriggered. Floors attempt zero / one / two / three rooms with probabilities 30% / 45% / 20% / 5%, averaging one room. Layout constraints may reduce that count. Rooms never contain initially generated enemies, traps, strongholds or guardians, and their chests cannot be mimics.
+From floor three, revealing enough walkable tiles can awaken **The Unwritten** far from the party. It advances slowly when the player moves, aims to intercept, favours revealed paths and can disappear into an unexplored tile. Its mark is visible only on revealed ground. Contact starts a fight.
 
-**Fog** can form only on previously revealed, walkable tiles, including rooms seen by a beacon or cave reveal. It forms **one minute after the party was last within one tile**, including diagonals. Returning before it forms resets that timer. Once formed, the opaque drifting overlay remains even when approached, until the party steps onto it. Walls, rivers and unknown tiles never fog. Fog timers and formed fog persist in saves; they use elapsed time, not movement counts.
+## Reels and combat
 
-Long routes can cross fog normally. Entering a fogged empty or already activated room has a **12% ambush chance**. Untouched events resolve normally. Ambush entrances have a large smoke poof and SURPRISE / AMBUSH banner. Winning one scatters smoke on the map and removes fog from the eight adjacent tiles. It neither reveals unknown tiles nor activates, consumes or changes any event. Cleared tiles restart their normal timer and cannot cause another fog ambush until they fog again.
+Heroes have six ordinary weighted faces on each outer reel and seven faces on the middle reel, including its **single class seal**. Each reel starts with a permanent EMPTY face. Empty faces have no effect and never crit. Personal points can inscribe over them for **3 points**. Other tier prices are 1 / 4 / 9 / 16 points; tier IV is available for blade and magic attacks. Edits preserve face weights, which the editor displays.
 
-## Encounters and discoveries
+| Class  | Style                                                  | Middle-reel ability                                                                 |
+| ------ | ------------------------------------------------------ | ----------------------------------------------------------------------------------- |
+| Tank   | 44 HP; damage and shared protection; very rare healing | **Rage:** lasting damage and a little protection, shown with a fist and a red pulse |
+| Healer | 32 HP; strongly favours healing                        | **Sanctuary:** heal all allies and raise team block                                 |
+| Rogue  | 26 HP; damage and poison, little protection            | **Flurry:** roll three extra attacks and deliver three separate quick hits          |
+| Mage   | 28 HP; magic, poison and stimulants                    | **Nova:** magic against every enemy                                                 |
 
-- **Fights:** confirm the illustrated enemy entrance before it shrinks into the combat column. Any living hero may act repeatedly, in any order. Starting at floor five, normal encounters have a **12% chance of two enemies**, with separate countdowns, health, armour and reels. Successful encounters award EXP, personal points, and loot only after every enemy is defeated.
-- **Treasure:** reels mostly award gold. Consumables and personal points are uncommon; artefacts are rare. A treasure chest has a **2.5% chance** of being a mimic: confirm its entrance, then fight the hungry chest for battle spoils instead. Take time to inspect the result, then click to pocket it. Large coin bursts and a sustained shower pour off the popup; particle counts scale with the reward and are capped for performance.
-- **Traps:** a warning and drawn spikes, arrows, or boulder precede the reels. Roll safe, danger, or temporary trap guard, then confirm the result. Early trap damage is reduced: even the worst floor-one critical deals at most 16 damage before guard. Trap guard expires after that trap; it cannot be banked for a fight.
-- **Wells:** accept or leave the fountain untouched for later. When used, each living hero receives 30% of their maximum HP plus a healing slot roll. A triple match rolls a critical multiplier on that combined amount. The result always lists potential healing, before and after the critical, without reducing those numbers to the target’s missing HP. Only applied healing is capped. Green portrait pulses, floating crosses, and health numbers show who recovered. Used wells become grey; declined wells remain bright and can be revisited, including by clicking the current tile.
-- **Beacons:** confirm to reveal exactly the eight surrounding cells, including diagonals. The reveal spreads outward in staggered waves; seeing an event does not activate it.
-- **Adventurers:** one has a **35% chance** to spawn on a floor with a solo hero, or **28%** with companions. Each floor without meeting one increases the next floor’s odds by 7 percentage points solo or 5 with companions, up to 85% / 70%. Meeting one resets this bonus, even if declined. Preview their class, portrait, level, health, and introduction. Newcomers join at the rounded average party level with the corresponding health increases. Half their level-earned points are already spent on class-appropriate reel upgrades; the rest, plus three starting points, remain theirs to spend. Explicitly accept or decline. Three heroes is the maximum; full parties can only wish the visitor safe travels.
-- **Ruins:** a floor has a **32% chance** of an optional ruin. Ignore it and return later, or examine its mechanism. Coin, spike and safe symbols determine a combined reward and damage outcome. Triple matches roll a multiplier within the ruin panel; loot and trap damage apply only after confirmation.
-- **Strongholds:** very rarely, a small walled structure houses **The Bastion Butcher**, an optional very hard boss. A gate connects its chamber to the floor. Defeating it gives doubled battle EXP, triple base gold, and a guaranteed artefact with power calculated two depth levels stronger. This does not count as defeating the final guardian.
-- **Shops:** a shop has an independent **30% spawn chance per floor**. It sells one tonic, bomb, ward, full-team heal, and stairs map, each with limited stock and prices increasing with depth. Full healing affects living heroes only. The map reveals stairs without teleporting or descending.
+Blade and magic tiers deal 2 / 4 / 7 / 11 damage per face. Healing tiers offer 2 / 4 / 6 HP. Block and stun tiers contribute 1 / 2 / 3 power. **Three identical type-and-tier symbols crit**; a middle class seal can complete two matching meaningful symbols while also casting its ability. A pair alone never crits. Critical multipliers are ×2, ×2.5, ×3 or ×4, with displayed before-and-after calculations.
 
-Events wait for a confirmation button at every speed, including Skip. Escape and fast-forward never confirm them. Combat critical popups are the exception: their results linger, shake, and close automatically. Treasure, fountain, trap, and ruin criticals use an inset multiplier reel in their original event panel; the initial roll and critical calculation remain until you confirm.
+Normal combat rolls stay on the right page. Criticals get a multiplier popup that lingers automatically; **Strike now** skips its result hold. Treasure, fountain and other event criticals stay inside their original panel and still require confirmation. Critical damage lands as the original hit followed by a separate bonus hit, each with its own beam, number and impact. Flurries likewise produce separate hits. Criticals and tier III / IV attacks hit every enemy. Click portraits to choose damage and healing targets.
 
-## Class machines and combat
+**Team block** is a shared consumable pool, depleted point for point by damage and cleared after combat. A fully absorbed hit shows a shield on its recipient. Any positive armour blocks a stun but consumes up to six armour per power. A stunned hero misses one go without advancing or resetting enemy clocks. Enemy attack frequency determines how many player actions occur between attacks; difficult enemies can make multiple separately rolled strikes.
 
-Each hero has three **seven-face reels**: six ordinary weighted entries, including a blank, and one class seal. Each starting reel contains one actual blank face with its own weight and an explicit EMPTY icon. Blanks have no effect and cannot crit. In the editor, **Inscribe** replaces a blank with the class’s basic blade, magic attack or heal for one personal point, preserving its weight. Removed blanks cannot reappear randomly during a spin. Faces have class-specific weights, shown as percentages in the editor; changing a face preserves its chance.
+**Poison** deals one armour-piercing damage per completed action for a limited duration, with visible status ticks and kill credit. **Stimulants** increase damage and protection and show a fiery glow. Rage, poison and buffs end with combat. Level-ups add 6 maximum HP and 4 personal editing points, with portrait and machine effects. EXP comes only from successful battles; surviving heroes also gain one editing point per victory.
 
-- **Tank:** mostly damage and shared protection. Its default chance of a heal face is under 4% per reel.
-- **Healer:** over 70% healing faces, with little direct damage.
-- **Rogue:** mostly damage and poison; 26 starting HP, very little protection, and no default healing faces.
-- **Mage:** a wandering magic specialist with 28 starting HP, magic attacks, poison and stimulants.
+The **Autoresolve** checkbox chooses heroes, targets and occasional useful emergency supplies. It preserves the selected animation speed and all combat feedback. Enemy entrances confirm automatically; loot, recruits, death decisions and other choices still wait for the player. Untick it to take over between actions.
 
-Blade and magic attack faces have **four tiers**, worth **2 / 4 / 7 / 11 damage**. Heal, block and stun keep three tiers, worth **2 / 4 / 6 healing**, **1 / 2 / 3 block**, or **1 / 2 / 3 stun power** per face. All effects resolve together. A successful stun cancels one enemy attack turn.
+## Supplies and equipment
 
-**Three identical symbols of the same type and tier crit.** A pair alone never does. One class seal acts as a matching third symbol when the other two meaningful faces have the same type and tier; it still casts its own class ability. Blank pairs do not qualify. The critical multiplier machine rolls ×2, ×2.5, ×3, or ×4; effects round up. It shows the original amount × multiplier = final amount. This applies to combat, treasure, healing fountains, and traps. Ordinary hero and enemy rolls stay on the page. Lethal hits remain visible for a moment before the battle-loot popup appears. The enabled **Strike now** button or multiplier machine skips the result hold; inline event criticals offer **Take the result now**, then still require the ordinary event confirmation.
+The satchel holds **three item types**, with matching items stacked. Inspect to use or discard. If full, swap out a stack, use an item immediately when applicable, or leave the find. Pending choices survive reloads. Items do not advance enemy countdowns.
 
-Click a hero portrait to select their healing and tonic target; click an enemy portrait to select the damage target. Ordinary damage hits that selected enemy. **Critical attacks and any roll containing tier III or IV blade or magic symbols deal their full damage to every living enemy.** Each target consumes its own armour.
+Consumables: Healing Tonic, Ink Bomb, Paper Ward, Antidote, Field Bandage, Mending Salve, Ember Draught, Sharpening Oil, Frost Vial, Cinder Flask, Venom Ink, Surveyor's Chalk and Trail Ration. Ink Bombs roll damage and poison on a slot machine; matching results crit.
 
-Health bars change from green to yellow at 65%, red at 40%, and flash at 25% or less; HP numbers and portrait injury art remain visible. Class names are capitalised beneath their portraits. Large floating numbers show actual damage and healing over each recipient. Critical hits use a distinct violet beam and a rapid series of four particle impacts; killing blows use heavier beams and shakes; the result ribbon also shows damage totals.
+Each hero also has one personal equipment slot. **Drag equipment from the bag onto a matching hero**, or click it and choose a recipient with keyboard-accessible buttons. Equipping consumes one item; replaced equipment returns through the normal bag/overflow rules.
 
-The prominent **TEAM BLOCK** counter protects every hero. Each incoming hit consumes block point for point before damaging its target. Fully absorbed damage puts a large shield over that specific hero or enemy, lasting through the UI refresh. Block clears after victory or defeat and resets at the next encounter. Wards can only be used during combat. An equipped Ember Seal creates fresh opening block for each fight rather than carrying unused block forward.
+| Equipment     | Class  | Bonus                                                |
+| ------------- | ------ | ---------------------------------------------------- |
+| Iron Signet   | Tank   | +2 damage on damaging rolls                          |
+| Bulwark Badge | Tank   | +3 opening team block, resist 1 damage per hit       |
+| Glass Rosary  | Healer | +2 healing on healing rolls                          |
+| Mercy Bell    | Healer | Every roll heals each ally by 1 and adds 1 block     |
+| Silent Boots  | Rogue  | +1 damage; every fourth roll stuns                   |
+| Serpent Pin   | Rogue  | Damaging rolls poison                                |
+| Star Lens     | Mage   | +2 magic damage on damaging rolls                    |
+| Storm Quill   | Mage   | +1 magic damage; every third roll grants a stimulant |
 
-Floor-one enemies have **21 HP**, attack once every **three** hero actions, and deal at most **12 damage** on a full critical. Normal enemies gain five HP per floor and one damage-scaling step every three floors. Their clock becomes two actions on floor three and one on floor nine; individual normal enemies keep a single strike. Paired foes have reduced HP and damage. Stronghold enemies use a two-action clock, gaining two strikes from floor seven; the final guardian has 140 HP and two strikes every two actions. Revenants, horned fiends and liches appear from floor four; the deepest floors use marrow liches, furnace devils and stitched horrors, with their own hand-drawn art and speech. Every strike rolls its own machine and targets a living hero. Enemy healing and shields protect the enemy. Enemy stun affects a hero; pulling that hero's handle spends their missed go without advancing or resetting the enemy countdown. Recovery protects them from immediate re-stunning, guaranteeing a real action before another stun can stick. Any positive armour can block a stun: it consumes up to six armour per stun power, or all remaining armour if there is less. Enemy armour can block stuns the same way.
+Rare run artefacts use a separate collection and one shared passive slot beneath the map. Their power grows with depth. Attack, healing, block, gold and opening-guard artefacts grant bonuses only while equipped. **Revive Stones** stay ready without occupying that slot: choose to consume one when a hero falls to restore 75% HP. Otherwise death is permanent. Survivors confirm a burial recording cause, origin, time and statistics. The last death leads directly from acknowledgement to the expedition's complete fallen roster.
 
-**EXP is awarded only on successful battles**, at 85% of the previous amount, rounded, never for spinning or losing. Leveling grants +6 maximum HP and +4 personal editing points; victory adds another personal point per surviving hero. Paired encounters award EXP for both foes, once the entire encounter is won. Use ✎ to change faces: tier I / II / III prices are **1 / 4 / 9 points**, with **tier IV blade and magic attacks costing 16 points**. An upgrade costs its destination tier's price; weakening costs one point. Cheap consistent symbols crit more often than mixed powerful ones.
+## Notebook controls and presentation
 
-Class seals resolve alongside the other two slots:
+The notebook fits **1920×1080** and other desktop resolutions; tablets and phones stack its pages. The larger field log sits beside the three-pocket inventory. Only the log and final adventurer roster scroll internally. Side tabs open functional **Options** and **Field Guide** pages.
 
-- **Tank — Rage:** gain damage for the rest of this fight, stacking up to +4. At three rage, gain one point of damage reduction too.
-- **Healer — Sanctuary:** heal every living ally and add a substantial amount of shared team block. Both scale gently with level and multiply on a critical.
-- **Rogue — Flurry:** roll three additional attack reels on the character’s on-page machine. A matching flurry can crit; a critical original roll multiplies the combined attack instead.
-- **Mage — Nova:** add magic damage against every enemy.
+Animation modes are **1×, 2×, 3×, 5× and Skip cinematics**. The toolbar remains usable while popups are open. Skip lands reels immediately while preserving shakes, particles, damage and healing feedback. Movement scales at half the animation speed increase, with Skip using the fastest walking speed and long routes receiving a modest additional boost. Animation speed, palette and autoresolve persist across runs and reloads.
 
-**Poison** deals one armour-piercing damage per completed player action for `1 + poison power` actions, capped at eight. Higher tiers and criticals increase duration. A newly applied poison starts ticking on the next action. Stunned missed goes do not advance it. Poison shows a green portrait badge with its remaining ticks; poison kills receive damage/kill credit and can end a battle normally.
+Paper tears, slowing reels, animated handles with fixed hitboxes, jaunty walking, injury portraits, health bars, targeted numbers, level-up bursts and critical impacts accompany actions. Headings animate inside reserved spaces. Torchlight flickers across the pages. Idle chatter is infrequent and staggered; obsolete discovery callouts fade on a floor change.
 
-**Stimulants** target the selected ally. They grant a small damage and defence bonus for four to six of that hero’s actions; the portrait and machine glow with animated fire. Repeated applications can strengthen the effect up to its cap. Rage, stimulant buffs and poison clear at the end of combat and before the next encounter. Active status effects survive reloads during the same fight.
+The bottom bar displays keyboard and mouse prompts. Tab / Shift+Tab and Enter reach every control.
 
-## Six-pocket satchel
+| Key             | Action                                   |
+| --------------- | ---------------------------------------- |
+| WASD / arrows   | Move                                     |
+| 1 / 2 / 3       | Spin a hero's reels                      |
+| Shift+1 / 2 / 3 | Select healing target                    |
+| [ / ]           | Cycle damage target                      |
+| E               | Edit selected hero's reels               |
+| P / B / V       | Use tonic / bomb / ward                  |
+| X / R           | Reached stairs / revisit current event   |
+| F / M           | Field guide / focus log                  |
+| T / C           | Cycle pace / palette                     |
+| N / G           | New run / download HTML                  |
+| Space           | Land rolling reels or skip critical hold |
 
-Carry **up to six distinct consumable types**; matching items stack in the same pocket. New types enter automatically when there is space. If full, explicitly replace an entire existing stack, use an existing item to free a pocket, use the found item immediately when applicable, or leave the find. An interrupted full-bag decision resumes after reloading. **Inspect / discard** shows full descriptions and lets the player use or toss stacks. Rare artefacts have their own collection and do not consume a pocket.
-
-Finite items do not advance enemy attack countdowns. There are thirteen consumable types, including ten new ones:
-
-| Item           | Effect                                                                                                                        |
-| -------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| Healing tonic  | Heal the selected living hero for 16 HP.                                                                                      |
-| Ink bomb       | Roll damage and poison against the selected enemy; triple matches crit inside the same popup. Confirm before the bomb bursts. |
-| Paper ward     | Add five shared block for this battle.                                                                                        |
-| Antidote       | Remove poison from the selected hero.                                                                                         |
-| Bandage        | Restore eight HP to the selected hero.                                                                                        |
-| Mending salve  | Restore six HP to each living party member.                                                                                   |
-| Ember draught  | Stimulate the selected hero for five actions.                                                                                 |
-| Sharpening oil | Add two rage to the selected hero for this battle.                                                                            |
-| Frost vial     | Attempt a strength-two stun; armour can resist it.                                                                            |
-| Cinder flask   | Deal eight plus half the floor depth in magic damage to all enemies.                                                          |
-| Venom vial     | Poison the selected enemy for five ticks.                                                                                     |
-| Chalk map      | Reveal the eight neighbouring tiles without triggering events; usable outside combat.                                         |
-| Trail ration   | Restore 30% of the selected hero’s maximum HP.                                                                                |
-
-Items cannot resurrect the dead. Healing items require an injured recipient; attack and buff items require combat. Shops retain the original supplies and can stock two random new consumables.
-
-## Permanent companions and memorials
-
-A hero reaching zero HP falls. If the party owns a **Revive Stone**, choose whether to consume it and restore them at **75% maximum HP**. It works from the pack without occupying the passive slot, is consumed exactly once, and removes their corpse. Declining keeps the stone and confirms permanent death. Without that rescue, death is permanent. Heroes and enemies immediately change to hand-drawn, collapsed corpse art when killed, and their remains persist on that floor’s map. Death is saved immediately, including if the page is reloaded before confirmation. A mandatory death notice appears; if someone survives, a separate burial screen records the cause, floor and location, where the companion was found, time and steps with the party, level, battles, kills, damage, protection, healing, and EXP earned. The survivor then continues with the smaller party. The **Names remembered** button reopens those records.
-
-Wells, tonics, shops, level-ups, and later victories cannot resurrect the dead. If the last hero dies, “Remember” goes directly to the end-of-run summary, without a separate burial. Its scrollable roster includes **every fallen companion**, with their complete personal statistics, cause, origin, time with the party and resting place. Only survivors receive victory EXP and points.
-
-## Rare artefacts
-
-Chests and battle spoils share a weighted loot table: 92.6% coin faces, 3.5% personal-point faces, 2.1% consumable faces combined, and **1.8% artefact faces** per reel. Three reels resolve per loot roll. These are face odds, not a guarantee that a chest contains a particular item. With three chests and four battles per floor, a full ten-floor exploration averages about **3.8 artefacts**, plus occasional stronghold rewards.
-
-Artefacts go into a collection, with **one equipped slot** beneath the map. The first passive find equips automatically; inspect and swap freely between actions or equip a new find directly from its loot result. Only the equipped artefact grants its passive bonus. Revive Stones stay ready in the pack and never auto-equip. Power increases with the floor of discovery:
-
-- **Fang of the Margin:** extra damage on attack rolls.
-- **The Glass Tear:** extra healing on heal rolls.
-- **Iron Pennant:** extra shared block on shield rolls.
-- **Lucky Farthing:** more gold from chests and battle loot.
-- **Ember Seal:** fresh shared block at the start of every fight.
-- **Revive Stone:** a one-use choice to rescue a fallen companion at 75% HP.
-
-## Pace and game feel
-
-The always-visible main toolbar offers **1×, 2×, 3×, 5×, and Skip cinematics**, plus **Default, Dark, and Warm** colour palettes. Both settings persist when starting a new run and after reloading. It remains accessible while a scene is open, so animations can always be reenabled. Popups contain no animation toggle.
-
-Click a rolling machine or its handle, or press Space, to land the already-selected result. Handle buttons have stationary hitboxes, at least 44 screen pixels wide even when the desktop notebook is scaled; only their artwork swings. Skip bypasses reel travel and cinematic delays but retains short impact shakes, paper and coin particles, speech, healing pulses, and results. Critical popups still appear at Skip speed, immediately show the multiplier and calculation, and hold automatically long enough to read. Travel scales at half the animation-speed increase: 1× / 2× / 3× / 5× animations produce 1× / 1.5× / 2× / 3× walking; Skip uses 3× walking. Reserved spaces for party members, results, captions, and stage content keep the notebook from shifting as those elements change. The OS reduced-motion preference limits shaking.
-
-Machines burst through paper on arrival; reels slow down and lock separately; characters walk with alternating boots and a jaunty bounce. Tanks, healers, rogues, rats, wraiths, skeletons, and blotlings have their own battle cries and reactions. Idle party chatter is infrequent and occurs only outside combat and dialogs; battle callouts also have cooldowns. A subtle torchlight overlay flickers across the notebook. Reserved field-note hints occasionally fade out and back in with a new tip. Popup headings slide, pulse and settle without moving surrounding content.
-
-The player token uses board-relative percentage coordinates so it remains centred through notebook scaling and window resizing. Injury states add obvious red pencil slashes and bandages, alongside the changing face and health bar.
-
-The fixed bottom bar displays contextual keyboard and mouse prompts. All buttons and selectors are reachable with Tab / Shift+Tab and Enter, including event confirmations. The log remains visible; **M** focuses it for keyboard scrolling.
-
-| Key                         | Action                                                 |
-| --------------------------- | ------------------------------------------------------ |
-| WASD / arrows               | Move through the map                                   |
-| 1 / 2 / 3                   | Spin that hero’s reels                                 |
-| Shift+1 / Shift+2 / Shift+3 | Select a healing target                                |
-| [ / ]                       | Cycle the enemy damage target                          |
-| E                           | Edit the selected hero’s reels                         |
-| P / B / V                   | Use a tonic / bomb / ward                              |
-| X / R                       | Use reached stairs / revisit the current event         |
-| F / M                       | Open the guide / focus the field log                   |
-| T / C                       | Cycle animation speed / palette                        |
-| N / G                       | New run / download the HTML backup                     |
-| Space / Escape              | Land active reels; Escape also closes ordinary dialogs |
-
-Mouse controls remain click-to-move, click portraits to target, and click handles or reels to act. Event results require an explicit button. Dialogs support keyboard focus trapping; native select controls retain their arrow-key behaviour.
-
-## Browser tests
-
-Node.js 20+ and Chromium are needed only for development:
+## Development and browser tests
 
 ```sh
 npm ci
-# If Chromium is not already available:
+# Only if Chromium is unavailable:
 npx playwright install chromium
 npm test
 ```
 
-The suite uses `/usr/bin/chromium` if present, otherwise Playwright's installed Chromium. Set `CHROMIUM_PATH` for another executable. It starts a loopback server and writes screenshots and the downloaded game to ignored `test-results/`.
+Tests use `/usr/bin/chromium` when present or Playwright's browser; `CHROMIUM_PATH` selects another executable. They start a loopback server and put screenshots and downloaded HTML in ignored `test-results/`.
 
-Coverage includes uninterrupted stair traversal and repeated destination prompts, real-time persistent fog/proximity resets, smoke ambushes and neighbour-only fog clearing, connected cave-room distribution and group reveals, token alignment through zoom and reloads, all four class seals and wild criticals, poison ticks/kill credit, ally stimulants and battle cleanup, critical hold skipping, ink-bomb reels, all ten new consumables, six-type bag stacking and overflow/use/swap/reload flows, full-bag shop purchases, distinct critical multi-hit effects, bounded floor-one and floor-four critical damage, tier IV purchasing/persistence/area attacks, recruit pity and inherited upgrades, mimics, consuming or declining Revive Stones across reloads, complete scrolling final rosters on desktop and mobile, optional-event travel, barrier/proximity fog exclusions and refreshed timers, relic-rate sampling, old-fight migration, rotating hints, random distant stairs, connected river and bridge generation across 1,000 maps, stronghold reachability, optional ruins and their criticals, paired enemies and area damage, separate clocks, old fog and wandering fights, shop discovery versus first stair arrival, persistent palettes and pace, health-bar thresholds, full keyboard operation, unclipped titles and scroll-free dialog/editor layouts, a full notebook fitting desktop resolutions without overlap, desktop/mobile and stable layouts, in-event criticals, uncapped potential healing, editable permanent blank faces, corpse art and persistent remains, shield overlays, water and stone blockers, highlighted stairs, fog-preserving discovery hints, hidden-destination retargeting during walking and erasing, explicit event confirmations, critical math and automatic holds at Skip speed, critical treasure/fountain/trap rolls, persistent pace controls, stationary handle hitboxes, rerouting during travel, safe visible-only paths, movement-speed scaling, declined fountains, permanent death and burial, saved deaths across reloads, survivor-only healing and EXP, beacon radius, class weights and blanks, enemy difficulty, shared armour and stun costs, rare loot and coin showers, recruit choices and cap, shop frequency and transactions, artefact passives, speech cooldowns, clipped trap art, a complete ten-floor campaign, 1,000 connected generated maps, save migration, and offline downloads.
-
-The complete-campaign integration check uses a controlled attack loadout and extra health to exercise navigation, loot confirmations, enemy turns, and progression independently of luck. It does not replace movement, events, enemy AI, rewards, or victory logic. Other tests isolate actual combat calculations and failure paths. The offline test executes the downloaded bytes with networking disabled because managed cloud Chromium restricts `file://` navigation.
+Coverage includes full ten-floor progression, stair bosses and immediate victory, class selection and page animations, equipment drag/effects/swaps, autoresolve, pursuers, floor-specific species and elite odds, hidden exploration-only ambush timers, rockfalls and bodies, beacon sight lines, save migration, inventory decisions, permanent death, revives, critical and multi-hit calculations, map generation and connectivity, mobile/desktop layout and offline downloads. The campaign integration test uses controlled attack faces and extra health to exercise real navigation, encounters, rewards and progression independently of luck. Separate tests verify ordinary combat and failure paths. The offline test executes downloaded bytes with networking disabled because managed Chromium restricts `file://` navigation.
 
 ## Credits
 
-The embedded **Patrick Hand** font is by Patrick Wagesreiter, distributed under the SIL Open Font License 1.1. The complete license is in the HTML source. Illustrations are inline SVG; all effects run locally.
+The embedded **Patrick Hand** font is by Patrick Wagesreiter, under the SIL Open Font License 1.1. Its full license is in the HTML source. All illustrations and effects run locally.

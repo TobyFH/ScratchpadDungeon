@@ -5011,6 +5011,587 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         color: var(--ink);
         background: #333d30;
       }
+      /* A compact supplies page leaves the journal room to breathe. */
+      .notes-and-bag {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 238px;
+        gap: 12px;
+        height: 245px;
+        margin-top: 4px;
+      }
+      .notes-and-bag .journal,
+      .fit-notebook .notes-and-bag .journal {
+        height: 245px;
+        margin: 0;
+        padding: 9px 12px;
+        min-width: 0;
+      }
+      .notes-and-bag .journal ol,
+      .fit-notebook .notes-and-bag .journal ol {
+        height: 190px;
+        max-height: 190px;
+        overflow-y: auto;
+        font-size: 16px;
+        line-height: 1.4;
+      }
+      .notes-and-bag .journal-head {
+        gap: 8px;
+        align-items: center;
+      }
+      .notes-and-bag .journal h3 {
+        font-size: 19px;
+      }
+      .notes-and-bag .journal-head button {
+        font-size: 12px;
+        white-space: nowrap;
+      }
+      .notes-and-bag .inventory,
+      .fit-notebook .notes-and-bag .inventory {
+        height: 245px;
+        margin: 0;
+        padding: 9px 10px;
+        min-width: 0;
+      }
+      .notes-and-bag .inventory h3 {
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 4px;
+        margin-bottom: 6px;
+      }
+      .notes-and-bag #manage-bag {
+        font-size: 12px;
+        margin-left: auto;
+      }
+      .notes-and-bag #bag-count {
+        font-size: 12px;
+      }
+      .notes-and-bag .inventory-items {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(3, 57px);
+        gap: 5px;
+      }
+      .notes-and-bag .inventory-items button,
+      .fit-notebook .notes-and-bag .inventory-items button {
+        display: grid;
+        grid-template-columns: 35px minmax(0, 1fr);
+        grid-template-rows: 1fr 1fr;
+        height: 57px;
+        min-height: 0;
+        padding: 4px 7px;
+        text-align: left;
+        column-gap: 5px;
+      }
+      .notes-and-bag .inventory-items button svg {
+        grid-row: 1/3;
+        width: 30px;
+        height: 30px;
+        align-self: center;
+      }
+      .notes-and-bag .inventory-items button > span,
+      .fit-notebook .notes-and-bag .inventory-items button > span {
+        font-size: 15px;
+        min-height: 0;
+        line-height: 1.1;
+        align-self: end;
+      }
+      .notes-and-bag .inventory-items button small,
+      .fit-notebook .notes-and-bag .inventory-items button small {
+        font-size: 12px;
+        height: auto;
+        line-height: 1.15;
+        align-self: start;
+      }
+      .save-line,
+      .fit-notebook .save-line {
+        justify-content: flex-end;
+        text-align: right;
+        font-size: 14px;
+        height: 26px;
+      }
+      #save-status[hidden] {
+        display: none !important;
+      }
+      .autoresolve-control {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 14px;
+        white-space: nowrap;
+      }
+      input[type="checkbox"] {
+        accent-color: #795034;
+        width: 17px;
+        height: 17px;
+        cursor: pointer;
+      }
+      .notebook-tabs {
+        position: absolute;
+        right: -31px;
+        top: 110px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        z-index: 4;
+      }
+      .notebook-tabs button {
+        writing-mode: vertical-rl;
+        transform: rotate(180deg);
+        border: 2px solid var(--ink);
+        border-radius: 0 5px 6px 0;
+        background: #c9b78f;
+        padding: 15px 7px;
+        font-size: 16px;
+        min-width: 32px;
+        box-shadow: 2px 3px 2px #21180e33;
+      }
+      .notebook-tabs button:last-child {
+        background: #c5cbb0;
+      }
+      .equipment-slot {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        padding: 1px 2px;
+        height: 22px;
+        width: 100%;
+        font-size: 10px;
+        border: 1px dashed #877759;
+        background: transparent;
+      }
+      .equipment-slot svg {
+        width: 15px !important;
+        height: 15px !important;
+        flex: none;
+      }
+      .equipment-slot span {
+        min-width: 0;
+        line-height: 1;
+      }
+      .equipment-slot.equipped {
+        background: #cbb76f33;
+        border-style: solid;
+      }
+      .hero-dossier {
+        position: relative;
+        padding-bottom: 23px;
+      }
+      .hero-dossier > .equipment-slot {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+      }
+      .gear-hover {
+        outline: 3px dashed #9b7742;
+        background: #c8ba6a44;
+      }
+      .raging .portrait {
+        animation: rage-heartbeat 0.8s ease-in-out infinite;
+        outline: 2px solid #9b4035;
+      }
+      .raging .machine-face {
+        box-shadow:
+          0 0 0 2px #ab4d3b66,
+          inset 0 0 14px #b14c3222;
+      }
+      .rage-badge {
+        background: #e5bba7 !important;
+        color: #7b2b25 !important;
+        border-color: #934031 !important;
+      }
+      @keyframes rage-heartbeat {
+        0%,
+        100% {
+          box-shadow: 0 0 0 0 #a3423955;
+        }
+        45% {
+          box-shadow: 0 0 0 5px #a3423900;
+          filter: contrast(1.12);
+        }
+      }
+      .class-face {
+        height: 100%;
+        max-height: 100%;
+        padding: 3px 0;
+        box-sizing: border-box;
+        justify-content: center;
+        gap: 0;
+      }
+      .class-face svg {
+        width: 31px !important;
+        height: 31px !important;
+        max-height: 60%;
+        flex: 0 1 31px;
+        overflow: visible;
+      }
+      .class-face small {
+        font-size: 8px !important;
+        line-height: 1.15;
+        flex: none;
+      }
+      .tier-symbol.stimulant svg {
+        max-height: 75%;
+        overflow: visible;
+      }
+      .elite-enemy .enemy-art,
+      [data-elite="true"] {
+        position: relative;
+        outline: 2px solid #a77839;
+        animation: elite-aura 1.5s ease-in-out infinite alternate;
+      }
+      @keyframes elite-aura {
+        from {
+          box-shadow:
+            0 0 5px #b6803a66,
+            inset 0 0 5px #be8e4533;
+        }
+        to {
+          box-shadow:
+            0 0 20px #c69454aa,
+            inset 0 0 16px #bd8e4455;
+        }
+      }
+      .enemy-info h4 {
+        line-height: 1.05;
+      }
+      .pursuer-token {
+        position: absolute;
+        inset: 2px;
+        z-index: 5;
+        display: grid;
+        place-items: center;
+        background: #d6ceba;
+        outline: 2px dashed #9b3833;
+        animation: pursuer-stalk 1.1s ease-in-out infinite alternate;
+        color: #7d2828;
+      }
+      .pursuer-token svg {
+        width: 88%;
+        height: 88%;
+      }
+      @keyframes pursuer-stalk {
+        to {
+          transform: scale(0.9) rotate(-4deg);
+          box-shadow: 0 0 14px #9b383377;
+        }
+      }
+      .item-find {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border: 2px dashed #ac7933;
+        background: #e1ca7833;
+        padding: 8px 12px;
+        animation: item-attention 1.3s ease-in-out infinite alternate;
+      }
+      .item-find > svg {
+        width: 40px;
+        height: 40px;
+        flex: none;
+      }
+      .item-find p {
+        font-size: 14px;
+        margin: 3px 0;
+      }
+      @keyframes item-attention {
+        to {
+          box-shadow: 0 0 13px #d5ad5d77;
+          transform: scale(1.018);
+        }
+      }
+      .starter-grid,
+      .replacement-grid,
+      .equipment-choices {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+      }
+      .starter-grid button {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 10px;
+      }
+      .starter-grid svg {
+        height: 150px;
+        width: 110px;
+        max-width: 100%;
+      }
+      .starter-grid b {
+        font-size: 23px;
+      }
+      .starter-grid small {
+        font-size: 14px;
+      }
+      .starter-grid span {
+        font-size: 15px;
+        line-height: 1.25;
+      }
+      .replacement-grid,
+      .equipment-choices {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+      .replacement-grid article,
+      .equipment-choices button {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        text-align: center;
+      }
+      .replacement-grid svg,
+      .equipment-choices svg {
+        height: 140px;
+        width: 110px;
+      }
+      .options-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        margin: 25px 0;
+      }
+      .options-grid label {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        font-size: 23px;
+      }
+      .options-grid select {
+        padding: 8px;
+        font: inherit;
+        background: var(--paper);
+        color: var(--ink);
+      }
+      .options-grid small {
+        font-size: 16px;
+        line-height: 1.3;
+      }
+      .options-grid .auto-option {
+        grid-column: 1/-1;
+        display: block;
+      }
+      .options-grid .auto-option small {
+        display: block;
+        margin-top: 8px;
+      }
+      .book {
+        perspective: 1800px;
+      }
+      .book-cover,
+      .turning-page {
+        position: absolute;
+        inset: 0;
+        z-index: 20;
+        transform-origin: left center;
+        backface-visibility: hidden;
+        pointer-events: none;
+        border: 4px double #baa072;
+      }
+      .book-cover {
+        background: repeating-linear-gradient(
+          12deg,
+          #463122 0 2px,
+          #4b3525 2px 5px
+        );
+        color: #e4cf9a;
+        display: grid;
+        place-items: center;
+        text-align: center;
+        border-radius: 17px;
+        box-shadow: inset 0 0 0 20px #21190f66;
+      }
+      .book-cover > span {
+        font-size: 70px;
+        line-height: 1.3;
+        border: 4px double #c7a86b;
+        padding: 60px;
+      }
+      .book-cover small {
+        display: block;
+        font-size: 23px;
+      }
+      .turning-page {
+        left: 50%;
+        background: repeating-linear-gradient(
+          0deg,
+          var(--paper) 0 28px,
+          #93917b55 29px,
+          var(--paper) 30px
+        );
+        box-shadow: -12px 0 30px #33271e44;
+        transform-origin: left;
+      }
+      .victory-heading {
+        font-size: 34px;
+        text-align: center;
+        color: #956f28;
+        animation: victory-pulse 1s ease-in-out infinite alternate;
+        margin: 0 0 12px;
+      }
+      @keyframes victory-pulse {
+        to {
+          text-shadow:
+            0 2px #e5c977,
+            0 0 18px #d3aa5266;
+          transform: scale(1.04) rotate(-1deg);
+        }
+      }
+      .rockfall-scene {
+        position: relative;
+        height: 95px;
+        overflow: hidden;
+      }
+      .rockfall-scene span {
+        position: absolute;
+        left: calc(6% + var(--rock) * 12%);
+        top: -30px;
+        animation: rock-fall 0.8s calc(var(--rock) * 0.06s) infinite;
+      }
+      .rockfall-scene svg {
+        width: 35px;
+        height: 35px;
+      }
+      @keyframes rock-fall {
+        to {
+          transform: translate(-12px, 150px) rotate(160deg);
+        }
+      }
+      @media (max-width: 760px) {
+        .notes-and-bag {
+          grid-template-columns: minmax(0, 1fr) 170px;
+          gap: 6px;
+        }
+        .notes-and-bag .journal {
+          padding: 7px;
+        }
+        .notes-and-bag .journal-head {
+          flex-wrap: wrap;
+        }
+        .notes-and-bag .journal h3 {
+          font-size: 16px;
+        }
+        .notes-and-bag .journal ol {
+          font-size: 14px;
+          height: 178px;
+        }
+        .notes-and-bag .inventory {
+          padding: 6px;
+        }
+        .notes-and-bag .inventory-items button > span {
+          font-size: 12px;
+        }
+        .notes-and-bag .inventory-items button small {
+          font-size: 10px;
+        }
+        .notes-and-bag .inventory-items button {
+          grid-template-columns: 26px minmax(0, 1fr);
+        }
+        .notebook-tabs {
+          right: -12px;
+          top: 90px;
+        }
+        .notebook-tabs button {
+          min-width: 24px;
+          font-size: 12px;
+          padding: 10px 3px;
+        }
+        .starter-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .starter-grid svg {
+          height: 85px;
+        }
+        .starter-grid span {
+          font-size: 13px;
+        }
+        .autoresolve-control {
+          font-size: 12px;
+        }
+        .book-cover > span {
+          font-size: 38px;
+          padding: 25px;
+        }
+        .options-grid {
+          gap: 12px;
+        }
+        .options-grid label {
+          font-size: 19px;
+        }
+      }
+      .book {
+        overflow: visible;
+      }
+      .left-page {
+        border-radius: 20px 0 0 18px;
+      }
+      .right-page {
+        border-radius: 0 17px 19px 0;
+      }
+      .hero-dossier {
+        padding-bottom: 22px;
+      }
+      .hero-name,
+      .fit-notebook .hero-name {
+        height: 32px;
+        line-height: 1.05;
+        padding-top: 3px;
+      }
+      .hero-name small {
+        line-height: 1.1;
+      }
+      @media (min-width: 761px) {
+        .desk.fit-notebook {
+          max-width: calc(100vw - 95px);
+        }
+      }
+      @media (max-width: 1259px) {
+        .notebook-tabs {
+          right: 0;
+          top: 80px;
+        }
+        .notebook-tabs button {
+          min-width: 24px;
+          padding: 10px 3px;
+          font-size: 12px;
+        }
+      }
+      .hero-name,
+      .fit-notebook .hero-name {
+        height: 38px;
+        padding-top: 0;
+        line-height: 1.15;
+      }
+      .portrait,
+      .fit-notebook .portrait {
+        height: 84px;
+      }
+      .portrait > svg,
+      .fit-notebook .portrait > svg {
+        height: 82px;
+        width: 70px;
+      }
+      .incoming-item {
+        animation: item-attention 1.3s ease-in-out infinite alternate;
+      }
+      .desk {
+        position: relative;
+      }
+      .book {
+        overflow: hidden;
+      }
+      .notebook-tabs {
+        top: 160px;
+      }
+      @media (max-width: 1259px) {
+        .notebook-tabs {
+          top: 145px;
+          right: 0;
+        }
+      }
     </style>
   </head>
   <body>
@@ -5030,6 +5611,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
               <option value="5">5×</option>
               <option value="skip">Skip cinematics</option>
             </select></label
+          ><label class="autoresolve-control"
+            ><input type="checkbox" id="autoresolve" /> Autoresolve</label
           ><label class="palette-control"
             >Palette<select id="palette" aria-label="Colour palette">
               <option value="default">Default</option>
@@ -5117,41 +5700,47 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           <div class="result-ribbon" id="result-ribbon" aria-live="polite">
             Pull a handle. Make a little luck.
           </div>
-          <section class="journal">
-            <div class="journal-head">
-              <h3>Battle &amp; field notes</h3>
-              <button class="quiet small" id="toggle-log" aria-expanded="true">
-                Focus log (M)
-              </button>
-            </div>
-            <ol
-              id="log"
-              tabindex="0"
-              aria-live="polite"
-              aria-label="Expedition journal"
-            ></ol>
-          </section>
-          <section class="inventory">
-            <h3 id="inventory-title">
-              Satchel <small id="bag-count">0 / 6 types</small
-              ><button class="quiet small" id="manage-bag">
-                Inspect / discard
-              </button>
-            </h3>
-            <div class="inventory-items"></div>
-          </section>
+          <div class="notes-and-bag">
+            <section class="journal">
+              <div class="journal-head">
+                <h3>Battle &amp; field notes</h3>
+                <button
+                  class="quiet small"
+                  id="toggle-log"
+                  aria-expanded="true"
+                >
+                  Focus log (M)
+                </button>
+              </div>
+              <ol
+                id="log"
+                tabindex="0"
+                aria-live="polite"
+                aria-label="Expedition journal"
+              ></ol>
+            </section>
+            <section class="inventory">
+              <h3 id="inventory-title">
+                Satchel <small id="bag-count">0 / 3 types</small
+                ><button class="quiet small" id="manage-bag">
+                  Inspect / discard
+                </button>
+              </h3>
+              <div class="inventory-items"></div>
+            </section>
+          </div>
           <div class="save-line">
-            <span id="save-status">Saved locally</span
-            ><span
-              >Click a rolling machine to reveal its result · Space to
-              fast-forward</span
-            >
+            <span id="save-status" hidden aria-live="polite"></span
+            ><span>FIELD NOTES · Made of paper. Played with courage.</span>
           </div>
         </section>
       </main>
+      <nav class="notebook-tabs" aria-label="Notebook pages">
+        <button id="options-tab">Options</button
+        ><button id="guide-tab">Field guide</button>
+      </nav>
       <footer class="footer">
-        <span>FIELD NOTES № 003 · Made of paper. Played with courage.</span
-        ><span>Keep a little light with you. ✧</span>
+        <span>Keep a little light with you. ✧</span><span></span>
       </footer>
     </div>
     <nav id="keyboard-bar" aria-label="Keyboard and mouse controls"></nav>
@@ -5288,8 +5877,36 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           "M3 28V7h6v5h5V7h5v5h5V7h5v21H3z M12 28v-9q4-8 8 0v9M5 20h3m16-1h3",
       });
       let artSerial = 0;
+      Object.assign(paths, {
+        rage: "M7 28V15l-3-5 4-3 4 4V4h5v7-8h5v9-6h5v12l-5 10z M8 15l7 3 8-3M4 26H0m29-9h3M4 3l-3-2",
+        pursuer:
+          "M3 29 7 10 16 2l9 8 4 19-8-6-5 7-5-7z M10 13l4 2m8-2-4 2M14 21h4 M1 6l4 2m22-4 4-2",
+      });
+      function specialEnemyArt(kind, entity) {
+        const body = {
+          gnawer:
+            "M20 131q-21-24 10-49l17-23-4-28 12-17 9 23 19 6 17 35-8 38-29 15z M28 91 8 93l-5 18 20 9M51 49 71 30l19 8-2 33 M50 67l10 7m14-9 9 7M57 91l9 9 14-11M60 96v15m10-14v11M47 28V9h12v19M47 8l6-7 6 7 M39 128l-8 13h25m20-13 6 13h19 M21 125l-9 4m80-12 14-5",
+          bellkeeper:
+            "M23 138 30 86l15-17-8-35 20-20 28 12 5 39 12 26 2 47z M39 38 77 24l9 35-12 19-24-4z M40 46l42-9m-38 16 40-9 M51 61l13 8 13-10 M31 89l25 18 34-26M56 107v31 M19 66 8 110l22 8 13-38z M12 109l16 7M17 118v11 M81 83l16-15 10 7-11 16 M102 40v35M90 51h24l-4-19-8-6-8 7z M98 53v8",
+          widow:
+            "M46 90C-5 82 16 36 48 52c-14-50 51-52 45-10 39 11 25 58-8 54l-20 17z M40 63l20-13 24 13-2 25-21 15-22-14z M47 68l9 7m12-2 9-8 M47 80l12 8 17-9M53 84l3 13m12-14-2 15 M35 84 9 90l-6 39m30-32-12 21 6 21M85 82l27 7 5 40m-27-31 10 21-5 21 M44 44l-9-20M83 40l15-20M35 119l26-14 27 14-26 23z",
+          oracle:
+            "M23 140 29 101l16-24-12-39 25-28 30 14 7 39-17 18 23 29 8 30z M36 41 58 22l28 13-9 35-20 14-14-15z M45 48q16-21 33 0-16 20-33 0z M61 41v16 M53 69h15 M45 84l16 18 15-18M61 103v36 M30 110l-14-8-7 9 23 15m62-13 17-17 8 9-19 23 M2 88h29m-14-14v28M90 14l8-11 13 4M20 60l-8-5 4-12",
+          pageeater:
+            "M11 137 17 86l-5-24 17-37 33-17 36 19 13 38-8 24 9 48z M21 64l23-26 37-3 22 31-14 26-55-2z M32 62l19 7 30-3 14-9-10 32-25 12-24-12z M35 65l7 15 7-9 10 18 10-17 9 11 12-20 M36 101l12-13 13 20 14-18 13 12M47 26l9 6m18-7-8 8 M23 110l-17 6 2 18 22-4m64-18 19 3 4 20-22-6M36 139l7-18m35 20-5-22",
+          pursuer:
+            "M13 143 23 110 16 86l20-34 1-24 25-25 27 24-3 29 18 27-7 26 12 35-24-12-21 14-19-12z M37 29l23-11 21 11-7 37-15 15-15-14z M45 45l10 3m12-3 9-3M53 62l14-1 M38 80 59 98l22-19M59 99v33 M25 88l-20 13 10 25 22-12m52-26 24 12-8 26-16-12 M17 142l-10 5m99-5 10 5",
+        }[kind];
+        if (!body) return null;
+        return `<svg class="horror-art species-${kind}" viewBox="0 0 120 150" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${body}" fill="#d7ccb1"/><path d="m27 95 12-10m-12 17 10-9m-11 19 15-12m40 18 12-12m-10 20 12-13m-43 6 6-5" stroke-width=".8" opacity=".5"/></svg>`;
+      }
+
       function portraitArt(kind, entity = { hp: 1, maxHp: 1 }) {
-        let art = basePortraitArt(kind === "mage" ? "healer" : kind, entity);
+        let art =
+          entity.hp > 0 && !entity.dead
+            ? specialEnemyArt(kind, entity) ||
+              basePortraitArt(kind === "mage" ? "healer" : kind, entity)
+            : corpseArt(kind);
         if (kind === "mage" && entity.hp > 0 && !entity.dead)
           art = art.replace(
             "</svg>",
@@ -5358,7 +5975,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       }
       function symbolMarkup(s) {
         if (s.type === "class")
-          return `<span class="class-face" title="${classAbilityDescription(s.job || "fighter")}">${icon({ fighter: "flame", healer: "blessing", rogue: "flurry", mage: "magic" }[s.job] || "class")}<small>${classAbilityName(s.job || "fighter")}</small></span>`;
+          return `<span class="class-face" title="${classAbilityDescription(s.job || "fighter")}">${icon({ fighter: "rage", healer: "blessing", rogue: "flurry", mage: "magic" }[s.job] || "class")}<small>${classAbilityName(s.job || "fighter")}</small></span>`;
         if (s.type === "blank")
           return `<span class="blank-face" aria-label="Empty reel face" title="Empty face · replace it with personal points">${icon("blank")}<small>EMPTY</small></span>`;
         if (s.type === "multiplier")
@@ -5480,6 +6097,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           hp: maxHp,
           maxHp,
           points: 3,
+          equipment: null,
           stun: 0,
           poison: null,
           stimulant: null,
@@ -5493,13 +6111,13 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             description: "A wandering adventurer in the dungeon",
           },
           stats: emptyStats(),
-          reels: [0, 1, 2].map(() => [
+          reels: [0, 1, 2].map((reel) => [
             ...faces[job].map(([type, tier, weight]) => ({
               type,
               tier,
               weight,
             })),
-            { type: "class", tier: 1, weight: 3, job },
+            ...(reel === 1 ? [{ type: "class", tier: 1, weight: 3, job }] : []),
           ]),
           last:
             job === "mage"
@@ -5646,21 +6264,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         place(stair, "stairs");
         ensureStairsPath(map);
         const reachable = mapDistances(map);
-        // A final guardian is placed in a reachable distant room near the stairs.
-        if (depth === 10) {
-          const guards = [...reachable.keys()]
-            .filter(
-              (i) => i !== start && !map[i].event && reachable.get(i) >= 6,
-            )
-            .sort(
-              (a, b) =>
-                Math.abs((a % W) - (stair % W)) +
-                Math.abs(Math.floor(a / W) - Math.floor(stair / W)) -
-                (Math.abs((b % W) - (stair % W)) +
-                  Math.abs(Math.floor(b / W) - Math.floor(stair / W))),
-            );
-          place(guards[0], "guardian");
-        }
+        map[stair].bossDefeated = false;
         if (Math.random() < 0.035) {
           const centers = [pos(4, 3), pos(6, 3), pos(7, 4)].filter(
             (i) =>
@@ -5716,7 +6320,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             "well",
             "beacon",
           ];
-        if (Math.random() < recruitChance(partySize, missedFloors))
+        if (Math.random() < recruitChance(partySize, missedFloors, depth))
           events.push("recruit");
         if (Math.random() < 0.3) events.push("shop");
         if (Math.random() < 0.32) events.push("ruin");
@@ -5766,6 +6370,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         }
       }
       function newRun(job = "fighter") {
+        document
+          .querySelectorAll(".book-cover,.turning-page")
+          .forEach((el) => el.remove());
+        fadeDiscoveryHints();
+        exploreWasAllowed = false;
+        exploreTickAt = performance.now();
         animationVersion++;
         if (stageResolver) {
           stageResolver("cancel");
@@ -5779,19 +6389,30 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         travel = null;
         document.querySelectorAll(".speech-bubble").forEach((e) => e.remove());
         state = {
-          version: 8,
+          version: 9,
           depth: 1,
           map: generateFloor(1, 1, 0),
           startedAt: Date.now(),
+          exploreTime: 0,
+          retired: [],
+          pursuer: null,
+          autoresolve:
+            state?.autoresolve ?? readSettings().autoresolve ?? false,
           recruitPity: 0,
           recruitFoundThisFloor: false,
           position: pos(1, 7),
           party: [
-            makeHero(job === "rogue" ? "Wren" : "Alden", job, {
-              depth: 0,
-              tile: null,
-              description: "At camp, before the expedition",
-            }),
+            makeHero(
+              { rogue: "Wren", fighter: "Alden", mage: "Orin", healer: "Mira" }[
+                job
+              ] || "Alden",
+              job,
+              {
+                depth: 0,
+                tile: null,
+                description: "At camp, before the expedition",
+              },
+            ),
           ],
           gold: 0,
           steps: 0,
@@ -5820,6 +6441,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           over: false,
           won: false,
           actionSerial: 0,
+          awaitingStarter: false,
           lastResult: null,
           speed:
             state?.speed ||
@@ -5848,7 +6470,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           );
           if (
             !s ||
-            ![1, 2, 3, 4, 5, 6, 7, 8].includes(s.version) ||
+            ![1, 2, 3, 4, 5, 6, 7, 8, 9].includes(s.version) ||
             s.map?.length !== W * H ||
             !Array.isArray(s.party) ||
             !s.party.length ||
@@ -5878,9 +6500,14 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             return false;
           let migrated = s.version < 4,
             rebalance = s.version < 7,
-            oldFog = s.version < 8;
+            oldFog = s.version < 8,
+            oldRules = s.version < 9;
           state = s;
-          state.version = 8;
+          state.version = 9;
+          state.exploreTime ??= 0;
+          state.retired ??= [];
+          state.autoresolve ??= readSettings().autoresolve || false;
+          if (oldRules) state.pursuer = null;
           state.bombs ??= 0;
           state.wards ??= 0;
           state.potions ??= 0;
@@ -5916,15 +6543,22 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             h.poison ??= null;
             h.stimulant ??= null;
             h.rage ??= 0;
-            if (oldFog)
-              h.reels.forEach((r) => {
-                if (!r.some((f) => f.type === "class"))
-                  r.push({ type: "class", tier: 1, weight: 3, job: h.job });
-                if (["healer", "mage"].includes(h.job))
-                  r.forEach((f) => {
+            if (oldRules)
+              h.reels.forEach((r, k) => {
+                h.reels[k] = r.filter((f) => f.type !== "class");
+                if (k === 1)
+                  h.reels[k].push({
+                    type: "class",
+                    tier: 1,
+                    weight: 3,
+                    job: h.job,
+                  });
+                if (oldFog && ["healer", "mage"].includes(h.job))
+                  h.reels[k].forEach((f) => {
                     if (f.type === "attack") f.type = "magic";
                   });
               });
+            h.equipment ??= null;
             initLife(h);
           });
           state.map.forEach((c, i) => {
@@ -5935,9 +6569,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             c.hint ??= null;
             c.hintChecked ??= false;
             c.lastVisitedStep ??= c.visited ? state.steps : null;
-            c.fogged = oldFog ? false : !!c.fogged;
+            if (oldRules) {
+              c.fogged = false;
+              c.fogSince = state.exploreTime;
+            } else c.fogged = !!c.fogged;
             if (c.seen && !c.wall && c.fogSince == null)
-              c.fogSince = Date.now();
+              c.fogSince = state.exploreTime || 0;
             c.room ??= null;
             delete c.wanderPending;
             if (c.terrain === "puddle") c.terrain = "stone";
@@ -6002,7 +6639,11 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           localStorage.setItem(SAVE_KEY, JSON.stringify(state));
           localStorage.setItem(
             "scratchpad-dungeon-settings",
-            JSON.stringify({ speed: state.speed, palette: state.palette }),
+            JSON.stringify({
+              speed: state.speed,
+              palette: state.palette,
+              autoresolve: state.autoresolve,
+            }),
           );
           $("#save-status").textContent = "Notebook saved locally";
         } catch {
@@ -6105,6 +6746,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         document.body.classList.toggle("skip-cinematics", skip);
         document.body.style.setProperty("--speed", pace());
         $("#animation-speed").value = state.speed;
+        $("#autoresolve").checked = !!state.autoresolve;
         $("#gold").textContent = state.gold;
         $("#steps").textContent = state.steps;
         $("#explored").textContent = state.map.filter(
@@ -6191,7 +6833,10 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           well: "Healing well",
           beacon: "Beacon",
           recruit: "Wandering adventurer",
-          stairs: "Stairway / descend",
+          stairs:
+            state.floorBossDefeated || c.bossDefeated
+              ? "Stairway / descend"
+              : "Stairway / guardian awaits",
           enemy: "Enemy",
           guardian: "The Last Redaction",
           shop: "Rare shop",
@@ -6199,8 +6844,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         let type = c.event || c.feature;
         return names[type]
           ? names[type] + (c.event ? " / active" : " / used")
-          : (c.room ? "Cave room" : "Quiet room") +
-              (c.fogged ? " / lingering fog" : "");
+          : c.room
+            ? "Cave room"
+            : "Quiet room";
       }
       function renderMap() {
         const locked = (busy && !travel) || !!state.enemy || state.over;
@@ -6222,7 +6868,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                           : c.event || c.feature,
                       )
                     : floorArt(c, i);
-            return `<button class="tile ${c.seen ? "" : "fog"} ${c.wall && c.seen ? "wall" : ""} ${water && c.seen ? "water-block " + c.terrain : ""} ${c.visited ? "visited" : ""} ${c.feature && !c.event ? "spent" : ""} ${active ? "active-event" : ""} ${battle ? "active-battle" : ""} ${active && c.event === "well" ? "active-well" : ""} ${active && c.event === "stairs" ? "active-stairs" : ""} ${corpse ? "has-corpse" : ""} ${!c.seen && c.hint ? "has-hint" : ""} ${isStale(c) ? "stale-fog" : ""} ${c.room && c.seen ? "cave-room" : ""} ${Date.now() - (c.roomRevealedAt || 0) < 1200 ? "room-reveal" : ""} ${c.terrain === "bridge" ? "bridge-tile" : ""} ${i === state.position ? "player-cell" : ""} ${travel?.goal === i ? "travel-goal" : ""}" data-tile="${i}" data-state="${!c.seen ? "unknown" : active ? "active" : c.feature ? "used" : "empty"}" aria-label="${escapeHTML(tileName(c))}, column ${(i % W) + 1}, row ${Math.floor(i / W) + 1}" ${locked || (c.seen && c.wall) ? "disabled" : ""}>${art}${c.seen && c.wall ? '<span class="terrain-stop" aria-hidden="true">×</span>' : ""}${active ? `<span class="tile-status" aria-hidden="true">${c.event === "stairs" ? "↓" : "!"}</span>` : c.seen && c.feature ? '<span class="tile-status used" aria-hidden="true">✓</span>' : ""}${!c.seen && c.hint ? `<span class="tile-whisper" title="${escapeHTML(c.hint.text)}" aria-hidden="true">${icon(c.hint.kind)}</span>` : ""}${corpse && c.event ? '<span class="corpse-mark" aria-hidden="true">†</span>' : ""}</button>`;
+            return `<button class="tile ${c.seen ? "" : "fog"} ${c.wall && c.seen ? "wall" : ""} ${water && c.seen ? "water-block " + c.terrain : ""} ${c.visited ? "visited" : ""} ${c.feature && !c.event ? "spent" : ""} ${active ? "active-event" : ""} ${battle ? "active-battle" : ""} ${active && c.event === "well" ? "active-well" : ""} ${active && c.event === "stairs" ? "active-stairs" : ""} ${corpse ? "has-corpse" : ""} ${!c.seen && c.hint ? "has-hint" : ""}  ${c.room && c.seen ? "cave-room" : ""} ${Date.now() - (c.roomRevealedAt || 0) < 1200 ? "room-reveal" : ""} ${c.terrain === "bridge" ? "bridge-tile" : ""} ${i === state.position ? "player-cell" : ""} ${travel?.goal === i ? "travel-goal" : ""}" data-tile="${i}" data-state="${!c.seen ? "unknown" : active ? "active" : c.feature ? "used" : "empty"}" aria-label="${escapeHTML(tileName(c))}, column ${(i % W) + 1}, row ${Math.floor(i / W) + 1}" ${locked || (c.seen && c.wall) ? "disabled" : ""}>${art}${c.seen && c.wall ? '<span class="terrain-stop" aria-hidden="true">×</span>' : ""}${active ? `<span class="tile-status" aria-hidden="true">${c.event === "stairs" ? "↓" : "!"}</span>` : c.seen && c.feature ? '<span class="tile-status used" aria-hidden="true">✓</span>' : ""}${!c.seen && c.hint ? `<span class="tile-whisper" title="${escapeHTML(c.hint.text)}" aria-hidden="true">${icon(c.hint.kind)}</span>` : ""}${corpse && c.event ? '<span class="corpse-mark" aria-hidden="true">†</span>' : ""}</button>`;
           })
           .join("");
         let leader = state.party.find(alive) || state.party[0];
@@ -6230,6 +6876,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           portraitArt(leader?.job || "fighter", leader) +
           '<span class="walk-boots"><i></i><i></i></span>';
         positionPlayer(false);
+        renderPursuer();
       }
 
       function positionPlayer(animate = true) {
@@ -6249,7 +6896,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           state.party
             .map((h, i) => {
               let status = injury(h);
-              return `<article class="hero ${status} ${state.target === i ? "selected" : ""}" id="hero-${i}"><div class="hero-dossier"><button class="portrait" id="portrait-${i}" data-target="${i}" aria-label="Healing target: ${h.name}" aria-pressed="${state.target === i}" ${busy || !alive(h) ? "disabled" : ""}>${portraitArt(h.job, h)}${statusMarkup(h)}</button><div class="hero-name">${h.name}<small>${className(h.job)} · Lv.${h.level}</small></div></div><div class="hero-controls"><div class="hero-title-line"><span class="hp-info">HP ${h.hp} / ${h.maxHp}</span><span class="injury ${status}">${h.stun ? "stunned" : status}</span></div>${drawMachine("hero-" + i, h.last, { hero: i, disabled: busy || !state.enemy || !h.hp || state.over })}<div class="bars">${healthMarkup(h)}<div class="healthbar exp" title="Experience"><i style="width:${(h.xp / (h.level * 12)) * 100}%"></i></div></div><div class="edit-line"><span>${h.xp}/${h.level * 12} EXP</span><button class="edit-button" data-edit="${i}" ${busy || state.over ? "disabled" : ""} aria-label="Edit ${h.name}'s reels">✎ ${h.points} points</button></div></div></article>`;
+              return `<article data-gear-target="${i}" class="hero ${status} ${state.target === i ? "selected" : ""}" id="hero-${i}"><div class="hero-dossier"><button class="portrait" id="portrait-${i}" data-target="${i}" aria-label="Healing target: ${h.name}" aria-pressed="${state.target === i}" ${busy || !alive(h) ? "disabled" : ""}>${portraitArt(h.job, h)}${statusMarkup(h)}</button><div class="hero-name">${h.name}<small>${className(h.job)} · Lv.${h.level}</small></div>${equipmentMarkup(h, i)}</div><div class="hero-controls"><div class="hero-title-line"><span class="hp-info">HP ${h.hp} / ${h.maxHp}</span><span class="injury ${status}">${h.stun ? "stunned" : status}</span></div>${drawMachine("hero-" + i, h.last, { hero: i, disabled: busy || !state.enemy || !h.hp || state.over })}<div class="bars">${healthMarkup(h)}<div class="healthbar exp" title="Experience"><i style="width:${(h.xp / (h.level * 12)) * 100}%"></i></div></div><div class="edit-line"><span>${h.xp}/${h.level * 12} EXP</span><button class="edit-button" data-edit="${i}" ${busy || state.over ? "disabled" : ""} aria-label="Edit ${h.name}'s reels">✎ ${h.points} points</button></div></div></article>`;
             })
             .join("") +
           Array.from(
@@ -6263,7 +6910,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           paired = enemies.length > 1;
         $("#encounter").classList.toggle("paired-enemies", paired);
         $("#encounter").innerHTML = enemies.length
-          ? `<h3 class="enemy-label">${paired ? "Enemies · click a target" : "Enemy"}</h3><div class="enemy-roster">${enemies.map((e, k) => `<div class="enemy-box ${e === state.enemy ? "selected-enemy" : ""} ${e.hp <= 0 ? "enemy-corpse" : ""}" id="${k ? "enemy-2" : "enemy"}" data-enemy-id="${e.id}"><button class="enemy-art" id="${k ? "enemy-art-2" : "enemy-art"}" data-enemy-target="${e.id}" aria-label="Damage target: ${e.name}" aria-pressed="${e === state.enemy}" ${busy || e.hp <= 0 ? "disabled" : ""}>${portraitArt(e.art, e)}${statusMarkup(e)}</button><div class="enemy-info"><h4>${e.name}${e.elite ? " · BOSS" : ""}</h4><span class="enemy-health-label">HP ${e.hp} / ${e.maxHp} · <span class="injury ${injury(e)}">${injury(e)}</span></span>${healthMarkup(e, "enemy-hp")}<span class="enemy-clock">${e.hp <= 0 ? "Slain" : e.stun ? "Stunned · one turn" : "Attacks in " + e.countdown + (e.countdown === 1 ? " spin" : " spins")}</span><p class="enemy-stats">${e.strikes} strike${e.strikes > 1 ? "s" : ""} · base ${e.damage} damage<br>Every ${e.frequency} spins${e.block ? " · " + e.block + " block" : ""}</p></div>${drawMachine(k ? "enemy-2" : "enemy", e.last, { enemy: true, title: paired ? e.name + " rolls here" : "The enemy prepares its attack…", disabled: true })}</div>`).join("")}</div>`
+          ? `<h3 class="enemy-label">${paired ? "Enemies · click a target" : "Enemy"}</h3><div class="enemy-roster">${enemies.map((e, k) => `<div class="enemy-box ${e.elite ? "elite-enemy" : ""} ${e === state.enemy ? "selected-enemy" : ""} ${e.hp <= 0 ? "enemy-corpse" : ""}" id="${k ? "enemy-2" : "enemy"}" data-enemy-id="${e.id}"><button class="enemy-art" id="${k ? "enemy-art-2" : "enemy-art"}" data-enemy-target="${e.id}" aria-label="Damage target: ${e.name}" aria-pressed="${e === state.enemy}" ${busy || e.hp <= 0 ? "disabled" : ""}>${portraitArt(e.art, e)}${statusMarkup(e)}</button><div class="enemy-info"><h4>${e.name}${e.elite ? (e.boss ? " · BOSS" : " · ELITE") : ""}</h4><span class="enemy-health-label">HP ${e.hp} / ${e.maxHp} · <span class="injury ${injury(e)}">${injury(e)}</span></span>${healthMarkup(e, "enemy-hp")}<span class="enemy-clock">${e.hp <= 0 ? "Slain" : e.stun ? "Stunned · one turn" : "Attacks in " + e.countdown + (e.countdown === 1 ? " spin" : " spins")}</span><p class="enemy-stats">${e.strikes} strike${e.strikes > 1 ? "s" : ""} · base ${e.damage} damage<br>Every ${e.frequency} spins${e.affix ? " · " + e.affix : ""}${e.block ? " · " + e.block + " block" : ""}</p></div>${drawMachine(k ? "enemy-2" : "enemy", e.last, { enemy: true, title: paired ? e.name + " rolls here" : "The enemy prepares its attack…", disabled: true })}</div>`).join("")}</div>`
           : `<h3 class="enemy-label">The margins</h3><div class="peace">${portraitArt("fighter", state.party.find(alive) || state.party[0])}<p>${state.over ? (state.won ? "Ten floors, one very stubborn party. You wrote the ending." : "Every expedition leaves a story. A fresh page is waiting.") : "A moment between monsters.<br>Gather your nerve. The next floor is waiting."}</p></div>`;
       }
 
@@ -6284,17 +6931,17 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           slots
             .map(
               ([type, count]) =>
-                `<button id="${ids[type] || "item-" + type}" data-use-item="${type}" title="${escapeHTML(ITEM_DEFS[type].description)}" ${busy || !canUseItem(type) ? "disabled" : ""}>${icon(ITEM_DEFS[type].icon)}<span>${ITEM_DEFS[type].name} ×${count}</span><small>${ITEM_DEFS[type].brief}</small></button>`,
+                `<button id="${ids[type] || "item-" + type}" data-use-item="${type}" draggable="${!!ITEM_DEFS[type].equipment}" data-drag-item="${type}" title="${escapeHTML(ITEM_DEFS[type].description)}" ${busy || !canUseItem(type) ? "disabled" : ""}>${icon(ITEM_DEFS[type].icon)}<span>${ITEM_DEFS[type].name} ×${count}</span><small>${ITEM_DEFS[type].brief}</small></button>`,
             )
             .join("") +
           Array.from(
-            { length: Math.max(0, 6 - slots.length) },
+            { length: Math.max(0, 3 - slots.length) },
             () =>
               '<button class="empty-pocket" disabled>' +
               icon("bag") +
               "<span>Empty pocket</span><small>One item type per pocket</small></button>",
           ).join("");
-        $("#bag-count").textContent = slots.length + " / 6 types";
+        $("#bag-count").textContent = slots.length + " / 3 types";
         $("#manage-bag").disabled = busy || state.over || !slots.length;
       }
       function renderResult(result, fresh = true) {
@@ -6359,12 +7006,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         let c = state.map[i];
         const fresh = !c.seen;
         c.seen = true;
-        if (fresh) c.fogSince = Date.now();
+        if (fresh) c.fogSince = state.exploreTime || 0;
         if (fresh && c.room) {
           state.map.forEach((other, index) => {
             if (other.room !== c.room || other.seen) return;
             other.seen = true;
-            other.fogSince = Date.now();
+            other.fogSince = state.exploreTime || 0;
             other.roomRevealedAt = Date.now();
             if (other.event === "stairs") state.exitFound = true;
             const el = $(`[data-tile="${index}"]`);
@@ -6441,8 +7088,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           return;
         if (goal === state.position) {
           let c = state.map[goal];
-          if (c.event === "stairs") stairs();
-          else if (["well", "shop", "ruin"].includes(c.event)) {
+          if (c.event === "stairs" && state.exitReached) stairs();
+          else if (c.event) {
             busy = true;
             render();
             try {
@@ -6491,7 +7138,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             const staleEntry = isStale(c),
               resolved = !c.event || !!c.activated;
             c.fogged = false;
-            c.fogSince = Date.now();
+            c.fogSince = state.exploreTime || 0;
             state.position = i;
             state.steps++;
             c.lastVisitedStep = state.steps;
@@ -6503,12 +7150,20 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             await waitMovement(fresh ? 205 : 180, travel.boost);
             $("#map-player").classList.remove("walking");
             refreshStaleMap();
+            if (await advancePursuer()) {
+              travel = null;
+              break;
+            }
+            if (fresh && !c.event && (await minorTravelEvent(c))) {
+              travel = null;
+              break;
+            }
             if (staleEntry && resolved && Math.random() < 0.12) {
               travel = null;
               beginEncounter(false, { wandering: true });
               renderMap();
               renderEncounter();
-              log("Ambush! A wandering enemy bursts from the fog.");
+              log("Ambush! Something was waiting in the old passages.");
               smokePoof($(`[data-tile="${i}"]`), true);
               await encounterEntrance();
               break;
@@ -6518,6 +7173,15 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
               state.exitFound = true;
               state.exitReached = true;
               c.activated = true;
+              if (!state.floorBossDefeated && !c.bossDefeated) {
+                state.exitPromptPending = i === travel.goal;
+                travel = null;
+                beginEncounter(true, { stairBoss: true });
+                renderMap();
+                renderEncounter();
+                await encounterEntrance();
+                break;
+              }
               if (i !== travel.goal) continue;
             }
             const passOptional =
@@ -6576,7 +7240,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         if (type === "beacon") {
           showSpotlight(
             "A rare beacon",
-            "Eight little squares of light.",
+            "A lantern awakens beneath the pencil.",
             `<div class="stage-art">${icon("beacon")}</div><div class="stage-result">Reveal covered cells within one tile,<br>including the diagonals.</div>`,
             "beacon",
           );
@@ -6587,13 +7251,17 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           result(icon("beacon") + " A little light spreads through the paper.");
           shakeBook(2);
           burst($(`[data-tile="${state.position}"]`), "gold", 20);
-          let around = neighbors(state.position, true).filter(
+          let around = beaconTiles(state.position).filter(
             (i) => !state.map[i].seen,
           );
           pulseBeacon();
           for (let ring of [
             around.filter((i) => neighbors(state.position).includes(i)),
-            around.filter((i) => !neighbors(state.position).includes(i)),
+            around.filter(
+              (i) =>
+                !neighbors(state.position).includes(i) && tileDistance(i) <= 1,
+            ),
+            around.filter((i) => tileDistance(i) > 1),
           ])
             await Promise.all(
               ring.map(async (i, k) => {
@@ -6627,11 +7295,25 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           state.exitReached = true;
           c.activated = true;
           state.exitPromptPending = true;
+          if (!state.floorBossDefeated && !c.bossDefeated) {
+            beginEncounter(true, { stairBoss: true });
+            renderEncounter();
+            await encounterEntrance();
+          }
           return true;
         }
         return false;
       }
       function enemyReels(art) {
+        art =
+          {
+            gnawer: "rat",
+            bellkeeper: "skull",
+            widow: "rat",
+            oracle: "ghost",
+            pageeater: "abomination",
+            pursuer: "revenant",
+          }[art] || art;
         art =
           {
             revenant: "skull",
@@ -6687,30 +7369,54 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       }
       function enemyBalance(
         depth,
-        { boss = false, elite = false, pair = false, mimic = false } = {},
+        {
+          boss = false,
+          elite = false,
+          pair = false,
+          mimic = false,
+          stronghold = false,
+        } = {},
       ) {
+        const growth = Math.max(0, depth - 3);
         return {
           maxHp: boss
-            ? 140
+            ? Math.ceil(30 + depth * 9 + growth * growth * 3.2)
             : Math.ceil(
-                (16 + depth * 5) * (elite ? 1.8 : mimic ? 1.2 : pair ? 0.7 : 1),
+                (16 + depth * 5 + growth * growth * 0.45) *
+                  (elite ? 1.38 : 1) *
+                  (stronghold ? 1.5 : 1) *
+                  (mimic ? 1.2 : 1) *
+                  (pair ? 0.78 : 1),
               ),
           damage: boss
-            ? 5
+            ? 2 + Math.floor(depth / 3)
             : Math.max(
                 1,
                 Math.floor(
-                  (2 + Math.floor((depth - 1) / 3) + (elite ? 1 : 0)) *
-                    (pair ? 0.75 : 1),
+                  (2 +
+                    Math.floor((depth - 1) / 3) +
+                    (elite ? 1 : 0) +
+                    (stronghold ? 1 : 0)) *
+                    (pair ? 0.8 : 1),
                 ),
               ),
-          frequency: boss || elite ? 2 : depth < 3 ? 3 : depth < 9 ? 2 : 1,
-          strikes: boss || (elite && depth >= 7) ? 2 : 1,
+          frequency: stronghold
+            ? 2
+            : boss
+              ? depth >= 7
+                ? 1
+                : 2
+              : depth < 3
+                ? 3
+                : depth < 9
+                  ? 2
+                  : 1,
+          strikes: (boss && depth >= 6) || (stronghold && depth >= 7) ? 2 : 1,
         };
       }
       function beginEncounter(boss = false, options = {}) {
         const depth = state.depth,
-          elite = !!options.elite,
+          stronghold = !!options.elite,
           pools =
             depth >= 8
               ? [
@@ -6730,40 +7436,61 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                     { name: "Blotling", art: "slime" },
                     { name: "Skeletal warrior", art: "skull" },
                   ],
+          band = [
+            { name: "Candle gnawer", art: "gnawer" },
+            { name: "Blind bellkeeper", art: "bellkeeper" },
+            { name: "Thorn widow", art: "widow" },
+            { name: "Gutter oracle", art: "oracle" },
+            { name: "The page eater", art: "pageeater" },
+          ][Math.min(4, Math.floor((depth - 1) / 2))],
           count =
             options.count ||
             (!boss &&
-            !elite &&
+            !stronghold &&
             !options.wandering &&
-            depth >= 5 &&
-            Math.random() < 0.12
+            depth >= 4 &&
+            Math.random() < Math.min(0.45, 0.08 + (depth - 4) * 0.055)
               ? 2
               : 1),
           create = (index) => {
-            const b = options.mimic
-                ? { name: "The hungry chest", art: "mimic" }
-                : boss
-                  ? { name: "The Last Redaction", art: "lich" }
-                  : elite
-                    ? { name: "The Bastion Butcher", art: "abomination" }
-                    : pick(pools),
+            const elite = boss || stronghold || Math.random() < 0.065,
+              affix = elite
+                ? pick(["Ironbound", "Frenzied", "Venomous"])
+                : null,
+              b = options.pursuer
+                ? { name: "The Unwritten", art: "pursuer" }
+                : options.mimic
+                  ? { name: "The hungry chest", art: "mimic" }
+                  : boss
+                    ? stairBossType(depth)
+                    : stronghold
+                      ? { name: "The Bastion Butcher", art: "abomination" }
+                      : pick([...pools, band, band]),
               stats = enemyBalance(depth, {
                 boss,
                 elite,
+                stronghold,
                 mimic: options.mimic,
                 pair: count === 2,
               }),
-              frequency = stats.frequency;
+              frequency =
+                affix === "Frenzied"
+                  ? Math.max(1, stats.frequency - 1)
+                  : stats.frequency;
             return {
               ...b,
               ...stats,
+              frequency,
+              affix,
+              stronghold,
+              pursuer: !!options.pursuer,
               id: "enemy-" + Date.now() + "-" + index,
               hp: stats.maxHp,
               mimic: !!options.mimic,
               ambush: !!options.wandering,
               countdown: frequency,
               stun: 0,
-              block: 0,
+              block: affix === "Ironbound" ? 2 + depth : 0,
               boss,
               elite,
               reels: enemyReels(b.art).map((r) =>
@@ -6791,11 +7518,17 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         state.encounterReward = {
           count,
           boss,
-          elite,
+          elite: state.enemies.some((e) => e.elite),
+          stronghold,
+          stairBoss: !!options.stairBoss,
           ambush: !!options.wandering,
         };
         state.round = 1;
-        state.block = passive("guard");
+        state.block =
+          passive("guard") +
+          state.party
+            .filter(alive)
+            .reduce((n, h) => n + equipmentBonus(h, "guard"), 0);
         log(
           `${state.enemies.map((e) => e.name).join(" and ")} appear. Team block resets for this battle.`,
         );
@@ -6810,15 +7543,17 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           });
         let e = state.enemy;
         showSpotlight(
-          e.ambush
-            ? "Ambush in the fog!"
-            : e.mimic
-              ? "That chest has teeth!"
-              : "An unwelcome scribble",
           battleEnemies()
-            .map((e) => e.name)
+            .map((foe) => foe.name)
             .join(" & "),
-          `<div class="stage-art ${battleEnemies().length > 1 ? "paired-intro" : ""}" id="entrance-art">${battleEnemies()
+          e.boss
+            ? "STAIR GUARDIAN · ELITE · FLOOR " + state.depth
+            : e.elite
+              ? "ELITE · " + e.affix
+              : e.ambush
+                ? "AMBUSH!"
+                : "An enemy steps out of the margins.",
+          `<div class="stage-art ${battleEnemies().length > 1 ? "paired-intro" : ""}" id="entrance-art" data-elite="${e.elite}">${battleEnemies()
             .map((foe) => portraitArt(foe.art, foe))
             .join(
               "",
@@ -7145,6 +7880,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         while (h.xp >= h.level * 12) {
           h.xp -= h.level * 12;
           h.level++;
+          h.stats.levelsGained = (h.stats.levelsGained || 0) + 1;
+          levelUpFX(h);
           h.maxHp += 6;
           h.hp = Math.min(h.maxHp, h.hp + 6);
           h.points += 4;
@@ -7284,19 +8021,18 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         (entity.rage || 0) +
         (entity.stimulant ? 1 + Math.floor(entity.stimulant.power / 3) : 0);
       const defenceBonus = (entity) =>
+        equipmentBonus(entity, "defence") +
         Math.floor((entity.rage || 0) / 3) +
         (entity.stimulant ? 1 + Math.floor(entity.stimulant.power / 5) : 0);
       function statusMarkup(entity) {
         if (entity.hp <= 0 || entity.dead) return "";
-        return `<span class="portrait-conditions">${entity.poison?.turns ? `<b class="poison-badge">${icon("poison")}${entity.poison.turns}</b>` : ""}${entity.rage ? `<b class="rage-badge">${icon("flame")}+${entity.rage}</b>` : ""}${entity.stimulant ? `<b class="buff-badge">${icon("flame")}${entity.stimulant.turns}</b>` : ""}</span>`;
+        return `<span class="portrait-conditions">${entity.poison?.turns ? `<b class="poison-badge">${icon("poison")}${entity.poison.turns}</b>` : ""}${entity.rage ? `<b class="rage-badge">${icon("rage")}+${entity.rage}</b>` : ""}${entity.stimulant ? `<b class="buff-badge">${icon("flame")}${entity.stimulant.turns}</b>` : ""}</span>`;
       }
       function syncStatusFX() {
         state.party.forEach((h, i) => {
           const root = $("#hero-" + i);
-          root?.classList.toggle(
-            "powered-up",
-            alive(h) && !!(h.rage || h.stimulant),
-          );
+          root?.classList.toggle("powered-up", alive(h) && !!h.stimulant);
+          root?.classList.toggle("raging", alive(h) && !!h.rage);
           root?.classList.toggle("poisoned", alive(h) && !!h.poison);
         });
         battleEnemies().forEach((e) => {
@@ -7403,7 +8139,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       }
       async function planHeroRoll(h, symbols) {
         const base = calculate(symbols),
-          seals = symbols.filter((s) => s.type === "class").length;
+          seals = symbols[1]?.type === "class" ? 1 : 0;
+        let flurryHits = [];
         if (seals) {
           if (h.job === "fighter") base.rage = seals;
           if (h.job === "healer") {
@@ -7436,6 +8173,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                       { label: "Flurry damage", icon: "sword", value: damage },
                     ],
                   });
+            flurryHits = flurry.map((face) => ATTACK_POWER[face.tier]);
+            if (multi > 1) flurryHits.push(Math.ceil(damage * multi) - damage);
+            Object.defineProperty(base, "flurryMultiplier", {
+              value: multi,
+              enumerable: false,
+            });
             base.attack += Math.ceil(damage * multi) * seals;
             state.lastFlurry = {
               heroId: h.id,
@@ -7447,8 +8190,34 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         }
         if (base.attack) base.attack += passive("attack") + attackBonus(h);
         else if (base.magic) base.magic += passive("attack") + attackBonus(h);
-        if (base.heal) base.heal += passive("heal");
+        if (base.attack || base.magic) {
+          if (base.attack) base.attack += equipmentBonus(h, "attack");
+          else base.magic += equipmentBonus(h, "attack");
+          base.magic += equipmentBonus(h, "magic");
+          base.poison += equipmentBonus(h, "poison");
+        }
+        if (base.heal) base.heal += passive("heal") + equipmentBonus(h, "heal");
+        base.teamHeal = (base.teamHeal || 0) + equipmentBonus(h, "teamHeal");
+        base.block += equipmentBonus(h, "block");
+        if (
+          equipmentBonus(h, "stunEvery") &&
+          h.stats.spins % equipmentBonus(h, "stunEvery") === 0
+        )
+          base.stun++;
+        if (
+          equipmentBonus(h, "stimEvery") &&
+          h.stats.spins % equipmentBonus(h, "stimEvery") === 0
+        )
+          base.stimulant += 2;
         if (base.block) base.block += passive("block");
+        const regular =
+          (base.attack || 0) +
+          (base.magic || 0) -
+          flurryHits.reduce((n, x) => n + x, 0);
+        Object.defineProperty(base, "hitSegments", {
+          value: [...(regular > 0 ? [regular] : []), ...flurryHits],
+          enumerable: false,
+        });
         return base;
       }
       async function spin(i) {
@@ -7497,8 +8266,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
               details: effectDetails(base),
             }),
             sums = scaleEffects(base, multiplier),
+            criticalImpact = multiplier > 1 || base.flurryMultiplier > 1,
             area =
-              multiplier > 1 ||
+              criticalImpact ||
               symbols.some(
                 (s) => ["attack", "magic"].includes(s.type) && s.tier >= 3,
               ) ||
@@ -7512,6 +8282,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             parts.push(
               `<span>${icon(h.job === "mage" ? "magic" : "flurry")}${classAbilityName(h.job)}</span>`,
             );
+          if (criticalImpact) h.stats.criticals = (h.stats.criticals || 0) + 1;
           state.lastPlayerRoll = {
             actor: i,
             heroId: h.id,
@@ -7519,12 +8290,13 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             multiplier,
             base,
             totals: { ...sums },
+            flurryMultiplier: base.flurryMultiplier || 1,
             area,
             targets: targets.map((e) => e.id),
           };
           if (sums.rage) {
             h.rage = Math.min(4, (h.rage || 0) + sums.rage);
-            parts.push(`<span>${icon("flame")}RAGE · +${h.rage} damage</span>`);
+            parts.push(`<span>${icon("rage")}RAGE · +${h.rage} damage</span>`);
             burst($("#portrait-" + i), "gold", 24);
           }
           if (sums.stimulant) {
@@ -7536,25 +8308,46 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           const damage = (sums.attack || 0) + (sums.magic || 0);
           if (damage) {
             let dealt = 0;
-            for (const e of targets.filter((e) => e.hp > 0)) {
-              beam(
-                $("#portrait-" + i),
-                enemyArtEl(e),
-                sums.magic ? "magic" : "attack",
-                {
-                  critical: multiplier > 1,
-                  lethal: damage >= e.hp + (e.block || 0) + defenceBonus(e),
-                },
-              );
-              const n = damageEnemy(
-                damage,
-                h.name +
-                  (multiplier > 1 ? " (×" + multiplier + " critical)" : ""),
-                e,
-              );
-              dealt += n;
-              h.stats.damageDealt += n;
-              if (e.hp === 0) h.stats.kills++;
+            const segments = base.hitSegments?.length
+              ? [...base.hitSegments]
+              : [(base.attack || 0) + (base.magic || 0)];
+            const bonus = damage - segments.reduce((n, x) => n + x, 0);
+            if (bonus > 0) segments.push(bonus);
+            state.lastPlayerRoll.hits = [];
+            for (let hit = 0; hit < segments.length; hit++) {
+              for (const e of targets.filter((e) => e.hp > 0)) {
+                const power = segments[hit];
+                if (power <= 0) continue;
+                beam(
+                  $("#portrait-" + i),
+                  enemyArtEl(e),
+                  sums.magic ? "magic" : "attack",
+                  {
+                    critical: criticalImpact,
+                    lethal: power >= e.hp + (e.block || 0) + defenceBonus(e),
+                  },
+                );
+                lunge($("#portrait-" + i), false);
+                if (hit === segments.length - 1 && criticalImpact)
+                  actionLabel(enemyArtEl(e), "CRITICAL · BONUS HIT");
+                const n = damageEnemy(
+                  power,
+                  h.name +
+                    (multiplier > 1 ? " (×" + multiplier + " critical)" : ""),
+                  e,
+                );
+                dealt += n;
+                h.stats.damageDealt += n;
+                if (e.hp === 0) h.stats.kills++;
+                state.lastPlayerRoll.hits.push({
+                  enemyId: e.id,
+                  power,
+                  actual: n,
+                  at: Date.now(),
+                });
+              }
+              if (hit < segments.length - 1)
+                await feedbackPause(skip ? 95 : Math.max(100, 190 / pace()));
             }
             state.lastPlayerRoll.actualDamage = dealt;
             parts.push(
@@ -7687,7 +8480,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
               attack:
                 Math.ceil(((raw.attack + raw.magic) * e.damage) / 9) +
                 (raw.attack || raw.magic ? attackBonus(e) : 0),
-              poison: raw.poison,
+              poison:
+                raw.poison +
+                (e.affix === "Venomous" && (raw.attack || raw.magic) ? 1 : 0),
               stimulant: raw.stimulant,
               heal: Math.ceil(raw.heal / 2),
               block: raw.block,
@@ -7717,21 +8512,34 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           }
           if (totals.stun) notes.push(stunHero(target, totals.stun));
           if (totals.attack) {
-            beam(
-              enemyArtEl(e),
-              $("#portrait-" + target),
-              raw.magic ? "magic" : "attack",
-              {
-                critical: multiplier > 1,
-                lethal: totals.attack >= victim.hp + state.block,
-              },
-            );
-            lunge(enemyArtEl(e), true);
-            let n = damageHero(
-              target,
-              totals.attack,
-              `${e.name}${multiplier > 1 ? " (×" + multiplier + " critical)" : ""}`,
-            );
+            let n = 0;
+            const hits =
+              multiplier > 1
+                ? [base.attack, totals.attack - base.attack]
+                : [totals.attack];
+            state.lastEnemyRoll.hits = [];
+            for (const power of hits) {
+              if (!alive(victim) || power <= 0) break;
+              beam(
+                enemyArtEl(e),
+                $("#portrait-" + target),
+                raw.magic ? "magic" : "attack",
+                {
+                  critical: multiplier > 1,
+                  lethal: power >= victim.hp + state.block,
+                },
+              );
+              lunge(enemyArtEl(e), true);
+              const actual = damageHero(
+                target,
+                power,
+                `${e.name}${multiplier > 1 ? " (×" + multiplier + " critical)" : ""}`,
+              );
+              n += actual;
+              state.lastEnemyRoll.hits.push({ power, actual, at: Date.now() });
+              if (hits.length > 1)
+                await feedbackPause(skip ? 95 : Math.max(100, 190 / pace()));
+            }
             state.lastEnemyRoll.actualDamage = n;
             notes.push("<strong>−" + n + " HP</strong> to " + victim.name);
             await pause(380);
@@ -7770,12 +8578,30 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           h.stats.battles++;
           addXP(
             h,
-            Math.round((8 + state.depth * 2) * 0.85) *
-              (state.encounterReward?.count || 1) *
-              (e.elite ? 2 : 1),
+            Math.round(
+              (8 + state.depth * 2) *
+                0.85 *
+                (state.encounterReward?.count || 1) *
+                (e.stronghold ? 2 : e.boss ? 1.35 : e.elite ? 1.2 : 1),
+            ),
           );
           h.points++;
         });
+        const leveled = state.party.filter(
+          (h) => alive(h) && Date.now() - (h.levelUpAt || 0) < 2000,
+        );
+        if (leveled.length) {
+          renderParty();
+          leveled.forEach(levelUpFX);
+          result(
+            leveled
+              .map(
+                (h) => h.name + " · LEVEL " + h.level + " · +6 HP · +4 points",
+              )
+              .join(" / "),
+          );
+          await feedbackPause(skip ? 180 : Math.max(180, 600 / pace()));
+        }
         state.battlesWon++;
         if (state.encounterReward?.ambush) clearFogAfterVictory();
         clearBattleStatuses();
@@ -7784,26 +8610,45 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         state.block = 0;
         if (e.boss) {
           state.floorBossDefeated = true;
-          log("The Last Redaction is erased. The final stairs are open.");
+          const stair = state.map.find((c) => c.event === "stairs");
+          if (stair) stair.bossDefeated = true;
+          log(e.name + " falls. The staircase is unguarded.");
         }
         log(
           `${e.name} is defeated. EXP for the survivors. Team armour expires.`,
         );
         renderBlock();
-        await treasureRoll(e.elite ? "stronghold" : "battle");
+        if (e.boss && state.depth === 10) {
+          finishVictory();
+          return;
+        }
+        await treasureRoll(
+          e.stronghold ? "stronghold" : e.boss ? "boss" : "battle",
+        );
         $("#field-note").textContent =
           "“The only way to write the ending is to keep turning pages.”";
         maybeDiscoveryHint();
+        if (state.exitPromptPending) {
+          state.exitPromptPending = false;
+          busy = false;
+          stairs();
+        }
       }
       async function treasureRoll(source = "chest") {
         let faces = lootFaces(),
           battle = source !== "chest",
           elite = source === "stronghold";
         showSpotlight(
-          battle ? "Spoils of battle" : "Treasure!",
-          battle
-            ? "The enemy leaves a few scraps worth keeping."
-            : "Something rattles inside the little wooden chest.",
+          source === "body"
+            ? "A traveller’s satchel"
+            : battle
+              ? "Spoils of battle"
+              : "Treasure!",
+          source === "body"
+            ? "A few keepsakes, left beneath the dust."
+            : battle
+              ? "The enemy leaves a few scraps worth keeping."
+              : "Something rattles inside the little wooden chest.",
           `<div class="trap-art">${icon(battle ? "skull" : "treasure")}</div>${drawMachine(
             "treasure",
             [
@@ -7825,6 +8670,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             baseGold += s.tier * (battle ? 2 + state.depth : 4 + state.depth);
           if (s.type === "artefact") found.push(makeArtefact(state.depth));
         }
+        if (source === "boss") baseGold *= 2;
         if (elite) {
           baseGold *= 3;
           const prized = makeArtefact(state.depth + 2);
@@ -7880,12 +8726,19 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           (multiplier > 1
             ? `<b>JACKPOT · ${baseGold} × ${multiplier} = ${gold} gold</b><br>`
             : "") + notes.map(escapeHTML).join(" · ");
-        $("#artefact-loot").innerHTML = found
-          .map(
-            (a) =>
-              `<div class="artefact-card">${icon("artefact")}<div><b>${a.name}</b><p>${artefactText(a)}</p>${artefactButton(a)}</div></div>`,
-          )
-          .join("");
+        $("#artefact-loot").innerHTML =
+          itemDrops
+            .map(
+              (drop) =>
+                `<div class="item-find">${icon(ITEM_DEFS[drop.type].icon)}<div><b>${ITEM_DEFS[drop.type].name} ×${drop.count}</b><p>${ITEM_DEFS[drop.type].description}</p></div></div>`,
+            )
+            .join("") +
+          found
+            .map(
+              (a) =>
+                `<div class="artefact-card">${icon("artefact")}<div><b>${a.name}</b><p>${artefactText(a)}</p>${artefactButton(a)}</div></div>`,
+            )
+            .join("");
         state.lastLoot = {
           source,
           symbols,
@@ -7900,6 +8753,10 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         log(
           (battle ? "Battle spoils: " : "Treasure: ") + notes.join(", ") + ".",
         );
+        document.querySelectorAll(".item-find").forEach((el) => {
+          popTitle(el);
+          burst(el, "gold", 30);
+        });
         goldCelebration(gold, multiplier > 1);
         await eventChoice([
           {
@@ -8021,34 +8878,46 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           return;
         state.exitPromptPending = false;
         let finalFloor = state.depth === 10,
-          locked = finalFloor && !state.floorBossDefeated;
+          locked = !state.floorBossDefeated;
         openModal(
           "A stairway in the paper",
-          `<p>The stairs are marked. Use them from anywhere on this floor, or stay and explore. There is no road back: only the next page.</p>${locked ? "<p><b>The Last Redaction bars the final descent.</b> Defeat the guardian marked near these stairs to write the ending.</p>" : ""}<p>Floor ${state.depth} / 10 · ${state.gold} gold · ${state.battlesWon} battles won</p><div class="modal-actions"><button class="primary" id="descend" ${locked ? "disabled" : ""}>${finalFloor ? "Write the final page ↗" : "Descend to floor " + (state.depth + 1)}</button><button data-close>Keep exploring</button></div>`,
+          `<p>The stairs are marked. Use them from anywhere on this floor, or stay and explore. There is no road back: only the next page.</p>${locked ? "<p><b>A guardian bars this staircase.</b> Defeat the guardian on the staircase to descend.</p>" : ""}<p>Floor ${state.depth} / 10 · ${state.gold} gold · ${state.battlesWon} battles won</p><div class="modal-actions"><button class="primary" id="descend" ${locked ? "disabled" : ""}>${finalFloor ? "Write the final page ↗" : "Descend to floor " + (state.depth + 1)}</button><button data-close>Keep exploring</button></div>`,
           "stairs",
         );
+        if (locked) {
+          const button = document.createElement("button");
+          button.className = "primary";
+          button.textContent = "Challenge the stair guardian";
+          $("#modal .modal-actions").prepend(button);
+          button.onclick = async () => {
+            closeModal();
+            busy = true;
+            try {
+              beginEncounter(true, { stairBoss: true });
+              render();
+              await encounterEntrance();
+            } finally {
+              busy = false;
+              render();
+              save();
+            }
+          };
+        }
         $("#descend").onclick = () => {
           if (busy || locked) return;
           closeModal();
           if (finalFloor) {
-            state.over = true;
-            state.won = true;
-            log("Ten floors conquered. The last page belongs to the company.");
-            openModal(
-              "You wrote the ending.",
-              `<p>Ten floors. ${state.battlesWon} hard-won battles. ${state.gold} gold. The company keeps walking, into a story of its own.</p><div class="modal-actions"><button class="primary" data-restart>A fresh page</button><button data-close>Keep the notebook</button></div>`,
-              "end",
-            );
-            burst($("#book"), "paper", 80);
-            render();
-            save();
+            finishVictory();
             return;
           }
           state.recruitPity = state.recruitFoundThisFloor
             ? 0
             : (state.recruitPity || 0) + 1;
           state.recruitFoundThisFloor = false;
+          fadeDiscoveryHints();
           state.depth++;
+          state.pursuer = null;
+          state.pursuerSpawned = false;
           state.map = generateFloor(state.depth);
           state.position = pos(1, 7);
           state.exitFound = false;
@@ -8175,6 +9044,10 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         for (const [key, count] of Object.entries(state.bag))
           if (!ITEM_DEFS[key] || !Number.isFinite(count) || count <= 0)
             delete state.bag[key];
+        for (const key of Object.keys(state.bag).slice(3)) {
+          state.pendingItems.push({ type: key, count: state.bag[key] });
+          delete state.bag[key];
+        }
         for (const [field, type] of Object.entries({
           potions: "potion",
           bombs: "bomb",
@@ -8203,6 +9076,10 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           (item.outside && state.enemy)
         )
           return false;
+        if (item.equipment)
+          return state.party.some(
+            (hero) => alive(hero) && hero.job === item.job,
+          );
         if (["potion", "bandage", "ration"].includes(type))
           return h.hp < h.maxHp;
         if (type === "salve")
@@ -8221,8 +9098,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       function inspectBag() {
         if (busy || state.over) return;
         openModal(
-          "Six pockets in the dark",
-          `<p>${Object.keys(state.bag).length} / 6 item types. Matching items share a pocket.</p><div class="bag-grid">${bagCards()}</div><div class="modal-actions"><button data-close class="primary">Close the satchel</button></div>`,
+          "Three pockets in the dark",
+          `<p>${Object.keys(state.bag).length} / 3 item types. Matching items share a pocket.</p><div class="bag-grid">${bagCards()}</div><div class="modal-actions"><button data-close class="primary">Close the satchel</button></div>`,
           "bag",
         );
       }
@@ -8238,7 +9115,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
               state.pendingItems.shift();
               continue;
             }
-            if (state.bag[drop.type] || Object.keys(state.bag).length < 6) {
+            if (state.bag[drop.type] || Object.keys(state.bag).length < 3) {
               state.bag[drop.type] = (state.bag[drop.type] || 0) + drop.count;
               state.pendingItems.shift();
               renderInventory();
@@ -8247,7 +9124,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             }
             showSpotlight(
               "The satchel is full",
-              `${item.name} ×${drop.count} · six different item types already packed.`,
+              `${item.name} ×${drop.count} · three different item types already packed.`,
               `<div class="incoming-item">${icon(item.icon)}<b>${item.name}</b><p>${item.description}</p></div><div class="bag-grid">${bagCards(true)}</div>`,
               "bag-overflow",
             );
@@ -8270,9 +9147,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
               state.pendingItems.shift();
               log(item.name + " left beside the full satchel.");
             } else if (choice === "found") {
-              drop.count--;
+              const used = await useItem(drop.type, {
+                free: true,
+                internal: true,
+              });
+              if (used) drop.count--;
               save();
-              await useItem(drop.type, { free: true, internal: true });
             } else if (choice.startsWith("swap:")) {
               const old = choice.slice(5);
               delete state.bag[old];
@@ -8297,6 +9177,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           !canUseItem(type)
         )
           return false;
+        if (ITEM_DEFS[type]?.equipment)
+          return selectEquipment(type, { free, internal });
         const wasBusy = busy,
           h = state.party[state.target],
           item = ITEM_DEFS[type];
@@ -8312,6 +9194,10 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         save();
         try {
           const target = state.target;
+          if (item.equipment)
+            return state.party.some(
+              (hero) => alive(hero) && hero.job === item.job,
+            );
           if (["potion", "bandage", "ration"].includes(type)) {
             const amount =
               type === "potion"
@@ -8357,7 +9243,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           }
           if (type === "chalk") {
             for (const i of neighbors(state.position, true))
-              if (!state.map[i].seen) await revealTile(i);
+              if (!state.map[i].seen && lineOfSight(state.position, i))
+                await revealTile(i);
             result(icon("chalk") + " A few more rooms in the torchlight.");
           }
           if (type === "firebomb") {
@@ -8481,6 +9368,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       function showSpotlight(title, subtitle, body, kind) {
         stagePrevious = document.activeElement;
         $("#stage-card").className = "stage-card " + kind;
+        $("#spotlight").dataset.kind = kind;
         $("#stage-card").innerHTML =
           `<div class="paper-tear" aria-hidden="true"></div><div class="eyebrow">A turn of fate / ${kind === "critical" ? "three of a kind" : kind === "enemy-intro" ? "encounter" : "field notes"}</div><h2 class="stage-title" id="stage-title">${title}</h2><p class="stage-subtitle">${subtitle}</p><div class="stage-content"><div class="scene-layout">${body}</div></div><div class="stage-actions" id="stage-actions"><button class="stage-skip" id="stage-skip" data-fast>Land the reels now ↗</button></div>`;
         $("#spotlight").hidden = false;
@@ -8504,7 +9392,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         if (!h) return;
         openModal(
           h.name + "’s lucky machinery",
-          `<p><b>${h.points} personal points.</b> ${classAbilityDescription(h.job)}<br>Each column is one reel; every weighted face is shown. Change a symbol for its tier cost. Inscribe an EMPTY face for 1 point. Upgrade I → II for 4 points, II → III for 9, attack / magic III → IV for 16. Weaken for 1.</p><div class="reel-editor">${h.reels.map((r, k) => `<section class="editor-row"><b>Reel ${k + 1}</b><div class="editor-slots">${r.map((s, j) => `<div class="editor-slot">${symbolMarkup(s)}<small>${s.type} ${tierName(s.tier)} · ${Math.round((100 * (s.weight || 1)) / r.reduce((n, f) => n + (f.weight || 1), 0))}%</small><div class="face-actions"><button data-cycle="${i},${k},${j}" ${h.points < FACE_COST[s.tier] ? "disabled" : ""}>Change ${FACE_COST[s.tier]}pt</button><button data-upgrade="${i},${k},${j}" ${h.points < (faceUpgradeCost(s) || Infinity) ? "disabled" : ""}>${s.type === "blank" ? "Inscribe " + (h.job === "healer" ? "heal" : h.job === "mage" ? "magic" : "attack") + " I · 1pt" : s.tier >= maxFaceTier(s.type) ? "Max" : "↑ " + FACE_COST[s.tier + 1] + "pt"}</button>${s.tier > 1 ? `<button data-weaken="${i},${k},${j}" ${h.points < 1 ? "disabled" : ""}>↓ 1pt</button>` : ""}</div></div>`).join("")}</div></section>`).join("")}</div><div class="modal-actions"><button class="primary" data-close>Back to the adventure</button></div>`,
+          `<p><b>${h.points} personal points.</b> ${classAbilityDescription(h.job)}<br>Each column is one reel; every weighted face is shown. Only the middle reel carries a class seal. Change a symbol for its tier cost. Inscribe an EMPTY face for 3 points. Upgrade I → II for 4 points, II → III for 9, attack / magic III → IV for 16. Weaken for 1.</p><div class="reel-editor">${h.reels.map((r, k) => `<section class="editor-row"><b>Reel ${k + 1}</b><div class="editor-slots">${r.map((s, j) => `<div class="editor-slot">${symbolMarkup(s)}<small>${s.type} ${tierName(s.tier)} · ${Math.round((100 * (s.weight || 1)) / r.reduce((n, f) => n + (f.weight || 1), 0))}%</small><div class="face-actions"><button data-cycle="${i},${k},${j}" ${h.points < (s.type === "blank" ? 3 : FACE_COST[s.tier]) ? "disabled" : ""}>Change ${s.type === "blank" ? 3 : FACE_COST[s.tier]}pt</button><button data-upgrade="${i},${k},${j}" ${h.points < (faceUpgradeCost(s) || Infinity) ? "disabled" : ""}>${s.type === "blank" ? "Inscribe " + (h.job === "healer" ? "heal" : h.job === "mage" ? "magic" : "attack") + " I · 3pt" : s.tier >= maxFaceTier(s.type) ? "Max" : "↑ " + FACE_COST[s.tier + 1] + "pt"}</button>${s.tier > 1 ? `<button data-weaken="${i},${k},${j}" ${h.points < 1 ? "disabled" : ""}>↓ 1pt</button>` : ""}</div></div>`).join("")}</div></section>`).join("")}</div><div class="modal-actions"><button class="primary" data-close>Back to the adventure</button></div>`,
           "editor",
         );
       }
@@ -8526,7 +9414,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
               ? faceUpgradeCost(s)
               : op === "weaken"
                 ? 1
-                : FACE_COST[s.tier];
+                : s.type === "blank"
+                  ? 3
+                  : FACE_COST[s.tier];
         if (
           !cost ||
           h.points < cost ||
@@ -8547,7 +9437,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           let next = (TYPES.indexOf(s.type) + 1) % TYPES.length;
           if (
             TYPES[next] === "class" &&
-            h.reels[r].some((face, j) => j !== f && face.type === "class")
+            (r !== 1 ||
+              h.reels[r].some((face, j) => j !== f && face.type === "class"))
           )
             next = (next + 1) % TYPES.length;
           s.type = TYPES[next];
@@ -8564,17 +9455,17 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           "A field guide for the brave",
           `<div class="guide-grid">
           <p><b>Explore.</b> Click a frontier tile, or follow known rooms. Routes avoid active fights and traps, and pass through known wells, shops and ruins unless selected. Click a new goal while walking or erasing. Walls and rivers block movement; bridges cross rivers. Stairs are random, reachable, and at least eight steps from camp.</p>
-          <p><b>Descend.</b> A shop map only marks the stairs. Select the stairs to open their menu, even after an earlier visit. Walking across them on a longer path does not stop you. Once reached, descend from anywhere or keep exploring. Defeat the final guardian on floor ten to win.</p>
-          <p><b>Old fog.</b> Revealed rooms fog one minute after you were last within one tile. Returning early resets the timer. Fog already formed stays until entered. A resolved foggy room can hide an ambush; winning scatters adjacent fog. Walls and rivers stay clear.</p>
+          <p><b>Descend.</b> A shop map only marks the stairs. Select the stairs to open their menu, even after an earlier visit. Walking across them on a longer path does not stop you. Once reached, descend from anywhere or keep exploring. Every staircase has an elite guardian. Defeat it before descending. Killing the tenth guardian wins the expedition.</p>
+          <p><b>Old passages.</b> Explored rooms may hide an ambush after a minute away. Only exploration time counts; battles and menus pause it. There is no fog on the map. Winning an ambush makes nearby passages safe again. On deeper floors The Unwritten follows your footsteps: watch for its moving mark.</p>
           <p><b>Act freely.</b> Any living hero can spin repeatedly. Click a hero portrait to select healing; click an enemy portrait to select damage. On deep floors two enemies may attack with independent clocks. Magic attacks work like blades. Poison deals one damage per action for a few turns. Stimulants boost damage and protection. Tier III / IV attacks and criticals hit ALL enemies.</p>
           <p><b>Three of a kind.</b> Three identical type-and-tier symbols roll a ×2–×4 critical. A class seal completes two matching symbols while also casting its ability. Blanks never crit. Event criticals stay in their original panel. Click rolling reels or press Space to land them. “Strike now” skips a critical result’s hold. Confirm event results with a button.</p>
           <p><b>Armour and stun.</b> Shared team armour absorbs damage and clears after battle. Any armour blocks a stun, consuming up to six armour per power. A stunned hero misses one go without advancing enemy clocks.</p>
-          <p><b>Live and learn.</b> Victory gives EXP and editing points. Each level adds 6 maximum HP and 4 personal points. Edit all three reels with ✎. Upgrading to tiers II / III / IV costs 4 / 9 / 16 points. Blank faces cost one point to inscribe. Rage, poison and buffs end with combat.</p>
+          <p><b>Live and learn.</b> Victory gives EXP and editing points. Each level adds 6 maximum HP and 4 personal points. Edit all three reels with ✎. Upgrading to tiers II / III / IV costs 4 / 9 / 16 points. Blank faces cost three points to inscribe. Rage, poison and buffs end with combat.</p>
           <p><b>The fallen.</b> A Revive Stone in your pack can be consumed once to restore a fallen hero at 75% health. Otherwise dead heroes leave corpses. Survivors confirm a burial with their cause, origin, time and statistics. Names remembered keeps those records. Healing never revives the dead.</p>
           <p><b>Discoveries.</b> Wells can be left for later; they roll 30% HP plus a bonus. Ruins can be ignored or examined for loot against trap damage. Cave rooms reveal together without activating anything. Rare walled strongholds house bosses with rich loot.</p>
-          <p><b>Supplies.</b> Carry six item types; matching items stack. Inspect the satchel to use or discard stacks. With a full bag, use a find, swap a stack or leave it. Ink bombs roll damage and poison. Equip one passive artefact. Shops sell supplies and healing. Adventurers join only if invited, up to three heroes.</p>
+          <p><b>Supplies.</b> Carry three item types; matching items stack. Drag class equipment onto a hero to fill their personal equipment slot. Eight unique pieces grant damage, protection or abilities. Inspect the satchel to use or discard stacks. With a full bag, use a find, swap a stack or leave it. Ink bombs roll damage and poison. Equip one passive artefact. Shops sell supplies and healing. Adventurers join only if invited, up to three heroes; a fourth can replace a current companion. Retired companions remain in the final records.</p>
           <p><b>Read the page.</b> Health bars move from green through yellow to red and flash below 25%. Faint hints suggest neighbouring discoveries without revealing them. The field log and final memorial roster scroll; other panels fit their content.</p>
-          <p><b>Controls.</b> The bottom bar lists keyboard and mouse actions. Tab and Enter reach every control. Animation speed and palette persist into new runs. Save HTML downloads the complete offline game; progress stays in this browser.</p>
+          <p><b>Controls.</b> The bottom bar lists keyboard and mouse actions. Tab and Enter reach every control. Options and Field Guide tabs turn to extra notebook pages. Autoresolve chooses battle actions and occasional emergency supplies. Animation speed, palette and autoresolve persist into new runs. Save HTML downloads the complete offline game; progress stays in this browser.</p>
         </div><div class="modal-actions"><button class="primary" data-close>Into the margins ↗</button></div>`,
           "help",
         );
@@ -8799,7 +9690,13 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         let el = document.createElement("div");
         el.className =
           "fx-beam " +
-          (type === "heal" ? "heal" : type === "block" ? "block" : "");
+          (type === "heal"
+            ? "heal"
+            : type === "block"
+              ? "block"
+              : type === "magic"
+                ? "magic"
+                : "");
         el.style.left = x + "px";
         el.style.top = y + "px";
         el.style.width = Math.hypot(dx, dy) + "px";
@@ -8842,6 +9739,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         state.speed = String(value);
         skip = state.speed === "skip";
         $("#animation-speed").value = state.speed;
+        $("#autoresolve").checked = !!state.autoresolve;
         document.body.classList.toggle("skip-cinematics", skip);
         document.body.style.setProperty("--speed", pace());
         if (skip) for (let a of liveAnimations) if (!a.juice) a.cancel();
@@ -8953,7 +9851,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           ...Object.keys(ITEM_DEFS).map((type) => ({
             type,
             tier: 1,
-            weight: 21 / 13,
+            weight: 21 / Object.keys(ITEM_DEFS).length,
           })),
           { type: "artefact", tier: 1, weight: 18 },
         ];
@@ -8976,29 +9874,52 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         showSpotlight(
           "A wandering adventurer",
           `${h.name} · ${job === "fighter" ? "Tank" : job[0].toUpperCase() + job.slice(1)}`,
-          `<div class="stage-art">${portraitArt(job, h)}</div><p class="encounter-quote">“${quote}”</p><div class="stage-result">${h.maxHp} HP · level ${h.level} · ${job === "healer" ? "Healing specialist" : job === "fighter" ? "Damage & team protection" : job === "mage" ? "Magic, poison & stimulants" : "Damage & poison"}<br>${full ? "Your three-person company is full." : "Invite them to join your company?"}</div>`,
+          `<div class="stage-art">${portraitArt(job, h)}</div><p class="encounter-quote">“${quote}”</p><div class="stage-result">${h.maxHp} HP · level ${h.level} · ${job === "healer" ? "Healing specialist" : job === "fighter" ? "Damage & team protection" : job === "mage" ? "Magic, poison & stimulants" : "Damage & poison"}<br>${full ? "Three companions already share your torch. You may invite a replacement." : "Invite them to join your company?"}</div>`,
           "recruit",
         );
-        let yes = await eventChoice(
-          full
-            ? [
-                {
-                  id: "recruit-decline",
-                  label: "Wish them safe travels",
-                  value: false,
-                },
-              ]
-            : [
-                {
-                  id: "recruit-accept",
-                  label: "Invite " + h.name,
-                  value: true,
-                },
-                { id: "recruit-decline", label: "Leave them be", value: false },
-              ],
-        );
+        let yes = await eventChoice([
+          { id: "recruit-accept", label: "Invite " + h.name, value: true },
+          {
+            id: "recruit-decline",
+            label: "Wish them safe travels",
+            value: false,
+          },
+        ]);
+        let replacement = -1;
+        if (yes === "true" && full) {
+          showSpotlight(
+            "Make room by the torch",
+            h.name + " can join if someone steps away.",
+            `<div class="replacement-grid">${state.party.map((member, i) => `<article>${portraitArt(member.job, member)}<b>${member.name}</b><small>${className(member.job)} · Lv.${member.level} · ${member.hp}/${member.maxHp} HP</small><button data-stage-choice="replace:${i}">Let ${member.name} rest</button></article>`).join("")}</div>`,
+            "recruit-swap",
+          );
+          const swap = await eventChoice([
+            {
+              id: "recruit-decline",
+              label: "Keep the current party",
+              value: false,
+            },
+          ]);
+          if (swap.startsWith("replace:")) replacement = Number(swap.slice(8));
+          else yes = "false";
+        }
         closeSpotlight();
-        if (yes === "true" && state.party.length < 3) {
+        if (yes === "true" && (state.party.length < 3 || replacement >= 0)) {
+          if (replacement >= 0) {
+            const old = state.party.splice(replacement, 1)[0];
+            state.retired ??= [];
+            state.retired.push({
+              ...old,
+              retiredAt: Date.now(),
+              stepsWithParty: state.steps - (old.joinedSteps || 0),
+            });
+            if (old.equipment)
+              state.pendingItems.push({ type: old.equipment, count: 1 });
+            log(
+              old.name +
+                " leaves the expedition alive. Their story is kept in the notebook.",
+            );
+          }
           h.joinedAt = Date.now();
           h.joinedSteps = state.steps;
           state.party.push(h);
@@ -9008,6 +9929,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           renderParty();
           sayHero(state.party.length - 1, "idle");
           result(icon("recruit") + h.name + " joins the company.");
+          if (state.pendingItems.length) await processPendingItems();
         } else {
           log(`The company wishes ${h.name} safe travels.`);
           result(icon("recruit") + " A brief meeting in the margins.");
@@ -9092,7 +10014,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         if (ITEM_DEFS[key]) {
           shopPurchasePending = true;
           const overflow =
-            !state.bag[key] && Object.keys(state.bag).length >= 6;
+            !state.bag[key] && Object.keys(state.bag).length >= 3;
           if (overflow) $("#overlay").hidden = true;
           state.pendingItems.push({ type: key, count: 1 });
           save();
@@ -9207,6 +10129,42 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       };
       function enemyLine(e, mood) {
         let lines = {
+          gnawer: {
+            entrance: ["Snff. Warm wax."],
+            attack: ["Krrr-CHOMP!"],
+            hurt: ["Skree!"],
+            defeat: ["Fssst…"],
+          },
+          bellkeeper: {
+            entrance: ["The bell has called your name."],
+            attack: ["TOLL!"],
+            hurt: ["A cracked note."],
+            defeat: ["Silence…"],
+          },
+          widow: {
+            entrance: ["Another thread in my web."],
+            attack: ["Stay still, little fly."],
+            hurt: ["Hisss!"],
+            defeat: ["The thread breaks…"],
+          },
+          oracle: {
+            entrance: ["I have already seen you fall."],
+            attack: ["Your ending approaches."],
+            hurt: ["An unwelcome future!"],
+            defeat: ["I did not see this…"],
+          },
+          pageeater: {
+            entrance: ["Your story smells sweet."],
+            attack: ["RIP. CHEW. SWALLOW."],
+            hurt: ["Bitter ink!"],
+            defeat: ["No more pages…"],
+          },
+          pursuer: {
+            entrance: ["Every footstep brought me closer."],
+            attack: ["No further."],
+            hurt: ["Still I follow."],
+            defeat: ["The trail… ends."],
+          },
           revenant: {
             entrance: ["The chains are hungry."],
             attack: ["RUST AND RUIN!"],
@@ -9284,16 +10242,19 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         document.body.append(node);
         setTimeout(() => node.remove(), 2200);
       }
+      let lastPartySpeechAt = 0;
       function sayHero(i, mood) {
         let h = state.party[i];
         if (!h || (!alive(h) && mood !== "panic")) return;
         let now = Date.now();
         if (
+          (mood === "idle" && now - lastPartySpeechAt < 7000) ||
           now - (h.lastQuipAt || 0) < 15000 ||
           fxRandom() > (mood === "panic" ? 0.75 : mood === "idle" ? 1 : 0.22)
         )
           return;
         h.lastQuipAt = now;
+        lastPartySpeechAt = now;
         speech(
           $("#portrait-" + i),
           visualPick(HERO_LINES[h.job]?.[mood] || ["Keep going."]),
@@ -9336,8 +10297,29 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       function isStale(c) {
         return !!(c.seen && !c.wall && c.fogged);
       }
-      function refreshStaleMap(now = Date.now()) {
-        if (!state || state.over) return false;
+      function canExplore() {
+        return (
+          !!state &&
+          !state.over &&
+          !state.enemy &&
+          (!busy || !!travel) &&
+          $("#overlay").hidden &&
+          $("#spotlight").hidden &&
+          !document.hidden
+        );
+      }
+      let exploreTickAt = performance.now(),
+        exploreWasAllowed = false;
+      function refreshStaleMap(now = performance.now()) {
+        const delta = Math.max(0, Math.min(1000, now - exploreTickAt));
+        exploreTickAt = now;
+        if (!state || !canExplore()) {
+          exploreWasAllowed = false;
+          return false;
+        }
+        if (exploreWasAllowed)
+          state.exploreTime = (state.exploreTime || 0) + delta;
+        exploreWasAllowed = true;
         let changed = false;
         state.map.forEach((c, i) => {
           if (!c.seen || c.wall) {
@@ -9345,13 +10327,13 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             return;
           }
           if (!c.fogged) {
-            if (tileDistance(i) <= 1 || c.fogSince == null) c.fogSince = now;
-            else if (now - c.fogSince >= FOG_DELAY) {
+            if (tileDistance(i) <= 1 || c.fogSince == null)
+              c.fogSince = state.exploreTime;
+            else if (state.exploreTime - c.fogSince >= FOG_DELAY) {
               c.fogged = true;
               changed = true;
             }
           }
-          $(`[data-tile="${i}"]`)?.classList.toggle("stale-fog", isStale(c));
         });
         return changed;
       }
@@ -9364,14 +10346,14 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           const c = state.map[i];
           if (!c.seen || !c.fogged || c.wall) continue;
           c.fogged = false;
-          c.fogSince = Date.now();
+          c.fogSince = state.exploreTime || 0;
           cleared.push(i);
           smokePoof($(`[data-tile="${i}"]`));
         }
         smokePoof($(`[data-tile="${state.position}"]`), true);
         state.lastFogClear = cleared;
         refreshStaleMap();
-        log("The fog scatters around the fallen ambusher.");
+        log("The nearby passages are quiet again.");
       }
       function announceStairs() {
         animate(
@@ -9759,7 +10741,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         ["attack", "magic"].includes(type) ? 4 : type === "class" ? 1 : 3;
       function faceUpgradeCost(face) {
         return face.type === "blank"
-          ? 1
+          ? 3
           : face.tier < maxFaceTier(face.type)
             ? FACE_COST[face.tier + 1]
             : undefined;
@@ -9867,7 +10849,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             mage: ["Ivo", "Aster", "Vey", "Rune"],
           },
           used = new Set(
-            [...state.party, ...state.graveyard].map((h) => h.name),
+            [...state.party, ...state.graveyard, ...(state.retired || [])].map(
+              (h) => h.name,
+            ),
           ),
           pool = pools[job];
         return (
@@ -9886,6 +10870,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           healingDone: 0,
           healingReceived: 0,
           xpEarned: 0,
+          itemsUsed: 0,
+          criticals: 0,
+          levelsGained: 0,
         };
       }
       function initLife(h) {
@@ -9918,6 +10905,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           maxHp: h.maxHp,
           stats: { ...emptyStats(), ...h.stats },
           cause,
+          points: h.points,
+          equipment: h.equipment,
+          reels: h.reels.map((r) => r.map((f) => ({ ...f }))),
           depth: state.depth,
           tile: state.position,
           joinedAt: h.joinedAt || Date.now(),
@@ -10222,20 +11212,52 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         h.last = h.reels.map((r) => ({ type: r[0].type, tier: r[0].tier }));
         return h;
       }
-      function runSummaryMarkup() {
+      function runSummaryMarkup(all = false) {
         const fallen = [...state.graveyard];
         for (const h of state.party)
           if (h.death && !fallen.some((d) => d.id === h.id))
             fallen.push(h.death);
-        const totals = [
-          ...fallen.map((d) => d.stats),
-          ...state.party.filter(alive).map((h) => h.stats),
-        ].reduce((out, stats) => {
+        const living = state.party.filter(alive),
+          retired = state.retired || [],
+          roster = all ? [...living, ...retired, ...fallen] : fallen;
+        const totals = [...living, ...retired, ...fallen].reduce((out, h) => {
           for (const key of Object.keys(emptyStats()))
-            out[key] += stats?.[key] || 0;
+            out[key] += h.stats?.[key] || 0;
           return out;
         }, emptyStats());
-        return `<div class="run-summary"><p>Floor <b>${state.depth} / 10</b> · <b>${state.battlesWon}</b> battles won · <b>${state.gold}</b> gold<br>${state.steps} steps · ${elapsedText(Date.now() - (state.startedAt || Date.now()))}<br>${totals.damageDealt} damage dealt · ${totals.healingDone} healing · ${totals.kills} enemies slain</p><h3>The names we remember · ${fallen.length}</h3><p class="roster-prompt">Scroll through their stories ↓</p><div class="fallen-roster" tabindex="0" role="region" aria-label="All fallen party members">${fallen.map((d) => `<article class="fallen-entry"><div class="fallen-portrait">${corpseArt(d.job)}</div>${memorialMarkup(d)}</article>`).join("") || "<p>No names have been lost.</p>"}</div></div>`;
+        const labels = {
+          spins: "Spins",
+          turnsMissed: "Turns missed",
+          battles: "Victories",
+          kills: "Kills",
+          damageDealt: "Damage dealt",
+          damageTaken: "Damage taken",
+          damageBlocked: "Damage blocked",
+          healingDone: "Healing given",
+          healingReceived: "Healing received",
+          xpEarned: "EXP earned",
+          itemsUsed: "Items used",
+          criticals: "Criticals",
+          levelsGained: "Levels gained",
+        };
+        return `<div class="run-summary"><p>Floor <b>${state.depth} / 10</b> · <b>${state.battlesWon}</b> battles won · <b>${state.gold}</b> gold<br>${state.steps} steps · ${elapsedText((state.finishedAt || Date.now()) - (state.startedAt || Date.now()))}<br>${totals.damageDealt} damage dealt · ${totals.healingDone} healing · ${totals.kills} enemies slain</p><h3>${all ? "Every name in the story" : "The names we remember"} · ${roster.length}</h3><p class="roster-prompt">Scroll through their stories ↓</p><div class="fallen-roster" tabindex="0" role="region" aria-label="${all ? "All adventurers, living and fallen" : "All fallen party members"}">${
+          roster
+            .map((h) => {
+              const dead = fallen.some((d) => d.id === h.id),
+                away = !!h.retiredAt,
+                stats = { ...emptyStats(), ...h.stats };
+              return `<article class="fallen-entry"><div class="fallen-portrait">${dead ? corpseArt(h.job) : portraitArt(h.job, h)}</div><div class="memorial-stats"><p><b>${escapeHTML(h.name)}</b> · ${className(h.job)} · Lv.${h.level} · ${dead ? "FALLEN" : away ? "RETIRED" : "SURVIVOR"}</p><dl><dt>Health / EXP / points</dt><dd>${dead ? "0" : h.hp} / ${h.maxHp} HP · ${h.xp || 0} EXP · ${h.points ?? "—"} points</dd><dt>Found</dt><dd>${escapeHTML(foundText(h.origin))}</dd><dt>Time with party</dt><dd>${elapsedText((h.diedAt || h.retiredAt || state.finishedAt || Date.now()) - h.joinedAt)} · ${h.stepsWithParty ?? Math.max(0, state.steps - (h.joinedSteps || 0))} steps</dd>${dead ? `<dt>Cause / resting place</dt><dd>${escapeHTML(h.cause)} · floor ${h.depth}, column ${(h.tile % W) + 1}, row ${Math.floor(h.tile / W) + 1}</dd>` : ""}<dt>Equipment</dt><dd>${EQUIPMENT_DEFS[h.equipment]?.name || "None"}</dd>${Object.entries(
+                labels,
+              )
+                .map(
+                  ([key, label]) => `<dt>${label}</dt><dd>${stats[key]}</dd>`,
+                )
+                .join(
+                  "",
+                )}<dt>Reels</dt><dd>${h.reels ? h.reels.map((r, k) => `Reel ${k + 1}: ${r.map((f) => f.type + " " + tierName(f.tier) + " [" + (f.weight || 1) + "]").join(", ")}`).join("<br>") : "Recorded in the burial notes"}</dd></dl></div></article>`;
+            })
+            .join("") || "<p>No names have been lost.</p>"
+        }</div></div>`;
       }
       function combatNumber(el, value, type) {
         if (!el || (type === "heal" && !value)) return;
@@ -10327,10 +11349,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       function recruitChance(
         partySize = state?.party.filter(alive).length || 1,
         missedFloors = state?.recruitPity || 0,
+        depth = state?.depth || 1,
       ) {
         return Math.min(
           partySize === 1 ? 0.85 : 0.7,
           (partySize === 1 ? 0.35 : 0.28) +
+            Math.max(0, 4 - depth) * 0.025 +
             missedFloors * (partySize === 1 ? 0.07 : 0.05),
         );
       }
@@ -10478,16 +11502,16 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           coinRain = null;
         }
       }
-      function startCoinRain(gold, massive = false) {
+      function startCoinRain(gold, massive = false, anchor = $("#stage-card")) {
         stopCoinRain();
         let remaining = Math.min(500, Math.max(100, gold * (massive ? 7 : 5)));
         coinRain = { remaining, timer: null };
         const shower = () => {
-          if ($("#spotlight").hidden) {
+          if (!anchor?.isConnected || !anchor.getClientRects().length) {
             stopCoinRain();
             return;
           }
-          let r = $("#stage-card").getBoundingClientRect(),
+          let r = anchor.getBoundingClientRect(),
             count = Math.min(coinRain.remaining, massive ? 12 : 8);
           for (let j = 0; j < count; j++)
             particles.push({
@@ -10511,13 +11535,16 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         shower();
       }
       function goldCelebration(gold, massive = false) {
-        burst(
-          $("#treasure-result") || $("#stage-card"),
-          "coin",
-          Math.min(240, Math.max(55, gold * 3)),
-        );
-        burst($("#stage-card"), "paper", massive ? 65 : 28);
-        startCoinRain(gold, massive);
+        const anchor = !$("#spotlight").hidden
+          ? $("#stage-card")
+          : !$("#overlay").hidden
+            ? $("#modal")
+            : $("#book");
+        const source =
+          anchor.id === "stage-card" ? $("#treasure-result") || anchor : anchor;
+        burst(source, "coin", Math.min(240, Math.max(55, gold * 3)));
+        burst(anchor, "paper", massive ? 65 : 28);
+        startCoinRain(gold, massive, anchor);
         shakeBook(massive ? 6 : 2.5);
       }
 
@@ -10602,15 +11629,61 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           renderTargets();
           save();
         }
-        if (b.hasAttribute("data-close")) closeModal();
-        if (b.hasAttribute("data-restart")) newRun();
-        if (b.hasAttribute("data-start-job")) newRun(b.dataset.startJob);
+        if (b.hasAttribute("data-close")) {
+          if (modalKind === "equipment") equipmentCancel?.();
+          else closeModal();
+        }
+        if (b.hasAttribute("data-restart")) chooseStartingClass(false);
+        if (b.hasAttribute("data-start-job")) startNewBook(b.dataset.startJob);
+        if (b.hasAttribute("data-gear-hero") && !busy) {
+          const h = state.party[Number(b.dataset.gearHero)];
+          toast(
+            h.equipment
+              ? EQUIPMENT_DEFS[h.equipment].description
+              : "Drag matching class equipment from your satchel, or click its item card.",
+          );
+        }
         if (b.id === "memorial") inspectGraveyard();
         for (let op of ["cycle", "upgrade", "weaken"])
           if (b.hasAttribute("data-" + op)) editFace(b.dataset[op], op);
       });
       $("#stage-card").addEventListener("click", (e) => {
         if (!e.target.closest("button,input,label")) fastForward();
+      });
+      $("#autoresolve").onchange = (e) => setAutoresolve(e.target.checked);
+      $("#options-tab").onclick = optionsPage;
+      $("#guide-tab").onclick = () => {
+        if (!busy) help();
+      };
+      document.addEventListener("dragstart", (e) => {
+        const item = e.target.closest("[data-drag-item]");
+        if (!item || busy || !EQUIPMENT_DEFS[item.dataset.dragItem]) return;
+        e.dataTransfer.setData("text/plain", item.dataset.dragItem);
+        e.dataTransfer.effectAllowed = "move";
+      });
+      document.addEventListener("dragover", (e) => {
+        const hero = e.target.closest("[data-gear-target]");
+        if (hero && !busy) {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = "move";
+          hero.classList.add("gear-hover");
+        }
+      });
+      document.addEventListener("dragleave", (e) =>
+        e.target.closest("[data-gear-target]")?.classList.remove("gear-hover"),
+      );
+      document.addEventListener("drop", (e) => {
+        document
+          .querySelectorAll(".gear-hover")
+          .forEach((el) => el.classList.remove("gear-hover"));
+        const hero = e.target.closest("[data-gear-target]");
+        if (hero) {
+          e.preventDefault();
+          equipCharacter(
+            e.dataTransfer.getData("text/plain"),
+            Number(hero.dataset.gearTarget),
+          );
+        }
       });
       $("#palette").onchange = (e) => setPalette(e.target.value);
       $("#animation-speed").onchange = (e) => setPace(e.target.value);
@@ -10630,11 +11703,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           toast("Finish the current action first, or fast-forward it.");
           return;
         }
-        openModal(
-          "Turn to a fresh page?",
-          '<p>This replaces the current expedition and its local save. Your HTML game file stays the same.</p><div class="modal-actions"><button class="primary" data-start-job="fighter">Start as tank · 44 HP</button><button data-start-job="rogue">Start as rogue · 26 HP</button><button data-close>Keep this story</button></div>',
-          "restart",
-        );
+        chooseStartingClass(false);
       };
       $("#download").onclick = () => {
         let blob = new Blob([HTML_BACKUP], { type: "text/html;charset=utf-8" }),
@@ -10704,6 +11773,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           trapFocus(e, $("#modal"));
           if (e.key === "Escape") {
             e.preventDefault();
+            if (modalKind === "starter" && !state.steps && !state.battlesWon)
+              return;
+            if (modalKind === "equipment") {
+              equipmentCancel?.();
+              return;
+            }
             closeModal();
           }
           return;
@@ -10766,8 +11841,24 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       });
       sizeCanvas();
       setInterval(() => {
-        if (refreshStaleMap()) save();
-      }, 500);
+        if (
+          refreshStaleMap() ||
+          (canExplore() &&
+            state.exploreTime - (state.lastExploreSave || 0) > 5000)
+        ) {
+          state.lastExploreSave = state.exploreTime;
+          save();
+        }
+      }, 250);
+      setInterval(
+        () =>
+          autoresolveTick().catch((error) => {
+            state.autoresolve = false;
+            save();
+            console.error(error);
+          }),
+        180,
+      );
       setInterval(() => {
         if (fxRandom() < 0.3) idleChatter();
       }, 24000);
@@ -10795,9 +11886,687 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       $("#margin-doodle").innerHTML =
         icon("beacon") +
         "<span>A beacon wakes the eight squares around it. Even the diagonal ones.</span>";
-      if (!load()) newRun();
-      else {
+      // Exploration time advances only while the map is available.
+      function lineOfSight(from, to) {
+        let x = from % W,
+          y = Math.floor(from / W),
+          tx = to % W,
+          ty = Math.floor(to / W);
+        const dx = Math.abs(tx - x),
+          dy = Math.abs(ty - y),
+          sx = x < tx ? 1 : -1,
+          sy = y < ty ? 1 : -1;
+        let err = dx - dy;
+        while (x !== tx || y !== ty) {
+          const twice = 2 * err,
+            oldX = x,
+            oldY = y;
+          if (twice > -dy) {
+            err -= dy;
+            x += sx;
+          }
+          if (twice < dx) {
+            err += dx;
+            y += sy;
+          }
+          if (
+            x !== oldX &&
+            y !== oldY &&
+            state.map[pos(x, oldY)]?.terrain === "stone" &&
+            state.map[pos(oldX, y)]?.terrain === "stone"
+          )
+            return false;
+          if (x === tx && y === ty) return true;
+          if (
+            state.map[pos(x, y)]?.wall &&
+            state.map[pos(x, y)].terrain !== "river"
+          )
+            return false;
+        }
+        return true;
+      }
+      function beaconTiles(origin) {
+        const near = neighbors(origin, true).filter((i) =>
+          lineOfSight(origin, i),
+        );
+        if (Math.random() < 0.55) {
+          const ring = state.map
+            .map((_, i) => i)
+            .filter(
+              (i) => tileDistance(i, origin) === 2 && lineOfSight(origin, i),
+            );
+          const extra = Math.min(ring.length, 1 + rand(5));
+          for (let k = 0; k < extra; k++)
+            near.push(ring.splice(rand(ring.length), 1)[0]);
+        }
+        return near;
+      }
+      function stairBossType(depth) {
+        const names = [
+          "The Rust Warden",
+          "The Candle King",
+          "The Blind Castellan",
+          "The Bell Below",
+          "The Thorn Matriarch",
+          "The Ash Collector",
+          "The Gutter Saint",
+          "The Bone Architect",
+          "The Keeper of Last Names",
+          "The Last Redaction",
+        ];
+        const art = [
+          "skull",
+          "gnawer",
+          "revenant",
+          "bellkeeper",
+          "widow",
+          "demon",
+          "oracle",
+          "abomination",
+          "pageeater",
+          "lich",
+        ][depth - 1];
+        return { name: names[depth - 1], art };
+      }
+      function fadeDiscoveryHints() {
+        document
+          .querySelectorAll(".discovery-whisper,.speech-bubble")
+          .forEach((el) => {
+            setTimeout(() => el.remove(), 160);
+            el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 120 })
+              .finished.then(() => el.remove())
+              .catch(() => el.remove());
+          });
+      }
+      function pursuerRoute(start, goal) {
+        const costs = new Map([[start, 0]]),
+          came = new Map(),
+          queue = [start];
+        while (queue.length) {
+          queue.sort((a, b) => costs.get(a) - costs.get(b));
+          const i = queue.shift();
+          if (i === goal) break;
+          for (const j of neighbors(i)) {
+            if (state.map[j].wall) continue;
+            const next = costs.get(i) + (state.map[j].seen ? 1 : 2.5);
+            if (next < (costs.get(j) ?? Infinity)) {
+              costs.set(j, next);
+              came.set(j, i);
+              if (!queue.includes(j)) queue.push(j);
+            }
+          }
+        }
+        if (!costs.has(goal)) return [];
+        const path = [];
+        for (let i = goal; i !== start; i = came.get(i)) {
+          if (i === undefined) return [];
+          path.unshift(i);
+        }
+        return path;
+      }
+      function renderPursuer() {
+        document.querySelectorAll(".pursuer-token").forEach((e) => e.remove());
+        const p = state.pursuer;
+        if (!p || !state.map[p.position]?.seen) return;
+        const cell = $(`[data-tile="${p.position}"]`);
+        if (!cell) return;
+        const marker = document.createElement("span");
+        marker.className = "pursuer-token";
+        marker.innerHTML = icon("pursuer");
+        marker.title = "The Unwritten is hunting you";
+        cell.append(marker);
+        cell.setAttribute(
+          "aria-label",
+          cell.getAttribute("aria-label") + " · The Unwritten is here",
+        );
+      }
+      async function advancePursuer() {
+        if (state.depth < 3 || state.enemy || state.over) return false;
+        let p = state.pursuer;
+        if (
+          !p &&
+          !state.pursuerSpawned &&
+          state.map.filter((c) => c.seen && !c.wall).length >= 18
+        ) {
+          const reach = mapDistances(state.map, state.position);
+          let far = [...reach.keys()].filter(
+            (i) => reach.get(i) >= 6 && !state.map[i].event,
+          );
+          const visible = far.filter((i) => state.map[i].seen);
+          if (visible.length) far = visible;
+          if (far.length) {
+            p = state.pursuer = { position: pick(far), beat: 0 };
+            state.pursuerSpawned = true;
+            log("Something is scratching toward you: The Unwritten.");
+            toast("THE UNWRITTEN · Something has begun to follow.");
+          }
+        }
+        if (!p) return false;
+        const oldPosition = p.position;
+        let contact = p.position === state.position;
+        if (!contact && ++p.beat % 2 === 0) {
+          // Aim one step ahead when a walkable interception route exists.
+          const ahead =
+            travel && travel.goal !== state.position
+              ? shortestPath(travel?.goal)?.[0]
+              : null;
+          let route = pursuerRoute(p.position, ahead ?? state.position);
+          if (route.length) p.position = route[0];
+          contact = p.position === state.position;
+        }
+        renderPursuer();
+        if (
+          oldPosition !== p.position &&
+          state.map[oldPosition].seen &&
+          state.map[p.position].seen
+        ) {
+          const marker = $(".pursuer-token"),
+            from = $(`[data-tile="${oldPosition}"]`)?.getBoundingClientRect(),
+            to = marker?.getBoundingClientRect();
+          if (marker && from && to) {
+            const scale = to.width / (marker.offsetWidth || to.width);
+            animate(
+              marker,
+              [
+                {
+                  transform: `translate(${(from.left - to.left) / scale}px,${(from.top - to.top) / scale}px) rotate(-5deg)`,
+                },
+                { transform: "translate(0,0) rotate(3deg)" },
+              ],
+              { duration: 400 / moveRate() },
+            );
+          }
+        }
+        if (!contact) return false;
+        state.pursuer = null;
+        travel = null;
+        beginEncounter(false, { pursuer: true, count: 1 });
+        renderEncounter();
+        renderMap();
+        smokePoof($(`[data-tile="${state.position}"]`), true);
+        await encounterEntrance();
+        return true;
+      }
+      async function minorTravelEvent(c) {
+        if (
+          state.steps - (state.lastMinorEventStep ?? -20) < 12 ||
+          Math.random() >= 0.025
+        )
+          return false;
+        state.lastMinorEventStep = state.steps;
+        if (Math.random() < 0.45) {
+          showSpotlight(
+            "A forgotten traveller",
+            "A quiet life, ended between the pages.",
+            `<div class="stage-art">${corpseArt("fighter")}</div><div class="stage-result">A worn satchel rests beside the body.</div>`,
+            "body",
+          );
+          await eventChoice([
+            { id: "stage-confirm", label: "Search the satchel", value: true },
+            { id: "body-leave", label: "Let them rest", value: false },
+          ]).then(async (choice) => {
+            closeSpotlight();
+            if (choice === "true") await treasureRoll("body");
+          });
+          c.corpses.push({
+            kind: "fighter",
+            name: "A forgotten traveller",
+            enemy: false,
+          });
+          return true;
+        }
+        showSpotlight(
+          "ROCKFALL!",
+          "The ceiling answers your footsteps.",
+          `<div class="rockfall-scene">${Array.from({ length: 8 }, (_, i) => `<span style="--rock:${i}">${icon("wall")}</span>`).join("")}</div>${drawMachine(
+            "rockfall",
+            [
+              { type: "safe", tier: 1 },
+              { type: "trap", tier: 1 },
+              { type: "safe", tier: 1 },
+            ],
+          )}${criticalSpace()}<div class="stage-result" id="rockfall-result">Keep your head down…</div>`,
+          "rockfall",
+        );
+        shakeBook(9);
+        burst($("#stage-card"), "dust", 85);
+        const faces = [
+            { type: "safe", tier: 1, weight: 7 },
+            { type: "trap", tier: 1, weight: 2 },
+            { type: "trap", tier: 2, weight: 1 },
+          ],
+          symbols = await runMachine("rockfall", [faces, faces, faces]);
+        const danger = symbols.reduce(
+            (n, f) => n + (f.type === "trap" ? f.tier : 0),
+            0,
+          ),
+          base = danger ? danger + Math.floor(state.depth / 4) : 0;
+        const mult = await rollCritical("Rockfall", symbols, false, {
+          context: "rockfall",
+          details: [{ label: "Falling stone", value: base, icon: "trap" }],
+        });
+        const target = state.party.findIndex(alive),
+          damage = base ? Math.ceil(base * mult) : 0;
+        $("#rockfall-result").textContent = damage
+          ? `${state.party[target].name} is caught beneath ${damage} damage worth of falling stone.`
+          : "The rocks miss the party. A dusty escape.";
+        await eventChoice([
+          { id: "stage-confirm", label: "Find solid ground", value: true },
+        ]);
+        closeSpotlight();
+        if (damage) damageHero(target, damage, "A sudden rockfall");
+        await processDeaths();
+        checkDefeat();
+        return true;
+      }
+      function levelUpFX(h) {
+        h.levelUpAt = Date.now();
+        const i = state.party.indexOf(h),
+          hero = $("#hero-" + i),
+          portrait = $("#portrait-" + i),
+          machine = $("#machine-hero-" + i);
+        [portrait, machine].forEach((el) => {
+          burst(el, "gold", 45);
+          animate(
+            el,
+            [
+              { transform: "scale(1)" },
+              { transform: "scale(1.12)", filter: "brightness(1.35)" },
+              { transform: "scale(1)" },
+            ],
+            { duration: 900, juice: true },
+          );
+        });
+        actionLabel(hero, "LEVEL " + h.level + " · +6 HP · +4 points");
+        shakeElement(hero, 3);
+      }
+      function finishVictory() {
+        state.over = true;
+        state.won = true;
+        state.enemy = null;
+        state.enemies = [];
+        state.block = 0;
+        state.finishedAt = Date.now();
+        state.gold += 100 + state.depth * 20;
+        log("The Last Redaction falls. All ten pages belong to your party.");
+        closeSpotlight();
         render();
+        save();
+        openModal(
+          "YOU WROTE THE ENDING!",
+          `<div class="victory-heading">TEN FLOORS CONQUERED</div>${runSummaryMarkup(true)}<div class="modal-actions"><button class="primary" data-restart>A fresh page</button><button data-close>Keep this story</button></div>`,
+          "end",
+        );
+        popTitle($("#modal-title"));
+        goldCelebration(300, true);
+        shakeBook(9);
+        for (let k = 0; k < 5; k++)
+          setTimeout(() => {
+            if (modalKind === "end" && state.won) {
+              burst($("#modal-title"), "confetti", 75);
+              burst($("#book"), "paper", 55);
+              shakeElement($("#modal-title"), 5);
+            }
+          }, k * 260);
+        setTimeout(stopCoinRain, 4200);
+      }
+      const EQUIPMENT_DEFS = {
+        ironSignet: {
+          name: "Iron Signet",
+          icon: "rage",
+          job: "fighter",
+          brief: "+2 blade damage",
+          description: "Tank equipment. Every damaging roll gains 2 damage.",
+          attack: 2,
+        },
+        bulwarkBadge: {
+          name: "Bulwark Badge",
+          icon: "block",
+          job: "fighter",
+          brief: "+3 opening armour",
+          description:
+            "Tank equipment. Start fights with 3 team block; resist 1 damage per incoming hit.",
+          guard: 3,
+          defence: 1,
+        },
+        glassRosary: {
+          name: "Glass Rosary",
+          icon: "heal",
+          job: "healer",
+          brief: "+2 healing",
+          description: "Healer equipment. Add 2 HP to healing rolls.",
+          heal: 2,
+        },
+        mercyBell: {
+          name: "Mercy Bell",
+          icon: "blessing",
+          job: "healer",
+          brief: "A little sanctuary",
+          description:
+            "Healer equipment. Every roll heals the party by 1 and adds 1 team block.",
+          teamHeal: 1,
+          block: 1,
+        },
+        silentBoots: {
+          name: "Silent Boots",
+          icon: "flurry",
+          job: "rogue",
+          brief: "Every fourth roll stuns",
+          description:
+            "Rogue equipment. +1 damage; every fourth roll stuns the target.",
+          attack: 1,
+          stunEvery: 4,
+        },
+        serpentPin: {
+          name: "Serpent Pin",
+          icon: "poison",
+          job: "rogue",
+          brief: "Venom-tipped blades",
+          description: "Rogue equipment. Damaging rolls add a short poison.",
+          poison: 1,
+        },
+        starLens: {
+          name: "Star Lens",
+          icon: "magic",
+          job: "mage",
+          brief: "+2 magic damage",
+          description:
+            "Mage equipment. Add 2 magic damage to every damaging roll.",
+          magic: 2,
+        },
+        stormQuill: {
+          name: "Storm Quill",
+          icon: "stimulant",
+          job: "mage",
+          brief: "Power every third roll",
+          description:
+            "Mage equipment. Every third roll grants a stimulant; +1 magic damage.",
+          magic: 1,
+          stimEvery: 3,
+        },
+      };
+      for (const [type, def] of Object.entries(EQUIPMENT_DEFS))
+        ITEM_DEFS[type] = { ...def, equipment: true };
+      function equipmentBonus(entity, key) {
+        return EQUIPMENT_DEFS[entity?.equipment]?.[key] || 0;
+      }
+      function equipmentMarkup(h, i) {
+        const e = EQUIPMENT_DEFS[h.equipment];
+        return `<button class="equipment-slot ${e ? "equipped" : ""}" data-gear-hero="${i}" title="${e ? e.description : "Drag matching class equipment here, or select it in your satchel."}" aria-label="${h.name}'s equipment: ${e ? e.name : "empty"}">${icon(e?.icon || "bag")}<span>${e ? e.name : "Equipment"}</span></button>`;
+      }
+      async function equipCharacter(
+        type,
+        index,
+        { free = false, internal = false } = {},
+      ) {
+        const h = state.party[index],
+          gear = EQUIPMENT_DEFS[type];
+        if (
+          !h ||
+          !alive(h) ||
+          !gear ||
+          h.job !== gear.job ||
+          state.over ||
+          (busy && !internal) ||
+          (!free && !state.bag[type])
+        )
+          return false;
+        if (!free) {
+          state.bag[type]--;
+          if (!state.bag[type]) delete state.bag[type];
+        }
+        const previous = h.equipment;
+        h.equipment = type;
+        if (previous) state.pendingItems.push({ type: previous, count: 1 });
+        closeModal();
+        renderParty();
+        syncStatusFX();
+        renderInventory();
+        save();
+        actionLabel($("#portrait-" + index), gear.name + " equipped");
+        burst($("#portrait-" + index), "gold", 30);
+        if (previous && !processingItems) {
+          const wasBusy = busy;
+          busy = true;
+          try {
+            await processPendingItems();
+          } finally {
+            busy = wasBusy;
+            render();
+            save();
+          }
+        }
+        return true;
+      }
+      function selectEquipment(type, options = {}) {
+        const gear = EQUIPMENT_DEFS[type];
+        if (!gear) return Promise.resolve(false);
+        return new Promise((resolve) => {
+          openModal(
+            gear.name,
+            `<p>${gear.description}</p><div class="equipment-choices">${state.party.map((h, i) => `<button data-gear-choice="${i}" ${alive(h) && h.job === gear.job ? "" : "disabled"}>${portraitArt(h.job, h)}<b>${h.name} · ${className(h.job)}</b><small>${h.equipment ? "Replace " + EQUIPMENT_DEFS[h.equipment].name : "Empty equipment slot"}</small></button>`).join("")}</div><div class="modal-actions"><button id="gear-cancel">Keep it in the bag</button></div>`,
+            "equipment",
+          );
+          let done = false;
+          const finish = async (index) => {
+            if (done) return;
+            done = true;
+            closeModal();
+            resolve(
+              index === null
+                ? false
+                : await equipCharacter(type, index, options),
+            );
+          };
+          document
+            .querySelectorAll("[data-gear-choice]")
+            .forEach(
+              (b) => (b.onclick = () => finish(Number(b.dataset.gearChoice))),
+            );
+          $("#gear-cancel").onclick = () => finish(null);
+          equipmentCancel = () => finish(null);
+        });
+      }
+      let equipmentCancel = null;
+      function setAutoresolve(value) {
+        state.autoresolve = !!value;
+        $("#autoresolve").checked = state.autoresolve;
+        save();
+      }
+      let autoActing = false,
+        autoNextAt = 0;
+      async function autoresolveTick() {
+        if (!state?.autoresolve || state.over || autoActing) return;
+        if (!$("#spotlight").hidden) {
+          if (
+            $("#spotlight").dataset.kind === "enemy-intro" ||
+            document.body.dataset.scene === "enemy-intro"
+          )
+            $("#stage-confirm:not(:disabled)")?.click();
+          // Event rewards and decisions remain yours; only combat presentation is automated.
+          return;
+        }
+        if (
+          !state.enemy ||
+          busy ||
+          !$("#overlay").hidden ||
+          Date.now() < autoNextAt
+        )
+          return;
+        const living = state.party
+          .map((h, i) => ({ h, i }))
+          .filter(({ h }) => alive(h));
+        if (!living.length) return;
+        autoActing = true;
+        try {
+          const weakest = living.reduce((a, b) =>
+            a.h.hp / a.h.maxHp < b.h.hp / b.h.maxHp ? a : b,
+          );
+          state.target = weakest.i;
+          const foe = livingEnemies().sort((a, b) => a.hp - b.hp)[0];
+          if (foe) state.enemy = foe;
+          const due = livingEnemies().some((e) => e.countdown <= 1);
+          const healer = living.find(({ h }) => h.job === "healer" && !h.stun);
+          let actor =
+            healer && weakest.h.hp / weakest.h.maxHp < 0.6
+              ? healer
+              : living
+                  .filter(({ h }) => !h.stun)
+                  .sort(
+                    (a, b) => autoDamageScore(b.h) - autoDamageScore(a.h),
+                  )[0] || living[0];
+          const itemReady =
+            state.actionSerial - (state.lastAutoItemAction ?? -6) >= 6;
+          if (itemReady && weakest.h.hp / weakest.h.maxHp < 0.25) {
+            const item = [
+              "potion",
+              "ration",
+              "bandage",
+              "salve",
+              "antidote",
+            ].find((t) => state.bag[t] && canUseItem(t));
+            if (item) {
+              state.lastAutoItemAction = state.actionSerial;
+              await useItem(item);
+              return;
+            }
+          }
+          if (
+            due &&
+            state.block < 1 &&
+            weakest.h.hp / weakest.h.maxHp < 0.45 &&
+            itemReady &&
+            state.bag.ward
+          ) {
+            state.lastAutoItemAction = state.actionSerial;
+            await useItem("ward");
+            return;
+          }
+          await spin(actor.i);
+        } finally {
+          autoActing = false;
+          autoNextAt = Date.now() + Math.max(90, 320 / pace());
+        }
+      }
+      function autoDamageScore(h) {
+        return (
+          h.reels.reduce(
+            (n, r) =>
+              n +
+              r.reduce(
+                (a, f) =>
+                  a +
+                  (f.weight || 1) *
+                    (["attack", "magic"].includes(f.type)
+                      ? ATTACK_POWER[f.tier]
+                      : f.type === "class"
+                        ? h.job === "rogue"
+                          ? 7
+                          : h.job === "mage"
+                            ? 5
+                            : 2
+                        : f.type === "poison"
+                          ? 1
+                          : 0),
+                0,
+              ) /
+                r.reduce((a, f) => a + (f.weight || 1), 0),
+            0,
+          ) + attackBonus(h)
+        );
+      }
+      function optionsPage() {
+        if (busy) {
+          toast("Finish this moment before turning the options page.");
+          return;
+        }
+        openModal(
+          "A few notes in the margin",
+          `<div class="options-grid"><label>Animation speed<select id="option-speed">${["1", "2", "3", "5", "skip"].map((v) => `<option value="${v}" ${v === state.speed ? "selected" : ""}>${v === "skip" ? "Skip cinematics" : v + "×"}</option>`).join("")}</select><small>Shakes and hit feedback remain at every speed.</small></label><label>Paper & ink<select id="option-palette">${["default", "dark", "warm"].map((v) => `<option value="${v}" ${v === state.palette ? "selected" : ""}>${v[0].toUpperCase() + v.slice(1)}</option>`).join("")}</select></label><label class="auto-option"><input type="checkbox" id="option-auto" ${state.autoresolve ? "checked" : ""}> Autoresolve battles<small>Chooses heroes, targets and occasional emergency supplies. Rewards and choices still wait for you.</small></label></div><div class="modal-actions"><button id="option-guide">Read the field guide</button><button id="option-download">Download HTML backup</button><button class="primary" data-close>Back to this page</button></div>`,
+          "options",
+        );
+        $("#option-speed").onchange = (e) => setPace(e.target.value);
+        $("#option-palette").onchange = (e) => setPalette(e.target.value);
+        $("#option-auto").onchange = (e) => setAutoresolve(e.target.checked);
+        $("#option-guide").onclick = help;
+        $("#option-download").onclick = () => $("#download").click();
+      }
+      function chooseStartingClass(initial = false) {
+        if (initial) {
+          state.awaitingStarter = true;
+          save();
+        }
+        openModal(
+          initial ? "Who opens the notebook?" : "Turn to a fresh page?",
+          `<p>${initial ? "Choose the first name in your story." : "Choose a new adventurer. This replaces the current expedition."}</p><div class="starter-grid">${[
+            "fighter",
+            "healer",
+            "rogue",
+            "mage",
+          ]
+            .map((job) => {
+              const h = makeHero(
+                {
+                  fighter: "Alden",
+                  healer: "Mira",
+                  rogue: "Wren",
+                  mage: "Orin",
+                }[job],
+                job,
+              );
+              return `<button data-start-job="${job}">${portraitArt(job, h)}<b>${className(job)}</b><small>${h.maxHp} HP · ${classAbilityName(job)}</small><span>${classAbilityDescription(job)}</span></button>`;
+            })
+            .join(
+              "",
+            )}</div>${initial ? "" : '<div class="modal-actions"><button data-close>Keep this story</button></div>'}`,
+          "starter",
+        );
+        if (initial) $("#modal .close").hidden = true;
+      }
+      function openBook(initial = false) {
+        const book = $("#book");
+        book.classList.remove("book-closed");
+        if (skip) {
+          shakeElement(book, 2);
+          return;
+        }
+        const overlay = document.createElement("div");
+        overlay.className = initial ? "book-cover" : "turning-page";
+        overlay.innerHTML = initial
+          ? "<span>SCRATCHPAD<br>DUNGEON<small>A little courage between the covers.</small>✧</span>"
+          : "";
+        book.append(overlay);
+        animate(
+          overlay,
+          [
+            { transform: "rotateY(0deg)", opacity: 1 },
+            { transform: "rotateY(-165deg)", opacity: 0 },
+          ],
+          {
+            duration: initial ? 1250 : 850,
+            easing: "cubic-bezier(.2,.65,.25,1)",
+            fill: "forwards",
+          },
+        )
+          .finished.then(() => overlay.remove())
+          .catch(() => overlay.remove());
+        burst(book, "paper", 32);
+      }
+      function startNewBook(job) {
+        newRun(job);
+        openBook(false);
+      }
+
+      if (!load()) {
+        newRun();
+        openBook(true);
+        chooseStartingClass(true);
+      } else {
+        render();
+        if (state.awaitingStarter) {
+          openBook(true);
+          chooseStartingClass(true);
+        }
         toast(
           state.over
             ? "A finished expedition. A fresh page is waiting."
