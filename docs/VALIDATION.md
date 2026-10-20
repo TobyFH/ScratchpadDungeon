@@ -13,4 +13,6 @@ Validated in the cloud environment on 20 October 2026 with Node 24.19.0, Chromiu
 
 Screenshots and local build outputs are in ignored `test-results/` and `dist/desktop/`. Tests and packaging commands are documented in the linked workflow guides and CI configuration.
 
+Production CI pins Ubuntu 24.04 and Node 24 action releases by commit (checkout v6, setup-node v6 and upload-artifact v7). The always-uploaded `browser-screenshots` artifact includes `browser-tests.log` alongside screenshots. The test step uses explicit Bash with `pipefail`, so retaining its output does not suppress a failing exit status.
+
 Physical controllers, Steam Input/overlay, SteamOS hardware, Windows/Proton, suspend/resume, handheld performance/battery behaviour and Steam depot installation remain manual release checks. No Steam upload or Valve verification was performed. The Steamworks documentation host returned HTTP 403 here; confirm Valve's current checklist through a partner account before submission.
