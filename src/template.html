@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#302d25" />
+    <title>Scratchpad Dungeon · A little adventure in the margins</title>
+    <!-- Embedded Patrick Hand typeface, distributed under the SIL Open Font License.
+Copyright (c) 2010-2012 Patrick Wagesreiter (mail@patrickwagesreiter.at)
+
+This Font Software is licensed under the SIL Open Font License, Version 1.1.
+This license is copied below, and is also available with a FAQ at:
+http://scripts.sil.org/OFL
+
+
+-----------------------------------------------------------
+SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
+-----------------------------------------------------------
+
+PREAMBLE
+The goals of the Open Font License (OFL) are to stimulate worldwide
+development of collaborative font projects, to support the font creation
+efforts of academic and linguistic communities, and to provide a free and
+open framework in which fonts may be shared and improved in partnership
+with others.
+
+The OFL allows the licensed fonts to be used, studied, modified and
+redistributed freely as long as they are not sold by themselves. The
+fonts, including any derivative works, can be bundled, embedded,
+redistributed and/or sold with any software provided that any reserved
+names are not used by derivative works. The fonts and derivatives,
+however, cannot be released under any other type of license. The
+requirement for fonts to remain under this license does not apply
+to any document created using the fonts or their derivatives.
+
+DEFINITIONS
+"Font Software" refers to the set of files released by the Copyright
+Holder(s) under this license and clearly marked as such. This may
+include source files, build scripts and documentation.
+
+"Reserved Font Name" refers to any names specified as such after the
+copyright statement(s).
+
+"Original Version" refers to the collection of Font Software components as
+distributed by the Copyright Holder(s).
+
+"Modified Version" refers to any derivative made by adding to, deleting,
+or substituting -- in part or in whole -- any of the components of the
+Original Version, by changing formats or by porting the Font Software to a
+new environment.
+
+"Author" refers to any designer, engineer, programmer, technical
+writer or other person who contributed to the Font Software.
+
+PERMISSION & CONDITIONS
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of the Font Software, to use, study, copy, merge, embed, modify,
+redistribute, and sell modified and unmodified copies of the Font
+Software, subject to the following conditions:
+
+1) Neither the Font Software nor any of its individual components,
+in Original or Modified Versions, may be sold by itself.
+
+2) Original or Modified Versions of the Font Software may be bundled,
+redistributed and/or sold with any software, provided that each copy
+contains the above copyright notice and this license. These can be
+included either as stand-alone text files, human-readable headers or
+in the appropriate machine-readable metadata fields within text or
+binary files as long as those fields can be easily viewed by the user.
+
+3) No Modified Version of the Font Software may use the Reserved Font
+Name(s) unless explicit written permission is granted by the corresponding
+Copyright Holder. This restriction only applies to the primary font name as
+presented to the users.
+
+4) The name(s) of the Copyright Holder(s) or the Author(s) of the Font
+Software shall not be used to promote, endorse or advertise any
+Modified Version, except to acknowledge the contribution(s) of the
+Copyright Holder(s) and the Author(s) or with their explicit written
+permission.
+
+5) The Font Software, modified or unmodified, in part or in whole,
+must be distributed entirely under this license, and must not be
+distributed under any other license. The requirement for fonts to
+remain under this license does not apply to any document created
+using the Font Software.
+
+TERMINATION
+This license becomes null and void if any of the above conditions are
+not met.
+
+DISCLAIMER
+THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+OF COPYRIGHT, PATENT, TRADEMARK, OR OTHER RIGHT. IN NO EVENT SHALL THE
+COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+INCLUDING ANY GENERAL, SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL
+DAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM
+OTHER DEALINGS IN THE FONT SOFTWARE.
+
+-->
+    <style>
+      {{GAME_STYLE}}
+    </style>
+  </head>
+  <body>
+    <div class="ambient-light" aria-hidden="true"></div>
+    <div class="desk">
+      <header class="desk-top">
+        <span class="muted-top"
+          ><i class="torch-dot"></i>A little adventure in the margins.</span
+        >
+        <nav aria-label="Game tools">
+          <label class="pace-control"
+            >Animation speed
+            <select id="animation-speed" aria-label="Animation speed">
+              <option value="1">1×</option>
+              <option value="2">2×</option>
+              <option value="3">3×</option>
+              <option value="5">5×</option>
+              <option value="skip">Skip cinematics</option>
+            </select></label
+          ><label class="autoresolve-control"
+            ><input type="checkbox" id="autoresolve" /> Autoresolve</label
+          ><label class="palette-control"
+            >Palette<select id="palette" aria-label="Colour palette">
+              <option value="default">Default</option>
+              <option value="dark">Dark</option>
+              <option value="warm">Warm</option>
+            </select></label
+          ><button id="help">Field guide</button
+          ><button id="download">↓ Save HTML</button
+          ><button id="new-game">New run</button>
+        </nav>
+      </header>
+      <main class="book" id="book">
+        <section class="page left-page" aria-label="Dungeon exploration">
+          <h1 class="title-underline">Scratchpad Dungeon</h1>
+          <div class="floor-heading" id="floor-tag">Floor 1 / 10</div>
+          <p class="floor-subtitle" id="floor-name">The overgrown cellar</p>
+          <div class="legend" id="legend"></div>
+          <div class="map-wrap" id="map-wrap">
+            <div class="map-board" id="map-board">
+              <div
+                class="map"
+                id="map"
+                role="group"
+                aria-label="Dungeon tiles"
+              ></div>
+              <div class="map-player" id="map-player" aria-hidden="true"></div>
+            </div>
+          </div>
+          <div class="map-caption">
+            <span class="hover-name" id="hover-name"
+              >Unknown / pencil-covered tile</span
+            ><button
+              class="quiet small"
+              id="reveal-help"
+              aria-label="Explain exploration"
+            >
+              ? Exploration
+            </button>
+          </div>
+          <button class="exit-button" id="exit-found" hidden></button>
+          <p class="map-hint" id="map-status">
+            Scratch a neighbouring tile to see what’s there.<br />Click across
+            uncovered tiles to retrace a shortest path.
+          </p>
+          <p class="field-note" id="field-note">
+            “A sword, a stubborn heart, and a very questionable map.”
+          </p>
+          <div class="margin-doodle" id="margin-doodle"></div>
+          <div class="expedition-boxes">
+            <section class="sketch-box">
+              <h3>Dungeon progress</h3>
+              <p><span id="steps">0</span> steps into the dark</p>
+              <p><span id="explored">1</span> tiles uncovered</p>
+              <p>Current run: <span id="depth-stat">1</span> / 10</p>
+              <div class="floor-dots" id="floor-dots" aria-hidden="true"></div>
+              <button id="memorial" class="quiet small" disabled>
+                Names remembered · 0
+              </button>
+            </section>
+            <section class="sketch-box">
+              <h3>Run treasures</h3>
+              <p><b id="gold">0</b> gold in the satchel</p>
+              <div class="relic-state" id="relic-status"></div>
+            </section>
+          </div>
+        </section>
+        <section class="page right-page" aria-label="Party and combat">
+          <div class="combat-heading">
+            <h2 class="title-underline" id="combat-title">Your Party</h2>
+            <span class="round-tag" id="round">Round 1</span
+            ><span class="team-block" id="block">0 block</span>
+          </div>
+          <div class="battle-stage">
+            <div class="party-side">
+              <h3 class="party-label">Your party</h3>
+              <div id="party"></div>
+            </div>
+            <div
+              class="enemy-side"
+              id="encounter"
+              aria-label="Current encounter"
+            ></div>
+          </div>
+          <div class="battle-target" id="targets"></div>
+          <div class="result-ribbon" id="result-ribbon" aria-live="polite">
+            Pull a handle. Make a little luck.
+          </div>
+          <div class="notes-and-bag">
+            <section class="journal">
+              <div class="journal-head">
+                <h3>Battle &amp; field notes</h3>
+                <button
+                  class="quiet small"
+                  id="toggle-log"
+                  aria-expanded="true"
+                >
+                  Focus log (M)
+                </button>
+              </div>
+              <ol
+                id="log"
+                tabindex="0"
+                aria-live="polite"
+                aria-label="Expedition journal"
+              ></ol>
+            </section>
+            <section class="inventory">
+              <h3 id="inventory-title">
+                Satchel <small id="bag-count">0 / 3 types</small
+                ><button class="quiet small" id="manage-bag">
+                  Inspect / discard
+                </button>
+              </h3>
+              <div class="inventory-items"></div>
+            </section>
+          </div>
+          <div class="save-line">
+            <span id="save-status" hidden aria-live="polite"></span
+            ><span>FIELD NOTES · Made of paper. Played with courage.</span>
+          </div>
+        </section>
+      </main>
+      <nav class="notebook-tabs" aria-label="Notebook pages">
+        <button id="options-tab">Options</button
+        ><button id="guide-tab">Field guide</button>
+      </nav>
+      <footer class="footer">
+        <span>Keep a little light with you. ✧</span><span></span>
+      </footer>
+    </div>
+    <nav id="keyboard-bar" aria-label="Keyboard and mouse controls"></nav>
+    <canvas class="fx-canvas" id="fx-canvas" aria-hidden="true"></canvas>
+    <div class="toast" id="toast" role="status" hidden></div>
+    <div class="overlay" id="overlay" hidden>
+      <section
+        class="modal"
+        id="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+        tabindex="-1"
+      ></section>
+    </div>
+    <div class="spotlight" id="spotlight" hidden>
+      <section
+        class="stage-card"
+        id="stage-card"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="stage-title"
+        tabindex="-1"
+      ></section>
+    </div>
+
+    <!-- prettier-ignore -->
+    <script>
+{{GAME_SCRIPT}}
+</script>
+  </body>
+</html>

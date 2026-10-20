@@ -103,7 +103,7 @@ The bottom bar displays keyboard and mouse prompts. Tab / Shift+Tab and Enter re
 ## Development and browser tests
 
 ```sh
-npm ci
+npm ci --ignore-scripts
 # Only if Chromium is unavailable:
 npx playwright install chromium
 npm test
@@ -116,3 +116,25 @@ Coverage includes full ten-floor progression, stair bosses and immediate victory
 ## Credits
 
 The embedded **Patrick Hand** font is by Patrick Wagesreiter, under the SIL Open Font License 1.1. Its full license is in the HTML source. All illustrations and effects run locally.
+
+## Production authoring
+
+The playable `index.html` remains a self-contained offline download. Authoring now lives in `src/`, with canonical balance data in `data/balance.json` and asset identity/replacements in `data/assets.json`. Run `npm run build` after source/data changes; do not edit generated HTML directly. Existing run saves remain compatible.
+
+```sh
+npm ci --ignore-scripts
+npm run build
+npm run balance:export
+npm run validate
+npm test
+```
+
+Open `balance/Scratchpad-Dungeon-Balance.xlsx` to edit designer values. Validate and import with `npm run balance:validate -- edited.xlsx` and `npm run balance:import -- edited.xlsx`; successful import rebuilds the offline game. Re-export to refresh the workbook after importing.
+
+- [Balance workbook and validated import workflow](docs/BALANCING.md)
+- [Asset replacement, licences and audio](docs/ASSETS-AND-AUDIO.md)
+- [Controller controls and hardware testing](docs/CONTROLLERS.md)
+- [Desktop/Steam build instructions and Deck checklist](docs/DESKTOP-AND-STEAM.md)
+- [Architecture assessment and packaging decision](docs/ARCHITECTURE.md)
+
+Options has Game, Audio, Controller and Screen pages. Controller Menu pauses, View opens the guide, and the bottom bar switches to device prompts. The compact layout targets 1280×800/720; Steam Deck hardware and Valve review are still required before any Verified claim.

@@ -1,0 +1,3492 @@
+{
+  "schemaVersion": 1,
+  "revision": 1,
+  "engine": {
+    "mapWidth": 11,
+    "mapHeight": 9,
+    "maxSupportedParty": 3,
+    "reelsPerMachine": 3,
+    "criticalMatches": 3
+  },
+  "rules": {
+    "maxParty": 3,
+    "bagTypes": 3,
+    "floors": 10,
+    "startingPoints": 3,
+    "levelHp": 6,
+    "levelPoints": 4,
+    "xpPerLevel": 12,
+    "blankInscriptionCost": 3,
+    "stunArmourCost": 6,
+    "reviveHealthFraction": 0.75,
+    "fountainHealthFraction": 0.3,
+    "descentHeal": 5,
+    "weakenCost": 1,
+    "victoryGoldBase": 100,
+    "victoryGoldPerDepth": 20,
+    "areaAttackTier": 3
+  },
+  "slots": {
+    "types": [
+      "attack",
+      "magic",
+      "poison",
+      "stimulant",
+      "heal",
+      "block",
+      "stun",
+      "class",
+      "blank"
+    ],
+    "icons": {
+      "attack": "sword",
+      "magic": "magic",
+      "poison": "poison",
+      "stimulant": "flame",
+      "class": "class",
+      "rage": "flame",
+      "teamHeal": "blessing",
+      "heal": "heal",
+      "block": "block",
+      "stun": "stun",
+      "blank": "blank"
+    },
+    "power": {
+      "poison": 1,
+      "stimulant": 1,
+      "heal": 2,
+      "block": 1,
+      "stun": 1,
+      "class": 0,
+      "blank": 0
+    },
+    "attackPower": [
+      0,
+      2,
+      4,
+      7,
+      11
+    ],
+    "faceCost": {
+      "1": 1,
+      "2": 4,
+      "3": 9,
+      "4": 16
+    },
+    "criticalMultipliers": [
+      2,
+      2.5,
+      3,
+      4
+    ]
+  },
+  "classes": {
+    "fighter": {
+      "id": "class.fighter",
+      "name": "Tank",
+      "maxHp": 44,
+      "reels": [
+        [
+          {
+            "type": "attack",
+            "tier": 1,
+            "weight": 9
+          },
+          {
+            "type": "attack",
+            "tier": 2,
+            "weight": 5
+          },
+          {
+            "type": "block",
+            "tier": 1,
+            "weight": 7
+          },
+          {
+            "type": "block",
+            "tier": 2,
+            "weight": 3
+          },
+          {
+            "type": "heal",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "blank",
+            "tier": 1,
+            "weight": 5
+          }
+        ],
+        [
+          {
+            "type": "attack",
+            "tier": 1,
+            "weight": 9
+          },
+          {
+            "type": "attack",
+            "tier": 2,
+            "weight": 5
+          },
+          {
+            "type": "block",
+            "tier": 1,
+            "weight": 7
+          },
+          {
+            "type": "block",
+            "tier": 2,
+            "weight": 3
+          },
+          {
+            "type": "heal",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "blank",
+            "tier": 1,
+            "weight": 5
+          },
+          {
+            "type": "class",
+            "tier": 1,
+            "weight": 3,
+            "job": "fighter"
+          }
+        ],
+        [
+          {
+            "type": "attack",
+            "tier": 1,
+            "weight": 9
+          },
+          {
+            "type": "attack",
+            "tier": 2,
+            "weight": 5
+          },
+          {
+            "type": "block",
+            "tier": 1,
+            "weight": 7
+          },
+          {
+            "type": "block",
+            "tier": 2,
+            "weight": 3
+          },
+          {
+            "type": "heal",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "blank",
+            "tier": 1,
+            "weight": 5
+          }
+        ]
+      ],
+      "last": [
+        {
+          "type": "attack",
+          "tier": 1
+        },
+        {
+          "type": "block",
+          "tier": 1
+        },
+        {
+          "type": "blank",
+          "tier": 1
+        }
+      ]
+    },
+    "healer": {
+      "id": "class.healer",
+      "name": "Healer",
+      "maxHp": 32,
+      "reels": [
+        [
+          {
+            "type": "heal",
+            "tier": 1,
+            "weight": 14
+          },
+          {
+            "type": "heal",
+            "tier": 2,
+            "weight": 12
+          },
+          {
+            "type": "block",
+            "tier": 1,
+            "weight": 2
+          },
+          {
+            "type": "stun",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "magic",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "blank",
+            "tier": 1,
+            "weight": 4
+          }
+        ],
+        [
+          {
+            "type": "heal",
+            "tier": 1,
+            "weight": 14
+          },
+          {
+            "type": "heal",
+            "tier": 2,
+            "weight": 12
+          },
+          {
+            "type": "block",
+            "tier": 1,
+            "weight": 2
+          },
+          {
+            "type": "stun",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "magic",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "blank",
+            "tier": 1,
+            "weight": 4
+          },
+          {
+            "type": "class",
+            "tier": 1,
+            "weight": 3,
+            "job": "healer"
+          }
+        ],
+        [
+          {
+            "type": "heal",
+            "tier": 1,
+            "weight": 14
+          },
+          {
+            "type": "heal",
+            "tier": 2,
+            "weight": 12
+          },
+          {
+            "type": "block",
+            "tier": 1,
+            "weight": 2
+          },
+          {
+            "type": "stun",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "magic",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "blank",
+            "tier": 1,
+            "weight": 4
+          }
+        ]
+      ],
+      "last": [
+        {
+          "type": "heal",
+          "tier": 1
+        },
+        {
+          "type": "heal",
+          "tier": 2
+        },
+        {
+          "type": "blank",
+          "tier": 1
+        }
+      ]
+    },
+    "rogue": {
+      "id": "class.rogue",
+      "name": "Rogue",
+      "maxHp": 26,
+      "reels": [
+        [
+          {
+            "type": "attack",
+            "tier": 1,
+            "weight": 11
+          },
+          {
+            "type": "attack",
+            "tier": 2,
+            "weight": 10
+          },
+          {
+            "type": "attack",
+            "tier": 3,
+            "weight": 3
+          },
+          {
+            "type": "poison",
+            "tier": 1,
+            "weight": 2
+          },
+          {
+            "type": "block",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "blank",
+            "tier": 1,
+            "weight": 4
+          }
+        ],
+        [
+          {
+            "type": "attack",
+            "tier": 1,
+            "weight": 11
+          },
+          {
+            "type": "attack",
+            "tier": 2,
+            "weight": 10
+          },
+          {
+            "type": "attack",
+            "tier": 3,
+            "weight": 3
+          },
+          {
+            "type": "poison",
+            "tier": 1,
+            "weight": 2
+          },
+          {
+            "type": "block",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "blank",
+            "tier": 1,
+            "weight": 4
+          },
+          {
+            "type": "class",
+            "tier": 1,
+            "weight": 3,
+            "job": "rogue"
+          }
+        ],
+        [
+          {
+            "type": "attack",
+            "tier": 1,
+            "weight": 11
+          },
+          {
+            "type": "attack",
+            "tier": 2,
+            "weight": 10
+          },
+          {
+            "type": "attack",
+            "tier": 3,
+            "weight": 3
+          },
+          {
+            "type": "poison",
+            "tier": 1,
+            "weight": 2
+          },
+          {
+            "type": "block",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "blank",
+            "tier": 1,
+            "weight": 4
+          }
+        ]
+      ],
+      "last": [
+        {
+          "type": "attack",
+          "tier": 1
+        },
+        {
+          "type": "attack",
+          "tier": 3
+        },
+        {
+          "type": "blank",
+          "tier": 1
+        }
+      ]
+    },
+    "mage": {
+      "id": "class.mage",
+      "name": "Mage",
+      "maxHp": 28,
+      "reels": [
+        [
+          {
+            "type": "magic",
+            "tier": 1,
+            "weight": 11
+          },
+          {
+            "type": "magic",
+            "tier": 2,
+            "weight": 7
+          },
+          {
+            "type": "poison",
+            "tier": 1,
+            "weight": 3
+          },
+          {
+            "type": "stimulant",
+            "tier": 1,
+            "weight": 3
+          },
+          {
+            "type": "block",
+            "tier": 1,
+            "weight": 2
+          },
+          {
+            "type": "blank",
+            "tier": 1,
+            "weight": 5
+          }
+        ],
+        [
+          {
+            "type": "magic",
+            "tier": 1,
+            "weight": 11
+          },
+          {
+            "type": "magic",
+            "tier": 2,
+            "weight": 7
+          },
+          {
+            "type": "poison",
+            "tier": 1,
+            "weight": 3
+          },
+          {
+            "type": "stimulant",
+            "tier": 1,
+            "weight": 3
+          },
+          {
+            "type": "block",
+            "tier": 1,
+            "weight": 2
+          },
+          {
+            "type": "blank",
+            "tier": 1,
+            "weight": 5
+          },
+          {
+            "type": "class",
+            "tier": 1,
+            "weight": 3,
+            "job": "mage"
+          }
+        ],
+        [
+          {
+            "type": "magic",
+            "tier": 1,
+            "weight": 11
+          },
+          {
+            "type": "magic",
+            "tier": 2,
+            "weight": 7
+          },
+          {
+            "type": "poison",
+            "tier": 1,
+            "weight": 3
+          },
+          {
+            "type": "stimulant",
+            "tier": 1,
+            "weight": 3
+          },
+          {
+            "type": "block",
+            "tier": 1,
+            "weight": 2
+          },
+          {
+            "type": "blank",
+            "tier": 1,
+            "weight": 5
+          }
+        ]
+      ],
+      "last": [
+        {
+          "type": "magic",
+          "tier": 1
+        },
+        {
+          "type": "stimulant",
+          "tier": 1
+        },
+        {
+          "type": "blank",
+          "tier": 1
+        }
+      ]
+    }
+  },
+  "items": {
+    "potion": {
+      "name": "Healing tonic",
+      "icon": "potion",
+      "brief": "{heal} HP",
+      "description": "Restore {heal} HP to the selected living hero.",
+      "id": "item.potion",
+      "heal": 16
+    },
+    "bomb": {
+      "name": "Ink bomb",
+      "icon": "bomb",
+      "brief": "Roll damage + poison",
+      "combat": true,
+      "description": "Roll three reels for damage and poison against the selected enemy. Three alike can crit.",
+      "id": "item.bomb"
+    },
+    "ward": {
+      "name": "Paper ward",
+      "icon": "ward",
+      "brief": "{block} team block",
+      "combat": true,
+      "description": "Add {block} shared block for this battle.",
+      "id": "item.ward",
+      "block": 5
+    },
+    "antidote": {
+      "name": "Antidote",
+      "icon": "antidote",
+      "brief": "Cure poison",
+      "description": "Remove poison from the selected living hero.",
+      "id": "item.antidote"
+    },
+    "bandage": {
+      "name": "Bandage",
+      "icon": "bandage",
+      "brief": "{heal} HP",
+      "description": "Restore {heal} HP to the selected living hero.",
+      "id": "item.bandage",
+      "heal": 8
+    },
+    "salve": {
+      "name": "Mending salve",
+      "icon": "salve",
+      "brief": "{heal} HP to everyone",
+      "description": "Restore {heal} HP to every living party member.",
+      "id": "item.salve",
+      "heal": 6
+    },
+    "ember": {
+      "name": "Ember draught",
+      "icon": "flame",
+      "brief": "Damage + protection",
+      "combat": true,
+      "description": "Stimulate the selected hero: a small damage and defence bonus for {stimulantTurns} of their actions.",
+      "id": "item.ember",
+      "stimulant": 2
+    },
+    "oil": {
+      "name": "Sharpening oil",
+      "icon": "oil",
+      "brief": "+{rage} rage",
+      "combat": true,
+      "description": "Give the selected hero {rage} rage, adding damage until this battle ends.",
+      "id": "item.oil",
+      "rage": 2
+    },
+    "frost": {
+      "name": "Frost vial",
+      "icon": "frost",
+      "brief": "Stun one enemy",
+      "combat": true,
+      "description": "Attempt a strength-{stun} stun on the selected enemy. Armour can absorb it.",
+      "id": "item.frost",
+      "stun": 2
+    },
+    "firebomb": {
+      "name": "Cinder flask",
+      "icon": "flame",
+      "brief": "Scorch all enemies",
+      "combat": true,
+      "description": "Deal {damageBase} plus floor depth divided by {depthDivisor}, rounded down, in magic damage to every enemy.",
+      "id": "item.firebomb",
+      "damageBase": 8,
+      "depthDivisor": 2
+    },
+    "venom": {
+      "name": "Venom vial",
+      "icon": "poison",
+      "brief": "Poison for {poisonTurns} turns",
+      "combat": true,
+      "description": "Poison the selected enemy for {poisonTurns} tiny, armour-piercing damage ticks.",
+      "id": "item.venom",
+      "poison": 4
+    },
+    "chalk": {
+      "name": "Chalk map",
+      "icon": "chalk",
+      "brief": "Reveal neighbours",
+      "outside": true,
+      "description": "Reveal adjacent and diagonal tiles without activating them. Cannot be used during combat.",
+      "id": "item.chalk"
+    },
+    "ration": {
+      "name": "Trail ration",
+      "icon": "ration",
+      "brief": "{healthPercent}% maximum HP",
+      "description": "Restore {healthPercent}% of the selected hero\u2019s maximum HP.",
+      "id": "item.ration",
+      "healthFraction": 0.3
+    }
+  },
+  "equipment": {
+    "ironSignet": {
+      "name": "Iron Signet",
+      "icon": "rage",
+      "job": "fighter",
+      "brief": "+{attack} blade damage",
+      "description": "Tank equipment. Every damaging roll gains {attack} damage.",
+      "attack": 2,
+      "id": "equipment.ironSignet"
+    },
+    "bulwarkBadge": {
+      "name": "Bulwark Badge",
+      "icon": "block",
+      "job": "fighter",
+      "brief": "+{guard} opening armour",
+      "description": "Tank equipment. Start fights with {guard} team block; resist {defence} damage per incoming hit.",
+      "guard": 3,
+      "defence": 1,
+      "id": "equipment.bulwarkBadge"
+    },
+    "glassRosary": {
+      "name": "Glass Rosary",
+      "icon": "heal",
+      "job": "healer",
+      "brief": "+{heal} healing",
+      "description": "Healer equipment. Add {heal} HP to healing rolls.",
+      "heal": 2,
+      "id": "equipment.glassRosary"
+    },
+    "mercyBell": {
+      "name": "Mercy Bell",
+      "icon": "blessing",
+      "job": "healer",
+      "brief": "A little sanctuary",
+      "description": "Healer equipment. Every roll heals the party by {teamHeal} and adds {block} team block.",
+      "teamHeal": 1,
+      "block": 1,
+      "id": "equipment.mercyBell"
+    },
+    "silentBoots": {
+      "name": "Silent Boots",
+      "icon": "flurry",
+      "job": "rogue",
+      "brief": "Every {stunEveryOrdinal} roll stuns",
+      "description": "Rogue equipment. +{attack} damage; every {stunEveryOrdinal} roll stuns the target.",
+      "attack": 1,
+      "stunEvery": 4,
+      "id": "equipment.silentBoots"
+    },
+    "serpentPin": {
+      "name": "Serpent Pin",
+      "icon": "poison",
+      "job": "rogue",
+      "brief": "Venom-tipped blades",
+      "description": "Rogue equipment. Damaging rolls add a short poison.",
+      "poison": 1,
+      "id": "equipment.serpentPin"
+    },
+    "starLens": {
+      "name": "Star Lens",
+      "icon": "magic",
+      "job": "mage",
+      "brief": "+{magic} magic damage",
+      "description": "Mage equipment. Add {magic} magic damage to every damaging roll.",
+      "magic": 2,
+      "id": "equipment.starLens"
+    },
+    "stormQuill": {
+      "name": "Storm Quill",
+      "icon": "flame",
+      "job": "mage",
+      "brief": "Power every {stimEveryOrdinal} roll",
+      "description": "Mage equipment. Every {stimEveryOrdinal} roll grants a stimulant; +{magic} magic damage.",
+      "magic": 1,
+      "stimEvery": 3,
+      "id": "equipment.stormQuill",
+      "stimulantPower": 2
+    }
+  },
+  "artefacts": [
+    {
+      "key": "attack",
+      "name": "Fang of the Margin",
+      "base": 1,
+      "scale": 0.6,
+      "id": "artefact.attack"
+    },
+    {
+      "key": "heal",
+      "name": "The Glass Tear",
+      "base": 1,
+      "scale": 0.5,
+      "id": "artefact.heal"
+    },
+    {
+      "key": "block",
+      "name": "Iron Pennant",
+      "base": 1,
+      "scale": 0.5,
+      "id": "artefact.block"
+    },
+    {
+      "key": "gold",
+      "name": "Lucky Farthing",
+      "base": 10,
+      "scale": 3,
+      "id": "artefact.gold"
+    },
+    {
+      "key": "guard",
+      "name": "Ember Seal",
+      "base": 1,
+      "scale": 0.5,
+      "id": "artefact.guard"
+    },
+    {
+      "key": "revive",
+      "name": "Revive Stone",
+      "base": 1,
+      "scale": 0,
+      "id": "artefact.revive"
+    }
+  ],
+  "enemies": {
+    "enemy.ink-rat": {
+      "id": "enemy.ink-rat",
+      "name": "The ink rat",
+      "art": "rat",
+      "minFloor": 1,
+      "maxFloor": 3,
+      "hpMultiplier": 1,
+      "damageMultiplier": 1,
+      "frequencyOverride": 0,
+      "strikesOverride": 0,
+      "reelSet": "reel.enemy.rat"
+    },
+    "enemy.margin-wraith": {
+      "id": "enemy.margin-wraith",
+      "name": "Margin wraith",
+      "art": "ghost",
+      "minFloor": 1,
+      "maxFloor": 3,
+      "hpMultiplier": 1,
+      "damageMultiplier": 1,
+      "frequencyOverride": 0,
+      "strikesOverride": 0,
+      "reelSet": "reel.enemy.ghost"
+    },
+    "enemy.blotling": {
+      "id": "enemy.blotling",
+      "name": "Blotling",
+      "art": "slime",
+      "minFloor": 1,
+      "maxFloor": 3,
+      "hpMultiplier": 1,
+      "damageMultiplier": 1,
+      "frequencyOverride": 0,
+      "strikesOverride": 0,
+      "reelSet": "reel.enemy.slime"
+    },
+    "enemy.skeletal-warrior": {
+      "id": "enemy.skeletal-warrior",
+      "name": "Skeletal warrior",
+      "art": "skull",
+      "minFloor": 1,
+      "maxFloor": 3,
+      "hpMultiplier": 1,
+      "damageMultiplier": 1,
+      "frequencyOverride": 0,
+      "strikesOverride": 0,
+      "reelSet": "reel.enemy.skull"
+    },
+    "enemy.chainbound-revenant": {
+      "id": "enemy.chainbound-revenant",
+      "name": "Chainbound revenant",
+      "art": "revenant",
+      "minFloor": 4,
+      "maxFloor": 7,
+      "hpMultiplier": 1,
+      "damageMultiplier": 1,
+      "frequencyOverride": 0,
+      "strikesOverride": 0,
+      "reelSet": "reel.enemy.skull"
+    },
+    "enemy.ash-horned-fiend": {
+      "id": "enemy.ash-horned-fiend",
+      "name": "Ash-horned fiend",
+      "art": "demon",
+      "minFloor": 4,
+      "maxFloor": 7,
+      "hpMultiplier": 1,
+      "damageMultiplier": 1,
+      "frequencyOverride": 0,
+      "strikesOverride": 0,
+      "reelSet": "reel.enemy.enemy-ash-horned-fiend"
+    },
+    "enemy.hollow-cantor": {
+      "id": "enemy.hollow-cantor",
+      "name": "The hollow cantor",
+      "art": "lich",
+      "minFloor": 4,
+      "maxFloor": 7,
+      "hpMultiplier": 1,
+      "damageMultiplier": 1,
+      "frequencyOverride": 0,
+      "strikesOverride": 0,
+      "reelSet": "reel.enemy.enemy-hollow-cantor"
+    },
+    "enemy.marrow-lich": {
+      "id": "enemy.marrow-lich",
+      "name": "The marrow lich",
+      "art": "lich",
+      "minFloor": 8,
+      "maxFloor": 10,
+      "hpMultiplier": 1,
+      "damageMultiplier": 1,
+      "frequencyOverride": 0,
+      "strikesOverride": 0,
+      "reelSet": "reel.enemy.enemy-hollow-cantor"
+    },
+    "enemy.furnace-devil": {
+      "id": "enemy.furnace-devil",
+      "name": "The furnace devil",
+      "art": "demon",
+      "minFloor": 8,
+      "maxFloor": 10,
+      "hpMultiplier": 1,
+      "damageMultiplier": 1,
+      "frequencyOverride": 0,
+      "strikesOverride": 0,
+      "reelSet": "reel.enemy.enemy-ash-horned-fiend"
+    },
+    "enemy.stitched-horror": {
+      "id": "enemy.stitched-horror",
+      "name": "The stitched horror",
+      "art": "abomination",
+      "minFloor": 8,
+      "maxFloor": 10,
+      "hpMultiplier": 1,
+      "damageMultiplier": 1,
+      "frequencyOverride": 0,
+      "strikesOverride": 0,
+      "reelSet": "reel.enemy.slime"
+    },
+    "enemy.candle-gnawer": {
+      "id": "enemy.candle-gnawer",
+      "name": "Candle gnawer",
+      "art": "gnawer",
+      "minFloor": 1,
+      "maxFloor": 2,
+      "hpMultiplier": 1,
+      "damageMultiplier": 1,
+      "frequencyOverride": 0,
+      "strikesOverride": 0,
+      "reelSet": "reel.enemy.rat"
+    },
+    "enemy.blind-bellkeeper": {
+      "id": "enemy.blind-bellkeeper",
+      "name": "Blind bellkeeper",
+      "art": "bellkeeper",
+      "minFloor": 3,
+      "maxFloor": 4,
+      "hpMultiplier": 1,
+      "damageMultiplier": 1,
+      "frequencyOverride": 0,
+      "strikesOverride": 0,
+      "reelSet": "reel.enemy.skull"
+    },
+    "enemy.thorn-widow": {
+      "id": "enemy.thorn-widow",
+      "name": "Thorn widow",
+      "art": "widow",
+      "minFloor": 5,
+      "maxFloor": 6,
+      "hpMultiplier": 1,
+      "damageMultiplier": 1,
+      "frequencyOverride": 0,
+      "strikesOverride": 0,
+      "reelSet": "reel.enemy.rat"
+    },
+    "enemy.gutter-oracle": {
+      "id": "enemy.gutter-oracle",
+      "name": "Gutter oracle",
+      "art": "oracle",
+      "minFloor": 7,
+      "maxFloor": 8,
+      "hpMultiplier": 1,
+      "damageMultiplier": 1,
+      "frequencyOverride": 0,
+      "strikesOverride": 0,
+      "reelSet": "reel.enemy.ghost"
+    },
+    "enemy.page-eater": {
+      "id": "enemy.page-eater",
+      "name": "The page eater",
+      "art": "pageeater",
+      "minFloor": 9,
+      "maxFloor": 10,
+      "hpMultiplier": 1,
+      "damageMultiplier": 1,
+      "frequencyOverride": 0,
+      "strikesOverride": 0,
+      "reelSet": "reel.enemy.slime"
+    },
+    "enemy.hungry-chest": {
+      "id": "enemy.hungry-chest",
+      "name": "The hungry chest",
+      "art": "mimic",
+      "minFloor": 1,
+      "maxFloor": 10,
+      "hpMultiplier": 1,
+      "damageMultiplier": 1,
+      "frequencyOverride": 0,
+      "strikesOverride": 0,
+      "reelSet": "reel.enemy.skull"
+    },
+    "enemy.unwritten": {
+      "id": "enemy.unwritten",
+      "name": "The Unwritten",
+      "art": "pursuer",
+      "minFloor": 1,
+      "maxFloor": 10,
+      "hpMultiplier": 1,
+      "damageMultiplier": 1,
+      "frequencyOverride": 0,
+      "strikesOverride": 0,
+      "reelSet": "reel.enemy.skull"
+    },
+    "enemy.bastion-butcher": {
+      "id": "enemy.bastion-butcher",
+      "name": "The Bastion Butcher",
+      "art": "abomination",
+      "minFloor": 1,
+      "maxFloor": 10,
+      "hpMultiplier": 1,
+      "damageMultiplier": 1,
+      "frequencyOverride": 0,
+      "strikesOverride": 0,
+      "reelSet": "reel.enemy.slime"
+    },
+    "boss.floor01": {
+      "id": "boss.floor01",
+      "name": "The Rust Warden",
+      "art": "skull",
+      "minFloor": 1,
+      "maxFloor": 1,
+      "hpMultiplier": 1,
+      "damageMultiplier": 1,
+      "frequencyOverride": 0,
+      "strikesOverride": 0,
+      "reelSet": "reel.enemy.skull"
+    },
+    "boss.floor02": {
+      "id": "boss.floor02",
+      "name": "The Candle King",
+      "art": "gnawer",
+      "minFloor": 2,
+      "maxFloor": 2,
+      "hpMultiplier": 1,
+      "damageMultiplier": 1,
+      "frequencyOverride": 0,
+      "strikesOverride": 0,
+      "reelSet": "reel.enemy.rat"
+    },
+    "boss.floor03": {
+      "id": "boss.floor03",
+      "name": "The Blind Castellan",
+      "art": "revenant",
+      "minFloor": 3,
+      "maxFloor": 3,
+      "hpMultiplier": 1,
+      "damageMultiplier": 1,
+      "frequencyOverride": 0,
+      "strikesOverride": 0,
+      "reelSet": "reel.enemy.skull"
+    },
+    "boss.floor04": {
+      "id": "boss.floor04",
+      "name": "The Bell Below",
+      "art": "bellkeeper",
+      "minFloor": 4,
+      "maxFloor": 4,
+      "hpMultiplier": 1,
+      "damageMultiplier": 1,
+      "frequencyOverride": 0,
+      "strikesOverride": 0,
+      "reelSet": "reel.enemy.skull"
+    },
+    "boss.floor05": {
+      "id": "boss.floor05",
+      "name": "The Thorn Matriarch",
+      "art": "widow",
+      "minFloor": 5,
+      "maxFloor": 5,
+      "hpMultiplier": 1,
+      "damageMultiplier": 1,
+      "frequencyOverride": 0,
+      "strikesOverride": 0,
+      "reelSet": "reel.enemy.rat"
+    },
+    "boss.floor06": {
+      "id": "boss.floor06",
+      "name": "The Ash Collector",
+      "art": "demon",
+      "minFloor": 6,
+      "maxFloor": 6,
+      "hpMultiplier": 1,
+      "damageMultiplier": 1,
+      "frequencyOverride": 0,
+      "strikesOverride": 0,
+      "reelSet": "reel.enemy.enemy-ash-horned-fiend"
+    },
+    "boss.floor07": {
+      "id": "boss.floor07",
+      "name": "The Gutter Saint",
+      "art": "oracle",
+      "minFloor": 7,
+      "maxFloor": 7,
+      "hpMultiplier": 1,
+      "damageMultiplier": 1,
+      "frequencyOverride": 0,
+      "strikesOverride": 0,
+      "reelSet": "reel.enemy.ghost"
+    },
+    "boss.floor08": {
+      "id": "boss.floor08",
+      "name": "The Bone Architect",
+      "art": "abomination",
+      "minFloor": 8,
+      "maxFloor": 8,
+      "hpMultiplier": 1,
+      "damageMultiplier": 1,
+      "frequencyOverride": 0,
+      "strikesOverride": 0,
+      "reelSet": "reel.enemy.slime"
+    },
+    "boss.floor09": {
+      "id": "boss.floor09",
+      "name": "The Keeper of Last Names",
+      "art": "pageeater",
+      "minFloor": 9,
+      "maxFloor": 9,
+      "hpMultiplier": 1,
+      "damageMultiplier": 1,
+      "frequencyOverride": 0,
+      "strikesOverride": 0,
+      "reelSet": "reel.enemy.slime"
+    },
+    "boss.floor10": {
+      "id": "boss.floor10",
+      "name": "The Last Redaction",
+      "art": "lich",
+      "minFloor": 10,
+      "maxFloor": 10,
+      "hpMultiplier": 1,
+      "damageMultiplier": 1,
+      "frequencyOverride": 0,
+      "strikesOverride": 0,
+      "reelSet": "reel.enemy.enemy-hollow-cantor"
+    }
+  },
+  "bosses": [
+    "boss.floor01",
+    "boss.floor02",
+    "boss.floor03",
+    "boss.floor04",
+    "boss.floor05",
+    "boss.floor06",
+    "boss.floor07",
+    "boss.floor08",
+    "boss.floor09",
+    "boss.floor10"
+  ],
+  "encounterPools": {
+    "early": [
+      "enemy.ink-rat",
+      "enemy.margin-wraith",
+      "enemy.blotling",
+      "enemy.skeletal-warrior"
+    ],
+    "middle": [
+      "enemy.chainbound-revenant",
+      "enemy.ash-horned-fiend",
+      "enemy.hollow-cantor"
+    ],
+    "deep": [
+      "enemy.marrow-lich",
+      "enemy.furnace-devil",
+      "enemy.stitched-horror"
+    ],
+    "bands": [
+      "enemy.candle-gnawer",
+      "enemy.blind-bellkeeper",
+      "enemy.thorn-widow",
+      "enemy.gutter-oracle",
+      "enemy.page-eater"
+    ],
+    "mimic": "enemy.hungry-chest",
+    "pursuer": "enemy.unwritten",
+    "stronghold": "enemy.bastion-butcher"
+  },
+  "elites": [
+    {
+      "id": "elite.ironbound",
+      "name": "Ironbound",
+      "frequencyReduction": 0,
+      "blockBase": 2,
+      "blockPerDepth": 1,
+      "poisonOnHit": 0
+    },
+    {
+      "id": "elite.frenzied",
+      "name": "Frenzied",
+      "frequencyReduction": 1,
+      "blockBase": 0,
+      "blockPerDepth": 0,
+      "poisonOnHit": 0
+    },
+    {
+      "id": "elite.venomous",
+      "name": "Venomous",
+      "frequencyReduction": 0,
+      "blockBase": 0,
+      "blockPerDepth": 0,
+      "poisonOnHit": 1
+    }
+  ],
+  "tuning": {
+    "generateFloor.start.1": {
+      "value": 7,
+      "category": "World",
+      "label": "generateFloor \u00b7 start 1",
+      "description": "Coefficient in: Pity || 0, ) { const start = pos(1, 7), map = Array.from({ length: W *",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "generateFloor.coefficient.1": {
+      "value": 0.11,
+      "category": "World",
+      "label": "generateFloor \u00b7 coefficient 1",
+      "description": "Coefficient in: os(x, y) !== start && Math.random() < 0.11) Object.assign(map[pos(x, y)]",
+      "unit": "probability or multiplier",
+      "min": 0,
+      "max": 1,
+      "integer": false
+    },
+    "generateFloor.riverCount.1": {
+      "value": 0.012,
+      "category": "World",
+      "label": "generateFloor \u00b7 riverCount 1",
+      "description": "Coefficient in: andom(), riverCount = riverRoll < 0.012 ? 2 : riverRoll < 0.35 ? 1 : 0; for",
+      "unit": "probability or multiplier",
+      "min": 0,
+      "max": 1,
+      "integer": false
+    },
+    "generateFloor.riverCount.2": {
+      "value": 2,
+      "category": "World",
+      "label": "generateFloor \u00b7 riverCount 2",
+      "description": "Coefficient in: riverCount = riverRoll < 0.012 ? 2 : riverRoll < 0.35 ? 1 : 0; for (le",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "generateFloor.riverCount.3": {
+      "value": 0.35,
+      "category": "World",
+      "label": "generateFloor \u00b7 riverCount 3",
+      "description": "Coefficient in: = riverRoll < 0.012 ? 2 : riverRoll < 0.35 ? 1 : 0; for (let stream = 0; strea",
+      "unit": "probability or multiplier",
+      "min": 0,
+      "max": 1,
+      "integer": false
+    },
+    "generateFloor.horizontal.1": {
+      "value": 0.45,
+      "category": "World",
+      "label": "generateFloor \u00b7 horizontal 1",
+      "description": "Coefficient in: = riverCount === 1 && Math.random() < 0.45, low = riverCount === 2 ? (stre",
+      "unit": "probability or multiplier",
+      "min": 0,
+      "max": 1,
+      "integer": false
+    },
+    "generateFloor.low.1": {
+      "value": 2,
+      "category": "World",
+      "label": "generateFloor \u00b7 low 1",
+      "description": "Coefficient in: () < 0.45, low = riverCount === 2 ? (stream === 0 ? 2 : 6) : 2, h",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "generateFloor.low.2": {
+      "value": 2,
+      "category": "World",
+      "label": "generateFloor \u00b7 low 2",
+      "description": "Coefficient in: = riverCount === 2 ? (stream === 0 ? 2 : 6) : 2, high = riverCount ===",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "generateFloor.low.3": {
+      "value": 6,
+      "category": "World",
+      "label": "generateFloor \u00b7 low 3",
+      "description": "Coefficient in: iverCount === 2 ? (stream === 0 ? 2 : 6) : 2, high = riverCount === 2 ?",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "generateFloor.low.4": {
+      "value": 2,
+      "category": "World",
+      "label": "generateFloor \u00b7 low 4",
+      "description": "Coefficient in: ount === 2 ? (stream === 0 ? 2 : 6) : 2, high = riverCount === 2 ? low",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "generateFloor.high.1": {
+      "value": 2,
+      "category": "World",
+      "label": "generateFloor \u00b7 high 1",
+      "description": "Coefficient in: : 6) : 2, high = riverCount === 2 ? low + 1 : horizontal ? 5 : 8,",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "generateFloor.high.2": {
+      "value": 5,
+      "category": "World",
+      "label": "generateFloor \u00b7 high 2",
+      "description": "Coefficient in: rCount === 2 ? low + 1 : horizontal ? 5 : 8, river = []; let offset",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "generateFloor.high.3": {
+      "value": 8,
+      "category": "World",
+      "label": "generateFloor \u00b7 high 3",
+      "description": "Coefficient in: nt === 2 ? low + 1 : horizontal ? 5 : 8, river = []; let offset = l",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "generateFloor.length.1": {
+      "value": 2,
+      "category": "World",
+      "label": "generateFloor \u00b7 length 1",
+      "description": "Coefficient in: ; const length = horizontal ? W - 2 : H - 2; for (let step = 1; step",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "generateFloor.length.2": {
+      "value": 2,
+      "category": "World",
+      "label": "generateFloor \u00b7 length 2",
+      "description": "Coefficient in: nst length = horizontal ? W - 2 : H - 2; for (let step = 1; step <= lengt",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "generateFloor.coefficient.2": {
+      "value": 0.45,
+      "category": "World",
+      "label": "generateFloor \u00b7 coefficient 2",
+      "description": "Coefficient in: if (step < length && Math.random() < 0.45) { offset = Math.max(",
+      "unit": "probability or multiplier",
+      "min": 0,
+      "max": 1,
+      "integer": false
+    },
+    "generateFloor.coefficient.3": {
+      "value": 0.5,
+      "category": "World",
+      "label": "generateFloor \u00b7 coefficient 3",
+      "description": "Coefficient in: h.min(high, offset + (Math.random() < 0.5 ? -1 : 1)), ); wet(st",
+      "unit": "probability or multiplier",
+      "min": 0,
+      "max": 1,
+      "integer": false
+    },
+    "generateFloor.candidates.1": {
+      "value": 7,
+      "category": "World",
+      "label": "generateFloor \u00b7 candidates 1",
+      "description": "Coefficient in: ) - 1) + Math.abs(Math.floor(i / W) - 7) >= 8, ); if (!candidates.lengt",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "generateFloor.candidates.2": {
+      "value": 8,
+      "category": "World",
+      "label": "generateFloor \u00b7 candidates 2",
+      "description": "Coefficient in: + Math.abs(Math.floor(i / W) - 7) >= 8, ); if (!candidates.length) {",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "generateFloor.coefficient.4": {
+      "value": 9,
+      "category": "World",
+      "label": "generateFloor \u00b7 coefficient 4",
+      "description": "Coefficient in: s.length) { Object.assign(map[pos(9, 1)], { wall: false, terrain: \"floor\"",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "generateFloor.coefficient.5": {
+      "value": 9,
+      "category": "World",
+      "label": "generateFloor \u00b7 coefficient 5",
+      "description": "Coefficient in: in: \"floor\" }); candidates = [pos(9, 1)]; } const stair = pick(candid",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "generateFloor.coefficient.6": {
+      "value": 0.035,
+      "category": "World",
+      "label": "generateFloor \u00b7 coefficient 6",
+      "description": "Coefficient in: feated = false; if (Math.random() < 0.035) { const centers = [pos(4, 3), po",
+      "unit": "probability or multiplier",
+      "min": 0,
+      "max": 1,
+      "integer": false
+    },
+    "generateFloor.centers.1": {
+      "value": 4,
+      "category": "World",
+      "label": "generateFloor \u00b7 centers 1",
+      "description": "Coefficient in: ) < 0.035) { const centers = [pos(4, 3), pos(6, 3), pos(7, 4)].filter(",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "generateFloor.centers.2": {
+      "value": 3,
+      "category": "World",
+      "label": "generateFloor \u00b7 centers 2",
+      "description": "Coefficient in: 0.035) { const centers = [pos(4, 3), pos(6, 3), pos(7, 4)].filter(",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "generateFloor.centers.3": {
+      "value": 6,
+      "category": "World",
+      "label": "generateFloor \u00b7 centers 3",
+      "description": "Coefficient in: { const centers = [pos(4, 3), pos(6, 3), pos(7, 4)].filter( (i) =>",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "generateFloor.centers.4": {
+      "value": 3,
+      "category": "World",
+      "label": "generateFloor \u00b7 centers 4",
+      "description": "Coefficient in: const centers = [pos(4, 3), pos(6, 3), pos(7, 4)].filter( (i) =>",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "generateFloor.centers.5": {
+      "value": 7,
+      "category": "World",
+      "label": "generateFloor \u00b7 centers 5",
+      "description": "Coefficient in: centers = [pos(4, 3), pos(6, 3), pos(7, 4)].filter( (i) => !ma",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "generateFloor.centers.6": {
+      "value": 4,
+      "category": "World",
+      "label": "generateFloor \u00b7 centers 6",
+      "description": "Coefficient in: nters = [pos(4, 3), pos(6, 3), pos(7, 4)].filter( (i) => !map[i",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "generateFloor.coefficient.7": {
+      "value": 7,
+      "category": "World",
+      "label": "generateFloor \u00b7 coefficient 7",
+      "description": "Coefficient in: r (let y = Math.floor(gate / W); y <= 7; y++) { let i = pos(gate % W,",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "generateFloor.coefficient.8": {
+      "value": 0.3,
+      "category": "World",
+      "label": "generateFloor \u00b7 coefficient 8",
+      "description": "Coefficient in: ush(\"recruit\"); if (Math.random() < 0.3) events.push(\"shop\"); if (Math.rand",
+      "unit": "probability or multiplier",
+      "min": 0,
+      "max": 1,
+      "integer": false
+    },
+    "generateFloor.coefficient.9": {
+      "value": 0.32,
+      "category": "World",
+      "label": "generateFloor \u00b7 coefficient 9",
+      "description": "Coefficient in: s.push(\"shop\"); if (Math.random() < 0.32) events.push(\"ruin\"); for (const e",
+      "unit": "probability or multiplier",
+      "min": 0,
+      "max": 1,
+      "integer": false
+    },
+    "addCaveRooms.desired.1": {
+      "value": 0.3,
+      "category": "World",
+      "label": "addCaveRooms \u00b7 desired 1",
+      "description": "Coefficient in: = Math.random(), desired = draw < 0.3 ? 0 : draw < 0.75 ? 1 : draw < 0.95 ?",
+      "unit": "probability or multiplier",
+      "min": 0,
+      "max": 1,
+      "integer": false
+    },
+    "addCaveRooms.desired.2": {
+      "value": 0.75,
+      "category": "World",
+      "label": "addCaveRooms \u00b7 desired 2",
+      "description": "Coefficient in: desired = draw < 0.3 ? 0 : draw < 0.75 ? 1 : draw < 0.95 ? 2 : 3; for (let",
+      "unit": "probability or multiplier",
+      "min": 0,
+      "max": 1,
+      "integer": false
+    },
+    "addCaveRooms.desired.3": {
+      "value": 0.95,
+      "category": "World",
+      "label": "addCaveRooms \u00b7 desired 3",
+      "description": "Coefficient in: < 0.3 ? 0 : draw < 0.75 ? 1 : draw < 0.95 ? 2 : 3; for (let room = 1; room <=",
+      "unit": "probability or multiplier",
+      "min": 0,
+      "max": 1,
+      "integer": false
+    },
+    "addCaveRooms.desired.4": {
+      "value": 2,
+      "category": "World",
+      "label": "addCaveRooms \u00b7 desired 4",
+      "description": "Coefficient in: ? 0 : draw < 0.75 ? 1 : draw < 0.95 ? 2 : 3; for (let room = 1; room <= des",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "addCaveRooms.desired.5": {
+      "value": 3,
+      "category": "World",
+      "label": "addCaveRooms \u00b7 desired 5",
+      "description": "Coefficient in: : draw < 0.75 ? 1 : draw < 0.95 ? 2 : 3; for (let room = 1; room <= desired",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "addCaveRooms.coefficient.1": {
+      "value": 2,
+      "category": "World",
+      "label": "addCaveRooms \u00b7 coefficient 1",
+      "description": "Coefficient in: tes = []; for (let y = 1; y < H - 2; y++) for (let x = 1; x < W - 2",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "addCaveRooms.coefficient.2": {
+      "value": 2,
+      "category": "World",
+      "label": "addCaveRooms \u00b7 coefficient 2",
+      "description": "Coefficient in: 2; y++) for (let x = 1; x < W - 2; x++) { const width = 2 + (Ma",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "addCaveRooms.width.1": {
+      "value": 2,
+      "category": "World",
+      "label": "addCaveRooms \u00b7 width 1",
+      "description": "Coefficient in: < W - 2; x++) { const width = 2 + (Math.random() < 0.3 && x < W - 3 ?",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "addCaveRooms.width.2": {
+      "value": 0.3,
+      "category": "World",
+      "label": "addCaveRooms \u00b7 width 2",
+      "description": "Coefficient in: const width = 2 + (Math.random() < 0.3 && x < W - 3 ? 1 : 0), cell",
+      "unit": "probability or multiplier",
+      "min": 0,
+      "max": 1,
+      "integer": false
+    },
+    "addCaveRooms.width.3": {
+      "value": 3,
+      "category": "World",
+      "label": "addCaveRooms \u00b7 width 3",
+      "description": "Coefficient in: = 2 + (Math.random() < 0.3 && x < W - 3 ? 1 : 0), cells = [];",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "addCaveRooms.coefficient.3": {
+      "value": 2,
+      "category": "World",
+      "label": "addCaveRooms \u00b7 coefficient 3",
+      "description": "Coefficient in: s = []; for (let dy = 0; dy < 2; dy++) for (let dx = 0; dx",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "addCaveRooms.coefficient.4": {
+      "value": 7,
+      "category": "World",
+      "label": "addCaveRooms \u00b7 coefficient 4",
+      "description": "Coefficient in: i].room && i !== pos(1, 7) && ![\"enemy\", \"guardia",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "move.coefficient.1": {
+      "value": 0.12,
+      "category": "World",
+      "label": "move \u00b7 coefficient 1",
+      "description": "Coefficient in: eEntry && resolved && Math.random() < 0.12) { travel = null; beg",
+      "unit": "probability or multiplier",
+      "min": 0,
+      "max": 1,
+      "integer": false
+    },
+    "enemyBalance.damage.1": {
+      "value": 2,
+      "category": "Enemies",
+      "label": "enemyBalance \u00b7 damage 1",
+      "description": "Coefficient in: , ), damage: boss ? 2 + Math.floor(depth / 3) : Math.",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "enemyBalance.damage.2": {
+      "value": 3,
+      "category": "Enemies",
+      "label": "enemyBalance \u00b7 damage 2",
+      "description": "Coefficient in: : boss ? 2 + Math.floor(depth / 3) : Math.max( 1,",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "enemyBalance.damage.3": {
+      "value": 2,
+      "category": "Enemies",
+      "label": "enemyBalance \u00b7 damage 3",
+      "description": "Coefficient in: 1, Math.floor( (2 + Math.floor((depth - 1",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "enemyBalance.damage.4": {
+      "value": 3,
+      "category": "Enemies",
+      "label": "enemyBalance \u00b7 damage 4",
+      "description": "Coefficient in: Math.floor((depth - 1) / 3) + (elite ? 1 : 0) +",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "enemyBalance.damage.5": {
+      "value": 0.8,
+      "category": "Enemies",
+      "label": "enemyBalance \u00b7 damage 5",
+      "description": "Coefficient in: old ? 1 : 0)) * (pair ? 0.8 : 1), ), ), fre",
+      "unit": "probability or multiplier",
+      "min": 0,
+      "max": 1,
+      "integer": false
+    },
+    "enemyBalance.frequency.1": {
+      "value": 2,
+      "category": "Enemies",
+      "label": "enemyBalance \u00b7 frequency 1",
+      "description": "Coefficient in: ), frequency: stronghold ? 2 : boss ? depth >= 7",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "enemyBalance.frequency.2": {
+      "value": 7,
+      "category": "Enemies",
+      "label": "enemyBalance \u00b7 frequency 2",
+      "description": "Coefficient in: ? 2 : boss ? depth >= 7 ? 1 : 2 :",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "enemyBalance.frequency.3": {
+      "value": 2,
+      "category": "Enemies",
+      "label": "enemyBalance \u00b7 frequency 3",
+      "description": "Coefficient in: depth >= 7 ? 1 : 2 : depth < 3 ? 3",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "enemyBalance.frequency.4": {
+      "value": 3,
+      "category": "Enemies",
+      "label": "enemyBalance \u00b7 frequency 4",
+      "description": "Coefficient in: ? 1 : 2 : depth < 3 ? 3 : depth < 9",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "enemyBalance.frequency.5": {
+      "value": 3,
+      "category": "Enemies",
+      "label": "enemyBalance \u00b7 frequency 5",
+      "description": "Coefficient in: : 2 : depth < 3 ? 3 : depth < 9 ? 2",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "enemyBalance.frequency.6": {
+      "value": 9,
+      "category": "Enemies",
+      "label": "enemyBalance \u00b7 frequency 6",
+      "description": "Coefficient in: < 3 ? 3 : depth < 9 ? 2 : 1,",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "enemyBalance.frequency.7": {
+      "value": 2,
+      "category": "Enemies",
+      "label": "enemyBalance \u00b7 frequency 7",
+      "description": "Coefficient in: 3 : depth < 9 ? 2 : 1, strikes: (boss &",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "enemyBalance.strikes.1": {
+      "value": 6,
+      "category": "Enemies",
+      "label": "enemyBalance \u00b7 strikes 1",
+      "description": "Coefficient in: : 1, strikes: (boss && depth >= 6) || (stronghold && depth >= 7) ? 2 :",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "enemyBalance.strikes.2": {
+      "value": 7,
+      "category": "Enemies",
+      "label": "enemyBalance \u00b7 strikes 2",
+      "description": "Coefficient in: epth >= 6) || (stronghold && depth >= 7) ? 2 : 1, }; }",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "enemyBalance.strikes.3": {
+      "value": 2,
+      "category": "Enemies",
+      "label": "enemyBalance \u00b7 strikes 3",
+      "description": "Coefficient in: >= 6) || (stronghold && depth >= 7) ? 2 : 1, }; }",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "beginEncounter.pools.1": {
+      "value": 8,
+      "category": "Enemies",
+      "label": "beginEncounter \u00b7 pools 1",
+      "description": "Coefficient in: = !!options.elite, pools=(depth>=8?BALANCE.encounterPools.deep:depth>=4?",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "beginEncounter.pools.2": {
+      "value": 4,
+      "category": "Enemies",
+      "label": "beginEncounter \u00b7 pools 2",
+      "description": "Coefficient in: =8?BALANCE.encounterPools.deep:depth>=4?BALANCE.encounterPools.middle:BALANCE",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "beginEncounter.band.1": {
+      "value": 4,
+      "category": "Enemies",
+      "label": "beginEncounter \u00b7 band 1",
+      "description": "Coefficient in: BALANCE.encounterPools.bands[Math.min(4,Math.floor((depth-1)/2))]), count",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "beginEncounter.band.2": {
+      "value": 2,
+      "category": "Enemies",
+      "label": "beginEncounter \u00b7 band 2",
+      "description": "Coefficient in: bands[Math.min(4,Math.floor((depth-1)/2))]), count = options.count",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "beginEncounter.count.1": {
+      "value": 4,
+      "category": "Enemies",
+      "label": "beginEncounter \u00b7 count 1",
+      "description": "Coefficient in: !options.wandering && depth >= 4 && Math.random() < Math.min(0.4",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "beginEncounter.count.2": {
+      "value": 0.45,
+      "category": "Enemies",
+      "label": "beginEncounter \u00b7 count 2",
+      "description": "Coefficient in: = 4 && Math.random() < Math.min(0.45, 0.08 + (depth - 4) * 0.055)",
+      "unit": "probability or multiplier",
+      "min": 0,
+      "max": 1,
+      "integer": false
+    },
+    "beginEncounter.count.3": {
+      "value": 0.08,
+      "category": "Enemies",
+      "label": "beginEncounter \u00b7 count 3",
+      "description": "Coefficient in: Math.random() < Math.min(0.45, 0.08 + (depth - 4) * 0.055) ? 2",
+      "unit": "probability or multiplier",
+      "min": 0,
+      "max": 1,
+      "integer": false
+    },
+    "beginEncounter.count.4": {
+      "value": 4,
+      "category": "Enemies",
+      "label": "beginEncounter \u00b7 count 4",
+      "description": "Coefficient in: om() < Math.min(0.45, 0.08 + (depth - 4) * 0.055) ? 2 : 1),",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "beginEncounter.count.5": {
+      "value": 0.055,
+      "category": "Enemies",
+      "label": "beginEncounter \u00b7 count 5",
+      "description": "Coefficient in: < Math.min(0.45, 0.08 + (depth - 4) * 0.055) ? 2 : 1), create",
+      "unit": "probability or multiplier",
+      "min": 0,
+      "max": 1,
+      "integer": false
+    },
+    "beginEncounter.count.6": {
+      "value": 2,
+      "category": "Enemies",
+      "label": "beginEncounter \u00b7 count 6",
+      "description": "Coefficient in: 0.08 + (depth - 4) * 0.055) ? 2 : 1), create = (index) =>",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "beginEncounter.elite.1": {
+      "value": 0.065,
+      "category": "Enemies",
+      "label": "beginEncounter \u00b7 elite 1",
+      "description": "Coefficient in: boss || stronghold || Math.random() < 0.065, affixData=elite?pick(BALANCE",
+      "unit": "probability or multiplier",
+      "min": 0,
+      "max": 1,
+      "integer": false
+    },
+    "beginEncounter.pair.1": {
+      "value": 2,
+      "category": "Enemies",
+      "label": "beginEncounter \u00b7 pair 1",
+      "description": "Coefficient in: ions.mimic, pair: count === 2, }), definition=BALAN",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "enemyTurn.attack.1": {
+      "value": 9,
+      "category": "Enemies",
+      "label": "enemyTurn \u00b7 attack 1",
+      "description": "Coefficient in: raw.attack + raw.magic) * e.damage) / 9) + (raw.attack || raw.magic",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "enemyTurn.heal.1": {
+      "value": 2,
+      "category": "Enemies",
+      "label": "enemyTurn \u00b7 heal 1",
+      "description": "Coefficient in: t, heal: Math.ceil(raw.heal / 2), block: raw.block, s",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "victory.coefficient.1": {
+      "value": 8,
+      "category": "Progression",
+      "label": "victory \u00b7 coefficient 1",
+      "description": "Coefficient in: ( h, Math.round( (8 + state.depth * 2) * 0.85 *",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "victory.coefficient.2": {
+      "value": 2,
+      "category": "Progression",
+      "label": "victory \u00b7 coefficient 2",
+      "description": "Coefficient in: ath.round( (8 + state.depth * 2) * 0.85 * (state.",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "victory.coefficient.3": {
+      "value": 0.85,
+      "category": "Progression",
+      "label": "victory \u00b7 coefficient 3",
+      "description": "Coefficient in: (8 + state.depth * 2) * 0.85 * (state.encounterReward?.c",
+      "unit": "probability or multiplier",
+      "min": 0,
+      "max": 1,
+      "integer": false
+    },
+    "victory.coefficient.4": {
+      "value": 2,
+      "category": "Progression",
+      "label": "victory \u00b7 coefficient 4",
+      "description": "Coefficient in: unt || 1) * (e.stronghold ? 2 : e.boss ? 1.35 : e.elite ? 1.2 : 1),",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "victory.coefficient.5": {
+      "value": 1.35,
+      "category": "Progression",
+      "label": "victory \u00b7 coefficient 5",
+      "description": "Coefficient in: (e.stronghold ? 2 : e.boss ? 1.35 : e.elite ? 1.2 : 1), ), );",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": false
+    },
+    "victory.coefficient.6": {
+      "value": 1.2,
+      "category": "Progression",
+      "label": "victory \u00b7 coefficient 6",
+      "description": "Coefficient in: ghold ? 2 : e.boss ? 1.35 : e.elite ? 1.2 : 1), ), ); h.points++;",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": false
+    },
+    "treasureRoll.baseGold.1": {
+      "value": 2,
+      "category": "Loot",
+      "label": "treasureRoll \u00b7 baseGold 1",
+      "description": "Coefficient in: faces, faces, faces]), baseGold = 2 + state.depth, counts = {}, f",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "treasureRoll.coefficient.1": {
+      "value": 2,
+      "category": "Loot",
+      "label": "treasureRoll \u00b7 coefficient 1",
+      "description": "Coefficient in: baseGold += s.tier * (battle ? 2 + state.depth : 4 + state.depth);",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "treasureRoll.coefficient.2": {
+      "value": 4,
+      "category": "Loot",
+      "label": "treasureRoll \u00b7 coefficient 2",
+      "description": "Coefficient in: s.tier * (battle ? 2 + state.depth : 4 + state.depth); if (s.type === \"a",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "treasureRoll.coefficient.3": {
+      "value": 2,
+      "category": "Loot",
+      "label": "treasureRoll \u00b7 coefficient 3",
+      "description": "Coefficient in: if (source === \"boss\") baseGold *= 2; if (elite) { baseGold *= 3;",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "treasureRoll.coefficient.4": {
+      "value": 3,
+      "category": "Loot",
+      "label": "treasureRoll \u00b7 coefficient 4",
+      "description": "Coefficient in: *= 2; if (elite) { baseGold *= 3; const prized = makeArtefact(stat",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "treasureRoll.prized.1": {
+      "value": 2,
+      "category": "Loot",
+      "label": "treasureRoll \u00b7 prized 1",
+      "description": "Coefficient in: t prized = makeArtefact(state.depth + 2); prized.depth = state.depth;",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "rollInkBomb.coefficient.1": {
+      "value": 3,
+      "category": "Items",
+      "label": "rollInkBomb \u00b7 coefficient 1",
+      "description": "Coefficient in: se.attack += Math.floor(state.depth / 3); const multiplier = await rollCrit",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "makeArtefact.name.1": {
+      "value": 3,
+      "category": "Artefacts",
+      "label": "makeArtefact \u00b7 name 1",
+      "description": "Coefficient in: [\"I\", \"II\", \"III\", \"IV\"][Math.min(3, Math.floor((depth - 1) / 3))], k",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "makeArtefact.name.2": {
+      "value": 3,
+      "category": "Artefacts",
+      "label": "makeArtefact \u00b7 name 2",
+      "description": "Coefficient in: [Math.min(3, Math.floor((depth - 1) / 3))], key: t.key, power: Math.c",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "shopPrices.coefficient.1": {
+      "value": 14,
+      "category": "Economy",
+      "label": "shopPrices \u00b7 coefficient 1",
+      "description": "Coefficient in: .keys(ITEM_DEFS).map((type) => [type, 14 + state.depth * 2]), ), potio",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 140,
+      "integer": true
+    },
+    "shopPrices.coefficient.2": {
+      "value": 2,
+      "category": "Economy",
+      "label": "shopPrices \u00b7 coefficient 2",
+      "description": "Coefficient in: p((type) => [type, 14 + state.depth * 2]), ), potion: 14 + state.dept",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "shopPrices.potion.1": {
+      "value": 14,
+      "category": "Economy",
+      "label": "shopPrices \u00b7 potion 1",
+      "description": "Coefficient in: state.depth * 2]), ), potion: 14 + state.depth * 2, bomb: 18 + sta",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 140,
+      "integer": true
+    },
+    "shopPrices.potion.2": {
+      "value": 2,
+      "category": "Economy",
+      "label": "shopPrices \u00b7 potion 2",
+      "description": "Coefficient in: ), potion: 14 + state.depth * 2, bomb: 18 + state.depth * 2,",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "shopPrices.bomb.1": {
+      "value": 18,
+      "category": "Economy",
+      "label": "shopPrices \u00b7 bomb 1",
+      "description": "Coefficient in: tion: 14 + state.depth * 2, bomb: 18 + state.depth * 2, ward: 12 + sta",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 180,
+      "integer": true
+    },
+    "shopPrices.bomb.2": {
+      "value": 2,
+      "category": "Economy",
+      "label": "shopPrices \u00b7 bomb 2",
+      "description": "Coefficient in: pth * 2, bomb: 18 + state.depth * 2, ward: 12 + state.depth * 2,",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "shopPrices.ward.1": {
+      "value": 12,
+      "category": "Economy",
+      "label": "shopPrices \u00b7 ward 1",
+      "description": "Coefficient in: bomb: 18 + state.depth * 2, ward: 12 + state.depth * 2, heal: 22 + sta",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 120,
+      "integer": true
+    },
+    "shopPrices.ward.2": {
+      "value": 2,
+      "category": "Economy",
+      "label": "shopPrices \u00b7 ward 2",
+      "description": "Coefficient in: pth * 2, ward: 12 + state.depth * 2, heal: 22 + state.depth * 5,",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "shopPrices.heal.1": {
+      "value": 22,
+      "category": "Economy",
+      "label": "shopPrices \u00b7 heal 1",
+      "description": "Coefficient in: ward: 12 + state.depth * 2, heal: 22 + state.depth * 5, reveal: 18 + s",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 220,
+      "integer": true
+    },
+    "shopPrices.heal.2": {
+      "value": 5,
+      "category": "Economy",
+      "label": "shopPrices \u00b7 heal 2",
+      "description": "Coefficient in: pth * 2, heal: 22 + state.depth * 5, reveal: 18 + state.depth * 3,",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "shopPrices.reveal.1": {
+      "value": 18,
+      "category": "Economy",
+      "label": "shopPrices \u00b7 reveal 1",
+      "description": "Coefficient in: al: 22 + state.depth * 5, reveal: 18 + state.depth * 3, }; }",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 180,
+      "integer": true
+    },
+    "shopPrices.reveal.2": {
+      "value": 3,
+      "category": "Economy",
+      "label": "shopPrices \u00b7 reveal 2",
+      "description": "Coefficient in: h * 5, reveal: 18 + state.depth * 3, }; }",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "ruinEncounter.baseGold.1": {
+      "value": 6,
+      "category": "World",
+      "label": "ruinEncounter \u00b7 baseGold 1",
+      "description": "Coefficient in: .reduce((n, s) => n + s.tier * (6 + state.depth * 2), 0), baseDamag",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "ruinEncounter.baseGold.2": {
+      "value": 2,
+      "category": "World",
+      "label": "ruinEncounter \u00b7 baseGold 2",
+      "description": "Coefficient in: s) => n + s.tier * (6 + state.depth * 2), 0), baseDamage = Math.ceil(",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "maybeDiscoveryHint.coefficient.1": {
+      "value": 0.25,
+      "category": "World",
+      "label": "maybeDiscoveryHint \u00b7 coefficient 1",
+      "description": "Coefficient in: hecked = true; if (Math.random() >= 0.25) return; const candidates = neighbo",
+      "unit": "probability or multiplier",
+      "min": 0,
+      "max": 1,
+      "integer": false
+    },
+    "trapPower.coefficient.1": {
+      "value": 0.5,
+      "category": "World",
+      "label": "trapPower \u00b7 coefficient 1",
+      "description": "Coefficient in: function trapPower(depth) { return 0.5 + depth * 0.15; }",
+      "unit": "probability or multiplier",
+      "min": 0,
+      "max": 1,
+      "integer": false
+    },
+    "trapPower.coefficient.2": {
+      "value": 0.15,
+      "category": "World",
+      "label": "trapPower \u00b7 coefficient 2",
+      "description": "Coefficient in: Power(depth) { return 0.5 + depth * 0.15; }",
+      "unit": "probability or multiplier",
+      "min": 0,
+      "max": 1,
+      "integer": false
+    },
+    "prepareRecruit.budget.1": {
+      "value": 2,
+      "category": "Progression",
+      "label": "prepareRecruit \u00b7 budget 1",
+      "description": "Coefficient in: nts, budget = Math.floor(earned / 2); let remaining = budget; // Pref",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "recruitChance.coefficient.1": {
+      "value": 0.85,
+      "category": "World",
+      "label": "recruitChance \u00b7 coefficient 1",
+      "description": "Coefficient in: eturn Math.min( partySize === 1 ? 0.85 : 0.7, (partySize === 1 ? 0.35 :",
+      "unit": "probability or multiplier",
+      "min": 0,
+      "max": 1,
+      "integer": false
+    },
+    "recruitChance.coefficient.2": {
+      "value": 0.7,
+      "category": "World",
+      "label": "recruitChance \u00b7 coefficient 2",
+      "description": "Coefficient in: ath.min( partySize === 1 ? 0.85 : 0.7, (partySize === 1 ? 0.35 : 0.28)",
+      "unit": "probability or multiplier",
+      "min": 0,
+      "max": 1,
+      "integer": false
+    },
+    "recruitChance.coefficient.3": {
+      "value": 0.35,
+      "category": "World",
+      "label": "recruitChance \u00b7 coefficient 3",
+      "description": "Coefficient in: ? 0.85 : 0.7, (partySize === 1 ? 0.35 : 0.28) + Math.max(0, 4 - depth",
+      "unit": "probability or multiplier",
+      "min": 0,
+      "max": 1,
+      "integer": false
+    },
+    "recruitChance.coefficient.4": {
+      "value": 0.28,
+      "category": "World",
+      "label": "recruitChance \u00b7 coefficient 4",
+      "description": "Coefficient in: : 0.7, (partySize === 1 ? 0.35 : 0.28) + Math.max(0, 4 - depth) * 0.0",
+      "unit": "probability or multiplier",
+      "min": 0,
+      "max": 1,
+      "integer": false
+    },
+    "recruitChance.coefficient.5": {
+      "value": 4,
+      "category": "World",
+      "label": "recruitChance \u00b7 coefficient 5",
+      "description": "Coefficient in: 1 ? 0.35 : 0.28) + Math.max(0, 4 - depth) * 0.025 + missedFloors",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "recruitChance.coefficient.6": {
+      "value": 0.025,
+      "category": "World",
+      "label": "recruitChance \u00b7 coefficient 6",
+      "description": "Coefficient in: .28) + Math.max(0, 4 - depth) * 0.025 + missedFloors * (partySize ===",
+      "unit": "probability or multiplier",
+      "min": 0,
+      "max": 1,
+      "integer": false
+    },
+    "recruitChance.coefficient.7": {
+      "value": 0.07,
+      "category": "World",
+      "label": "recruitChance \u00b7 coefficient 7",
+      "description": "Coefficient in: missedFloors * (partySize === 1 ? 0.07 : 0.05), ); }",
+      "unit": "probability or multiplier",
+      "min": 0,
+      "max": 1,
+      "integer": false
+    },
+    "recruitChance.coefficient.8": {
+      "value": 0.05,
+      "category": "World",
+      "label": "recruitChance \u00b7 coefficient 8",
+      "description": "Coefficient in: sedFloors * (partySize === 1 ? 0.07 : 0.05), ); }",
+      "unit": "probability or multiplier",
+      "min": 0,
+      "max": 1,
+      "integer": false
+    },
+    "beaconTiles.coefficient.1": {
+      "value": 0.55,
+      "category": "World",
+      "label": "beaconTiles \u00b7 coefficient 1",
+      "description": "Coefficient in: rigin, i), ); if (Math.random() < 0.55) { const ring = state.map .",
+      "unit": "probability or multiplier",
+      "min": 0,
+      "max": 1,
+      "integer": false
+    },
+    "beaconTiles.ring.1": {
+      "value": 2,
+      "category": "World",
+      "label": "beaconTiles \u00b7 ring 1",
+      "description": "Coefficient in: (i) => tileDistance(i, origin) === 2 && lineOfSight(origin, i), );",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "beaconTiles.extra.1": {
+      "value": 5,
+      "category": "World",
+      "label": "beaconTiles \u00b7 extra 1",
+      "description": "Coefficient in: xtra = Math.min(ring.length, 1 + rand(5)); for (let k = 0; k < extra; k++",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "pursuerRoute.next.1": {
+      "value": 2.5,
+      "category": "World",
+      "label": "pursuerRoute \u00b7 next 1",
+      "description": "Coefficient in: sts.get(i) + (state.map[j].seen ? 1 : 2.5); if (next < (costs.get(j) ?? I",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": false
+    },
+    "advancePursuer.coefficient.1": {
+      "value": 3,
+      "category": "World",
+      "label": "advancePursuer \u00b7 coefficient 1",
+      "description": "Coefficient in: dvancePursuer() { if (state.depth < 3 || state.enemy || state.over) return",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "advancePursuer.coefficient.2": {
+      "value": 18,
+      "category": "World",
+      "label": "advancePursuer \u00b7 coefficient 2",
+      "description": "Coefficient in: r((c) => c.seen && !c.wall).length >= 18 ) { const reach = mapDistances(",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 180,
+      "integer": true
+    },
+    "advancePursuer.far.1": {
+      "value": 6,
+      "category": "World",
+      "label": "advancePursuer \u00b7 far 1",
+      "description": "Coefficient in: .filter( (i) => reach.get(i) >= 6 && !state.map[i].event, ); co",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "advancePursuer.coefficient.3": {
+      "value": 2,
+      "category": "World",
+      "label": "advancePursuer \u00b7 coefficient 3",
+      "description": "Coefficient in: osition; if (!contact && ++p.beat % 2 === 0) { // Aim one step ahead wh",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "minorTravelEvent.coefficient.1": {
+      "value": 20,
+      "category": "World",
+      "label": "minorTravelEvent \u00b7 coefficient 1",
+      "description": "Coefficient in: steps - (state.lastMinorEventStep ?? -20) < 12 || Math.random() >= 0.025",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 200,
+      "integer": true
+    },
+    "minorTravelEvent.coefficient.2": {
+      "value": 12,
+      "category": "World",
+      "label": "minorTravelEvent \u00b7 coefficient 2",
+      "description": "Coefficient in: - (state.lastMinorEventStep ?? -20) < 12 || Math.random() >= 0.025 )",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 120,
+      "integer": true
+    },
+    "minorTravelEvent.coefficient.3": {
+      "value": 0.025,
+      "category": "World",
+      "label": "minorTravelEvent \u00b7 coefficient 3",
+      "description": "Coefficient in: ?? -20) < 12 || Math.random() >= 0.025 ) return false; state.lastMin",
+      "unit": "probability or multiplier",
+      "min": 0,
+      "max": 1,
+      "integer": false
+    },
+    "minorTravelEvent.coefficient.4": {
+      "value": 0.45,
+      "category": "World",
+      "label": "minorTravelEvent \u00b7 coefficient 4",
+      "description": "Coefficient in: = state.steps; if (Math.random() < 0.45) { showSpotlight( \"A forgot",
+      "unit": "probability or multiplier",
+      "min": 0,
+      "max": 1,
+      "integer": false
+    },
+    "minorTravelEvent.base.1": {
+      "value": 4,
+      "category": "World",
+      "label": "minorTravelEvent \u00b7 base 1",
+      "description": "Coefficient in: r ? danger + Math.floor(state.depth / 4) : 0; const mult = await rollCritic",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "enemy.growthStartDepth": {
+      "value": 3,
+      "category": "Enemies",
+      "label": "growthStartDepth",
+      "description": "Coefficient in: const growth = Math.max(0, depth - 3); return { maxHp: boss ?",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "enemy.bossHpBase": {
+      "value": 30,
+      "category": "Enemies",
+      "label": "bossHpBase",
+      "description": "Coefficient in: n { maxHp: boss ? Math.ceil(30 + depth * 9 + growth * growth * 3.2)",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 300,
+      "integer": true
+    },
+    "enemy.bossHpPerDepth": {
+      "value": 9,
+      "category": "Enemies",
+      "label": "bossHpPerDepth",
+      "description": "Coefficient in: : boss ? Math.ceil(30 + depth * 9 + growth * growth * 3.2) : Math",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "enemy.bossHpQuadratic": {
+      "value": 3.2,
+      "category": "Enemies",
+      "label": "bossHpQuadratic",
+      "description": "Coefficient in: il(30 + depth * 9 + growth * growth * 3.2) : Math.ceil( (16 + d",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": false
+    },
+    "enemy.hpBase": {
+      "value": 16,
+      "category": "Enemies",
+      "label": "hpBase",
+      "description": "Coefficient in: * 3.2) : Math.ceil( (16 + depth * 5 + growth * growth * 0.45)",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 160,
+      "integer": true
+    },
+    "enemy.hpPerDepth": {
+      "value": 5,
+      "category": "Enemies",
+      "label": "hpPerDepth",
+      "description": "Coefficient in: : Math.ceil( (16 + depth * 5 + growth * growth * 0.45) *",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": true
+    },
+    "enemy.hpQuadratic": {
+      "value": 0.45,
+      "category": "Enemies",
+      "label": "hpQuadratic",
+      "description": "Coefficient in: (16 + depth * 5 + growth * growth * 0.45) * (elite ? 1.38 : 1) *",
+      "unit": "probability or multiplier",
+      "min": 0,
+      "max": 1,
+      "integer": false
+    },
+    "enemy.eliteHpMultiplier": {
+      "value": 1.38,
+      "category": "Enemies",
+      "label": "eliteHpMultiplier",
+      "description": "Coefficient in: growth * 0.45) * (elite ? 1.38 : 1) * (stronghold ? 1.5",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": false
+    },
+    "enemy.strongholdHpMultiplier": {
+      "value": 1.5,
+      "category": "Enemies",
+      "label": "strongholdHpMultiplier",
+      "description": "Coefficient in: 1.38 : 1) * (stronghold ? 1.5 : 1) * (mimic ? 1.2 : 1)",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": false
+    },
+    "enemy.mimicHpMultiplier": {
+      "value": 1.2,
+      "category": "Enemies",
+      "label": "mimicHpMultiplier",
+      "description": "Coefficient in: old ? 1.5 : 1) * (mimic ? 1.2 : 1) * (pair ? 0.78 : 1),",
+      "unit": "count or coefficient",
+      "min": 0,
+      "max": 100,
+      "integer": false
+    },
+    "enemy.pairHpMultiplier": {
+      "value": 0.78,
+      "category": "Enemies",
+      "label": "pairHpMultiplier",
+      "description": "Coefficient in: imic ? 1.2 : 1) * (pair ? 0.78 : 1), ), damage: boss",
+      "unit": "probability or multiplier",
+      "min": 0,
+      "max": 1,
+      "integer": false
+    },
+    "world.ambushAgeMs": {
+      "value": 60000,
+      "category": "World",
+      "label": "Old passage age",
+      "description": "Exploration-only elapsed time before a resolved tile can ambush.",
+      "unit": "milliseconds",
+      "min": 1000,
+      "max": 3600000,
+      "integer": true
+    }
+  },
+  "abilities": {
+    "fighter": {
+      "id": "ability.rage",
+      "name": "RAGE",
+      "description": "Rage: add damage for the rest of this fight. Repeated rage builds a little protection.",
+      "stackCap": 4,
+      "defenceThreshold": 3
+    },
+    "healer": {
+      "id": "ability.sanctuary",
+      "name": "SANCTUARY",
+      "description": "Sanctuary: heal every living ally and raise shared team block.",
+      "healBase": 3,
+      "healLevelDivisor": 2,
+      "blockBase": 4,
+      "blockLevelDivisor": 3
+    },
+    "rogue": {
+      "id": "ability.flurry",
+      "name": "FLURRY",
+      "description": "Flurry: roll three extra attack reels; matching blades can crit.",
+      "reel": [
+        {
+          "type": "attack",
+          "tier": 1,
+          "weight": 8
+        },
+        {
+          "type": "attack",
+          "tier": 2,
+          "weight": 3
+        },
+        {
+          "type": "attack",
+          "tier": 3,
+          "weight": 1
+        }
+      ]
+    },
+    "mage": {
+      "id": "ability.nova",
+      "name": "NOVA",
+      "description": "Nova: strike every enemy with magic.",
+      "damageBase": 4,
+      "damageLevelDivisor": 2
+    },
+    "poison": {
+      "id": "ability.poison",
+      "name": "POISON",
+      "description": "A tiny armour-piercing damage tick per action.",
+      "baseTurns": 1,
+      "maxTurns": 8,
+      "damage": 1
+    },
+    "stimulant": {
+      "id": "ability.stimulant",
+      "name": "STIMULANT",
+      "description": "Temporary damage and protection.",
+      "attackBase": 1,
+      "attackDivisor": 3,
+      "defenceBase": 1,
+      "defenceDivisor": 5,
+      "maxPower": 6,
+      "baseTurns": 3,
+      "maxExtraTurns": 3
+    }
+  },
+  "loot": {
+    "coins": [
+      {
+        "type": "coin",
+        "tier": 1,
+        "weight": 536
+      },
+      {
+        "type": "coin",
+        "tier": 2,
+        "weight": 280
+      },
+      {
+        "type": "coin",
+        "tier": 3,
+        "weight": 110
+      }
+    ],
+    "pointWeight": 35,
+    "itemWeight": 21,
+    "artefactWeight": 18
+  },
+  "world": {
+    "events": {
+      "enemy": 4,
+      "treasure": 3,
+      "trap": 2,
+      "well": 2,
+      "beacon": 1
+    },
+    "mimicChance": 0.025,
+    "shopExtraStock": 2
+  },
+  "eventReels": {
+    "trap": {
+      "id": "reel.event.trap",
+      "faces": [
+        {
+          "type": "safe",
+          "tier": 1,
+          "weight": 1
+        },
+        {
+          "type": "safe",
+          "tier": 1,
+          "weight": 1
+        },
+        {
+          "type": "safe",
+          "tier": 1,
+          "weight": 1
+        },
+        {
+          "type": "trap",
+          "tier": 1,
+          "weight": 1
+        },
+        {
+          "type": "trap",
+          "tier": 2,
+          "weight": 1
+        },
+        {
+          "type": "block",
+          "tier": 1,
+          "weight": 1
+        }
+      ]
+    },
+    "inkBomb": {
+      "id": "reel.event.inkBomb",
+      "faces": [
+        {
+          "type": "attack",
+          "tier": 1,
+          "weight": 8
+        },
+        {
+          "type": "attack",
+          "tier": 2,
+          "weight": 5
+        },
+        {
+          "type": "poison",
+          "tier": 1,
+          "weight": 6
+        },
+        {
+          "type": "poison",
+          "tier": 2,
+          "weight": 2
+        },
+        {
+          "type": "blank",
+          "tier": 1,
+          "weight": 2
+        }
+      ]
+    },
+    "ruin": {
+      "id": "reel.event.ruin",
+      "faces": [
+        {
+          "type": "coin",
+          "tier": 1,
+          "weight": 1
+        },
+        {
+          "type": "coin",
+          "tier": 2,
+          "weight": 1
+        },
+        {
+          "type": "coin",
+          "tier": 3,
+          "weight": 1
+        },
+        {
+          "type": "trap",
+          "tier": 1,
+          "weight": 1
+        },
+        {
+          "type": "trap",
+          "tier": 2,
+          "weight": 1
+        },
+        {
+          "type": "safe",
+          "tier": 1,
+          "weight": 1
+        }
+      ]
+    },
+    "well": {
+      "id": "reel.event.well",
+      "faces": [
+        {
+          "type": "heal",
+          "tier": 1,
+          "weight": 5
+        },
+        {
+          "type": "heal",
+          "tier": 2,
+          "weight": 3
+        },
+        {
+          "type": "heal",
+          "tier": 3,
+          "weight": 1
+        },
+        {
+          "type": "blank",
+          "tier": 1,
+          "weight": 2
+        }
+      ]
+    },
+    "rockfall": {
+      "id": "reel.event.rockfall",
+      "faces": [
+        {
+          "type": "safe",
+          "tier": 1,
+          "weight": 7
+        },
+        {
+          "type": "trap",
+          "tier": 1,
+          "weight": 2
+        },
+        {
+          "type": "trap",
+          "tier": 2,
+          "weight": 1
+        }
+      ]
+    }
+  },
+  "reelSets": {
+    "reel.enemy.skull": {
+      "id": "reel.enemy.skull",
+      "reels": [
+        [
+          {
+            "type": "attack",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "attack",
+            "tier": 2,
+            "weight": 1
+          },
+          {
+            "type": "attack",
+            "tier": 2,
+            "weight": 1
+          },
+          {
+            "type": "block",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "stun",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "attack",
+            "tier": 1,
+            "weight": 1
+          }
+        ],
+        [
+          {
+            "type": "attack",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "attack",
+            "tier": 2,
+            "weight": 1
+          },
+          {
+            "type": "attack",
+            "tier": 2,
+            "weight": 1
+          },
+          {
+            "type": "block",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "stun",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "attack",
+            "tier": 1,
+            "weight": 1
+          }
+        ],
+        [
+          {
+            "type": "attack",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "attack",
+            "tier": 2,
+            "weight": 1
+          },
+          {
+            "type": "attack",
+            "tier": 2,
+            "weight": 1
+          },
+          {
+            "type": "block",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "stun",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "attack",
+            "tier": 1,
+            "weight": 1
+          }
+        ]
+      ]
+    },
+    "reel.enemy.rat": {
+      "id": "reel.enemy.rat",
+      "reels": [
+        [
+          {
+            "type": "attack",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "attack",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "attack",
+            "tier": 2,
+            "weight": 1
+          },
+          {
+            "type": "poison",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "stun",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "miss",
+            "tier": 1,
+            "weight": 1
+          }
+        ],
+        [
+          {
+            "type": "attack",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "attack",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "attack",
+            "tier": 2,
+            "weight": 1
+          },
+          {
+            "type": "poison",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "stun",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "miss",
+            "tier": 1,
+            "weight": 1
+          }
+        ],
+        [
+          {
+            "type": "attack",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "attack",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "attack",
+            "tier": 2,
+            "weight": 1
+          },
+          {
+            "type": "poison",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "stun",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "miss",
+            "tier": 1,
+            "weight": 1
+          }
+        ]
+      ]
+    },
+    "reel.enemy.ghost": {
+      "id": "reel.enemy.ghost",
+      "reels": [
+        [
+          {
+            "type": "magic",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "magic",
+            "tier": 2,
+            "weight": 1
+          },
+          {
+            "type": "heal",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "stun",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "block",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "miss",
+            "tier": 1,
+            "weight": 1
+          }
+        ],
+        [
+          {
+            "type": "magic",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "magic",
+            "tier": 2,
+            "weight": 1
+          },
+          {
+            "type": "heal",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "stun",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "block",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "miss",
+            "tier": 1,
+            "weight": 1
+          }
+        ],
+        [
+          {
+            "type": "magic",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "magic",
+            "tier": 2,
+            "weight": 1
+          },
+          {
+            "type": "heal",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "stun",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "block",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "miss",
+            "tier": 1,
+            "weight": 1
+          }
+        ]
+      ]
+    },
+    "reel.enemy.slime": {
+      "id": "reel.enemy.slime",
+      "reels": [
+        [
+          {
+            "type": "attack",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "attack",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "heal",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "block",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "block",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "miss",
+            "tier": 1,
+            "weight": 1
+          }
+        ],
+        [
+          {
+            "type": "attack",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "attack",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "heal",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "block",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "block",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "miss",
+            "tier": 1,
+            "weight": 1
+          }
+        ],
+        [
+          {
+            "type": "attack",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "attack",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "heal",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "block",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "block",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "miss",
+            "tier": 1,
+            "weight": 1
+          }
+        ]
+      ]
+    },
+    "reel.enemy.enemy-ash-horned-fiend": {
+      "id": "reel.enemy.enemy-ash-horned-fiend",
+      "reels": [
+        [
+          {
+            "type": "attack",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "attack",
+            "tier": 2,
+            "weight": 1
+          },
+          {
+            "type": "attack",
+            "tier": 2,
+            "weight": 1
+          },
+          {
+            "type": "stimulant",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "stun",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "attack",
+            "tier": 1,
+            "weight": 1
+          }
+        ],
+        [
+          {
+            "type": "attack",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "attack",
+            "tier": 2,
+            "weight": 1
+          },
+          {
+            "type": "attack",
+            "tier": 2,
+            "weight": 1
+          },
+          {
+            "type": "stimulant",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "stun",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "attack",
+            "tier": 1,
+            "weight": 1
+          }
+        ],
+        [
+          {
+            "type": "attack",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "attack",
+            "tier": 2,
+            "weight": 1
+          },
+          {
+            "type": "attack",
+            "tier": 2,
+            "weight": 1
+          },
+          {
+            "type": "stimulant",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "stun",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "attack",
+            "tier": 1,
+            "weight": 1
+          }
+        ]
+      ]
+    },
+    "reel.enemy.enemy-hollow-cantor": {
+      "id": "reel.enemy.enemy-hollow-cantor",
+      "reels": [
+        [
+          {
+            "type": "magic",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "magic",
+            "tier": 2,
+            "weight": 1
+          },
+          {
+            "type": "heal",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "poison",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "block",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "miss",
+            "tier": 1,
+            "weight": 1
+          }
+        ],
+        [
+          {
+            "type": "magic",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "magic",
+            "tier": 2,
+            "weight": 1
+          },
+          {
+            "type": "heal",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "poison",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "block",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "miss",
+            "tier": 1,
+            "weight": 1
+          }
+        ],
+        [
+          {
+            "type": "magic",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "magic",
+            "tier": 2,
+            "weight": 1
+          },
+          {
+            "type": "heal",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "poison",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "block",
+            "tier": 1,
+            "weight": 1
+          },
+          {
+            "type": "miss",
+            "tier": 1,
+            "weight": 1
+          }
+        ]
+      ]
+    }
+  },
+  "enemyReelRefs": {
+    "skull": "reel.enemy.skull",
+    "rat": "reel.enemy.rat",
+    "ghost": "reel.enemy.ghost",
+    "slime": "reel.enemy.slime",
+    "revenant": "reel.enemy.skull",
+    "demon": "reel.enemy.skull",
+    "lich": "reel.enemy.ghost",
+    "abomination": "reel.enemy.slime",
+    "mimic": "reel.enemy.skull",
+    "gnawer": "reel.enemy.rat",
+    "bellkeeper": "reel.enemy.skull",
+    "widow": "reel.enemy.rat",
+    "oracle": "reel.enemy.ghost",
+    "pageeater": "reel.enemy.slime",
+    "pursuer": "reel.enemy.skull"
+  },
+  "autoresolve": {
+    "healThreshold": 0.6,
+    "itemInterval": 6,
+    "potionThreshold": 0.25,
+    "wardThreshold": 0.45,
+    "sealScores": {
+      "rogue": 7,
+      "mage": 5,
+      "other": 2
+    },
+    "poisonScore": 1
+  }
+}

@@ -1,12 +1,42 @@
 {
   "name": "scratchpad-dungeon",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
-  "description": "A self-contained notebook dungeon crawler. No runtime dependencies.",
+  "description": "Standalone notebook dungeon with validated production data, assets, audio and controller support.",
   "scripts": {
-    "test": "node --test tests/game.test.cjs"
+    "test": "node --test tests/game.test.cjs tests/production.test.cjs",
+    "build": "node tools/build.cjs",
+    "balance:export": "node tools/balance.cjs export",
+    "balance:validate": "node tools/balance.cjs validate",
+    "balance:import": "node tools/balance.cjs import",
+    "assets:validate": "node tools/assets.cjs validate",
+    "assets:audit": "node tools/assets.cjs audit",
+    "assets:replace": "node tools/assets.cjs replace",
+    "assets:sync": "node tools/assets.cjs sync",
+    "audio:generate": "python3 tools/generate-audio.py",
+    "desktop:setup": "node tools/desktop.cjs setup",
+    "desktop:start": "electron .",
+    "desktop:pack:linux": "node tools/desktop.cjs package linux dir",
+    "desktop:dist:linux": "node tools/desktop.cjs package linux zip",
+    "desktop:dist:win": "node tools/desktop.cjs package win zip",
+    "test:production": "node --test tests/production.test.cjs",
+    "test:all": "node --test tests/game.test.cjs tests/production.test.cjs",
+    "validate": "node tools/validate.cjs",
+    "test:game": "node --test tests/game.test.cjs",
+    "pretest": "node tools/build.cjs",
+    "format": "prettier --write src tools desktop tests/production.test.cjs docs"
   },
   "devDependencies": {
-    "playwright": "1.58.2"
+    "acorn": "8.17.0",
+    "electron": "44.9.2",
+    "electron-builder": "26.15.3",
+    "exceljs": "4.4.0",
+    "playwright": "1.58.2",
+    "prettier": "3.6.2",
+    "yauzl": "3.2.0"
+  },
+  "main": "desktop/main.cjs",
+  "engines": {
+    "node": ">=22"
   }
 }

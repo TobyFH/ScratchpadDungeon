@@ -1,2 +1,6 @@
 test-results/
 node_modules/
+
+dist/
+*.tmp
+data/*.backup
