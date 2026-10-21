@@ -7386,7 +7386,9 @@ body[data-palette="dark"] .pencil-scan image {
               <option value="skip">Skip cinematics</option>
             </select></label
           ><label class="autoresolve-control"
-            ><input type="checkbox" id="autoresolve" /> Autoresolve</label
+            ><input type="checkbox" id="autoresolve" /> Autofight</label
+          ><label class="autoresolve-control" title="Explore, handle discoveries and descend automatically. Enable Autofight too for a hands-free run."
+            ><input type="checkbox" id="autoplay" /> Autoplay</label
           ><label class="palette-control"
             >Palette<select id="palette" aria-label="Colour palette">
               <option value="default">Default</option>
@@ -8380,7 +8382,7 @@ function trapArt(type) {
         travel = null;
         document.querySelectorAll(".speech-bubble").forEach((e) => e.remove());
         state = {
-          version: 9,
+          version: 10,
           depth: 1,
           map: generateFloor(1, 1, 0),
           startedAt: Date.now(),
@@ -8389,6 +8391,7 @@ function trapArt(type) {
           pursuer: null,
           autoresolve:
             state?.autoresolve ?? readSettings().autoresolve ?? false,
+          autoplay: state?.autoplay ?? readSettings().autoplay ?? false,
           recruitPity: 0,
           recruitFoundThisFloor: false,
           position: pos(1, 7),
@@ -8461,7 +8464,7 @@ function trapArt(type) {
           );
           if (
             !s ||
-            ![1, 2, 3, 4, 5, 6, 7, 8, 9].includes(s.version) ||
+            ![1, 2, 3, 4, 5, 6, 7, 8, 9, 10].includes(s.version) ||
             s.map?.length !== W * H ||
             !Array.isArray(s.party) ||
             !s.party.length ||
@@ -8492,12 +8495,14 @@ function trapArt(type) {
           let migrated = s.version < 4,
             rebalance = s.version < 7,
             oldFog = s.version < 8,
-            oldRules = s.version < 9;
+            oldRules = s.version < 9,
+            retuneEnemies = s.version < 10;
           state = s;
-          state.version = 9;
+          state.version = 10;
           state.exploreTime ??= 0;
           state.retired ??= [];
           state.autoresolve ??= readSettings().autoresolve || false;
+          state.autoplay ??= readSettings().autoplay || false;
           if (oldRules) state.pursuer = null;
           state.bombs ??= 0;
           state.wards ??= 0;
@@ -8590,8 +8595,7 @@ function trapArt(type) {
                     pair: state.enemies.length > 1,
                   });
                 Object.assign(e, stats, {
-                  hp:
-                    e.hp > 0 ? Math.max(1, Math.ceil(stats.maxHp * ratio)) : 0,
+                  hp: e.hp > 0 ? Math.max(1, Math.ceil(stats.maxHp * ratio)) : 0,
                   countdown: Math.max(
                     1,
                     Math.min(e.countdown || stats.frequency, stats.frequency),
@@ -8599,12 +8603,22 @@ function trapArt(type) {
                 });
               }
             });
-            state.enemy.reels ??= enemyReels(state.enemy.art);
-            state.enemy.last ??= [
-              { type: "attack", tier: 1 },
-              { type: "block", tier: 1 },
-              { type: "blank", tier: 1 },
-            ];
+            if (retuneEnemies)
+              state.enemies.forEach((e) => {
+                const stats = enemyBalance(state.depth, {
+                  ...e,
+                  pair: state.enemies.length > 1,
+                });
+                e.damage = stats.damage;
+                e.strikes = stats.strikes;
+                e.reels = enemyReels(e.art, state.depth, e);
+              });
+            state.enemy.reels ??= enemyReels(
+              state.enemy.art,
+              state.depth,
+              state.enemy,
+            );
+            state.enemy.last ??= enemyReelPreview(state.enemy.reels);
             state.enemy.block ??= 0;
             if (state.enemy.countdown < 1)
               state.enemy.countdown = state.enemy.frequency;
@@ -8612,9 +8626,7 @@ function trapArt(type) {
           }
           if (migrated) {
             state.block = 0;
-            state.logs = [
-              "A new page: companions can no longer return from death.",
-            ];
+            state.logs = ["A new page: companions can no longer return from death."];
             state.lastResult = null;
           }
           delete state.relic;
@@ -8634,6 +8646,7 @@ function trapArt(type) {
               speed: state.speed,
               palette: state.palette,
               autoresolve: state.autoresolve,
+              autoplay: state.autoplay,
             }),
           );
           $("#save-status").textContent = "Notebook saved locally";
@@ -8738,6 +8751,7 @@ function trapArt(type) {
         document.body.style.setProperty("--speed", pace());
         $("#animation-speed").value = state.speed;
         $("#autoresolve").checked = !!state.autoresolve;
+        $("#autoplay").checked = !!state.autoplay;
         $("#gold").textContent = state.gold;
         $("#steps").textContent = state.steps;
         $("#explored").textContent = state.map.filter(
@@ -9054,13 +9068,14 @@ function trapArt(type) {
         );
         await pause(125);
       }
-      async function move(goal) {
+      async function move(goal, { autonomous = false } = {}) {
         if (travel) {
           const path = shortestPath(goal);
           if (path === null) {
             toast("That destination has no uncovered route.");
             return;
           }
+          travel.autonomous = autonomous;
           travel.goal = goal;
           travel.revision++;
           markTravelGoal(goal);
@@ -9102,10 +9117,20 @@ function trapArt(type) {
         }
         busy = true;
         sceneFast = false;
-        travel = { goal, revision: 0, boost: distanceBoost(route.length) };
+        travel = {
+          goal,
+          revision: 0,
+          boost: distanceBoost(route.length),
+          autonomous,
+        };
         render();
         try {
           while (travel && state.position !== travel.goal) {
+            if (
+              travel.autonomous &&
+              (!state.autoplay || !$("#overlay").hidden || !$("#spotlight").hidden)
+            )
+              break;
             let path = shortestPath(travel.goal);
             if (!path?.length) break;
             let i = path[0],
@@ -9116,6 +9141,11 @@ function trapArt(type) {
               await revealTile(i);
               renderMap();
             }
+            if (
+              travel.autonomous &&
+              (!state.autoplay || !$("#overlay").hidden || !$("#spotlight").hidden)
+            )
+              break;
             if (revision !== travel.revision) continue;
             if (c.wall) {
               log(
@@ -9295,7 +9325,8 @@ function trapArt(type) {
         }
         return false;
       }
-      function enemyReels(art) {
+      function enemyReels(species, depth = 1, { boss = false } = {}) {
+        let art = species;
         art =
           {
             gnawer: "rat",
@@ -9354,9 +9385,29 @@ function trapArt(type) {
             tier,
           ]);
         if (art === "rat") base[3] = ["poison", 1];
+        // Every enemy uses the same depth progression; species retain their
+        // identity. The final guardian has no dud faces and top-tier powers.
+        if (species === "lich") base[3] = ["poison", 1];
+        if (species === "demon") base[3] = ["stimulant", 1];
+        const finalGuardian = boss && depth === 10,
+          promotion = finalGuardian ? 3 : Math.floor((depth - 1) / 4);
         return [0, 1, 2].map(() =>
-          base.map(([type, tier]) => ({ type, tier })),
+          base
+            .filter(([type]) => !finalGuardian || !["miss", "blank"].includes(type))
+            .map(([type, tier]) => ({
+              type,
+              tier: ["miss", "blank"].includes(type)
+                ? tier
+                : Math.min(
+                    ["attack", "magic"].includes(type) ? 4 : 3,
+                    tier + promotion,
+                  ),
+            })),
         );
+      }
+      function enemyReelPreview(reels) {
+        // Ready-state windows should show faces this enemy can actually roll.
+        return reels.map((faces, i) => ({ ...faces[(i * 2) % faces.length] }));
       }
       function enemyBalance(
         depth,
@@ -9380,12 +9431,12 @@ function trapArt(type) {
                   (pair ? 0.78 : 1),
               ),
           damage: boss
-            ? 2 + Math.floor(depth / 3)
+            ? 3 + Math.floor((depth - 1) * 0.8)
             : Math.max(
                 1,
                 Math.floor(
                   (2 +
-                    Math.floor((depth - 1) / 3) +
+                    Math.floor((depth - 1) * 0.6) +
                     (elite ? 1 : 0) +
                     (stronghold ? 1 : 0)) *
                     (pair ? 0.8 : 1),
@@ -9402,7 +9453,12 @@ function trapArt(type) {
                 : depth < 9
                   ? 2
                   : 1,
-          strikes: (boss && depth >= 6) || (stronghold && depth >= 7) ? 2 : 1,
+          strikes:
+            boss && depth === 10
+              ? 3
+              : (boss && depth >= 6) || (stronghold && depth >= 7)
+                ? 2
+                : 1,
         };
       }
       function beginEncounter(boss = false, options = {}) {
@@ -9467,7 +9523,8 @@ function trapArt(type) {
               frequency =
                 affix === "Frenzied"
                   ? Math.max(1, stats.frequency - 1)
-                  : stats.frequency;
+                  : stats.frequency,
+              reels = enemyReels(b.art, depth, { boss });
             return {
               ...b,
               ...stats,
@@ -9484,23 +9541,11 @@ function trapArt(type) {
               block: affix === "Ironbound" ? 2 + depth : 0,
               boss,
               elite,
-              reels: enemyReels(b.art).map((r) =>
-                r.map((face, index) =>
-                  b.art === "lich" && index === 3
-                    ? { type: "poison", tier: 1 }
-                    : b.art === "demon" && index === 3
-                      ? { type: "stimulant", tier: 1 }
-                      : face,
-                ),
-              ),
+              reels,
               poison: null,
               stimulant: null,
               rage: 0,
-              last: [
-                { type: "attack", tier: 1 },
-                { type: "block", tier: 1 },
-                { type: "attack", tier: 2 },
-              ],
+              last: enemyReelPreview(reels),
             };
           };
         clearBattleStatuses();
@@ -10869,6 +10914,7 @@ function trapArt(type) {
         if (locked) {
           const button = document.createElement("button");
           button.className = "primary";
+          button.id = "challenge-guardian";
           button.textContent = "Challenge the stair guardian";
           $("#modal .modal-actions").prepend(button);
           button.onclick = async () => {
@@ -11447,7 +11493,7 @@ function trapArt(type) {
           <p><b>Discoveries.</b> Wells can be left for later; they roll 30% HP plus a bonus. Ruins can be ignored or examined for loot against trap damage. Cave rooms reveal together without activating anything. Rare walled strongholds house bosses with rich loot.</p>
           <p><b>Supplies.</b> Carry three item types; matching items stack. Drag class equipment onto a hero to fill their personal equipment slot. Eight unique pieces grant damage, protection or abilities. Inspect the satchel to use or discard stacks. With a full bag, use a find, swap a stack or leave it. Ink bombs roll damage and poison. Equip one passive artefact. Shops sell supplies and healing. Adventurers join only if invited, up to three heroes; a fourth can replace a current companion. Retired companions remain in the final records.</p>
           <p><b>Read the page.</b> Health bars move from green through yellow to red and flash below 25%. Faint hints suggest neighbouring discoveries without revealing them. The field log and final memorial roster scroll; other panels fit their content.</p>
-          <p><b>Controls.</b> The bottom bar lists keyboard and mouse actions. Tab and Enter reach every control. Options and Field Guide tabs turn to extra notebook pages. Autoresolve chooses battle actions and occasional emergency supplies. Animation speed, palette and autoresolve persist into new runs. Save HTML downloads the complete offline game; progress stays in this browser.</p>
+          <p><b>Controls.</b> The bottom bar lists keyboard and mouse actions. Tab and Enter reach every control. Options and Field Guide tabs turn to extra notebook pages. Autofight (Autoresolve) chooses battle actions and occasional emergency supplies. Autoplay explores, heads for known stairs, accepts routine discoveries and descends. Enable both for a hands-free attempt; combat animations still play normally. Options, the guide and editors pause exploration. All settings persist into new runs. Save HTML downloads the complete offline game; progress stays in this browser.</p>
         </div><div class="modal-actions"><button class="primary" data-close>Into the margins ↗</button></div>`,
           "help",
         );
@@ -11722,6 +11768,7 @@ function trapArt(type) {
         skip = state.speed === "skip";
         $("#animation-speed").value = state.speed;
         $("#autoresolve").checked = !!state.autoresolve;
+        $("#autoplay").checked = !!state.autoplay;
         document.body.classList.toggle("skip-cinematics", skip);
         document.body.style.setProperty("--speed", pace());
         if (skip) for (let a of liveAnimations) if (!a.juice) a.cancel();
@@ -13612,6 +13659,7 @@ function trapArt(type) {
         if (!e.target.closest("button,input,label")) fastForward();
       });
       $("#autoresolve").onchange = (e) => setAutoresolve(e.target.checked);
+      $("#autoplay").onchange = (e) => setAutoplay(e.target.checked);
       $("#options-tab").onclick = optionsPage;
       $("#guide-tab").onclick = () => {
         if (!busy) help();
@@ -13820,6 +13868,13 @@ function trapArt(type) {
           }),
         180,
       );
+      setInterval(() => {
+        autoplayTick().catch((error) => {
+          setAutoplay(false);
+          toast("Autoplay paused after an unexpected error.");
+          console.error(error);
+        });
+      }, 180);
       setInterval(() => {
         if (fxRandom() < 0.3) idleChatter();
       }, 24000);
@@ -14332,7 +14387,155 @@ function trapArt(type) {
       function setAutoresolve(value) {
         state.autoresolve = !!value;
         $("#autoresolve").checked = state.autoresolve;
+        if ($("#option-auto")) $("#option-auto").checked = state.autoresolve;
         save();
+      }
+      function setAutoplay(value) {
+        state.autoplay = !!value;
+        $("#autoplay").checked = state.autoplay;
+        if ($("#option-autoplay")) $("#option-autoplay").checked = state.autoplay;
+        autoplayNextAt = 0;
+        save();
+      }
+      let autoplayActing = false,
+        autoplayNextAt = 0;
+
+      // Only use revealed knowledge. Unknown cells are destinations, never
+      // shortcuts; their hidden walls/events must not influence the choice.
+      function autoplayGoal() {
+        const stairs = state.map.findIndex((c) => c.seen && c.event === "stairs");
+        if (stairs >= 0 && shortestPath(stairs) !== null) return stairs;
+        let goal = null,
+          best = Infinity;
+        state.map.forEach((cell, i) => {
+          if (cell.seen) return;
+          const route = shortestPath(i);
+          if (!route?.length) return;
+          const score =
+            route.length +
+            route
+              .slice(0, -1)
+              .reduce(
+                (n, j) =>
+                  n +
+                  (["enemy", "guardian", "stronghold", "trap"].includes(
+                    state.map[j].event,
+                  )
+                    ? 1000
+                    : 0),
+                0,
+              );
+          if (score < best) {
+            best = score;
+            goal = i;
+          }
+        });
+        return goal;
+      }
+
+      // Use the same buttons as the player. Never bypass a roll, a critical's
+      // hold, combat rules, death processing or the final expedition summary.
+      function autoplayPrompt() {
+        let button = null;
+        if (!$("#overlay").hidden) {
+          if (modalKind === "stairs")
+            button = $("#descend:not(:disabled),#challenge-guardian:not(:disabled)");
+          else if (modalKind === "shop") button = $("#modal [data-close]");
+          else if (modalKind === "equipment" && busy)
+            button =
+              [
+                ...document.querySelectorAll(
+                  "#modal [data-gear-choice]:not(:disabled)",
+                ),
+              ].find((b) => !state.party[Number(b.dataset.gearChoice)]?.equipment) ||
+              $("#gear-cancel");
+          // Options, the guide, editors and other player-opened pages pause us.
+        } else if (!$("#spotlight").hidden && stageResolver) {
+          const kind = $("#spotlight").dataset.kind;
+          if (kind === "enemy-intro") {
+            if (state.autoresolve) button = $("#stage-confirm");
+          } else if (kind === "recruit" || kind === "recruit-swap")
+            button = $(
+              kind === "recruit" && state.party.length < 3
+                ? "#recruit-accept"
+                : "#recruit-decline",
+            );
+          else if (kind === "well" && $("#well-use"))
+            button = $(
+              state.party.some((h) => alive(h) && h.hp < h.maxHp)
+                ? "#well-use"
+                : "#well-decline",
+            );
+          else if (kind === "ruin" && $("#ruin-leave")) button = $("#ruin-leave");
+          else if (kind === "bag-overflow") {
+            const gear = EQUIPMENT_DEFS[state.pendingItems[0]?.type];
+            // Swapping returns the old gear to the same full bag. Only fill
+            // empty slots, so duplicates cannot cause endless re-equipping.
+            const useful =
+              !gear ||
+              state.party.some((h) => alive(h) && h.job === gear.job && !h.equipment);
+            button =
+              (useful && $("#item-use-found:not(:disabled)")) || $("#item-leave");
+          } else if (kind === "revive") button = $("#revive-use");
+          else if (kind === "death") button = $("#death-confirm");
+          else if (kind === "burial") button = $("#burial-confirm");
+          else if (
+            [
+              "treasure",
+              "trap",
+              "well",
+              "beacon",
+              "ruin",
+              "body",
+              "rockfall",
+            ].includes(kind)
+          ) {
+            // Equip the first passive found if the slot is empty. Future
+            // finds stay owned; there is no need to interrupt travel to swap.
+            if (!state.equippedArtefact) $("#stage-card [data-equip]")?.click();
+            button = $("#stage-confirm");
+          }
+        }
+        if (!button || button.disabled) return false;
+        button.click();
+        autoplayNextAt = Date.now() + Math.max(240, 600 / pace());
+        return true;
+      }
+
+      async function autoplayTick() {
+        if (
+          !state?.autoplay ||
+          state.over ||
+          state.awaitingStarter ||
+          Date.now() < autoplayNextAt
+        )
+          return;
+        // A movement promise may be waiting for one of these event decisions.
+        // Handle it before checking our lock, so discoveries cannot deadlock.
+        if (autoplayPrompt()) return;
+        if (
+          autoplayActing ||
+          busy ||
+          travel ||
+          state.enemy ||
+          $(".book-cover,.turning-page") ||
+          !$("#overlay").hidden ||
+          !$("#spotlight").hidden
+        )
+          return;
+        const goal = autoplayGoal();
+        if (goal === null) {
+          setAutoplay(false);
+          toast("Autoplay paused: no reachable unexplored path or staircase.");
+          return;
+        }
+        autoplayActing = true;
+        try {
+          await move(goal, { autonomous: true });
+        } finally {
+          autoplayActing = false;
+          autoplayNextAt = Date.now() + Math.max(120, 300 / pace());
+        }
       }
       let autoActing = false,
         autoNextAt = 0;
@@ -14443,12 +14646,13 @@ function trapArt(type) {
         }
         openModal(
           "Options",
-          `<div class="options-grid"><label>Animation speed<select id="option-speed">${["1", "2", "3", "5", "skip"].map((v) => `<option value="${v}" ${v === state.speed ? "selected" : ""}>${v === "skip" ? "Skip cinematics" : v + "×"}</option>`).join("")}</select><small>Shakes and hit feedback remain at every speed.</small></label><label>Paper & ink<select id="option-palette">${["default", "dark", "warm"].map((v) => `<option value="${v}" ${v === state.palette ? "selected" : ""}>${v[0].toUpperCase() + v.slice(1)}</option>`).join("")}</select></label><label class="auto-option"><input type="checkbox" id="option-auto" ${state.autoresolve ? "checked" : ""}> Autoresolve battles<small>Chooses heroes, targets and occasional emergency supplies. Rewards and choices still wait for you.</small></label></div><div class="modal-actions"><button id="option-guide">Read the field guide</button><button id="option-download">Download HTML backup</button><button class="primary" data-close>Back to this page</button></div>`,
+          `<div class="options-grid"><label>Animation speed<select id="option-speed">${["1", "2", "3", "5", "skip"].map((v) => `<option value="${v}" ${v === state.speed ? "selected" : ""}>${v === "skip" ? "Skip cinematics" : v + "×"}</option>`).join("")}</select><small>Shakes and hit feedback remain at every speed.</small></label><label>Paper & ink<select id="option-palette">${["default", "dark", "warm"].map((v) => `<option value="${v}" ${v === state.palette ? "selected" : ""}>${v[0].toUpperCase() + v.slice(1)}</option>`).join("")}</select></label><label class="auto-option"><input type="checkbox" id="option-auto" ${state.autoresolve ? "checked" : ""}> Autoresolve battles<small>Chooses heroes, targets and occasional emergency supplies. Rewards and choices wait unless Autoplay is enabled.</small></label><label class="auto-option"><input type="checkbox" id="option-autoplay" ${state.autoplay ? "checked" : ""}> Autoplay exploration<small>Head for known stairs, otherwise explore. Handles discoveries and descent; enable Autofight too for a hands-free run. Turning this off stops travel after the current step.</small></label></div><div class="modal-actions"><button id="option-guide">Read the field guide</button><button id="option-download">Download HTML backup</button><button class="primary" data-close>Back to this page</button></div>`,
           "options",
         );
         $("#option-speed").onchange = (e) => setPace(e.target.value);
         $("#option-palette").onchange = (e) => setPalette(e.target.value);
         $("#option-auto").onchange = (e) => setAutoresolve(e.target.checked);
+        $("#option-autoplay").onchange = (e) => setAutoplay(e.target.checked);
         $("#option-guide").onclick = help;
         $("#option-download").onclick = () => $("#download").click();
       }

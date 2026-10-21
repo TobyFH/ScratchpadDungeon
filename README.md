@@ -16,6 +16,20 @@ The notebook opens with a choice of **Tank, Healer, Rogue or Mage**. A new exped
 
 ## Explore
 
+**Autoplay** in the top toolbar walks to known, reachable stairs; otherwise it
+explores reachable covered tiles. Enable **Autofight** alongside it for a
+hands-free attempt through the dungeon. Autoplay handles discoveries, claims
+loot, accepts companions while there is room, uses needed wells and Revive
+Stones, and descends after a guardian falls. It leaves ruins alone, leaves shops
+without buying, and does not replace a full party. It uses ordinary movement
+and event buttons, with no knowledge of concealed terrain and no guaranteed win.
+
+Options, the field guide and editors pause exploration. Disabling Autoplay
+stops walking after the current step; Autofight remains an independent setting.
+Without Autofight, Autoplay waits at combat. It leaves the final victory or
+defeat summary open. Both toggles persist through reloads and new runs; the
+starting class still needs to be chosen.
+
 Click a reachable pencil-covered tile to erase it and walk into its discovery. Click a distant revealed tile to follow a shortest route across known ground. Routes avoid untouched fights and traps when possible. Click another valid destination while walking or erasing to redirect the party. Known wells, shops and ruins are ignored when merely passing through. Once its guardian is defeated, a staircase also permits uninterrupted passage; selecting it opens the descent menu again.
 
 Walls and connected underground rivers block movement. Wooden bridges cross rivers. Every floor randomises its layout and events. Stairs are reachable and at least eight steps from camp; generation can carve a route and bridge a river when necessary. Most floors have no river; a second river is very rare. Connected cave rooms reveal together without activating their contents.
@@ -51,9 +65,21 @@ Normal combat rolls stay on the right page. Criticals get a multiplier popup tha
 
 **Team block** is a shared consumable pool, depleted point for point by damage and cleared after combat. A fully absorbed hit shows a shield on its recipient. Any positive armour blocks a stun but consumes up to six armour per power. A stunned hero misses one go without advancing or resetting enemy clocks. Enemy attack frequency determines how many player actions occur between attacks; difficult enemies can make multiple separately rolled strikes.
 
+Enemy damage now grows faster with depth. Attack and magic faces advance on
+floors 5 and 9; species keep their usual mix of powers. The final guardian acts
+after every player action with **three independently rolled strikes**, tier-IV
+attack/magic faces and tier-III support faces, with no dud entries. Existing
+saved enemy encounters adopt this curve while hero wounds and edited reels stay
+intact.
+
+| Base damage | Floor 1 | Floor 5 | Floor 10 |
+| --- | --- | --- | --- |
+| Ordinary enemy | 2 | 4 | 7 |
+| Stair guardian | 3 | 6 | 10 |
+
 **Poison** deals one armour-piercing damage per completed action for a limited duration, with visible status ticks and kill credit. **Stimulants** increase damage and protection and show a fiery glow. Rage, poison and buffs end with combat. Level-ups add 6 maximum HP and 4 personal editing points, with portrait and machine effects. EXP comes only from successful battles; surviving heroes also gain one editing point per victory.
 
-The **Autoresolve** checkbox chooses heroes, targets and occasional useful emergency supplies. It preserves the selected animation speed and all combat feedback. Enemy entrances confirm automatically; loot, recruits, death decisions and other choices still wait for the player. Untick it to take over between actions.
+The **Autofight** checkbox (Autoresolve in Options) chooses heroes, targets and occasional useful emergency supplies. It preserves the selected animation speed and all combat feedback. Enemy entrances confirm automatically; other choices wait for the player unless Autoplay is also enabled. Untick it to take over between actions.
 
 ## Supplies and equipment
 
@@ -80,7 +106,7 @@ Rare run artefacts use a separate collection and one shared passive slot beneath
 
 The notebook fits **1920×1080** and other desktop resolutions; tablets and phones stack its pages. The larger field log sits beside the three-pocket inventory. Only the log and final adventurer roster scroll internally. Side tabs open functional **Options** and **Field Guide** pages.
 
-Animation modes are **1×, 2×, 3×, 5× and Skip cinematics**. The toolbar remains usable while popups are open. Skip lands reels immediately while preserving shakes, particles, damage and healing feedback. Movement scales at half the animation speed increase, with Skip using the fastest walking speed and long routes receiving a modest additional boost. Animation speed, palette and autoresolve persist across runs and reloads.
+Animation modes are **1×, 2×, 3×, 5× and Skip cinematics**. The toolbar remains usable while popups are open. Skip lands reels immediately while preserving shakes, particles, damage and healing feedback. Movement scales at half the animation speed increase, with Skip using the fastest walking speed and long routes receiving a modest additional boost. Animation speed, palette, Autofight and Autoplay persist across runs and reloads.
 
 Paper tears, slowing reels, animated handles with fixed hitboxes, jaunty walking, injury portraits, health bars, targeted numbers, level-up bursts and critical impacts accompany actions. Headings animate inside reserved spaces. Torchlight flickers across the pages. Idle chatter is infrequent and staggered; obsolete discovery callouts fade on a floor change.
 

@@ -56,6 +56,11 @@ Regenerate the standalone HTML with `npm run build:ui`.
 - Retain all `id`, `data-*` hooks and animation classes used by the game and
   tests. Animation speed, timing, slot outcomes and gameplay balance are not
   presentation tokens.
+- Autoplay is an explicit opt-in exception to manual discovery confirmation.
+  Its driver activates the existing event buttons; do not add unconditional
+  popup-dismissal timers or bypass rolls and critical holds. Player-opened
+  menus pause autonomous travel, and final run summaries stay open. Autofight
+  is separate and does not automate exploration or field decisions by itself.
 
 ## Adding a panel
 

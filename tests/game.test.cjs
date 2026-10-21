@@ -1030,7 +1030,7 @@ test("save restores speed and artefacts and migrates the earlier Sunseed-era not
     localStorage.setItem("scratchpad-dungeon-v2", JSON.stringify(old));
   });
   await p.reload();
-  assert.equal(await p.evaluate(() => state.version), 9);
+  assert.equal(await p.evaluate(() => state.version), 10);
   assert.equal(await p.evaluate(() => state.speed), "skip");
   assert.equal(await p.evaluate(() => state.relic), undefined);
   assert.doesNotMatch(await p.locator("body").textContent(), /Sunseed/);
@@ -2647,7 +2647,7 @@ test("pace and palette survive a new run and reload; the full UI can be reached 
   assert.match(await p.locator("#keyboard-bar").textContent(), /Tab/);
 });
 
-test("early full enemy criticals cannot one-shot any starter and individual enemies scale gently", async (t) => {
+test("early full enemy criticals remain survivable while damage grows faster on deeper floors", async (t) => {
   const p = await game(t);
   const r = await p.evaluate(() => {
     const curve = [];
@@ -2683,7 +2683,8 @@ test("early full enemy criticals cannot one-shot any starter and individual enem
     assert.ok(r.curve[i].maxHp - r.curve[i - 1].maxHp <= 12);
     assert.ok(r.curve[i].pairDamage <= r.curve[i].damage);
   }
-  assert.ok(r.curve[9].maxCrit <= 28);
+  assert.ok(r.curve[9].maxCrit > 28);
+  assert.equal(r.curve[9].damage, 7);
   await fast(p);
   await p.evaluate(() => {
     beginEncounter();
@@ -3119,7 +3120,7 @@ test("older saved fights migrate to the gentler curve without losing wounds or e
       face: state.party[0].reels[0][0].tier,
     })),
     {
-      version: 9,
+      version: 10,
       hp: 19,
       max: 37,
       damage: 3,
@@ -4746,4 +4747,352 @@ test("victory coins burst and keep pouring from the visible summary, rather than
   assert.equal(r.rain, true);
   await p.waitForTimeout(130);
   assert.equal(await p.evaluate(() => !!coinRain), true);
+});
+
+test("deep enemy reels improve with depth and the final guardian actually rolls three top-tier strikes", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  const powers = await p.evaluate(() =>
+    [1, 5, 9].map((depth) =>
+      enemyReels("skull", depth)[0]
+        .filter((f) => f.type === "attack")
+        .map((f) => f.tier),
+    ),
+  );
+  assert.ok(Math.min(...powers[1]) > Math.min(...powers[0]));
+  assert.equal(Math.max(...powers[2]), 4);
+  const boss = await p.evaluate(() => {
+    state.depth = 10;
+    beginEncounter(true, { stairBoss: true });
+    render();
+    return {
+      damage: state.enemy.damage,
+      strikes: state.enemy.strikes,
+      frequency: state.enemy.frequency,
+      faces: state.enemy.reels.flat(),
+      preview: state.enemy.last,
+    };
+  });
+  assert.deepEqual([boss.damage, boss.strikes, boss.frequency], [10, 3, 1]);
+  assert.ok(
+    boss.faces.every(
+      (f) => f.tier === (["attack", "magic"].includes(f.type) ? 4 : 3),
+    ),
+  );
+  assert.ok(
+    boss.preview.every(
+      (f) => f.tier === (["attack", "magic"].includes(f.type) ? 4 : 3),
+    ),
+    "the ready-state machine shows the upgraded faces before its first roll",
+  );
+  const strikes = await p.evaluate(async () => {
+    state.party[0].hp = state.party[0].maxHp = 1000;
+    state.enemy.reels = [
+      [{ type: "attack", tier: 4 }],
+      [{ type: "magic", tier: 4 }],
+      [{ type: "block", tier: 3 }],
+    ];
+    const original = runMachine;
+    let rolls = 0;
+    runMachine = (...args) => {
+      if (args[0] === "enemy") rolls++;
+      return original(...args);
+    };
+    try {
+      await enemyTurn(state.enemy);
+    } finally {
+      runMachine = original;
+    }
+    return { rolls, damage: 1000 - state.party[0].hp };
+  });
+  assert.deepEqual(strikes, { rolls: 3, damage: 75 });
+});
+
+test("version-nine fights adopt the stronger enemy curve without changing hero wounds or edited reels", async (t) => {
+  const p = await game(t);
+  await p.evaluate(() => {
+    state.depth = 10;
+    beginEncounter(true);
+    state.version = 9;
+    state.party[0].hp = 17;
+    state.party[0].reels[0][0].tier = 4;
+    state.enemy.hp = 123;
+    state.enemy.damage = state.enemy.strikes = 1;
+    state.enemy.countdown = 1;
+    state.enemy.reels = enemyReels(state.enemy.art);
+    delete state.autoplay;
+    save();
+  });
+  await p.reload();
+  assert.deepEqual(
+    await p.evaluate(() => ({
+      version: state.version,
+      autoplay: state.autoplay,
+      heroHp: state.party[0].hp,
+      face: state.party[0].reels[0][0].tier,
+      enemyHp: state.enemy.hp,
+      damage: state.enemy.damage,
+      strikes: state.enemy.strikes,
+      clock: state.enemy.countdown,
+      tiers: state.enemy.reels
+        .flat()
+        .filter((f) => ["attack", "magic"].includes(f.type))
+        .map((f) => f.tier),
+    })),
+    {
+      version: 10,
+      autoplay: false,
+      heroHp: 17,
+      face: 4,
+      enemyHp: 123,
+      damage: 10,
+      strikes: 3,
+      clock: 1,
+      tiers: [4, 4, 4, 4, 4, 4],
+    },
+  );
+});
+
+test("autoplay chooses only reachable frontiers, pauses in player menus and stops a long walk when disabled", async (t) => {
+  const p = await game(t);
+  await p.evaluate(blankFloor);
+  assert.equal(
+    await p.evaluate(() => {
+      const goal = autoplayGoal(),
+        route = shortestPath(goal);
+      state.map[goal].wall = true;
+      state.map[goal].event = "stairs";
+      return (
+        goal === autoplayGoal() &&
+        !state.map[goal].seen &&
+        route.slice(0, -1).every((i) => state.map[i].seen)
+      );
+    }),
+    true,
+    "hidden terrain and event metadata cannot guide autoplay",
+  );
+  await p.evaluate(blankFloor);
+  await p.evaluate(() => {
+    state.map.forEach((c) => (c.seen = true));
+    const stair = state.map[pos(9, 7)];
+    stair.event = "stairs";
+    stair.bossDefeated = true;
+    state.floorBossDefeated = true;
+    state.exitFound = true;
+    help();
+    setAutoplay(true);
+  });
+  await p.waitForTimeout(550);
+  assert.equal(
+    await p.evaluate(() => state.steps),
+    0,
+    "an open guide pauses exploration",
+  );
+  await p.evaluate(() => closeModal());
+  await p.waitForFunction(() => state.steps >= 1);
+  await p.evaluate(() => help());
+  await finish(p);
+  const paused = await p.evaluate(() => state.steps);
+  assert.ok(
+    paused < 8,
+    "opening the guide interrupts an autonomous route after its current step",
+  );
+  await p.waitForTimeout(450);
+  assert.equal(await p.evaluate(() => state.steps), paused);
+  await p.evaluate(() => closeModal());
+  await p.waitForFunction((steps) => state.steps > steps, paused);
+  await p.locator("#autoplay").uncheck();
+  await finish(p);
+  const stopped = await p.evaluate(() => state.steps);
+  assert.ok(
+    stopped < 8,
+    "disabling autoplay ends the route before the staircase",
+  );
+  await p.waitForTimeout(500);
+  assert.equal(await p.evaluate(() => state.steps), stopped);
+  assert.equal(await p.evaluate(() => state.autoresolve), false);
+});
+
+test("autoplay without Autofight waits at an encounter instead of spinning a hero", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await p.evaluate(blankFloor);
+  await p.evaluate(() => {
+    state.map.forEach((c) => (c.seen = true));
+    state.map[pos(2, 7)].event = "enemy";
+    state.map[pos(3, 7)].event = "stairs";
+    state.exitFound = true;
+    setAutoplay(true);
+  });
+  await p.waitForSelector("#stage-confirm");
+  await p.waitForTimeout(650);
+  assert.equal(await p.evaluate(() => state.party[0].stats.spins), 0);
+  assert.equal(await p.locator("#spotlight").isVisible(), true);
+  await p.locator("#autoplay").uncheck();
+});
+
+test("Autoplay and Autofight handle discoveries, recruit, descend and win without test-driven button clicks", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await p.evaluate(() => {
+    // A short two-floor fixture exercises actual rolls, movement, guardian
+    // fights and rewards. Boost hero power to test the workflow independently
+    // of luck; no test observer clicks buttons or drives the autoplay loop.
+    const original = generateFloor;
+    generateFloor = (depth) => {
+      const map = original(depth);
+      state.pursuerSpawned = true;
+      state.lastMinorEventStep = state.steps + 10000;
+      map.forEach((c, i) =>
+        Object.assign(c, {
+          wall: Math.floor(i / W) !== 7 || i % W < 1 || i % W > 9,
+          seen:
+            Math.floor(i / W) !== 7 ||
+            i % W < 1 ||
+            i % W > 9 ||
+            i === pos(1, 7),
+          event: null,
+          feature: null,
+          room: null,
+          terrain: "floor",
+          activated: false,
+        }),
+      );
+      for (const [x, type] of depth === 9
+        ? [
+            [2, "treasure"],
+            [3, "trap"],
+            [4, "recruit"],
+            [5, "well"],
+            [6, "shop"],
+            [8, "enemy"],
+          ]
+        : [])
+        map[pos(x, 7)].event = map[pos(x, 7)].feature = type;
+      map[pos(9, 7)].event = map[pos(9, 7)].feature = "stairs";
+      map[pos(9, 7)].bossDefeated = false;
+      return map;
+    };
+    state.depth = 9;
+    state.map = generateFloor(9);
+    state.position = pos(1, 7);
+    state.party[0].hp = 19900;
+    state.party[0].maxHp = 20000;
+    state.party[0].reels = [
+      [{ type: "attack", tier: 4 }],
+      [{ type: "magic", tier: 4 }],
+      [{ type: "block", tier: 1 }],
+    ];
+    state.artefacts = [
+      {
+        id: "workflow-power",
+        key: "attack",
+        power: 1000,
+        name: "Test power",
+        depth: 9,
+      },
+    ];
+    state.equippedArtefact = "workflow-power";
+    window.autoplayScenes = [];
+    new MutationObserver(() => {
+      if (!document.querySelector("#spotlight").hidden)
+        window.autoplayScenes.push(
+          document.querySelector("#spotlight").dataset.kind,
+        );
+    }).observe(document.querySelector("#spotlight"), { attributes: true });
+    render();
+  });
+  await p.locator("#autoresolve").check();
+  await p.locator("#autoplay").check();
+  await p.waitForFunction(() => state.over, null, { timeout: 90000 });
+  assert.equal(await p.evaluate(() => state.won), true);
+  assert.equal(await p.evaluate(() => state.depth), 10);
+  assert.ok(await p.evaluate(() => state.party.length > 1));
+  const scenes = await p.evaluate(() => [...new Set(window.autoplayScenes)]);
+  for (const type of ["treasure", "trap", "recruit", "well", "enemy-intro"])
+    assert.ok(
+      scenes.includes(type),
+      `${type} resolved without manual input: ${scenes}`,
+    );
+  assert.match(
+    await p.locator("#modal-title").textContent(),
+    /YOU WROTE THE ENDING!/,
+  );
+});
+
+test("autoplay settings persist through fresh runs and reloads without bypassing starting-class selection", async (t) => {
+  const p = await game(t);
+  await p.locator("#options-tab").click();
+  await p.locator("#option-autoplay").check();
+  assert.equal(await p.locator("#autoplay").isChecked(), true);
+  await p.evaluate(() => {
+    newRun("rogue");
+    state.awaitingStarter = true;
+    save();
+  });
+  await p.reload();
+  assert.equal(await p.locator("#autoplay").isChecked(), true);
+  assert.equal(await p.evaluate(() => state.autoplay), true);
+  await p.waitForTimeout(500);
+  assert.equal(await p.evaluate(() => state.steps), 0);
+  assert.equal(await p.locator("[data-start-job]").count(), 4);
+  await p.locator("#autoplay").uncheck();
+  await p.reload();
+  assert.equal(await p.evaluate(() => state.autoplay), false);
+});
+
+test("autoplay resolves a full satchel, class equipment, revives and permanent deaths, then leaves the final summary open", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await p.evaluate(() => {
+    busy = true;
+    state.bag = { potion: 1, bomb: 1, ward: 1 };
+    state.party.push(makeHero("Second tank", "fighter"));
+    state.pendingItems = [
+      { type: "ironSignet", count: 3 },
+      { type: "bulwarkBadge", count: 1 },
+    ];
+    setAutoplay(true);
+  });
+  await p.evaluate(() => processPendingItems());
+  assert.equal(await p.evaluate(() => state.party[0].equipment), "ironSignet");
+  assert.equal(
+    await p.evaluate(() => state.party[1].equipment),
+    "ironSignet",
+    "the empty matching slot is chosen instead of replacing the first hero's gear",
+  );
+  assert.equal(await p.evaluate(() => state.pendingItems.length), 0);
+  await p.evaluate(() => {
+    state.party = state.party.slice(0, 1);
+    state.party.push(makeHero("Mira", "healer"));
+    state.artefacts.push({
+      id: "auto-revive",
+      key: "revive",
+      name: "Revive Stone",
+      power: 1,
+    });
+    render();
+    damageHero(1, 999, "A test ambush");
+  });
+  await p.evaluate(() => processDeaths());
+  assert.equal(await p.evaluate(() => state.party[1].hp), 24);
+  assert.equal(
+    await p.evaluate(() => state.artefacts.some((a) => a.key === "revive")),
+    false,
+  );
+  await p.evaluate(async () => {
+    damageHero(1, 999, "Another ambush");
+    await processDeaths();
+  });
+  assert.equal(await p.evaluate(() => state.party.length), 1);
+  assert.equal(await p.evaluate(() => state.graveyard.length), 1);
+  await p.evaluate(async () => {
+    damageHero(0, 999, "The last ambush");
+    await processDeaths();
+    checkDefeat();
+  });
+  assert.equal(await p.evaluate(() => state.over && !state.won), true);
+  assert.equal(await p.evaluate(() => modalKind), "defeat");
+  await p.waitForTimeout(400);
+  assert.equal(await p.locator("#overlay").isVisible(), true);
 });
