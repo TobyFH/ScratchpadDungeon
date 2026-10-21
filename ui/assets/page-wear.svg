@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120" fill="none" stroke="#75654c" stroke-linecap="round">
+  <!-- Small creases and rubbed edge fibres, kept outside the content area. -->
+  <path d="m2 20 4-15 17-3-10 7-5 12Zm96-17 17 3 3 17-6-9Zm19 96-2 16-17 3 11-7ZM3 99l3 16 17 3-11-8Z" fill="#887354" fill-opacity=".08" stroke-opacity=".25" stroke-width=".7"/>
+  <path d="m3 22 6-13 12-7M5 23l7-12 12-6M96 3l15 8 7 14m-1 71-7 15-14 7M2 96l9 16 15 6" stroke-width=".65" opacity=".38"/>
+  <path d="m7 3 2 4m4-5-3 5m7-4-3 3m-11 9 4-4m-5 7 5-3M108 4l3 4m3-3-1 5m2 4 3 3M4 107l3 4m0 4 4-1m3 2 4 2m89-1 5-4m3-5 2-3M31 2l8 1m12-1 5 .6m35-.5 7 1M118 34l-.7 9m.6 18-.5 6M3 38l-.7 8m.2 25 .7 6M34 118l7-.5m18 .1 10 .5m14-.1 6-.7" stroke-width=".7" opacity=".35"/>
+</svg>

@@ -9,6 +9,12 @@
   font-weight: 400 700;
   font-display: swap;
 }
+@font-face {
+  font-family: "Notebook Lettering";
+  src: url("@asset(fonts/CabinSketch-Bold.ttf)") format("truetype");
+  font-weight: 700;
+  font-display: swap;
+}
 :root {
   --paper: #f2ead9;
   --paper-raised: #f6efdf;
@@ -23,14 +29,22 @@
   --pencil-light: #514b3d18;
   --pencil-mid: #514b3d38;
   --focus: #806220;
-  --display: "Notebook Display", "Notebook", cursive;
+  --display: "Notebook Lettering", "Notebook", cursive;
+  --hand-display: "Notebook Display", "Notebook", cursive;
   --frame: url("@asset(pencil-frame.svg)");
   --graphite: url("@asset(graphite.svg)");
+  --tape: url("@asset(tape-label.svg)");
+  --pencil-shading: url("@asset(pencil-shading.svg)");
+  --reel-rim: url("@asset(reel-rim.svg)");
+  --ui-token-gold: #dcc27d;
+  --ui-token-danger: #dfc6b3;
+  --ui-token-health: #cbd4b6;
   --ui-gap: 12px;
   --ui-inset: 12px;
-  --ui-stroke: 5px;
+  --ui-stroke: 7px;
   --ui-label: #e9ddc2;
   --ui-battle-height: 560px;
+  --ui-hero-reel-inset: 43px;
   --ui-left-share: 0.47;
   --ui-book-border: 4px;
   --ui-page-inset: 25px;
@@ -63,6 +77,9 @@ body[data-palette="dark"] {
   --focus: #e9cb85;
   --ui-label: #444237;
   --frame: url("@asset(pencil-frame-light.svg)");
+  --ui-token-gold: #645336;
+  --ui-token-danger: #60473c;
+  --ui-token-health: #47533d;
 }
 body {
   color: var(--ink);
@@ -77,7 +94,59 @@ body {
   background: var(--paper);
   border: var(--ui-book-border) solid transparent;
   border-image: var(--frame) 12 / 9px / 2px stretch;
-  border-radius: 13px 18px 15px 12px;
+  border-radius: 19px 13px 21px 12px / 12px 23px 13px 24px;
+  /* Only the outer few pixels are cut: keep all content, token coordinates,
+   * speech and hitboxes intact while breaking the machine-cut silhouette. */
+  clip-path: polygon(
+    0 0.9%,
+    0.3% 0.25%,
+    1.3% 0.1%,
+    3.4% 0.2%,
+    5.8% 0,
+    9.2% 0.15%,
+    15% 0.05%,
+    24% 0.2%,
+    33% 0.05%,
+    42% 0.1%,
+    50% 0.3%,
+    57% 0.1%,
+    69% 0.05%,
+    78% 0.2%,
+    87% 0,
+    95% 0.15%,
+    98.9% 0.1%,
+    99.7% 0.35%,
+    100% 1.2%,
+    99.9% 8%,
+    100% 19%,
+    99.9% 33%,
+    100% 49%,
+    99.85% 65%,
+    100% 79%,
+    99.9% 91%,
+    100% 98.6%,
+    99.5% 99.65%,
+    98.4% 99.9%,
+    94% 99.75%,
+    86% 100%,
+    74% 99.85%,
+    61% 100%,
+    50% 99.7%,
+    38% 100%,
+    26% 99.85%,
+    16% 100%,
+    7% 99.8%,
+    1% 99.9%,
+    0.2% 99.5%,
+    0 98.8%,
+    0.15% 89%,
+    0 77%,
+    0.1% 63%,
+    0 47%,
+    0.15% 31%,
+    0 17%,
+    0.1% 6%
+  );
   box-shadow:
     0 7px 0 #b2a58c,
     0 10px 0 #4a4033,
@@ -93,7 +162,20 @@ body {
   border-color: var(--pencil-mid);
   /* Fine paper grain belongs on the page, never on the lettering. */
   opacity: 0.72;
-  box-shadow: inset 0 0 32px #76634424;
+  box-shadow:
+    inset 0 0 2px 2px #69594030,
+    inset 0 0 16px 3px #76634424;
+  border: 2px solid transparent;
+  border-image: var(--frame) 12 / 5px / 1px stretch;
+}
+.book::after {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border: 25px solid transparent;
+  border-image: url("@asset(page-wear.svg)") 25 / 25px stretch;
+  pointer-events: none;
+  z-index: 6;
 }
 .left-page,
 .right-page {
@@ -215,8 +297,8 @@ h3 {
   font-size: 28px;
   line-height: 1.05;
   border: 4px solid transparent;
-  border-image: var(--frame) 12 / 4px / 1px stretch;
-  background: var(--ui-label);
+  border-image: none;
+  background: var(--tape) center / 100% 100% no-repeat;
   box-shadow: none;
   color: var(--ink);
   padding: 2px 15px 3px;
@@ -224,11 +306,11 @@ h3 {
 }
 .combat-heading > h2 {
   justify-self: start;
-  background: var(--ui-label);
+  background: var(--tape) center / 100% 100% no-repeat;
   padding: 3px 18px 7px;
   transform: rotate(-1.2deg);
   border: 5px solid transparent;
-  border-image: var(--frame) 12 / 5px / 3px stretch;
+  border-image: none;
   line-height: 1;
 }
 .combat-heading > h2::after,
@@ -263,6 +345,21 @@ select,
   box-shadow:
     1px 1px 0 var(--pencil-mid),
     -1px -0.5px 0 var(--pencil-light);
+}
+/* Native menus do not inherit the select's painted background. Override the
+ * old dark option fill explicitly, including the options page's controls. */
+select {
+  color-scheme: light;
+}
+select option,
+.pace-control option {
+  color: var(--ink);
+  background: var(--paper-raised);
+  font-family: var(--hand);
+  font-size: 18px;
+}
+body[data-palette="dark"] select {
+  color-scheme: dark;
 }
 button:hover:not(:disabled),
 .pencil-button:hover {
@@ -362,13 +459,13 @@ input[type="checkbox"] {
 }
 .tile.wall {
   background: var(--paper-shade);
-  box-shadow: inset 0 0 0 2px var(--ink);
+  box-shadow: inset 0 0 0 1px var(--ink);
 }
 .tile.wall > svg {
   color: var(--ink);
-  opacity: 0.85;
-  width: 96%;
-  height: 96%;
+  opacity: 1;
+  width: 100%;
+  height: 100%;
   stroke-width: 1.05px;
 }
 .tile.river,
@@ -389,6 +486,9 @@ input[type="checkbox"] {
   color: var(--ink);
   border-color: var(--ink);
 }
+.tile.wall:not(.water-block) .terrain-stop {
+  display: none;
+}
 .tile.active-event {
   outline-color: var(--gold);
   background-color: var(--paper-raised);
@@ -402,6 +502,39 @@ input[type="checkbox"] {
 .tile.active-stairs {
   color: var(--ink);
   background-color: var(--ui-label);
+}
+/* A pencilled disc is a map token, not a new tile mechanic. Only revealed,
+ * unresolved events receive colour; hidden events expose no type or artwork. */
+.tile.active-event > svg {
+  width: 73%;
+  height: 73%;
+  padding: 3px;
+  border: 1px solid currentColor;
+  border-radius: 46% 52% 48% 49%;
+  background: var(--paper-raised);
+  box-shadow: 1px 1px 0 var(--pencil-mid);
+}
+.tile.active-event[data-event="treasure"] > svg,
+.tile.active-event[data-event="beacon"] > svg {
+  color: var(--ink);
+  background:
+    var(--pencil-shading) center / 48px 16px,
+    var(--ui-token-gold);
+}
+.tile.active-battle > svg,
+.tile.active-event[data-event="trap"] > svg {
+  color: var(--red);
+  background: var(--ui-token-danger);
+}
+.tile.active-well > svg {
+  color: var(--green);
+  background: var(--ui-token-health);
+  filter: none;
+}
+.tile.active-stairs > svg {
+  color: var(--ink);
+  background: var(--ui-label);
+  border-radius: 2px 4px 1px 3px;
 }
 .tile.spent {
   background: var(--paper);
@@ -473,6 +606,17 @@ svg.pencil-art {
   filter: url(#pencil-grain);
   color: inherit;
 }
+/* The scan already contains real graphite grain; never distort it twice. */
+svg.pencil-scan {
+  filter: none;
+}
+.pencil-scan image {
+  mix-blend-mode: multiply;
+}
+body[data-palette="dark"] .pencil-scan image {
+  filter: grayscale(1) invert(1);
+  mix-blend-mode: screen;
+}
 .hero-name {
   font-size: 20px;
 }
@@ -507,7 +651,7 @@ svg.pencil-art {
   background-color: transparent;
 }
 .enemy-info h4 {
-  font-family: var(--display);
+  font-family: var(--hand-display);
   font-weight: 700;
   font-size: 32px;
   color: var(--ink);
@@ -551,11 +695,17 @@ svg.pencil-art {
 .hero .bars {
   margin: 4px 0 2px;
 }
-.hero .healthbar {
-  height: 7px;
+.hero-controls > .hp-bar {
+  height: 10px;
+  margin: 0 0 5px;
+  width: calc(100% - var(--ui-hero-reel-inset));
+}
+.hero .machine-shell {
+  padding-right: var(--ui-hero-reel-inset);
 }
 .hero .healthbar.exp {
   height: 4px;
+  flex: 1;
 }
 .hero .edit-line {
   height: 20px;
@@ -582,21 +732,23 @@ svg.pencil-art {
 .healthbar > i,
 .hp-bar > i {
   border-radius: 0;
-  background: var(--green);
+  background-color: var(--green);
+  background-image: var(--pencil-shading);
+  background-size: 48px 16px;
   box-shadow: none;
 }
 .healthbar.yellow > i,
 .hp-bar.yellow > i {
-  background: var(--gold);
+  background-color: var(--gold);
 }
 .healthbar.red > i,
 .hp-bar.red > i,
 .healthbar.critical > i,
 .hp-bar.critical > i {
-  background: var(--red);
+  background-color: var(--red);
 }
 .enemy-box .healthbar > i {
-  background: var(--red);
+  background-color: var(--red);
 }
 .xp-bar {
   border-color: var(--line);
@@ -611,9 +763,7 @@ svg.pencil-art {
   background: var(--paper-raised);
   color: var(--ink);
   border-width: 5px;
-  box-shadow:
-    inset 0 4px 7px var(--pencil-light),
-    inset 0 -4px 7px var(--pencil-light);
+  box-shadow: inset 1px 0 0 var(--pencil-mid);
 }
 .machine-face:hover:not(:disabled) {
   background-color: var(--paper-raised);
@@ -621,12 +771,28 @@ svg.pencil-art {
 }
 .machine-face::before,
 .machine-face::after {
-  opacity: 0.45;
+  height: 9px;
+  background: var(--reel-rim) repeat-x;
+  background-size: 100px 12px;
+  opacity: 0.75;
 }
 .slot-window {
   border-color: var(--line);
   background: transparent;
   box-shadow: inset -1px 0 0 var(--pencil-light);
+}
+.slot-window::after {
+  background: none;
+  border-right: 1px solid var(--pencil-mid);
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    99% 19%,
+    100% 40%,
+    98% 68%,
+    100% 100%,
+    0 100%
+  );
 }
 .slot-window:nth-child(2) {
   background: var(--pencil-light);
@@ -926,10 +1092,10 @@ svg.pencil-art {
   color: var(--ink);
   background: var(--paper-raised);
   border-color: var(--line);
-  font-size: 15px;
+  font-size: 17px;
 }
 .desk-top label {
-  font-size: 15px;
+  font-size: 17px;
 }
 .desk-top .pace-control,
 .desk-top .palette-control {
@@ -992,7 +1158,7 @@ svg.pencil-art {
   .fit-notebook .desk-top label,
   .fit-notebook .desk-top button,
   .fit-notebook .desk-top select {
-    font-size: 15px;
+    font-size: 18px;
   }
   .fit-notebook h1 {
     font-size: 62px;
@@ -1090,6 +1256,9 @@ svg.pencil-art {
     margin-bottom: 9px;
   }
   .fit-notebook .hero {
+    /* Lever hitboxes keep their physical size as the book fits. HP and reel
+     * share that inset so their right edges stay aligned at every scale. */
+    --ui-hero-reel-inset: calc(43px / var(--desk-scale, 1));
     grid-template-columns: 87px minmax(0, 1fr);
     gap: 9px;
   }
@@ -1110,7 +1279,7 @@ svg.pencil-art {
     font-size: 14px;
   }
   .fit-notebook .hero .machine-face {
-    height: 69px;
+    height: 62px;
   }
   .fit-notebook .hero .lever {
     height: 74px;

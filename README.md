@@ -136,8 +136,11 @@ Coverage includes full ten-floor progression, stair bosses and immediate victory
 
 The embedded **Patrick Hand** font is by Patrick Wagesreiter, under the SIL Open Font License 1.1. Its full license is in the HTML source. All illustrations and effects run locally.
 
-Hand-lettered headings use **Caveat** by the Caveat Project Authors (original
-design by Pablo Impallari), also under the SIL Open Font License 1.1. The font
-and licence are in `ui/assets/fonts/`, and its licence is embedded in the HTML.
-New pencil frames, graphite texture and vector drawings are local project
+Graphite headings use **Cabin Sketch** by the Cabin Project Authors. Creature
+names use **Caveat** by the Caveat Project Authors (original
+design by Pablo Impallari), also under the SIL Open Font License 1.1. These fonts
+and their licences are in `ui/assets/fonts/` and embedded in the HTML.
+The Candle Gnawer is an original AI-generated graphite illustration, stored at
+`ui/assets/illustrations/candle-gnawer.png` and embedded in its SVG portrait.
+Pencil frames, tape, edge wear, graphite textures and vector drawings are local project
 assets; no external image, font or paid service is needed at runtime.

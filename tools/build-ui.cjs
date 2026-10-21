@@ -13,7 +13,9 @@ const assets = (name) => {
     ? "image/svg+xml"
     : name.endsWith(".ttf")
       ? "font/ttf"
-      : null;
+      : name.endsWith(".png")
+        ? "image/png"
+        : null;
   if (!mime) throw Error(`Unsupported UI asset: ${name}`);
   return `data:${mime};base64,${fs.readFileSync(file).toString("base64")}`;
 };
@@ -27,7 +29,9 @@ const css = ["layout.css", "notebook.css"]
     return name === "layout.css" ? `@layer legacy {\n${content}\n}` : content;
   })
   .join("\n");
-const license = read("ui/assets/fonts/OFL-Caveat.txt");
+const license = ["OFL-Caveat.txt", "OFL-CabinSketch.txt"]
+  .map((name) => read("ui/assets/fonts/" + name))
+  .join("\n\n");
 let html = read("index.html");
 function embed(start, end, content) {
   const a = html.indexOf(start),
@@ -44,12 +48,14 @@ function embed(start, end, content) {
 embed(
   "/* BEGIN GENERATED NOTEBOOK CSS */",
   "/* END GENERATED NOTEBOOK CSS */",
-  `/* Caveat by Pablo Impallari. SIL Open Font License 1.1.\n${license}\n*/\n${css}`,
+  `/* Caveat and Cabin Sketch. Font credits and SIL Open Font License 1.1.\n${license}\n*/\n${css}`,
 );
 embed(
   "// BEGIN GENERATED NOTEBOOK ART",
   "// END GENERATED NOTEBOOK ART",
-  read("ui/drawings.js"),
+  read("ui/drawings.js").replace(/@asset\(([^)]+)\)/g, (_, asset) =>
+    assets(asset),
+  ),
 );
 if (process.argv.includes("--check")) {
   if (html !== read("index.html")) {

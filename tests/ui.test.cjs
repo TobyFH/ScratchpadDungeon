@@ -61,6 +61,35 @@ async function notebook(t) {
   return page;
 }
 
+async function assertMenuContrast(page, context) {
+  const options = await page.locator("select option").evaluateAll((entries) => {
+    const luminance = (color) => {
+      const rgb = color
+        .match(/[\d.]+/g)
+        .slice(0, 3)
+        .map((value) => {
+          const v = Number(value) / 255;
+          return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
+        });
+      return rgb[0] * 0.2126 + rgb[1] * 0.7152 + rgb[2] * 0.0722;
+    };
+    return entries.map((entry) => {
+      const style = getComputedStyle(entry),
+        ink = luminance(style.color),
+        paper = luminance(style.backgroundColor);
+      return {
+        text: entry.textContent,
+        background: style.backgroundColor,
+        contrast: (Math.max(ink, paper) + 0.05) / (Math.min(ink, paper) + 0.05),
+      };
+    });
+  });
+  assert.ok(
+    options.length > 0 && options.every((o) => o.contrast >= 7),
+    `${context}: native dropdown options must have explicit readable colours: ${JSON.stringify(options)}`,
+  );
+}
+
 test("pencil drawings cover every species and injury state without consuming gameplay randomness", async (t) => {
   const page = await notebook(t);
   const result = await page.evaluate(() => {
@@ -139,6 +168,23 @@ test("pencil drawings cover every species and injury state without consuming gam
     accessible: true,
     geometry: true,
   });
+  assert.equal(
+    await page
+      .locator("#art-review .species-gnawer image")
+      .first()
+      .evaluate(async (el) => {
+        const bitmap = new Image();
+        bitmap.src = el.getAttribute("href");
+        await bitmap.decode();
+        return (
+          bitmap.src.startsWith("data:image/png;base64,") &&
+          bitmap.naturalWidth > 0 &&
+          bitmap.naturalHeight > 0
+        );
+      }),
+    true,
+    "the graphite creature scan decodes from the offline HTML itself",
+  );
   await page.screenshot({ path: path.join(output, "pencil-art-gallery.png") });
 });
 
@@ -146,12 +192,13 @@ test("notebook palettes keep contrast, embedded typography, stable tabs and keyb
   const page = await notebook(t);
   assert.equal(
     await page.evaluate(() =>
-      document.fonts.check('700 30px "Notebook Display"'),
+      document.fonts.check('700 30px "Notebook Lettering"'),
     ),
     true,
   );
   for (const palette of ["default", "dark", "warm"]) {
     await page.evaluate((palette) => setPalette(palette), palette);
+    await assertMenuContrast(page, `${palette} toolbar`);
     const contrast = await page.evaluate(() => {
       const probe = document.createElement("span");
       document.body.append(probe);
@@ -192,7 +239,13 @@ test("notebook palettes keep contrast, embedded typography, stable tabs and keyb
   }
   await page.evaluate(() => setPalette("default"));
   await page.locator("#options-tab").hover();
-  await page.waitForTimeout(200);
+  // A busy browser may not paint the CSS transition within a fixed 200ms.
+  // Wait for the visible state we actually require, without weakening it.
+  await page.waitForFunction(() => {
+    const tab = document.querySelector("#options-tab");
+    const matrix = new DOMMatrix(getComputedStyle(tab).transform);
+    return tab.matches(":hover") && matrix.a > 1 && matrix.d > 1;
+  });
   const transform = await page.locator("#options-tab").evaluate((el) => {
     const m = new DOMMatrix(getComputedStyle(el).transform);
     return { x: m.a, y: m.d, skewX: m.b, skewY: m.c };
@@ -203,6 +256,23 @@ test("notebook palettes keep contrast, embedded typography, stable tabs and keyb
   await page.locator("#options-tab").focus();
   await page.keyboard.press("Enter");
   await page.waitForSelector("#option-speed");
+  for (const palette of ["default", "dark", "warm"]) {
+    await page.evaluate((palette) => setPalette(palette), palette);
+    await assertMenuContrast(page, `${palette} options page`);
+  }
+  await page.evaluate(() => {
+    setPalette("default");
+    setPace("1");
+  });
+  await page.locator("#animation-speed").click();
+  await page.keyboard.press("ArrowDown");
+  await page.keyboard.press("Enter");
+  assert.equal(
+    await page.locator("#animation-speed").inputValue(),
+    "2",
+    "the native expanded speed menu remains keyboard-selectable above a dialog",
+  );
+  await page.evaluate(() => setPace("skip"));
   assert.equal(await page.locator("#modal-title").textContent(), "Options");
   assert.equal(
     await page.locator("#animation-speed").evaluate((el) => {
@@ -316,6 +386,20 @@ test("paired encounters, party labels, satchel pockets and log fit desktop and c
             box(el.querySelector(".hero-name")).bottom <=
             box(el.querySelector(".equipment-slot")).top + 1,
         ),
+        healthAboveReels: [...document.querySelectorAll(".hero")].every(
+          (el) => {
+            const hp = box(el.querySelector(".hp-bar")),
+              reel = box(el.querySelector(".machine-face")),
+              xp = box(el.querySelector(".healthbar.exp"));
+            return (
+              hp.height >= 5 &&
+              hp.bottom <= reel.top &&
+              xp.top >= reel.bottom &&
+              Math.abs(hp.left - reel.left) < 1 &&
+              Math.abs(hp.right - reel.right) < 1
+            );
+          },
+        ),
         log: box(document.querySelector("#log")).bottom <= journal.bottom - 3,
       };
     });
@@ -326,6 +410,7 @@ test("paired encounters, party labels, satchel pockets and log fit desktop and c
         metrics.enemies &&
         metrics.titles &&
         metrics.classes &&
+        metrics.healthAboveReels &&
         metrics.log,
       JSON.stringify({ width, height, ...metrics }),
     );

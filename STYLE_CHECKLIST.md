@@ -12,6 +12,11 @@
       meaningful status. Default, warm and dark palettes remain readable.
 - [ ] Headers feel hand-lettered; body text, HP and outcomes remain easy to read.
       Text itself is never filtered/distressed.
+- [ ] Hero HP numbers and shaded bars are above reels; EXP stays below them.
+- [ ] Tape labels, graphite frames, masonry and edge wear use shared assets;
+      paper wear stays outside gameplay information.
+- [ ] Expanded dropdown text/backgrounds are readable in every palette, including
+      the animation-speed controls in the toolbar and options page.
 - [ ] Buttons have clear hover/focus cues; side tabs grow without rotating;
       handles keep their generous stationary hitboxes.
 - [ ] All three hero rows and bag pockets fit; transient content doesn't shift

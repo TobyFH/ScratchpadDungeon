@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
-  <defs><pattern id="pencil" width="7" height="8" patternUnits="userSpaceOnUse"><rect width="7" height="8" fill="#34332e"/><path d="m-2 8 10-10M1 10 10 1M-2 2l10 8M0-3 10 6" fill="none" stroke="#aaa28e" stroke-width=".65" opacity=".29"/></pattern></defs>
+  <defs><pattern id="pencil" width="7" height="8" patternUnits="userSpaceOnUse"><rect width="7" height="8" fill="#292824"/><path d="m-2 8 10-10M1 10 10 1M-2 2l10 8M0-3 10 6" fill="none" stroke="#888576" stroke-width=".65" opacity=".23"/></pattern></defs>
   <rect width="48" height="48" fill="url(#pencil)"/>
-  <g stroke="#c2b9a3" stroke-width=".7" opacity=".25">
+  <g stroke="#c2b9a3" stroke-width=".7" opacity=".17">
     <path d="m-8 19 29-29M-4 27 30-7M-1 35 41-7M-4 47 49-6M2 49 51 0M12 49 53 8M21 49 53 17M32 51 54 29M41 51 52 40"/>
     <path d="m-6 9 46 43M-4-1 53 49M8-3l45 40M20-4l33 29M33-4l20 18M-5 20l33 31M-5 33l20 18" opacity=".5"/>
   </g>

@@ -268,16 +268,34 @@ const paths = {
     "M3 29 7 10 16 2l9 8 4 19-8-6-5 7-5-7z M10 13l4 2m8-2-4 2M14 21h4 M1 6l4 2m22-4 4-2",
 };
 function icon(name) {
+  if (name === "wall") return wallArt();
   const line = pencilPath(paths[name] || paths.sword, 0.32);
   return `<svg class="pencil-art pencil-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="pencil-echo" d="${line}" transform="translate(.38 -.28)"/><path d="${line}"/></svg>`;
+}
+
+// Chunky, staggered masonry, shared by map and legend. Explicit graphite
+// shadows make this terrain read as a barrier even without a colour cue.
+function wallArt() {
+  const bricks = [
+    "M1.8 2.1 14.3 1.7 14 9.4 2.2 9.8Z",
+    "M16.2 2 30.1 2.4 29.7 9.7 16.4 9.2Z",
+    "M2 11.5 7.7 11.2 8 20 1.8 20.3Z",
+    "M10 11.3 24 11.5 23.6 20.2 10.2 19.6Z",
+    "M26 11.3 30.2 11.5 29.8 20.1 25.7 19.8Z",
+    "M2.2 22 15 21.8 14.6 29.9 1.9 29.5Z",
+    "M17 22 29.9 21.6 30.1 29.5 17.2 30Z",
+  ];
+  return `<svg class="pencil-art pencil-icon masonry-art" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M.5 1 31.3.5 31.6 31 1 31.5Z" fill="var(--paper-shade)" stroke-width="1.1"/>${bricks.map((d) => `<path d="${pencilPath(d, 0.25)}" fill="var(--paper)" stroke-width=".85"/>`).join("")}<path d="M3 8.2 12.4 8m5.8.1 9.5.2M3 18.4l3.2-.3m5.7-.2 9.8.4m5.2-.3h1.5M3.4 28l9.3.2m6.1.1 9-.4M3 4l2-1m7 3 1-2m5 1 3-1m5 3 2-2M3 13l2-.5m6 1 3-1m5 3 3-2M3 24l2-1m5 2 3-1m5 1 3-2m4 4 3-2" stroke-width=".55" opacity=".6"/><path d="m1 2-.2 12m30-8 .3 17M5 31l12-.2" stroke-width=".5" opacity=".5"/></svg>`;
 }
 
 let artSerial = 0;
 
 function specialEnemyArt(kind, entity) {
+  // Embedded original graphite illustration. Retain the portrait SVG contract
+  // so injuries, corpses, targeting and action choreography work as before.
+  if (kind === "gnawer")
+    return `<svg class="pencil-art horror-art species-gnawer pencil-scan" viewBox="0 0 120 150" aria-hidden="true"><image href="@asset(illustrations/candle-gnawer.png)" x="0" y="0" width="120" height="150" preserveAspectRatio="xMidYMid meet"/></svg>`;
   const body = {
-    gnawer:
-      "M22 128 27 113 17 115 25 97 17 98 30 78 25 77 38 58 34 57 45 40 42 31 53 35 64 29 78 38 75 45 89 57 84 61 97 77 89 78 98 99 89 99 98 117 86 114 89 132 69 127 57 135 43 128 28 134z M27 93l-16 7-6 16 17 7M92 87l13 12-4 15-9-1 M45 66q6-5 12 0m12-2q5-5 11 1M51 67v3m23-6v4M52 87l10 9 13-11m-13 9 1 13M49 129l-6 14-16 2m43-16 10 14 18 2M52 35 53 14l13 1-1 19M53 20l8 2m-8 4 6 1M55 13q-8-6 1-13 0 6 6 8l-3 7M34 66l4-9m-5 24 5-9m42 34 4 9m-45-1-5 10 M34 145l14-1m39-1 12 2",
     bellkeeper:
       "M23 138 30 86l15-17-8-35 20-20 28 12 5 39 12 26 2 47z M39 38 77 24l9 35-12 19-24-4z M40 46l42-9m-38 16 40-9 M51 61l13 8 13-10 M31 89l25 18 34-26M56 107v31 M19 66 8 110l22 8 13-38z M12 109l16 7M17 118v11 M81 83l16-15 10 7-11 16 M102 40v35M90 51h24l-4-19-8-6-8 7z M98 53v8",
     widow:

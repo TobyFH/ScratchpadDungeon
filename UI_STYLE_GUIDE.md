@@ -18,7 +18,7 @@ for the user's canonical reference. Generate fresh captures with
 | `ui/notebook.css`    | Presentation tokens, shared primitives, component treatments, palette and presentation breakpoints                       |
 | `ui/layout.css`      | Existing structural geometry, responsive arrangements and animation choreography; isolated in the `legacy` cascade layer |
 | `ui/drawings.js`     | All icons, portraits, creatures, corpses, floor marks, trap drawings and lever artwork                                   |
-| `ui/assets/`         | Nine-slice pencil frames, graphite cover texture, display font and its licence                                           |
+| `ui/assets/`         | Nine-slice frames, tape, page wear, graphite textures, embedded fonts/licences and original creature scans                |
 | `tools/build-ui.cjs` | Embeds those sources and assets into the marked regions of `index.html`                                                  |
 | `index.html`         | Runnable, downloadable, self-contained game; HTML structure and gameplay remain here                                     |
 
@@ -47,6 +47,9 @@ its licence remain in the HTML outside the generated region.
   glass, metallic chrome or pill-shaped containers.
 - Warm and dark palettes use the same tokens and drawing language. Dark is
   pale graphite on charcoal paper, not a separate neon theme.
+- Page wear is confined to the perimeter: `page-wear.svg` supplies small creases
+  and rubbed fibres; the book's outer cut is slightly irregular. Keep it subtle
+  and outside the content. Do not increase distress across the whole page.
 
 ## Colour has a job
 
@@ -72,8 +75,13 @@ contrast respectively against the main paper in every palette.
 - The nine-slice SVG frames preserve a consistent stroke while a panel grows.
   Use the shared `--frame` token. The light frame is selected automatically in
   dark mode. Keep SVG dimensions explicit when making another nine-slice asset.
-- Large panels use the 5px source-space frame; small cards use 3px. This is the
-  frame's slice area, not a five-pixel solid outline. Actual graphite is finer.
+- Large panels use the 7px source-space frame; small cards use 3px. This is the
+  frame's slice area, not a seven-pixel solid outline. Actual graphite is finer.
+- Frame-only pressure grain lives inside the SVG asset. It must never filter
+  the panel's text. Retraced edges should remain visibly distinct at desktop fit.
+- Combat and party/enemy headings sit on `--tape`, the reusable translucent,
+  torn-end adhesive-paper label. Use it for actual section titles, without
+  additional text or decoration. Preserve the heading's reserved space.
 - Small buttons have a thin graphite edge and a very slight second contour.
   Hand-drawn does not require every control to be rotated. Side tabs never
   rotate on hover: they grow gently while retaining their orientation.
@@ -82,8 +90,10 @@ contrast respectively against the main paper in every palette.
 
 ## Typography and hierarchy
 
-- **Caveat, weight 700:** title, section headings, creature names and paper
-  labels. **Patrick Hand / Notebook:** body, HP, stats, logs and controls.
+- **Cabin Sketch, weight 700 / `--display`:** title, section headings and tape
+  labels. Its graphite lettering is part of the font, not a filter on live text.
+  **Caveat, weight 700 / `--hand-display`:** creature names.
+  **Patrick Hand / Notebook:** body, HP, stats, logs and controls.
 - Keep real labels plain and concise. Use uppercase for major notebook labels;
   preserve normal case for names, explanations and class names.
 - Desktop source sizes include 62px for the book title, 48px for the combat
@@ -92,6 +102,9 @@ contrast respectively against the main paper in every palette.
 - Check the rendered result at 1920×1080 and 1280×800, not just CSS values.
   Narrow screens stack the pages. Do not solve crowding by continually shrinking
   an entire interface or by hiding necessary controls.
+- Native dropdown **options** need explicit ink and raised-paper backgrounds in
+  every palette, as well as the closed select itself. Set `color-scheme` to the
+  palette. Test the expanded animation-speed menu and settings-page menus.
 - Long event headings must wrap and fit their reserved area. Transient text,
   arrivals and damage results must not change the main layout's dimensions.
 
@@ -106,6 +119,12 @@ contrast respectively against the main paper in every palette.
 - Portraits use a 120×150 viewBox, expressive faces, soft contour changes and
   small areas of pencil hatching. Keep the class/species recognisable at map
   token size. The new hero drawings and shaggy Candle Gnawer are examples.
+- The Candle Gnawer uses `illustrations/candle-gnawer.png`: an original generated
+  graphite illustration with transparent edges, embedded through `@asset(...)`
+  in the portrait SVG. Keep its shaggy triangular silhouette, candle, crooked
+  fangs and spindly limbs. Do not replace it with a clean polygon icon. Scanned
+  pencil art skips the contour filter; dark mode reverses graphite into pale
+  pencil. Injury overlays and corpse art keep the normal portrait contract.
 - Show severe injury clearly, while retaining the character's identity.
   Corpses must remain unmistakably fallen; don't substitute a healthy portrait.
 - `pencilIllustration()` normalises older illustration fills to palette tokens
@@ -122,6 +141,15 @@ contrast respectively against the main paper in every palette.
 - Floor marks are cracks and small stone shapes. Avoid floor doodles resembling
   treasure, enemies or other active events. Covered cells are dense graphite;
   stone and water still read as impassable when revealed.
+- `wallArt()` draws staggered masonry with mortar and small material shadows.
+  A wall stays an opaque, disabled barrier; do not add event-style token discs.
+  Active discoveries use restrained coloured pencil discs: gold valuables,
+  muted red danger, green wells. Used tiles lose that active treatment. Never
+  put a hidden cell's event type in its markup.
+- Hero HP numbers and their shaded health strip sit **above** the slot machine;
+  EXP sits below. Keep this ordering for all classes, injury states and sizes.
+  `--pencil-shading` supplies graphite texture to coloured bars;
+  `--reel-rim` confines hatching to the pencilled machine casing.
 
 ## Meaningful text only
 
