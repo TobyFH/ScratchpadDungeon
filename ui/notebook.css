@@ -1,0 +1,1402 @@
+/* Scratchpad Dungeon visual system.
+ * All artwork/font references are embedded by tools/build-ui.cjs.
+ * Keep layout/animation choreography in layout.css; use these primitives for new UI.
+ * Do not texture text or add decorative writing. Frames and hatching describe objects.
+ */
+@font-face {
+  font-family: "Notebook Display";
+  src: url("@asset(fonts/Caveat.ttf)") format("truetype");
+  font-weight: 400 700;
+  font-display: swap;
+}
+:root {
+  --paper: #f2ead9;
+  --paper-raised: #f6efdf;
+  --paper-shade: #e4dac3;
+  --ink: #35342e;
+  --soft: #686459;
+  --line: #a09886;
+  --red: #a0473b;
+  --green: #59704b;
+  --gold: #95702e;
+  --rule: #73726716;
+  --pencil-light: #514b3d18;
+  --pencil-mid: #514b3d38;
+  --focus: #806220;
+  --display: "Notebook Display", "Notebook", cursive;
+  --frame: url("@asset(pencil-frame.svg)");
+  --graphite: url("@asset(graphite.svg)");
+  --ui-gap: 12px;
+  --ui-inset: 12px;
+  --ui-stroke: 5px;
+  --ui-label: #e9ddc2;
+  --ui-battle-height: 560px;
+  --ui-left-share: 0.47;
+  --ui-book-border: 4px;
+  --ui-page-inset: 25px;
+  --ui-desk-inset: 20px;
+  --ui-reading-width: 1360px;
+}
+body[data-palette="warm"] {
+  --paper: #efe0c6;
+  --paper-raised: #f7e9d0;
+  --paper-shade: #dfcba8;
+  --ink: #46372d;
+  --soft: #715c49;
+  --line: #aa9478;
+  --rule: #795e3616;
+  --ui-label: #e5cfa9;
+}
+body[data-palette="dark"] {
+  --paper: #302f2b;
+  --paper-raised: #393831;
+  --paper-shade: #242521;
+  --ink: #e6decb;
+  --soft: #c0b7a2;
+  --line: #817b6e;
+  --red: #e39986;
+  --green: #a0b48a;
+  --gold: #d4b877;
+  --rule: #dfd7c316;
+  --pencil-light: #dfd7c310;
+  --pencil-mid: #dfd7c330;
+  --focus: #e9cb85;
+  --ui-label: #444237;
+  --frame: url("@asset(pencil-frame-light.svg)");
+}
+body {
+  color: var(--ink);
+  background: #3b352b;
+  background-image: radial-gradient(
+    ellipse at 20% 0,
+    #74604455,
+    transparent 70%
+  );
+}
+.book {
+  background: var(--paper);
+  border: var(--ui-book-border) solid transparent;
+  border-image: var(--frame) 12 / 9px / 2px stretch;
+  border-radius: 13px 18px 15px 12px;
+  box-shadow:
+    0 7px 0 #b2a58c,
+    0 10px 0 #4a4033,
+    0 18px 35px #100e0b66;
+  grid-template-columns: minmax(0, calc(100% * var(--ui-left-share))) minmax(
+      0,
+      1fr
+    );
+}
+.book::before {
+  inset: 3px;
+  border-radius: 10px 14px 13px 9px;
+  border-color: var(--pencil-mid);
+  /* Fine paper grain belongs on the page, never on the lettering. */
+  opacity: 0.72;
+  box-shadow: inset 0 0 32px #76634424;
+}
+.left-page,
+.right-page {
+  background-color: transparent;
+  background-image: repeating-linear-gradient(
+    transparent 0 30px,
+    var(--rule) 30px 31px
+  );
+}
+.left-page {
+  border-right-color: var(--pencil-mid);
+  box-shadow: inset -16px 0 20px -16px #31291c70;
+}
+.right-page {
+  box-shadow: inset 16px 0 20px -17px #31291c70;
+}
+.ambient-light {
+  opacity: 0.45;
+}
+
+/* TYPE: the display face is reserved for headings; the body face stays legible. */
+h1,
+h2,
+h3,
+.pencil-heading {
+  font-family: var(--display);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+}
+h1 {
+  font-size: clamp(35px, 4vw, 68px);
+  line-height: 1.02;
+}
+h2 {
+  font-size: 41px;
+}
+h3 {
+  font-size: 27px;
+}
+.title-underline {
+  padding-bottom: 10px;
+}
+.title-underline::after,
+.title-underline::before {
+  background: var(--ink);
+  clip-path: polygon(
+    0 30%,
+    25% 0,
+    67% 35%,
+    100% 0,
+    99% 70%,
+    65% 100%,
+    27% 60%,
+    0 100%
+  );
+  height: 2px;
+  opacity: 0.75;
+}
+.floor-heading {
+  color: var(--ink);
+  letter-spacing: 0.07em;
+}
+.floor-subtitle {
+  color: var(--soft);
+  font-size: 19px;
+}
+.muted,
+.eyebrow,
+.hover-name,
+.map-hint,
+.machine-footnote {
+  color: var(--soft);
+}
+
+/* FRAME: reusable pencil outlines, also applied to the original renderer classes.
+ * Nine-slice SVG keeps strokes the same weight at every panel size. No text filters.
+ */
+.pencil-panel,
+.sketch-box,
+.journal,
+.inventory,
+.party-side,
+.enemy-box,
+.modal,
+.stage-card,
+.round-tag,
+.team-block,
+.portrait,
+.machine-face,
+.artefact-slot,
+.enemy-clock,
+.editor-reel,
+.starter-choice,
+.guide-section {
+  border: var(--ui-stroke) solid transparent;
+  border-image: var(--frame) 12 / var(--ui-stroke) / 2px stretch;
+  border-radius: 0;
+  box-shadow: none;
+  background-color: transparent;
+  color: var(--ink);
+}
+.sketch-box,
+.journal,
+.inventory {
+  padding: var(--ui-inset);
+}
+.sketch-box h3,
+.journal-head,
+.inventory h3 {
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 5px;
+}
+.pencil-label,
+.party-label,
+.enemy-label {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 1.05;
+  border: 4px solid transparent;
+  border-image: var(--frame) 12 / 4px / 1px stretch;
+  background: var(--ui-label);
+  box-shadow: none;
+  color: var(--ink);
+  padding: 2px 15px 3px;
+  transform: rotate(-1deg);
+}
+.combat-heading > h2 {
+  justify-self: start;
+  background: var(--ui-label);
+  padding: 3px 18px 7px;
+  transform: rotate(-1.2deg);
+  border: 5px solid transparent;
+  border-image: var(--frame) 12 / 5px / 3px stretch;
+  line-height: 1;
+}
+.combat-heading > h2::after,
+.combat-heading > h2::before {
+  display: none;
+}
+.round-tag,
+.team-block {
+  background: var(--paper-raised);
+}
+.team-block {
+  color: var(--ink);
+}
+.team-block strong {
+  color: var(--ink);
+}
+.team-block small {
+  color: var(--soft);
+}
+.team-block.blocking {
+  background: var(--paper-shade);
+}
+
+/* CONTROLS: flat paper, fixed hitboxes, unmistakable hover/focus states. */
+button,
+select,
+.pencil-button {
+  color: var(--ink);
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: 1px 3px 2px 1px;
+  box-shadow:
+    1px 1px 0 var(--pencil-mid),
+    -1px -0.5px 0 var(--pencil-light);
+}
+button:hover:not(:disabled),
+.pencil-button:hover {
+  background-color: var(--paper-shade);
+  color: var(--ink);
+}
+button:focus-visible,
+select:focus-visible,
+input:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+button.primary,
+.primary,
+.modal .primary,
+.stage-card .primary {
+  background: var(--paper-shade);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  box-shadow: 2px 2px 0 var(--pencil-mid);
+}
+.primary:hover:not(:disabled) {
+  background: var(--ui-label);
+}
+button.quiet {
+  color: var(--ink);
+  border-color: transparent;
+  box-shadow: none;
+  background: transparent;
+}
+button.quiet:hover:not(:disabled) {
+  background: var(--pencil-light);
+}
+input[type="checkbox"] {
+  accent-color: var(--green);
+}
+.notebook-tabs button {
+  background: var(--paper-shade);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 0 3px 3px 0;
+  writing-mode: vertical-rl;
+  transform: none;
+  transform-origin: left center;
+  transition:
+    transform 0.15s,
+    background 0.15s;
+  box-shadow: 2px 2px 0 #19160f33;
+}
+.notebook-tabs button:hover:not(:disabled) {
+  transform: scale(1.045);
+}
+
+/* MAP: graphite cover, stone walls, monochrome water; colour signals events. */
+.legend {
+  color: var(--ink);
+  gap: 6px 11px;
+  font-size: 16px;
+}
+.legend svg {
+  width: 23px;
+  height: 23px;
+}
+.map-wrap {
+  border: 5px solid transparent;
+  border-image: var(--frame) 12 / 6px / 3px stretch;
+  box-shadow: none;
+  background: var(--paper-shade);
+}
+.map-board {
+  border: 0;
+  box-shadow: none;
+}
+.tile {
+  color: var(--ink);
+  background: var(--paper);
+  border: 0;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  box-shadow: none;
+}
+.tile:hover:not(:disabled) {
+  transform: none;
+  outline: 2px solid var(--focus);
+  outline-offset: -3px;
+}
+.tile.fog {
+  background: #34332e;
+}
+.tile.fog::after {
+  background: var(--graphite) repeat;
+  background-size: 48px 48px;
+  opacity: 1;
+  box-shadow: none;
+}
+.tile.wall {
+  background: var(--paper-shade);
+  box-shadow: inset 0 0 0 2px var(--ink);
+}
+.tile.wall > svg {
+  color: var(--ink);
+  opacity: 0.85;
+  width: 96%;
+  height: 96%;
+  stroke-width: 1.05px;
+}
+.tile.river,
+.tile.water-block {
+  background: var(--paper-shade);
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+.tile.river > svg {
+  color: var(--ink);
+}
+.tile.bridge-tile {
+  background: var(--paper);
+  color: var(--ink);
+}
+.terrain-stop {
+  background: var(--paper-shade);
+  color: var(--ink);
+  border-color: var(--ink);
+}
+.tile.active-event {
+  outline-color: var(--gold);
+  background-color: var(--paper-raised);
+}
+.tile.active-battle {
+  color: var(--red);
+}
+.tile.active-well {
+  color: var(--green);
+}
+.tile.active-stairs {
+  color: var(--ink);
+  background-color: var(--ui-label);
+}
+.tile.spent {
+  background: var(--paper);
+}
+.map-player {
+  filter: none;
+}
+.map-player > svg {
+  background: var(--paper-raised);
+  border-radius: 40% 44% 36% 42%;
+  filter: drop-shadow(1px 2px 0 #302c2344);
+}
+.exit-button {
+  background: var(--ui-label);
+  color: var(--ink);
+  border: 2px solid var(--gold);
+}
+.field-note {
+  font-style: normal;
+  color: var(--soft);
+  background: none;
+  border: none;
+}
+.margin-doodle {
+  display: none !important;
+}
+
+/* PARTY / ENEMIES: art and health remain dominant; machinery is pencilled metal. */
+.party-side {
+  padding: 0 10px 5px;
+}
+.hero {
+  border-color: var(--line);
+  background: transparent;
+}
+.hero.selected {
+  background: var(--pencil-light);
+}
+.portrait {
+  background: var(--paper-raised);
+  padding: 0;
+}
+.portrait:hover:not(:disabled) {
+  background: var(--paper-shade);
+}
+.portrait > svg,
+.enemy-art > svg,
+.peace-art > svg {
+  filter: none;
+  color: var(--ink);
+}
+.pencil-art .paper-fill {
+  fill: var(--paper);
+}
+.pencil-art .shade-fill {
+  fill: var(--paper-shade);
+}
+.pencil-art .pencil-echo {
+  opacity: 0.24;
+  stroke-width: 0.65;
+  fill: none;
+}
+.art-definitions {
+  position: absolute;
+  pointer-events: none;
+  overflow: hidden;
+}
+svg.pencil-art {
+  filter: url(#pencil-grain);
+  color: inherit;
+}
+.hero-name {
+  font-size: 20px;
+}
+.hero-name small {
+  color: var(--soft);
+}
+.hero-dossier {
+  padding-bottom: 0;
+}
+.hero-dossier > .equipment-slot {
+  position: static;
+}
+.hero-title-line {
+  font-size: 16px;
+}
+.injury {
+  font-size: 14px;
+}
+.hero .equipment-slot {
+  font-size: 12px;
+}
+.empty-slot {
+  border-color: var(--line);
+  background: transparent;
+  color: var(--soft);
+  opacity: 1;
+}
+.enemy-box,
+.enemy-box.selected,
+.enemy-box.active-target {
+  border-color: transparent;
+  background-color: transparent;
+}
+.enemy-info h4 {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 32px;
+  color: var(--ink);
+}
+.enemy-hp,
+.enemy-stats,
+.enemy-clock {
+  color: var(--ink);
+}
+.enemy-health-label {
+  font-size: 17px;
+}
+.enemy-clock {
+  background: var(--paper-raised);
+}
+.enemy-box .machine-title {
+  color: var(--ink);
+}
+.machine-title {
+  font-size: 17px;
+}
+.machine-footnote {
+  font-size: 13px;
+}
+.hero-controls {
+  padding-top: 2px;
+}
+.hero-title-line {
+  height: 20px;
+  margin-bottom: 2px;
+}
+.hp-info {
+  font-size: 16px;
+}
+.hero .machine-footnote {
+  height: 14px;
+  min-height: 14px;
+  margin-top: 2px;
+  font-size: 12px;
+}
+.hero .bars {
+  margin: 4px 0 2px;
+}
+.hero .healthbar {
+  height: 7px;
+}
+.hero .healthbar.exp {
+  height: 4px;
+}
+.hero .edit-line {
+  height: 20px;
+}
+.hero .edit-button {
+  padding: 0 3px;
+  border: 0;
+}
+.enemy-art {
+  border-color: transparent;
+  box-shadow: none;
+  background: transparent;
+}
+.enemy-art:hover:not(:disabled) {
+  background: var(--pencil-light);
+}
+.hp-bar,
+.healthbar {
+  background: var(--paper-shade);
+  border: 1px solid var(--ink);
+  border-radius: 0;
+  box-shadow: 0 1px 0 var(--pencil-mid);
+}
+.healthbar > i,
+.hp-bar > i {
+  border-radius: 0;
+  background: var(--green);
+  box-shadow: none;
+}
+.healthbar.yellow > i,
+.hp-bar.yellow > i {
+  background: var(--gold);
+}
+.healthbar.red > i,
+.hp-bar.red > i,
+.healthbar.critical > i,
+.hp-bar.critical > i {
+  background: var(--red);
+}
+.enemy-box .healthbar > i {
+  background: var(--red);
+}
+.xp-bar {
+  border-color: var(--line);
+  background: var(--paper-shade);
+  border-radius: 0;
+}
+.xp-bar i {
+  background: var(--green);
+  opacity: 0.6;
+}
+.machine-face {
+  background: var(--paper-raised);
+  color: var(--ink);
+  border-width: 5px;
+  box-shadow:
+    inset 0 4px 7px var(--pencil-light),
+    inset 0 -4px 7px var(--pencil-light);
+}
+.machine-face:hover:not(:disabled) {
+  background-color: var(--paper-raised);
+  transform: none;
+}
+.machine-face::before,
+.machine-face::after {
+  opacity: 0.45;
+}
+.slot-window {
+  border-color: var(--line);
+  background: transparent;
+  box-shadow: inset -1px 0 0 var(--pencil-light);
+}
+.slot-window:nth-child(2) {
+  background: var(--pencil-light);
+}
+.slot-symbol {
+  color: var(--ink);
+  text-shadow: none;
+}
+.tier-symbol {
+  color: var(--ink);
+}
+.tier-symbol.heal {
+  color: var(--green);
+}
+.tier-symbol.poison,
+.tier-symbol.block,
+.tier-symbol.magic,
+.tier-symbol.stun {
+  color: var(--ink);
+}
+.class-face {
+  color: var(--ink);
+}
+.blank-face {
+  color: var(--soft);
+  opacity: 1;
+}
+.lever,
+.lever:hover:not(:disabled) {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  color: var(--ink);
+}
+.lever > svg {
+  filter: none;
+}
+.result-ribbon {
+  border-color: var(--line);
+  color: var(--ink);
+  background: transparent;
+}
+.result-ribbon strong {
+  color: var(--red);
+}
+.artefact-slot {
+  background: var(--pencil-light);
+}
+.artefact-slot svg,
+.relic-state > svg {
+  color: var(--gold);
+}
+
+/* LOG / BAG: only the log (and final memorial roster) scroll internally. */
+.journal,
+.inventory {
+  background: transparent;
+}
+.journal ol {
+  scrollbar-color: var(--line) transparent;
+  scrollbar-width: thin;
+}
+.notes-and-bag .journal {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 5px;
+}
+.notes-and-bag .journal ol {
+  height: 100%;
+  max-height: none;
+  min-height: 0;
+  margin: 0;
+  padding-bottom: 5px;
+}
+.journal li {
+  border-color: var(--pencil-light);
+}
+.journal li:first-child {
+  color: var(--ink);
+}
+.inventory h3 {
+  color: var(--ink);
+}
+.inventory-items button,
+.empty-pocket {
+  color: var(--ink);
+  background: transparent;
+  border: 1px dashed var(--line);
+  border-radius: 2px 0 3px 0;
+  box-shadow: none;
+}
+.inventory-items button:disabled {
+  opacity: 0.72;
+}
+.inventory-items button small {
+  color: var(--soft);
+}
+.notes-and-bag .inventory h3 {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: 26px 15px;
+  gap: 0 5px;
+  margin: 0 0 4px;
+  padding-bottom: 2px;
+  line-height: 1;
+}
+.notes-and-bag #bag-count {
+  font: 14px var(--hand);
+  justify-self: end;
+  white-space: nowrap;
+}
+.notes-and-bag #manage-bag {
+  grid-column: 1/-1;
+  font: 12px var(--hand);
+  padding: 0;
+  margin: 0;
+  justify-self: end;
+}
+.notes-and-bag .inventory-items {
+  grid-template-rows: repeat(3, 49px);
+  gap: 4px;
+}
+.notes-and-bag .inventory-items button {
+  height: 49px;
+}
+.notes-and-bag .inventory-items button > span {
+  font-size: 16px;
+}
+.notes-and-bag .inventory-items button small {
+  font-size: 13px;
+}
+.save-line {
+  color: var(--soft);
+}
+.footer {
+  display: none;
+}
+
+/* DIALOGS: the same paper, frames, typography and controls as the open pages. */
+.overlay,
+.spotlight {
+  background: #211e1999;
+  backdrop-filter: blur(2px);
+}
+.modal,
+.stage-card {
+  background: var(--paper);
+  background-image: repeating-linear-gradient(
+    transparent 0 30px,
+    var(--rule) 30px 31px
+  );
+  box-shadow: 0 12px 30px #15120d66;
+  border-width: 7px;
+  border-image-width: 7px;
+}
+.modal h2,
+.stage-card h2 {
+  font-family: var(--display);
+  font-weight: 700;
+  color: var(--ink);
+}
+.modal p,
+.stage-card p,
+.modal label {
+  color: var(--ink);
+}
+.stage-card .eyebrow,
+.stage-subtitle,
+.modal .muted {
+  color: var(--soft);
+}
+.modal-actions {
+  border-color: var(--line);
+}
+/* Balance long instructions across a wider sheet, keeping all text visible. */
+.modal:has(.guide-grid) {
+  width: min(var(--ui-reading-width), calc(100vw - 30px));
+}
+.pencil-columns,
+.guide-grid {
+  display: block;
+  columns: 3;
+  column-gap: 28px;
+}
+.guide-grid > p {
+  break-inside: avoid;
+  font-size: 18px;
+  line-height: 1.35;
+  margin: 0 0 12px;
+}
+@media (max-width: 1100px) {
+  .pencil-columns,
+  .guide-grid {
+    columns: 2;
+    column-gap: 18px;
+  }
+}
+.pencil-card,
+.starter-grid > button,
+.editor-row,
+.bag-card,
+.artefact-card,
+.replacement-grid article,
+.equipment-choices button,
+.guide-grid > section,
+.run-summary,
+.memorial-stats {
+  border: 3px solid transparent;
+  border-image: var(--frame) 12 / 3px / 1px stretch;
+  border-radius: 0;
+  box-shadow: none;
+  color: var(--ink);
+  background: var(--pencil-light);
+}
+.editor-slot,
+.fallen-entry {
+  background: transparent;
+  border-color: var(--line);
+  border-radius: 0;
+}
+.shop-offers button {
+  background: var(--paper-raised);
+  color: var(--ink);
+}
+.shop-offers small,
+.bag-card small,
+.artefact-card p {
+  color: var(--soft);
+}
+.gold {
+  color: var(--gold);
+}
+.healing,
+.well-heal-total {
+  color: var(--green);
+}
+.damage {
+  color: var(--red);
+}
+.modal-body,
+.stage-content {
+  padding: 0;
+}
+.starter-choice,
+.editor-reel {
+  background: var(--paper-raised);
+}
+.starter-choice:hover:not(:disabled) {
+  background: var(--paper-shade);
+}
+.guide-grid > section,
+.options-grid > label,
+.stat-card,
+.record-card {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--line);
+  border-radius: 0;
+}
+.toast {
+  background: var(--paper-raised);
+  color: var(--ink);
+  border-color: var(--ink);
+}
+.book-cover {
+  background: var(--paper-shade);
+  color: var(--ink);
+  border-color: var(--ink);
+}
+.book-cover > span {
+  font-family: var(--display);
+  font-weight: 700;
+}
+.turning-page {
+  background: var(--paper);
+}
+
+/* Toolbars are notebook controls, not floating app chrome. */
+.desk-top,
+.fit-notebook .desk-top {
+  color: var(--ink);
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  padding: 0 0 10px;
+  margin: 0 0 14px;
+  height: auto;
+}
+.desk-top nav {
+  flex-wrap: wrap;
+  gap: 7px 10px;
+  width: 100%;
+  justify-content: flex-end;
+}
+.desk-top button,
+.desk-top select {
+  color: var(--ink);
+  background: var(--paper-raised);
+  border-color: var(--line);
+  font-size: 15px;
+}
+.desk-top label {
+  font-size: 15px;
+}
+.desk-top .pace-control,
+.desk-top .palette-control {
+  color: var(--ink);
+}
+#keyboard-bar {
+  color: var(--ink);
+  background: var(--paper);
+  border-top: 1px solid var(--line);
+  box-shadow: 0 -2px 5px #211d1633;
+}
+#keyboard-bar kbd {
+  background: var(--paper-raised);
+  color: var(--ink);
+  border-color: var(--line);
+  box-shadow: 1px 1px 0 var(--pencil-mid);
+}
+#keyboard-bar span,
+#keyboard-bar .mouse-prompt {
+  color: var(--ink);
+}
+
+/* Reserved desktop geometry. These values are source-space sizes before fitNotebook().
+ * Preserve hitboxes and empty slots: arrivals and transient text must not move controls.
+ */
+@media (min-width: 1260px) and (min-height: 560px) {
+  .desk.fit-notebook {
+    max-width: none;
+    padding: 10px var(--ui-desk-inset) 8px;
+  }
+  .fit-notebook .page {
+    padding: 20px var(--ui-page-inset) 15px;
+  }
+  .fit-notebook .right-page {
+    padding-top: 71px;
+  }
+  .fit-notebook .desk-top {
+    position: absolute;
+    /* Visually on the right page, but outside the book's perspective/stacking
+     * context so animation controls remain clickable above modal backdrops. */
+    top: calc(22px + var(--ui-book-border));
+    left: calc(
+      (100% - 2 * var(--ui-desk-inset) - 2 * var(--ui-book-border)) *
+        var(--ui-left-share) + var(--ui-desk-inset) + var(--ui-book-border) +
+        var(--ui-page-inset)
+    );
+    right: calc(
+      var(--ui-desk-inset) + var(--ui-book-border) + var(--ui-page-inset)
+    );
+    height: 43px;
+    margin: 0;
+  }
+  .fit-notebook .desk-top nav {
+    flex-wrap: nowrap;
+    gap: 7px;
+  }
+  .fit-notebook .desk-top button {
+    padding: 4px 7px;
+  }
+  .fit-notebook .desk-top label,
+  .fit-notebook .desk-top button,
+  .fit-notebook .desk-top select {
+    font-size: 15px;
+  }
+  .fit-notebook h1 {
+    font-size: 62px;
+    white-space: nowrap;
+  }
+  .fit-notebook .floor-heading {
+    margin-top: 11px;
+    font-size: 27px;
+  }
+  .fit-notebook .floor-subtitle {
+    font-size: 21px;
+    margin-bottom: 12px;
+  }
+  .fit-notebook .legend {
+    height: 59px;
+    font-size: 16px;
+    margin-bottom: 9px;
+    gap: 5px 11px;
+    align-content: center;
+  }
+  .fit-notebook .map-wrap {
+    max-width: 600px;
+  }
+  .fit-notebook .map-caption {
+    height: 30px;
+    min-height: 30px;
+  }
+  .fit-notebook #map-status {
+    height: 32px;
+    font-size: 17px;
+    margin: 4px 0;
+    padding-top: 0;
+  }
+  .fit-notebook .exit-button {
+    height: 30px;
+    margin: 4px 0;
+  }
+  .fit-notebook .field-note {
+    height: 28px;
+    margin: 2px 0;
+    padding: 0;
+  }
+  .fit-notebook .expedition-boxes {
+    margin-top: 8px;
+    height: 190px;
+    min-height: 190px;
+  }
+  .fit-notebook .expedition-boxes h3 {
+    font-size: 28px;
+    line-height: 1.1;
+    margin-bottom: 5px;
+  }
+  .fit-notebook .expedition-boxes .sketch-box {
+    padding: 8px 12px;
+    min-height: 0;
+  }
+  .fit-notebook .expedition-boxes .sketch-box p {
+    margin: 3px 0;
+    font-size: 18px;
+    line-height: 1.2;
+  }
+  .fit-notebook .floor-dots {
+    margin-top: 6px;
+  }
+  .fit-notebook #memorial {
+    font-size: 13px;
+    line-height: 1.1;
+    padding: 2px 0;
+  }
+  .fit-notebook .artefact-slot {
+    height: 85px;
+  }
+  .fit-notebook .combat-heading {
+    height: 69px;
+    min-height: 69px;
+    margin-bottom: 10px;
+  }
+  .fit-notebook .combat-heading h2 {
+    font-size: 48px;
+  }
+  .fit-notebook .battle-stage,
+  .fit-notebook .enemy-side {
+    height: var(--ui-battle-height);
+    min-height: var(--ui-battle-height);
+  }
+  .fit-notebook .party-side {
+    height: var(--ui-battle-height);
+    min-height: 0;
+  }
+  .fit-notebook .hero,
+  .fit-notebook .empty-slot {
+    height: 153px;
+    min-height: 153px;
+    max-height: 153px;
+    margin-bottom: 9px;
+  }
+  .fit-notebook .hero {
+    grid-template-columns: 87px minmax(0, 1fr);
+    gap: 9px;
+  }
+  .fit-notebook .hero-dossier {
+    width: 87px;
+  }
+  .fit-notebook .portrait {
+    height: 83px;
+  }
+  .fit-notebook .portrait > svg {
+    width: 78px;
+    height: 80px;
+  }
+  .fit-notebook .hero-name {
+    font-size: 21px;
+  }
+  .fit-notebook .hero-name small {
+    font-size: 14px;
+  }
+  .fit-notebook .hero .machine-face {
+    height: 69px;
+  }
+  .fit-notebook .hero .lever {
+    height: 74px;
+  }
+  .fit-notebook .hero .edit-line {
+    font-size: 14px;
+  }
+  .fit-notebook .hero .hero-controls {
+    padding-top: 2px;
+  }
+  .fit-notebook .hero .portrait {
+    height: 74px;
+  }
+  .fit-notebook .hero .portrait > svg {
+    height: 71px;
+  }
+  .fit-notebook .hero .hero-name {
+    height: 40px;
+    margin-top: 3px;
+    font-size: 20px;
+  }
+  .fit-notebook .hero .equipment-slot {
+    height: 20px;
+  }
+  .fit-notebook .enemy-art {
+    height: 194px;
+  }
+  .fit-notebook .enemy-info h4 {
+    height: 44px;
+    font-size: 33px;
+  }
+  .fit-notebook .enemy-stats {
+    font-size: 17px;
+  }
+  .fit-notebook .battle-target {
+    height: 32px;
+    min-height: 32px;
+  }
+  .fit-notebook .result-ribbon {
+    height: 48px;
+    min-height: 48px;
+    max-height: 48px;
+  }
+  .fit-notebook .notes-and-bag {
+    height: 235px;
+    grid-template-columns: minmax(0, 1fr) 222px;
+    gap: var(--ui-gap);
+  }
+  .fit-notebook .notes-and-bag .journal {
+    height: 235px;
+  }
+  .fit-notebook .notes-and-bag .journal ol {
+    font-size: 17px;
+  }
+  .fit-notebook .notes-and-bag .inventory {
+    height: 235px;
+  }
+  .fit-notebook .notes-and-bag .journal h3,
+  .fit-notebook .notes-and-bag .inventory h3 {
+    font-size: 26px;
+  }
+  .fit-notebook .notes-and-bag .inventory-items {
+    grid-template-rows: repeat(3, 49px);
+  }
+  .fit-notebook .notes-and-bag .inventory-items button {
+    height: 49px;
+  }
+  .fit-notebook .save-line {
+    height: 23px;
+  }
+  .fit-notebook .paired-enemies .enemy-art {
+    height: 125px;
+  }
+  .fit-notebook .paired-enemies .enemy-roster {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+  .fit-notebook .paired-enemies > .enemy-label {
+    font-size: 21px;
+    white-space: nowrap;
+  }
+  .fit-notebook .paired-enemies .enemy-box {
+    display: grid;
+    grid-template-columns: 92px minmax(0, 1fr);
+    grid-template-rows: 131px 90px;
+    gap: 2px 6px;
+    padding: 4px;
+  }
+  .fit-notebook .paired-enemies .enemy-info {
+    min-width: 0;
+  }
+  .fit-notebook .paired-enemies .enemy-info h4 {
+    height: 38px;
+    font-size: 21px;
+    line-height: 1.05;
+    margin: 0;
+  }
+  .fit-notebook .paired-enemies .enemy-health-label {
+    font-size: 14px;
+    height: 18px;
+  }
+  .fit-notebook .paired-enemies .enemy-hp {
+    margin: 2px 0;
+    height: 6px;
+  }
+  .fit-notebook .paired-enemies .enemy-clock {
+    height: 23px;
+    margin: 2px 0;
+    padding: 1px 3px;
+    font-size: 14px;
+  }
+  .fit-notebook .paired-enemies .enemy-stats {
+    font-size: 13px;
+  }
+  .fit-notebook .paired-enemies .enemy-stats {
+    height: 32px;
+    margin: 2px 0;
+    line-height: 1.15;
+  }
+  .fit-notebook .paired-enemies .machine-shell {
+    grid-column: 1/-1;
+    margin-top: 0;
+  }
+  .fit-notebook .paired-enemies .machine-title {
+    height: 18px;
+    font-size: 14px;
+    margin-bottom: 2px;
+  }
+  .fit-notebook .paired-enemies .machine-face {
+    height: 54px;
+  }
+  .fit-notebook .paired-enemies .lever {
+    height: 59px;
+  }
+  .fit-notebook .paired-enemies .machine-footnote {
+    height: 14px;
+    margin-top: 2px;
+  }
+}
+@media (max-width: 1259px) {
+  .desk-top {
+    padding: 8px;
+    border: 1px solid var(--line);
+  }
+  /* Reserve both regions when combat stacks. Enemy reels must never occupy
+   * the healing-target strip, including a pair of long-named creatures. */
+  .battle-stage {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 600px 480px;
+    gap: 12px;
+    height: 1100px;
+    min-height: 1100px;
+  }
+  .party-side {
+    height: 600px;
+  }
+  .enemy-side,
+  .enemy-side.paired-enemies {
+    height: 480px;
+    min-height: 0;
+    margin-top: 0;
+    padding-top: 12px;
+  }
+  .paired-enemies .enemy-box {
+    display: block;
+    min-height: 0;
+  }
+  .paired-enemies .enemy-art {
+    height: 115px;
+    width: 100%;
+  }
+  .paired-enemies .enemy-info h4 {
+    height: 40px;
+  }
+  .paired-enemies .enemy-stats {
+    height: 40px;
+  }
+}
+@media (max-width: 1259px) and (min-width: 761px) {
+  .book {
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  }
+  .desk {
+    padding: 18px 23px 70px;
+  }
+  .page {
+    padding: 20px 17px;
+  }
+  .right-page .desk-top {
+    margin-bottom: 15px;
+  }
+  h1 {
+    font-size: clamp(31px, 4.4vw, 49px);
+  }
+  .legend {
+    font-size: 14px;
+    height: auto;
+    min-height: 69px;
+  }
+  .legend svg {
+    width: 19px;
+    height: 19px;
+  }
+  .party-side {
+    padding: 0 5px 5px;
+  }
+}
+@media (max-width: 760px) {
+  .book {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .desk {
+    padding: 13px 11px 105px;
+  }
+  .page {
+    padding: 20px 15px;
+  }
+  .right-page {
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+  }
+  .desk-top nav {
+    justify-content: flex-start;
+    gap: 8px;
+  }
+  h1 {
+    font-size: clamp(33px, 9vw, 58px);
+  }
+  .legend {
+    font-size: 14px;
+    height: auto;
+    min-height: 68px;
+    gap: 5px 10px;
+  }
+  .legend svg {
+    width: 20px;
+    height: 20px;
+  }
+  .party-side {
+    padding: 0 5px 5px;
+  }
+  .party-label,
+  .enemy-label {
+    font-size: 25px;
+  }
+  .combat-heading > h2 {
+    padding: 3px 9px 6px;
+  }
+  .sketch-box h3 {
+    font-size: 25px;
+  }
+  .notes-and-bag .journal h3,
+  .notes-and-bag .inventory h3 {
+    font-size: 21px;
+    line-height: 1.05;
+  }
+  .notes-and-bag .journal-head {
+    display: grid;
+    gap: 3px;
+  }
+  .notes-and-bag .journal-head button {
+    justify-self: start;
+    font-size: 11px;
+    padding: 1px 0;
+  }
+  .notes-and-bag #bag-count {
+    font-size: 12px;
+  }
+  .notes-and-bag .inventory-items button {
+    grid-template-rows: minmax(0, 1fr) 14px;
+  }
+  .notes-and-bag .inventory-items button > span {
+    font-size: 13px;
+    line-height: 1;
+  }
+  .notes-and-bag .inventory-items button small {
+    font-size: 11px;
+  }
+  .notebook-tabs button {
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .notebook-tabs button,
+  button,
+  select {
+    transition: none;
+  }
+}

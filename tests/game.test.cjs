@@ -4085,7 +4085,8 @@ test("options tabs are functional and autoresolve, palette and pace persist acro
   );
   assert.equal(
     (await p.locator(".save-line").innerText()).trim(),
-    "FIELD NOTES · Made of paper. Played with courage.",
+    "",
+    "the notebook footer has no decorative filler text",
   );
   assert.equal(await p.locator("#save-status").isVisible(), false);
 });

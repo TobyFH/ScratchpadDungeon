@@ -4,7 +4,10 @@
   "private": true,
   "description": "A self-contained notebook dungeon crawler. No runtime dependencies.",
   "scripts": {
-    "test": "node --test tests/game.test.cjs"
+    "build:ui": "node tools/build-ui.cjs",
+    "check:ui": "node tools/build-ui.cjs --check",
+    "review:ui": "npm run check:ui && node tools/review-ui.cjs",
+    "test": "npm run check:ui && node --test tests/*.test.cjs"
   },
   "devDependencies": {
     "playwright": "1.58.2"

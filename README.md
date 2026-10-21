@@ -102,6 +102,25 @@ The bottom bar displays keyboard and mouse prompts. Tab / Shift+Tab and Enter re
 
 ## Development and browser tests
 
+The pencil presentation has editable sources in `ui/`; the playable distribution
+is still the single `index.html`. Read [UI_STYLE_GUIDE.md](UI_STYLE_GUIDE.md),
+[UI_COMPONENT_RULES.md](UI_COMPONENT_RULES.md) and
+[STYLE_CHECKLIST.md](STYLE_CHECKLIST.md) before changing its visual language.
+
+```sh
+npm run build:ui   # embed edited CSS, SVG artwork and assets into index.html
+npm run check:ui   # verify checked-in HTML matches the editable sources
+npm run review:ui  # generate visual-review screenshots and an HTML backup
+```
+
+The build uses Node's standard library and embeds fonts/textures directly. No
+build step or network access is required to play a downloaded copy. Commit the
+generated HTML with its source changes. `npm test` checks freshness first, then
+runs gameplay and visual-system browser tests. Review output goes into ignored
+`test-results/ui-review/`; it includes the default, warm and dark palettes,
+1920×1080 and 1280×800 combat, a stacked mobile page, menus and a treasure crit.
+Those are review fixtures, not new gameplay rules.
+
 ```sh
 npm ci
 # Only if Chromium is unavailable:
@@ -116,3 +135,9 @@ Coverage includes full ten-floor progression, stair bosses and immediate victory
 ## Credits
 
 The embedded **Patrick Hand** font is by Patrick Wagesreiter, under the SIL Open Font License 1.1. Its full license is in the HTML source. All illustrations and effects run locally.
+
+Hand-lettered headings use **Caveat** by the Caveat Project Authors (original
+design by Pablo Impallari), also under the SIL Open Font License 1.1. The font
+and licence are in `ui/assets/fonts/`, and its licence is embedded in the HTML.
+New pencil frames, graphite texture and vector drawings are local project
+assets; no external image, font or paid service is needed at runtime.

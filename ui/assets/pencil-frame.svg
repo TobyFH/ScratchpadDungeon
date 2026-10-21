@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120" fill="none" stroke="#48443c" stroke-linecap="round" stroke-linejoin="round">
+  <!-- A nine-slice frame: slight contour changes survive stretching without distorting text. -->
+  <path d="M4 12 5 5 31 4.4 61 5.2 92 4.3 115 5.5 115.5 32 114.8 63 115.6 91 114.5 115 88 114.6 57 115.4 28 114.8 5 115.8 4.4 88 5.1 57 4.5 30Z" stroke-width="2.3"/>
+  <path d="m2.6 19 1-16 27 .1m54-.8 32 1.4-.2 25m.1 63-1 25-29 .6m-56-1.1-28 .5.4-27M9 3l-6 7m6-3-6 8m108-12 6 5m-1 101-6 8m-1-4 7-10M3 111l7 7" stroke-width=".95" opacity=".62"/>
+</svg>
