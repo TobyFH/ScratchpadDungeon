@@ -72,32 +72,7 @@ async function buildHTML({ balance = readJSON("data/balance.json") } = {}) {
       version: readJSON("package.json").version,
     },
   };
-  // Store shared sprite sheets once in the downloadable HTML. The constructed
-  // runtime objects retain ordinary data URLs, including for offline backups.
-  const resources = {},
-    resourceKeys = new Map();
-  const packedAssets = payload.assets.map((a) => {
-    let key = resourceKeys.get(a.url);
-    if (!key) {
-      key = "r" + resourceKeys.size;
-      resourceKeys.set(a.url, key);
-      resources[key] = a.url;
-    }
-    const metadata = { ...a };
-    delete metadata.url;
-    return jsString(metadata).slice(0, -1) + ',"url":r[' + jsString(key) + "]}";
-  });
-  const packedPayload =
-    "(()=>{const r=" +
-    jsString(resources) +
-    ";return {balance:" +
-    jsString(balance) +
-    ",assets:[" +
-    packedAssets.join(",") +
-    "],build:" +
-    jsString(payload.build) +
-    "};})()";
-  const script = `"use strict";\nglobalThis.__PRODUCTION_DATA__=${packedPayload};\n${services.join("\n")}\n${game}`;
+  const script = `"use strict";\nglobalThis.__PRODUCTION_DATA__=${jsString(payload)};\n${services.join("\n")}\n${game}`;
   new Function(script);
   const template = await fs.readFile(
     path.join(ROOT, "src/template.html"),

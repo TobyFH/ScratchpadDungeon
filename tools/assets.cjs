@@ -54,15 +54,6 @@ function inspect(file, bytes) {
       throw Error(file + ": image dimensions exceed 8192");
     return "image/png";
   }
-  if (ext === ".webp") {
-    if (
-      bytes.length < 25 ||
-      bytes.toString("ascii", 0, 4) !== "RIFF" ||
-      bytes.toString("ascii", 8, 12) !== "WEBP"
-    )
-      throw Error(file + ": invalid WebP header");
-    return "image/webp";
-  }
   if (ext === ".jpg" || ext === ".jpeg") {
     if (bytes[0] !== 255 || bytes[1] !== 216)
       throw Error(file + ": invalid JPEG");
@@ -101,8 +92,7 @@ function validate(
   const errors = [],
     ids = new Set(),
     referenced = new Set(),
-    embedded = {},
-    fileCache = new Map();
+    embedded = {};
   for (const a of manifest.assets) {
     try {
       if (!/^[A-Za-z0-9_.-]+$/.test(a.id) || ids.has(a.id))
@@ -129,19 +119,8 @@ function validate(
           throw Error(a.id + ": symlink escapes assets");
         referenced.add(ref);
       }
-      let file = fileCache.get(a.path);
-      if (!file) {
-        const bytes = fs.readFileSync(safePath(a.path)),
-          mime = inspect(a.path, bytes);
-        file = {
-          mime,
-          sha256: hash(bytes),
-          url: "data:" + mime + ";base64," + bytes.toString("base64"),
-          text: mime === "image/svg+xml" ? bytes.toString("utf8") : undefined,
-        };
-        fileCache.set(a.path, file);
-      }
-      const { mime } = file;
+      const bytes = fs.readFileSync(safePath(a.path)),
+        mime = inspect(a.path, bytes);
       if (
         (a.type === "font" && !mime.startsWith("font/")) ||
         (["image", "sprite"].includes(a.type) && !mime.startsWith("image/")) ||
@@ -160,41 +139,18 @@ function validate(
           a.loopEnd <= a.loopStart)
       )
         throw Error(a.id + ": invalid music loop points");
-      if (checkHashes && a.sha256 !== file.sha256)
+      if (checkHashes && a.sha256 !== hash(bytes))
         throw Error(
           a.id + ": checksum mismatch; run assets:sync after intentional edits",
         );
       embedded[a.id] = {
         ...a,
         mime,
-        url: file.url,
-        text: file.text,
+        url: "data:" + mime + ";base64," + bytes.toString("base64"),
+        text: mime === "image/svg+xml" ? bytes.toString("utf8") : undefined,
       };
     } catch (e) {
       errors.push(e.message);
-    }
-  }
-  for (const a of manifest.assets) {
-    if (a.renderMode !== "atlas") continue;
-    for (const frame of [a.atlas, ...Object.values(a.states || {})]) {
-      const sheet = manifest.assets.find((e) => e.id === frame?.asset),
-        size = sheet?.dimensions;
-      if (!sheet || !size || size.length !== 2) {
-        errors.push(a.id + ": missing atlas sheet or dimensions");
-        continue;
-      }
-      if (
-        ![frame.x, frame.y, frame.width, frame.height, ...size].every(
-          Number.isFinite,
-        ) ||
-        frame.x < 0 ||
-        frame.y < 0 ||
-        frame.width <= 0 ||
-        frame.height <= 0 ||
-        frame.x + frame.width > size[0] ||
-        frame.y + frame.height > size[1]
-      )
-        errors.push(a.id + ": atlas frame is outside its sheet");
     }
   }
   const files = [];
@@ -237,14 +193,7 @@ function unusedEntries(manifest = readJSON("data/assets.json")) {
     ...Object.keys(balance.classes),
     ...Object.values(balance.enemies).map((e) => e.art),
   ]);
-  const atlasReferences = new Set(
-    manifest.assets
-      .flatMap((a) => [a.atlas, ...Object.values(a.states || {})])
-      .filter(Boolean)
-      .map((f) => f.asset),
-  );
   const referenced = (asset) => {
-    if (atlasReferences.has(asset.id)) return true;
     if (source.includes(asset.id)) return true;
     if (asset.id.startsWith("icon.")) {
       const name = asset.alias;

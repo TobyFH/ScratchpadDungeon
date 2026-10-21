@@ -3,7 +3,7 @@
   "assets": [
     {
       "id": "icon.sword",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/sword.svg",
       "originalPath": "assets/images/icons/sword.svg",
       "type": "image",
       "usage": [
@@ -11,25 +11,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "sword",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 3,
-        "y": 3,
-        "width": 154,
-        "height": 169
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "0dc96618ab16bd10270b8b56b9bb269386c273ddf4e08298288183544bb60075",
+      "renderMode": "icon",
+      "alias": "sword"
     },
     {
       "id": "icon.heal",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/heal.svg",
       "originalPath": "assets/images/icons/heal.svg",
       "type": "image",
       "usage": [
@@ -37,25 +28,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "heal",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 163,
-        "y": 3,
-        "width": 150,
-        "height": 169
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "12eb14cb4144e09f31dedd5dde0096e6ab09414cdbc5cfb826cac3b6d6507a54",
+      "renderMode": "icon",
+      "alias": "heal"
     },
     {
       "id": "icon.block",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/block.svg",
       "originalPath": "assets/images/icons/block.svg",
       "type": "image",
       "usage": [
@@ -63,25 +45,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "block",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 319,
-        "y": 3,
-        "width": 150,
-        "height": 169
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "df6d625f9ea39783bcbfbc98edf501da614ae44f1afe66f53be37f5e8929c342",
+      "renderMode": "icon",
+      "alias": "block"
     },
     {
       "id": "icon.stun",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/stun.svg",
       "originalPath": "assets/images/icons/stun.svg",
       "type": "image",
       "usage": [
@@ -89,25 +62,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "stun",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 475,
-        "y": 3,
-        "width": 149,
-        "height": 169
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "715c29fe42eb4b57835ee7802711ae92aff3c183ff6b60e98ad0ac2afb3a9a7d",
+      "renderMode": "icon",
+      "alias": "stun"
     },
     {
       "id": "icon.treasure",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/treasure.svg",
       "originalPath": "assets/images/icons/treasure.svg",
       "type": "image",
       "usage": [
@@ -115,25 +79,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "treasure",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 630,
-        "y": 3,
-        "width": 151,
-        "height": 169
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "9bca5de3697978a6c1df68ea26b05990ddac5651264878a84f8a4cde5929517e",
+      "renderMode": "icon",
+      "alias": "treasure"
     },
     {
       "id": "icon.trap",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/trap.svg",
       "originalPath": "assets/images/icons/trap.svg",
       "type": "image",
       "usage": [
@@ -141,25 +96,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "trap",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 787,
-        "y": 3,
-        "width": 150,
-        "height": 169
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "225fd2c3c05f118708e8b236525adff45f482f7a3cd89a0c2cf4b924d71f631f",
+      "renderMode": "icon",
+      "alias": "trap"
     },
     {
       "id": "icon.well",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/well.svg",
       "originalPath": "assets/images/icons/well.svg",
       "type": "image",
       "usage": [
@@ -167,25 +113,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "well",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 943,
-        "y": 3,
-        "width": 146,
-        "height": 169
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "c42247162bc7a8c6e1d4c15cd7b5345a9f0e6b8fe1dd9c5aab971e816c08f5c4",
+      "renderMode": "icon",
+      "alias": "well"
     },
     {
       "id": "icon.beacon",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/beacon.svg",
       "originalPath": "assets/images/icons/beacon.svg",
       "type": "image",
       "usage": [
@@ -193,25 +130,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "beacon",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 1095,
-        "y": 3,
-        "width": 156,
-        "height": 169
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "8227968a56b6439fb3d0da338a9189f35d8e9d9122e6a304012166d20465e98b",
+      "renderMode": "icon",
+      "alias": "beacon"
     },
     {
       "id": "icon.recruit",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/recruit.svg",
       "originalPath": "assets/images/icons/recruit.svg",
       "type": "image",
       "usage": [
@@ -219,25 +147,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "recruit",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 3,
-        "y": 178,
-        "width": 154,
-        "height": 162
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "d1025a5d62e9487cd849794a45b98a10a47917e80bf7ff580840092dbd29cea1",
+      "renderMode": "icon",
+      "alias": "recruit"
     },
     {
       "id": "icon.stairs",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/stairs.svg",
       "originalPath": "assets/images/icons/stairs.svg",
       "type": "image",
       "usage": [
@@ -245,25 +164,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "stairs",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 163,
-        "y": 178,
-        "width": 149,
-        "height": 162
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "8193c819dbd27ccae8a182431a6201eec433a5f59ce2028d5e066030e134b05b",
+      "renderMode": "icon",
+      "alias": "stairs"
     },
     {
       "id": "icon.hero",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/hero.svg",
       "originalPath": "assets/images/icons/hero.svg",
       "type": "image",
       "usage": [
@@ -271,25 +181,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "hero",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 318,
-        "y": 178,
-        "width": 146,
-        "height": 162
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "44afadad6d6499900d7fa2506b70f14d1f4f1fa4de4e0ec50a4c9c689fc74728",
+      "renderMode": "icon",
+      "alias": "hero"
     },
     {
       "id": "icon.rogue",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/rogue.svg",
       "originalPath": "assets/images/icons/rogue.svg",
       "type": "image",
       "usage": [
@@ -297,25 +198,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "rogue",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 470,
-        "y": 178,
-        "width": 160,
-        "height": 162
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "3b2012381e98c336c215dfba76f95e09e6c94aea97c1e7c95f038147e19cc3fa",
+      "renderMode": "icon",
+      "alias": "rogue"
     },
     {
       "id": "icon.magic",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/magic.svg",
       "originalPath": "assets/images/icons/magic.svg",
       "type": "image",
       "usage": [
@@ -323,25 +215,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "magic",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 636,
-        "y": 178,
-        "width": 146,
-        "height": 162
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "793ddd452c5037658d66c572ecab94369d1c4718ad157e2689edfb51b8c982a2",
+      "renderMode": "icon",
+      "alias": "magic"
     },
     {
       "id": "icon.poison",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/poison.svg",
       "originalPath": "assets/images/icons/poison.svg",
       "type": "image",
       "usage": [
@@ -349,25 +232,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "poison",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 788,
-        "y": 178,
-        "width": 153,
-        "height": 162
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "f41d5d2ae1ccaeacc8a7e948696b40fb5a9fbd180bfe324abc84d1f504ee49bc",
+      "renderMode": "icon",
+      "alias": "poison"
     },
     {
       "id": "icon.flame",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/flame.svg",
       "originalPath": "assets/images/icons/flame.svg",
       "type": "image",
       "usage": [
@@ -375,25 +249,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "flame",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 947,
-        "y": 178,
-        "width": 146,
-        "height": 162
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "a01f00f7586d044706063c0a5b027fd7d3ba4fd8359bf2a95fed5b03e1b00621",
+      "renderMode": "icon",
+      "alias": "flame"
     },
     {
       "id": "icon.class",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/class.svg",
       "originalPath": "assets/images/icons/class.svg",
       "type": "image",
       "usage": [
@@ -401,25 +266,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "class",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 1099,
-        "y": 178,
-        "width": 152,
-        "height": 162
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "e02fc5099fd72b1f5e870dca0d6d712721c4eb76e691ef1922fda3a74dbaf4ea",
+      "renderMode": "icon",
+      "alias": "class"
     },
     {
       "id": "icon.blessing",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/blessing.svg",
       "originalPath": "assets/images/icons/blessing.svg",
       "type": "image",
       "usage": [
@@ -427,25 +283,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "blessing",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 3,
-        "y": 346,
-        "width": 152,
-        "height": 167
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "ec03ea49f2df2a2199e4166081ada54484ca6e7174737c4dab2c548c7c2df853",
+      "renderMode": "icon",
+      "alias": "blessing"
     },
     {
       "id": "icon.flurry",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/flurry.svg",
       "originalPath": "assets/images/icons/flurry.svg",
       "type": "image",
       "usage": [
@@ -453,25 +300,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "flurry",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 161,
-        "y": 346,
-        "width": 142,
-        "height": 167
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "410e421f84c12865708ce4fc5720c4b90df16b23cc372e12b9069e8cbf671e4d",
+      "renderMode": "icon",
+      "alias": "flurry"
     },
     {
       "id": "icon.mage",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/mage.svg",
       "originalPath": "assets/images/icons/mage.svg",
       "type": "image",
       "usage": [
@@ -479,25 +317,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "mage",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 309,
-        "y": 346,
-        "width": 158,
-        "height": 167
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "4d9288c8513160437ba3537270bc15af1c0bdd3c5448dca64254c644d3870e49",
+      "renderMode": "icon",
+      "alias": "mage"
     },
     {
       "id": "icon.healer",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/healer.svg",
       "originalPath": "assets/images/icons/healer.svg",
       "type": "image",
       "usage": [
@@ -505,25 +334,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "healer",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 473,
-        "y": 346,
-        "width": 152,
-        "height": 167
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "2378f58dc69a30f51f48db86c38d1a8631450535bc51c601ab02aec3013396f0",
+      "renderMode": "icon",
+      "alias": "healer"
     },
     {
       "id": "icon.skull",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/skull.svg",
       "originalPath": "assets/images/icons/skull.svg",
       "type": "image",
       "usage": [
@@ -531,25 +351,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "skull",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 631,
-        "y": 346,
-        "width": 150,
-        "height": 167
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "a4053224b24c1af489ad39b7413fa6f42a673f591e21b9368fbe38f1619d5cd9",
+      "renderMode": "icon",
+      "alias": "skull"
     },
     {
       "id": "icon.rat",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/rat.svg",
       "originalPath": "assets/images/icons/rat.svg",
       "type": "image",
       "usage": [
@@ -557,25 +368,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "rat",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 787,
-        "y": 346,
-        "width": 154,
-        "height": 167
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "40ae2b3a0bf806249a7eb0fe3665b99becd8ed45c2335a9d82a2d3f52d5e8b46",
+      "renderMode": "icon",
+      "alias": "rat"
     },
     {
       "id": "icon.ghost",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/ghost.svg",
       "originalPath": "assets/images/icons/ghost.svg",
       "type": "image",
       "usage": [
@@ -583,25 +385,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "ghost",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 947,
-        "y": 346,
-        "width": 140,
-        "height": 167
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "b0b689e84d4990f2da9ef09055779bed2b69ffdd0bbe1655195bae60dc537bf9",
+      "renderMode": "icon",
+      "alias": "ghost"
     },
     {
       "id": "icon.slime",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/slime.svg",
       "originalPath": "assets/images/icons/slime.svg",
       "type": "image",
       "usage": [
@@ -609,25 +402,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "slime",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 1093,
-        "y": 346,
-        "width": 158,
-        "height": 167
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "7cecda0153a32c1e298bfa3f56a2889e335767dd892e3ce8b85eb7ad48d42611",
+      "renderMode": "icon",
+      "alias": "slime"
     },
     {
       "id": "icon.bag",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/bag.svg",
       "originalPath": "assets/images/icons/bag.svg",
       "type": "image",
       "usage": [
@@ -635,25 +419,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "bag",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 3,
-        "y": 519,
-        "width": 153,
-        "height": 156
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "2fca8250d01fcc26168b91f9d7a773cf69b78ce53d32600267cd7de38b081a10",
+      "renderMode": "icon",
+      "alias": "bag"
     },
     {
       "id": "icon.bandage",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/bandage.svg",
       "originalPath": "assets/images/icons/bandage.svg",
       "type": "image",
       "usage": [
@@ -661,25 +436,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "bandage",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 162,
-        "y": 519,
-        "width": 148,
-        "height": 156
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "30529d051825c5d028d787d08b744e93a0c477d927665830e9e728661a0f1f89",
+      "renderMode": "icon",
+      "alias": "bandage"
     },
     {
       "id": "icon.antidote",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/antidote.svg",
       "originalPath": "assets/images/icons/antidote.svg",
       "type": "image",
       "usage": [
@@ -687,25 +453,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "antidote",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 316,
-        "y": 519,
-        "width": 153,
-        "height": 156
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "b21c5f2b1e610a45084a23dcd5e1c797b59ae62bbe1dca6398a420a1f46012d9",
+      "renderMode": "icon",
+      "alias": "antidote"
     },
     {
       "id": "icon.salve",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/salve.svg",
       "originalPath": "assets/images/icons/salve.svg",
       "type": "image",
       "usage": [
@@ -713,25 +470,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "salve",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 475,
-        "y": 519,
-        "width": 157,
-        "height": 156
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "91975acdec646c16853a635674839a7456ab511d51ded57bc3d0a41ed3c31623",
+      "renderMode": "icon",
+      "alias": "salve"
     },
     {
       "id": "icon.frost",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/frost.svg",
       "originalPath": "assets/images/icons/frost.svg",
       "type": "image",
       "usage": [
@@ -739,25 +487,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "frost",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 638,
-        "y": 519,
-        "width": 144,
-        "height": 156
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "9d33504279f6f8ea24c6b4b7e07608212458401733fe8a52f44277c5484014c8",
+      "renderMode": "icon",
+      "alias": "frost"
     },
     {
       "id": "icon.oil",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/oil.svg",
       "originalPath": "assets/images/icons/oil.svg",
       "type": "image",
       "usage": [
@@ -765,25 +504,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "oil",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 788,
-        "y": 519,
-        "width": 140,
-        "height": 156
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "e8eb30bc4644cd87a3896835960ef429141440121bcb219885338095cccf581e",
+      "renderMode": "icon",
+      "alias": "oil"
     },
     {
       "id": "icon.ration",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/ration.svg",
       "originalPath": "assets/images/icons/ration.svg",
       "type": "image",
       "usage": [
@@ -791,25 +521,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "ration",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 934,
-        "y": 519,
-        "width": 159,
-        "height": 156
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "8f5fa99c18bcb43aabb6a72541d591c7ad6326a0ccc4a63a4d97b0f748be4aa4",
+      "renderMode": "icon",
+      "alias": "ration"
     },
     {
       "id": "icon.chalk",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/chalk.svg",
       "originalPath": "assets/images/icons/chalk.svg",
       "type": "image",
       "usage": [
@@ -817,25 +538,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "chalk",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 1099,
-        "y": 519,
-        "width": 152,
-        "height": 156
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "3b7c177e68afa875041482f0f40eb21f0b56d5b5e0519a407bbafe135e94c273",
+      "renderMode": "icon",
+      "alias": "chalk"
     },
     {
       "id": "icon.potion",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/potion.svg",
       "originalPath": "assets/images/icons/potion.svg",
       "type": "image",
       "usage": [
@@ -843,25 +555,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "potion",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 3,
-        "y": 681,
-        "width": 154,
-        "height": 151
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "12a0a266510feed238e1fc3d111c7ac036fc50fa50d854cb9875c09ee353c7c3",
+      "renderMode": "icon",
+      "alias": "potion"
     },
     {
       "id": "icon.seed",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/seed.svg",
       "originalPath": "assets/images/icons/seed.svg",
       "type": "image",
       "usage": [
@@ -869,25 +572,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "seed",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 163,
-        "y": 681,
-        "width": 148,
-        "height": 151
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "a38865a36447b11704a35f8aac5aa0b77befb2253fa13214e92fcc5bd8a0fedb",
+      "renderMode": "icon",
+      "alias": "seed"
     },
     {
       "id": "icon.camp",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/camp.svg",
       "originalPath": "assets/images/icons/camp.svg",
       "type": "image",
       "usage": [
@@ -895,25 +589,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "camp",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 317,
-        "y": 681,
-        "width": 149,
-        "height": 151
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "2098871ef64c720fcceb76aca9b0d079760174bf6a20d183fd16cac65c4faf20",
+      "renderMode": "icon",
+      "alias": "camp"
     },
     {
       "id": "icon.eye",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/eye.svg",
       "originalPath": "assets/images/icons/eye.svg",
       "type": "image",
       "usage": [
@@ -921,25 +606,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "eye",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 472,
-        "y": 681,
-        "width": 151,
-        "height": 151
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "304b2d3a2839987864a83b992f68c3e31e140546965989afc54f7e7996e0f85c",
+      "renderMode": "icon",
+      "alias": "eye"
     },
     {
       "id": "icon.coin",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/coin.svg",
       "originalPath": "assets/images/icons/coin.svg",
       "type": "image",
       "usage": [
@@ -947,25 +623,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "coin",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 629,
-        "y": 681,
-        "width": 154,
-        "height": 151
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "befa2c9ef55c7a50488fa5ab7365ef535aebebcbc6f490736cdff747447b15ed",
+      "renderMode": "icon",
+      "alias": "coin"
     },
     {
       "id": "icon.point",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/point.svg",
       "originalPath": "assets/images/icons/point.svg",
       "type": "image",
       "usage": [
@@ -973,25 +640,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "point",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 789,
-        "y": 681,
-        "width": 151,
-        "height": 151
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "2a146433fab524e683158eda3347a0938d4a142daf6fa836ae44fe0047eb0daa",
+      "renderMode": "icon",
+      "alias": "point"
     },
     {
       "id": "icon.bomb",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/bomb.svg",
       "originalPath": "assets/images/icons/bomb.svg",
       "type": "image",
       "usage": [
@@ -999,25 +657,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "bomb",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 946,
-        "y": 681,
-        "width": 145,
-        "height": 151
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "073d1d454871573502dae0aa870d71eb97c24bed1c8b02e636b14f79c12e6da4",
+      "renderMode": "icon",
+      "alias": "bomb"
     },
     {
       "id": "icon.ward",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/ward.svg",
       "originalPath": "assets/images/icons/ward.svg",
       "type": "image",
       "usage": [
@@ -1025,25 +674,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "ward",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 1097,
-        "y": 681,
-        "width": 154,
-        "height": 151
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "1b37b1a9b2efc01111f368fd310163f1ad4a83562ac892ec85fde9364a03cb81",
+      "renderMode": "icon",
+      "alias": "ward"
     },
     {
       "id": "icon.safe",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/safe.svg",
       "originalPath": "assets/images/icons/safe.svg",
       "type": "image",
       "usage": [
@@ -1051,25 +691,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "safe",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 3,
-        "y": 838,
-        "width": 153,
-        "height": 150
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "fe571e218139105bf39977cf1a12435176e19312bed4fcd5958ec09997bdb93b",
+      "renderMode": "icon",
+      "alias": "safe"
     },
     {
       "id": "icon.miss",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/miss.svg",
       "originalPath": "assets/images/icons/miss.svg",
       "type": "image",
       "usage": [
@@ -1077,25 +708,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "miss",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 162,
-        "y": 838,
-        "width": 144,
-        "height": 150
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "76d35f2809905972ae5ecd5fdbdf8de5171e50b086ca109c9cde64dd2e24f8d2",
+      "renderMode": "icon",
+      "alias": "miss"
     },
     {
       "id": "icon.floor",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/floor.svg",
       "originalPath": "assets/images/icons/floor.svg",
       "type": "image",
       "usage": [
@@ -1103,25 +725,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "floor",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 312,
-        "y": 838,
-        "width": 158,
-        "height": 150
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "bbeef9fa8b914ae55760b9446ba0967deb8e2f026f7cba4f46cb59b66fbce284",
+      "renderMode": "icon",
+      "alias": "floor"
     },
     {
       "id": "icon.wall",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/wall.svg",
       "originalPath": "assets/images/icons/wall.svg",
       "type": "image",
       "usage": [
@@ -1129,25 +742,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "wall",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 476,
-        "y": 838,
-        "width": 147,
-        "height": 150
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "6f9305c4afbf391f461f502ab014982602159961b796da3730b25a0e6c822a97",
+      "renderMode": "icon",
+      "alias": "wall"
     },
     {
       "id": "icon.shop",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/shop.svg",
       "originalPath": "assets/images/icons/shop.svg",
       "type": "image",
       "usage": [
@@ -1155,25 +759,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "shop",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 629,
-        "y": 838,
-        "width": 154,
-        "height": 150
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "3eb14ca744d8b9c7c1786c896986f0217fe4a702eafa400a83563f8331601018",
+      "renderMode": "icon",
+      "alias": "shop"
     },
     {
       "id": "icon.artefact",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/artefact.svg",
       "originalPath": "assets/images/icons/artefact.svg",
       "type": "image",
       "usage": [
@@ -1181,25 +776,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "artefact",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 789,
-        "y": 838,
-        "width": 147,
-        "height": 150
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "d5f5c9d3290cad9fd5dc3ad4b4589b76e46afb2ea2cd4865e8a00b03345845ce",
+      "renderMode": "icon",
+      "alias": "artefact"
     },
     {
       "id": "icon.blank",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/blank.svg",
       "originalPath": "assets/images/icons/blank.svg",
       "type": "image",
       "usage": [
@@ -1207,25 +793,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "blank",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 942,
-        "y": 838,
-        "width": 150,
-        "height": 150
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "61e7f3c6ba74bb957b24932c2c49917b2eaf31058fa3c609d2371c70d9c4988a",
+      "renderMode": "icon",
+      "alias": "blank"
     },
     {
       "id": "icon.river",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/river.svg",
       "originalPath": "assets/images/icons/river.svg",
       "type": "image",
       "usage": [
@@ -1233,25 +810,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "river",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 1098,
-        "y": 838,
-        "width": 153,
-        "height": 150
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "b2066b6d32b97697bf218e30307905e16d1ecebac5381a6b8cb66873c61728fa",
+      "renderMode": "icon",
+      "alias": "river"
     },
     {
       "id": "icon.puddle",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/puddle.svg",
       "originalPath": "assets/images/icons/puddle.svg",
       "type": "image",
       "usage": [
@@ -1259,25 +827,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "puddle",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 3,
-        "y": 994,
-        "width": 173,
-        "height": 129
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "f30cc5704d6840fe333970ff565581a2bf051fb9755a1d5d6e53b957c54433ac",
+      "renderMode": "icon",
+      "alias": "puddle"
     },
     {
       "id": "icon.sound",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/sound.svg",
       "originalPath": "assets/images/icons/sound.svg",
       "type": "image",
       "usage": [
@@ -1285,25 +844,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "sound",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 182,
-        "y": 994,
-        "width": 130,
-        "height": 129
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "0a91ca2748e8eabced4b5330d74eb90b30116dbb23b1a65d8538679084a0fd33",
+      "renderMode": "icon",
+      "alias": "sound"
     },
     {
       "id": "icon.glimmer",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/glimmer.svg",
       "originalPath": "assets/images/icons/glimmer.svg",
       "type": "image",
       "usage": [
@@ -1311,25 +861,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "glimmer",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 318,
-        "y": 994,
-        "width": 147,
-        "height": 129
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "1a1fbf513565f3bbb2dbb24ecc202df4041c2059b0c6128730b14caf72dece6a",
+      "renderMode": "icon",
+      "alias": "glimmer"
     },
     {
       "id": "icon.water",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/water.svg",
       "originalPath": "assets/images/icons/water.svg",
       "type": "image",
       "usage": [
@@ -1337,25 +878,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "water",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 471,
-        "y": 994,
-        "width": 152,
-        "height": 129
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "b4e229e1516db30942d0cc010eaada0fd2ffae08d30c1155bd8efaca6c3ddef8",
+      "renderMode": "icon",
+      "alias": "water"
     },
     {
       "id": "icon.draft",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/draft.svg",
       "originalPath": "assets/images/icons/draft.svg",
       "type": "image",
       "usage": [
@@ -1363,25 +895,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "draft",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 629,
-        "y": 994,
-        "width": 146,
-        "height": 129
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "b12bb94db846073d005cb04bed187dfc5748b85f922b52938770843ddedbb35c",
+      "renderMode": "icon",
+      "alias": "draft"
     },
     {
       "id": "icon.bridge",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/bridge.svg",
       "originalPath": "assets/images/icons/bridge.svg",
       "type": "image",
       "usage": [
@@ -1389,25 +912,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "bridge",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 781,
-        "y": 994,
-        "width": 152,
-        "height": 129
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "e82311d5f2edc25f86b7edb6cc6b043683fb1410eb46b3594a15eb98ba6566a3",
+      "renderMode": "icon",
+      "alias": "bridge"
     },
     {
       "id": "icon.ruin",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/ruin.svg",
       "originalPath": "assets/images/icons/ruin.svg",
       "type": "image",
       "usage": [
@@ -1415,25 +929,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "ruin",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 939,
-        "y": 994,
-        "width": 155,
-        "height": 129
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "bd5560667adf579b3291c319bdc731e3f02ae08f4346cf6e9636ca57e655e9f6",
+      "renderMode": "icon",
+      "alias": "ruin"
     },
     {
       "id": "icon.stronghold",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/stronghold.svg",
       "originalPath": "assets/images/icons/stronghold.svg",
       "type": "image",
       "usage": [
@@ -1441,25 +946,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "stronghold",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 1100,
-        "y": 994,
-        "width": 151,
-        "height": 129
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "1c89546d4571a7f522c22178bdb4ec62322e9be45611658e56bd7d23020eca03",
+      "renderMode": "icon",
+      "alias": "stronghold"
     },
     {
       "id": "icon.rage",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/rage.svg",
       "originalPath": "assets/images/icons/rage.svg",
       "type": "image",
       "usage": [
@@ -1467,25 +963,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "rage",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 3,
-        "y": 1129,
-        "width": 147,
-        "height": 122
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "5ef3032ab96492f422f27d608f962f0682f429cb32a12c2b5f528f091b166b5b",
+      "renderMode": "icon",
+      "alias": "rage"
     },
     {
       "id": "icon.pursuer",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/icons/pursuer.svg",
       "originalPath": "assets/images/icons/pursuer.svg",
       "type": "image",
       "usage": [
@@ -1493,25 +980,16 @@
         "map markers",
         "slot symbols"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
-      "alias": "pursuer",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 156,
-        "y": 1129,
-        "width": 146,
-        "height": 122
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "facc25f82afa4e8b0374ef3f7263661ead7ad094684b7c0aa7ec7896e48b4f70",
+      "renderMode": "icon",
+      "alias": "pursuer"
     },
     {
       "id": "portrait.fighter",
-      "path": "assets/images/pencil/heroes.webp",
+      "path": "assets/images/portraits/fighter.svg",
       "originalPath": "assets/images/portraits/fighter.svg",
       "type": "sprite",
       "usage": [
@@ -1520,42 +998,17 @@
         "map token",
         "encounter introductions"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "609187e986c3a24e9f83ad2514391f0b95d1a16f2461819311fc8052f0165c49",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "b7004b37081be6ee2e6063737d0e032b174224f7a8517017d85d8c4c1662697d",
+      "renderMode": "procedural",
       "renderer": "portraitArt",
-      "alias": "fighter",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.heroes",
-        "x": 3,
-        "y": 3,
-        "width": 332,
-        "height": 417
-      },
-      "states": {
-        "bruised": {
-          "asset": "art.atlas.heroes",
-          "x": 3,
-          "y": 434,
-          "width": 343,
-          "height": 402
-        },
-        "wounded": {
-          "asset": "art.atlas.heroes",
-          "x": 3,
-          "y": 850,
-          "width": 343,
-          "height": 388
-        }
-      }
+      "alias": "fighter"
     },
     {
       "id": "portrait.healer",
-      "path": "assets/images/pencil/heroes.webp",
+      "path": "assets/images/portraits/healer.svg",
       "originalPath": "assets/images/portraits/healer.svg",
       "type": "sprite",
       "usage": [
@@ -1564,42 +1017,17 @@
         "map token",
         "encounter introductions"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "609187e986c3a24e9f83ad2514391f0b95d1a16f2461819311fc8052f0165c49",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "38b97ba279cdc9c013235a46cfeac752a00d3d1b4c1edecc70348a1cf98ef7a7",
+      "renderMode": "procedural",
       "renderer": "portraitArt",
-      "alias": "healer",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.heroes",
-        "x": 347,
-        "y": 3,
-        "width": 290,
-        "height": 417
-      },
-      "states": {
-        "bruised": {
-          "asset": "art.atlas.heroes",
-          "x": 359,
-          "y": 434,
-          "width": 286,
-          "height": 402
-        },
-        "wounded": {
-          "asset": "art.atlas.heroes",
-          "x": 360,
-          "y": 850,
-          "width": 277,
-          "height": 388
-        }
-      }
+      "alias": "healer"
     },
     {
       "id": "portrait.rogue",
-      "path": "assets/images/pencil/heroes.webp",
+      "path": "assets/images/portraits/rogue.svg",
       "originalPath": "assets/images/portraits/rogue.svg",
       "type": "sprite",
       "usage": [
@@ -1608,42 +1036,17 @@
         "map token",
         "encounter introductions"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "609187e986c3a24e9f83ad2514391f0b95d1a16f2461819311fc8052f0165c49",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "298e12241503950f0307b6cac341e1c2d44467b961b5c92896ced620714f0787",
+      "renderMode": "procedural",
       "renderer": "portraitArt",
-      "alias": "rogue",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.heroes",
-        "x": 655,
-        "y": 3,
-        "width": 272,
-        "height": 417
-      },
-      "states": {
-        "bruised": {
-          "asset": "art.atlas.heroes",
-          "x": 666,
-          "y": 434,
-          "width": 270,
-          "height": 402
-        },
-        "wounded": {
-          "asset": "art.atlas.heroes",
-          "x": 660,
-          "y": 850,
-          "width": 274,
-          "height": 388
-        }
-      }
+      "alias": "rogue"
     },
     {
       "id": "portrait.mage",
-      "path": "assets/images/pencil/heroes.webp",
+      "path": "assets/images/portraits/mage.svg",
       "originalPath": "assets/images/portraits/mage.svg",
       "type": "sprite",
       "usage": [
@@ -1652,42 +1055,17 @@
         "map token",
         "encounter introductions"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "609187e986c3a24e9f83ad2514391f0b95d1a16f2461819311fc8052f0165c49",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "af027f67a73184a0d61bb5e96009fbfdef9e0b6740a61a2558bab98f87e94da7",
+      "renderMode": "procedural",
       "renderer": "portraitArt",
-      "alias": "mage",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.heroes",
-        "x": 955,
-        "y": 3,
-        "width": 296,
-        "height": 417
-      },
-      "states": {
-        "bruised": {
-          "asset": "art.atlas.heroes",
-          "x": 956,
-          "y": 434,
-          "width": 295,
-          "height": 402
-        },
-        "wounded": {
-          "asset": "art.atlas.heroes",
-          "x": 956,
-          "y": 850,
-          "width": 295,
-          "height": 388
-        }
-      }
+      "alias": "mage"
     },
     {
       "id": "portrait.skull",
-      "path": "assets/images/pencil/enemies.webp",
+      "path": "assets/images/portraits/skull.svg",
       "originalPath": "assets/images/portraits/skull.svg",
       "type": "sprite",
       "usage": [
@@ -1696,35 +1074,17 @@
         "map token",
         "encounter introductions"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "98f41103a919344e991595d5a9c8bc5d9591821f95f42d3db8bf7801e1d81821",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "39217e6dc0994a8f2e6e329012f779ab15dd7c985efe5cdce9e7f5ca9d84ff0a",
+      "renderMode": "procedural",
       "renderer": "portraitArt",
-      "alias": "skull",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.enemies",
-        "x": 2,
-        "y": 2,
-        "width": 300,
-        "height": 312
-      },
-      "states": {
-        "wounded": {
-          "asset": "art.atlas.wounded",
-          "x": 0,
-          "y": 0,
-          "width": 310,
-          "height": 329
-        }
-      }
+      "alias": "skull"
     },
     {
       "id": "portrait.skeleton",
-      "path": "assets/images/pencil/enemies.webp",
+      "path": "assets/images/portraits/skeleton.svg",
       "originalPath": "assets/images/portraits/skeleton.svg",
       "type": "sprite",
       "usage": [
@@ -1733,35 +1093,17 @@
         "map token",
         "encounter introductions"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "98f41103a919344e991595d5a9c8bc5d9591821f95f42d3db8bf7801e1d81821",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "77dc8493d8db216378c93260653759d0e597780e3e8f811e71d4c54a28cac326",
+      "renderMode": "procedural",
       "renderer": "portraitArt",
-      "alias": "skeleton",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.enemies",
-        "x": 944,
-        "y": 930,
-        "width": 310,
-        "height": 324
-      },
-      "states": {
-        "wounded": {
-          "asset": "art.atlas.wounded",
-          "x": 948,
-          "y": 948,
-          "width": 306,
-          "height": 306
-        }
-      }
+      "alias": "skeleton"
     },
     {
       "id": "portrait.rat",
-      "path": "assets/images/pencil/enemies.webp",
+      "path": "assets/images/portraits/rat.svg",
       "originalPath": "assets/images/portraits/rat.svg",
       "type": "sprite",
       "usage": [
@@ -1770,35 +1112,17 @@
         "map token",
         "encounter introductions"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "98f41103a919344e991595d5a9c8bc5d9591821f95f42d3db8bf7801e1d81821",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "615b53fc70161bf55e56606420d354cb0b50caebbb30e713ac1d727eaf5d441c",
+      "renderMode": "procedural",
       "renderer": "portraitArt",
-      "alias": "rat",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.enemies",
-        "x": 305,
-        "y": 15,
-        "width": 329,
-        "height": 298
-      },
-      "states": {
-        "wounded": {
-          "asset": "art.atlas.wounded",
-          "x": 322,
-          "y": 30,
-          "width": 337,
-          "height": 298
-        }
-      }
+      "alias": "rat"
     },
     {
       "id": "portrait.ghost",
-      "path": "assets/images/pencil/enemies.webp",
+      "path": "assets/images/portraits/ghost.svg",
       "originalPath": "assets/images/portraits/ghost.svg",
       "type": "sprite",
       "usage": [
@@ -1807,35 +1131,17 @@
         "map token",
         "encounter introductions"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "98f41103a919344e991595d5a9c8bc5d9591821f95f42d3db8bf7801e1d81821",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "134c841a32658ed9af86477b39429c5c29756177b5b1322c0794ccf78eff4f8a",
+      "renderMode": "procedural",
       "renderer": "portraitArt",
-      "alias": "ghost",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.enemies",
-        "x": 639,
-        "y": 0,
-        "width": 297,
-        "height": 304
-      },
-      "states": {
-        "wounded": {
-          "asset": "art.atlas.wounded",
-          "x": 660,
-          "y": 0,
-          "width": 286,
-          "height": 332
-        }
-      }
+      "alias": "ghost"
     },
     {
       "id": "portrait.slime",
-      "path": "assets/images/pencil/enemies.webp",
+      "path": "assets/images/portraits/slime.svg",
       "originalPath": "assets/images/portraits/slime.svg",
       "type": "sprite",
       "usage": [
@@ -1844,35 +1150,17 @@
         "map token",
         "encounter introductions"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "98f41103a919344e991595d5a9c8bc5d9591821f95f42d3db8bf7801e1d81821",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "28eb3f6ff85d889e0de7e9d1b7bca0a2841a338c7d3f7b24d7e24795d28abfed",
+      "renderMode": "procedural",
       "renderer": "portraitArt",
-      "alias": "slime",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.enemies",
-        "x": 938,
-        "y": 0,
-        "width": 316,
-        "height": 314
-      },
-      "states": {
-        "wounded": {
-          "asset": "art.atlas.wounded",
-          "x": 946,
-          "y": 35,
-          "width": 308,
-          "height": 295
-        }
-      }
+      "alias": "slime"
     },
     {
       "id": "portrait.revenant",
-      "path": "assets/images/pencil/enemies.webp",
+      "path": "assets/images/portraits/revenant.svg",
       "originalPath": "assets/images/portraits/revenant.svg",
       "type": "sprite",
       "usage": [
@@ -1881,35 +1169,17 @@
         "map token",
         "encounter introductions"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "98f41103a919344e991595d5a9c8bc5d9591821f95f42d3db8bf7801e1d81821",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "7ca9a2668a5d61967d7b560c1bf437fed76a102d24be043d7c7e52757b75479e",
+      "renderMode": "procedural",
       "renderer": "portraitArt",
-      "alias": "revenant",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.enemies",
-        "x": 0,
-        "y": 319,
-        "width": 320,
-        "height": 309
-      },
-      "states": {
-        "wounded": {
-          "asset": "art.atlas.wounded",
-          "x": 0,
-          "y": 335,
-          "width": 342,
-          "height": 305
-        }
-      }
+      "alias": "revenant"
     },
     {
       "id": "portrait.demon",
-      "path": "assets/images/pencil/enemies.webp",
+      "path": "assets/images/portraits/demon.svg",
       "originalPath": "assets/images/portraits/demon.svg",
       "type": "sprite",
       "usage": [
@@ -1918,35 +1188,17 @@
         "map token",
         "encounter introductions"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "98f41103a919344e991595d5a9c8bc5d9591821f95f42d3db8bf7801e1d81821",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "268ebfe51dd582c197b7ee654f284e8280ca535f5edc11f100380af0890ab154",
+      "renderMode": "procedural",
       "renderer": "portraitArt",
-      "alias": "demon",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.enemies",
-        "x": 321,
-        "y": 318,
-        "width": 307,
-        "height": 317
-      },
-      "states": {
-        "wounded": {
-          "asset": "art.atlas.wounded",
-          "x": 342,
-          "y": 335,
-          "width": 293,
-          "height": 309
-        }
-      }
+      "alias": "demon"
     },
     {
       "id": "portrait.lich",
-      "path": "assets/images/pencil/enemies.webp",
+      "path": "assets/images/portraits/lich.svg",
       "originalPath": "assets/images/portraits/lich.svg",
       "type": "sprite",
       "usage": [
@@ -1955,35 +1207,17 @@
         "map token",
         "encounter introductions"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "98f41103a919344e991595d5a9c8bc5d9591821f95f42d3db8bf7801e1d81821",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "beaa2e6dc0f9b9654d1ae29b32a53509bd522a39de09524da3423ba53fb06108",
+      "renderMode": "procedural",
       "renderer": "portraitArt",
-      "alias": "lich",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.enemies",
-        "x": 635,
-        "y": 306,
-        "width": 295,
-        "height": 329
-      },
-      "states": {
-        "wounded": {
-          "asset": "art.atlas.wounded",
-          "x": 645,
-          "y": 335,
-          "width": 278,
-          "height": 307
-        }
-      }
+      "alias": "lich"
     },
     {
       "id": "portrait.abomination",
-      "path": "assets/images/pencil/enemies.webp",
+      "path": "assets/images/portraits/abomination.svg",
       "originalPath": "assets/images/portraits/abomination.svg",
       "type": "sprite",
       "usage": [
@@ -1992,35 +1226,17 @@
         "map token",
         "encounter introductions"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "98f41103a919344e991595d5a9c8bc5d9591821f95f42d3db8bf7801e1d81821",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "11a497d8cd380ceb0bbf648c3399b3d4c3f993dede9c9e96d18aa7f5d70f13f1",
+      "renderMode": "procedural",
       "renderer": "portraitArt",
-      "alias": "abomination",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.enemies",
-        "x": 936,
-        "y": 320,
-        "width": 318,
-        "height": 315
-      },
-      "states": {
-        "wounded": {
-          "asset": "art.atlas.wounded",
-          "x": 932,
-          "y": 336,
-          "width": 322,
-          "height": 311
-        }
-      }
+      "alias": "abomination"
     },
     {
       "id": "portrait.mimic",
-      "path": "assets/images/pencil/enemies.webp",
+      "path": "assets/images/portraits/mimic.svg",
       "originalPath": "assets/images/portraits/mimic.svg",
       "type": "sprite",
       "usage": [
@@ -2029,35 +1245,17 @@
         "map token",
         "encounter introductions"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "98f41103a919344e991595d5a9c8bc5d9591821f95f42d3db8bf7801e1d81821",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "a4c76852f5c08ceebb5774818ba6e4607d24e33264fbb4e26b569aa76866295a",
+      "renderMode": "procedural",
       "renderer": "portraitArt",
-      "alias": "mimic",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.enemies",
-        "x": 0,
-        "y": 636,
-        "width": 339,
-        "height": 284
-      },
-      "states": {
-        "wounded": {
-          "asset": "art.atlas.wounded",
-          "x": 0,
-          "y": 658,
-          "width": 339,
-          "height": 278
-        }
-      }
+      "alias": "mimic"
     },
     {
       "id": "portrait.gnawer",
-      "path": "assets/images/pencil/enemies.webp",
+      "path": "assets/images/portraits/gnawer.svg",
       "originalPath": "assets/images/portraits/gnawer.svg",
       "type": "sprite",
       "usage": [
@@ -2066,35 +1264,17 @@
         "map token",
         "encounter introductions"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "98f41103a919344e991595d5a9c8bc5d9591821f95f42d3db8bf7801e1d81821",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "310c5274b4a51e10c00fedba10b4b8a511b370d6421ef016a7265e87b1c3e3e4",
+      "renderMode": "procedural",
       "renderer": "portraitArt",
-      "alias": "gnawer",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.enemies",
-        "x": 342,
-        "y": 630,
-        "width": 263,
-        "height": 313
-      },
-      "states": {
-        "wounded": {
-          "asset": "art.atlas.wounded",
-          "x": 354,
-          "y": 646,
-          "width": 277,
-          "height": 297
-        }
-      }
+      "alias": "gnawer"
     },
     {
       "id": "portrait.bellkeeper",
-      "path": "assets/images/pencil/enemies.webp",
+      "path": "assets/images/portraits/bellkeeper.svg",
       "originalPath": "assets/images/portraits/bellkeeper.svg",
       "type": "sprite",
       "usage": [
@@ -2103,35 +1283,17 @@
         "map token",
         "encounter introductions"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "98f41103a919344e991595d5a9c8bc5d9591821f95f42d3db8bf7801e1d81821",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "225214f14b962fbde071d0834b6c2cf541f3aa82156031d825c2247596509b50",
+      "renderMode": "procedural",
       "renderer": "portraitArt",
-      "alias": "bellkeeper",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.enemies",
-        "x": 610,
-        "y": 632,
-        "width": 322,
-        "height": 292
-      },
-      "states": {
-        "wounded": {
-          "asset": "art.atlas.wounded",
-          "x": 632,
-          "y": 652,
-          "width": 314,
-          "height": 290
-        }
-      }
+      "alias": "bellkeeper"
     },
     {
       "id": "portrait.widow",
-      "path": "assets/images/pencil/enemies.webp",
+      "path": "assets/images/portraits/widow.svg",
       "originalPath": "assets/images/portraits/widow.svg",
       "type": "sprite",
       "usage": [
@@ -2140,35 +1302,17 @@
         "map token",
         "encounter introductions"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "98f41103a919344e991595d5a9c8bc5d9591821f95f42d3db8bf7801e1d81821",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "983ded5b981f6dae06bda3e4aea12c92c7a97086f9d3dbef156798b6c07d4970",
+      "renderMode": "procedural",
       "renderer": "portraitArt",
-      "alias": "widow",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.enemies",
-        "x": 944,
-        "y": 632,
-        "width": 310,
-        "height": 296
-      },
-      "states": {
-        "wounded": {
-          "asset": "art.atlas.wounded",
-          "x": 946,
-          "y": 685,
-          "width": 308,
-          "height": 262
-        }
-      }
+      "alias": "widow"
     },
     {
       "id": "portrait.oracle",
-      "path": "assets/images/pencil/enemies.webp",
+      "path": "assets/images/portraits/oracle.svg",
       "originalPath": "assets/images/portraits/oracle.svg",
       "type": "sprite",
       "usage": [
@@ -2177,35 +1321,17 @@
         "map token",
         "encounter introductions"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "98f41103a919344e991595d5a9c8bc5d9591821f95f42d3db8bf7801e1d81821",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "b4b259195d2ee4a56fad8a072a32827052bdb23ca937140b754aad85a142adc5",
+      "renderMode": "procedural",
       "renderer": "portraitArt",
-      "alias": "oracle",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.enemies",
-        "x": 0,
-        "y": 925,
-        "width": 310,
-        "height": 329
-      },
-      "states": {
-        "wounded": {
-          "asset": "art.atlas.wounded",
-          "x": 0,
-          "y": 937,
-          "width": 310,
-          "height": 317
-        }
-      }
+      "alias": "oracle"
     },
     {
       "id": "portrait.pageeater",
-      "path": "assets/images/pencil/enemies.webp",
+      "path": "assets/images/portraits/pageeater.svg",
       "originalPath": "assets/images/portraits/pageeater.svg",
       "type": "sprite",
       "usage": [
@@ -2214,35 +1340,17 @@
         "map token",
         "encounter introductions"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "98f41103a919344e991595d5a9c8bc5d9591821f95f42d3db8bf7801e1d81821",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "5360ff4152e5e8a41264652d6a48132af5496d93504032eea0112347df18698a",
+      "renderMode": "procedural",
       "renderer": "portraitArt",
-      "alias": "pageeater",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.enemies",
-        "x": 316,
-        "y": 944,
-        "width": 326,
-        "height": 310
-      },
-      "states": {
-        "wounded": {
-          "asset": "art.atlas.wounded",
-          "x": 316,
-          "y": 948,
-          "width": 326,
-          "height": 306
-        }
-      }
+      "alias": "pageeater"
     },
     {
       "id": "portrait.pursuer",
-      "path": "assets/images/pencil/enemies.webp",
+      "path": "assets/images/portraits/pursuer.svg",
       "originalPath": "assets/images/portraits/pursuer.svg",
       "type": "sprite",
       "usage": [
@@ -2251,35 +1359,17 @@
         "map token",
         "encounter introductions"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "98f41103a919344e991595d5a9c8bc5d9591821f95f42d3db8bf7801e1d81821",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "2a69847736b32998ee46bffe8d76253630c1809cdc19887dd4718b0cf866e283",
+      "renderMode": "procedural",
       "renderer": "portraitArt",
-      "alias": "pursuer",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.enemies",
-        "x": 643,
-        "y": 919,
-        "width": 286,
-        "height": 335
-      },
-      "states": {
-        "wounded": {
-          "asset": "art.atlas.wounded",
-          "x": 643,
-          "y": 940,
-          "width": 304,
-          "height": 314
-        }
-      }
+      "alias": "pursuer"
     },
     {
       "id": "corpse.fighter",
-      "path": "assets/images/pencil/corpses.webp",
+      "path": "assets/images/corpses/fighter.svg",
       "originalPath": "assets/images/corpses/fighter.svg",
       "type": "sprite",
       "usage": [
@@ -2287,26 +1377,17 @@
         "floor remains",
         "memorials"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "8f79855e2465ce455b70bb4a52ba00b6f6cbf92c1837e904dad5ddf495eb1987",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "331ac3c32d1bb52c68e2c6f352d1a1bd4bb0f94122e5760170850331e6ae6dbf",
+      "renderMode": "procedural",
       "renderer": "corpseArt",
-      "alias": "fighter",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.corpses",
-        "x": 10,
-        "y": 68,
-        "width": 323,
-        "height": 183
-      }
+      "alias": "fighter"
     },
     {
       "id": "corpse.healer",
-      "path": "assets/images/pencil/corpses.webp",
+      "path": "assets/images/corpses/healer.svg",
       "originalPath": "assets/images/corpses/healer.svg",
       "type": "sprite",
       "usage": [
@@ -2314,26 +1395,17 @@
         "floor remains",
         "memorials"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "8f79855e2465ce455b70bb4a52ba00b6f6cbf92c1837e904dad5ddf495eb1987",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "773da96127e8c53d011a84a8d58ceed4aa6814ef523ddfe185f860b3f6633bb3",
+      "renderMode": "procedural",
       "renderer": "corpseArt",
-      "alias": "healer",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.corpses",
-        "x": 337,
-        "y": 78,
-        "width": 291,
-        "height": 171
-      }
+      "alias": "healer"
     },
     {
       "id": "corpse.rogue",
-      "path": "assets/images/pencil/corpses.webp",
+      "path": "assets/images/corpses/rogue.svg",
       "originalPath": "assets/images/corpses/rogue.svg",
       "type": "sprite",
       "usage": [
@@ -2341,26 +1413,17 @@
         "floor remains",
         "memorials"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "8f79855e2465ce455b70bb4a52ba00b6f6cbf92c1837e904dad5ddf495eb1987",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "ac024f5378b15460377be9cea4a88e4849efe5b03b65d362e005111c3fa0d54c",
+      "renderMode": "procedural",
       "renderer": "corpseArt",
-      "alias": "rogue",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.corpses",
-        "x": 635,
-        "y": 85,
-        "width": 301,
-        "height": 148
-      }
+      "alias": "rogue"
     },
     {
       "id": "corpse.mage",
-      "path": "assets/images/pencil/corpses.webp",
+      "path": "assets/images/corpses/mage.svg",
       "originalPath": "assets/images/corpses/mage.svg",
       "type": "sprite",
       "usage": [
@@ -2368,26 +1431,17 @@
         "floor remains",
         "memorials"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "8f79855e2465ce455b70bb4a52ba00b6f6cbf92c1837e904dad5ddf495eb1987",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "9c6d7bf6fe44e12b045f3260efa2e1e887620510428e991256fb1169cdbfc847",
+      "renderMode": "procedural",
       "renderer": "corpseArt",
-      "alias": "mage",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.corpses",
-        "x": 944,
-        "y": 64,
-        "width": 310,
-        "height": 221
-      }
+      "alias": "mage"
     },
     {
       "id": "corpse.skull",
-      "path": "assets/images/pencil/corpses.webp",
+      "path": "assets/images/corpses/skull.svg",
       "originalPath": "assets/images/corpses/skull.svg",
       "type": "sprite",
       "usage": [
@@ -2395,26 +1449,17 @@
         "floor remains",
         "memorials"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "8f79855e2465ce455b70bb4a52ba00b6f6cbf92c1837e904dad5ddf495eb1987",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "c915028a00fd97d191f6577937e3dc73050fb93dd4a73f19d5b8e8500f997f25",
+      "renderMode": "procedural",
       "renderer": "corpseArt",
-      "alias": "skull",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.corpses",
-        "x": 0,
-        "y": 304,
-        "width": 352,
-        "height": 181
-      }
+      "alias": "skull"
     },
     {
       "id": "corpse.rat",
-      "path": "assets/images/pencil/corpses.webp",
+      "path": "assets/images/corpses/rat.svg",
       "originalPath": "assets/images/corpses/rat.svg",
       "type": "sprite",
       "usage": [
@@ -2422,26 +1467,17 @@
         "floor remains",
         "memorials"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "8f79855e2465ce455b70bb4a52ba00b6f6cbf92c1837e904dad5ddf495eb1987",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "d9e1abb270f83aa7a92523978613522c634fb21a3e09e4ce73bb873083a00bae",
+      "renderMode": "procedural",
       "renderer": "corpseArt",
-      "alias": "rat",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.corpses",
-        "x": 356,
-        "y": 312,
-        "width": 274,
-        "height": 178
-      }
+      "alias": "rat"
     },
     {
       "id": "corpse.ghost",
-      "path": "assets/images/pencil/corpses.webp",
+      "path": "assets/images/corpses/ghost.svg",
       "originalPath": "assets/images/corpses/ghost.svg",
       "type": "sprite",
       "usage": [
@@ -2449,26 +1485,17 @@
         "floor remains",
         "memorials"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "8f79855e2465ce455b70bb4a52ba00b6f6cbf92c1837e904dad5ddf495eb1987",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "bef0662a50fa1958db609953539417a8be81c7d304ebb190403fbff386af767a",
+      "renderMode": "procedural",
       "renderer": "corpseArt",
-      "alias": "ghost",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.corpses",
-        "x": 633,
-        "y": 278,
-        "width": 324,
-        "height": 239
-      }
+      "alias": "ghost"
     },
     {
       "id": "corpse.slime",
-      "path": "assets/images/pencil/corpses.webp",
+      "path": "assets/images/corpses/slime.svg",
       "originalPath": "assets/images/corpses/slime.svg",
       "type": "sprite",
       "usage": [
@@ -2476,26 +1503,17 @@
         "floor remains",
         "memorials"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "8f79855e2465ce455b70bb4a52ba00b6f6cbf92c1837e904dad5ddf495eb1987",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "886a5f4008d8876e2cdfc04b31c8a1c8e73e290039bf2d4152d32fc491831af7",
+      "renderMode": "procedural",
       "renderer": "corpseArt",
-      "alias": "slime",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.corpses",
-        "x": 965,
-        "y": 366,
-        "width": 289,
-        "height": 114
-      }
+      "alias": "slime"
     },
     {
       "id": "corpse.revenant",
-      "path": "assets/images/pencil/corpses.webp",
+      "path": "assets/images/corpses/revenant.svg",
       "originalPath": "assets/images/corpses/revenant.svg",
       "type": "sprite",
       "usage": [
@@ -2503,26 +1521,17 @@
         "floor remains",
         "memorials"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "8f79855e2465ce455b70bb4a52ba00b6f6cbf92c1837e904dad5ddf495eb1987",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "11f7c98750c8098014c2a460f05b141fb0aa858e3773e59de50f4d032ba0d796",
+      "renderMode": "procedural",
       "renderer": "corpseArt",
-      "alias": "revenant",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.corpses",
-        "x": 0,
-        "y": 543,
-        "width": 335,
-        "height": 201
-      }
+      "alias": "revenant"
     },
     {
       "id": "corpse.demon",
-      "path": "assets/images/pencil/corpses.webp",
+      "path": "assets/images/corpses/demon.svg",
       "originalPath": "assets/images/corpses/demon.svg",
       "type": "sprite",
       "usage": [
@@ -2530,26 +1539,17 @@
         "floor remains",
         "memorials"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "8f79855e2465ce455b70bb4a52ba00b6f6cbf92c1837e904dad5ddf495eb1987",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "0e232858e380f6d1aa365aca0aed2695ceb0b55693bf5c9b03548d6397a7e31a",
+      "renderMode": "procedural",
       "renderer": "corpseArt",
-      "alias": "demon",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.corpses",
-        "x": 345,
-        "y": 542,
-        "width": 287,
-        "height": 201
-      }
+      "alias": "demon"
     },
     {
       "id": "corpse.lich",
-      "path": "assets/images/pencil/corpses.webp",
+      "path": "assets/images/corpses/lich.svg",
       "originalPath": "assets/images/corpses/lich.svg",
       "type": "sprite",
       "usage": [
@@ -2557,26 +1557,17 @@
         "floor remains",
         "memorials"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "8f79855e2465ce455b70bb4a52ba00b6f6cbf92c1837e904dad5ddf495eb1987",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "e418e7829d7b9a8ea2476c46118ed90b74d74bd85ffcde8a8580fd919a83a465",
+      "renderMode": "procedural",
       "renderer": "corpseArt",
-      "alias": "lich",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.corpses",
-        "x": 641,
-        "y": 551,
-        "width": 302,
-        "height": 199
-      }
+      "alias": "lich"
     },
     {
       "id": "corpse.abomination",
-      "path": "assets/images/pencil/corpses.webp",
+      "path": "assets/images/corpses/abomination.svg",
       "originalPath": "assets/images/corpses/abomination.svg",
       "type": "sprite",
       "usage": [
@@ -2584,26 +1575,17 @@
         "floor remains",
         "memorials"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "8f79855e2465ce455b70bb4a52ba00b6f6cbf92c1837e904dad5ddf495eb1987",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "d01d733d64440db0e50538853e192387c20b51d617962b31e5d3db7f12a1e83b",
+      "renderMode": "procedural",
       "renderer": "corpseArt",
-      "alias": "abomination",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.corpses",
-        "x": 949,
-        "y": 555,
-        "width": 305,
-        "height": 183
-      }
+      "alias": "abomination"
     },
     {
       "id": "corpse.mimic",
-      "path": "assets/images/pencil/corpses.webp",
+      "path": "assets/images/corpses/mimic.svg",
       "originalPath": "assets/images/corpses/mimic.svg",
       "type": "sprite",
       "usage": [
@@ -2611,26 +1593,17 @@
         "floor remains",
         "memorials"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "8f79855e2465ce455b70bb4a52ba00b6f6cbf92c1837e904dad5ddf495eb1987",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "58fa91fc5a0421ae28a06c679e5ea8c47a247d882f5c89c3adc70b3f0dfce7dc",
+      "renderMode": "procedural",
       "renderer": "corpseArt",
-      "alias": "mimic",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.corpses",
-        "x": 0,
-        "y": 755,
-        "width": 339,
-        "height": 231
-      }
+      "alias": "mimic"
     },
     {
       "id": "corpse.gnawer",
-      "path": "assets/images/pencil/corpses.webp",
+      "path": "assets/images/corpses/gnawer.svg",
       "originalPath": "assets/images/corpses/gnawer.svg",
       "type": "sprite",
       "usage": [
@@ -2638,26 +1611,17 @@
         "floor remains",
         "memorials"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "8f79855e2465ce455b70bb4a52ba00b6f6cbf92c1837e904dad5ddf495eb1987",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "0e1f7c3c4ff80de028b35afa41eebb6a46a4b5e28de2bb8b483ae61c7c3e9d78",
+      "renderMode": "procedural",
       "renderer": "corpseArt",
-      "alias": "gnawer",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.corpses",
-        "x": 347,
-        "y": 756,
-        "width": 274,
-        "height": 207
-      }
+      "alias": "gnawer"
     },
     {
       "id": "corpse.bellkeeper",
-      "path": "assets/images/pencil/corpses.webp",
+      "path": "assets/images/corpses/bellkeeper.svg",
       "originalPath": "assets/images/corpses/bellkeeper.svg",
       "type": "sprite",
       "usage": [
@@ -2665,26 +1629,17 @@
         "floor remains",
         "memorials"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "8f79855e2465ce455b70bb4a52ba00b6f6cbf92c1837e904dad5ddf495eb1987",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "45644de327be8812cba6670ac6c1ab706ea289e40d2c0bc0f1c1e8c0bf36552b",
+      "renderMode": "procedural",
       "renderer": "corpseArt",
-      "alias": "bellkeeper",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.corpses",
-        "x": 628,
-        "y": 792,
-        "width": 323,
-        "height": 198
-      }
+      "alias": "bellkeeper"
     },
     {
       "id": "corpse.widow",
-      "path": "assets/images/pencil/corpses.webp",
+      "path": "assets/images/corpses/widow.svg",
       "originalPath": "assets/images/corpses/widow.svg",
       "type": "sprite",
       "usage": [
@@ -2692,26 +1647,17 @@
         "floor remains",
         "memorials"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "8f79855e2465ce455b70bb4a52ba00b6f6cbf92c1837e904dad5ddf495eb1987",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "545ec30e98b466fe1c95d1b6eb810fcb186ec1edaac1d37520eca32176081cf8",
+      "renderMode": "procedural",
       "renderer": "corpseArt",
-      "alias": "widow",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.corpses",
-        "x": 953,
-        "y": 785,
-        "width": 301,
-        "height": 205
-      }
+      "alias": "widow"
     },
     {
       "id": "corpse.oracle",
-      "path": "assets/images/pencil/corpses.webp",
+      "path": "assets/images/corpses/oracle.svg",
       "originalPath": "assets/images/corpses/oracle.svg",
       "type": "sprite",
       "usage": [
@@ -2719,26 +1665,17 @@
         "floor remains",
         "memorials"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "8f79855e2465ce455b70bb4a52ba00b6f6cbf92c1837e904dad5ddf495eb1987",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "abc11f4fb966c4c8c8ff40daaf64f638ff5beacd5b6f1e09dbfa1ebae970d083",
+      "renderMode": "procedural",
       "renderer": "corpseArt",
-      "alias": "oracle",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.corpses",
-        "x": 0,
-        "y": 1000,
-        "width": 337,
-        "height": 211
-      }
+      "alias": "oracle"
     },
     {
       "id": "corpse.pageeater",
-      "path": "assets/images/pencil/corpses.webp",
+      "path": "assets/images/corpses/pageeater.svg",
       "originalPath": "assets/images/corpses/pageeater.svg",
       "type": "sprite",
       "usage": [
@@ -2746,26 +1683,17 @@
         "floor remains",
         "memorials"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "8f79855e2465ce455b70bb4a52ba00b6f6cbf92c1837e904dad5ddf495eb1987",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "390c700eb0a80ba064c96f7f09db8289aecc965b01f478ba4bb61b0c74d8eb7d",
+      "renderMode": "procedural",
       "renderer": "corpseArt",
-      "alias": "pageeater",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.corpses",
-        "x": 342,
-        "y": 997,
-        "width": 296,
-        "height": 257
-      }
+      "alias": "pageeater"
     },
     {
       "id": "corpse.pursuer",
-      "path": "assets/images/pencil/corpses.webp",
+      "path": "assets/images/corpses/pursuer.svg",
       "originalPath": "assets/images/corpses/pursuer.svg",
       "type": "sprite",
       "usage": [
@@ -2773,147 +1701,93 @@
         "floor remains",
         "memorials"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "8f79855e2465ce455b70bb4a52ba00b6f6cbf92c1837e904dad5ddf495eb1987",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "86a420bf9d093a43917eafa51c182a0bbb0a8245a8c07ab0c9e783520cf3fcd1",
+      "renderMode": "procedural",
       "renderer": "corpseArt",
-      "alias": "pursuer",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.corpses",
-        "x": 646,
-        "y": 1016,
-        "width": 303,
-        "height": 205
-      }
+      "alias": "pursuer"
     },
     {
       "id": "floor.0",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/floors/0.svg",
       "originalPath": "assets/images/floors/0.svg",
       "type": "image",
       "usage": [
         "Quiet tile doodles"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "b3a74009ecf76af56e632d38a59ca245a83ed540e5471beb1d1418725b4e18d5",
+      "renderMode": "procedural",
       "renderer": "floorArt",
-      "alias": "0",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 308,
-        "y": 1129,
-        "width": 162,
-        "height": 122
-      }
+      "alias": "0"
     },
     {
       "id": "floor.1",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/floors/1.svg",
       "originalPath": "assets/images/floors/1.svg",
       "type": "image",
       "usage": [
         "Quiet tile doodles"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "e6fd5338be2e221c4c44452fb884c440408f777bd80b7a2aef74a1ba4c51a041",
+      "renderMode": "procedural",
       "renderer": "floorArt",
-      "alias": "1",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 476,
-        "y": 1129,
-        "width": 151,
-        "height": 122
-      }
+      "alias": "1"
     },
     {
       "id": "floor.2",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/floors/2.svg",
       "originalPath": "assets/images/floors/2.svg",
       "type": "image",
       "usage": [
         "Quiet tile doodles"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "6826b93eac5c33ed65c78d2e4578af9f9205fb229387b3ce08f658610e6a4b59",
+      "renderMode": "procedural",
       "renderer": "floorArt",
-      "alias": "2",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 633,
-        "y": 1129,
-        "width": 150,
-        "height": 122
-      }
+      "alias": "2"
     },
     {
       "id": "floor.3",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/floors/3.svg",
       "originalPath": "assets/images/floors/3.svg",
       "type": "image",
       "usage": [
         "Quiet tile doodles"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "42790498920822c0c2c1529e59ae8bf2599da94b462bf9cf3460ba9540cbf041",
+      "renderMode": "procedural",
       "renderer": "floorArt",
-      "alias": "3",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 789,
-        "y": 1129,
-        "width": 152,
-        "height": 122
-      }
+      "alias": "3"
     },
     {
       "id": "floor.4",
-      "path": "assets/images/pencil/icons.webp",
+      "path": "assets/images/floors/4.svg",
       "originalPath": "assets/images/floors/4.svg",
       "type": "image",
       "usage": [
         "Quiet tile doodles"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "atlas",
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "4632fb03ce77718340eeaf85e922cba04f1e282cb7927d0c57b4c5fc69ce58cb",
+      "renderMode": "procedural",
       "renderer": "floorArt",
-      "alias": "4",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.icons",
-        "x": 947,
-        "y": 1129,
-        "width": 148,
-        "height": 122
-      }
+      "alias": "4"
     },
     {
       "id": "font.notebook",
@@ -3269,209 +2143,48 @@
     },
     {
       "id": "trap.spikes",
-      "path": "assets/images/pencil/traps.webp",
+      "path": "assets/images/traps/spikes.svg",
       "originalPath": "assets/images/traps/spikes.svg",
       "type": "image",
       "usage": [
         "Animated trap encounter"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "57d9a1d0c4c44cd77f7a1becbace3629dba9c6cf49e7e7a4481e87045e527661",
-      "renderMode": "atlas",
-      "viewBox": "0 0 200 90",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.traps",
-        "x": 8,
-        "y": 8,
-        "width": 1008,
-        "height": 496
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "3e244c9a3701cd1ebeedfbcc8da65495585e013fe9170f609537385aed3b9806",
+      "renderMode": "procedural",
+      "viewBox": "0 0 200 90"
     },
     {
       "id": "trap.arrow",
-      "path": "assets/images/pencil/traps.webp",
+      "path": "assets/images/traps/arrow.svg",
       "originalPath": "assets/images/traps/arrow.svg",
       "type": "image",
       "usage": [
         "Animated trap encounter"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "57d9a1d0c4c44cd77f7a1becbace3629dba9c6cf49e7e7a4481e87045e527661",
-      "renderMode": "atlas",
-      "viewBox": "0 0 200 90",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.traps",
-        "x": 8,
-        "y": 520,
-        "width": 1008,
-        "height": 496
-      }
+      "replacementStatus": "placeholder",
+      "licence": "UNSPECIFIED-project-art",
+      "licenceFile": "assets/LICENCES.md",
+      "sha256": "74779ab8f2c90a6c2465bee9241dbb6621f6d947bf7ff55cd78f1a7cb540dcb1",
+      "renderMode": "procedural",
+      "viewBox": "0 0 200 90"
     },
     {
       "id": "trap.boulder",
-      "path": "assets/images/pencil/traps.webp",
+      "path": "assets/images/traps/boulder.svg",
       "originalPath": "assets/images/traps/boulder.svg",
       "type": "image",
       "usage": [
         "Animated trap encounter"
       ],
-      "replacementStatus": "replacement",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "57d9a1d0c4c44cd77f7a1becbace3629dba9c6cf49e7e7a4481e87045e527661",
-      "renderMode": "atlas",
-      "viewBox": "0 0 200 90",
-      "originalLicence": "UNSPECIFIED-project-art",
-      "originalLicenceFile": "assets/LICENCES.md",
-      "atlas": {
-        "asset": "art.atlas.traps",
-        "x": 8,
-        "y": 1032,
-        "width": 1008,
-        "height": 496
-      }
-    },
-    {
-      "id": "art.atlas.heroes",
-      "path": "assets/images/pencil/heroes.webp",
-      "originalPath": "assets/images/pencil/heroes.webp",
-      "type": "image",
-      "usage": [
-        "Pencil illustration sprite sheet",
-        "heroes"
-      ],
-      "replacementStatus": "generated",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "609187e986c3a24e9f83ad2514391f0b95d1a16f2461819311fc8052f0165c49",
-      "renderMode": "file",
-      "dimensions": [
-        1254,
-        1254
-      ],
-      "provenance": "OpenAI image generation, 2026-10-21; losslessly encoded for the game."
-    },
-    {
-      "id": "art.atlas.enemies",
-      "path": "assets/images/pencil/enemies.webp",
-      "originalPath": "assets/images/pencil/enemies.webp",
-      "type": "image",
-      "usage": [
-        "Pencil illustration sprite sheet",
-        "enemies"
-      ],
-      "replacementStatus": "generated",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "98f41103a919344e991595d5a9c8bc5d9591821f95f42d3db8bf7801e1d81821",
-      "renderMode": "file",
-      "dimensions": [
-        1254,
-        1254
-      ],
-      "provenance": "OpenAI image generation, 2026-10-21; losslessly encoded for the game."
-    },
-    {
-      "id": "art.atlas.wounded",
-      "path": "assets/images/pencil/enemies-wounded.webp",
-      "originalPath": "assets/images/pencil/enemies-wounded.webp",
-      "type": "image",
-      "usage": [
-        "Pencil illustration sprite sheet",
-        "wounded"
-      ],
-      "replacementStatus": "generated",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "3293a96bb7644d57c3b9ddfb6d491131c0fb52e7aef1b5b6d7b36cd3e572cb1f",
-      "renderMode": "file",
-      "dimensions": [
-        1254,
-        1254
-      ],
-      "provenance": "OpenAI image generation, 2026-10-21; losslessly encoded for the game."
-    },
-    {
-      "id": "art.atlas.icons",
-      "path": "assets/images/pencil/icons.webp",
-      "originalPath": "assets/images/pencil/icons.webp",
-      "type": "image",
-      "usage": [
-        "Pencil illustration sprite sheet",
-        "icons"
-      ],
-      "replacementStatus": "generated",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "781054fde36e8c9f26e8114233c505a4f8c4bc54eea81e1aa39d8f703aec0c50",
-      "renderMode": "file",
-      "dimensions": [
-        1254,
-        1254
-      ],
-      "provenance": "OpenAI image generation, 2026-10-21; losslessly encoded for the game."
-    },
-    {
-      "id": "art.atlas.corpses",
-      "path": "assets/images/pencil/corpses.webp",
-      "originalPath": "assets/images/pencil/corpses.webp",
-      "type": "image",
-      "usage": [
-        "Pencil illustration sprite sheet",
-        "corpses"
-      ],
-      "replacementStatus": "generated",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "8f79855e2465ce455b70bb4a52ba00b6f6cbf92c1837e904dad5ddf495eb1987",
-      "renderMode": "file",
-      "dimensions": [
-        1254,
-        1254
-      ],
-      "provenance": "OpenAI image generation, 2026-10-21; losslessly encoded for the game."
-    },
-    {
-      "id": "art.atlas.traps",
-      "path": "assets/images/pencil/traps.webp",
-      "originalPath": "assets/images/pencil/traps.webp",
-      "type": "image",
-      "usage": [
-        "Pencil illustration sprite sheet",
-        "traps"
-      ],
-      "replacementStatus": "generated",
-      "licence": "GENERATED-project-art",
-      "licenceFile": "assets/PENCIL-ART.md",
-      "sha256": "57d9a1d0c4c44cd77f7a1becbace3629dba9c6cf49e7e7a4481e87045e527661",
-      "renderMode": "file",
-      "dimensions": [
-        1024,
-        1536
-      ],
-      "provenance": "OpenAI image generation, 2026-10-21; losslessly encoded for the game."
-    },
-    {
-      "id": "texture.pencil.blackout",
-      "path": "assets/images/pencil/blackout.svg",
-      "originalPath": "assets/images/pencil/blackout.svg",
-      "type": "image",
-      "usage": [
-        "Layered pencil blackout on unexplored map cells"
-      ],
-      "replacementStatus": "original",
+      "replacementStatus": "placeholder",
       "licence": "UNSPECIFIED-project-art",
       "licenceFile": "assets/LICENCES.md",
-      "sha256": "7e5c728d89b6660570c4b76f10eb40bc9149787dd379c83936b7a4d0ea37ba15",
-      "renderMode": "file"
+      "sha256": "be40e7c15c7263cffb86ea47ee865d13ca5a2dc138045024f4dbb300b98c1b33",
+      "renderMode": "procedural",
+      "viewBox": "0 0 200 90"
     }
   ]
 }

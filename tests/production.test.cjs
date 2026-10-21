@@ -370,7 +370,7 @@ test("unsafe SVG and traversal replacements are rejected; basic hand-drawn SVG r
   );
 });
 
-test("manifest pencil art resolves through every wrapper and retains injury overlays", async (t) => {
+test("manifest replacement resolves through every art wrapper while retaining default dynamic injury art", async (t) => {
   const p = await page(t);
   assert.deepEqual(
     await p.evaluate(() => {
@@ -383,9 +383,7 @@ test("manifest pencil art resolves through every wrapper and retains injury over
       return {
         hurt: hurt.includes("injury-marks"),
         replacement: replacement.includes('data-asset="portrait.fighter"'),
-        url:
-          replacement.includes("blob:") &&
-          a.url.startsWith("data:image/webp;base64,"),
+        url: replacement.includes("data:image/svg+xml;base64,"),
       };
     }),
     { hurt: true, replacement: true, url: true },
@@ -400,111 +398,6 @@ test("manifest pencil art resolves through every wrapper and retains injury over
       return Production.errors;
     }),
     [],
-  );
-});
-
-test("pencil atlas frames select distinct injuries and corpses while sharing decoded image resources", async (t) => {
-  const p = await page(t);
-  assert.deepEqual(
-    await p.evaluate(async () => {
-      const parse = (markup) =>
-        new DOMParser().parseFromString(markup, "image/svg+xml")
-          .documentElement;
-      const hero = [44, 24, 3].map((hp) =>
-        parse(portraitArt("fighter", { hp, maxHp: 44 })),
-      );
-      const dead = parse(portraitArt("fighter", { hp: 0, maxHp: 44 }));
-      const enemy = [20, 1].map((hp) =>
-        parse(portraitArt("skull", { hp, maxHp: 20 })),
-      );
-      const icons = ["sword", "heal", "block", "blank"].map((name) =>
-        parse(icon(name)),
-      );
-      const sheets = [...Production.assets.entries.values()].filter((a) =>
-        a.id.startsWith("art.atlas."),
-      );
-      const dimensions = await Promise.all(
-        sheets.map(async (a) => {
-          const bitmap = await createImageBitmap(
-            new Blob(
-              [
-                Uint8Array.from(atob(a.url.split(",")[1]), (c) =>
-                  c.charCodeAt(0),
-                ),
-              ],
-              { type: a.mime },
-            ),
-          );
-          const matches =
-            bitmap.width === a.dimensions[0] &&
-            bitmap.height === a.dimensions[1];
-          bitmap.close();
-          return matches;
-        }),
-      );
-      return {
-        states: hero.map((e) => e.getAttribute("data-art-state")),
-        distinctFrames: new Set(hero.map((e) => e.getAttribute("viewBox")))
-          .size,
-        corpse: dead.getAttribute("data-corpse"),
-        sharedHeroes: new Set(
-          hero.map((e) => e.querySelector("image").getAttribute("href")),
-        ).size,
-        sharedIcons: new Set(
-          icons.map((e) => e.querySelector("image").getAttribute("href")),
-        ).size,
-        injuredEnemy:
-          enemy[0].querySelector("image").getAttribute("href") !==
-          enemy[1].querySelector("image").getAttribute("href"),
-        localResources: [...hero, ...icons, dead, ...enemy].every((e) =>
-          e.querySelector("image").getAttribute("href").startsWith("blob:"),
-        ),
-        dimensions,
-        clippedFrames: [...hero, ...icons, dead, ...enemy].every((e) => {
-          const clip = e.querySelector("clipPath"),
-            group = e.querySelector("g[clip-path]");
-          return (
-            clip && group.getAttribute("clip-path") === "url(#" + clip.id + ")"
-          );
-        }),
-        clipping: getComputedStyle(document.querySelector(".pencil-art"))
-          .overflow,
-      };
-    }),
-    {
-      states: ["steady", "bruised", "wounded"],
-      distinctFrames: 3,
-      corpse: "fighter",
-      sharedHeroes: 1,
-      sharedIcons: 1,
-      injuredEnemy: true,
-      localResources: true,
-      dimensions: [true, true, true, true, true, true],
-      clippedFrames: true,
-      clipping: "hidden",
-    },
-  );
-});
-
-test("pencil atlas validation rejects missing sheets and frames outside their bounds", () => {
-  const manifest = lib.readJSON("data/assets.json");
-  const missing = structuredClone(manifest);
-  missing.assets.find((a) => a.id === "icon.sword").atlas.asset = "art.missing";
-  assert.match(assets.validate(missing).errors.join(), /missing atlas sheet/);
-  const outside = structuredClone(manifest);
-  outside.assets.find((a) => a.id === "portrait.fighter").states.wounded.width =
-    9999;
-  assert.match(assets.validate(outside).errors.join(), /outside its sheet/);
-  const invalid = structuredClone(manifest);
-  invalid.assets.find((a) => a.id === "icon.blank").atlas.x = -1;
-  assert.match(assets.validate(invalid).errors.join(), /outside its sheet/);
-  const webp = sync.readFileSync(
-    path.join(ROOT, "assets/images/pencil/icons.webp"),
-  );
-  assert.equal(assets.inspect("icons.webp", webp), "image/webp");
-  assert.throws(
-    () => assets.inspect("icons.webp", Buffer.from("not a WebP")),
-    /invalid WebP/,
   );
 });
 
