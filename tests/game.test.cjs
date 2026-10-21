@@ -466,7 +466,11 @@ test("floor-one enemies attack every three actions and scale gradually to faster
     };
   });
   assert.equal(scaling.start, 3);
-  assert.equal(scaling.hp, 21);
+  assert.equal(
+    scaling.hp,
+    23,
+    "the selected skeletal warrior has its species health multiplier",
+  );
   assert.equal(scaling.dmg, 2);
   assert.ok(scaling.speed && scaling.strikes && scaling.health);
 });
@@ -1030,7 +1034,7 @@ test("save restores speed and artefacts and migrates the earlier Sunseed-era not
     localStorage.setItem("scratchpad-dungeon-v2", JSON.stringify(old));
   });
   await p.reload();
-  assert.equal(await p.evaluate(() => state.version), 10);
+  assert.equal(await p.evaluate(() => state.version), 11);
   assert.equal(await p.evaluate(() => state.speed), "skip");
   assert.equal(await p.evaluate(() => state.relic), undefined);
   assert.doesNotMatch(await p.locator("body").textContent(), /Sunseed/);
@@ -2388,6 +2392,8 @@ test("deep floors use new horror art and a rare stronghold boss guarantees an ar
   assert.equal(await p.locator("#enemy-art .horror-art").count(), 1);
   await p.evaluate(() => {
     beginEncounter(false, { elite: true });
+    // Isolate the stronghold reward here; second-form behaviour has its own test.
+    if (state.enemy.passive) state.enemy.passive.used = true;
     state.enemy.hp = 1;
     render();
   });
@@ -3120,7 +3126,7 @@ test("older saved fights migrate to the gentler curve without losing wounds or e
       face: state.party[0].reels[0][0].tier,
     })),
     {
-      version: 10,
+      version: 11,
       hp: 19,
       max: 37,
       damage: 3,
@@ -3706,7 +3712,7 @@ test("bag stacks matching items but limits types to three; overflow can replace 
   );
   await p.reload();
   assert.equal(await p.evaluate(() => state.bag.ration), 2);
-  assert.equal(await p.evaluate(() => Object.keys(ITEM_DEFS).length), 21);
+  assert.equal(await p.evaluate(() => Object.keys(ITEM_DEFS).length), 42);
 });
 
 test("full bag lets the player use a new item immediately, use an existing last item to free a pocket, or decline the find", async (t) => {
@@ -3809,7 +3815,7 @@ test("ten new consumables have usable effects and respect targets and combat res
     rage: 2,
     stunned: 1,
     poison: 5,
-    fire: 8,
+    fire: 10,
     ration: 15,
     prevented: true,
     chalk: 0,
@@ -4221,6 +4227,11 @@ test("final guardian death celebrates a complete living, fallen and retired rost
   ])
     assert.ok(text.includes(value), value);
   assert.ok(await p.evaluate(() => particles.length > 50));
+  assert.equal(
+    await p.locator(".fallen-roster .final-floor-record").count(),
+    1,
+    "final-floor details share the existing scrollable records so they do not shrink the whole phone UI",
+  );
   await p.setViewportSize({ width: 390, height: 844 });
   await panelFits(p, "#modal", ".modal-body", ".modal-flow", "#modal-title");
 });
@@ -4255,7 +4266,8 @@ test("pursuer moves only with footsteps, prefers revealed paths, hides in covere
       route: pursuerRoute(pos(8, 7), pos(1, 7)).length,
     };
   });
-  assert.equal(r.first, r.still);
+  assert.notEqual(r.first, r.still);
+  assert.notEqual(r.still, r.next);
   assert.notEqual(r.first, r.next);
   assert.equal(r.hidden, true);
   assert.equal(r.route, 7);
@@ -4840,7 +4852,7 @@ test("version-nine fights adopt the stronger enemy curve without changing hero w
         .map((f) => f.tier),
     })),
     {
-      version: 10,
+      version: 11,
       autoplay: false,
       heroHp: 17,
       face: 4,
@@ -4848,7 +4860,7 @@ test("version-nine fights adopt the stronger enemy curve without changing hero w
       damage: 10,
       strikes: 3,
       clock: 1,
-      tiers: [4, 4, 4, 4, 4, 4],
+      tiers: [4, 4, 4, 4, 4, 4, 4, 4, 4],
     },
   );
 });
@@ -5095,4 +5107,528 @@ test("autoplay resolves a full satchel, class equipment, revives and permanent d
   assert.equal(await p.evaluate(() => modalKind), "defeat");
   await p.waitForTimeout(400);
   assert.equal(await p.locator("#overlay").isVisible(), true);
+});
+
+test("decision rules price off-role upgrades and conversions consistently and preserve class seals", async (t) => {
+  const p = await game(t);
+  const data = await p.evaluate(() => {
+    const fighter = state.party[0],
+      healer = makeHero("Mira", "healer"),
+      mage = makeHero("Orin", "mage");
+    const face = { type: "heal", tier: 1 };
+    const prices = [
+      faceUpgradeCost(face, fighter),
+      faceUpgradeCost(face, healer),
+      faceUpgradeCost(face, mage),
+      faceUpgradeCost({ type: "attack", tier: 1 }, mage),
+    ];
+    fighter.points = 50;
+    fighter.reels[0] = [
+      { type: "heal", tier: 1 },
+      { type: "blank", tier: 1 },
+    ];
+    fighter.last[0] = { type: "heal", tier: 1 };
+    const before = fighter.points;
+    editFace("0,0,0", "upgrade");
+    const label = document.querySelector('[data-upgrade="0,0,0"]').textContent;
+    closeModal();
+    const cost = faceEditCost(fighter, 0, 1, "cycle");
+    applyFaceEdit(fighter, 0, 1, "cycle");
+    return {
+      prices,
+      spent: before - fighter.points,
+      tier: fighter.reels[0][0].tier,
+      label,
+      changeCost: cost,
+      newType: fighter.reels[0][1].type,
+      seals: fighter.reels.map(
+        (r) => r.filter((f) => f.type === "class").length,
+      ),
+    };
+  });
+  assert.deepEqual(data.prices, [8, 4, 5, 8]);
+  assert.equal(data.spent, 11);
+  assert.equal(data.tier, 2);
+  assert.ok(data.label.includes("18pt"));
+  assert.equal(data.changeCost, 3);
+  assert.deepEqual(data.seals, [0, 1, 0]);
+});
+
+test("decision rules spend real personal points on useful edits and equip only better matching gear", async (t) => {
+  const p = await game(t);
+  const r = await p.evaluate(async () => {
+    state.map.forEach((c) => {
+      c.seen = true;
+      c.event = null;
+    });
+    const h = state.party[0];
+    h.points = 28;
+    const before = autoUpgradeValue(h),
+      points = h.points;
+    const changed = autoUpgradeHero(h),
+      after = autoUpgradeValue(h);
+    state.party.push(makeHero("Mira", "healer"));
+    state.bag = { ironSignet: 1, glassRosary: 1 };
+    render();
+    await autoMaintainParty();
+    await autoMaintainParty();
+    return {
+      changed,
+      before,
+      after,
+      spent: points - h.points,
+      gear: state.party.map((h) => h.equipment),
+      duplicate: autoGearTarget("ironSignet"),
+      wrong: autoGearValue("starLens", h),
+      seals: h.reels.map((r) => r.filter((f) => f.type === "class").length),
+      bag: Object.keys(state.bag),
+    };
+  });
+  assert.ok(
+    r.changed > 0 && r.spent > 0 && r.spent <= 28 && r.after > r.before,
+  );
+  assert.deepEqual(r.gear, ["ironSignet", "glassRosary"]);
+  assert.equal(r.duplicate, -1);
+  assert.equal(r.wrong, 0);
+  assert.deepEqual(r.seals, [0, 1, 0]);
+  assert.deepEqual(r.bag, []);
+});
+
+test("decision rules pursue visible treasure, save an efficient well and return when wounded", async (t) => {
+  const p = await game(t);
+  await p.evaluate(blankFloor);
+  const r = await p.evaluate(() => {
+    state.map.forEach((c) => {
+      if (!c.wall) c.seen = true;
+    });
+    const treasure = pos(3, 7),
+      well = pos(2, 7),
+      stairs = pos(9, 7);
+    state.map[treasure].event = "treasure";
+    state.map[well].event = "well";
+    state.map[stairs].event = "stairs";
+    const h = state.party[0];
+    h.hp = h.maxHp - 1;
+    const healthy = autoplayGoal(),
+      declined = !autoNeedsWell();
+    state.map[treasure].event = null;
+    h.hp = 10;
+    const wounded = autoplayGoal();
+    state.bag = { potion: 1 };
+    const savePotion = autoItemPlan();
+    return { healthy, wounded, treasure, well, declined, savePotion };
+  });
+  assert.equal(r.healthy, r.treasure);
+  assert.equal(r.wounded, r.well);
+  assert.equal(r.declined, true);
+  // At critical HP supplies may be used before risking the walk to a well.
+  assert.equal(r.savePotion.type, "potion");
+});
+
+test("decision rules choose healing, damage and shielding from actual wheels instead of always reusing one class", async (t) => {
+  const p = await game(t);
+  const r = await p.evaluate(() => {
+    const damage = state.party[0],
+      heal = makeHero("Mira", "healer"),
+      shield = makeHero("Wren", "rogue");
+    state.party = [damage, heal, shield];
+    beginEncounter();
+    const set = (h, type, tier) => {
+      h.reels = [0, 1, 2].map(() => [{ type, tier }]);
+    };
+    set(damage, "attack", 1);
+    set(heal, "heal", 2);
+    set(shield, "block", 3);
+    state.enemy.hp = state.enemy.maxHp = 200;
+    state.enemy.countdown = 3;
+    state.enemy.damage = 10;
+    const pick = () =>
+      state.party
+        .slice()
+        .sort((a, b) => autoCombatScore(b) - autoCombatScore(a))[0].name;
+    const attack = pick();
+    damage.hp = 7;
+    const healing = pick();
+    damage.hp = damage.maxHp;
+    state.enemy.countdown = 1;
+    const protection = pick();
+    state.block = 100;
+    const protectedPick = pick();
+    heal.stun = 1;
+    damage.hp = 7;
+    const noStunned = pick() !== heal.name;
+    return {
+      attack,
+      healing,
+      protection,
+      protectedPick,
+      noStunned,
+      names: state.party.map((h) => h.name),
+    };
+  });
+  assert.equal(r.attack, r.names[0]);
+  assert.equal(r.healing, r.names[1]);
+  assert.equal(r.protection, r.names[2]);
+  assert.equal(r.protectedPick, r.names[0]);
+  assert.equal(r.noStunned, true);
+});
+
+test("decision rules use targeted emergency healing, antidotes, buffs and offensive supplies without wasting a tonic", async (t) => {
+  const p = await game(t);
+  const r = await p.evaluate(() => {
+    state.party.push(makeHero("Mira", "healer"));
+    beginEncounter();
+    state.enemy.hp = 200;
+    state.enemy.countdown = 1;
+    const h = state.party[1];
+    state.bag = { potion: 1 };
+    h.hp--;
+    const conserve = autoItemPlan();
+    h.hp = 4;
+    const emergency = autoItemPlan();
+    h.hp = h.maxHp;
+    h.poison = { turns: 5, damage: 2 };
+    state.bag = { antidote: 1 };
+    const poison = autoItemPlan();
+    h.poison = null;
+    state.bag = { oil: 1 };
+    const buff = autoItemPlan();
+    state.bag = { venom_3: 1 };
+    const venom = autoItemPlan();
+    state.enemy.poison = { turns: 5, damage: 2 };
+    const duplicate = autoItemPlan();
+    return { conserve, emergency, poison, buff, venom, duplicate };
+  });
+  assert.equal(r.conserve, null);
+  assert.equal(r.emergency.target, 1);
+  assert.equal(r.poison.target, 1);
+  assert.equal(r.buff.type, "oil");
+  assert.equal(r.venom.type, "venom_3");
+  assert.equal(r.duplicate, null);
+});
+
+test("fixed supply variants keep their acquired power across floors and deeper loot and shops offer better IDs", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await encounter(p);
+  const r = await p.evaluate(async () => {
+    const h = state.party[0],
+      e = state.enemy;
+    e.passive = null;
+    const hits = [];
+    for (const depth of [1, 10]) {
+      state.depth = depth;
+      const before = e.hp;
+      state.bag = { firebomb: 1 };
+      await useItem("firebomb");
+      hits.push(before - e.hp);
+    }
+    const better = lootItemForDepth("firebomb", 7),
+      before = e.hp;
+    state.bag = { [better]: 1 };
+    await useItem(better);
+    const power = before - e.hp;
+    state.enemy = null;
+    state.enemies = [];
+    state.depth = 7;
+    const types = lootFaces()
+      .filter((f) => ITEM_DEFS[f.type])
+      .map((f) => f.type);
+    state.bag = { potion_2: 1 };
+    h.hp = 1;
+    await useItem("potion_2");
+    return {
+      hits,
+      power,
+      better,
+      hp: h.hp,
+      base: ITEM_DEFS.firebomb.damage,
+      types,
+      quality: ITEM_DEFS[better].quality,
+    };
+  });
+  assert.deepEqual(r.hits, [10, 10]);
+  assert.equal(r.power, 23);
+  assert.equal(r.better, "firebomb_3");
+  assert.equal(r.hp, 25);
+  assert.equal(r.quality, 3);
+  assert.ok(r.types.includes("potion_3"));
+  assert.ok(!r.types.includes("potion"));
+});
+
+test("enemy identities have thematic wheels and health differences without losing final guardian top-tier multi-strikes", async (t) => {
+  const p = await game(t);
+  const r = await p.evaluate(() => {
+    const faces = (art) =>
+      enemyReels(art, 5)
+        .flat()
+        .map((f) => f.type);
+    return {
+      slime: enemyBalance(2, { species: "slime" }).maxHp,
+      ghost: enemyBalance(2, { species: "ghost" }).maxHp,
+      ghostFaces: faces("ghost"),
+      widow: faces("widow"),
+      slimeFaces: faces("slime"),
+      demon: faces("demon"),
+      boss: enemyBalance(10, { boss: true }),
+      final: enemyReels("lich", 10, { boss: true }).flat(),
+    };
+  });
+  assert.ok(r.slime > r.ghost * 1.5);
+  assert.ok(!r.ghostFaces.includes("attack"));
+  assert.ok(
+    r.widow.filter((t) => t === "poison").length >
+      r.widow.filter((t) => t === "attack").length,
+  );
+  assert.ok(r.slimeFaces.includes("heal") && r.slimeFaces.includes("block"));
+  assert.ok(r.demon.includes("stimulant"));
+  assert.equal(r.boss.strikes, 3);
+  assert.ok(
+    r.final.every(
+      (f) => f.tier === (["attack", "magic"].includes(f.type) ? 4 : 3),
+    ),
+  );
+});
+
+test("enemy passives heal once, resist hits, split once and summon only into a free second slot", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await encounter(p);
+  const r = await p.evaluate(() => {
+    const e = state.enemy;
+    state.depth = 8;
+    e.hp = e.maxHp = 100;
+    e.block = 0;
+    e.passive = { key: "secondWind", used: false, turns: 0 };
+    damageEnemy(75, "Test", e);
+    const healed = e.hp;
+    damageEnemy(25, "Test", e);
+    const onlyOnce = e.hp;
+    e.hp = 100;
+    e.passive = { key: "carapace" };
+    const armour = damageEnemy(10, "Test", e);
+    e.hp = e.maxHp = 100;
+    e.passive = { key: "split", used: false };
+    damageEnemy(1000, "Test", e);
+    const fragment = { hp: e.hp, small: e.fragment, name: e.name };
+    damageEnemy(1000, "Test", e);
+    const dead = e.hp;
+    e.hp = e.maxHp = 100;
+    e.fragment = false;
+    e.passive = { key: "summoner", turns: 0 };
+    tickEnemyPassive(e);
+    tickEnemyPassive(e);
+    const early = state.enemies.length;
+    tickEnemyPassive(e);
+    const called = state.enemies[1];
+    for (let i = 0; i < 6; i++) tickEnemyPassive(e);
+    const cap = state.enemies.length;
+    called.hp = 0;
+    tickEnemyPassive(e);
+    const reused = state.enemies.length;
+    return {
+      healed,
+      onlyOnce,
+      armour,
+      fragment,
+      dead,
+      early,
+      cap,
+      reused,
+      called: !!called.summoned,
+      alive: livingEnemies().length,
+    };
+  });
+  assert.equal(r.healed, 50);
+  assert.equal(r.onlyOnce, 25);
+  assert.equal(r.armour, 8);
+  assert.equal(r.fragment.hp, 35);
+  assert.equal(r.fragment.small, true);
+  assert.equal(r.dead, 0);
+  assert.equal(r.early, 1);
+  assert.equal(r.called, true);
+  assert.equal(r.cap, 2);
+  assert.equal(r.reused, 2);
+  assert.equal(r.alive, 2);
+});
+
+test("combat cleanup clears stun, grace, poison and buffs including their portrait badges", async (t) => {
+  const p = await game(t);
+  await encounter(p);
+  const r = await p.evaluate(() => {
+    const all = [state.party[0], state.enemy];
+    for (const h of all) {
+      h.stun = 2;
+      h.stunGrace = 1;
+      h.poison = { turns: 4, damage: 1 };
+      h.rage = 3;
+      h.stimulant = { turns: 3, power: 2 };
+    }
+    render();
+    clearBattleStatuses();
+    return {
+      clear: all.every(
+        (h) => !h.stun && !h.stunGrace && !h.poison && !h.rage && !h.stimulant,
+      ),
+      badges: document.querySelectorAll(".poison-badge,.buff-badge,.rage-badge")
+        .length,
+      text: document.querySelector("#hero-0 .injury").textContent,
+    };
+  });
+  assert.equal(r.clear, true);
+  assert.equal(r.badges, 0);
+  assert.notEqual(r.text, "stunned");
+});
+
+test("the pursuer advances for every actual tile of a long movement", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await p.evaluate(async () => {
+    newRun();
+    setPace("skip");
+    state.depth = 4;
+    state.map.forEach((c, i) => {
+      const x = i % W,
+        y = Math.floor(i / W);
+      c.wall = x === 0 || y === 0 || x === W - 1 || y === H - 1;
+      c.seen = true;
+      c.event = null;
+      c.feature = null;
+      c.room = null;
+      c.fogged = false;
+    });
+    minorTravelEvent = async () => false;
+    state.pursuerSpawned = true;
+    state.pursuer = { position: pos(9, 1), beat: 0 };
+    render();
+    await move(pos(5, 7));
+  });
+  assert.equal(await p.evaluate(() => state.steps), 4);
+  assert.equal(await p.evaluate(() => state.pursuer.beat), 4);
+  assert.equal(
+    await p.evaluate(
+      () =>
+        Math.abs((state.pursuer.position % W) - 9) +
+        Math.abs(Math.floor(state.pursuer.position / W) - 1),
+    ),
+    4,
+  );
+});
+
+test("floor clear fanfare waits for confirmation and records this floor's statistics only once", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await startEval(
+    p,
+    `state.steps=12;state.battlesWon=3;state.gold=42;state.party[0].stats.damageDealt=70;state.party[0].stats.xpEarned=18;celebrateFloorClear()`,
+  );
+  await p.waitForSelector("#stage-confirm");
+  assert.ok(
+    (await p.locator("#stage-title").textContent()).includes("FLOOR 1 CLEARED"),
+  );
+  assert.ok((await p.locator(".floor-summary").textContent()).includes("70"));
+  await p.waitForTimeout(400);
+  assert.equal(await p.locator("#spotlight").isVisible(), true);
+  assert.ok(await p.evaluate(() => particles.length > 0));
+  await p.locator("#stage-confirm").click();
+  await p.evaluate(() => testAction);
+  assert.equal(await p.evaluate(() => state.floorClears.length), 1);
+  assert.equal(await p.evaluate(() => recordFloorClear().xp), 18);
+  assert.equal(await p.evaluate(() => state.floorClears.length), 1);
+});
+
+test("Autofight confirms its own ink bomb roll even when exploration autoplay is off", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await encounter(p, { hp: 300, countdown: 1 });
+  await p.evaluate(() => {
+    state.bag = { bomb: 1 };
+    state.autoplay = false;
+    state.autoresolve = true;
+    state.lastAutoItemAction = -10;
+    state.party[0].hp = state.party[0].maxHp = 1000;
+  });
+  await p.waitForFunction(() => state.lastItemRoll?.type === "bomb", null, {
+    timeout: 15000,
+  });
+  await p.waitForFunction(() => document.querySelector("#spotlight").hidden);
+  await p.evaluate(() => setAutoresolve(false));
+  await finish(p);
+  assert.equal(await p.evaluate(() => state.bag.bomb || 0), 0);
+  assert.equal(await p.evaluate(() => state.party[0].stats.itemsUsed), 1);
+});
+
+test("autoplay shops for needed healing and a map, claims better full-bag supplies and can replace a duplicate role", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await p.evaluate(() => {
+    busy = true;
+    state.party[0].hp = 7;
+    state.gold = 75;
+    setAutoplay(true);
+    window.shopping = shopEncounter({ shop: { heal: 1, reveal: 1 } });
+  });
+  await p.evaluate(() => shopping);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 44);
+  assert.equal(await p.evaluate(() => state.gold), 27);
+  assert.equal(await p.evaluate(() => state.exitFound), true);
+  await p.evaluate(async () => {
+    state.bag = { potion: 1, ward: 1, antidote: 1 };
+    state.pendingItems = [{ type: "potion_3", count: 1 }];
+    await processPendingItems();
+  });
+  assert.equal(await p.evaluate(() => state.bag.potion_3), 1);
+  assert.equal(await p.evaluate(() => Object.keys(state.bag).length), 3);
+  const replacement = await p.evaluate(() => {
+    state.party = [
+      makeHero("A", "fighter"),
+      makeHero("B", "fighter"),
+      makeHero("C", "fighter"),
+    ];
+    recruitOffer = makeHero("Mira", "healer");
+    const wanted = autoReplacement();
+    recruitOffer = makeHero("D", "fighter");
+    const declined = autoReplacement();
+    recruitOffer = null;
+    return { wanted, declined };
+  });
+  assert.ok(replacement.wanted >= 0);
+  assert.equal(replacement.declined, -1);
+  await p.evaluate(() => {
+    setAutoplay(false);
+    busy = false;
+  });
+});
+
+test("summoned allies keep combat active and do not lose a defeated guardian's floor-clear reward", async (t) => {
+  const p = await game(t, { auto: true });
+  await fast(p);
+  await p.evaluate(() => {
+    state.depth = 5;
+    state.floorStart = floorSnapshot();
+    beginEncounter(true, { stairBoss: true });
+    const boss = state.enemy;
+    boss.hp = 1;
+    boss.block = 0;
+    boss.passive = { key: "summoner", turns: 2 };
+    tickEnemyPassive(boss);
+    const ally = state.enemies[1];
+    ally.hp = 2;
+    ally.block = 0;
+    ally.countdown = 20;
+    boss.countdown = 20;
+    state.party[0].reels = [
+      [{ type: "attack", tier: 1 }],
+      [{ type: "block", tier: 1 }],
+      [{ type: "blank", tier: 1 }],
+    ];
+    render();
+  });
+  await p.evaluate(() => spin(0));
+  assert.equal(await p.evaluate(() => !!state.enemy), true);
+  assert.equal(await p.evaluate(() => state.floorBossDefeated), false);
+  await p.evaluate(() => spin(0));
+  assert.equal(await p.evaluate(() => state.enemy), null);
+  assert.equal(await p.evaluate(() => state.floorBossDefeated), true);
+  assert.equal(await p.evaluate(() => state.floorClears[0].depth), 5);
 });

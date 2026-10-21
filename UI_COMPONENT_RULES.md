@@ -100,3 +100,26 @@ meaningful `icon(id)` illustration.
 
 The supplied visual reference remains the authority. A new component should
 look like another part of the same drawn notebook, not a separate application.
+
+## Combat feedback and floor summaries
+
+- Keep the full `.lever` button inside the hero's reserved machine/caption row.
+  Its SVG animation must not move the hitbox. EXP follows the whole machine,
+  including that hitbox, and the edit row stays inside the fixed hero card.
+- Use `.low-health` / `.critical-health`, `.poisoned`, `.stunned` and the existing
+  roll/status hooks on the whole hero card. Damage/heal/roll pulses use
+  `partyCardFeedback()` without changing card size. Critical HP flashes red;
+  poison is purple via `--poison` and `--poison-wash`, with a labelled badge.
+- Rivers use `--water-ink` / `--water-wash` while retaining their blocked mark.
+  Never tint a hidden tile based on its concealed terrain.
+- Stronger supplies have a full name for decisions and a concise `shortName`
+  for three fixed bag pockets. Two name lines and one effect line are reserved;
+  don't hide clipping with overflow rules. Full effects remain in the tooltip
+  and bag/event views. Check Masterwork names on 320px and 390px screens.
+- Enemy traits occupy the existing machine-title row. Use a short label plus
+  the description tooltip, without pushing health/clocks/reels into targeting.
+- Floor-clear results use `.floor-summary`, a fixed three-column statistic
+  pattern with actual labels and values. Fanfare never replaces the confirm
+  button or automatically dismisses the result in manual play. Final victory
+  retains the full roster and appends final-floor statistics inside its existing
+  scrollable records; don't compress all adventurer text to fit an extra grid.

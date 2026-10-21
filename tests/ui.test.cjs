@@ -349,7 +349,7 @@ test("paired encounters, party labels, satchel pockets and log fit desktop and c
     state.party[1].hp = 5;
     state.depth = 6;
     beginEncounter(false, { count: 2 });
-    state.bag = { potion: 2, bomb: 1, ward: 1 };
+    state.bag = { potion_4: 2, bomb_3: 1, firebomb_4: 1 };
     state.enemies[0].name = "Chainbound revenant";
     state.enemies[1].name = "Blind bellkeeper";
     render();
@@ -375,6 +375,20 @@ test("paired encounters, party labels, satchel pockets and log fit desktop and c
         pockets: [
           ...document.querySelectorAll(".inventory-items button"),
         ].every((el) => box(el).bottom <= inventory.bottom + 1),
+        pocketText: [
+          ...document.querySelectorAll(
+            ".inventory-items button > span, .inventory-items button small",
+          ),
+        ].every((el) => {
+          const parent = box(el.closest("button")),
+            text = box(el);
+          return (
+            text.top >= parent.top &&
+            text.bottom <= parent.bottom &&
+            text.left >= parent.left &&
+            text.right <= parent.right
+          );
+        }),
         enemies: [
           ...document.querySelectorAll(".enemy-box .machine-shell"),
         ].every((el) => box(el).bottom < targets.top),
@@ -390,11 +404,15 @@ test("paired encounters, party labels, satchel pockets and log fit desktop and c
           (el) => {
             const hp = box(el.querySelector(".hp-bar")),
               reel = box(el.querySelector(".machine-face")),
-              xp = box(el.querySelector(".healthbar.exp"));
+              xp = box(el.querySelector(".healthbar.exp")),
+              lever = box(el.querySelector(".lever")),
+              edit = box(el.querySelector(".edit-line"));
             return (
               hp.height >= 5 &&
               hp.bottom <= reel.top &&
               xp.top >= reel.bottom &&
+              xp.top >= lever.bottom &&
+              edit.bottom <= box(el).bottom + 1 &&
               Math.abs(hp.left - reel.left) < 1 &&
               Math.abs(hp.right - reel.right) < 1
             );
@@ -407,6 +425,7 @@ test("paired encounters, party labels, satchel pockets and log fit desktop and c
       metrics.width <= width &&
         (width < 1260 || metrics.height <= height + 1) &&
         metrics.pockets &&
+        metrics.pocketText &&
         metrics.enemies &&
         metrics.titles &&
         metrics.classes &&

@@ -140,6 +140,67 @@ const output = path.join(root, "test-results/ui-review");
       await window.reviewLoot;
       Math.random = window.reviewRandom;
     });
+    await page.evaluate(() => {
+      state.party.push(
+        makeHero("Mira", "healer"),
+        makeHero("Alden", "fighter"),
+      );
+      state.depth = 8;
+      state.floorStart = floorSnapshot();
+      beginEncounter(false, { count: 2 });
+      state.enemies[0].passive = { key: "summoner", turns: 1 };
+      state.enemies[1].passive = { key: "carapace" };
+      state.party[1].hp = 6;
+      state.party[1].poison = { turns: 4, damage: 1 };
+      state.party[2].stun = 1;
+      state.bag = { potion_3: 1, bomb_3: 1, firebomb_3: 1 };
+      for (const i of [pos(7, 5), pos(8, 5), pos(9, 5)])
+        Object.assign(state.map[i], {
+          wall: true,
+          seen: true,
+          terrain: "river",
+          event: null,
+          feature: null,
+        });
+      render();
+      particles = [];
+    });
+    await shot("12-status-and-passives");
+    await page.evaluate(() => setPalette("dark"));
+    await shot("13-status-dark");
+    await page.evaluate(() => {
+      setPalette("default");
+      clearBattleStatuses();
+      state.enemy = null;
+      state.enemies = [];
+      state.steps = 42;
+      state.battlesWon = 5;
+      state.gold = 90;
+      state.party[0].stats.damageDealt = 185;
+      state.party[0].stats.xpEarned = 70;
+      state.floorStart.depth = 8;
+      window.reviewClear = celebrateFloorClear();
+    });
+    await page.waitForSelector("#stage-confirm");
+    await shot("14-floor-clear");
+    await page.setViewportSize({ width: 390, height: 844 });
+    await shot("15-floor-clear-mobile");
+    await page.locator("#stage-confirm").click();
+    await page.evaluate(() => window.reviewClear);
+    await page.setViewportSize({ width: 1920, height: 1080 });
+    await page.evaluate(() => {
+      state.depth = 10;
+      state.floorStart = floorSnapshot();
+      state.steps += 22;
+      state.battlesWon += 4;
+      state.party[0].stats.damageDealt += 240;
+      finishVictory();
+    });
+    await shot("16-victory-records");
+    await page.setViewportSize({ width: 390, height: 844 });
+    await shot("17-victory-mobile");
+    await page.evaluate(() => closeModal());
+    await page.setViewportSize({ width: 1920, height: 1080 });
     const download = page.waitForEvent("download");
     await page.locator("#download").click();
     await (

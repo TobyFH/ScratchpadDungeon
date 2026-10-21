@@ -188,3 +188,12 @@ reference; passing geometry tests cannot prove the artistic match.
 A useful future request is: **“Add [feature] using UI_STYLE_GUIDE.md and
 UI_COMPONENT_RULES.md. Reuse the existing pencil primitives, preserve game rules,
 and include desktop, compact-screen and relevant dialog screenshots.”**
+
+## Functional combat colour additions
+
+Purple (`--poison`, `--poison-wash`) exclusively identifies poison. Blue
+(`--water-ink`, `--water-wash`) lightly tints impassable river water. Both have
+explicit dark-palette counterparts and preserve graphite linework. Low health
+uses the existing danger red; active rolling uses a faint gold card wash.
+These are gameplay cues, not a broader decorative palette. Keep HP numbers,
+injury/status labels, shield indicators and the river's blocked symbol.

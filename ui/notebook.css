@@ -1569,3 +1569,178 @@ body[data-palette="dark"] .pencil-scan image {
     transition: none;
   }
 }
+
+/* Functional colour remains restrained: blue is impassable water, purple poison. */
+:root {
+  --poison: #79528d;
+  --poison-wash: #9666b622;
+  --water-ink: #527a8d;
+  --water-wash: #a6c4cc55;
+}
+body[data-palette="dark"] {
+  --poison: #d1a0e7;
+  --poison-wash: #b185c52b;
+  --water-ink: #a3c9d9;
+  --water-wash: #688da43b;
+}
+.tile.river,
+.tile.water-block {
+  color: var(--water-ink);
+  background:
+    linear-gradient(var(--water-wash), var(--water-wash)), var(--paper-shade);
+}
+.tile.river > svg {
+  color: var(--water-ink);
+}
+.tile.water-block .terrain-stop {
+  color: var(--water-ink);
+  border-color: var(--water-ink);
+}
+
+/* The lever used to extend 20px below its intended row and into EXP.
+ * Reserve its entire stationary hitbox inside the reel casing + caption. */
+.hero .machine-shell > .lever {
+  top: 0;
+  bottom: auto;
+  height: 74px;
+}
+.hero .bars {
+  width: calc(100% - var(--ui-hero-reel-inset));
+  margin-top: 5px;
+}
+.hero.low-health {
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--red) 45%, transparent);
+}
+.hero.low-health .portrait {
+  background: color-mix(in srgb, var(--red) 10%, var(--paper));
+}
+.hero.critical-health .portrait {
+  outline: 2px solid var(--red);
+  outline-offset: -2px;
+}
+.hero .healthbar.critical > i {
+  animation: notebook-critical-hp 1s ease-in-out infinite;
+}
+.hero:has(.machine-shell.rolling) {
+  background: color-mix(in srgb, var(--gold) 12%, var(--paper));
+  box-shadow: inset 0 0 0 2px var(--gold);
+}
+.hero.poisoned {
+  box-shadow: inset 0 0 0 2px var(--poison);
+  background: var(--poison-wash);
+}
+.poisoned .portrait,
+.poisoned .enemy-art {
+  box-shadow:
+    inset 0 0 12px var(--poison-wash),
+    0 0 0 2px var(--poison);
+}
+.portrait-conditions .poison-badge {
+  color: var(--poison);
+  background: var(--paper-raised);
+  border: 1px solid var(--poison);
+}
+.hero.stunned .portrait {
+  outline: 2px dashed var(--gold);
+  outline-offset: -2px;
+}
+.enemy-trait {
+  color: var(--red);
+  border-bottom: 1px dotted currentColor;
+  cursor: help;
+}
+.fragment-enemy .enemy-art > svg {
+  transform: scale(0.72);
+  transform-origin: 50% 90%;
+}
+@keyframes notebook-critical-hp {
+  0%,
+  100% {
+    background-color: var(--red);
+    filter: brightness(0.8);
+  }
+  50% {
+    background-color: #ed5b48;
+    filter: brightness(1.2);
+  }
+}
+.floor-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 12px 0;
+}
+.floor-summary > div {
+  border-bottom: 1px dashed var(--line);
+  padding: 6px;
+  display: grid;
+  text-align: center;
+}
+.floor-summary b {
+  font-family: var(--hand-display);
+  font-size: 30px;
+  color: var(--ink);
+  line-height: 1.1;
+}
+.floor-summary span {
+  font-size: 17px;
+  color: var(--soft);
+}
+.floor-clear-emblem {
+  text-align: center;
+}
+.floor-clear-emblem svg {
+  width: 70px;
+  height: 70px;
+  color: var(--gold);
+}
+#spotlight[data-kind="floor-clear"] .stage-title {
+  color: var(--gold);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero .healthbar.critical > i {
+    animation: none;
+    background: var(--red);
+  }
+}
+
+.poisoned .portrait,
+.poisoned .enemy-art {
+  outline: 2px dashed var(--poison);
+  background-image: radial-gradient(
+    ellipse at bottom,
+    var(--poison-wash),
+    transparent 80%
+  );
+}
+@media (max-width: 1259px) {
+  /* Compact cards have 154px of usable height; keep their edit row inside. */
+  .hero-controls {
+    padding-top: 0;
+  }
+  .hero .bars {
+    margin-top: 3px;
+    margin-bottom: 0;
+  }
+}
+/* Supply quality names can wrap; reserve two text lines above the effect. */
+.notes-and-bag .inventory-items button,
+.fit-notebook .notes-and-bag .inventory-items button {
+  grid-template-rows: 27px 12px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+.notes-and-bag .inventory-items button > span,
+.fit-notebook .notes-and-bag .inventory-items button > span {
+  align-self: center;
+  font-size: 14px;
+  line-height: 0.95;
+}
+.notes-and-bag .inventory-items button small,
+.fit-notebook .notes-and-bag .inventory-items button small {
+  font-size: 11px;
+  line-height: 1;
+}
+.tier-symbol.poison {
+  color: var(--poison);
+}

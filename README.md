@@ -16,14 +16,21 @@ The notebook opens with a choice of **Tank, Healer, Rogue or Mage**. A new exped
 
 ## Explore
 
-**Autoplay** in the top toolbar walks to known, reachable stairs; otherwise it
-explores reachable covered tiles. Enable **Autofight** alongside it for a
-hands-free attempt through the dungeon. Autoplay handles discoveries, claims
-loot, accepts companions while there is room, uses needed wells and Revive
-Stones, and descends after a guardian falls. It leaves ruins alone, leaves shops
-without buying, and does not replace a full party. It uses ordinary movement
-and event buttons, with no knowledge of concealed terrain and no guaranteed win.
+**Autoplay** in the top toolbar spends personal points on useful reel edits,
+equips matching gear and the best owned passive, and weighs visible treasure,
+companions, beacons, shops and reachable stairs. It saves active wells until the
+party is hurt enough to benefit, then can return to them. It uses useful supplies,
+shops within its budget, handles full-bag swaps and can replace a companion when
+that improves level or role coverage. Unknown tiles never disclose their contents
+to its planner.
 
+Enable **Autofight** alongside it for a hands-free attempt. Autofight estimates
+what each hero's actual weighted wheels can deliver, balancing damage, healing,
+team protection, stun, poison and buffs. It selects targets and useful items,
+including the ink bomb's confirmed roll. These are practical heuristics, not a
+perfect player or a guaranteed win. Both modes use normal validated actions,
+prices, enemy clocks, event choices and rolls. Autoplay leaves the final summary
+open.
 Options, the field guide and editors pause exploration. Disabling Autoplay
 stops walking after the current step; Autofight remains an independent setting.
 Without Autofight, Autoplay waits at combat. It leaves the final victory or
@@ -46,11 +53,11 @@ Walls and connected underground rivers block movement. Wooden bridges cross rive
 
 Old passages can hide an ambush after **one minute of exploration time** away from the party's immediate neighbourhood. Battles, popups, menus and hidden browser tabs pause that clock. There is **no visible fog overlay**. Entering an aged, resolved tile has a 12% encounter chance. Ambushes arrive in a smoke poof with a banner; victory clears adjacent ambush age without revealing or activating anything.
 
-From floor three, revealing enough walkable tiles can awaken **The Unwritten** far from the party. It advances slowly when the player moves, aims to intercept, favours revealed paths and can disappear into an unexplored tile. Its mark is visible only on revealed ground. Contact starts a fight.
+From floor three, revealing enough walkable tiles can awaken **The Unwritten** far from the party. It advances one tile for every player step, including each step of a long route, aims to intercept, favours revealed paths and can disappear into an unexplored tile. Its mark is visible only on revealed ground. Contact starts a fight.
 
 ## Reels and combat
 
-Heroes have six ordinary weighted faces on each outer reel and seven faces on the middle reel, including its **single class seal**. Each reel starts with a permanent EMPTY face. Empty faces have no effect and never crit. Personal points can inscribe over them for **3 points**. Other tier prices are 1 / 4 / 9 / 16 points; tier IV is available for blade and magic attacks. Edits preserve face weights, which the editor displays.
+Heroes have six ordinary weighted faces on each outer reel and seven faces on the middle reel, including its **single class seal**. Each reel starts with a permanent EMPTY face. Empty faces have no effect and never crit. Personal points can inscribe over them for **3 points**. Base tier prices are 1 / 4 / 9 / 16 points; class affinities make off-role symbols more expensive. A tank pays 8 points to upgrade healing I → II, a healer 4 and a mage 5; a mage pays 8 to upgrade blade I → II. The editor displays the exact price, including the destination class affinity for symbol changes; tier IV is available for blade and magic attacks. Edits preserve face weights, which the editor displays.
 
 | Class  | Style                                                  | Middle-reel ability                                                                 |
 | ------ | ------------------------------------------------------ | ----------------------------------------------------------------------------------- |
@@ -77,7 +84,7 @@ intact.
 | Ordinary enemy | 2 | 4 | 7 |
 | Stair guardian | 3 | 6 | 10 |
 
-**Poison** deals one armour-piercing damage per completed action for a limited duration, with visible status ticks and kill credit. **Stimulants** increase damage and protection and show a fiery glow. Rage, poison and buffs end with combat. Level-ups add 6 maximum HP and 4 personal editing points, with portrait and machine effects. EXP comes only from successful battles; surviving heroes also gain one editing point per victory.
+**Poison** from wheels deals one armour-piercing damage per completed action for a limited duration; stronger venom supplies can deal more, with visible status ticks and kill credit. **Stimulants** increase damage and protection and show a fiery glow. Rage, poison, stun and buffs end with combat. Level-ups add 6 maximum HP and 4 personal editing points, with portrait and machine effects. EXP comes only from successful battles; surviving heroes also gain one editing point per victory.
 
 The **Autofight** checkbox (Autoresolve in Options) chooses heroes, targets and occasional useful emergency supplies. It preserves the selected animation speed and all combat feedback. Enemy entrances confirm automatically; other choices wait for the player unless Autoplay is also enabled. Untick it to take over between actions.
 
@@ -86,6 +93,26 @@ The **Autofight** checkbox (Autoresolve in Options) chooses heroes, targets and 
 The satchel holds **three item types**, with matching items stacked. Inspect to use or discard. If full, swap out a stack, use an item immediately when applicable, or leave the find. Pending choices survive reloads. Items do not advance enemy countdowns.
 
 Consumables: Healing Tonic, Ink Bomb, Paper Ward, Antidote, Field Bandage, Mending Salve, Ember Draught, Sharpening Oil, Frost Vial, Cinder Flask, Venom Ink, Surveyor's Chalk and Trail Ration. Ink Bombs roll damage and poison on a slot machine; matching results crit.
+
+Consumable power is fixed by its item ID: an old Cinder Flask always deals 10
+magic damage, regardless of the floor where it is used. Tonic, bandage, salve,
+ward, cinder flask, ink bomb and venom vial also have **Fortified** (floor 4+),
+**Potent** (7+) and **Masterwork** (10) variants. Deeper loot and new shop stock
+use the appropriate variant. Matching IDs stack; stronger variants are separate
+item types. Descriptions show the acquired strength; old saves keep base items.
+
+Species now have different health multipliers and weighted reels: wraiths favour
+magic and stun, widows poison, slimes healing and shields, bellkeepers armour and
+stun, and demons attacks and stimulants. Strong enemies and some elites gain a
+labelled passive: **Armoured** resists each hit, **Second wind** heals once below
+30% HP, **Summoner** calls a lesser ally every third turn into a free second foe
+slot, and **Fractures** becomes a weaker fragment once. Summons cannot summon.
+The last guardian retains three strikes with top-tier attack and support faces.
+
+Clearing a staircase guardian adds a confirmed celebration with that floor's
+victories, steps, revealed tiles, net gold, damage, healing, EXP, supplies used and
+elapsed time. Records are stored once per floor. Net gold includes purchases;
+legacy saves start the first available snapshot when loaded.
 
 Each hero also has one personal equipment slot. **Drag equipment from the bag onto a matching hero**, or click it and choose a recipient with keyboard-accessible buttons. Equipping consumes one item; replaced equipment returns through the normal bag/overflow rules.
 
@@ -145,7 +172,7 @@ generated HTML with its source changes. `npm test` checks freshness first, then
 runs gameplay and visual-system browser tests. Review output goes into ignored
 `test-results/ui-review/`; it includes the default, warm and dark palettes,
 1920×1080 and 1280×800 combat, a stacked mobile page, menus and a treasure crit.
-Those are review fixtures, not new gameplay rules.
+Additional fixtures show purple poison, critical health, enemy passives, stronger supplies, blue rivers and desktop/mobile floor-clear summaries. Those are review fixtures, not new gameplay rules.
 
 ```sh
 npm ci
@@ -170,3 +197,9 @@ The Candle Gnawer is an original AI-generated graphite illustration, stored at
 `ui/assets/illustrations/candle-gnawer.png` and embedded in its SVG portrait.
 Pencil frames, tape, edge wear, graphite textures and vector drawings are local project
 assets; no external image, font or paid service is needed at runtime.
+
+## Gameplay maintenance
+
+See [GAMEPLAY_SYSTEMS.md](GAMEPLAY_SYSTEMS.md) for the shared enemy profiles,
+class prices, fixed supply definitions, automation decisions and save migration
+contracts. Keep manual and automatic actions on the same validation paths.
