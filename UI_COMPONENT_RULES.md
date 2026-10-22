@@ -137,7 +137,7 @@ look like another part of the same drawn notebook, not a separate application.
   explicit labels/outputs. Preview settings must say they are not active.
 - Equipment names use a fixed single text line measured by `fitText()`;
   preserve their full name/effect in the accessible label and tooltip. Check
-  all eight pieces, not only the empty slot. Enemy machine state captions
+  all ten pieces, not only the empty slot. Enemy machine state captions
   share a reserved row with passive information; phones reserve two short lines.
 - A `.trait-badge` sits in a portrait corner, distinct from bottom status badges.
   It has a meaningful icon, accessible name, effect and origin tooltip. Positive,
@@ -145,3 +145,25 @@ look like another part of the same drawn notebook, not a separate application.
   no new card row and never opens a mandatory choice.
 - Dead health bars use `.dead`, never `.critical`, and have no flashing animation.
   Re-run title fitting after embedded fonts finish loading, as well as on resize.
+
+## Camp and banking
+
+Camp uses the existing torn-sheet modal, `.settings-tabs` navigation and a
+`.camp-grid` of four `.pencil-card` entries per category. Descriptions are real
+effects; do not add decorative camp notes. Purchases and enable/disable actions
+must be distinct, with visible costs and `aria-pressed` for toggles. Fit whole
+pages without another scrolling panel. The fifth starting class uses
+`.starter-grid.five-classes`, with a three-column compact layout.
+
+`.banking-panel` contains four equal choices plus a status line. Banking does
+not dismiss floor/victory records. Update the line and disable the four choices
+after a committed deposit; retain the normal Continue button. Gameplay logic
+belongs in `game/progression.js`, which the builder embeds separately from art.
+
+Portrait status badges use `statusBadge()` with actual effect values, accessible
+labels and `data-tooltip`; the shared viewport tooltip also supports passive and
+trait descriptions. Never make a status look like a new action. Keep tooltips
+within the viewport and dismiss them on focus/pointer exit, click and rerender.
+Inspection buttons keep the same opacity during travel locks; ordinary movement
+is not a new treasure animation. Inactive round/block widgets use the shared
+`.inactive-combat` treatment and reset values outside battle.

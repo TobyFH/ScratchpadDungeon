@@ -206,6 +206,7 @@ const output = path.join(root, "test-results/ui-review");
       state.steps = 42;
       state.battlesWon = 5;
       state.gold = 90;
+      state.floorBossDefeated = true;
       state.party[0].stats.damageDealt = 185;
       state.party[0].stats.xpEarned = 70;
       state.floorStart.depth = 8;
@@ -231,6 +232,56 @@ const output = path.join(root, "test-results/ui-review");
     await shot("17-victory-mobile");
     await page.evaluate(() => closeModal());
     await page.setViewportSize({ width: 1920, height: 1080 });
+    await page.evaluate(() => {
+      const p = emptyProfile();
+      p.gold = 315;
+      p.owned = ["ranger", "rangerFocus", "rangerStart", "springs"];
+      p.enabled = ["rangerFocus", "rangerStart", "springs"];
+      localStorage.setItem(PROFILE_KEY, JSON.stringify(p));
+      chooseStartingClass(false);
+    });
+    await shot("18-five-starting-classes");
+    await page.locator("#camp-open").click();
+    await shot("19-camp-ranger");
+    for (const tab of ["boons", "challenges", "oddities"]) {
+      await page.locator(`[data-camp-tab="${tab}"]`).click();
+      await shot("20-camp-" + tab);
+    }
+    await page.setViewportSize({ width: 390, height: 844 });
+    await shot("21-camp-mobile");
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.evaluate(() => {
+      newRun("ranger");
+      state.party[0].charge = 9;
+      state.party[0].equipment = "trailBow";
+      state.depth = 4;
+      beginEncounter(true, { stairBoss: true });
+      state.party[0].charge = 9;
+      render();
+      particles = [];
+    });
+    await shot("22-ranger-guardian-1280");
+    await page.locator("#portrait-0 .aim-badge").hover();
+    await shot("23-status-tooltip");
+    await page.mouse.move(1, 1);
+    await page.setViewportSize({ width: 1920, height: 1080 });
+    await page.evaluate(() => {
+      window.reviewCritRandom = Math.random;
+      Math.random = () => 0.999;
+      window.reviewEnemyCrit = rollCritical(
+        state.enemy.name,
+        [0, 1, 2].map(() => ({ type: "attack", tier: 4 })),
+        true,
+        { details: [{ label: "Damage", icon: "sword", value: 13 }] },
+      );
+    });
+    await page.waitForFunction(() => !!criticalHoldResolver);
+    await shot("24-enemy-critical");
+    await page.evaluate(async () => {
+      fastForward();
+      await window.reviewEnemyCrit;
+      Math.random = window.reviewCritRandom;
+    });
     const download = page.waitForEvent("download");
     await page.locator("#download").click();
     await (

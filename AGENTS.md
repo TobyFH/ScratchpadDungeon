@@ -16,3 +16,9 @@ unless the user requests changes to them. Art must never consume gameplay RNG.
 Run `npm test` for changes and `npm run review:ui` for visual work; inspect the
 screenshots at desktop and compact sizes, including applicable dialogs and
 palettes. Don't claim an exact visual match based only on passing tests.
+
+Camp progression, stable unlock IDs and persistent banking transactions live in
+`game/progression.js`, embedded by the same builder. Never directly edit its
+generated HTML block. Enabled rules are snapshotted per expedition; deposits
+use a separate profile ledger. Read `docs/CAMP_PROGRESSION.md` before changing
+that economy or its save migration/recovery.

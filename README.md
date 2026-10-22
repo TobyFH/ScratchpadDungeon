@@ -12,7 +12,26 @@ python3 -m http.server 8000
 
 Open `http://localhost:8000`. **Save HTML** downloads a complete offline copy of the game. Progress stays in this browser's local storage; the HTML download does not export a saved expedition. Older saves preserve edited faces and migrate to one middle-reel class seal. Surplus inventory types wait for explicit keep, use or discard decisions.
 
-The notebook opens with a choice of **Tank, Healer, Rogue or Mage**. A new expedition turns to fresh pages. Start with one hero and no items; keep at most three heroes. Every staircase has an elite guardian. Defeat it to descend when you choose. **Defeating the tenth guardian wins immediately**, with a celebration and a scrollable record of every survivor, fallen companion and retired adventurer.
+The notebook opens with a choice of **Tank, Healer, Rogue or Mage**, plus Ranger after its camp unlocks. A new expedition turns to fresh pages. Start with one hero and no items; keep at most three heroes. Every staircase has an elite guardian. Defeat it to descend when you choose. **Defeating the tenth guardian wins immediately**, with a celebration and a scrollable record of every survivor, fallen companion and retired adventurer.
+
+## Camp and banked gold
+
+After clearing a floor, optionally bank **25%, 50%, 75% or 100%** of carried gold.
+The remainder stays available for this expedition; banked gold survives deaths
+and new runs. Each floor permits one deposit, including the final victory sheet.
+**Upgrades** in the starting-class menu spends this pool on 16 unlocks across
+Ranger, Provisions, Challenges and Oddities. Purchased modifiers are optional,
+start disabled, and apply to subsequent expeditions when enabled. Autoplay banks
+25% on ordinary floor-clear sheets; it leaves the final victory decision to you
+and never purchases camp unlocks.
+
+Ranger's middle-reel **Aim** seal stores power for a later damaging roll. Its bow
+badge explains the stored amount; power clears after combat. Additional unlocks
+improve Aim, increase Ranger HP and enable Ranger starts. Other camp choices
+change starting supplies/health, encounters, shops, wells, beacons and difficulty.
+See [Camp progression](docs/CAMP_PROGRESSION.md) for prices, exact effects and
+save/backup details. Camp progress uses browser local storage independently of
+the run; downloading the HTML does not export either save.
 
 ## Explore
 
@@ -22,7 +41,10 @@ companions, beacons, shops and reachable stairs. It saves active wells until the
 party is hurt enough to benefit, then can return to them. It uses useful supplies,
 shops within its budget, handles full-bag swaps and can replace a companion when
 that improves level or role coverage. Unknown tiles never disclose their contents
-to its planner.
+to its planner. It assesses average level, expected damage and wounds before
+heading for a guardian, preferring exploration or reachable supplies when behind.
+It can seek ordinary fights for experience and eventually commits when no useful
+preparation remains.
 
 Enable **Autofight** alongside it for a hands-free attempt. Autofight estimates
 what each hero's actual weighted wheels can deliver, balancing damage, healing,
@@ -41,7 +63,7 @@ Click a reachable pencil-covered tile to erase it and walk into its discovery. C
 
 Walls and connected underground rivers block movement. Wooden bridges cross rivers. Every floor randomises its layout and events. Stairs are reachable and at least eight steps from camp; generation can carve a route and bridge a river when necessary. Most floors have no river; a second river is very rare. Connected cave rooms reveal together without activating their contents.
 
-- **Fights:** any living hero can act repeatedly. Deeper floors increasingly contain two enemies with independent attack clocks. Rare elite variants retain their species and gain an Ironbound, Frenzied or Venomous modifier, with an animated aura. Five additional species appear in successive floor pairs: Candle Gnawer, Blind Bellkeeper, Thorn Widow, Gutter Oracle and Page Eater.
+- **Fights:** any living hero can act repeatedly. Ordinary double encounters rise from 2% on floor 1 to 7%, 13% and 18% on floors 2–4, then gain only one percentage point per floor, reaching 24% on floor 10. Each foe has an independent attack clock. Rare elite variants retain their species and gain an Ironbound, Frenzied or Venomous modifier, with an animated aura. Five additional species appear in successive floor pairs: Candle Gnawer, Blind Bellkeeper, Thorn Widow, Gutter Oracle and Page Eater.
 - **Treasure:** roll gold, occasional supplies or equipment, personal points and rare artefacts. A rare chest is a mimic. Items pulse in the reward panel before claiming; coin showers scale with the gold awarded.
 - **Traps:** a warning and illustrated spikes, arrows or boulder precede a danger check. Early damage is restrained. Confirm the outcome before it resolves.
 - **Wells:** use one now or leave it active for later. Each hero receives 30% maximum HP plus a healing roll; criticals multiply the complete offered amount. Portrait effects show actual healing.
@@ -53,9 +75,17 @@ Walls and connected underground rivers block movement. Wooden bridges cross rive
 
 Old passages can hide an ambush after **one minute of exploration time** away from the party's immediate neighbourhood. Battles, popups, menus and hidden browser tabs pause that clock. There is **no visible fog overlay**. Entering an aged, resolved tile has a 12% encounter chance. Ambushes arrive in a smoke poof with a banner; victory clears adjacent ambush age without revealing or activating anything.
 
-From floor three, revealing enough walkable tiles can awaken **The Unwritten** far from the party. It advances one tile for every player step, including each step of a long route, aims to intercept, favours revealed paths and can disappear into an unexplored tile. Its mark is visible only on revealed ground. Contact starts a fight.
+From floor three, revealing enough walkable tiles can awaken **The Unwritten** far from the party. It advances one tile for every player step, including each step of a long route, aims to intercept, favours revealed paths and can disappear into an unexplored tile. It arrives with a small smoke/scratch burst and sound. Its mark is visible only on revealed ground. Contact starts a fight.
 
 ## Reels and combat
+
+Enemy strike strength stays in a tighter range (up to 125% of base damage,
+before buffs), rather than multiplying high-tier damage disproportionately.
+Enemy triple matches roll ×1.25 (50%), ×1.5 (25%) or ×1.75 (25%); hero and
+event criticals retain ×2 / ×2.5 / ×3 / ×4. Top-tier final-guardian wheels,
+frequent attacks and three strikes remain. Hover poison, rage, stimulant, stun,
+Aim, elite and passive badges for current effects. Round/team block fade and
+reset between fights.
 
 Heroes have six ordinary weighted faces on each outer reel and seven faces on the middle reel, including its **single class seal**. Each reel starts with a permanent EMPTY face. Empty faces have no effect and never crit. Personal points can inscribe over them for **3 points**. Base tier prices are 1 / 4 / 9 / 16 points; class affinities make off-role symbols more expensive. A tank pays 8 points to upgrade healing I → II, a healer 4 and a mage 5; a mage pays 8 to upgrade blade I → II. The editor displays the exact price, including the destination class affinity for symbol changes; tier IV is available for all seven attack/support powers. Edits preserve face weights, which the editor displays.
 
@@ -66,7 +96,7 @@ Heroes have six ordinary weighted faces on each outer reel and seven faces on th
 | Rogue  | 26 HP; damage and poison, little protection            | **Flurry:** roll three extra attacks and deliver three separate quick hits          |
 | Mage   | 28 HP; magic, poison and stimulants                    | **Nova:** magic against every enemy                                                 |
 
-Blade and magic tiers deal 2 / 4 / 7 / 11 damage per face. Healing tiers offer 2 / 4 / 6 / 8 HP. Block and stun tiers contribute 1 / 2 / 3 / 4 power. **Three identical type-and-tier symbols crit**; a middle class seal can complete two matching meaningful symbols while also casting its ability. A pair alone never crits. Critical multipliers are ×2, ×2.5, ×3 or ×4, with displayed before-and-after calculations.
+Blade and magic tiers deal 2 / 4 / 7 / 11 damage per face. Healing tiers offer 2 / 4 / 6 / 8 HP. Block and stun tiers contribute 1 / 2 / 3 / 4 power. **Three identical type-and-tier symbols crit**; a middle class seal can complete two matching meaningful symbols while also casting its ability. A pair alone never crits. Hero and event critical multipliers are ×2, ×2.5, ×3 or ×4, with displayed before-and-after calculations.
 
 Normal combat rolls stay on the right page. Criticals get a multiplier popup that lingers automatically; **Strike now** skips its result hold. Treasure, fountain and other event criticals stay inside their original panel and still require confirmation. Critical damage lands as the original hit followed by a separate bonus hit, each with its own beam, number and impact. Flurries likewise produce separate hits. Criticals and tier III / IV attacks hit every enemy. Click portraits to choose damage and healing targets.
 
@@ -84,7 +114,7 @@ intact.
 | Ordinary enemy | 2 | 5 | 7 |
 | Stair guardian | 3 | 7 | 10 |
 
-**Poison** from wheels deals one armour-piercing damage per completed action for a limited duration; stronger venom supplies can deal more, with visible status ticks and kill credit. **Stimulants** increase damage and protection and show a fiery glow. Rage, poison, stun and buffs end with combat. Level-ups add 6 maximum HP and 4 personal editing points, with portrait and machine effects. EXP comes only from successful battles; surviving heroes also gain one editing point per victory.
+**Poison** from wheels deals one armour-piercing damage per completed action for a limited duration; stronger venom supplies can deal more, with visible status ticks and kill credit. **Stimulants** increase damage and protection and show a fiery glow. Rage, Aim, poison, stun and buffs end with combat. Level-ups add 6 maximum HP and 4 personal editing points, with portrait and machine effects. EXP comes only from successful battles; surviving heroes also gain one editing point per victory.
 
 The **Autofight** checkbox (Autoresolve in Options) chooses heroes, targets and occasional useful emergency supplies. It preserves the selected animation speed and all combat feedback. Enemy entrances confirm automatically; other choices wait for the player unless Autoplay is also enabled. Untick it to take over between actions.
 
@@ -126,6 +156,8 @@ Each hero also has one personal equipment slot. **Drag equipment from the bag on
 | Serpent Pin   | Rogue  | Damaging rolls poison                                |
 | Star Lens     | Mage   | +2 magic damage on damaging rolls                    |
 | Storm Quill   | Mage   | +1 magic damage; every third roll grants a stimulant |
+| Notched Longbow | Ranger | +2 damage on damaging rolls |
+| Scout Cloak | Ranger | Resist 1 damage; +2 opening team block |
 
 Rare run artefacts use a separate collection and one shared passive slot beneath the map. Their power grows with depth. Attack, healing, block, gold and opening-guard artefacts grant bonuses only while equipped. **Revive Stones** stay ready without occupying that slot: choose to consume one when a hero falls to restore 75% HP. Otherwise death is permanent. Survivors confirm a burial recording cause, origin, time and statistics. The last death leads directly from acknowledgement to the expedition's complete fallen roster.
 
@@ -135,7 +167,7 @@ The notebook fits **1920×1080** and other desktop resolutions; tablets and phon
 
 Animation modes are **1×, 2×, 3×, 5× and Skip cinematics**. The toolbar remains usable while popups are open. Skip lands reels immediately while preserving shakes, particles, damage and healing feedback. Movement scales at half the animation speed increase, with Skip using the fastest walking speed and long routes receiving a modest additional boost. Animation speed, palette, Autofight and Autoplay persist across runs and reloads.
 
-Paper tears, slowing reels, animated handles with fixed hitboxes, jaunty walking, injury portraits, health bars, targeted numbers, level-up bursts and critical impacts accompany actions. Headings animate inside reserved spaces. Torchlight flickers across the pages. Idle chatter is infrequent and staggered; obsolete discovery callouts fade on a floor change.
+Paper tears, slowing reels, animated handles with fixed hitboxes, jaunty walking, injury portraits, health bars, targeted numbers, level-up bursts and critical impacts accompany actions. Headings animate inside reserved spaces. Torchlight flickers more visibly at the screen edges, respecting the ambient-effects option. Empty-tile footsteps are quiet; encounters, criticals and substantial rewards have distinct stronger cues. The short line under the map describes the current room or terrain without revealing hidden events. Idle chatter is infrequent and staggered; obsolete discovery callouts fade on a floor change.
 
 The bottom bar displays keyboard and mouse prompts. Tab / Shift+Tab and Enter reach every control.
 
@@ -202,7 +234,7 @@ generated HTML with its source changes. `npm test` checks freshness first, then
 runs gameplay and visual-system browser tests. Review output goes into ignored
 `test-results/ui-review/`; it includes the default, warm and dark palettes,
 1920×1080 and 1280×800 combat, a stacked mobile page, menus and a treasure crit.
-Additional fixtures show purple poison, critical health, enemy passives, stronger supplies, blue rivers and desktop/mobile floor-clear summaries. Additional captures cover every options page, trait badges and worn gear. Those are review fixtures, not new gameplay rules.
+Additional fixtures show purple poison, critical health, enemy passives, stronger supplies, blue rivers and desktop/mobile floor-clear summaries. Additional captures cover every options page, trait badges, worn gear, all camp categories, banking, Ranger and status tooltips. Those are review fixtures, not new gameplay rules.
 
 ```sh
 npm ci
@@ -213,7 +245,7 @@ npm test
 
 Tests use `/usr/bin/chromium` when present or Playwright's browser; `CHROMIUM_PATH` selects another executable. They start a loopback server and put screenshots and downloaded HTML in ignored `test-results/`.
 
-Coverage includes full ten-floor progression, stair bosses and immediate victory, class selection and page animations, equipment drag/effects/swaps, autoresolve, pursuers, floor-specific species and elite odds, hidden exploration-only ambush timers, rockfalls and bodies, beacon sight lines, save migration, inventory decisions, permanent death, revives, critical and multi-hit calculations, map generation and connectivity, mobile/desktop layout and offline downloads. The campaign integration test uses controlled attack faces and extra health to exercise real navigation, encounters, rewards and progression independently of luck. Separate tests verify ordinary combat and failure paths. The offline test executes downloaded bytes with networking disabled because managed Chromium restricts `file://` navigation.
+Coverage includes camp transactions/unlocks and interrupted saves, Ranger charge, optional run modifiers, conservative enemy criticals, status tooltips and full ten-floor progression, stair bosses and immediate victory, class selection and page animations, equipment drag/effects/swaps, autoresolve, pursuers, floor-specific species and elite odds, hidden exploration-only ambush timers, rockfalls and bodies, beacon sight lines, save migration, inventory decisions, permanent death, revives, critical and multi-hit calculations, map generation and connectivity, mobile/desktop layout and offline downloads. The campaign integration test uses controlled attack faces and extra health to exercise real navigation, encounters, rewards and progression independently of luck. Separate tests verify ordinary combat and failure paths. The offline test executes downloaded bytes with networking disabled because managed Chromium restricts `file://` navigation.
 
 ## Credits
 

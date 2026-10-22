@@ -108,6 +108,7 @@ test("pencil drawings cover every species and injury state without consuming gam
         "healer",
         "rogue",
         "mage",
+        "ranger",
         "skeleton",
         "rat",
         "ghost",
@@ -162,9 +163,9 @@ test("pencil drawings cover every species and injury state without consuming gam
   });
   assert.deepEqual(result, {
     unchanged: true,
-    total: 57,
-    injuries: 19,
-    corpses: 19,
+    total: 60,
+    injuries: 20,
+    corpses: 20,
     accessible: true,
     geometry: true,
   });

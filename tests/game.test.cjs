@@ -84,7 +84,7 @@ async function finish(page) {
 async function encounter(page, { hp = 1000, countdown = 20 } = {}) {
   await page.evaluate(
     ({ hp, countdown }) => {
-      beginEncounter();
+      beginEncounter(false, { count: 1 });
       state.enemy.hp = state.enemy.maxHp = hp;
       state.enemy.countdown = countdown;
       state.enemy.block = 0;
@@ -1034,7 +1034,7 @@ test("save restores speed and artefacts and migrates the earlier Sunseed-era not
     localStorage.setItem("scratchpad-dungeon-v2", JSON.stringify(old));
   });
   await p.reload();
-  assert.equal(await p.evaluate(() => state.version), 12);
+  assert.equal(await p.evaluate(() => state.version), 13);
   assert.equal(await p.evaluate(() => state.speed), "skip");
   assert.equal(await p.evaluate(() => state.relic), undefined);
   assert.doesNotMatch(await p.locator("body").textContent(), /Sunseed/);
@@ -1366,7 +1366,7 @@ test("enemy multi-strikes pause for death and burial, then retarget a surviving 
   await p.locator("#burial-confirm").click();
   await p.evaluate(() => window.testAction);
   assert.equal(await p.evaluate(() => state.party.length), 1);
-  assert.equal(await p.evaluate(() => state.party[0].hp), 42);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 38);
   assert.equal(
     await p.evaluate(() => state.lastEnemyRoll.heroId),
     await p.evaluate(() => state.party[0].id),
@@ -2324,14 +2324,14 @@ test("each enemy has its own countdown and a stunned hero advances neither enemy
   ]);
   await p.locator('[data-spin="0"]').click();
   await finish(p);
-  assert.equal(await p.evaluate(() => state.party[0].hp), 42);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 38);
   assert.deepEqual(
     await p.evaluate(() => state.enemies.map((e) => e.countdown)),
     [3, 1],
   );
   await p.locator('[data-spin="0"]').click();
   await finish(p);
-  assert.equal(await p.evaluate(() => state.party[0].hp), 40);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 32);
   assert.deepEqual(
     await p.evaluate(() => state.enemies.map((e) => e.countdown)),
     [2, 4],
@@ -2667,8 +2667,12 @@ test("early full enemy criticals remain survivable while damage grows faster on 
       curve.push({
         depth,
         ...normal,
-        maxCrit: Math.ceil((raw * normal.damage) / 9) * 4,
-        eliteCrit: Math.ceil((raw * elite.damage) / 9) * 4,
+        maxCrit: Math.ceil(
+          enemyHitPower({ attack: raw, magic: 0 }, normal) * 1.75,
+        ),
+        eliteCrit: Math.ceil(
+          enemyHitPower({ attack: raw, magic: 0 }, elite) * 1.75,
+        ),
         pairDamage: pair.damage,
       });
     }
@@ -2689,7 +2693,7 @@ test("early full enemy criticals remain survivable while damage grows faster on 
     assert.ok(r.curve[i].maxHp - r.curve[i - 1].maxHp <= 12);
     assert.ok(r.curve[i].pairDamage <= r.curve[i].damage);
   }
-  assert.ok(r.curve[9].maxCrit > 28);
+  assert.ok(r.curve[9].maxCrit > r.curve[0].maxCrit * 2);
   assert.equal(r.curve[9].damage, 7);
   await fast(p);
   await p.evaluate(() => {
@@ -2702,8 +2706,8 @@ test("early full enemy criticals remain survivable while damage grows faster on 
   });
   await p.locator('[data-spin="0"]').click();
   await finish(p);
-  assert.equal(await p.evaluate(() => state.party[0].hp), 32);
-  assert.equal(await p.evaluate(() => state.lastEnemyRoll.damage), 12);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 40);
+  assert.equal(await p.evaluate(() => state.lastEnemyRoll.damage), 4);
 });
 
 test("tier IV attacks can be bought, saved and used as area damage with clear per-target numbers", async (t) => {
@@ -3103,7 +3107,7 @@ test("older saved fights migrate to the gentler curve without losing wounds or e
   const p = await game(t);
   await p.evaluate(() => {
     state.depth = 4;
-    beginEncounter();
+    beginEncounter(false, { count: 1 });
     state.enemy.maxHp = 74;
     state.enemy.hp = 37;
     state.enemy.damage = 10;
@@ -3126,7 +3130,7 @@ test("older saved fights migrate to the gentler curve without losing wounds or e
       face: state.party[0].reels[0][0].tier,
     })),
     {
-      version: 12,
+      version: 13,
       hp: 19,
       max: 38,
       damage: 4,
@@ -3712,7 +3716,7 @@ test("bag stacks matching items but limits types to three; overflow can replace 
   );
   await p.reload();
   assert.equal(await p.evaluate(() => state.bag.ration), 2);
-  assert.equal(await p.evaluate(() => Object.keys(ITEM_DEFS).length), 42);
+  assert.equal(await p.evaluate(() => Object.keys(ITEM_DEFS).length), 44);
 });
 
 test("full bag lets the player use a new item immediately, use an existing last item to free a pocket, or decline the find", async (t) => {
@@ -4282,7 +4286,7 @@ test("pursuer moves only with footsteps, prefers revealed paths, hides in covere
   assert.equal(await p.evaluate(() => state.pursuer), null);
 });
 
-test("eight class equipment pieces work, can be dragged onto heroes, replaced safely and saved", async (t) => {
+test("ten class equipment pieces work, can be dragged onto heroes, replaced safely and saved", async (t) => {
   const p = await game(t);
   await fast(p);
   await p.evaluate(() => {
@@ -4333,7 +4337,9 @@ test("eight class equipment pieces work, can be dragged onto heroes, replaced sa
     }
     return out;
   });
-  assert.equal(effects.length, 8);
+  assert.equal(effects.length, 10);
+  assert.equal(effects.find((x) => x.type === "trailBow").damage, 4);
+  assert.equal(effects.find((x) => x.type === "trailCloak").defence, 1);
   assert.ok(effects.find((x) => x.type === "ironSignet").damage >= 4);
   assert.equal(effects.find((x) => x.type === "bulwarkBadge").guard, 3);
   assert.equal(effects.find((x) => x.type === "glassRosary").heal, 4);
@@ -4494,7 +4500,9 @@ test("five new enemy types stay in their floor pairs; elites retain their specie
         "The page eater",
       ][Math.floor(d / 2)],
     ]);
-  assert.ok(r.doubleRates[9] > r.doubleRates[3] + 0.15);
+  assert.ok(r.doubleRates[3] > r.doubleRates[0] + 0.08);
+  assert.ok(r.doubleRates[9] > r.doubleRates[0] + 0.1);
+  assert.ok(r.doubleRates[9] < 0.35);
   assert.ok(r.eliteRate > 0.03 && r.eliteRate < 0.1);
 });
 
@@ -4819,7 +4827,7 @@ test("deep enemy reels improve with depth and the final guardian actually rolls 
     }
     return { rolls, damage: 1000 - state.party[0].hp };
   });
-  assert.deepEqual(strikes, { rolls: 3, damage: 75 });
+  assert.deepEqual(strikes, { rolls: 3, damage: 36 });
 });
 
 test("version-nine fights adopt the stronger enemy curve without changing hero wounds or edited reels", async (t) => {
@@ -4854,7 +4862,7 @@ test("version-nine fights adopt the stronger enemy curve without changing hero w
         .map((f) => f.tier),
     })),
     {
-      version: 12,
+      version: 13,
       autoplay: false,
       heroHp: 17,
       face: 4,
@@ -6147,4 +6155,515 @@ test("skipping critical presentation still applies full critical damage and a gu
   assert.equal(await p.evaluate(() => state.floorBossDefeated), true);
   assert.equal(await p.locator("#portrait-0 .trait-badge").count(), 1);
   assert.equal(await p.locator("#spotlight").isVisible(), false);
+});
+
+test("floor banking transfers each percentage once, survives reload/new runs, and recovers interrupted run saves", async (t) => {
+  const p = await game(t);
+  const transfers = await p.evaluate(() => {
+    const out = [];
+    for (const percent of [25, 50, 75, 100]) {
+      state.depth = percent / 25;
+      state.floorBossDefeated = true;
+      state.gold = 103;
+      recordFloorClear();
+      const amount = bankGold(percent);
+      out.push({ amount, carried: state.gold, again: bankGold(percent) });
+    }
+    return out;
+  });
+  assert.deepEqual(transfers, [
+    { amount: 25, carried: 78, again: false },
+    { amount: 51, carried: 52, again: false },
+    { amount: 77, carried: 26, again: false },
+    { amount: 103, carried: 0, again: false },
+  ]);
+  await p.reload();
+  assert.equal(await p.evaluate(() => campProfile().gold), 256);
+  await p.evaluate(() => newRun());
+  assert.equal(await p.evaluate(() => campProfile().gold), 256);
+  assert.equal(await p.evaluate(() => state.gold), 0);
+  await p.evaluate(() => {
+    state.floorBossDefeated = true;
+    state.gold = 80;
+    recordFloorClear();
+    const before = localStorage.getItem(SAVE_KEY);
+    bankGold(50);
+    // Simulate losing the expedition write after the camp commit.
+    localStorage.setItem(SAVE_KEY, before);
+  });
+  await p.reload();
+  assert.deepEqual(
+    await p.evaluate(() => ({
+      gold: state.gold,
+      bank: campProfile().gold,
+      again: bankGold(50),
+    })),
+    { gold: 40, bank: 296, again: false },
+  );
+  await p.evaluate(() => save());
+  await p.reload();
+  assert.equal(await p.evaluate(() => state.gold), 40);
+});
+
+test("banking rejects invalid/unearned transfers and storage failures without taking gold", async (t) => {
+  const p = await game(t);
+  assert.equal(
+    await p.evaluate(() => {
+      state.gold = 100;
+      return bankGold(25);
+    }),
+    false,
+  );
+  const r = await p.evaluate(() => {
+    state.floorBossDefeated = true;
+    recordFloorClear();
+    const invalid = [0, 10, 101, NaN, Infinity, "25"].map(bankGold);
+    const original = Storage.prototype.setItem;
+    Storage.prototype.setItem = function (key, value) {
+      if (key === PROFILE_KEY) throw Error("Storage is full");
+      return original.call(this, key, value);
+    };
+    let failed;
+    try {
+      failed = bankGold(25);
+    } finally {
+      Storage.prototype.setItem = original;
+    }
+    return { invalid, failed, gold: state.gold, pool: campProfile().gold };
+  });
+  assert.deepEqual(r, {
+    invalid: [false, false, false, false, false, false],
+    failed: false,
+    gold: 100,
+    pool: 0,
+  });
+});
+
+test("camp purchases are persistent, affordable, prerequisite-checked, and modifiers apply only to new runs", async (t) => {
+  const p = await game(t);
+  await p.evaluate(() => {
+    const profile = emptyProfile();
+    profile.gold = 1000;
+    localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+    chooseStartingClass(true);
+  });
+  await p.locator("#camp-open").click();
+  assert.deepEqual(
+    await p.evaluate(() =>
+      ["missing", "toString", "__proto__"].map(purchaseUnlock),
+    ),
+    [false, false, false],
+  );
+  assert.equal(await p.evaluate(() => purchaseUnlock("rangerFocus")), false);
+  await p.locator('[data-camp-buy="ranger"]').click();
+  assert.equal(await p.evaluate(() => purchaseUnlock("ranger")), false);
+  await p.locator('[data-camp-buy="rangerFocus"]').click();
+  assert.equal(await p.evaluate(() => ruleEnabled("rangerFocus")), false);
+  await p.locator('[data-camp-toggle="rangerFocus"]').click();
+  await p.evaluate(() => {
+    campPage("boons");
+    purchaseUnlock("provisions");
+    toggleUnlock("provisions");
+  });
+  assert.equal(await p.evaluate(() => state.gold), 0);
+  await p.locator("#camp-return").click();
+  await p.locator('[data-start-job="fighter"]').click();
+  assert.deepEqual(
+    await p.evaluate(() => ({
+      gold: state.gold,
+      ranger: ruleEnabled("ranger"),
+      focus: ruleEnabled("rangerFocus"),
+      pool: campProfile().gold,
+    })),
+    { gold: 20, ranger: true, focus: true, pool: 750 },
+  );
+  await p.reload();
+  assert.equal(await p.evaluate(() => ruleEnabled("rangerFocus")), true);
+  assert.equal(await p.evaluate(() => campProfile().gold), 750);
+});
+
+test("Ranger has exactly one middle seal, saves Aim for a later hit and clears it after battle", async (t) => {
+  const p = await game(t);
+  await p.evaluate(() => {
+    state.party = [makeHero("Rowan", "ranger")];
+    beginEncounter(false, { count: 1 });
+    render();
+  });
+  assert.deepEqual(
+    await p.evaluate(() =>
+      state.party[0].reels.map(
+        (r) => r.filter((f) => f.type === "class").length,
+      ),
+    ),
+    [0, 1, 0],
+  );
+  const r = await p.evaluate(async () => {
+    const h = state.party[0],
+      blank = { type: "blank", tier: 1 },
+      attack = { type: "attack", tier: 1 };
+    const first = await planHeroRoll(h, [
+      blank,
+      { type: "class", tier: 1, job: "ranger" },
+      blank,
+    ]);
+    const charge = h.charge;
+    const second = await planHeroRoll(h, [attack, blank, blank]);
+    const consumed = h.charge;
+    await planHeroRoll(h, [
+      blank,
+      { type: "class", tier: 1, job: "ranger" },
+      blank,
+    ]);
+    clearBattleStatuses();
+    return {
+      charge,
+      damage: second.attack,
+      consumed,
+      after: h.charge,
+      attack: first.attack,
+    };
+  });
+  assert.deepEqual(r, {
+    charge: 5,
+    damage: 7,
+    consumed: 0,
+    after: 0,
+    attack: 0,
+  });
+  assert.ok(
+    (await p.locator("#portrait-0").innerHTML()).includes("hero-illustration"),
+  );
+});
+
+test("double-encounter odds rise steeply through floor four then flatten below one in four", async (t) => {
+  const p = await game(t);
+  const odds = await p.evaluate(() =>
+    Array.from({ length: 10 }, (_, i) => doubleBattleChance(i + 1)),
+  );
+  assert.deepEqual(odds.slice(0, 4), [0.02, 0.07, 0.13, 0.18]);
+  assert.ok(odds[9] <= 0.25);
+  assert.ok(odds[3] - odds[0] > odds[9] - odds[3]);
+  const counts = await p.evaluate(() => {
+    const original = Math.random,
+      result = [];
+    try {
+      for (const depth of [1, 4, 10]) {
+        state.depth = depth;
+        Math.random = () => 0.1;
+        beginEncounter();
+        result.push(state.enemies.length);
+      }
+    } finally {
+      Math.random = original;
+    }
+    return result;
+  });
+  assert.deepEqual(counts, [1, 2, 2]);
+});
+
+test("enemy damage has a tight tier range and enemy criticals are milder than player criticals", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  const r = await p.evaluate(async () => {
+    setPreference("skipCriticals", true);
+    const original = Math.random;
+    Math.random = () => 0.999;
+    try {
+      const symbols = [0, 1, 2].map(() => ({ type: "attack", tier: 4 }));
+      return {
+        enemy: await rollCritical("Enemy", symbols, true),
+        hero: await rollCritical("Hero", symbols, false),
+        range: [1, 2, 3, 4].map((tier) =>
+          enemyHitPower(
+            calculate([0, 1, 2].map(() => ({ type: "attack", tier }))),
+            { damage: 10 },
+          ),
+        ),
+      };
+    } finally {
+      Math.random = original;
+    }
+  });
+  assert.equal(r.enemy, 1.75);
+  assert.equal(r.hero, 4);
+  assert.ok(Math.max(...r.range) <= 13);
+  assert.ok(Math.min(...r.range) >= 8);
+});
+
+test("underlevelled autoplay explores and seeks recovery before a guardian, but eventually commits", async (t) => {
+  const p = await game(t);
+  await p.evaluate(blankFloor);
+  const r = await p.evaluate(() => {
+    const stairs = pos(2, 7),
+      frontier = pos(1, 6),
+      well = pos(1, 5);
+    state.map[stairs].seen = true;
+    state.map[stairs].event = "stairs";
+    state.map[frontier].seen = false;
+    const explore = autoplayGoal();
+    state.map[well].seen = true;
+    state.map[well].event = "well";
+    state.map[frontier].seen = true;
+    state.party[0].hp = 15;
+    const recover = autoplayGoal();
+    state.party[0].hp = state.party[0].maxHp;
+    state.map.forEach((c) => {
+      c.seen = true;
+    });
+    state.map[well].event = null;
+    const finish = autoplayGoal();
+    return { explore, recover, finish, stairs, well };
+  });
+  assert.notEqual(r.explore, r.stairs);
+  assert.equal(r.recover, r.well);
+  assert.equal(r.finish, r.stairs);
+});
+
+test("status badges explain exact effects on hover and idle combat widgets are subdued", async (t) => {
+  const p = await game(t);
+  assert.match(
+    await p.locator("#round").getAttribute("class"),
+    /inactive-combat/,
+  );
+  assert.equal(await p.evaluate(() => state.round), 1);
+  await p.evaluate(() => {
+    beginEncounter(false, { count: 1 });
+    const h = state.party[0];
+    h.poison = { damage: 2, turns: 3 };
+    h.rage = 3;
+    h.stun = 1;
+    render();
+  });
+  const badge = p.locator("#portrait-0 .poison-badge");
+  assert.match(await badge.getAttribute("title"), /2 damage.*3 more/);
+  await badge.hover({ force: true });
+  assert.equal(await p.locator("#status-tooltip").isVisible(), true);
+  assert.match(await p.locator("#status-tooltip").textContent(), /2 damage/);
+  await p.evaluate(() => {
+    state.enemy = null;
+    state.enemies = [];
+    state.block = 9;
+    state.round = 7;
+    render();
+  });
+  assert.equal(await p.evaluate(() => state.block), 0);
+  assert.match(await p.locator("#round").textContent(), /—/);
+  assert.equal(
+    await p.locator("#round").evaluate((el) => getComputedStyle(el).opacity),
+    "0.48",
+  );
+});
+
+test("camp and banking sheets fit desktop and phone, and inspection controls do not blink during travel", async (t) => {
+  const p = await game(t);
+  const opacities = await p.evaluate(() => {
+    state.bag = { potion: 1 };
+    render();
+    const read = () =>
+      ["#artefact-slot", "#manage-bag"].map(
+        (s) => getComputedStyle(document.querySelector(s)).opacity,
+      );
+    const before = read();
+    busy = true;
+    render();
+    const during = read();
+    busy = false;
+    render();
+    return { before, during };
+  });
+  assert.deepEqual(opacities.before, opacities.during);
+  for (const width of [1920, 1280, 390, 320]) {
+    await p.setViewportSize({ width, height: width === 1920 ? 1080 : 844 });
+    await p.evaluate(() => {
+      campInitial = true;
+      campPage();
+    });
+    await panelFits(p, "#modal", ".modal-body", ".modal-flow", "#modal-title");
+    await p.evaluate(() => {
+      closeModal();
+      state.floorBossDefeated = true;
+      state.gold = 100;
+      window.floorTest = celebrateFloorClear();
+    });
+    await p.waitForSelector("#stage-confirm");
+    await panelFits(
+      p,
+      "#stage-card",
+      ".stage-content",
+      ".scene-layout",
+      "#stage-title",
+    );
+    await p.locator("#stage-confirm").click();
+    await p.evaluate(() => window.floorTest);
+  }
+});
+
+test("camp modifiers change real generation, recruits, gear, starting health and enemy rules", async (t) => {
+  const p = await game(t);
+  const r = await p.evaluate(() => {
+    const original = Math.random;
+    const rules = [
+      "ranger",
+      "rangerHeart",
+      "hearty",
+      "springs",
+      "golden",
+      "lanterns",
+      "markets",
+      "company",
+      "iron",
+      "crowded",
+      "sharp",
+      "hunted",
+    ];
+    state.runRules = rules;
+    const ranger = makeHero("Rowan", "ranger"),
+      fighter = makeHero("Alden", "fighter"),
+      hard = enemyBalance(4);
+    Math.random = () => 0.5;
+    const map = generateFloor(1, 1, 0, rules),
+      dry = generateFloor(1, 1, 0, ["drought"]);
+    Math.random = original;
+    const count = (map, event) => map.filter((c) => c.event === event).length;
+    return {
+      ranger: ranger.maxHp,
+      fighter: fighter.maxHp,
+      hard,
+      normal: (() => {
+        state.runRules = [];
+        return enemyBalance(4);
+      })(),
+      events: ["well", "treasure", "beacon", "shop"].map((e) => count(map, e)),
+      dry: count(dry, "well"),
+      locked: availableLootTypes().includes("trailBow"),
+      unlocked: (() => {
+        state.runRules = ["ranger"];
+        return availableLootTypes().includes("trailBow");
+      })(),
+    };
+  });
+  assert.equal(r.ranger, 40);
+  assert.equal(r.fighter, 48);
+  assert.equal(r.hard.maxHp, Math.ceil(r.normal.maxHp * 1.2));
+  assert.equal(r.hard.damage, Math.ceil(r.normal.damage * 1.1) + 1);
+  assert.deepEqual(r.events, [3, 4, 2, 1]);
+  assert.equal(r.dry, 1);
+  assert.equal(r.locked, false);
+  assert.equal(r.unlocked, true);
+});
+
+test("final victory offers an actionable last-floor bank choice and leaves its records open", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await p.evaluate(() => {
+    state.depth = 10;
+    state.gold = 100;
+    state.floorBossDefeated = true;
+    finishVictory();
+  });
+  const before = await p.evaluate(() => state.gold);
+  await p.locator('[data-bank="75"]').click();
+  assert.equal(
+    await p.evaluate(() => campProfile().gold),
+    Math.floor(before * 0.75),
+  );
+  assert.equal(
+    await p.evaluate(() => state.gold),
+    before - Math.floor(before * 0.75),
+  );
+  assert.equal(await p.locator("#overlay").isVisible(), true);
+  assert.equal(await p.evaluate(() => modalKind), "end");
+  assert.equal(await p.locator(".fallen-roster").count(), 1);
+});
+
+test("room descriptions follow the current terrain and the pursuer arrives with small smoke FX", async (t) => {
+  const p = await game(t);
+  const r = await p.evaluate(async () => {
+    const cell = state.map[state.position];
+    cell.terrain = "bridge";
+    render();
+    const bridge = document.querySelector("#field-note").textContent;
+    cell.terrain = "floor";
+    cell.feature = "well";
+    cell.event = null;
+    render();
+    const well = document.querySelector("#field-note").textContent;
+    state.map.forEach((c) => {
+      if (!c.wall) {
+        c.seen = true;
+        c.event = null;
+      }
+    });
+    state.depth = 3;
+    state.pursuer = null;
+    state.pursuerSpawned = false;
+    particles = [];
+    await advancePursuer();
+    return {
+      bridge,
+      well,
+      spawn: !!state.pursuer,
+      smoke: particles.some((p) => p.kind === "smoke"),
+      step: SOUND_CUES.step.gain,
+      critical: SOUND_CUES.critical.gain,
+      encounter: !!SOUND_CUES.encounter,
+    };
+  });
+  assert.match(r.bridge, /boards/);
+  assert.match(r.well, /basin/);
+  assert.equal(r.spawn, true);
+  assert.equal(r.smoke, true);
+  assert.ok(r.step < 0.02);
+  assert.ok(r.critical > 0.15);
+  assert.equal(r.encounter, true);
+});
+
+test("a single guardian frame aligns with the party base and never reaches healing controls", async (t) => {
+  const p = await game(t);
+  await p.evaluate(() => {
+    state.depth = 4;
+    beginEncounter(true, { stairBoss: true });
+    render();
+  });
+  for (const width of [1920, 1280]) {
+    await p.setViewportSize({ width, height: width === 1920 ? 1080 : 800 });
+    await p.waitForTimeout(100);
+    const bounds = await p.evaluate(() => {
+      const box = (s) => document.querySelector(s).getBoundingClientRect();
+      return {
+        party: box(".party-side").bottom,
+        enemy: box(".enemy-box").bottom,
+        target: box("#targets").top,
+      };
+    });
+    assert.ok(
+      Math.abs(bounds.party - bounds.enemy) < 1,
+      JSON.stringify(bounds),
+    );
+    assert.ok(bounds.enemy <= bounds.target + 1);
+  }
+});
+
+test("the camp can be navigated with keyboard tabs and cannot dismiss an initial class choice", async (t) => {
+  const p = await game(t);
+  await p.evaluate(() => chooseStartingClass(true));
+  await p.locator("#camp-open").focus();
+  await p.keyboard.press("Enter");
+  await p.keyboard.press("Escape");
+  assert.equal(await p.locator("#overlay").isVisible(), true);
+  await p.locator('[data-camp-tab="ranger"]').focus();
+  await p.keyboard.press("ArrowRight");
+  assert.equal(
+    await p.evaluate(() => document.activeElement.dataset.campTab),
+    "boons",
+  );
+  await p.keyboard.press("End");
+  assert.equal(
+    await p.evaluate(() => document.activeElement.dataset.campTab),
+    "oddities",
+  );
+  await p.locator("#camp-return").focus();
+  await p.keyboard.press("Enter");
+  assert.equal(await p.evaluate(() => modalKind), "starter");
+  assert.equal(await p.evaluate(() => state.awaitingStarter), true);
 });

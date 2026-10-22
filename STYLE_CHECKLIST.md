@@ -30,3 +30,7 @@
 - [ ] `npm run build:ui` and `npm test` pass; `npm run review:ui` screenshots were
       visually compared with the reference, not merely generated.
 - [ ] The generated `index.html` still runs and downloads without external assets.
+- [ ] Camp cards and four banking choices fit without internal scrolling; costs,
+      ownership, next-run toggles and the camp balance are easy to distinguish.
+- [ ] Status tooltips show actual effects within the viewport, and quiet travel
+      does not flash treasure/inspection controls or active combat counters.

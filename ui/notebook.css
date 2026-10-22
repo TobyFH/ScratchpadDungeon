@@ -2008,3 +2008,204 @@ body[data-palette="warm"] {
     line-height: 13px;
   }
 }
+
+/* Camp and field feedback share the notebook's permanent primitives. */
+.artefact-slot:disabled,
+#manage-bag:disabled {
+  opacity: 1; /* Travel locks interaction, not the visual weight of the panel. */
+}
+.equipment-slot span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 17px;
+}
+.inactive-combat {
+  opacity: 0.48;
+  filter: grayscale(1);
+}
+.ambient-light {
+  background:
+    radial-gradient(ellipse at -8% 30%, #b97625a6, transparent 39%),
+    radial-gradient(ellipse at 108% 70%, #b36b208c, transparent 39%),
+    linear-gradient(
+      90deg,
+      #291d1240,
+      transparent 18%,
+      transparent 82%,
+      #291d1240
+    );
+  animation: notebook-torch-flicker 3.7s ease-in-out infinite;
+}
+.ambient-light::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 0 85%, #dc9a3966, transparent 32%),
+    radial-gradient(ellipse at 100% 12%, #d58d3566, transparent 30%);
+  animation: notebook-edge-flame 1.7s ease-in-out infinite alternate;
+}
+@keyframes notebook-edge-flame {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scaleY(0.96);
+  }
+  18%,
+  65% {
+    opacity: 0.95;
+    transform: scaleY(1.04);
+  }
+  22%,
+  71% {
+    opacity: 0.35;
+  }
+}
+.portrait-conditions {
+  pointer-events: auto;
+  flex-wrap: wrap;
+  max-width: 100%;
+  gap: 2px;
+}
+[data-tooltip] {
+  cursor: help;
+}
+.portrait-conditions .stun-badge {
+  color: var(--ink);
+  background: var(--paper-raised);
+}
+.portrait-conditions .elite-badge,
+.portrait-conditions .aim-badge {
+  color: var(--gold);
+  background: var(--paper-raised);
+}
+.status-tooltip {
+  position: fixed;
+  z-index: 10010;
+  max-width: min(290px, calc(100vw - 16px));
+  padding: 9px 12px;
+  background-color: var(--paper-raised);
+  color: var(--ink);
+  font: 17px/1.25 var(--hand);
+  pointer-events: none;
+}
+.banking-panel {
+  margin: 10px 0 2px;
+  padding: 8px 0;
+  border-top: 1px dashed var(--line);
+}
+.bank-status {
+  text-align: center;
+  font-size: 17px;
+  margin: 0 0 7px;
+}
+.bank-choices {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+.bank-choices button {
+  padding: 5px 3px;
+}
+.bank-choices small {
+  display: block;
+  font-size: 13px;
+}
+.camp-balance {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 6px 0 12px;
+  flex-wrap: wrap;
+}
+.camp-balance svg {
+  width: 30px;
+  height: 30px;
+  color: var(--gold);
+}
+.camp-balance strong {
+  font-size: 23px;
+}
+.camp-balance span {
+  flex-basis: 100%;
+}
+.camp-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.camp-card {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.camp-card h3 {
+  font: 24px/1.1 var(--display);
+}
+.camp-card p {
+  font-size: 18px;
+  line-height: 1.25;
+  flex: 1;
+  margin: 0;
+}
+.camp-card button {
+  min-height: 35px;
+}
+.camp-owned {
+  color: var(--green);
+  font-size: 17px;
+}
+.camp-card [aria-pressed="true"] {
+  border-color: var(--green);
+  background: var(--heal-wash, var(--paper-shade));
+}
+.starter-grid.five-classes {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+@media (min-width: 1260px) {
+  .enemy-side:not(.paired-enemies) {
+    display: flex;
+    flex-direction: column;
+  }
+  .enemy-side:not(.paired-enemies) > .enemy-label {
+    flex: 0 0 auto;
+  }
+  .enemy-side:not(.paired-enemies) .enemy-roster {
+    flex: 1;
+    min-height: 0;
+  }
+  .enemy-side:not(.paired-enemies) .enemy-box {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .enemy-side:not(.paired-enemies) .enemy-box > .machine-shell {
+    margin-top: auto;
+  }
+}
+@media (max-width: 760px) {
+  .camp-card {
+    padding: 8px;
+  }
+  .camp-card h3 {
+    font-size: 20px;
+  }
+  .camp-card p {
+    font-size: 16px;
+  }
+  .bank-choices {
+    gap: 4px;
+  }
+  .starter-grid.five-classes {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ambient-light,
+  .ambient-light::after {
+    animation: none;
+    opacity: 0.45;
+  }
+}

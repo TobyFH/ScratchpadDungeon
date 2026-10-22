@@ -1,7 +1,8 @@
 # Gameplay systems and automation
 
 The distributable remains one offline `index.html`. Gameplay definitions and
-functions live in its non-generated script. UI sources remain in `ui/`; rebuild
+functions live in its non-generated script; camp progression is embedded from
+`game/progression.js`. UI sources remain in `ui/`; rebuild
 with `npm run build:ui` after presentation edits. There is no new runtime package,
 external AI service or separate data file required to play.
 
@@ -98,7 +99,7 @@ all combatants, updates portraits and removes stale status labels at battle end.
 
 ## Floor records and saves
 
-Version 11 loads older saves, retaining wounds, personal points, edited hero
+Version 13 loads older saves, retaining wounds, personal points, edited hero
 reels and base supply IDs. Enemy powers/traits can refresh under the new rules;
 ongoing enemy HP is retained. Out-of-combat temporary statuses are cleaned up.
 
@@ -211,3 +212,41 @@ Enemy captions use `enemyActionText()` / `setEnemyPhase()`, independently of
 passive labels. Idle clocks, rolling, attacks, poison, stun, healing, shields and
 death get current captions. Transient phases are cleared on reload. The enemy
 machine footnote is deliberately empty; its reserved height keeps layout stable.
+
+
+## Camp and current encounter rules
+
+See [docs/CAMP_PROGRESSION.md](docs/CAMP_PROGRESSION.md) for the independent
+profile, stable unlock IDs, purchases, per-run rule snapshots and exactly-once
+banking recovery. `game/progression.js` is a generated-inline source; build it
+with `npm run build:ui`. Do not merge the camp balance into the replaceable run
+save or spend it from autoplay.
+
+`autoReadiness()` compares average party level against `1 + ceil(depth × .6)`,
+expected combined wheel damage against `5 + depth × 2`, and the weakest/aggregate
+health. When behind it prioritises reachable frontiers, rewards and recovery
+before stairs, and can take ordinary fights for EXP while healthy. Shops with
+remaining healing stock can be revisited when wounded. It ultimately commits
+when no useful preparation remains. The heuristic only reads revealed events.
+Autoplay banks 25% on nonfinal floor-clear sheets, once, through the normal
+bank button; final records and the last deposit remain a player decision.
+
+`doubleBattleChance()` is 2/7/13/18% on floors 1–4, then +1 percentage point per
+floor (24% on floor 10). Bosses, strongholds and wandering ambushes use their
+own encounter rules. `enemyHitPower()` maps offensive reel power to a bounded
+base-damage fraction; enemy critical multipliers are 1.25/1.25/1.5/1.75, while
+hero and event critical multipliers remain 2/2.5/3/4. The final guardian retains
+three strikes, frequency one and tier-IV offence. Camp difficulty hooks apply
+inside `enemyBalance()` so summoned enemies and migrations use the same rules.
+
+Ranger has one middle Aim seal. A damaging roll consumes existing `charge`;
+a seal adds new power afterwards, up to 18, for a later roll. New power cannot
+consume itself on the same roll. `clearBattleStatuses()` also clears charge.
+`expectedHeroEffects()` accounts for Aim and stored power so Autofight can
+select the Ranger. Ranger gear is gated from loot until its class is unlocked.
+
+`statusBadge()` is the shared source for live status explanations; hover and
+focus share a viewport tooltip. Room descriptions derive from the current
+revealed cell, nearby revealed water and floor environment, with no RNG or
+hidden-event disclosure. Inspection controls keep their opacity while travel
+disables interaction; round/team block are subdued and reset between fights.

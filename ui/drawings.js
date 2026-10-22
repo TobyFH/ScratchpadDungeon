@@ -177,6 +177,9 @@ function heroPortraitArt(kind, entity) {
     if (kind === "rogue")
       drawing +=
         '<path d="m23 137 15-23 5 3-17 24m7-18 11 8M48 35q4 8 1 15m26-15-2 15"/>';
+    if (kind === "ranger")
+      drawing +=
+        '<path d="M94 87q27 26-1 58l7-29Z" fill="var(--paper)"/><path d="m93 87 7 29-7 29m-6-29 29 0m-6-5 6 5-6 5M26 94l-7 50m3-50 13 48M31 9l15-3 5 8-18 8"/><path d="m15 112 18 17m-16-9 15 17m-13-4 12 9" stroke-width=".7"/>';
     if (kind === "mage")
       drawing +=
         '<path d="M27 38Q45 21 58 1q10 20 32 36l9 4-38 5-40-2Z" fill="var(--paper-shade)"/><path d="m48 28 11-18 4 17m-37 12 66 1M92 143l7-71m-4-6 5-10 6 9-7 8Z"/>';
@@ -189,6 +192,7 @@ function leverArt() {
   return `<svg class="pencil-art" viewBox="0 0 35 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 78 11-.5.5 13-12 .5Z M14 78l8-56 4 .5-7 57" fill="var(--paper-shade)"/><path d="m15 76 8-53m-15 60 8-.5m-8 5 8-.5M7 95l18-.5" stroke-width=".7"/><path d="M25 2q12 1 11 12-1 10-12 10-10-1-10-12Q15 2 25 2Z" fill="var(--paper)"/><path d="M25 5q9 1 8 9-1 8-9 7-7-1-7-8 0-7 8-8Zm-7 8 6-7m-6 12L30 6m-7 15 10-10" stroke-width=".65"/><path class="pencil-echo" d="m5 79 1 14 14-1M13 77l8-53"/></svg>`;
 }
 const paths = {
+  bow: "M10 3Q29 16 10 29L17 16ZM5 16h23m-5-4 5 4-5 4M10 3l7 13-7 13",
   sword: "M6 23 23 6l3-1-1 3L9 26M5 19l8 8M7 25l-3 3m1-4 3 3",
   heal: "M13 5h6v8h8v6h-8v8h-6v-8H5v-6h8z",
   block: "m16 3 11 5v8c0 7-11 13-11 13S5 23 5 16V8z M16 8v15",
@@ -324,7 +328,7 @@ function portraitArt(kind, entity = { hp: 1, maxHp: 1 }) {
 }
 function basePortraitArt(kind, entity = { hp: 1, maxHp: 1 }) {
   if (entity.hp <= 0 || entity.dead) return corpseArt(kind);
-  if (["fighter", "hero", "healer", "rogue", "mage"].includes(kind))
+  if (["fighter", "hero", "healer", "rogue", "mage", "ranger"].includes(kind))
     return heroPortraitArt(kind, entity);
   if (["revenant", "demon", "lich", "abomination"].includes(kind))
     return horrorArt(kind, entity);

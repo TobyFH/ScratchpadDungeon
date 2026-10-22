@@ -57,6 +57,11 @@ embed(
     assets(asset),
   ),
 );
+embed(
+  "// BEGIN GENERATED CAMP PROGRESSION",
+  "// END GENERATED CAMP PROGRESSION",
+  read("game/progression.js"),
+);
 if (process.argv.includes("--check")) {
   if (html !== read("index.html")) {
     console.error(
