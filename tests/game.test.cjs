@@ -1034,7 +1034,7 @@ test("save restores speed and artefacts and migrates the earlier Sunseed-era not
     localStorage.setItem("scratchpad-dungeon-v2", JSON.stringify(old));
   });
   await p.reload();
-  assert.equal(await p.evaluate(() => state.version), 13);
+  assert.equal(await p.evaluate(() => state.version), 14);
   assert.equal(await p.evaluate(() => state.speed), "skip");
   assert.equal(await p.evaluate(() => state.relic), undefined);
   assert.doesNotMatch(await p.locator("body").textContent(), /Sunseed/);
@@ -3130,7 +3130,7 @@ test("older saved fights migrate to the gentler curve without losing wounds or e
       face: state.party[0].reels[0][0].tier,
     })),
     {
-      version: 13,
+      version: 14,
       hp: 19,
       max: 38,
       damage: 4,
@@ -3630,10 +3630,20 @@ test("critical result button remains enabled and skips the hold; event criticals
   await p.waitForFunction(() => !!criticalHoldResolver);
   assert.equal(await p.locator("#stage-skip").isEnabled(), true);
   assert.match(await p.locator("#stage-skip").textContent(), /Strike now/);
-  const start = Date.now();
+  await p.evaluate(() => {
+    // The timer resolves independently. Only the actual skip path calls this
+    // resolver, so verify release directly rather than timing all impact FX.
+    const release = criticalHoldResolver;
+    window.testCriticalSkipped = false;
+    criticalHoldResolver = () => {
+      window.testCriticalSkipped = true;
+      release();
+    };
+  });
   await p.locator("#stage-skip").click();
+  assert.equal(await p.evaluate(() => window.testCriticalSkipped), true);
+  assert.equal(await p.evaluate(() => criticalHoldResolver === null), true);
   await finish(p);
-  assert.ok(Date.now() - start < 850);
   await p.evaluate(() => {
     state.enemy = null;
     state.enemies = [];
@@ -4862,7 +4872,7 @@ test("version-nine fights adopt the stronger enemy curve without changing hero w
         .map((f) => f.tier),
     })),
     {
-      version: 13,
+      version: 14,
       autoplay: false,
       heroHp: 17,
       face: 4,
@@ -5915,6 +5925,8 @@ test("dead healthbars stop flashing and enemy machine captions follow real state
 test("fifteen event-earned traits replace automatically, show one explained badge and persist", async (t) => {
   const p = await game(t);
   const r = await p.evaluate(() => {
+    const originalRandom = Math.random;
+    Math.random = () => 0;
     const h = state.party[0],
       before = document.querySelector("#spotlight").hidden;
     h.battleMemo = {
@@ -5939,6 +5951,7 @@ test("fifteen event-earned traits replace automatically, show one explained badg
     const studied = h.trait.id;
     render();
     save();
+    Math.random = originalRandom;
     return {
       count: Object.keys(HERO_TRAITS).length,
       kinds: new Set(Object.values(HERO_TRAITS).map((t) => t.kind)).size,
@@ -6031,6 +6044,8 @@ test("trait modifiers affect attacks, defence, healing, poison, opening block an
 test("survival trait rules distinguish critical scars, ambush fear, stun, endurance and helpful battle roles", async (t) => {
   const p = await game(t);
   const r = await p.evaluate(() => {
+    const originalRandom = Math.random;
+    Math.random = () => 0;
     const h = state.party[0],
       results = {};
     const run = (name, memo, delta, data = {}) => {
@@ -6065,6 +6080,7 @@ test("survival trait rules distinguish critical scars, ambush fear, stun, endura
     h.trait = null;
     evaluateTraitEvent(h, "trap", { damage: 0 });
     results.wary = h.trait?.id;
+    Math.random = originalRandom;
     return results;
   });
   for (const [expected, actual] of Object.entries(r))
@@ -6121,7 +6137,7 @@ test("all options pages and worn equipment labels fit at desktop, Deck and phone
   }
 });
 
-test("skipping critical presentation still applies full critical damage and a guardian victory earns Heroic without a trait popup", async (t) => {
+test("skipping critical presentation still applies full critical damage and a guardian victory can earn Heroic without a trait popup", async (t) => {
   const p = await game(t, { auto: true });
   await fast(p);
   await p.evaluate(() => {
@@ -6148,6 +6164,7 @@ test("skipping critical presentation still applies full critical damage and a gu
       [{ type: "heal", tier: 1 }],
       [{ type: "blank", tier: 1 }],
     ];
+    Math.random = () => 0;
     render();
   });
   await p.evaluate(() => spin(0));
@@ -6239,7 +6256,7 @@ test("banking rejects invalid/unearned transfers and storage failures without ta
   });
 });
 
-test("camp purchases are persistent, affordable, prerequisite-checked, and modifiers apply only to new runs", async (t) => {
+test("camp purchases are persistent and Ranger is the only class unlock without specific upgrades", async (t) => {
   const p = await game(t);
   await p.evaluate(() => {
     const profile = emptyProfile();
@@ -6250,16 +6267,20 @@ test("camp purchases are persistent, affordable, prerequisite-checked, and modif
   await p.locator("#camp-open").click();
   assert.deepEqual(
     await p.evaluate(() =>
-      ["missing", "toString", "__proto__"].map(purchaseUnlock),
+      [
+        "missing",
+        "toString",
+        "__proto__",
+        "rangerFocus",
+        "rangerHeart",
+        "rangerStart",
+      ].map(purchaseUnlock),
     ),
-    [false, false, false],
+    [false, false, false, false, false, false],
   );
-  assert.equal(await p.evaluate(() => purchaseUnlock("rangerFocus")), false);
   await p.locator('[data-camp-buy="ranger"]').click();
   assert.equal(await p.evaluate(() => purchaseUnlock("ranger")), false);
-  await p.locator('[data-camp-buy="rangerFocus"]').click();
-  assert.equal(await p.evaluate(() => ruleEnabled("rangerFocus")), false);
-  await p.locator('[data-camp-toggle="rangerFocus"]').click();
+  assert.equal(await p.locator('[data-camp-buy="rangerFocus"]').count(), 0);
   await p.evaluate(() => {
     campPage("boons");
     purchaseUnlock("provisions");
@@ -6267,19 +6288,18 @@ test("camp purchases are persistent, affordable, prerequisite-checked, and modif
   });
   assert.equal(await p.evaluate(() => state.gold), 0);
   await p.locator("#camp-return").click();
+  assert.equal(await p.locator('[data-start-job="ranger"]').count(), 1);
   await p.locator('[data-start-job="fighter"]').click();
   assert.deepEqual(
     await p.evaluate(() => ({
       gold: state.gold,
       ranger: ruleEnabled("ranger"),
-      focus: ruleEnabled("rangerFocus"),
       pool: campProfile().gold,
     })),
-    { gold: 20, ranger: true, focus: true, pool: 750 },
+    { gold: 20, ranger: true, pool: 860 },
   );
   await p.reload();
-  assert.equal(await p.evaluate(() => ruleEnabled("rangerFocus")), true);
-  assert.equal(await p.evaluate(() => campProfile().gold), 750);
+  assert.equal(await p.evaluate(() => campProfile().gold), 860);
 });
 
 test("Ranger has exactly one middle seal, saves Aim for a later hit and clears it after battle", async (t) => {
@@ -6504,7 +6524,6 @@ test("camp modifiers change real generation, recruits, gear, starting health and
     const original = Math.random;
     const rules = [
       "ranger",
-      "rangerHeart",
       "hearty",
       "springs",
       "golden",
@@ -6542,7 +6561,7 @@ test("camp modifiers change real generation, recruits, gear, starting health and
       })(),
     };
   });
-  assert.equal(r.ranger, 40);
+  assert.equal(r.ranger, 34);
   assert.equal(r.fighter, 48);
   assert.equal(r.hard.maxHp, Math.ceil(r.normal.maxHp * 1.2));
   assert.equal(r.hard.damage, Math.ceil(r.normal.damage * 1.1) + 1);
@@ -6651,7 +6670,7 @@ test("the camp can be navigated with keyboard tabs and cannot dismiss an initial
   await p.keyboard.press("Enter");
   await p.keyboard.press("Escape");
   assert.equal(await p.locator("#overlay").isVisible(), true);
-  await p.locator('[data-camp-tab="ranger"]').focus();
+  await p.locator('[data-camp-tab="classes"]').focus();
   await p.keyboard.press("ArrowRight");
   assert.equal(
     await p.evaluate(() => document.activeElement.dataset.campTab),
@@ -6666,4 +6685,529 @@ test("the camp can be navigated with keyboard tabs and cannot dismiss an initial
   await p.keyboard.press("Enter");
   assert.equal(await p.evaluate(() => modalKind), "starter");
   assert.equal(await p.evaluate(() => state.awaitingStarter), true);
+});
+
+test("autoplay drinks a selected moderately needed well instead of declining and selecting it again", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await p.evaluate(blankFloor);
+  const tile = await p.evaluate(() => {
+    const i = pos(2, 7);
+    Object.assign(state.map[i], { seen: true, event: "well", feature: "well" });
+    state.party[0].hp = 25;
+    render();
+    return autoplayGoal();
+  });
+  assert.equal(tile, 79);
+  await startEval(p, `move(${tile})`);
+  await p.waitForSelector("#well-use");
+  assert.equal(await p.evaluate(() => autoplayPrompt()), true);
+  await p.waitForSelector("#stage-confirm");
+  await p.evaluate(() => autoplayPrompt());
+  await finish(p);
+  assert.equal(await p.evaluate(() => state.map[79].event), null);
+  assert.equal(
+    await p.evaluate(
+      () => state.logs.filter((s) => s.includes("left flowing")).length,
+    ),
+    0,
+  );
+  assert.notEqual(await p.evaluate(() => autoplayGoal()), 79);
+});
+
+test("autoplay takes an unused fountain before descending even for one missing HP and a longer route", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await p.evaluate(blankFloor);
+  const goals = await p.evaluate(() => {
+    state.map.forEach((c) => {
+      c.seen = true;
+    });
+    const well = pos(9, 1),
+      stairsTile = pos(2, 7);
+    state.map[well].event = "well";
+    state.map[stairsTile].event = "stairs";
+    state.floorBossDefeated = true;
+    state.exitFound = true;
+    state.exitReached = true;
+    state.party[0].hp = state.party[0].maxHp - 1;
+    render();
+    stairs();
+    const closed =
+      autoplayPrompt() && document.querySelector("#overlay").hidden;
+    return { well, goal: autoplayGoal(), closed };
+  });
+  assert.equal(goals.closed, true);
+  assert.equal(goals.goal, goals.well);
+  await startEval(p, `move(${goals.well})`);
+  await p.waitForSelector("#well-use");
+  await p.evaluate(() => autoplayPrompt());
+  await p.waitForSelector("#stage-confirm");
+  await p.evaluate(() => autoplayPrompt());
+  await finish(p);
+  assert.equal(
+    await p.evaluate(() => state.party[0].hp),
+    await p.evaluate(() => state.party[0].maxHp),
+  );
+  assert.equal(
+    await p.evaluate(() => state.map[autoplayGoal()].event),
+    "stairs",
+  );
+});
+
+test("autofight breaks a sustainable healing-only loop by selecting an available attacker", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await p.evaluate(() => {
+    state.party = [makeHero("Alden", "fighter"), makeHero("Mira", "healer")];
+    state.party.forEach((h) => {
+      h.hp = h.maxHp = 100;
+    });
+    state.party[0].hp = 35;
+    state.party[0].reels = [
+      [{ type: "attack", tier: 1 }],
+      [{ type: "attack", tier: 2 }],
+      [{ type: "blank", tier: 1 }],
+    ];
+    state.party[1].reels = [
+      [{ type: "heal", tier: 3 }],
+      [{ type: "heal", tier: 4 }],
+      [{ type: "blank", tier: 1 }],
+    ];
+    beginEncounter(false, { count: 1 });
+    Object.assign(state.enemy, {
+      hp: 1000,
+      maxHp: 1000,
+      countdown: 1,
+      frequency: 1,
+      damage: 20,
+      strikes: 1,
+      affix: null,
+      passive: null,
+      block: 0,
+      reels: [
+        [{ type: "attack", tier: 1 }],
+        [{ type: "blank", tier: 1 }],
+        [{ type: "blank", tier: 1 }],
+      ],
+    });
+    Math.random = () => 0;
+    render();
+    setAutoresolve(true);
+  });
+  await p.waitForFunction(() => state.party[0].stats.spins >= 1, null, {
+    timeout: 12000,
+  });
+  await p.evaluate(() => setAutoresolve(false));
+  await finish(p);
+  assert.ok(await p.evaluate(() => state.party[0].stats.damageDealt > 0));
+  assert.ok(await p.evaluate(() => state.party[1].stats.spins <= 3));
+  assert.ok(await p.evaluate(() => state.enemy.hp < 1000));
+});
+
+test("autofight pauses with an explanation when every living wheel is unable to hurt enemies", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await p.evaluate(() => {
+    state.party = [makeHero("Mira", "healer")];
+    state.party[0].reels = [0, 1, 2].map(() => [{ type: "heal", tier: 1 }]);
+    beginEncounter(false, { count: 1 });
+    render();
+    setAutoresolve(true);
+  });
+  await p.waitForFunction(() => !state.autoresolve);
+  assert.equal(await p.evaluate(() => state.party[0].stats.spins), 0);
+  assert.match(await p.locator("#toast").textContent(), /nobody can harm/);
+});
+
+test("autoplay interprets public hints while ignoring a hidden tile's undisclosed event and terrain", async (t) => {
+  const p = await game(t);
+  await p.evaluate(blankFloor);
+  const r = await p.evaluate(() => {
+    const water = pos(2, 7),
+      gold = pos(1, 6);
+    state.party[0].hp = 10;
+    state.map[water].hint = { kind: "water", text: DISCOVERY_HINTS.well[1] };
+    state.map[gold].hint = {
+      kind: "glimmer",
+      text: DISCOVERY_HINTS.treasure[1],
+    };
+    const first = autoplayGoal();
+    state.map[water].event = "stronghold";
+    state.map[water].wall = true;
+    state.map[gold].event = "trap";
+    const concealed = autoplayGoal();
+    state.map[water].hint.text = DISCOVERY_HINTS.river[1];
+    const river = autoplayGoal();
+    return { water, gold, first, concealed, river };
+  });
+  assert.equal(r.first, r.water);
+  assert.equal(r.concealed, r.water);
+  assert.equal(r.river, r.gold);
+});
+
+test("trait requirements have a chance to award one eligible companion per shared occurrence", async (t) => {
+  const p = await game(t);
+  const r = await p.evaluate(() => {
+    state.party.push(makeHero("Mira", "healer"), makeHero("Wren", "rogue"));
+    render();
+    const entries = () =>
+      state.party.map((h) => ({ h, data: { healed: h.maxHp } }));
+    const random = Math.random;
+    try {
+      Math.random = () => 0.9;
+      const missed = awardTraitOccurrence("well", entries()),
+        none = state.party.filter((h) => h.trait).length;
+      const draws = [0.1, 0.8];
+      Math.random = () => draws.shift() ?? 0;
+      const awarded = awardTraitOccurrence("well", entries());
+      return {
+        missed,
+        none,
+        awarded,
+        recipients: state.party.map((h) => h.trait?.id || null),
+      };
+    } finally {
+      Math.random = random;
+    }
+  });
+  assert.equal(r.missed, false);
+  assert.equal(r.none, 0);
+  assert.equal(r.awarded, true);
+  assert.deepEqual(r.recipients, [null, null, "invigorated"]);
+});
+
+test("removed Ranger enhancements refund their costs once and unlock Ranger starts with the class invitation", async (t) => {
+  const p = await game(t);
+  const r = await p.evaluate(() => {
+    const profile = emptyProfile();
+    profile.gold = 10;
+    profile.owned = ["ranger", "rangerFocus", "rangerHeart", "rangerStart"];
+    profile.enabled = ["rangerFocus", "rangerHeart", "rangerStart"];
+    localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+    const first = readProfile(),
+      second = readProfile();
+    newRun();
+    chooseStartingClass(false);
+    return {
+      first: first.gold,
+      second: second.gold,
+      owned: second.owned,
+      enabled: second.enabled,
+      choices: document.querySelectorAll('[data-start-job="ranger"]').length,
+      removed: ["rangerFocus", "rangerHeart", "rangerStart"].some((id) =>
+        Object.hasOwn(CAMP_UNLOCKS, id),
+      ),
+    };
+  });
+  assert.deepEqual(r, {
+    first: 350,
+    second: 350,
+    owned: ["ranger"],
+    enabled: [],
+    choices: 1,
+    removed: false,
+  });
+  await p.reload();
+  assert.equal(await p.evaluate(() => readProfile().gold), 350);
+});
+
+test("Ranger Aim meter shows stored damage, release and battle cleanup without adding a hero row", async (t) => {
+  const p = await game(t);
+  await p.evaluate(async () => {
+    state.party = [makeHero("Rowan", "ranger")];
+    beginEncounter(false, { count: 1 });
+    render();
+    const blank = { type: "blank", tier: 1 };
+    await planHeroRoll(state.party[0], [
+      blank,
+      { type: "class", tier: 1, job: "ranger" },
+      blank,
+    ]);
+  });
+  assert.equal(
+    await p.locator(".aim-meter").getAttribute("aria-valuenow"),
+    "5",
+  );
+  assert.match(await p.locator(".aim-meter").textContent(), /\+5 next hit/);
+  assert.ok(
+    await p
+      .locator(".aim-track i")
+      .evaluate((el) => parseFloat(el.style.width) > 0),
+  );
+  await p.evaluate(async () => {
+    await planHeroRoll(state.party[0], [
+      { type: "attack", tier: 1 },
+      { type: "blank", tier: 1 },
+      { type: "blank", tier: 1 },
+    ]);
+  });
+  assert.equal(
+    await p.locator(".aim-meter").getAttribute("aria-valuenow"),
+    "0",
+  );
+  await p.evaluate(() => {
+    state.party[0].charge = 18;
+    syncHero(0);
+    clearBattleStatuses();
+  });
+  assert.equal(
+    await p.locator(".aim-meter").getAttribute("aria-valuenow"),
+    "0",
+  );
+  for (const width of [1920, 1280, 390, 320]) {
+    await p.setViewportSize({ width, height: 844 });
+    await p.waitForTimeout(100);
+    assert.equal(
+      await p
+        .locator(".aim-meter")
+        .evaluate((el) => el.scrollWidth <= el.clientWidth + 1),
+      true,
+      "Aim caption fits " + width,
+    );
+  }
+});
+
+test("five additional enemies spawn only on their allowed floors with distinct profiles and artwork", async (t) => {
+  const p = await game(t);
+  const r = await p.evaluate(() => {
+    const ids = [
+        "moth",
+        "rustmite",
+        "sporepilgrim",
+        "mirrorhound",
+        "ashcolossus",
+      ],
+      seen = new Set(),
+      bad = [];
+    for (let depth = 1; depth <= 10; depth++) {
+      state.depth = depth;
+      for (let n = 0; n < 150; n++) {
+        beginEncounter(false, { count: 1 });
+        const e = state.enemy;
+        if (ids.includes(e.art)) {
+          seen.add(e.art);
+          const d = ENEMY_PROFILES[e.art];
+          if (depth < d.minDepth || depth > d.maxDepth)
+            bad.push([depth, e.art]);
+        }
+      }
+    }
+    return {
+      seen: [...seen].sort(),
+      bad,
+      hp: ids.map((id) => ENEMY_PROFILES[id].hp),
+      art: ids.every((id) => portraitArt(id).includes("species-" + id)),
+    };
+  });
+  assert.deepEqual(r.seen, [
+    "ashcolossus",
+    "mirrorhound",
+    "moth",
+    "rustmite",
+    "sporepilgrim",
+  ]);
+  assert.deepEqual(r.bad, []);
+  assert.equal(r.art, true);
+  assert.equal(new Set(r.hp).size, 5);
+});
+
+test("The Unwritten has a modest health and damage increase at every supported depth and variant", async (t) => {
+  const p = await game(t);
+  const r = await p.evaluate(() => {
+    const profile = ENEMY_PROFILES.pursuer,
+      results = [];
+    try {
+      for (let depth = 3; depth <= 10; depth++)
+        for (const elite of [false, true])
+          for (const pair of [false, true]) {
+            profile.hp = 1.28;
+            profile.damage = 1.12;
+            const next = enemyBalance(depth, {
+              species: "pursuer",
+              elite,
+              pair,
+            });
+            profile.hp = 1.15;
+            profile.damage = 1;
+            const before = enemyBalance(depth, {
+              species: "pursuer",
+              elite,
+              pair,
+            });
+            results.push(
+              next.maxHp > before.maxHp &&
+                next.damage > before.damage &&
+                next.frequency === before.frequency,
+            );
+          }
+    } finally {
+      profile.hp = 1.28;
+      profile.damage = 1.12;
+    }
+    return results;
+  });
+  assert.ok(r.every(Boolean));
+});
+
+test("full screen effects cover wounds, healing, traps, gold and crits and the persisted toggle stops them", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await p.evaluate(() => {
+    state.party[0].hp = 20;
+    render();
+    damageHero(0, 3, "Test enemy");
+  });
+  assert.equal(
+    await p.locator("#screen-edge-fx").getAttribute("data-effect"),
+    "damage",
+  );
+  await p.evaluate(() => healHero(0, 2));
+  assert.equal(
+    await p.locator("#screen-edge-fx").getAttribute("data-effect"),
+    "heal",
+  );
+  await p.evaluate(() => goldCelebration(20));
+  assert.equal(
+    await p.locator("#screen-edge-fx").getAttribute("data-effect"),
+    "gold",
+  );
+  await p.evaluate(async () => {
+    setPreference("skipCriticals", true);
+    await rollCritical(
+      "Test",
+      [0, 1, 2].map(() => ({ type: "attack", tier: 1 })),
+    );
+  });
+  assert.equal(
+    await p.locator("#screen-edge-fx").getAttribute("data-effect"),
+    "critical",
+  );
+  await p.evaluate(() => screenFX("trap"));
+  assert.equal(
+    await p.locator("#screen-edge-fx").getAttribute("data-effect"),
+    "trap",
+  );
+  await p.evaluate(() => optionsPage("display"));
+  await p.locator("#setting-fullScreenEffects").uncheck();
+  assert.equal(
+    await p.evaluate(
+      () => document.querySelector("#screen-edge-fx").getAnimations().length,
+    ),
+    0,
+  );
+  await p.evaluate(() => screenFX("heal"));
+  assert.equal(
+    await p.locator("#screen-edge-fx").evaluate((el) => el.style.opacity),
+    "0",
+  );
+  await p.evaluate(() => newRun());
+  assert.equal(await p.evaluate(() => preferences().fullScreenEffects), false);
+  await p.reload();
+  assert.equal(await p.evaluate(() => preferences().fullScreenEffects), false);
+});
+
+test("older Unwritten encounters migrate strength once while preserving wounds", async (t) => {
+  const p = await game(t);
+  for (const version of [11, 13]) {
+    const result = await p.evaluate((version) => {
+      newRun();
+      state.depth = 5;
+      beginEncounter(false, { pursuer: true, count: 1 });
+      const e = state.enemy;
+      e.maxHp = 46;
+      e.hp = 23;
+      e.damage = 1;
+      state.version = version;
+      localStorage.setItem(SAVE_KEY, JSON.stringify(state));
+      const loaded = load();
+      const expected = enemyBalance(5, {
+        species: "pursuer",
+        elite: state.enemy.elite,
+      });
+      const first = {
+        hp: state.enemy.hp,
+        maxHp: state.enemy.maxHp,
+        damage: state.enemy.damage,
+      };
+      save();
+      load();
+      return {
+        loaded,
+        expected,
+        first,
+        second: {
+          hp: state.enemy.hp,
+          maxHp: state.enemy.maxHp,
+          damage: state.enemy.damage,
+        },
+      };
+    }, version);
+    assert.equal(result.loaded, true);
+    assert.equal(result.first.maxHp, result.expected.maxHp);
+    assert.equal(result.first.hp, Math.ceil(result.expected.maxHp / 2));
+    assert.equal(result.first.damage, result.expected.damage);
+    assert.deepEqual(result.second, result.first);
+  }
+});
+
+test("a failed retired-upgrade refund leaves the original profile intact for a safe retry", async (t) => {
+  const p = await game(t);
+  const r = await p.evaluate(() => {
+    const profile = emptyProfile();
+    profile.gold = 5;
+    profile.owned = ["ranger", "rangerFocus", "rangerFocus"];
+    const raw = JSON.stringify(profile);
+    localStorage.setItem(PROFILE_KEY, raw);
+    const write = Storage.prototype.setItem;
+    Storage.prototype.setItem = function (key, value) {
+      if (key === PROFILE_KEY) throw Error("Storage is full");
+      return write.call(this, key, value);
+    };
+    let failed;
+    try {
+      failed = campProfile();
+    } finally {
+      Storage.prototype.setItem = write;
+    }
+    const untouched = localStorage.getItem(PROFILE_KEY) === raw;
+    return {
+      error: failed.error,
+      untouched,
+      retried: readProfile().gold,
+      again: readProfile().gold,
+    };
+  });
+  assert.match(r.error, /Storage is full/);
+  assert.equal(r.untouched, true);
+  assert.equal(r.retried, 115);
+  assert.equal(r.again, 115);
+});
+
+test("autofight recovers a stunned attacker instead of indefinitely using the ready healer", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  const r = await p.evaluate(async () => {
+    state.party.push(makeHero("Mira", "healer"));
+    state.party[1].reels = [0, 1, 2].map(() => [{ type: "heal", tier: 1 }]);
+    beginEncounter(false, { count: 1 });
+    state.party[0].stun = 1;
+    state.autoCombat.supportSpins = 2;
+    render();
+    const living = state.party.map((h, i) => ({ h, i }));
+    const selected = autoChooseActor(living).i,
+      before = state.enemy.countdown;
+    await spin(selected);
+    return {
+      selected,
+      stun: state.party[0].stun,
+      before,
+      after: state.enemy.countdown,
+      next: autoChooseActor(living).i,
+    };
+  });
+  assert.equal(r.selected, 0);
+  assert.equal(r.stun, 0);
+  assert.equal(r.after, r.before);
+  assert.equal(r.next, 0);
 });

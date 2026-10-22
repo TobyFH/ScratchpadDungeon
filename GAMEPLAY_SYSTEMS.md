@@ -8,7 +8,7 @@ external AI service or separate data file required to play.
 
 ## Shared balance definitions
 
-- `ENEMY_PROFILES` gives each species a health multiplier, explicit face pool and
+- `ENEMY_PROFILES` gives each species a health multiplier, optional damage multiplier, explicit face pool and
   thematic passive. Repeated faces are weights. `enemyReels()` promotes those
   faces by depth; final guardian attack/magic faces are IV and support faces III.
   `enemyBalance()` keeps the depth curve separate from species identity.
@@ -41,6 +41,15 @@ compares useful damage, missing HP, incoming threat, remaining shared block and
 status coverage. Stunned actors are avoided when somebody else can act. It is
 an estimate, so it deliberately does not predict upcoming rolls.
 
+`autoChooseActor()` limits consecutive non-damaging support spins to two (three
+below 20% HP) before choosing an attacker. A stunned attacker can spend its
+missed action to recover rather than leaving a heal-only actor spinning forever.
+`recordAutoCombatProgress()` tracks damage and the lowest remaining enemy
+HP-plus-block; five stagnant spins also favour offence. With no damaging wheel
+it tries an offensive supply, otherwise pauses Autofight with an explanation.
+Sixty spins without progress also pause for manual intervention. This safety
+limit is not a guaranteed-win solver and never gives heroes free damage.
+
 `autoItemPlan()` picks a valid recipient and useful consumable; efficient healing
 or emergencies are favoured, existing poison/buffs are not needlessly repeated,
 and known wells conserve healing supplies. Offensive supplies and protection
@@ -57,10 +66,16 @@ browser. It never edits a class seal away. Recruit replacement values levels,
 role diversity and healer coverage rather than replacing a companion on a tie.
 
 `autoplayGoal()` only reads the contents of **seen** tiles. Hidden tiles are
-frontier goals; their concealed walls/events never affect priority. Visible
+frontier goals; their concealed walls/events never affect priority. Public
+`DISCOVERY_HINTS` text can affect priorities: seek hinted water while wounded,
+treasure/recruits when useful, and avoid hinted hazards. This inference uses the
+visible text, never the hidden event or terrain. Visible
 useful treasure, companions and beacons can take precedence over stairs. Active
-wells are sought when the weakest hero is below 48% or the party is missing 28%
-of total HP. Routes still penalise active fights and traps. Shops and declined
+wells are sought when the weakest hero is below 60% or the party is missing at
+least 28% of total HP. `autoNeedsWell()` is shared by travel and the drink/decline
+choice. Once the guardian is beaten, any missing HP makes the nearest reachable
+unused well take precedence over stairs, regardless of route length. This
+also closes an already-open descent sheet to return for recovery. Routes still penalise active fights and traps. Shops and declined
 ruins carry a per-floor decision marker to avoid revisiting them endlessly.
 
 Use `applyFaceEdit`, `useItem`, `equipCharacter`, `buyShop`, `equipArtefact`,
@@ -83,6 +98,13 @@ Always check the current living roster for victory, not a cached pre-roll list.
 long and redirected paths. Pursuit takes one route step per call. Animation pace
 changes presentation, never the relative number of player/pursuer steps.
 
+Additional species have explicit `minDepth`/`maxDepth` ranges in `ENEMY_PROFILES`:
+Tallow moth 1–3, Rust mite 2–5, Spore pilgrim 3–6, Mirror hound 5–8 and Ash
+colossus 8–10. Their health/strike multipliers and thematic reels vary independently
+of the global depth curve. Their carapace, recovery and split traits use the
+existing eligibility rules above. The Unwritten's health multiplier is 1.28
+(previously 1.15) and strike multiplier 1.12; its pursuit cadence is unchanged.
+
 ## Combat presentation and cleanup
 
 `syncStatusFX()` derives low/critical HP and poison/buff classes from live state.
@@ -99,9 +121,12 @@ all combatants, updates portraits and removes stale status labels at battle end.
 
 ## Floor records and saves
 
-Version 13 loads older saves, retaining wounds, personal points, edited hero
+Version 14 loads older saves, retaining wounds, personal points, edited hero
 reels and base supply IDs. Enemy powers/traits can refresh under the new rules;
-ongoing enemy HP is retained. Out-of-combat temporary statuses are cleaned up.
+ongoing enemy HP is retained. Saved Unwritten encounters refresh health and damage
+once, preserving their remaining HP fraction; the migration runs after older
+enemy migrations. Autofight's transient progress counters restart on reload.
+Out-of-combat temporary statuses are cleaned up.
 
 `floorSnapshot()` captures cumulative roster totals at entry. It deduplicates
 living, retired and fallen members by ID, so death doesn't erase their work.
@@ -131,6 +156,15 @@ unknown enum values and invalid booleans fall back to defaults. Brightness is
 animation. Lighting uses a non-interactive viewport overlay, so brightness does
 not move fixed dialogs, tokens or hitboxes. Torchlight is independent of gameplay
 particles and can be switched off; reduced-motion preferences suppress flicker.
+
+`screenFX()` is the separate full-screen event-feedback layer. The persisted
+`fullScreenEffects` boolean defaults on. Wounds/traps use red, poison purple,
+healing green and gold/criticals gold, from existing palette tokens. Its fixed,
+pointer-transparent edge mask leaves the centre clear. A new effect cancels the
+previous one; toggling off cancels active animation immediately. Reduced motion
+reduces opacity and duration; Skip still gives brief feedback. No effect consumes
+gameplay RNG, changes a delay or affects HP. The Display page keeps this toggle
+beside Torchlight in a shared settings cell, so compact sheets still fit.
 
 Options has Play, Audio, Display and Coming later pages. Controls use native
 inputs and keyboard navigation; only one settings panel is laid out at a time.
@@ -176,35 +210,39 @@ retain existing HP, except pre-version-7 saves that already use HP migration.
 
 `HERO_TRAITS` is the authoritative set of 15 stable IDs and effects.
 `beginTraitBattle()` records each living hero's start stats and lowest HP;
-`evaluateTraitEvent()` selects a qualifying outcome, and `grantTrait()` replaces
-one trait automatically, without a dialog. A repeat of the same trait does
+`traitCandidate()` identifies an eligible outcome. `awardTraitOccurrence()` gathers
+eligible heroes for the whole occurrence, makes one 30% chance check and chooses
+at most one eligible recipient. `evaluateTraitEvent()` wraps individual events
+such as a single victim's trap. `grantTrait()` replaces one trait automatically,
+without a dialog. A repeat of the same trait does
 nothing. Replacements wait until eight further steps **or** two more victories,
 limiting rapid feedback churn. The reason/depth/time stays with the hero and
 in their death record. Hover/focus the portrait badge to inspect its effect and
 origin. Traits survive combat cleanup; buffs, poison and stun still expire.
 
-| ID | Trigger | Minor effect |
-| --- | --- | --- |
-| heroic | Win a hard battle alone, staying above 30% HP | +1 damaging-roll power |
-| hardy | Survive at/below 20% HP after taking at least 30% max HP in damage | Resist 1 damage |
-| cowardly | Win after reaching 20% HP while still stunned | +1 shield-roll block, −1 damage |
-| scarred | Survive repeated critical wounds at/below 10% HP | Receive 1 less healing |
-| stoic | Block at least 12 damage while taking less than 6 | +1 opening team block |
-| merciful | Heal at least 16 HP in battle | +1 healing-roll power |
-| reckless | At least 5 spins, 40 damage, under 40% HP, no healing given | +2 damage, take 1 extra per hit |
-| venomous | Kill an enemy with poison and survive | Poison lasts 1 extra action, cap 8 |
-| haunted | Win an ambush after falling below 40% HP | −1 damage |
-| focused | Successfully apply at least 3 new stuns | +1 stun-roll power |
-| stubborn | Take at least 15 damage and block at least 6 | Resist 1 damage, −1 healing power |
-| wary | Escape a trap without HP damage | +1 opening team block |
-| scorched | Survive trap damage of at least 15% maximum HP | −1 healing power |
-| invigorated | Recover at least 20% maximum HP from a well | Receive 1 extra healing |
-| bookish | Examine two beacons | +5% EXP, fractions accumulate |
+| ID          | Trigger                                                            | Minor effect                       |
+| ----------- | ------------------------------------------------------------------ | ---------------------------------- |
+| heroic      | Win a hard battle alone, staying above 30% HP                      | +1 damaging-roll power             |
+| hardy       | Survive at/below 20% HP after taking at least 30% max HP in damage | Resist 1 damage                    |
+| cowardly    | Win after reaching 20% HP while still stunned                      | +1 shield-roll block, −1 damage    |
+| scarred     | Survive repeated critical wounds at/below 10% HP                   | Receive 1 less healing             |
+| stoic       | Block at least 12 damage while taking less than 6                  | +1 opening team block              |
+| merciful    | Heal at least 16 HP in battle                                      | +1 healing-roll power              |
+| reckless    | At least 5 spins, 40 damage, under 40% HP, no healing given        | +2 damage, take 1 extra per hit    |
+| venomous    | Kill an enemy with poison and survive                              | Poison lasts 1 extra action, cap 8 |
+| haunted     | Win an ambush after falling below 40% HP                           | −1 damage                          |
+| focused     | Successfully apply at least 3 new stuns                            | +1 stun-roll power                 |
+| stubborn    | Take at least 15 damage and block at least 6                       | Resist 1 damage, −1 healing power  |
+| wary        | Escape a trap without HP damage                                    | +1 opening team block              |
+| scorched    | Survive trap damage of at least 15% maximum HP                     | −1 healing power                   |
+| invigorated | Recover at least 20% maximum HP from a well                        | Receive 1 extra healing            |
+| bookish     | Examine two beacons                                                | +5% EXP, fractions accumulate      |
 
 Survival conditions have priority over role-based battle traits; the ordering is
-explicit in `evaluateTraitEvent()`. Damage/healing penalties cannot turn an
+explicit in `traitCandidate()`. Damage/healing penalties cannot turn an
 otherwise positive effect negative (minimum 1); no healing bonus creates healing
-on a blank roll. Traits never rewrite reels or consume gameplay randomness.
+on a blank roll. Trait effects never rewrite reels or consume randomness;
+the occurrence chance and recipient selection deliberately use gameplay RNG.
 Bookish fractions reset on replacement. Automated decisions include active
 trait modifiers in their expected effects.
 
@@ -212,7 +250,6 @@ Enemy captions use `enemyActionText()` / `setEnemyPhase()`, independently of
 passive labels. Idle clocks, rolling, attacks, poison, stun, healing, shields and
 death get current captions. Transient phases are cleared on reload. The enemy
 machine footnote is deliberately empty; its reserved height keeps layout stable.
-
 
 ## Camp and current encounter rules
 
@@ -227,7 +264,8 @@ expected combined wheel damage against `5 + depth × 2`, and the weakest/aggrega
 health. When behind it prioritises reachable frontiers, rewards and recovery
 before stairs, and can take ordinary fights for EXP while healthy. Shops with
 remaining healing stock can be revisited when wounded. It ultimately commits
-when no useful preparation remains. The heuristic only reads revealed events.
+when no useful preparation remains. The heuristic only reads revealed events
+and public discovery hints.
 Autoplay banks 25% on nonfinal floor-clear sheets, once, through the normal
 bank button; final records and the last deposit remain a player decision.
 
@@ -241,7 +279,9 @@ inside `enemyBalance()` so summoned enemies and migrations use the same rules.
 
 Ranger has one middle Aim seal. A damaging roll consumes existing `charge`;
 a seal adds new power afterwards, up to 18, for a later roll. New power cannot
-consume itself on the same roll. `clearBattleStatuses()` also clears charge.
+consume itself on the same roll. `RANGER_AIM_CAP` and `rangerAimGain()` are shared
+by rolls, expected effects and the meter tooltip; `syncRangerAim()` updates the
+existing machine-caption row without resizing the card. `clearBattleStatuses()` also clears charge.
 `expectedHeroEffects()` accounts for Aim and stored power so Autofight can
 select the Ranger. Ranger gear is gated from loot until its class is unlocked.
 

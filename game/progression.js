@@ -5,32 +5,11 @@ const PROFILE_KEY = "scratchpad-dungeon-camp-v1";
 const CAMP_UNLOCKS = {
   ranger: {
     name: "A ranger's invitation",
-    category: "ranger",
+    category: "classes",
     cost: 80,
     permanent: true,
     description:
-      "Rangers can appear as wandering companions. Their middle-reel Aim seal banks power for a later hit.",
-  },
-  rangerFocus: {
-    name: "Patient aim",
-    category: "ranger",
-    cost: 110,
-    requires: "ranger",
-    description: "Rangers store 2 extra power whenever Aim lands.",
-  },
-  rangerHeart: {
-    name: "Trail endurance",
-    category: "ranger",
-    cost: 90,
-    requires: "ranger",
-    description: "New rangers have 6 extra maximum HP.",
-  },
-  rangerStart: {
-    name: "A place at the campfire",
-    category: "ranger",
-    cost: 140,
-    requires: "ranger",
-    description: "Offer Ranger as a starting class.",
+      "Unlock Ranger as a starting class and wandering companion. Aim stores power for a later hit.",
   },
   provisions: {
     name: "A little spending money",
@@ -138,7 +117,7 @@ function readProfile() {
   const owned = [
     ...new Set(p.owned.filter((id) => Object.hasOwn(CAMP_UNLOCKS, id))),
   ];
-  return {
+  const profile = {
     version: 1,
     gold: p.gold,
     owned,
@@ -150,7 +129,22 @@ function readProfile() {
       ),
     ],
     deposits,
+    rangerRefunded: p.rangerRefunded === true,
   };
+  const removed = { rangerFocus: 110, rangerHeart: 90, rangerStart: 140 };
+  const obsolete = p.owned.filter((id) => Object.hasOwn(removed, id));
+  if (obsolete.length) {
+    const refund = profile.rangerRefunded
+      ? 0
+      : [...new Set(obsolete)].reduce((n, id) => n + removed[id], 0);
+    if (!Number.isSafeInteger(profile.gold + refund))
+      throw Error("The camp refund exceeds its balance limit.");
+    profile.gold += refund;
+    profile.rangerRefunded = true;
+    // Persist the refund and retirement together so repeated reads cannot pay twice.
+    localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+  }
+  return profile;
 }
 function campProfile() {
   try {
@@ -303,15 +297,15 @@ function toggleUnlock(id) {
   }
 }
 let campInitial = false;
-function campPage(category = "ranger") {
+function campPage(category = "classes") {
   const p = campProfile(),
     tabs = {
-      ranger: "Ranger",
+      classes: "Adventurers",
       boons: "Provisions",
       challenges: "Challenges",
       oddities: "Oddities",
     };
-  if (!Object.hasOwn(tabs, category)) category = "ranger";
+  if (!Object.hasOwn(tabs, category)) category = "classes";
   openModal(
     "Camp upgrades",
     `<div class="camp-balance">${icon("coin")}<strong>${p.gold} gold banked</strong><span>Unlock once. Choose your rules for the next expedition.</span></div>${p.error ? `<p role="alert">${escapeHTML(p.error)}</p>` : ""}<div class="settings-tabs" role="tablist" aria-label="Camp upgrades">${Object.entries(
@@ -326,7 +320,7 @@ function campPage(category = "ranger") {
       .map(([id, d]) => {
         const owned = p.owned.includes(id),
           locked = d.requires && !p.owned.includes(d.requires);
-        return `<article class="pencil-card camp-card"><h3>${d.name}</h3><p>${d.description}</p>${owned ? (d.permanent ? '<strong class="camp-owned">Unlocked · always available</strong>' : `<button data-camp-toggle="${id}" aria-pressed="${p.enabled.includes(id)}">${p.enabled.includes(id) ? "Enabled next run ✓" : "Enable next run"}</button>`) : `<button data-camp-buy="${id}" ${p.gold < d.cost || locked || p.error ? "disabled" : ""}>${locked ? "Requires Ranger invitation" : "Unlock · " + d.cost + " gold"}</button>`}</article>`;
+        return `<article class="pencil-card camp-card">${id === "ranger" ? `<div class="camp-class-art">${portraitArt("ranger")}</div>` : ""}<h3>${d.name}</h3><p>${d.description}</p>${owned ? (d.permanent ? '<strong class="camp-owned">Unlocked · always available</strong>' : `<button data-camp-toggle="${id}" aria-pressed="${p.enabled.includes(id)}">${p.enabled.includes(id) ? "Enabled next run ✓" : "Enable next run"}</button>`) : `<button data-camp-buy="${id}" ${p.gold < d.cost || locked || p.error ? "disabled" : ""}>${locked ? "Requires Ranger invitation" : "Unlock · " + d.cost + " gold"}</button>`}</article>`;
       })
       .join(
         "",

@@ -42,7 +42,7 @@ const output = path.join(root, "test-results/ui-review");
     });
     await page.goto(`http://127.0.0.1:${server.address().port}`);
     const shots = [];
-    async function shot(name, fullPage = false) {
+    async function shot(name, fullPage = false, animations = "disabled") {
       await page.evaluate(async () => {
         await document.fonts.ready;
         fitNotebook();
@@ -52,7 +52,7 @@ const output = path.join(root, "test-results/ui-review");
       await page.screenshot({
         path: path.join(output, name + ".png"),
         fullPage,
-        animations: "disabled",
+        animations,
       });
       shots.push(name);
     }
@@ -235,14 +235,14 @@ const output = path.join(root, "test-results/ui-review");
     await page.evaluate(() => {
       const p = emptyProfile();
       p.gold = 315;
-      p.owned = ["ranger", "rangerFocus", "rangerStart", "springs"];
-      p.enabled = ["rangerFocus", "rangerStart", "springs"];
+      p.owned = ["ranger", "springs"];
+      p.enabled = ["springs"];
       localStorage.setItem(PROFILE_KEY, JSON.stringify(p));
       chooseStartingClass(false);
     });
     await shot("18-five-starting-classes");
     await page.locator("#camp-open").click();
-    await shot("19-camp-ranger");
+    await shot("19-camp-adventurers");
     for (const tab of ["boons", "challenges", "oddities"]) {
       await page.locator(`[data-camp-tab="${tab}"]`).click();
       await shot("20-camp-" + tab);
@@ -282,6 +282,64 @@ const output = path.join(root, "test-results/ui-review");
       await window.reviewEnemyCrit;
       Math.random = window.reviewCritRandom;
     });
+    await page.evaluate(() => {
+      const gallery = document.createElement("section");
+      gallery.id = "new-enemy-review";
+      gallery.style.cssText =
+        "position:fixed;inset:30px;z-index:5000;background:var(--paper);color:var(--ink);padding:30px;display:grid;grid-template-columns:repeat(5,1fr);gap:25px";
+      for (const kind of [
+        "moth",
+        "rustmite",
+        "sporepilgrim",
+        "mirrorhound",
+        "ashcolossus",
+      ]) {
+        const d = ENEMY_PROFILES[kind],
+          cell = document.createElement("article");
+        cell.className = "pencil-card";
+        cell.style.cssText =
+          "padding:16px;text-align:center;display:grid;align-content:start;gap:10px";
+        cell.innerHTML = `<h2>${d.name}</h2><p>Floors ${d.minDepth}–${d.maxDepth}</p>${portraitArt(kind, { hp: 100, maxHp: 100 })}${portraitArt(kind, { hp: 20, maxHp: 100 })}${corpseArt(kind)}`;
+        cell.querySelectorAll("svg").forEach((svg) => {
+          svg.style.height = "190px";
+          svg.style.width = "100%";
+        });
+        gallery.append(cell);
+      }
+      document.body.append(gallery);
+    });
+    await shot("25-five-new-enemy-sketches");
+    await page.evaluate(() =>
+      document.querySelector("#new-enemy-review").remove(),
+    );
+    for (const kind of ["damage", "heal", "critical"]) {
+      await page.evaluate((kind) => {
+        screenFX(kind, 1.2);
+        const effect = document
+          .querySelector("#screen-edge-fx")
+          .getAnimations()[0];
+        effect.pause();
+        effect.currentTime = 90;
+      }, kind);
+      await shot("26-screen-edges-" + kind, false, "allow");
+    }
+    await page.evaluate(() => {
+      clearScreenFX();
+      state.party.push(makeHero("Mira", "healer"), makeHero("Wren", "rogue"));
+      render();
+    });
+    await shot("29-ranger-party-1920");
+    for (const width of [390, 320]) {
+      await page.setViewportSize({ width, height: 844 });
+      await shot("30-ranger-party-" + width, true);
+    }
+    await page.setViewportSize({ width: 1920, height: 1080 });
+    await page.evaluate(() => optionsPage("display"));
+    await shot("27-display-edge-toggle");
+    await page.setViewportSize({ width: 390, height: 844 });
+    await shot("28-display-edge-toggle-mobile");
+    await page.evaluate(() => closeModal());
+    await page.setViewportSize({ width: 1920, height: 1080 });
     const download = page.waitForEvent("download");
     await page.locator("#download").click();
     await (

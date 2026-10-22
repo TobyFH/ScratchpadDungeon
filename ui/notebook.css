@@ -2209,3 +2209,91 @@ body[data-palette="warm"] {
     opacity: 0.45;
   }
 }
+
+/* Aim uses the reel's existing caption row so cards keep their fixed height. */
+.aim-meter {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  height: 100%;
+  color: var(--soft);
+  font-size: 11px;
+  line-height: 1;
+}
+.aim-meter b,
+.aim-meter small {
+  font: inherit;
+  white-space: nowrap;
+}
+.aim-meter b {
+  font-weight: bold;
+}
+.aim-track {
+  flex: 1;
+  min-width: 15px;
+  height: 6px;
+  border: 1px solid var(--line);
+}
+.aim-track i {
+  display: block;
+  height: 100%;
+  background: var(--gold);
+  transition: width 0.18s ease-out;
+}
+.aim-meter.charged {
+  color: var(--gold);
+}
+.aim-charged .portrait {
+  outline: 1px dashed var(--gold);
+  outline-offset: -2px;
+}
+.camp-class-art {
+  text-align: center;
+}
+.camp-class-art svg {
+  width: 100px;
+  height: 125px;
+}
+.camp-grid:has(.camp-class-art) {
+  grid-template-columns: minmax(0, 1fr);
+}
+.camp-grid:has(.camp-class-art) .camp-card {
+  text-align: center;
+}
+.setting-stack {
+  display: grid;
+  gap: 8px;
+}
+.setting-stack .setting-check small {
+  font-size: 13px;
+}
+/* Event overlay is paint-only. Keep the centre clear and all inputs accessible. */
+#screen-edge-fx {
+  position: fixed;
+  inset: 0;
+  z-index: 9997;
+  pointer-events: none;
+  opacity: 0;
+  background:
+    linear-gradient(
+      90deg,
+      var(--edge-color),
+      transparent 19%,
+      transparent 81%,
+      var(--edge-color)
+    ),
+    linear-gradient(
+      0deg,
+      var(--edge-color),
+      transparent 12%,
+      transparent 88%,
+      var(--edge-color)
+    );
+  mask-image: radial-gradient(ellipse at center, transparent 48%, #000 100%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .aim-track i {
+    transition: none;
+  }
+}

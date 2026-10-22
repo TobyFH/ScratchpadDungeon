@@ -8,50 +8,49 @@ the adventurer records. Gold left with a defeated party is lost on a new run;
 gold already at camp remains.
 
 Open **New run → Upgrades** (or the Upgrades tab in the first adventurer chooser).
-Purchases are permanent. An invitation unlocks Ranger encounters immediately
-for subsequent expeditions. Other purchases are initially disabled: enable or
+Purchases are permanent. The Ranger invitation unlocks Ranger starts and wandering
+companions for subsequent expeditions. Other purchases are initially disabled: enable or
 disable them to build your next expedition's rules. Changes do not rewrite a
 current run. Owned unlocks can be freely toggled between runs; purchases cannot
 be refunded. Nothing requires an account or network connection.
 
 ## Unlock catalogue
 
-| Page       | Unlock                  | Cost | Enabled effect                                              |
-| ---------- | ----------------------- | ---: | ----------------------------------------------------------- |
-| Ranger     | A ranger's invitation   |   80 | Rangers join the wandering-companion pool; permanent        |
-| Ranger     | Patient aim             |  110 | Aim stores 2 more damage                                    |
-| Ranger     | Trail endurance         |   90 | New Rangers gain 6 maximum HP                               |
-| Ranger     | A place at the campfire |  140 | Ranger becomes a starting-class choice                      |
-| Provisions | A little spending money |   60 | Start with 20 gold                                          |
-| Provisions | A hearty breakfast      |  100 | New adventurers gain 4 maximum HP                           |
-| Provisions | Spread the word         |   95 | Recruit spawn probability ×1.25, capped at 95%              |
-| Provisions | Follow the water        |   85 | One extra well per floor                                    |
-| Challenges | Iron margins            |   65 | Enemy HP ×1.2 and base damage ×1.1, rounded up              |
-| Challenges | Never alone             |   70 | Double-encounter chance +8 percentage points, capped at 33% |
-| Challenges | Dry ink                 |   55 | One fewer well per floor                                    |
-| Challenges | Restless pages          |   60 | Pursuer awakens at 12 revealed tiles, from floor 3          |
-| Oddities   | Heavy pockets           |   90 | One extra treasure chest per floor                          |
-| Oddities   | Leave a light on        |   75 | One extra beacon per floor                                  |
-| Oddities   | Travelling market       |  100 | Shop spawn probability 60% per floor                        |
-| Oddities   | Both ends sharpened     |   80 | Hero damaging rolls +1 damage; enemy base damage +1         |
+| Page        | Unlock                  | Cost | Enabled effect                                              |
+| ----------- | ----------------------- | ---: | ----------------------------------------------------------- |
+| Adventurers | A ranger's invitation   |   80 | Unlock starting and wandering Rangers; permanent            |
+| Provisions  | A little spending money |   60 | Start with 20 gold                                          |
+| Provisions  | A hearty breakfast      |  100 | New adventurers gain 4 maximum HP                           |
+| Provisions  | Spread the word         |   95 | Recruit spawn probability ×1.25, capped at 95%              |
+| Provisions  | Follow the water        |   85 | One extra well per floor                                    |
+| Challenges  | Iron margins            |   65 | Enemy HP ×1.2 and base damage ×1.1, rounded up              |
+| Challenges  | Never alone             |   70 | Double-encounter chance +8 percentage points, capped at 33% |
+| Challenges  | Dry ink                 |   55 | One fewer well per floor                                    |
+| Challenges  | Restless pages          |   60 | Pursuer awakens at 12 revealed tiles, from floor 3          |
+| Oddities    | Heavy pockets           |   90 | One extra treasure chest per floor                          |
+| Oddities    | Leave a light on        |   75 | One extra beacon per floor                                  |
+| Oddities    | Travelling market       |  100 | Shop spawn probability 60% per floor                        |
+| Oddities    | Both ends sharpened     |   80 | Hero damaging rolls +1 damage; enemy base damage +1         |
 
-The three Ranger enhancements require the invitation. Provisions and challenges
-can coexist: for example, an extra well and Dry ink cancel one another. All
+There are 13 unlocks; the Ranger invitation is the only class-specific purchase.
+Provisions and challenges can coexist: for example, an extra well and Dry ink cancel one another. All
 options have actual gameplay hooks, not preview-only controls.
 
 ## Ranger
 
 Rangers start at 30 HP, with blade attacks, some poison, stun and block, plus
 ordinary upgradable EMPTY faces. Exactly one **Aim** face appears on their
-middle reel. Aim stores `4 + ceil(level / 2)` damage (plus Patient aim, if enabled),
+middle reel. Aim stores `4 + ceil(level / 2)` damage,
 up to 18. A later damaging roll releases all previously stored power as bonus
 damage before its critical multiplier. If Aim and damage land together, existing
 power is released and the newly gained power waits for another roll. Stored
-power expires after battle. A hoverable bow badge shows the remaining amount.
+power expires after battle. A meter in the reserved caption beneath its reels
+shows `AIM n/18`, a fill bar and `+n next hit`; the portrait also has a hoverable
+bow badge. Both update on storage, release and battle cleanup.
 
 Notched Longbow (+2 damage) and Scout Cloak (1 resistance, 2 opening team block)
 are matching Ranger equipment. They only enter loot pools in Ranger-unlocked
-expeditions. Starting as a Ranger requires the separate campfire purchase.
+expeditions. Starting as a Ranger requires only the invitation.
 
 ## Save design and recovery
 
@@ -61,8 +60,8 @@ expeditions. Starting as a Ranger requires the separate campfire purchase.
 - `scratchpad-dungeon-camp-v1` stores profile version 1, bank balance, purchased
   IDs, enabled IDs and the deposit ledger. It is independent of the expedition
   and preference keys. New run never deletes it.
-- Expedition save version 13 adds a unique `runId`, `bankedFloors` and a snapshot
-  of enabled `runRules`. Versions 1–12 still migrate; old expeditions start
+- Expedition save version 14 retains the version-13 `runId`, `bankedFloors` and
+  snapshot of enabled `runRules`. Versions 1–13 still migrate; old expeditions start
   without new modifiers and retain their wounds, equipment and edited reels.
 - A deposit is keyed by `runId:floor`. The profile write commits the transaction
   before the expedition is updated. If the expedition write is interrupted,
@@ -72,6 +71,13 @@ expeditions. Starting as a Ranger requires the separate campfire purchase.
   before writing. Costs, deposits and balances must be safe nonnegative integers.
   Failed profile writes leave carried gold and purchases unchanged. Corrupt
   profile records are reported and not silently overwritten by a transaction.
+- Retired `rangerFocus`, `rangerHeart` and `rangerStart` purchases refund their
+  original 110/90/140 gold costs once, using unique purchased IDs. Removed IDs
+  leave both owned/enabled lists; the refund and `rangerRefunded` marker commit
+  in the same profile write. An interrupted/failed write leaves the old profile
+  available for retry, not a partial refund. These exceptional retirement refunds
+  do not make ordinary purchases refundable. Existing hero HP is retained;
+  removed bonuses no longer affect new heroes, Aim gain or saved expedition rules.
 - This is browser-local persistence, not a server economy or cross-device sync.
   Use one active game tab when banking or purchasing. Clearing site data removes
   the camp as well as the run. Different sites/browser profiles have different

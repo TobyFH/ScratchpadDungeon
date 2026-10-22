@@ -19,15 +19,17 @@ The notebook opens with a choice of **Tank, Healer, Rogue or Mage**, plus Ranger
 After clearing a floor, optionally bank **25%, 50%, 75% or 100%** of carried gold.
 The remainder stays available for this expedition; banked gold survives deaths
 and new runs. Each floor permits one deposit, including the final victory sheet.
-**Upgrades** in the starting-class menu spends this pool on 16 unlocks across
-Ranger, Provisions, Challenges and Oddities. Purchased modifiers are optional,
+**Upgrades** in the starting-class menu spends this pool on 13 unlocks across
+Adventurers, Provisions, Challenges and Oddities. Purchased modifiers are optional,
 start disabled, and apply to subsequent expeditions when enabled. Autoplay banks
 25% on ordinary floor-clear sheets; it leaves the final victory decision to you
 and never purchases camp unlocks.
 
-Ranger's middle-reel **Aim** seal stores power for a later damaging roll. Its bow
-badge explains the stored amount; power clears after combat. Additional unlocks
-improve Aim, increase Ranger HP and enable Ranger starts. Other camp choices
+Ranger's invitation unlocks both starting Rangers and wandering Rangers. There
+are no separate Ranger upgrades; previously purchased enhancements are refunded
+to camp once. Its middle-reel **Aim** seal stores power for a later damaging
+roll. A meter beneath its reels shows stored power and the next-hit bonus; a bow
+badge explains it. Power clears after combat. Other camp choices
 change starting supplies/health, encounters, shops, wells, beacons and difficulty.
 See [Camp progression](docs/CAMP_PROGRESSION.md) for prices, exact effects and
 save/backup details. Camp progress uses browser local storage independently of
@@ -38,10 +40,13 @@ the run; downloading the HTML does not export either save.
 **Autoplay** in the top toolbar spends personal points on useful reel edits,
 equips matching gear and the best owned passive, and weighs visible treasure,
 companions, beacons, shops and reachable stairs. It saves active wells until the
-party is hurt enough to benefit, then can return to them. It uses useful supplies,
+party is hurt enough to benefit, then can return to them. After defeating a floor's
+guardian it uses reachable, unused wells before descending if anyone is wounded.
+It uses useful supplies,
 shops within its budget, handles full-bag swaps and can replace a companion when
 that improves level or role coverage. Unknown tiles never disclose their contents
-to its planner. It assesses average level, expected damage and wounds before
+to its planner; it can interpret the same sound/glimmer hints the player sees.
+It assesses average level, expected damage and wounds before
 heading for a guardian, preferring exploration or reachable supplies when behind.
 It can seek ordinary fights for experience and eventually commits when no useful
 preparation remains.
@@ -49,7 +54,9 @@ preparation remains.
 Enable **Autofight** alongside it for a hands-free attempt. Autofight estimates
 what each hero's actual weighted wheels can deliver, balancing damage, healing,
 team protection, stun, poison and buffs. It selects targets and useful items,
-including the ink bomb's confirmed roll. These are practical heuristics, not a
+including the ink bomb's confirmed roll. Repeated support turns give way to
+offence; if no wheel or available offensive supply can hurt a foe, Autofight
+pauses with an explanation rather than spinning forever. These are practical heuristics, not a
 perfect player or a guaranteed win. Both modes use normal validated actions,
 prices, enemy clocks, event choices and rolls. Autoplay leaves the final summary
 open.
@@ -75,7 +82,12 @@ Walls and connected underground rivers block movement. Wooden bridges cross rive
 
 Old passages can hide an ambush after **one minute of exploration time** away from the party's immediate neighbourhood. Battles, popups, menus and hidden browser tabs pause that clock. There is **no visible fog overlay**. Entering an aged, resolved tile has a 12% encounter chance. Ambushes arrive in a smoke poof with a banner; victory clears adjacent ambush age without revealing or activating anything.
 
-From floor three, revealing enough walkable tiles can awaken **The Unwritten** far from the party. It advances one tile for every player step, including each step of a long route, aims to intercept, favours revealed paths and can disappear into an unexplored tile. It arrives with a small smoke/scratch burst and sound. Its mark is visible only on revealed ground. Contact starts a fight.
+From floor three, revealing enough walkable tiles can awaken **The Unwritten** far from the party. It advances one tile for every player step, including each step of a long route, aims to intercept, favours revealed paths and can disappear into an unexplored tile. It arrives with a small smoke/scratch burst and sound. Its mark is visible only on revealed ground. Contact starts a fight. Its health and strike strength have increased slightly.
+
+Five further creatures join the encounter pools: **Tallow moth** (floors 1–3),
+**Rust mite** (2–5), **Spore pilgrim** (3–6), **Mirror hound** (5–8) and
+**Ash colossus** (8–10). Their reels, durability and later-floor passives differ:
+from a fragile fluttering moth to a heavily armoured rubble giant.
 
 ## Reels and combat
 
@@ -109,10 +121,10 @@ attack/magic faces and tier-III support faces, with no dud entries. Existing
 saved enemy encounters adopt this curve while hero wounds and edited reels stay
 intact.
 
-| Base damage | Floor 1 | Floor 5 | Floor 10 |
-| --- | --- | --- | --- |
-| Ordinary enemy | 2 | 5 | 7 |
-| Stair guardian | 3 | 7 | 10 |
+| Base damage    | Floor 1 | Floor 5 | Floor 10 |
+| -------------- | ------- | ------- | -------- |
+| Ordinary enemy | 2       | 5       | 7        |
+| Stair guardian | 3       | 7       | 10       |
 
 **Poison** from wheels deals one armour-piercing damage per completed action for a limited duration; stronger venom supplies can deal more, with visible status ticks and kill credit. **Stimulants** increase damage and protection and show a fiery glow. Rage, Aim, poison, stun and buffs end with combat. Level-ups add 6 maximum HP and 4 personal editing points, with portrait and machine effects. EXP comes only from successful battles; surviving heroes also gain one editing point per victory.
 
@@ -146,18 +158,18 @@ legacy saves start the first available snapshot when loaded.
 
 Each hero also has one personal equipment slot. **Drag equipment from the bag onto a matching hero**, or click it and choose a recipient with keyboard-accessible buttons. Equipping consumes one item; replaced equipment returns through the normal bag/overflow rules.
 
-| Equipment     | Class  | Bonus                                                |
-| ------------- | ------ | ---------------------------------------------------- |
-| Iron Signet   | Tank   | +2 damage on damaging rolls                          |
-| Bulwark Badge | Tank   | +3 opening team block, resist 1 damage per hit       |
-| Glass Rosary  | Healer | +2 healing on healing rolls                          |
-| Mercy Bell    | Healer | Every roll heals each ally by 1 and adds 1 block     |
-| Silent Boots  | Rogue  | +1 damage; every fourth roll stuns                   |
-| Serpent Pin   | Rogue  | Damaging rolls poison                                |
-| Star Lens     | Mage   | +2 magic damage on damaging rolls                    |
-| Storm Quill   | Mage   | +1 magic damage; every third roll grants a stimulant |
-| Notched Longbow | Ranger | +2 damage on damaging rolls |
-| Scout Cloak | Ranger | Resist 1 damage; +2 opening team block |
+| Equipment       | Class  | Bonus                                                |
+| --------------- | ------ | ---------------------------------------------------- |
+| Iron Signet     | Tank   | +2 damage on damaging rolls                          |
+| Bulwark Badge   | Tank   | +3 opening team block, resist 1 damage per hit       |
+| Glass Rosary    | Healer | +2 healing on healing rolls                          |
+| Mercy Bell      | Healer | Every roll heals each ally by 1 and adds 1 block     |
+| Silent Boots    | Rogue  | +1 damage; every fourth roll stuns                   |
+| Serpent Pin     | Rogue  | Damaging rolls poison                                |
+| Star Lens       | Mage   | +2 magic damage on damaging rolls                    |
+| Storm Quill     | Mage   | +1 magic damage; every third roll grants a stimulant |
+| Notched Longbow | Ranger | +2 damage on damaging rolls                          |
+| Scout Cloak     | Ranger | Resist 1 damage; +2 opening team block               |
 
 Rare run artefacts use a separate collection and one shared passive slot beneath the map. Their power grows with depth. Attack, healing, block, gold and opening-guard artefacts grant bonuses only while equipped. **Revive Stones** stay ready without occupying that slot: choose to consume one when a hero falls to restore 75% HP. Otherwise death is permanent. Survivors confirm a burial recording cause, origin, time and statistics. The last death leads directly from acknowledgement to the expedition's complete fallen roster.
 
@@ -189,7 +201,8 @@ The bottom bar displays keyboard and mouse prompts. Tab / Shift+Tab and Enter re
 
 The Options tab now has **Play / Audio / Display / Coming later** pages.
 Working controls include master, effects, music and ambience volume, mute,
-brightness, shake strength, torchlight, fullscreen, pace, palette and automation.
+brightness, shake strength, torchlight, full screen effects, fullscreen, pace,
+palette and automation.
 Settings persist across fresh runs and reloads. **Skip critical roll visuals**
 still rolls and applies the same multiplier, with normal damage and event results;
 it only removes the critical machine, popup/inline animation and wait.
@@ -197,7 +210,10 @@ it only removes the critical machine, popup/inline animation and wait.
 Audio consists of quiet, temporary synthesised cues, a simple music pattern and
 ambient noise. A click or key unlocks sound; hidden tabs pause it. No external
 audio files or network service are needed. Torch flicker covers the screen and
-can be disabled independently of gameplay particles. At zero shake, impact
+can be disabled independently of gameplay particles. **Display → Full screen
+effects** separately controls coloured edge pulses for wounds, poison, healing,
+traps, gold and criticals. It keeps the centre clear and respects reduced motion;
+disabling it immediately stops any current edge effect. At zero shake, impact
 numbers/particles remain but nothing is shaken.
 
 Resolution, language, desktop display mode and graphics quality are selectable,
@@ -207,6 +223,8 @@ Browser fullscreen works separately from the future desktop-mode selector.
 ## Learned traits
 
 Adventurers can earn **15 minor traits** from battles, traps, wells and beacons.
+Meeting a requirement gives a 30% chance of a trait; each shared experience can
+award only one eligible party member, chosen at random.
 There is only one active trait per hero; later experiences can replace it
 without a prompt. Hover the portrait badge for its effect and origin. Heroic,
 Hardy, Stoic, Merciful, Venomous, Focused, Wary, Invigorated and Bookish are
@@ -234,7 +252,7 @@ generated HTML with its source changes. `npm test` checks freshness first, then
 runs gameplay and visual-system browser tests. Review output goes into ignored
 `test-results/ui-review/`; it includes the default, warm and dark palettes,
 1920×1080 and 1280×800 combat, a stacked mobile page, menus and a treasure crit.
-Additional fixtures show purple poison, critical health, enemy passives, stronger supplies, blue rivers and desktop/mobile floor-clear summaries. Additional captures cover every options page, trait badges, worn gear, all camp categories, banking, Ranger and status tooltips. Those are review fixtures, not new gameplay rules.
+Additional fixtures show purple poison, critical health, enemy passives, stronger supplies, blue rivers and desktop/mobile floor-clear summaries. Additional captures cover every options page, trait badges, worn gear, all camp categories, banking, Ranger Aim on a full party at compact sizes, five new enemy sketches, screen-edge feedback and status tooltips. Those are review fixtures, not new gameplay rules.
 
 ```sh
 npm ci

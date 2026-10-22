@@ -11,14 +11,14 @@ Regenerate the standalone HTML with `npm run build:ui`.
 | ------------ | ------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
 | Main panel   | `.pencil-panel`; `.sketch-box`, `.party-side`, `.journal`, `.inventory`, `.modal`, `.stage-card` | Flat paper, shared nine-slice outline, clear title, consistent inset; no raised chrome                                                   |
 | Compact card | `.pencil-card`; starter buttons, `.editor-row`, `.bag-card`, artefact and equipment choices      | Finer 3px frame slice; deliberate space between adjacent frames                                                                          |
-| Tape label   | `.pencil-label`; `.party-label`, `.enemy-label`, combat heading                                  | `--tape` torn-end adhesive paper behind actual headings; no filler writing; small fixed tilt permitted                                  |
+| Tape label   | `.pencil-label`; `.party-label`, `.enemy-label`, combat heading                                  | `--tape` torn-end adhesive paper behind actual headings; no filler writing; small fixed tilt permitted                                   |
 | Button       | Native `button`, optional `.pencil-button`; `.primary`, `.quiet`                                 | Paper fill, graphite edge; primary has a stronger outline; quiet still gains a hover/focus cue                                           |
 | Side tab     | `.notebook-tabs button`                                                                          | Same paper family; vertical label, stable orientation; `scale(1.045)` hover, never rotation                                              |
 | Icon         | `icon(id)` / `.pencil-art.pencil-icon`                                                           | 32×32, meaningful silhouette, `aria-hidden` when labelled by its control; no independent decorative glyphs                               |
 | Illustration | `portraitArt(kind, entity)` / `.pencil-art`                                                      | 120×150, shared material fills, unique hatch IDs, injury and corpse states, no game-state mutation                                       |
 | Log          | `.journal`, `.journal-head`, `#log`                                                              | Fixed frame and heading; only entries scroll; retain keyboard focus and live announcements                                               |
 | Bag          | `.inventory`, `.inventory-items`                                                                 | Three fixed pockets; icon, name/count and short description; all three must fit inside the frame                                         |
-| Health / EXP | `.healthbar.hp-bar`, `.healthbar.exp`                                                            | Hero HP numbers and textured HP bar above reels, EXP below; preserve thresholds and critical-health pulse                               |
+| Health / EXP | `.healthbar.hp-bar`, `.healthbar.exp`                                                            | Hero HP numbers and textured HP bar above reels, EXP below; preserve thresholds and critical-health pulse                                |
 | Map          | `.map-wrap`, `.map-board`, `.tile`, `.map-player`                                                | Frame the wrapper; **do not add borders/padding to the coordinate board**; token uses the board's percentage coordinate system           |
 | Reel         | `.machine-shell`, `.machine-face`, `.slot-window`, `.lever`                                      | Three clearly separated windows, hatching confined to casing; fixed lever hitbox, animated child SVG                                     |
 | Modal/event  | `openModal()` / `showSpotlight()`                                                                | Existing focus/confirmation semantics; shared frame/paper; reserved title, body, result and actions; don't dismiss choices automatically |
@@ -149,7 +149,9 @@ look like another part of the same drawn notebook, not a separate application.
 ## Camp and banking
 
 Camp uses the existing torn-sheet modal, `.settings-tabs` navigation and a
-`.camp-grid` of four `.pencil-card` entries per category. Descriptions are real
+`.camp-grid` of `.pencil-card` entries, up to four per category. The Adventurers
+page currently has one illustrated Ranger invitation, not empty upgrade cards.
+Descriptions are real
 effects; do not add decorative camp notes. Purchases and enable/disable actions
 must be distinct, with visible costs and `aria-pressed` for toggles. Fit whole
 pages without another scrolling panel. The fifth starting class uses
@@ -167,3 +169,14 @@ within the viewport and dismiss them on focus/pointer exit, click and rerender.
 Inspection buttons keep the same opacity during travel locks; ordinary movement
 is not a new treasure animation. Inactive round/block widgets use the shared
 `.inactive-combat` treatment and reset values outside battle.
+
+Ranger's `.aim-meter` uses the existing `.machine-footnote` row: labelled stored
+power, short fill track and next-hit bonus. Do not add a row, move EXP, or rely
+on colour alone. Keep the meter and portrait badge consistent through storage,
+release and cleanup; its shared tooltip explains the cap and timing.
+
+Full-screen event feedback belongs in `screenFX()` / `#screen-edge-fx`, using
+the shared damage/healing/poison/value tokens. It is fixed, non-interactive and
+masked away from central information. Never shake or recolour the entire
+document to implement it. Keep its persisted Display toggle separate from
+Torchlight, and respect reduced motion without changing gameplay outcomes.
