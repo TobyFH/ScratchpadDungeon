@@ -1034,7 +1034,7 @@ test("save restores speed and artefacts and migrates the earlier Sunseed-era not
     localStorage.setItem("scratchpad-dungeon-v2", JSON.stringify(old));
   });
   await p.reload();
-  assert.equal(await p.evaluate(() => state.version), 14);
+  assert.equal(await p.evaluate(() => state.version), 15);
   assert.equal(await p.evaluate(() => state.speed), "skip");
   assert.equal(await p.evaluate(() => state.relic), undefined);
   assert.doesNotMatch(await p.locator("body").textContent(), /Sunseed/);
@@ -3130,7 +3130,7 @@ test("older saved fights migrate to the gentler curve without losing wounds or e
       face: state.party[0].reels[0][0].tier,
     })),
     {
-      version: 14,
+      version: 15,
       hp: 19,
       max: 38,
       damage: 4,
@@ -4764,6 +4764,9 @@ test("victory coins burst and keep pouring from the visible summary, rather than
   await fast(p);
   const r = await p.evaluate(() => {
     particles = [];
+    // A victory is a tenth-floor event; its coins now represent the deposit.
+    state.depth = 10;
+    state.floorBossDefeated = true;
     finishVictory();
     const coins = particles.filter((p) => p.kind === "coin");
     return {
@@ -4872,7 +4875,7 @@ test("version-nine fights adopt the stronger enemy curve without changing hero w
         .map((f) => f.tier),
     })),
     {
-      version: 14,
+      version: 15,
       autoplay: false,
       heroHp: 17,
       face: 4,
@@ -6571,28 +6574,35 @@ test("camp modifiers change real generation, recruits, gear, starting health and
   assert.equal(r.unlocked, true);
 });
 
-test("final victory offers an actionable last-floor bank choice and leaves its records open", async (t) => {
+test("final victory automatically banks all carried gold and its reward without closing records", async (t) => {
   const p = await game(t);
   await fast(p);
   await p.evaluate(() => {
     state.depth = 10;
     state.gold = 100;
     state.floorBossDefeated = true;
+    const celebrate = goldCelebration;
+    goldCelebration = (amount, ...args) => {
+      window.winningGold = amount;
+      return celebrate(amount, ...args);
+    };
     finishVictory();
+    goldCelebration = celebrate;
   });
-  const before = await p.evaluate(() => state.gold);
-  await p.locator('[data-bank="75"]').click();
-  assert.equal(
-    await p.evaluate(() => campProfile().gold),
-    Math.floor(before * 0.75),
-  );
-  assert.equal(
-    await p.evaluate(() => state.gold),
-    before - Math.floor(before * 0.75),
+  assert.equal(await p.evaluate(() => window.winningGold), 400);
+  assert.equal(await p.evaluate(() => state.gold), 0);
+  assert.equal(await p.evaluate(() => campProfile().gold), 400);
+  assert.equal(await p.locator("[data-bank]").count(), 0);
+  assert.match(
+    await p.locator(".victory-banking").textContent(),
+    /400 gold sent/,
   );
   assert.equal(await p.locator("#overlay").isVisible(), true);
-  assert.equal(await p.evaluate(() => modalKind), "end");
   assert.equal(await p.locator(".fallen-roster").count(), 1);
+  await p.evaluate(() => finishVictory());
+  assert.equal(await p.evaluate(() => campProfile().gold), 400);
+  await p.reload();
+  assert.equal(await p.evaluate(() => campProfile().gold), 400);
 });
 
 test("room descriptions follow the current terrain and the pursuer arrives with small smoke FX", async (t) => {
@@ -7210,4 +7220,505 @@ test("autofight recovers a stunned attacker instead of indefinitely using the re
   assert.equal(r.stun, 0);
   assert.equal(r.after, r.before);
   assert.equal(r.next, 0);
+});
+
+test("enemy hits strike the shared shield first and only HP overflow also targets the hero", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await encounter(p);
+  const r = await p.evaluate(async () => {
+    const e = state.enemy;
+    e.reels = [
+      [{ type: "attack", tier: 1 }],
+      [{ type: "blank", tier: 1 }],
+      [{ type: "miss", tier: 1 }],
+    ];
+    e.damage = 10;
+    e.strikes = 1;
+    const original = beam,
+      targets = [];
+    beam = (from, to, type) =>
+      targets.push({ id: to.closest("#block") ? "block" : to.id, type });
+    try {
+      state.block = 20;
+      const hp = state.party[0].hp;
+      await enemyTurn(e);
+      const full = {
+        targets: targets.splice(0),
+        hp: state.party[0].hp,
+        before: hp,
+        readouts: [...document.querySelectorAll(".combat-number")].map(
+          (el) => ({
+            target: el.dataset.target,
+            blocked: el.classList.contains("blocked"),
+            text: el.textContent,
+          }),
+        ),
+      };
+      state.block = 2;
+      await enemyTurn(e);
+      return {
+        full,
+        partial: { targets, hp: state.party[0].hp, block: state.block },
+      };
+    } finally {
+      beam = original;
+    }
+  });
+  assert.deepEqual(r.full.targets, [{ id: "block", type: "block" }]);
+  assert.equal(r.full.hp, r.full.before);
+  assert.ok(
+    r.full.readouts.some(
+      (n) => n.target === "block" && n.blocked && /BLOCKED/.test(n.text),
+    ),
+  );
+  assert.equal(
+    r.full.readouts.some((n) => n.target === "portrait-0" && !n.blocked),
+    false,
+  );
+  assert.deepEqual(r.partial.targets, [
+    { id: "block", type: "block" },
+    { id: "portrait-0", type: "attack" },
+  ]);
+  assert.ok(r.partial.hp < r.full.hp);
+  assert.equal(r.partial.block, 0);
+});
+
+test("team block tint grows to twenty while the actual protection remains uncapped", async (t) => {
+  const p = await game(t);
+  await encounter(p);
+  await p.addStyleTag({ content: ".team-block{transition:none!important}" });
+  const r = await p.evaluate(() => {
+    const shield = document.querySelector("#block > svg");
+    return [0, 5, 20, 100].map((value) => {
+      state.block = value;
+      renderBlock();
+      const el = document.querySelector("#block");
+      return {
+        amount: state.block,
+        text: el.querySelector("strong").textContent,
+        ink: getComputedStyle(el).color,
+        wash: getComputedStyle(el).backgroundColor,
+        strength: el.style.getPropertyValue("--block-strength"),
+        stable: shield === el.querySelector("svg"),
+      };
+    });
+  });
+  assert.deepEqual(
+    r.map((x) => x.amount),
+    [0, 5, 20, 100],
+  );
+  assert.equal(r[3].text, "100");
+  assert.notEqual(r[0].ink, r[1].ink);
+  assert.notEqual(r[1].ink, r[2].ink);
+  assert.equal(r[2].strength, "1");
+  assert.equal(r[3].strength, "1");
+  assert.ok(r.every((x) => x.stable));
+  // Disable the cosmetic transition when measuring its final plateau.
+  await p.addStyleTag({ content: ".team-block{transition:none!important}" });
+  const colors = await p.evaluate(() =>
+    [20, 100].map((n) => {
+      state.block = n;
+      renderBlock();
+      return getComputedStyle(document.querySelector("#block")).color;
+    }),
+  );
+  assert.equal(colors[0], colors[1]);
+});
+
+test("hero card clicks and keyboard activation spin once while portrait and editor controls retain their roles", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await encounter(p);
+  await faces(p);
+  await p.evaluate(() => {
+    state.party.push(makeHero("Mira", "healer"));
+    render();
+  });
+  await p.locator("#hero-0 .hero-name").click();
+  await finish(p);
+  assert.equal(await p.evaluate(() => state.party[0].stats.spins), 1);
+  await p.locator("#portrait-1").click();
+  assert.equal(await p.evaluate(() => state.target), 1);
+  assert.equal(await p.evaluate(() => state.party[1].stats.spins), 0);
+  await p.locator("#hero-0").focus();
+  await p.keyboard.press("Enter");
+  await finish(p);
+  assert.equal(await p.evaluate(() => state.party[0].stats.spins), 2);
+  await p.locator("#hero-0 [data-edit]").click();
+  assert.equal(await p.evaluate(() => modalKind), "editor");
+  assert.equal(await p.evaluate(() => state.party[0].stats.spins), 2);
+});
+
+test("portrait hover shows current lifetime statistics and respects nested status tooltips", async (t) => {
+  const p = await game(t);
+  await p.evaluate(() => {
+    const h = state.party[0];
+    Object.assign(h.stats, {
+      kills: 7,
+      damageDealt: 112,
+      criticals: 3,
+      healingReceived: 21,
+    });
+    h.poison = { turns: 3, damage: 1 };
+    render();
+  });
+  await p.locator("#portrait-0").hover({ position: { x: 10, y: 10 } });
+  assert.match(
+    await p.locator("#status-tooltip").textContent(),
+    /Damage dealt112/,
+  );
+  assert.match(await p.locator("#status-tooltip").textContent(), /Kills7/);
+  assert.match(await p.locator("#status-tooltip").textContent(), /Found/);
+  assert.match(
+    await p.locator("#status-tooltip").textContent(),
+    /Time \/ steps/,
+  );
+  await p.mouse.move(1, 1);
+  await p.evaluate(() => (state.party[0].stats.kills = 8));
+  await p.locator("#portrait-0").hover({ position: { x: 10, y: 10 } });
+  assert.match(await p.locator("#status-tooltip").textContent(), /Kills8/);
+  await p.locator("#portrait-0 .poison-badge").hover();
+  assert.match(await p.locator("#status-tooltip").textContent(), /Poison/);
+  assert.equal(
+    await p
+      .locator("#status-tooltip")
+      .evaluate((el) => el.classList.contains("hero-stats-tooltip")),
+    false,
+  );
+  await p.setViewportSize({ width: 320, height: 700 });
+  await p.locator("#portrait-0").hover({ position: { x: 10, y: 10 } });
+  const box = await p.locator("#status-tooltip").boundingBox();
+  assert.ok(
+    box.x >= 0 &&
+      box.x + box.width <= 321 &&
+      box.y >= 0 &&
+      box.y + box.height <= 701,
+    JSON.stringify(box),
+  );
+});
+
+test("single-target healing redirects only a completely full target to the lowest raw wounded HP", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await encounter(p);
+  await p.evaluate(() => {
+    state.party.push(makeHero("Mira", "healer"), makeHero("Wren", "rogue"));
+    state.party[1].hp = 10;
+    state.party[1].maxHp = 100;
+    state.party[2].hp = 8;
+    state.target = 0;
+    render();
+  });
+  await faces(p, [
+    ["heal", 1],
+    ["heal", 2],
+    ["blank", 1],
+  ]);
+  await p.evaluate(() => spin(0));
+  assert.equal(await p.evaluate(() => state.lastPlayerRoll.healTarget), 2);
+  assert.equal(await p.evaluate(() => state.party[1].hp), 10);
+  assert.ok(await p.evaluate(() => state.party[2].hp > 8));
+  await p.evaluate(() => {
+    state.party[0].hp = state.party[0].maxHp - 1;
+    state.target = 0;
+  });
+  await p.evaluate(() => spin(0));
+  assert.equal(await p.evaluate(() => state.lastPlayerRoll.healTarget), 0);
+  assert.equal(await p.evaluate(() => state.lastPlayerRoll.actualHealing), 1);
+});
+
+test("healing items recover another hero when the selected hero is full, but keep a partially wounded selection", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await p.evaluate(() => {
+    state.party.push(makeHero("Mira", "healer"), makeHero("Wren", "rogue"));
+    state.party[1].hp = 10;
+    state.party[2].hp = 8;
+    state.target = 0;
+    state.bag = { potion: 3 };
+    render();
+  });
+  assert.equal(await p.evaluate(() => canUseItem("potion")), true);
+  await p.evaluate(() => useItem("potion"));
+  assert.equal(await p.evaluate(() => state.target), 2);
+  assert.ok(await p.evaluate(() => state.party[2].hp > 8));
+  await p.evaluate(() => {
+    state.party[0].hp = state.party[0].maxHp - 1;
+    state.target = 0;
+  });
+  await p.evaluate(() => useItem("potion"));
+  assert.equal(await p.evaluate(() => state.target), 0);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 44);
+  await p.evaluate(() => {
+    state.party.forEach((h) => (h.hp = h.maxHp));
+  });
+  assert.equal(await p.evaluate(() => canUseItem("potion")), false);
+  assert.equal(await p.evaluate(() => state.bag.potion), 1);
+});
+
+test("options tabs reuse their title and animate it only when the menu is opened", async (t) => {
+  const p = await game(t);
+  await p.evaluate(() => {
+    window.titlePops = 0;
+    window.realPop = popTitle;
+    popTitle = (el) => {
+      if (el?.id === "modal-title") window.titlePops++;
+      return window.realPop(el);
+    };
+    optionsPage("play");
+    window.optionsTitle = document.querySelector("#modal-title");
+  });
+  for (const tab of ["audio", "display", "future", "play"])
+    await p.locator("#tab-" + tab).click();
+  assert.equal(await p.evaluate(() => window.titlePops), 1);
+  assert.equal(
+    await p.evaluate(
+      () => window.optionsTitle === document.querySelector("#modal-title"),
+    ),
+    true,
+  );
+  await p.locator("#modal [data-close]").last().click();
+  await p.locator("#options-tab").click();
+  assert.equal(await p.evaluate(() => window.titlePops), 2);
+});
+
+test("discovery clues hold their opacity then fade gradually instead of disappearing abruptly", async (t) => {
+  const p = await game(t);
+  await p.evaluate(blankFloor);
+  const r = await p.evaluate(() => {
+    const cell = state.map[state.position];
+    cell.visited = true;
+    cell.hintChecked = false;
+    state.map[pos(2, 7)].event = "treasure";
+    const rand = Math.random;
+    Math.random = () => 0;
+    try {
+      maybeDiscoveryHint();
+    } finally {
+      Math.random = rand;
+    }
+    const el = document.querySelector(".discovery-whisper"),
+      animation = el.getAnimations()[0];
+    animation.pause();
+    const values = [2000, 5000, 8000].map((time) => {
+      animation.currentTime = time;
+      return Number(getComputedStyle(el).opacity);
+    });
+    return { values, duration: animation.effect.getTiming().duration };
+  });
+  assert.equal(r.duration, 9000);
+  assert.ok(r.values[0] > 0.98);
+  assert.ok(r.values[1] < r.values[0] && r.values[1] > r.values[2]);
+  assert.ok(r.values[2] < 0.2);
+});
+
+test("species cries cover every enemy and class, trigger at appearance and death, and use the audio controls", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  const r = await p.evaluate(async () => {
+    const seen = [],
+      cry = GameSound.cry;
+    GameSound.cry = (kind, mood) => {
+      seen.push([kind, mood]);
+      return false;
+    };
+    try {
+      beginEncounter(false, { count: 2 });
+      render();
+      const types = state.enemies.map((e) => e.art);
+      window.entrance = encounterEntrance();
+      await new Promise((r) => setTimeout(r, 30));
+      document.querySelector("#stage-confirm").click();
+      await window.entrance;
+      state.enemies.forEach((e) => {
+        e.passive = null;
+        damageEnemy(e.hp + 100, "Test", e);
+      });
+      recordDeath(state.party[0], "Test");
+      return {
+        seen,
+        types,
+        missing: [
+          ...Object.keys(ENEMY_PROFILES),
+          "fighter",
+          "healer",
+          "rogue",
+          "mage",
+          "ranger",
+        ].filter((id) => !CRY_PROFILES[id]),
+        distinct: new Set(
+          Object.values(CRY_PROFILES).map((p) => JSON.stringify(p)),
+        ).size,
+        total: Object.keys(CRY_PROFILES).length,
+      };
+    } finally {
+      GameSound.cry = cry;
+    }
+  });
+  assert.deepEqual(r.missing, []);
+  assert.equal(r.distinct, r.total);
+  for (const type of r.types) {
+    assert.ok(r.seen.some((x) => x[0] === type && x[1] === "appear"));
+    assert.ok(r.seen.some((x) => x[0] === type && x[1] === "death"));
+  }
+  assert.ok(r.seen.some((x) => x[0] === "fighter" && x[1] === "death"));
+});
+
+test("the layered music and creature calls synthesize audio without gameplay RNG and remain bounded and mutable by volume", async (t) => {
+  const p = await game(t);
+  await p.evaluate(() => {
+    const create = AudioContext.prototype.createGain;
+    AudioContext.prototype.createGain = function () {
+      const gain = create.call(this);
+      if (!window.musicAnalyser) {
+        window.musicAnalyser = this.createAnalyser();
+        gain.connect(window.musicAnalyser);
+      }
+      return gain;
+    };
+  });
+  await p.locator("#options-tab").click();
+  await p.locator("#tab-audio").click();
+  await p.locator("#sound-preview").click();
+  await p.waitForFunction(() => GameSound.context?.state === "running");
+  const r = await p.evaluate(async () => {
+    const before = GameSound.stats.musicNotes,
+      rand = Math.random;
+    let calls = 0;
+    Math.random = () => {
+      calls++;
+      return 0.5;
+    };
+    try {
+      GameSound.cry("rat", "appear");
+      GameSound.cry("healer", "death");
+      setPreference("sfxVolume", 0);
+      setPreference("ambienceVolume", 0);
+      await new Promise((r) => setTimeout(r, 1200));
+      const notes = GameSound.stats.musicNotes - before;
+      const samples = new Float32Array(window.musicAnalyser.fftSize);
+      window.musicAnalyser.getFloatTimeDomainData(samples);
+      const rms = Math.sqrt(
+        samples.reduce((sum, v) => sum + v * v, 0) / samples.length,
+      );
+      setPreference("muted", true);
+      const muted = GameSound.cry("pursuer");
+      return {
+        notes,
+        rms,
+        calls,
+        muted,
+        cries: GameSound.stats.cries,
+        voices: GameSound.stats.peakVoices,
+        phrases: MUSIC_SCORE.melody.length,
+        chords: MUSIC_SCORE.chords.length,
+      };
+    } finally {
+      Math.random = rand;
+    }
+  });
+  assert.ok(r.notes >= 1);
+  assert.ok(
+    r.rms > 0.00001,
+    "music produces a real audio signal with SFX and ambience silenced",
+  );
+  assert.equal(r.calls, 0);
+  assert.equal(r.muted, false);
+  assert.ok(r.cries >= 2);
+  assert.ok(r.voices <= 20);
+  assert.ok(r.phrases >= 64 && r.chords >= 4);
+});
+
+test("final automatic banking reconciles an interrupted run write and extends an older partial tenth-floor deposit once", async (t) => {
+  const p = await game(t);
+  const r = await p.evaluate(() => {
+    state.depth = 10;
+    state.won = true;
+    state.over = true;
+    state.gold = 125;
+    state.bankedFloors[10] = 25;
+    const profile = emptyProfile();
+    profile.gold = 25;
+    profile.deposits[state.runId + ":10"] = 25;
+    localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+    const before = JSON.stringify(state);
+    const amount = bankVictoryGold(),
+      first = campProfile().gold;
+    localStorage.setItem(SAVE_KEY, before);
+    load();
+    save();
+    load();
+    return {
+      amount,
+      first,
+      after: campProfile().gold,
+      carried: state.gold,
+      ack: state.bankedFloors[10],
+    };
+  });
+  assert.deepEqual(r, {
+    amount: 125,
+    first: 150,
+    after: 150,
+    carried: 0,
+    ack: 150,
+  });
+});
+
+test("victory storage failure retains the reward and offers a retry without any percentage bank choices", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  await p.evaluate(() => {
+    state.depth = 10;
+    state.gold = 80;
+    state.floorBossDefeated = true;
+    window.realStorageWrite = Storage.prototype.setItem;
+    Storage.prototype.setItem = function (key, value) {
+      if (key === PROFILE_KEY) throw Error("Storage is full");
+      return window.realStorageWrite.call(this, key, value);
+    };
+    finishVictory();
+    Storage.prototype.setItem = window.realStorageWrite;
+  });
+  assert.equal(await p.evaluate(() => state.gold), 380);
+  assert.equal(await p.locator("[data-bank]").count(), 0);
+  assert.equal(await p.evaluate(() => state.victoryBankPending), true);
+  await p.locator("[data-retry-victory-bank]").click();
+  assert.equal(await p.evaluate(() => state.gold), 0);
+  assert.equal(await p.evaluate(() => campProfile().gold), 380);
+  assert.equal(await p.locator("[data-retry-victory-bank]").count(), 0);
+  assert.equal(await p.locator("[data-run-gold]").textContent(), "0");
+});
+
+test("floor and final celebrations launch paper fireworks with a much larger final burst, without gameplay RNG", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  const r = await p.evaluate(async () => {
+    const rand = Math.random;
+    let calls = 0;
+    Math.random = () => {
+      calls++;
+      return 0.5;
+    };
+    try {
+      showSpotlight("Floor clear", "", "", "floor-clear");
+      particles = [];
+      celebrationFireworks(document.querySelector("#stage-card"));
+      await new Promise((r) => setTimeout(r, 240));
+      const floor = particles.filter((p) => p.kind === "firework").length;
+      closeSpotlight();
+      openModal("Victory", "", "end");
+      particles = [];
+      celebrationFireworks(document.querySelector("#modal"), true);
+      await new Promise((r) => setTimeout(r, 240));
+      const final = particles.filter((p) => p.kind === "firework").length;
+      return { floor, final, calls };
+    } finally {
+      Math.random = rand;
+    }
+  });
+  assert.ok(r.floor >= 48);
+  assert.ok(r.final > r.floor);
+  assert.equal(r.calls, 0);
 });

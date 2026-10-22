@@ -8090,6 +8090,143 @@ body[data-palette="warm"] {
     transition: none;
   }
 }
+
+/* Shared protection gains a restrained blue-silver wash; only tint saturates. */
+:root {
+  --block-blue: #477c9c;
+  --block-silver: #b8cbd7;
+}
+body[data-palette="dark"] {
+  --block-blue: #a5cee5;
+  --block-silver: #506575;
+}
+.team-block {
+  --protection-ink: color-mix(
+    in srgb,
+    var(--ink),
+    var(--block-blue) calc(var(--block-strength, 0) * 100%)
+  );
+  color: var(--protection-ink);
+  background: color-mix(
+    in srgb,
+    var(--paper-raised),
+    var(--block-silver) calc(var(--block-strength, 0) * 70%)
+  );
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+.team-block strong,
+.team-block > svg {
+  color: var(--protection-ink);
+}
+.team-block.blocking {
+  background-color: var(--block-silver);
+}
+.hero[data-hero-roll]:focus-visible {
+  outline: 2px dashed var(--focus);
+  outline-offset: -3px;
+}
+.hero[data-hero-roll][tabindex="0"] {
+  cursor: pointer;
+}
+.hero-stats-tooltip {
+  width: min(360px, calc(100vw - 16px));
+  max-width: calc(100vw - 16px);
+  font-size: 14px;
+  line-height: 1.15;
+}
+.hero-stats-tooltip > strong {
+  display: block;
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+.hero-stats-tooltip dl {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px 10px;
+  margin: 0;
+}
+.hero-stats-tooltip dt {
+  color: var(--soft);
+}
+.hero-stats-tooltip dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.hero-stats-tooltip dt:last-of-type {
+  grid-column: 1 / -1;
+}
+.hero-stats-tooltip dd:last-of-type {
+  grid-column: 1 / -1;
+}
+.victory-banking {
+  margin: 10px 0;
+  text-align: center;
+  color: var(--gold);
+}
+.victory-banking p {
+  margin: 3px 0;
+  font-size: 16px;
+  color: var(--ink);
+}
+/* Three seconds at full opacity, then a gradual fade; the journal keeps it. */
+.discovery-whisper {
+  animation: discovery-clue 9s both;
+}
+@keyframes discovery-clue {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -80%) scale(0.9);
+  }
+  5%,
+  36% {
+    opacity: 1;
+    transform: translate(-50%, -105%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -115%) scale(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .team-block {
+    transition: none;
+  }
+  .discovery-whisper {
+    animation-name: discovery-clue-still;
+  }
+}
+@keyframes discovery-clue-still {
+  0%,
+  36% {
+    opacity: 1;
+    transform: translate(-50%, -105%);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -105%);
+  }
+}
+.fx-beam.block {
+  background: var(--block-blue);
+  box-shadow: 0 0 8px var(--block-silver);
+}
+.combat-number.blocked {
+  color: var(--block-blue);
+  font-size: 29px;
+}
+.shielded-overlay {
+  color: var(--block-blue);
+}
+.shielded-overlay svg {
+  fill: color-mix(in srgb, var(--block-silver) 82%, transparent);
+  filter: drop-shadow(0 0 7px var(--block-silver));
+}
+.shielded-overlay b {
+  background: var(--block-silver);
+  border-color: var(--block-blue);
+}
 /* END GENERATED NOTEBOOK CSS */
     </style>
   </head>
@@ -8958,17 +9095,76 @@ function reconcileBanking() {
   // immediately afterwards, apply the committed withdrawal exactly once here.
   for (let depth = 1; depth <= 10; depth++) {
     const key = state.runId + ":" + depth;
-    if (
-      Object.hasOwn(p.deposits, key) &&
-      !Object.hasOwn(state.bankedFloors, depth)
-    ) {
-      state.gold = Math.max(0, state.gold - p.deposits[key]);
-      state.bankedFloors[depth] = p.deposits[key];
+    if (Object.hasOwn(p.deposits, key)) {
+      const acknowledged = state.bankedFloors[depth] || 0,
+        difference = p.deposits[key] - acknowledged;
+      if (difference > 0) {
+        state.gold = Math.max(0, state.gold - difference);
+        state.bankedFloors[depth] = p.deposits[key];
+      }
     }
   }
 }
+// Shared commit order: profile first, expedition acknowledgement second.
+// Extending the tenth-floor deposit also upgrades older partially banked wins.
+function commitCampDeposit(profile, amount) {
+  const key = state.runId + ":" + state.depth;
+  if (
+    !Number.isSafeInteger(amount) ||
+    amount <= 0 ||
+    amount > state.gold ||
+    !Number.isSafeInteger(profile.gold + amount) ||
+    !Number.isSafeInteger((profile.deposits[key] || 0) + amount)
+  )
+    throw Error("The deposit exceeds its balance limit.");
+  profile.gold += amount;
+  profile.deposits[key] = (profile.deposits[key] || 0) + amount;
+  localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+  state.gold -= amount;
+  state.bankedFloors ??= {};
+  state.bankedFloors[state.depth] = profile.deposits[key];
+  save();
+}
+function bankVictoryGold() {
+  if (!state.won || state.depth !== 10) return false;
+  try {
+    // Reconcile a previous successful profile write before considering a retry.
+    reconcileBanking();
+    const profile = readProfile(),
+      amount = state.gold;
+    if (!Number.isSafeInteger(amount) || amount < 0)
+      throw Error("The carried gold balance is invalid.");
+    if (amount > 0) commitCampDeposit(profile, amount);
+    state.victoryBanked = profile.deposits[state.runId + ":10"] || 0;
+    state.victoryBankPending = false;
+    save();
+    document
+      .querySelectorAll("[data-run-gold]")
+      .forEach((el) => (el.textContent = state.gold));
+    document
+      .querySelectorAll("[data-run-banked]")
+      .forEach(
+        (el) =>
+          (el.textContent = Object.values(state.bankedFloors || {}).reduce(
+            (n, v) => n + v,
+            0,
+          )),
+      );
+    return amount;
+  } catch (error) {
+    state.victoryBankPending = true;
+    save();
+    toast("Victory gold is still with the party: " + error.message);
+    return false;
+  }
+}
+function victoryBankingMarkup() {
+  const total = state.bankedFloors?.[10] || 0;
+  return `<section class="victory-banking" aria-label="Victory gold"><strong>${total} gold sent to camp</strong><p>${state.victoryBankPending ? "Your remaining gold is safe with the party until camp can be saved." : "All carried gold, including the final reward, has been banked."}</p>${state.victoryBankPending ? "<button data-retry-victory-bank>Retry saving victory gold</button>" : ""}</section>`;
+}
 function bankGold(percent) {
   if (
+    state.won ||
     ![25, 50, 75, 100].includes(percent) ||
     !state.floorClears?.some((f) => f.depth === state.depth) ||
     (!state.floorBossDefeated && !state.won)
@@ -8984,13 +9180,7 @@ function bankGold(percent) {
     if (!Number.isSafeInteger(state.gold) || state.gold <= 0) return false;
     const amount = Math.floor((state.gold * percent) / 100);
     if (amount <= 0 || !Number.isSafeInteger(p.gold + amount)) return false;
-    p.gold += amount;
-    p.deposits[key] = amount;
-    localStorage.setItem(PROFILE_KEY, JSON.stringify(p));
-    state.gold -= amount;
-    state.bankedFloors ??= {};
-    state.bankedFloors[state.depth] = amount;
-    save();
+    commitCampDeposit(p, amount);
     render();
     log(
       amount + " gold sent to camp. " + state.gold + " stays with the party.",
@@ -9517,7 +9707,7 @@ function wireSettingsTabs() {
         travel = null;
         document.querySelectorAll(".speech-bubble").forEach((e) => e.remove());
         state = {
-          version: 14,
+          version: 15,
           runId: newExpeditionId(),
           bankedFloors: {},
           runRules: rules,
@@ -9609,7 +9799,7 @@ function wireSettingsTabs() {
           );
           if (
             !s ||
-            ![1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14].includes(s.version) ||
+            ![1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].includes(s.version) ||
             s.map?.length !== W * H ||
             !Array.isArray(s.party) ||
             !s.party.length ||
@@ -9644,7 +9834,7 @@ function wireSettingsTabs() {
             retuneEnemies = s.version < 12,
             tunePursuer = s.version < 14;
           state = s;
-          state.version = 14;
+          state.version = 15;
           state.autoCombat = null;
           state.runRules = Array.isArray(state.runRules)
             ? state.runRules.filter((id) => Object.hasOwn(CAMP_UNLOCKS, id))
@@ -9811,6 +10001,7 @@ function wireSettingsTabs() {
           state.floorStart ??= floorSnapshot();
           if (!state.enemy) clearBattleStatuses();
           skip = state.speed === "skip";
+          if (state.won && state.depth === 10) bankVictoryGold();
           return true;
         } catch {
           return false;
@@ -10193,7 +10384,7 @@ function wireSettingsTabs() {
           state.party
             .map((h, i) => {
               let status = injury(h);
-              return `<article data-gear-target="${i}" class="hero ${status} ${state.target === i ? "selected" : ""}" id="hero-${i}"><div class="hero-dossier"><button class="portrait" id="portrait-${i}" data-target="${i}" aria-label="Healing target: ${h.name}" aria-pressed="${state.target === i}" ${busy || !alive(h) ? "disabled" : ""}>${portraitArt(h.job, h)}${statusMarkup(h)}${traitMarkup(h)}</button><div class="hero-name">${h.name}<small>${className(h.job)} · Lv.${h.level}</small></div>${equipmentMarkup(h, i)}</div><div class="hero-controls"><div class="hero-title-line"><span class="hp-info">HP ${h.hp} / ${h.maxHp}</span><span class="injury ${status}">${h.stun ? "stunned" : status}</span></div>${healthMarkup(h)}${drawMachine("hero-" + i, h.last, { hero: i, disabled: busy || !state.enemy || !h.hp || state.over })}<div class="bars"><div class="healthbar exp" title="Experience"><i style="width:${(h.xp / (h.level * 12)) * 100}%"></i></div></div><div class="edit-line"><span>${h.xp}/${h.level * 12} EXP</span><button class="edit-button" data-edit="${i}" ${busy || state.over ? "disabled" : ""} aria-label="Edit ${h.name}'s reels">✎ ${h.points} points</button></div></div></article>`;
+              return `<article data-hero-roll="${i}" tabindex="${state.enemy && alive(h) && !state.over ? "0" : "-1"}" role="group" aria-label="${escapeHTML(h.name)} · click card or press Enter to spin; portrait selects healing target" data-gear-target="${i}" class="hero ${status} ${state.target === i ? "selected" : ""}" id="hero-${i}"><div class="hero-dossier"><button class="portrait" id="portrait-${i}" data-hero-stats="${i}" data-target="${i}" aria-label="Healing target: ${h.name}" aria-pressed="${state.target === i}" ${busy || !alive(h) ? "disabled" : ""}>${portraitArt(h.job, h)}${statusMarkup(h)}${traitMarkup(h)}</button><div class="hero-name">${h.name}<small>${className(h.job)} · Lv.${h.level}</small></div>${equipmentMarkup(h, i)}</div><div class="hero-controls"><div class="hero-title-line"><span class="hp-info">HP ${h.hp} / ${h.maxHp}</span><span class="injury ${status}">${h.stun ? "stunned" : status}</span></div>${healthMarkup(h)}${drawMachine("hero-" + i, h.last, { hero: i, disabled: busy || !state.enemy || !h.hp || state.over })}<div class="bars"><div class="healthbar exp" title="Experience"><i style="width:${(h.xp / (h.level * 12)) * 100}%"></i></div></div><div class="edit-line"><span>${h.xp}/${h.level * 12} EXP</span><button class="edit-button" data-edit="${i}" ${busy || state.over ? "disabled" : ""} aria-label="Edit ${h.name}'s reels">✎ ${h.points} points</button></div></div></article>`;
             })
             .join("") +
           Array.from(
@@ -11161,6 +11352,7 @@ function wireSettingsTabs() {
 
       async function encounterEntrance() {
         GameSound.play("encounter");
+        battleEnemies().filter(e => e.hp > 0).forEach((e,i) => GameSound.cry(e.art,"appear",i * .12));
         if (innerWidth <= 760)
           $(".right-page").scrollIntoView({
             behavior: "instant",
@@ -11551,6 +11743,18 @@ function wireSettingsTabs() {
         );
       }
 
+      // Redirect only a wholly wasted single-target heal. Party heals/recovery
+      // deliberately call healHero directly, preserving their per-hero amounts.
+      function healingTarget(preferred = state.target) {
+        const selected = state.party[preferred];
+        if (alive(selected) && selected.hp < selected.maxHp) return preferred;
+        return (
+          state.party
+            .map((h, i) => ({ h, i }))
+            .filter(({ h }) => alive(h) && h.hp < h.maxHp)
+            .sort((a, b) => a.h.hp - b.h.hp || a.i - b.i)[0]?.i ?? preferred
+        );
+      }
       function healHero(i, n) {
         let h = state.party[i];
         if (!alive(h)) return 0;
@@ -11573,7 +11777,12 @@ function wireSettingsTabs() {
         combatNumber($("#portrait-" + i), actual, "heal");
         return actual;
       }
-      function damageHero(i, n, source, { piercing = false } = {}) {
+      function damageHero(
+        i,
+        n,
+        source,
+        { piercing = false, attacker = null, impact = {} } = {},
+      ) {
         let h = state.party[i];
         if (!alive(h)) return 0;
         h.stats ??= emptyStats();
@@ -11583,6 +11792,22 @@ function wireSettingsTabs() {
         let blocked = piercing ? 0 : Math.min(state.block, n);
         state.block -= blocked;
         let actual = Math.min(h.hp, n - blocked);
+        // A blocked segment lands on the shared shield. Only overflow reaches
+        // the victim; both use this exact damage calculation, including armour.
+        if (attacker) {
+          const origin = enemyArtEl(attacker);
+          if (blocked)
+            beam(origin, $("#block > svg") || $("#block"), "block", {
+              critical: impact.critical,
+            });
+          if (actual || (!blocked && resisted))
+            beam(
+              origin,
+              $("#portrait-" + i),
+              actual ? impact.type || "attack" : "block",
+              { ...impact, lethal: actual >= h.hp },
+            );
+        }
         h.hp -= actual;
         h.stats.damageTaken += actual;
         if (h.battleMemo && state.enemy) {
@@ -11597,29 +11822,45 @@ function wireSettingsTabs() {
           screenFX(
             /poison/i.test(source)
               ? "poison"
-              : /trap|rockfall|ruin/i.test(source) ? "trap" : "damage",
+              : /trap|rockfall|ruin/i.test(source)
+                ? "trap"
+                : "damage",
             0.7 + actual / h.maxHp,
           );
         h.stats.damageBlocked += blocked + resisted;
         syncHero(i);
         partyCardFeedback(i, actual ? "hit" : "shield");
         renderBlock();
-        if (blocked) armourFX(blocked, "Damage blocked");
+        if (blocked) armourFX(blocked, "Damage blocked", { announce: !!actual });
         if ((blocked || resisted) && !actual) shieldedFX($("#portrait-" + i));
-        floatAt(
-          $("#portrait-" + i),
-          actual ? "-" + actual + " HP" : "Team protected",
-          false,
-          !actual,
+        if (actual || !blocked)
+          floatAt(
+            $("#portrait-" + i),
+            actual ? "-" + actual + " HP" : "Protected",
+            false,
+            !actual,
+          );
+        burst(
+          actual || !blocked ? $("#portrait-" + i) : $("#block"),
+          actual ? "damage" : "shield",
+          16,
         );
-        burst($("#portrait-" + i), actual ? "damage" : "shield", 16);
-        shakeElement($("#hero-" + i), actual ? 5 : 2);
+        shakeElement(
+          actual || !blocked ? $("#hero-" + i) : $("#block"),
+          actual ? 5 : 2,
+        );
         shakeBook(actual ? 3 : 1);
         sayHero(i, actual ? (h.hp / h.maxHp < 0.35 ? "panic" : "hurt") : "block");
         log(
           `${source} → ${h.name}: ${actual} damage${blocked ? " (" + blocked + " team armour consumed)" : ""}.`,
         );
-        combatNumber($("#portrait-" + i), actual, "attack");
+        if (actual) combatNumber($("#portrait-" + i), actual, "attack");
+        else if (blocked || resisted)
+          combatNumber(
+            blocked ? $("#block") : $("#portrait-" + i),
+            blocked || resisted,
+            "block",
+          );
         if (h.hp === 0) recordDeath(h, source);
         return actual;
       }
@@ -11637,6 +11878,10 @@ function wireSettingsTabs() {
           leaveCorpse(e.art, e.name, true);
         }
         resolveEnemyWoundTrait(e);
+        if (e.hp <= 0 && !e.deathCryPlayed) {
+          e.deathCryPlayed = true;
+          GameSound.cry(e.art, "death");
+        }
         syncEnemy(e);
         const art = enemyArtEl(e);
         combatNumber(art, actual, "attack");
@@ -11720,6 +11965,7 @@ function wireSettingsTabs() {
         if (empty >= 0) state.enemies[empty] = ally;
         else state.enemies.push(ally);
         renderEncounter();
+        GameSound.cry(ally.art, "appear");
         actionLabel(enemyArtEl(ally), "SUMMONED!");
         smokePoof(enemyArtEl(ally), true);
         shakeBook(3);
@@ -12184,10 +12430,10 @@ function wireSettingsTabs() {
             );
           }
           if (sums.heal) {
-            const target = alive(state.party[state.target])
-                ? state.target
-                : state.party.findIndex(alive),
+            const target = healingTarget(alive(state.party[state.target]) ? state.target : state.party.findIndex(alive)),
               n = healHero(target, sums.heal);
+            state.target = target;
+            state.lastPlayerRoll.healTarget = target;
             h.stats.healingDone += n;
             state.lastPlayerRoll.actualHealing = n;
             beam($("#portrait-" + i), $("#portrait-" + target), "heal");
@@ -12333,20 +12579,12 @@ function wireSettingsTabs() {
             state.lastEnemyRoll.hits = [];
             for (const power of hits) {
               if (!alive(victim) || power <= 0) break;
-              beam(
-                enemyArtEl(e),
-                $("#portrait-" + target),
-                raw.magic ? "magic" : "attack",
-                {
-                  critical: multiplier > 1,
-                  lethal: power >= victim.hp + state.block,
-                },
-              );
               lunge(enemyArtEl(e), true);
               const actual = damageHero(
                 target,
                 power,
                 `${e.name}${multiplier > 1 ? " (×" + multiplier + " critical)" : ""}`,
+                {attacker:e,impact:{type:raw.magic ? "magic" : "attack",critical:multiplier > 1}},
               );
               n += actual;
               state.lastEnemyRoll.hits.push({ power, actual, at: Date.now() });
@@ -12460,6 +12698,7 @@ function wireSettingsTabs() {
           "floor-clear",
         );
         popTitle($("#stage-title"));
+        celebrationFireworks($("#stage-card"));
         burst($("#stage-card"), "confetti", 95);
         burst($("#stage-card"), "paper", 80);
         shakeBook(7);
@@ -13114,8 +13353,9 @@ function wireSettingsTabs() {
           });
       }
       function canUseItem(type, target = state.target) {
-        const item = ITEM_DEFS[type],
-          h = state.party[target];
+        const item = ITEM_DEFS[type];
+        if (["potion","bandage","ration"].includes(item?.family || type)) target = healingTarget(target);
+        const h = state.party[target];
         if (
           !item ||
           state.over ||
@@ -13226,9 +13466,10 @@ function wireSettingsTabs() {
         if (ITEM_DEFS[type]?.equipment)
           return selectEquipment(type, { free, internal });
         const wasBusy = busy,
-          h = state.party[state.target],
           item = ITEM_DEFS[type],
           family = item.family || type;
+        if (["potion","bandage","ration"].includes(family)) state.target = healingTarget();
+        const h = state.party[state.target];
         busy = true;
         sceneFast = false;
         if (!free) {
@@ -13392,13 +13633,17 @@ function wireSettingsTabs() {
         return useItem("ward");
       }
       function openModal(title, body, kind) {
+        const reuseTitle =
+          kind === "options" && modalKind === kind && !$("#overlay").hidden;
         if ($("#overlay").hidden) modalPrevious = document.activeElement;
         modalKind = kind;
-        $("#modal").innerHTML =
-          `<button class="quiet close" data-close aria-label="Close dialog">✕</button><div class="eyebrow">Scratchpad / field notes</div><h2 id="modal-title">${title}</h2><div class="modal-body"><div class="modal-flow">${body}</div></div>`;
+        if (reuseTitle) $("#modal .modal-flow").innerHTML = body;
+        else
+          $("#modal").innerHTML =
+            `<button class="quiet close" data-close aria-label="Close dialog">✕</button><div class="eyebrow">Scratchpad / field notes</div><h2 id="modal-title">${title}</h2><div class="modal-body"><div class="modal-flow">${body}</div></div>`;
         $("#overlay").hidden = false;
         $("#modal").focus();
-        popTitle($("#modal-title"));
+        if (!reuseTitle) popTitle($("#modal-title"));
         updateKeyboardBar();
         fitDialogs();
         requestFitUI();
@@ -13532,6 +13777,44 @@ function wireSettingsTabs() {
         particles = particles.slice(-900);
         if (!fxFrame) fxFrame = requestAnimationFrame(drawParticles);
       }
+      function celebrationFireworks(el, final = false) {
+        const run = state,
+          count = final ? 18 : 6;
+        for (let k = 0; k < count; k++) {
+          const launch = () => {
+            if (state !== run || !el?.isConnected || el.closest("[hidden]")) return;
+            const r = el.getBoundingClientRect(),
+              x = r.left + r.width * (0.12 + fxRandom() * 0.76),
+              y = Math.max(30, r.top + r.height * (0.12 + fxRandom() * 0.5)),
+              amount = final ? 80 : 48;
+            for (let n = 0; n < amount; n++) {
+              const angle = (n / amount) * Math.PI * 2,
+                speed = 2 + fxRandom() * (final ? 9 : 6);
+              particles.push({
+                x,
+                y,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed - 1.5,
+                size: 1.5 + fxRandom() * 2,
+                angle: 0,
+                spin: 0,
+                life: 0,
+                max: 850 + fxRandom() * 650,
+                kind: "firework",
+                tint: ["#c6a544", "#e4d7ac", "#9aaeb9"][n % 3],
+              });
+            }
+            particles = particles.slice(-1400);
+            if (!fxFrame) fxFrame = requestAnimationFrame(drawParticles);
+            if (k % 3 === 0) {
+              GameSound.play("reward");
+              shakeElement(el, final ? 5 : 2);
+            }
+          };
+          if (k === 0) launch();
+          else setTimeout(launch, k * (final ? 130 : 190));
+        }
+      }
       let fxLast = 0;
       function drawParticles(time) {
         fxFrame = 0;
@@ -13550,7 +13833,7 @@ function wireSettingsTabs() {
           fxContext.translate(p.x, p.y);
           fxContext.rotate(p.angle);
           fxContext.globalAlpha = Math.max(0, 1 - p.life / p.max);
-          fxContext.fillStyle = {
+          fxContext.fillStyle = p.tint || {
             paper: "#d4c8a7",
             dust: "#5b5749",
             damage: "#8d5140",
@@ -13558,14 +13841,18 @@ function wireSettingsTabs() {
             gold: "#b99b55",
             coin: "#c6a544",
             confetti: "#c9ae6c",
-            shield: "#6b8461",
+            shield: "#86a9be",
             water: "#829b91",
             scary: "#423a2e",
             poison: "#9666b6",
             smoke: "#b5bfbb",
           }[p.kind];
           fxContext.strokeStyle = fxContext.fillStyle;
-          if (p.kind === "smoke") {
+          if (p.kind === "firework") {
+            fxContext.lineWidth=p.size;
+            fxContext.lineCap="round";
+            fxContext.beginPath();fxContext.moveTo(0,0);fxContext.lineTo(-p.vx*2.2,-p.vy*2.2);fxContext.stroke();
+          } else if (p.kind === "smoke") {
             fxContext.globalAlpha *= 0.5;
             fxContext.beginPath();
             fxContext.arc(0, 0, p.size * (1 + p.life / p.max), 0, Math.PI * 2);
@@ -13691,6 +13978,7 @@ function wireSettingsTabs() {
       }
       function beam(from, to, type, impact = {}) {
         if (!from || !to) return;
+        const impactKind = type === "block" ? "shield" : "damage";
         let a = from.getBoundingClientRect(),
           b = to.getBoundingClientRect(),
           x = a.left + a.width / 2,
@@ -13714,10 +14002,10 @@ function wireSettingsTabs() {
         if (impact.critical) {
           for (let hit = 0; hit < 4; hit++)
             setTimeout(() => {
-              burst(to, "damage", 16);
+              burst(to, impactKind, 16);
               burst(to, "paper", 9);
               shakeElement(to, 4 + hit);
-              impactFlash(to, hit);
+              if (type !== "block") impactFlash(to, hit);
             }, hit * 65);
         }
         if (impact.critical || impact.lethal) {
@@ -13726,7 +14014,7 @@ function wireSettingsTabs() {
           el.dataset.impact = impact.lethal ? "lethal" : "critical";
           shakeElement(to, impact.lethal ? 9 : 7);
           shakeBook(impact.lethal ? 5 : 4);
-          burst(to, "damage", impact.lethal ? 42 : 30);
+          burst(to, impactKind, impact.lethal ? 42 : 30);
           burst(from, "paper", 15);
         }
         document.body.append(el);
@@ -13784,9 +14072,16 @@ function wireSettingsTabs() {
           state.round = 1;
         }
         $("#block").classList.toggle("inactive-combat", !state.enemy);
-        $("#block").innerHTML =
-          icon("block") +
-          `<strong>${state.block}</strong><span>TEAM BLOCK<small>All heroes · this battle</small></span>`;
+        $("#block").style.setProperty(
+          "--block-strength",
+          Math.min(20, Math.max(0, state.block)) / 20,
+        );
+        // Keep the shield SVG mounted while incoming critical segments animate.
+        if (!$("#block > svg"))
+          $("#block").innerHTML =
+            icon("block") +
+            `<strong>${state.block}</strong><span>TEAM BLOCK<small>All heroes · this battle</small></span>`;
+        else $("#block strong").textContent = state.block;
         $("#block").setAttribute(
           "aria-label",
           state.block + " team block. Shared by every hero; expires after battle.",
@@ -14804,17 +15099,130 @@ function wireSettingsTabs() {
           cooldown: 80,
         },
       };
+      // Original, deterministic miniature score: plucked melody, low strings
+      // and an airy harmony. MIDI pitches keep the composition easy to edit.
+      const MUSIC_SCORE = Object.freeze({
+        stepSeconds: 0.42,
+        chords: [
+          [50, 53, 57],
+          [46, 50, 53],
+          [48, 52, 55],
+          [45, 49, 52],
+        ],
+        melody: [
+          62,
+          null,
+          65,
+          69,
+          67,
+          65,
+          62,
+          null,
+          60,
+          62,
+          65,
+          null,
+          69,
+          67,
+          65,
+          null,
+          65,
+          null,
+          69,
+          70,
+          69,
+          65,
+          62,
+          null,
+          60,
+          null,
+          62,
+          65,
+          64,
+          61,
+          57,
+          null,
+          74,
+          69,
+          65,
+          null,
+          67,
+          69,
+          65,
+          62,
+          65,
+          62,
+          60,
+          null,
+          62,
+          65,
+          69,
+          null,
+          70,
+          69,
+          65,
+          null,
+          67,
+          65,
+          62,
+          60,
+          64,
+          null,
+          61,
+          57,
+          61,
+          64,
+          69,
+          null,
+        ],
+      });
+      // Each species/class has its own short synthesised call, never a speech
+      // recording. Contours are frequency ratios; death stretches/drops the call.
+      const CRY_PROFILES = {
+        fighter: ["triangle", 150, [1, 1.4, 1.15, 0.8], 0.48, 0.1],
+        healer: ["sine", 440, [1, 1.25, 1.5, 1.1], 0.58, 0],
+        rogue: ["triangle", 280, [1, 1.7, 1.2, 0.7], 0.32, 0.08],
+        mage: ["sine", 330, [1, 1.5, 2, 1.3], 0.65, 0],
+        ranger: ["triangle", 390, [1, 1.35, 0.95, 1.5], 0.43, 0],
+        skull: ["square", 110, [1, 1.8, 0.85, 1.2], 0.4, 0.2],
+        rat: ["sawtooth", 720, [1, 1.4, 0.9, 1.7, 0.7], 0.27, 0.1],
+        ghost: ["sine", 360, [1, 1.3, 1.15, 0.55], 0.8, 0.04],
+        slime: ["sine", 100, [1, 2.5, 1.2, 0.6], 0.5, 0.08],
+        mimic: ["sawtooth", 125, [1, 0.8, 1.6, 0.65], 0.55, 0.2],
+        gnawer: ["triangle", 230, [1, 1.6, 1.2, 1.8, 0.8], 0.35, 0.14],
+        bellkeeper: ["sine", 180, [1, 2, 1.5, 1], 0.85, 0.02],
+        widow: ["sawtooth", 510, [1, 0.9, 1.3, 0.65], 0.45, 0.18],
+        oracle: ["sine", 260, [1, 1.33, 1.1, 0.75], 0.75, 0.04],
+        pageeater: ["sawtooth", 80, [1, 1.5, 1.1, 0.6], 0.82, 0.25],
+        pursuer: ["triangle", 95, [1, 1.06, 0.8, 0.5], 0.95, 0.16],
+        revenant: ["square", 145, [1, 0.75, 1.5, 0.6], 0.65, 0.12],
+        demon: ["sawtooth", 105, [1, 1.8, 1.5, 0.75], 0.7, 0.18],
+        lich: ["sine", 310, [1, 1.6, 1.2, 0.5], 0.9, 0.08],
+        abomination: ["sawtooth", 68, [1, 1.25, 0.8, 0.45], 1, 0.24],
+        moth: ["triangle", 590, [1, 1.12, 1.4, 0.9], 0.3, 0.05],
+        rustmite: ["square", 370, [1, 0.65, 1.3, 0.8, 1.5], 0.33, 0.16],
+        sporepilgrim: ["sine", 205, [1, 1.25, 1.4, 0.75], 0.7, 0.05],
+        mirrorhound: ["triangle", 190, [1, 2, 1.6, 0.8], 0.58, 0.14],
+        ashcolossus: ["triangle", 60, [1, 1.4, 1, 0.55], 1, 0.2],
+      };
       const GameSound = (() => {
         let context = null,
           master = null,
           buses = {},
           noise = null,
           timer = null,
-          note = 0;
+          note = 0,
+          nextBeat = 0;
         const active = new Set(),
           last = new Map(),
           gainTargets = new WeakMap();
-        const stats = { played: 0, peakVoices: 0 };
+        const stats = {
+          played: 0,
+          peakVoices: 0,
+          musicNotes: 0,
+          cries: 0,
+          lastCry: null,
+        };
         function configure(p) {
           if (!context) return;
           const now = context.currentTime;
@@ -14863,29 +15271,33 @@ function wireSettingsTabs() {
             if (document.hidden) return;
             await context.resume();
             if (!timer) {
+              nextBeat = context.currentTime + 0.04;
               background();
-              timer = setInterval(background, 1800);
+              timer = setInterval(background, 180);
             }
           } catch {
             /* Audio is optional; the notebook remains playable. */
           }
         }
-        function voice(cue, channel = "sfx") {
+        function voice(cue, channel = "sfx", when = null) {
           if (
             !context ||
             context.state !== "running" ||
             document.hidden ||
             preferences().muted ||
-            active.size >= 20 ||
+            active.size >= (channel === "sfx" ? 20 : 12) ||
             preferences()[channel + "Volume"] === 0 ||
             preferences().masterVolume === 0
           )
             return false;
-          const now = context.currentTime,
+          const now = Math.max(context.currentTime, when ?? context.currentTime),
             group = { nodes: [], gain: context.createGain() };
           group.gain.connect(buses[channel]);
           group.gain.gain.setValueAtTime(0, now);
-          group.gain.gain.linearRampToValueAtTime(cue.gain, now + 0.012);
+          group.gain.gain.linearRampToValueAtTime(
+            cue.gain,
+            now + (cue.attack || 0.012),
+          );
           group.gain.gain.exponentialRampToValueAtTime(0.0001, now + cue.duration);
           const cleanup = () => {
             if (!active.delete(group)) return;
@@ -14901,9 +15313,25 @@ function wireSettingsTabs() {
               node.playbackRate.value = frequency / 120;
             } else {
               node.type = cue.type || "sine";
-              node.frequency.value = frequency;
+              node.frequency.setValueAtTime(frequency, now);
+              if (cue.contour)
+                cue.contour.forEach((ratio, k) => {
+                  node.frequency.exponentialRampToValueAtTime(
+                    Math.max(20, frequency * ratio),
+                    now +
+                      0.01 +
+                      (k / (cue.contour.length - 1)) * (cue.duration - 0.04),
+                  );
+                });
             }
-            node.connect(group.gain);
+            if (cue.filter && !cue.noise) {
+              const filter = context.createBiquadFilter();
+              filter.type = "lowpass";
+              filter.frequency.value = cue.filter;
+              node.connect(filter);
+              filter.connect(group.gain);
+              group.nodes.push(filter);
+            } else node.connect(group.gain);
             group.nodes.push(node);
             node.start(
               now + i * Math.min(0.075, cue.duration / cue.frequencies.length),
@@ -14924,29 +15352,108 @@ function wireSettingsTabs() {
           last.set(id, now);
           return voice(cue);
         }
-        function background() {
-          if (!context || document.hidden) return;
-          const tones = [110, 130.81, 164.81, 146.83];
-          voice(
+        function cry(kind, mood = "appear", delay = 0) {
+          const id = kind === "skeleton" ? "skull" : kind,
+            profile = CRY_PROFILES[id] || CRY_PROFILES.skull,
+            [type, pitch, contour, duration, roughness] = profile,
+            dying = mood === "death";
+          const played = voice(
             {
-              frequencies: [tones[note++ % tones.length], 220],
-              duration: 1.7,
-              gain: 0.028,
-              type: "sine",
+              frequencies: [pitch * (dying ? 0.68 : 1)],
+              contour: dying ? [...contour].reverse().map((n) => n * 0.8) : contour,
+              duration: duration * (dying ? 1.25 : 1),
+              gain: 0.09,
+              type,
+              filter: 1800,
+              attack: 0.025,
             },
-            "music",
+            "sfx",
+            (context?.currentTime || 0) + delay,
           );
-          voice(
-            { frequencies: [60], duration: 1.7, gain: 0.025, noise: true },
-            "ambience",
-          );
+          if (played) {
+            stats.cries++;
+            stats.lastCry = { kind: id, mood };
+            if (roughness)
+              voice(
+                {
+                  frequencies: [80],
+                  duration: duration * 0.7,
+                  gain: roughness * 0.07,
+                  noise: true,
+                },
+                "sfx",
+                context.currentTime + delay,
+              );
+          }
+          return played;
+        }
+        function background() {
+          if (!context || document.hidden || context.state !== "running") return;
+          if (nextBeat < context.currentTime - 0.3)
+            nextBeat = context.currentTime + 0.04;
+          const hz = (midi) => 440 * Math.pow(2, (midi - 69) / 12);
+          while (nextBeat < context.currentTime + 0.28) {
+            const step = note++ % MUSIC_SCORE.melody.length,
+              beat = nextBeat,
+              chord = MUSIC_SCORE.chords[Math.floor(step / 16) % 4],
+              pitch = MUSIC_SCORE.melody[step];
+            if (
+              pitch &&
+              voice(
+                {
+                  frequencies: [hz(pitch)],
+                  duration: 0.75,
+                  gain: 0.045,
+                  type: "triangle",
+                  filter: 1500,
+                },
+                "music",
+                beat,
+              )
+            )
+              stats.musicNotes++;
+            if (step % 4 === 0) {
+              voice(
+                {
+                  frequencies: [hz(chord[0] - 12)],
+                  duration: 1.55,
+                  gain: 0.035,
+                  type: "sine",
+                  attack: 0.08,
+                },
+                "music",
+                beat,
+              );
+              voice(
+                {
+                  frequencies: chord.map((n) => hz(n + 12)),
+                  duration: 1.65,
+                  gain: 0.012,
+                  type: "sine",
+                  attack: 0.22,
+                },
+                "music",
+                beat,
+              );
+              voice(
+                { frequencies: [60], duration: 1.7, gain: 0.025, noise: true },
+                "ambience",
+                beat,
+              );
+            }
+            nextBeat += MUSIC_SCORE.stepSeconds;
+          }
         }
         document.addEventListener("pointerdown", unlock, { passive: true });
         document.addEventListener("keydown", (e) => {
           if (!e.repeat) unlock();
         });
         document.addEventListener("click", (e) => {
-          if (!e.target.closest("[data-tile]") && e.target.closest("button,input,select")) play("click");
+          if (
+            !e.target.closest("[data-tile]") &&
+            e.target.closest("button,input,select")
+          )
+            play("click");
         });
         document.addEventListener("visibilitychange", () => {
           if (document.hidden) {
@@ -14958,6 +15465,7 @@ function wireSettingsTabs() {
         return {
           unlock,
           play,
+          cry,
           configure,
           stats,
           get activeVoices() {
@@ -14976,7 +15484,6 @@ function wireSettingsTabs() {
           },
         };
       })();
-
       // Exactly one active, event-earned trait. Values are deliberately small.
       const HERO_TRAITS = Object.freeze({
         heroic: {
@@ -15634,7 +16141,7 @@ function wireSettingsTabs() {
           Math.max(90, Math.min(innerWidth - 90, r.left + r.width / 2)) + "px";
         note.style.top = Math.max(22, r.top) + "px";
         document.body.append(note);
-        setTimeout(() => note.remove(), 4200);
+        setTimeout(() => note.remove(), 9000);
       }
       function markTravelGoal(goal) {
         document
@@ -15677,6 +16184,46 @@ function wireSettingsTabs() {
           pool = pools[job];
         return pool.find((n) => !used.has(n)) || pool[0] + " " + (used.size + 1);
       }
+      const HERO_STAT_LABELS = {
+        spins: "Spins",
+        turnsMissed: "Turns missed",
+        battles: "Victories",
+        kills: "Kills",
+        damageDealt: "Damage dealt",
+        damageTaken: "Damage taken",
+        damageBlocked: "Damage blocked",
+        healingDone: "Healing given",
+        healingReceived: "Healing received",
+        xpEarned: "EXP earned",
+        itemsUsed: "Items used",
+        criticals: "Criticals",
+        levelsGained: "Levels gained",
+      };
+      function heroStatsMarkup(h) {
+        const stats = { ...emptyStats(), ...h.stats },
+          elapsed =
+            (h.diedAt || h.death?.diedAt || state.finishedAt || Date.now()) -
+            h.joinedAt;
+        const rows = [
+          ["Health", `${h.hp} / ${h.maxHp}`],
+          ["EXP / points", `${h.xp}/${h.level * 12} · ${h.points} points`],
+          [
+            "Time / steps",
+            `${elapsedText(elapsed)} · ${h.stepsWithParty ?? Math.max(0, state.steps - (h.joinedSteps || 0))} steps`,
+          ],
+          ...Object.entries(HERO_STAT_LABELS).map(([key, label]) => [
+            label,
+            stats[key] || 0,
+          ]),
+          ["Revives", stats.revives || 0],
+          ["Traits gained", h.traitsGained || 0],
+          ["Equipment", EQUIPMENT_DEFS[h.equipment]?.name || "None"],
+          ["Trait", HERO_TRAITS[h.trait?.id]?.name || "None"],
+          ["Found", foundText(h.origin)],
+        ];
+        if (h.death) rows.push(["Cause of death", h.death.cause]);
+        return `<strong>${escapeHTML(h.name)} · ${className(h.job)} · Lv.${h.level}</strong><dl>${rows.map(([label, value]) => `<dt>${escapeHTML(label)}</dt><dd>${escapeHTML(String(value))}</dd>`).join("")}</dl>`;
+      }
       function emptyStats() {
         return {
           spins: 0,
@@ -15713,6 +16260,7 @@ function wireSettingsTabs() {
       function recordDeath(h, cause) {
         if (h.dead && h.death) return;
         GameSound.play("death");
+        GameSound.cry(h.job, "death");
         h.dead = true;
         h.hp = 0;
         h.stun = 0;
@@ -15867,15 +16415,15 @@ function wireSettingsTabs() {
           "memorial",
         );
       }
-      function armourFX(spent, label) {
-        floatAt($("#block"), label + " · −" + spent, false, true);
+      function armourFX(spent, label, {announce=true}={}) {
+        if (announce) floatAt($("#block"), label + " · −" + spent, false, true);
         burst($("#block"), "shield", 24);
         shakeElement($("#block"), 4);
         animate(
           $("#block"),
           [
-            { background: "#c6d5ae", boxShadow: "0 0 0 0 #71865f88" },
-            { background: "#e6ddc2", boxShadow: "0 0 0 14px #71865f00" },
+            { background: "var(--block-silver)", boxShadow: "0 0 0 0 #86a9be88" },
+            { background: getComputedStyle($("#block")).backgroundColor, boxShadow: "0 0 0 14px #86a9be00" },
           ],
           { duration: 450, juice: true },
         );
@@ -16039,21 +16587,7 @@ function wireSettingsTabs() {
             out[key] += h.stats?.[key] || 0;
           return out;
         }, emptyStats());
-        const labels = {
-          spins: "Spins",
-          turnsMissed: "Turns missed",
-          battles: "Victories",
-          kills: "Kills",
-          damageDealt: "Damage dealt",
-          damageTaken: "Damage taken",
-          damageBlocked: "Damage blocked",
-          healingDone: "Healing given",
-          healingReceived: "Healing received",
-          xpEarned: "EXP earned",
-          itemsUsed: "Items used",
-          criticals: "Criticals",
-          levelsGained: "Levels gained",
-        };
+        const labels = HERO_STAT_LABELS;
         return `<div class="run-summary"><p>Floor <b>${state.depth} / 10</b> · <b>${state.battlesWon}</b> battles won · <b data-run-gold>${state.gold}</b> gold carried · <b data-run-banked>${Object.values(state.bankedFloors || {}).reduce((n, amount) => n + amount, 0)}</b> banked<br>${state.steps} steps · ${elapsedText((state.finishedAt || Date.now()) - (state.startedAt || Date.now()))}<br>${totals.damageDealt} damage dealt · ${totals.healingDone} healing · ${totals.kills} enemies slain</p><h3>${all ? "Every name in the story" : "The names we remember"} · ${roster.length}</h3><p class="roster-prompt">${floor ? "Scroll for every story and the final floor’s record ↓" : "Scroll through their stories ↓"}</p><div class="fallen-roster" tabindex="0" role="region" aria-label="${all ? "All adventurers, living and fallen" : "All fallen party members"}">${
           roster
             .map((h) => {
@@ -16075,10 +16609,10 @@ function wireSettingsTabs() {
         if (!el || (type === "heal" && !value)) return;
         const rect = el.getBoundingClientRect(),
           node = document.createElement("div");
-        node.className = "combat-number " + (type === "heal" ? "healing" : "damage");
+        node.className = "combat-number " + (type === "heal" ? "healing" : type === "block" ? "blocked" : "damage");
         node.dataset.target = el.id;
         node.dataset.value = value;
-        node.textContent = (type === "heal" ? "+" : "−") + value;
+        node.textContent = type === "block" ? value + " BLOCKED" : (type === "heal" ? "+" : "−") + value;
         node.style.left = rect.left + rect.width / 2 + "px";
         node.style.top = rect.top + rect.height * 0.3 + "px";
         document.body.append(node);
@@ -16391,6 +16925,12 @@ function wireSettingsTabs() {
         }
         spin(i);
       }
+      document.addEventListener("keydown", e => {
+        if (!e.repeat && ["Enter"," "].includes(e.key) && e.target.matches("[data-hero-roll]")) {
+          e.preventDefault();
+          startHero(Number(e.target.dataset.heroRoll));
+        }
+      });
       const statusTooltip = document.createElement("div");
       statusTooltip.className = "status-tooltip pencil-card";
       statusTooltip.id = "status-tooltip";
@@ -16398,9 +16938,14 @@ function wireSettingsTabs() {
       statusTooltip.hidden = true;
       document.body.append(statusTooltip);
       function showStatusTooltip(event) {
-        const source = event.target.closest("[data-tooltip]");
+        const source = event.target.closest("[data-tooltip],[data-hero-stats]");
         if (!source) return;
-        statusTooltip.textContent = source.dataset.tooltip;
+        const hero = source.hasAttribute("data-hero-stats")
+          ? state.party[Number(source.dataset.heroStats)]
+          : null;
+        statusTooltip.classList.toggle("hero-stats-tooltip", !!hero);
+        if (hero) statusTooltip.innerHTML = heroStatsMarkup(hero);
+        else statusTooltip.textContent = source.dataset.tooltip;
         statusTooltip.hidden = false;
         const r = source.getBoundingClientRect(),
           t = statusTooltip.getBoundingClientRect();
@@ -16409,18 +16954,28 @@ function wireSettingsTabs() {
             8,
             Math.min(innerWidth - t.width - 8, r.left + r.width / 2 - t.width / 2),
           ) + "px";
-        statusTooltip.style.top = Math.max(8, r.top - t.height - 8) + "px";
+        const above = r.top - t.height - 8;
+        statusTooltip.style.top =
+          Math.max(
+            8,
+            Math.min(innerHeight - t.height - 8, above >= 8 ? above : r.bottom + 8),
+          ) + "px";
       }
       document.addEventListener("pointerover", showStatusTooltip);
       document.addEventListener("focusin", showStatusTooltip);
       document.addEventListener("pointerout", (e) => {
-        if (e.target.closest("[data-tooltip]")) statusTooltip.hidden = true;
+        if (e.target.closest("[data-tooltip],[data-hero-stats]")) statusTooltip.hidden = true;
       });
       document.addEventListener("focusout", () => (statusTooltip.hidden = true));
       document.addEventListener("click", (e) => {
         statusTooltip.hidden = true;
         let b = e.target.closest("button");
-        if (!b || b.disabled) return;
+        if (!b) {
+          const card = e.target.closest("[data-hero-roll]");
+          if (card && !e.target.closest("input,select,a,[contenteditable]")) startHero(Number(card.dataset.heroRoll));
+          return;
+        }
+        if (b.disabled) return;
         if (b.hasAttribute("data-enemy-target")) selectEnemy(b.dataset.enemyTarget);
         if (b.hasAttribute("data-spin")) startHero(Number(b.dataset.spin));
         if (b.hasAttribute("data-roll-area")) {
@@ -16470,6 +17025,12 @@ function wireSettingsTabs() {
         if (b.hasAttribute("data-restart")) chooseStartingClass(false);
         if (b.hasAttribute("data-start-job")) startNewBook(b.dataset.startJob);
         if (b.hasAttribute("data-bank")) bankGold(Number(b.dataset.bank));
+        if (b.hasAttribute("data-retry-victory-bank")) {
+          const amount=bankVictoryGold();
+          const panel=$(".victory-banking");
+          if(panel) panel.outerHTML=victoryBankingMarkup();
+          if(amount) goldCelebration(amount,true);
+        }
         if (b.hasAttribute("data-gear-hero") && !busy) {
           const h = state.party[Number(b.dataset.gearHero)];
           toast(
@@ -16576,6 +17137,7 @@ function wireSettingsTabs() {
         }
       }
       document.addEventListener("keydown", (e) => {
+        if (e.defaultPrevented) return;
         if (keyboardShortcut(e)) return;
         if (
           document.activeElement.id === "log" &&
@@ -17019,6 +17581,7 @@ function wireSettingsTabs() {
         shakeElement(hero, 3);
       }
       function finishVictory() {
+        if (state.won) return;
         GameSound.play("victory");
         const finalFloorSummary = recordFloorClear();
         state.over = true;
@@ -17031,14 +17594,17 @@ function wireSettingsTabs() {
         log("The Last Redaction falls. All ten pages belong to your party.");
         closeSpotlight();
         render();
+        // Persist the awarded reward before committing its camp transfer.
         save();
+        const bankedNow = bankVictoryGold();
         openModal(
           "YOU WROTE THE ENDING!",
-          `<div class="victory-heading">TEN FLOORS CONQUERED</div>${runSummaryMarkup(true, finalFloorSummary)}${bankingMarkup()}<div class="modal-actions"><button class="primary" data-restart>A fresh page</button><button data-close>Keep this story</button></div>`,
+          `<div class="victory-heading">TEN FLOORS CONQUERED</div>${runSummaryMarkup(true, finalFloorSummary)}${victoryBankingMarkup()}<div class="modal-actions"><button class="primary" data-restart>A fresh page</button><button data-close>Keep this story</button></div>`,
           "end",
         );
         popTitle($("#modal-title"));
-        goldCelebration(300, true);
+        if (bankedNow > 0) goldCelebration(bankedNow, true);
+        celebrationFireworks($("#modal"), true);
         shakeBook(9);
         for (let k = 0; k < 5; k++)
           setTimeout(() => {
@@ -17048,7 +17614,10 @@ function wireSettingsTabs() {
               shakeElement($("#modal-title"), 5);
             }
           }, k * 260);
-        setTimeout(stopCoinRain, 4200);
+        const winningRun = state;
+        setTimeout(() => {
+          if (state === winningRun && state.won) stopCoinRain();
+        }, 4200);
       }
       const EQUIPMENT_DEFS = {
         trailBow: {

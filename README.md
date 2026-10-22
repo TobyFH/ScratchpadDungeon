@@ -16,13 +16,15 @@ The notebook opens with a choice of **Tank, Healer, Rogue or Mage**, plus Ranger
 
 ## Camp and banked gold
 
-After clearing a floor, optionally bank **25%, 50%, 75% or 100%** of carried gold.
+After clearing floors 1–9, optionally bank **25%, 50%, 75% or 100%** of carried gold.
 The remainder stays available for this expedition; banked gold survives deaths
-and new runs. Each floor permits one deposit, including the final victory sheet.
+and new runs. Each ordinary floor permits one deposit. **Winning floor 10
+automatically banks everything carried, including the final reward**, with no
+percentage choices. Its coin shower scales with the actual amount transferred.
 **Upgrades** in the starting-class menu spends this pool on 13 unlocks across
 Adventurers, Provisions, Challenges and Oddities. Purchased modifiers are optional,
 start disabled, and apply to subsequent expeditions when enabled. Autoplay banks
-25% on ordinary floor-clear sheets; it leaves the final victory decision to you
+25% on ordinary floor-clear sheets; it leaves the final adventurer records open
 and never purchases camp unlocks.
 
 Ranger's invitation unlocks both starting Rangers and wandering Rangers. There
@@ -110,9 +112,14 @@ Heroes have six ordinary weighted faces on each outer reel and seven faces on th
 
 Blade and magic tiers deal 2 / 4 / 7 / 11 damage per face. Healing tiers offer 2 / 4 / 6 / 8 HP. Block and stun tiers contribute 1 / 2 / 3 / 4 power. **Three identical type-and-tier symbols crit**; a middle class seal can complete two matching meaningful symbols while also casting its ability. A pair alone never crits. Hero and event critical multipliers are ×2, ×2.5, ×3 or ×4, with displayed before-and-after calculations.
 
-Normal combat rolls stay on the right page. Criticals get a multiplier popup that lingers automatically; **Strike now** skips its result hold. Treasure, fountain and other event criticals stay inside their original panel and still require confirmation. Critical damage lands as the original hit followed by a separate bonus hit, each with its own beam, number and impact. Flurries likewise produce separate hits. Criticals and tier III / IV attacks hit every enemy. Click portraits to choose damage and healing targets.
+Normal combat rolls stay on the right page. Criticals get a multiplier popup that lingers automatically; **Strike now** skips its result hold. Treasure, fountain and other event criticals stay inside their original panel and still require confirmation. Critical damage lands as the original hit followed by a separate bonus hit, each with its own beam, number and impact. Flurries likewise produce separate hits. Criticals and tier III / IV attacks hit every enemy. Click a hero card's name, statistics or blank space to spin; portraits still select targets, and equipment/editor buttons keep their own actions. A focused card also spins with Enter or Space. Hover a hero portrait for current lifetime statistics, origin, time with the party, equipment and trait; status badges keep their specific tooltips.
 
-**Team block** is a shared consumable pool, depleted point for point by damage and cleared after combat. A fully absorbed hit shows a shield on its recipient. Any positive armour blocks a stun but consumes up to six armour per power. A stunned hero misses one go without advancing or resetting enemy clocks. Enemy attack frequency determines how many player actions occur between attacks; difficult enemies can make multiple separately rolled strikes.
+A single-target healing roll or tonic aimed at a full-health hero redirects to
+the living wounded hero with the **lowest raw HP**, not the lowest percentage.
+A partially wounded selection stays selected even if some healing is wasted.
+Party heals, wells and floor recovery retain their individual per-hero amounts.
+
+**Team block** is a shared consumable pool, depleted point for point by damage and cleared after combat. Intercepted enemy attacks strike the team shield; any HP overflow also fires at the wounded hero. A fully absorbed hit shows a shield on its recipient. Its blue-silver tint deepens from 0 to 20 block; protection itself is uncapped. Any positive armour blocks a stun but consumes up to six armour per power. A stunned hero misses one go without advancing or resetting enemy clocks. Enemy attack frequency determines how many player actions occur between attacks; difficult enemies can make multiple separately rolled strikes.
 
 Enemy damage now grows faster with depth. Attack and magic faces advance on
 floors 5 and 9; species keep their usual mix of powers. The final guardian acts
@@ -207,8 +214,11 @@ Settings persist across fresh runs and reloads. **Skip critical roll visuals**
 still rolls and applies the same multiplier, with normal damage and event results;
 it only removes the critical machine, popup/inline animation and wait.
 
-Audio consists of quiet, temporary synthesised cues, a simple music pattern and
-ambient noise. A click or key unlocks sound; hidden tabs pause it. No external
+Audio combines synthesised cues, an original 64-step minor-key melody with
+plucked tones, bass and soft chord layers, plus quiet ambient noise. Every enemy
+type and hero class has a distinct short creature call; enemies call on appearance
+and death, and heroes on death. Calls use the effects volume; music and ambience
+retain their own sliders. A click or key unlocks sound; hidden tabs pause it. No external
 audio files or network service are needed. Torch flicker covers the screen and
 can be disabled independently of gameplay particles. **Display → Full screen
 effects** separately controls coloured edge pulses for wounds, poison, healing,
@@ -219,6 +229,11 @@ numbers/particles remain but nothing is shaken.
 Resolution, language, desktop display mode and graphics quality are selectable,
 saved **preview controls**. They do not yet resize, translate or change the game.
 Browser fullscreen works separately from the future desktop-mode selector.
+The Options heading animates when opening the menu, not when changing its tabs.
+Discovery callouts hold at full opacity for a few seconds and fade gradually
+over nine seconds; the hint remains in the journal and on its still-hidden tile.
+Floor-clear sheets launch paper-like fireworks; the tenth-floor celebration
+uses a substantially larger series of bursts while its records stay open.
 
 ## Learned traits
 
@@ -252,7 +267,7 @@ generated HTML with its source changes. `npm test` checks freshness first, then
 runs gameplay and visual-system browser tests. Review output goes into ignored
 `test-results/ui-review/`; it includes the default, warm and dark palettes,
 1920×1080 and 1280×800 combat, a stacked mobile page, menus and a treasure crit.
-Additional fixtures show purple poison, critical health, enemy passives, stronger supplies, blue rivers and desktop/mobile floor-clear summaries. Additional captures cover every options page, trait badges, worn gear, all camp categories, banking, Ranger Aim on a full party at compact sizes, five new enemy sketches, screen-edge feedback and status tooltips. Those are review fixtures, not new gameplay rules.
+Additional fixtures show purple poison, critical health, enemy passives, stronger supplies, blue rivers and desktop/mobile floor-clear summaries. Additional captures cover every options page, trait badges, worn gear, all camp categories, banking, Ranger Aim on a full party at compact sizes, five new enemy sketches, screen-edge feedback, shield strength/interception, live portrait statistics and the automatic victory deposit/fireworks. Those are review fixtures, not new gameplay rules.
 
 ```sh
 npm ci

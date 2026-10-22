@@ -170,6 +170,22 @@ Inspection buttons keep the same opacity during travel locks; ordinary movement
 is not a new treasure animation. Inactive round/block widgets use the shared
 `.inactive-combat` treatment and reset values outside battle.
 
+The team-block pool uses `--block-blue`, `--block-silver` and a strength fraction
+which saturates at twenty, retaining an uncapped numeric value. Keep its shield
+SVG mounted when changing the count: enemy interception beams target that icon,
+with a separate beam for real HP damage. Blue-silver is protection, not healing.
+Hero card background/name/health clicks roll; nested targeting, equipment and
+edit buttons retain their actions. Keep the card keyboard-focusable in combat.
+Portrait statistics use the shared tooltip frame and a compact labelled grid;
+read live values on hover/focus, and give nested status badges priority.
+
+Options tabs replace only `.modal-flow`, preserving the existing title node
+and its initial opening animation. Don't replay `popTitle()` on each tab.
+Discovery callouts hold at full opacity before a slow fade; retain the journal
+entry and tile hint. Floor changes still dismiss obsolete callouts quickly.
+Victory banking uses a concise `.victory-banking` receipt, not percentage
+buttons. Fireworks remain behind meaningful content and require no extra click.
+
 Ranger's `.aim-meter` uses the existing `.machine-footnote` row: labelled stored
 power, short fill track and next-hit bonus. Do not add a row, move EXP, or rely
 on colour alone. Keep the meter and portrait badge consistent through storage,

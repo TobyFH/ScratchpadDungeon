@@ -38,3 +38,9 @@
       1920, 1280, 390 and 320px without touching EXP or expanding the card.
 - [ ] Full-screen edge effects leave the centre/inputs clear, use functional
       colours, respect reduced motion and stop immediately when toggled off.
+- [ ] Block colour strengthens up to twenty without capping protection; intercepted
+      attacks target the shield and only HP overflow also targets the hero.
+- [ ] Card-wide rolling preserves nested target/edit/equipment controls; portrait
+      statistics stay readable within compact viewports and use current values.
+- [ ] Options tabs preserve their title; clues linger before fading; final victory
+      shows an automatic deposit receipt with amount-scaled coins and fireworks.

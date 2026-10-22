@@ -175,17 +175,76 @@ function reconcileBanking() {
   // immediately afterwards, apply the committed withdrawal exactly once here.
   for (let depth = 1; depth <= 10; depth++) {
     const key = state.runId + ":" + depth;
-    if (
-      Object.hasOwn(p.deposits, key) &&
-      !Object.hasOwn(state.bankedFloors, depth)
-    ) {
-      state.gold = Math.max(0, state.gold - p.deposits[key]);
-      state.bankedFloors[depth] = p.deposits[key];
+    if (Object.hasOwn(p.deposits, key)) {
+      const acknowledged = state.bankedFloors[depth] || 0,
+        difference = p.deposits[key] - acknowledged;
+      if (difference > 0) {
+        state.gold = Math.max(0, state.gold - difference);
+        state.bankedFloors[depth] = p.deposits[key];
+      }
     }
   }
 }
+// Shared commit order: profile first, expedition acknowledgement second.
+// Extending the tenth-floor deposit also upgrades older partially banked wins.
+function commitCampDeposit(profile, amount) {
+  const key = state.runId + ":" + state.depth;
+  if (
+    !Number.isSafeInteger(amount) ||
+    amount <= 0 ||
+    amount > state.gold ||
+    !Number.isSafeInteger(profile.gold + amount) ||
+    !Number.isSafeInteger((profile.deposits[key] || 0) + amount)
+  )
+    throw Error("The deposit exceeds its balance limit.");
+  profile.gold += amount;
+  profile.deposits[key] = (profile.deposits[key] || 0) + amount;
+  localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+  state.gold -= amount;
+  state.bankedFloors ??= {};
+  state.bankedFloors[state.depth] = profile.deposits[key];
+  save();
+}
+function bankVictoryGold() {
+  if (!state.won || state.depth !== 10) return false;
+  try {
+    // Reconcile a previous successful profile write before considering a retry.
+    reconcileBanking();
+    const profile = readProfile(),
+      amount = state.gold;
+    if (!Number.isSafeInteger(amount) || amount < 0)
+      throw Error("The carried gold balance is invalid.");
+    if (amount > 0) commitCampDeposit(profile, amount);
+    state.victoryBanked = profile.deposits[state.runId + ":10"] || 0;
+    state.victoryBankPending = false;
+    save();
+    document
+      .querySelectorAll("[data-run-gold]")
+      .forEach((el) => (el.textContent = state.gold));
+    document
+      .querySelectorAll("[data-run-banked]")
+      .forEach(
+        (el) =>
+          (el.textContent = Object.values(state.bankedFloors || {}).reduce(
+            (n, v) => n + v,
+            0,
+          )),
+      );
+    return amount;
+  } catch (error) {
+    state.victoryBankPending = true;
+    save();
+    toast("Victory gold is still with the party: " + error.message);
+    return false;
+  }
+}
+function victoryBankingMarkup() {
+  const total = state.bankedFloors?.[10] || 0;
+  return `<section class="victory-banking" aria-label="Victory gold"><strong>${total} gold sent to camp</strong><p>${state.victoryBankPending ? "Your remaining gold is safe with the party until camp can be saved." : "All carried gold, including the final reward, has been banked."}</p>${state.victoryBankPending ? "<button data-retry-victory-bank>Retry saving victory gold</button>" : ""}</section>`;
+}
 function bankGold(percent) {
   if (
+    state.won ||
     ![25, 50, 75, 100].includes(percent) ||
     !state.floorClears?.some((f) => f.depth === state.depth) ||
     (!state.floorBossDefeated && !state.won)
@@ -201,13 +260,7 @@ function bankGold(percent) {
     if (!Number.isSafeInteger(state.gold) || state.gold <= 0) return false;
     const amount = Math.floor((state.gold * percent) / 100);
     if (amount <= 0 || !Number.isSafeInteger(p.gold + amount)) return false;
-    p.gold += amount;
-    p.deposits[key] = amount;
-    localStorage.setItem(PROFILE_KEY, JSON.stringify(p));
-    state.gold -= amount;
-    state.bankedFloors ??= {};
-    state.bankedFloors[state.depth] = amount;
-    save();
+    commitCampDeposit(p, amount);
     render();
     log(
       amount + " gold sent to camp. " + state.gold + " stays with the party.",

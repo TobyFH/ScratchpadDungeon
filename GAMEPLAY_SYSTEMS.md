@@ -107,6 +107,25 @@ existing eligibility rules above. The Unwritten's health multiplier is 1.28
 
 ## Combat presentation and cleanup
 
+`damageHero()` owns the precise post-resistance/block damage calculation. For
+an enemy attacker, blocked segments beam to the mounted team-shield SVG;
+positive HP damage additionally beams to the hero. Critical base/bonus segments
+each repeat that interception. `renderBlock()` updates the value without replacing
+the shield node while impacts run. Its `--block-strength` is `min(block,20)/20`,
+driving blue-silver ink and paper tokens; the actual pool is never capped.
+
+`healingTarget()` only redirects single-target actions whose selection is full
+(or no longer alive). It picks the living wounded hero with lowest **raw** HP.
+The roll and item-use paths share it; consumable availability uses it too.
+Partially wounded targets retain the complete roll/item, wasting excess normally.
+`healHero()` itself never redirects, so party heals, wells, shops and floor
+recovery cannot repeatedly concentrate their per-hero grants onto one hero.
+
+Hero card background/name/HP clicks and Enter/Space activate its reels. Nested
+portrait, equipment, edit and reel controls keep their explicit actions.
+`heroStatsMarkup()` derives live lifetime values on hover/focus, sharing
+`HERO_STAT_LABELS` with the final roster. Nested status/trait badges take priority.
+
 `syncStatusFX()` derives low/critical HP and poison/buff classes from live state.
 `partyCardFeedback()` supplies transient whole-card hit, heal, roll, poison and
 shield pulses without changing geometry or consuming gameplay randomness.
@@ -121,7 +140,7 @@ all combatants, updates portraits and removes stale status labels at battle end.
 
 ## Floor records and saves
 
-Version 14 loads older saves, retaining wounds, personal points, edited hero
+Version 15 loads older saves, retaining wounds, personal points, edited hero
 reels and base supply IDs. Enemy powers/traits can refresh under the new rules;
 ongoing enemy HP is retained. Saved Unwritten encounters refresh health and damage
 once, preserving their remaining HP fraction; the migration runs after older
@@ -132,6 +151,10 @@ Out-of-combat temporary statuses are cleaned up.
 living, retired and fallen members by ID, so death doesn't erase their work.
 `recordFloorClear()` stores one delta record per depth in `floorClears`.
 `celebrateFloorClear()` requires confirmation and adds paper/confetti fanfare.
+`celebrationFireworks()` adds six radial paper-spark launches; victory uses
+eighteen larger launches. The first burst is synchronous so Skip retains it;
+later callbacks require the same run and visible panel. Particle budgets are
+bounded and use `fxRandom()`, never gameplay RNG.
 The final boss retains immediate end-of-run victory, with final floor statistics
 included after the adventurer entries in the existing scrollable records. A legacy save without a baseline starts counting at
 load; it cannot recover earlier per-floor activity. Gold is labelled **net**
@@ -176,8 +199,17 @@ quality. Don't remove their visible preview explanation until implemented.
 
 `GameSound` owns a single gesture-unlocked Web Audio context, separate gain
 buses, a compressor, throttled cues and a maximum of 20 concurrent voice groups.
-`SOUND_CUES` describes replaceable oscillator/noise sounds. Background music is
-an intentionally simple repeating low-note sequence; ambience is quiet noise.
+`SOUND_CUES` describes replaceable oscillator/noise sounds. `MUSIC_SCORE` holds
+an original 64-step melody, four minor-key chord voicings and a .42-second step.
+A lookahead scheduler layers filtered triangle plucks, sine bass and swelling
+chords, with independent ambience. Resuming a hidden tab resets the scheduling
+clock rather than trying to play missed notes. Music/ambience use at most twelve
+voice groups to reserve capacity for effects within the overall twenty limit.
+`CRY_PROFILES` defines distinct contour/pitch/wave/duration/roughness for every
+enemy species and hero class. `GameSound.cry()` synthesises an appearance call
+or lower, stretched death variation on the SFX bus. Encounters and summons call
+on appearance; final enemy deaths call once, after any split/recovery passive.
+Hero death recording calls once per death, including a later death after revival.
 No audio files, downloads, paid services or gameplay RNG are used. Hidden tabs
 suspend audio and resume it after earlier activation. Context startup failure
 leaves the game playable. Chromium can defer idle gain-node evaluation; volume
@@ -267,7 +299,8 @@ remaining healing stock can be revisited when wounded. It ultimately commits
 when no useful preparation remains. The heuristic only reads revealed events
 and public discovery hints.
 Autoplay banks 25% on nonfinal floor-clear sheets, once, through the normal
-bank button; final records and the last deposit remain a player decision.
+bank button; the tenth-floor victory banks its entire remaining balance
+automatically through the same ledger, while final records stay open.
 
 `doubleBattleChance()` is 2/7/13/18% on floors 1–4, then +1 percentage point per
 floor (24% on floor 10). Bosses, strongholds and wandering ambushes use their

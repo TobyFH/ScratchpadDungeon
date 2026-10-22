@@ -1,10 +1,11 @@
 # Camp, banking and expedition rules
 
-Banking is offered on every guardian's floor-clear sheet. Choose 25%, 50%, 75%
+Banking is offered on guardians' floor-clear sheets for floors 1–9. Choose 25%, 50%, 75%
 or 100% of **currently carried gold**, rounded down. Continue without banking
-if you prefer to keep it for shops. Each floor permits one deposit. The final
-victory sheet also offers banking, including the victory gold, without closing
-the adventurer records. Gold left with a defeated party is lost on a new run;
+if you prefer to keep it for shops. Each ordinary floor permits one deposit. The final
+victory automatically banks **all carried gold plus the final reward**. There
+are no percentage choices on that sheet; the adventurer records remain open.
+Gold left with a defeated party is lost on a new run;
 gold already at camp remains.
 
 Open **New run → Upgrades** (or the Upgrades tab in the first adventurer chooser).
@@ -60,13 +61,22 @@ expeditions. Starting as a Ranger requires only the invitation.
 - `scratchpad-dungeon-camp-v1` stores profile version 1, bank balance, purchased
   IDs, enabled IDs and the deposit ledger. It is independent of the expedition
   and preference keys. New run never deletes it.
-- Expedition save version 14 retains the version-13 `runId`, `bankedFloors` and
-  snapshot of enabled `runRules`. Versions 1–13 still migrate; old expeditions start
+- Expedition save version 15 retains the version-13 `runId`, `bankedFloors` and
+  snapshot of enabled `runRules`. Versions 1–14 still migrate; old expeditions start
   without new modifiers and retain their wounds, equipment and edited reels.
 - A deposit is keyed by `runId:floor`. The profile write commits the transaction
   before the expedition is updated. If the expedition write is interrupted,
-  loading subtracts each committed, unacknowledged deposit exactly once and
-  records its acknowledgement. Repeated clicks cannot deposit again.
+  loading subtracts the difference between each committed deposit and its
+  acknowledged amount, then updates the acknowledgement. Ordinary floors still
+  reject repeat deposits. `commitCampDeposit()` owns the shared write order.
+- `bankVictoryGold()` transfers the entire carried balance on victory and on
+  loading a completed tenth floor. It can extend a legacy partially banked
+  tenth-floor deposit; difference-based reconciliation prevents double charging
+  if that extension's run write is interrupted. The victory reward is saved
+  before transferring, and `finishVictory()` refuses a second reward.
+  If the camp write fails, gold stays with the party; the actual failure exposes
+  a retry control instead of percentage choices. Coin effects use the amount
+  successfully transferred, not a fixed celebration value.
 - Purchases re-read and validate the latest profile, prerequisite and balance
   before writing. Costs, deposits and balances must be safe nonnegative integers.
   Failed profile writes leave carried gold and purchases unchanged. Corrupt

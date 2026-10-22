@@ -18,7 +18,7 @@ for the user's canonical reference. Generate fresh captures with
 | `ui/notebook.css`    | Presentation tokens, shared primitives, component treatments, palette and presentation breakpoints                       |
 | `ui/layout.css`      | Existing structural geometry, responsive arrangements and animation choreography; isolated in the `legacy` cascade layer |
 | `ui/drawings.js`     | All icons, portraits, creatures, corpses, floor marks, trap drawings and lever artwork                                   |
-| `ui/assets/`         | Nine-slice frames, tape, page wear, graphite textures, embedded fonts/licences and original creature scans                |
+| `ui/assets/`         | Nine-slice frames, tape, page wear, graphite textures, embedded fonts/licences and original creature scans               |
 | `tools/build-ui.cjs` | Embeds those sources and assets into the marked regions of `index.html`                                                  |
 | `index.html`         | Runnable, downloadable, self-contained game; HTML structure and gameplay remain here                                     |
 
@@ -195,6 +195,10 @@ Purple (`--poison`, `--poison-wash`) exclusively identifies poison. Blue
 (`--water-ink`, `--water-wash`) lightly tints impassable river water. Both have
 explicit dark-palette counterparts and preserve graphite linework. Low health
 uses the existing danger red; active rolling uses a faint gold card wash.
+Blue-silver (`--block-blue`, `--block-silver`) specifically communicates shared
+protection. Its strength grows from zero to twenty block, retaining the numeric
+count and shield silhouette. A blocked attack lands at the shield, rather than
+implying the hero lost HP.
 These are gameplay cues, not a broader decorative palette. Keep HP numbers,
 injury/status labels, shield indicators and the river's blocked symbol.
 

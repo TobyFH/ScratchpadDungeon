@@ -2297,3 +2297,140 @@ body[data-palette="warm"] {
     transition: none;
   }
 }
+
+/* Shared protection gains a restrained blue-silver wash; only tint saturates. */
+:root {
+  --block-blue: #477c9c;
+  --block-silver: #b8cbd7;
+}
+body[data-palette="dark"] {
+  --block-blue: #a5cee5;
+  --block-silver: #506575;
+}
+.team-block {
+  --protection-ink: color-mix(
+    in srgb,
+    var(--ink),
+    var(--block-blue) calc(var(--block-strength, 0) * 100%)
+  );
+  color: var(--protection-ink);
+  background: color-mix(
+    in srgb,
+    var(--paper-raised),
+    var(--block-silver) calc(var(--block-strength, 0) * 70%)
+  );
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+.team-block strong,
+.team-block > svg {
+  color: var(--protection-ink);
+}
+.team-block.blocking {
+  background-color: var(--block-silver);
+}
+.hero[data-hero-roll]:focus-visible {
+  outline: 2px dashed var(--focus);
+  outline-offset: -3px;
+}
+.hero[data-hero-roll][tabindex="0"] {
+  cursor: pointer;
+}
+.hero-stats-tooltip {
+  width: min(360px, calc(100vw - 16px));
+  max-width: calc(100vw - 16px);
+  font-size: 14px;
+  line-height: 1.15;
+}
+.hero-stats-tooltip > strong {
+  display: block;
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+.hero-stats-tooltip dl {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px 10px;
+  margin: 0;
+}
+.hero-stats-tooltip dt {
+  color: var(--soft);
+}
+.hero-stats-tooltip dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.hero-stats-tooltip dt:last-of-type {
+  grid-column: 1 / -1;
+}
+.hero-stats-tooltip dd:last-of-type {
+  grid-column: 1 / -1;
+}
+.victory-banking {
+  margin: 10px 0;
+  text-align: center;
+  color: var(--gold);
+}
+.victory-banking p {
+  margin: 3px 0;
+  font-size: 16px;
+  color: var(--ink);
+}
+/* Three seconds at full opacity, then a gradual fade; the journal keeps it. */
+.discovery-whisper {
+  animation: discovery-clue 9s both;
+}
+@keyframes discovery-clue {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -80%) scale(0.9);
+  }
+  5%,
+  36% {
+    opacity: 1;
+    transform: translate(-50%, -105%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -115%) scale(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .team-block {
+    transition: none;
+  }
+  .discovery-whisper {
+    animation-name: discovery-clue-still;
+  }
+}
+@keyframes discovery-clue-still {
+  0%,
+  36% {
+    opacity: 1;
+    transform: translate(-50%, -105%);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -105%);
+  }
+}
+.fx-beam.block {
+  background: var(--block-blue);
+  box-shadow: 0 0 8px var(--block-silver);
+}
+.combat-number.blocked {
+  color: var(--block-blue);
+  font-size: 29px;
+}
+.shielded-overlay {
+  color: var(--block-blue);
+}
+.shielded-overlay svg {
+  fill: color-mix(in srgb, var(--block-silver) 82%, transparent);
+  filter: drop-shadow(0 0 7px var(--block-silver));
+}
+.shielded-overlay b {
+  background: var(--block-silver);
+  border-color: var(--block-blue);
+}

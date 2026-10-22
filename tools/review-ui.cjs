@@ -340,6 +340,47 @@ const output = path.join(root, "test-results/ui-review");
     await shot("28-display-edge-toggle-mobile");
     await page.evaluate(() => closeModal());
     await page.setViewportSize({ width: 1920, height: 1080 });
+    for (const block of [0, 10, 20]) {
+      await page.evaluate((block) => {
+        state.block = block;
+        renderBlock();
+      }, block);
+      await shot("31-protection-" + block);
+    }
+    await page.evaluate(() => setPalette("dark"));
+    await shot("32-protection-dark");
+    await page.evaluate(() => {
+      setPalette("default");
+      Object.assign(state.party[0].stats, {
+        kills: 12,
+        damageDealt: 345,
+        damageTaken: 48,
+        healingReceived: 62,
+        criticals: 9,
+      });
+      render();
+    });
+    await page.locator("#portrait-0").hover({ position: { x: 10, y: 10 } });
+    await shot("33-hero-statistics");
+    await page.setViewportSize({ width: 320, height: 800 });
+    await page.locator("#portrait-0").hover({ position: { x: 10, y: 10 } });
+    await shot("34-hero-statistics-mobile");
+    await page.mouse.move(1, 1);
+    await page.setViewportSize({ width: 1920, height: 1080 });
+    await page.evaluate(() => {
+      state.block = 20;
+      renderBlock();
+      damageHero(0, 6, "The Bell Below", { attacker: state.enemy });
+    });
+    await shot("35-shield-interception", false, "allow");
+    await page.evaluate(() => {
+      state.depth = 10;
+      state.gold = 235;
+      state.floorBossDefeated = true;
+      finishVictory();
+    });
+    await shot("36-victory-bank-fireworks");
+    await page.evaluate(() => closeModal());
     const download = page.waitForEvent("download");
     await page.locator("#download").click();
     await (
