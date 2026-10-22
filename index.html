@@ -7537,6 +7537,270 @@ body[data-palette="dark"] {
 .tier-symbol.poison {
   color: var(--poison);
 }
+
+/* Detached sheets use a transparent torn-paper asset, shared by all dialogs. */
+:root {
+  --torn-paper: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNjAiIGhlaWdodD0iMzIwIiB2aWV3Qm94PSIwIDAgMjYwIDMyMCI+PGRlZnM+PGZpbHRlciBpZD0iZ3JhaW4iPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuNzIiIG51bU9jdGF2ZXM9IjIiIHNlZWQ9IjQxIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjxmZUNvbXBvbmVudFRyYW5zZmVyPjxmZUZ1bmNBIHR5cGU9ImxpbmVhciIgc2xvcGU9Ii4wNDUiLz48L2ZlQ29tcG9uZW50VHJhbnNmZXI+PGZlQ29tcG9zaXRlIGluMj0iU291cmNlR3JhcGhpYyIgb3BlcmF0b3I9ImluIi8+PC9maWx0ZXI+PC9kZWZzPjxwYXRoIGQ9Ik03IDhMIDIxIDVMIDM1IDlMIDUyIDVMIDY5IDhMIDg4IDRMIDEwOCA3TCAxMjkgNEwgMTQ4IDhMIDE3MSA1TCAxOTQgOEwgMjE1IDRMIDIzOCA4TCAyNTEgNUwgMjUzIDIxTCAyNDkgMzlMIDI1NCA1OEwgMjUwIDc5TCAyNTQgMTAxTCAyNTEgMTIyTCAyNTUgMTQ2TCAyNTAgMTY5TCAyNTQgMTkyTCAyNTAgMjE4TCAyNTQgMjQwTCAyNTAgMjYzTCAyNTQgMjg2TCAyNTAgMzA3TCAyMzUgMzExTCAyMTYgMzA3TCAxOTUgMzEyTCAxNzMgMzA4TCAxNTEgMzEyTCAxMjkgMzA4TCAxMDcgMzEyTCA4NSAzMDhMIDYzIDMxMUwgNDQgMzA3TCAyMyAzMTFMIDYgMzA2TCA5IDI4OEwgNSAyNjdMIDggMjQ2TCA0IDIyM0wgOCAyMDFMIDUgMTc5TCA4IDE1OEwgNCAxMzZMIDkgMTE0TCA1IDkxTCA4IDcwTCA0IDQ5TCA4IDI5WiIgZmlsbD0iI2YyZWFkOSIgc3Ryb2tlPSIjOGI4MTZkIiBzdHJva2Utb3BhY2l0eT0iLjM4IiBzdHJva2Utd2lkdGg9Ii42NSIvPjxwYXRoIGQ9Ik03IDhMIDIxIDVMIDM1IDlMIDUyIDVMIDY5IDhMIDg4IDRMIDEwOCA3TCAxMjkgNEwgMTQ4IDhMIDE3MSA1TCAxOTQgOEwgMjE1IDRMIDIzOCA4TCAyNTEgNUwgMjUzIDIxTCAyNDkgMzlMIDI1NCA1OEwgMjUwIDc5TCAyNTQgMTAxTCAyNTEgMTIyTCAyNTUgMTQ2TCAyNTAgMTY5TCAyNTQgMTkyTCAyNTAgMjE4TCAyNTQgMjQwTCAyNTAgMjYzTCAyNTQgMjg2TCAyNTAgMzA3TCAyMzUgMzExTCAyMTYgMzA3TCAxOTUgMzEyTCAxNzMgMzA4TCAxNTEgMzEyTCAxMjkgMzA4TCAxMDcgMzEyTCA4NSAzMDhMIDYzIDMxMUwgNDQgMzA3TCAyMyAzMTFMIDYgMzA2TCA5IDI4OEwgNSAyNjdMIDggMjQ2TCA0IDIyM0wgOCAyMDFMIDUgMTc5TCA4IDE1OEwgNCAxMzZMIDkgMTE0TCA1IDkxTCA4IDcwTCA0IDQ5TCA4IDI5WiIgZmlsbD0iI2YyZWFkOSIgZmlsdGVyPSJ1cmwoI2dyYWluKSIvPjxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzhiODE2ZCIgc3Ryb2tlLXdpZHRoPSIuNDUiIG9wYWNpdHk9Ii4zMiI+PHBhdGggZD0ibTEyIDkgOS0xbTMzIDEgOS0xbTQzLTIgOCAxbTY0IDEgOS0xbTQxIDEgMTEtMk0yNTEgMzFsLTEgOG0yIDYzLTEgOG0wIDYzIDEgOW0tMSA2NSAxIDhNMjUgMzA3bDggMW00MyAwIDEwIDFtNDktMSA5IDFtNTEtMSAxMS0xTTggNDZsMSA4bS0yIDYzIDEgOG0tMSA2NiAxIDhtLTEgNjIgMSA5Ii8+PC9nPjwvc3ZnPgo=");
+}
+body[data-palette="dark"] {
+  --torn-paper: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNjAiIGhlaWdodD0iMzIwIiB2aWV3Qm94PSIwIDAgMjYwIDMyMCI+PGRlZnM+PGZpbHRlciBpZD0iZ3JhaW4iPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuNzIiIG51bU9jdGF2ZXM9IjIiIHNlZWQ9IjQxIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjxmZUNvbXBvbmVudFRyYW5zZmVyPjxmZUZ1bmNBIHR5cGU9ImxpbmVhciIgc2xvcGU9Ii4wNDUiLz48L2ZlQ29tcG9uZW50VHJhbnNmZXI+PGZlQ29tcG9zaXRlIGluMj0iU291cmNlR3JhcGhpYyIgb3BlcmF0b3I9ImluIi8+PC9maWx0ZXI+PC9kZWZzPjxwYXRoIGQ9Ik03IDhMIDIxIDVMIDM1IDlMIDUyIDVMIDY5IDhMIDg4IDRMIDEwOCA3TCAxMjkgNEwgMTQ4IDhMIDE3MSA1TCAxOTQgOEwgMjE1IDRMIDIzOCA4TCAyNTEgNUwgMjUzIDIxTCAyNDkgMzlMIDI1NCA1OEwgMjUwIDc5TCAyNTQgMTAxTCAyNTEgMTIyTCAyNTUgMTQ2TCAyNTAgMTY5TCAyNTQgMTkyTCAyNTAgMjE4TCAyNTQgMjQwTCAyNTAgMjYzTCAyNTQgMjg2TCAyNTAgMzA3TCAyMzUgMzExTCAyMTYgMzA3TCAxOTUgMzEyTCAxNzMgMzA4TCAxNTEgMzEyTCAxMjkgMzA4TCAxMDcgMzEyTCA4NSAzMDhMIDYzIDMxMUwgNDQgMzA3TCAyMyAzMTFMIDYgMzA2TCA5IDI4OEwgNSAyNjdMIDggMjQ2TCA0IDIyM0wgOCAyMDFMIDUgMTc5TCA4IDE1OEwgNCAxMzZMIDkgMTE0TCA1IDkxTCA4IDcwTCA0IDQ5TCA4IDI5WiIgZmlsbD0iIzMwMmYyYiIgc3Ryb2tlPSIjYTM5Yjg2IiBzdHJva2Utb3BhY2l0eT0iLjM4IiBzdHJva2Utd2lkdGg9Ii42NSIvPjxwYXRoIGQ9Ik03IDhMIDIxIDVMIDM1IDlMIDUyIDVMIDY5IDhMIDg4IDRMIDEwOCA3TCAxMjkgNEwgMTQ4IDhMIDE3MSA1TCAxOTQgOEwgMjE1IDRMIDIzOCA4TCAyNTEgNUwgMjUzIDIxTCAyNDkgMzlMIDI1NCA1OEwgMjUwIDc5TCAyNTQgMTAxTCAyNTEgMTIyTCAyNTUgMTQ2TCAyNTAgMTY5TCAyNTQgMTkyTCAyNTAgMjE4TCAyNTQgMjQwTCAyNTAgMjYzTCAyNTQgMjg2TCAyNTAgMzA3TCAyMzUgMzExTCAyMTYgMzA3TCAxOTUgMzEyTCAxNzMgMzA4TCAxNTEgMzEyTCAxMjkgMzA4TCAxMDcgMzEyTCA4NSAzMDhMIDYzIDMxMUwgNDQgMzA3TCAyMyAzMTFMIDYgMzA2TCA5IDI4OEwgNSAyNjdMIDggMjQ2TCA0IDIyM0wgOCAyMDFMIDUgMTc5TCA4IDE1OEwgNCAxMzZMIDkgMTE0TCA1IDkxTCA4IDcwTCA0IDQ5TCA4IDI5WiIgZmlsbD0iIzMwMmYyYiIgZmlsdGVyPSJ1cmwoI2dyYWluKSIvPjxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2EzOWI4NiIgc3Ryb2tlLXdpZHRoPSIuNDUiIG9wYWNpdHk9Ii4zMiI+PHBhdGggZD0ibTEyIDkgOS0xbTMzIDEgOS0xbTQzLTIgOCAxbTY0IDEgOS0xbTQxIDEgMTEtMk0yNTEgMzFsLTEgOG0yIDYzLTEgOG0wIDYzIDEgOW0tMSA2NSAxIDhNMjUgMzA3bDggMW00MyAwIDEwIDFtNDktMSA5IDFtNTEtMSAxMS0xTTggNDZsMSA4bS0yIDYzIDEgOG0tMSA2NiAxIDhtLTEgNjIgMSA5Ii8+PC9nPjwvc3ZnPgo=");
+}
+body[data-palette="warm"] {
+  --torn-paper: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNjAiIGhlaWdodD0iMzIwIiB2aWV3Qm94PSIwIDAgMjYwIDMyMCI+PGRlZnM+PGZpbHRlciBpZD0iZ3JhaW4iPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuNzIiIG51bU9jdGF2ZXM9IjIiIHNlZWQ9IjQxIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjxmZUNvbXBvbmVudFRyYW5zZmVyPjxmZUZ1bmNBIHR5cGU9ImxpbmVhciIgc2xvcGU9Ii4wNDUiLz48L2ZlQ29tcG9uZW50VHJhbnNmZXI+PGZlQ29tcG9zaXRlIGluMj0iU291cmNlR3JhcGhpYyIgb3BlcmF0b3I9ImluIi8+PC9maWx0ZXI+PC9kZWZzPjxwYXRoIGQ9Ik03IDhMIDIxIDVMIDM1IDlMIDUyIDVMIDY5IDhMIDg4IDRMIDEwOCA3TCAxMjkgNEwgMTQ4IDhMIDE3MSA1TCAxOTQgOEwgMjE1IDRMIDIzOCA4TCAyNTEgNUwgMjUzIDIxTCAyNDkgMzlMIDI1NCA1OEwgMjUwIDc5TCAyNTQgMTAxTCAyNTEgMTIyTCAyNTUgMTQ2TCAyNTAgMTY5TCAyNTQgMTkyTCAyNTAgMjE4TCAyNTQgMjQwTCAyNTAgMjYzTCAyNTQgMjg2TCAyNTAgMzA3TCAyMzUgMzExTCAyMTYgMzA3TCAxOTUgMzEyTCAxNzMgMzA4TCAxNTEgMzEyTCAxMjkgMzA4TCAxMDcgMzEyTCA4NSAzMDhMIDYzIDMxMUwgNDQgMzA3TCAyMyAzMTFMIDYgMzA2TCA5IDI4OEwgNSAyNjdMIDggMjQ2TCA0IDIyM0wgOCAyMDFMIDUgMTc5TCA4IDE1OEwgNCAxMzZMIDkgMTE0TCA1IDkxTCA4IDcwTCA0IDQ5TCA4IDI5WiIgZmlsbD0iI2VmZTBjNiIgc3Ryb2tlPSIjOWI4MDVlIiBzdHJva2Utb3BhY2l0eT0iLjM4IiBzdHJva2Utd2lkdGg9Ii42NSIvPjxwYXRoIGQ9Ik03IDhMIDIxIDVMIDM1IDlMIDUyIDVMIDY5IDhMIDg4IDRMIDEwOCA3TCAxMjkgNEwgMTQ4IDhMIDE3MSA1TCAxOTQgOEwgMjE1IDRMIDIzOCA4TCAyNTEgNUwgMjUzIDIxTCAyNDkgMzlMIDI1NCA1OEwgMjUwIDc5TCAyNTQgMTAxTCAyNTEgMTIyTCAyNTUgMTQ2TCAyNTAgMTY5TCAyNTQgMTkyTCAyNTAgMjE4TCAyNTQgMjQwTCAyNTAgMjYzTCAyNTQgMjg2TCAyNTAgMzA3TCAyMzUgMzExTCAyMTYgMzA3TCAxOTUgMzEyTCAxNzMgMzA4TCAxNTEgMzEyTCAxMjkgMzA4TCAxMDcgMzEyTCA4NSAzMDhMIDYzIDMxMUwgNDQgMzA3TCAyMyAzMTFMIDYgMzA2TCA5IDI4OEwgNSAyNjdMIDggMjQ2TCA0IDIyM0wgOCAyMDFMIDUgMTc5TCA4IDE1OEwgNCAxMzZMIDkgMTE0TCA1IDkxTCA4IDcwTCA0IDQ5TCA4IDI5WiIgZmlsbD0iI2VmZTBjNiIgZmlsdGVyPSJ1cmwoI2dyYWluKSIvPjxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzliODA1ZSIgc3Ryb2tlLXdpZHRoPSIuNDUiIG9wYWNpdHk9Ii4zMiI+PHBhdGggZD0ibTEyIDkgOS0xbTMzIDEgOS0xbTQzLTIgOCAxbTY0IDEgOS0xbTQxIDEgMTEtMk0yNTEgMzFsLTEgOG0yIDYzLTEgOG0wIDYzIDEgOW0tMSA2NSAxIDhNMjUgMzA3bDggMW00MyAwIDEwIDFtNDktMSA5IDFtNTEtMSAxMS0xTTggNDZsMSA4bS0yIDYzIDEgOG0tMSA2NiAxIDhtLTEgNjIgMSA5Ii8+PC9nPjwvc3ZnPgo=");
+}
+.modal,
+.stage-card {
+  border: 12px solid transparent;
+  border-image: var(--torn-paper) 28 fill / 18px / 7px stretch;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  filter: drop-shadow(0 10px 14px #17130c66);
+}
+.stage-card::before,
+.modal::before,
+.stage-card .paper-tear {
+  border: 0;
+}
+.hero .healthbar.dead,
+.hero .healthbar.dead > i,
+.enemy-hp.dead,
+.enemy-hp.dead > i {
+  animation: none !important;
+}
+.equipment-slot span {
+  display: block;
+  flex: 1;
+  height: 17px;
+  min-width: 0;
+  white-space: nowrap;
+  text-align: center;
+}
+.hero .equipment-slot {
+  justify-content: start;
+  gap: 2px;
+}
+.hero .equipment-slot svg {
+  width: 12px !important;
+  height: 12px !important;
+}
+.machine-footnote {
+  white-space: nowrap;
+}
+.enemy-box .machine-title {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 15px;
+}
+.enemy-action-state {
+  min-width: 0;
+  white-space: nowrap;
+}
+.enemy-box .enemy-trait {
+  font-size: 13px;
+  white-space: nowrap;
+}
+.trait-badge {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  width: 22px;
+  height: 22px;
+  border: 1px dashed currentColor;
+  background: var(--paper-raised);
+  color: var(--green);
+  display: grid;
+  place-items: center;
+  z-index: 3;
+}
+.trait-badge svg {
+  width: 18px !important;
+  height: 18px !important;
+}
+.trait-negative {
+  color: var(--red);
+}
+.trait-mixed {
+  color: var(--gold);
+}
+.trait-badge:focus {
+  outline: 2px solid var(--focus);
+}
+/* Overlay lighting changes paint only; no transforms or layout changes. */
+#screen-lighting {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  backdrop-filter: brightness(var(--scene-brightness, 1));
+}
+.ambient-light {
+  z-index: 900;
+  opacity: 0.52;
+  animation: notebook-torch-flicker 6s ease-in-out infinite;
+}
+.ambient-disabled .ambient-light {
+  display: none;
+}
+@keyframes notebook-torch-flicker {
+  0%,
+  100% {
+    opacity: 0.26;
+  }
+  10% {
+    opacity: 0.39;
+  }
+  13% {
+    opacity: 0.28;
+  }
+  32% {
+    opacity: 0.54;
+  }
+  35% {
+    opacity: 0.44;
+  }
+  61% {
+    opacity: 0.35;
+  }
+  65% {
+    opacity: 0.49;
+  }
+  82% {
+    opacity: 0.3;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ambient-light {
+    animation: none;
+    opacity: 0.28;
+  }
+}
+.settings-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.settings-tabs button {
+  flex: 1;
+  min-width: 85px;
+}
+.settings-tabs button[aria-selected="true"] {
+  background: var(--paper-shade);
+  outline: 1px solid var(--ink);
+  outline-offset: -3px;
+}
+.settings-panel {
+  min-height: 270px;
+}
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 24px;
+}
+.settings-grid > label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 20px;
+  min-width: 0;
+}
+.settings-grid select {
+  width: 100%;
+  font-size: 18px;
+  min-height: 35px;
+}
+.settings-grid .setting-check {
+  flex-direction: row;
+  align-items: start;
+  gap: 10px;
+}
+.setting-check input {
+  margin-top: 5px;
+  width: 18px;
+  height: 18px;
+  flex: none;
+  accent-color: var(--ink);
+}
+.setting-check small,
+.settings-note {
+  display: block;
+  font-size: 16px;
+  line-height: 1.3;
+}
+.setting-slider > span {
+  display: flex;
+  justify-content: space-between;
+}
+.setting-slider output {
+  color: var(--soft);
+  font-variant-numeric: tabular-nums;
+}
+.setting-slider input {
+  width: 100%;
+  height: 28px;
+  margin: 0;
+  accent-color: var(--ink);
+  cursor: pointer;
+}
+.modal:has(.settings-tabs) .modal-actions {
+  gap: 6px;
+  justify-content: center;
+}
+@media (max-width: 760px) {
+  .settings-grid {
+    gap: 16px 14px;
+  }
+  .settings-grid > label {
+    font-size: 17px;
+  }
+  .settings-grid select {
+    font-size: 16px;
+  }
+  .setting-check small,
+  .settings-note {
+    font-size: 14px;
+  }
+  .settings-panel {
+    min-height: 250px;
+  }
+  .settings-tabs {
+    gap: 4px;
+  }
+  .settings-tabs button {
+    min-width: 60px;
+    font-size: 14px;
+    padding: 6px 4px;
+  }
+  .modal:has(.settings-tabs) .modal-actions button {
+    font-size: 14px;
+  }
+}
+@media (max-width: 760px) {
+  /* Two compact foes reserve a separate line for their passive, with a gap
+   * above targeting. Dynamic status never grows the enemy row. */
+  .paired-enemies .enemy-box .machine-title {
+    height: 28px;
+    min-height: 28px;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0;
+    font-size: 12px;
+    line-height: 14px;
+  }
+  .paired-enemies .enemy-action-state {
+    display: block;
+    width: 100%;
+    height: 14px;
+    text-align: center;
+  }
+  .paired-enemies .enemy-box .enemy-trait {
+    font-size: 11px;
+    line-height: 13px;
+  }
+}
 /* END GENERATED NOTEBOOK CSS */
     </style>
   </head>
@@ -8266,6 +8530,8 @@ function trapArt(type) {
           maxHp,
           points: 3,
           equipment: null,
+          trait: null,
+          traitProgress: {},
           stun: 0,
           stunGrace: 0,
           poison: null,
@@ -8558,8 +8824,9 @@ function trapArt(type) {
         travel = null;
         document.querySelectorAll(".speech-bubble").forEach((e) => e.remove());
         state = {
-          version: 11,
+          version: 12,
           depth: 1,
+          preferences: normalisePreferences(state?.preferences || readSettings().preferences),
           map: generateFloor(1, 1, 0),
           startedAt: Date.now(),
           exploreTime: 0,
@@ -8642,7 +8909,7 @@ function trapArt(type) {
           );
           if (
             !s ||
-            ![1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].includes(s.version) ||
+            ![1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].includes(s.version) ||
             s.map?.length !== W * H ||
             !Array.isArray(s.party) ||
             !s.party.length ||
@@ -8664,7 +8931,7 @@ function trapArt(type) {
                             ? 4
                             : f.type === "class"
                               ? 1
-                              : 3),
+                              : maxFaceTier(f.type)),
                     ),
                 ),
             )
@@ -8674,9 +8941,11 @@ function trapArt(type) {
             rebalance = s.version < 7,
             oldFog = s.version < 8,
             oldRules = s.version < 9,
-            retuneEnemies = s.version < 11;
+            retuneEnemies = s.version < 12;
           state = s;
-          state.version = 11;
+          state.version = 12;
+          state.currentHero = null;
+          state.preferences = normalisePreferences(state.preferences || readSettings().preferences);
           state.exploreTime ??= 0;
           state.retired ??= [];
           state.autoresolve ??= readSettings().autoresolve || false;
@@ -8734,6 +9003,8 @@ function trapArt(type) {
                   });
               });
             h.equipment ??= null;
+            if (!Object.hasOwn(HERO_TRAITS,h.trait?.id)) h.trait = null;
+            h.traitProgress ??= {};
             initLife(h);
           });
           state.map.forEach((c, i) => {
@@ -8767,6 +9038,7 @@ function trapArt(type) {
             else state.enemies = [state.enemy];
             state.enemies.forEach((e, k) => {
               e.id ??= "saved-enemy-" + k;
+              e.actionPhase = null;
               if (rebalance) {
                 const ratio = e.hp / e.maxHp,
                   stats = enemyBalance(state.depth, {
@@ -8830,6 +9102,7 @@ function trapArt(type) {
               palette: state.palette,
               autoresolve: state.autoresolve,
               autoplay: state.autoplay,
+              preferences: state.preferences,
             }),
           );
           $("#save-status").textContent = "Notebook saved locally";
@@ -8925,9 +9198,10 @@ function trapArt(type) {
             : enemy
               ? "Enemy reels"
               : "Fast-forward this slot machine";
-        return `<div class="machine-shell ${one ? "one-reel" : ""}" id="machine-${id}" data-machine="${id}">${title ? `<div class="machine-title">${title}</div>` : ""}<button class="machine-face" data-roll-area="${id}" aria-label="${label}" ${disabled ? "disabled" : ""}>${last.map((s, k) => `<span class="slot-window" data-reel="${k}"><span class="symbol-track single"><span class="slot-symbol">${symbolMarkup(s)}</span></span></span>`).join("")}</button><button class="lever" ${active ? `data-spin="${hero}"` : `data-fast-machine="${id}"`} ${disabled ? "disabled" : ""} aria-label="${active ? "Pull " + state.party[hero].name + "’s slot handle" : "Fast-forward " + (enemy ? "enemy" : "event") + " reels"}">${leverArt()}</button><div class="machine-footnote">${active ? (state.enemy ? (state.party[hero].stun ? "Pull to shake off stun" : "Pull handle to spin") : "Waiting for an encounter") : enemy ? "The enemy rolls here" : "Click during the roll to land it"}</div></div>`;
+        return `<div class="machine-shell ${one ? "one-reel" : ""}" id="machine-${id}" data-machine="${id}">${title ? `<div class="machine-title">${title}</div>` : ""}<button class="machine-face" data-roll-area="${id}" aria-label="${label}" ${disabled ? "disabled" : ""}>${last.map((s, k) => `<span class="slot-window" data-reel="${k}"><span class="symbol-track single"><span class="slot-symbol">${symbolMarkup(s)}</span></span></span>`).join("")}</button><button class="lever" ${active ? `data-spin="${hero}"` : `data-fast-machine="${id}"`} ${disabled ? "disabled" : ""} aria-label="${active ? "Pull " + state.party[hero].name + "’s slot handle" : "Fast-forward " + (enemy ? "enemy" : "event") + " reels"}">${leverArt()}</button><div class="machine-footnote">${active ? (state.enemy ? (state.party[hero].stun ? "Pull to shake off stun" : "Pull handle to spin") : "Waiting for an encounter") : enemy ? "" : "Click during the roll to land it"}</div></div>`;
       }
       function render() {
+        applyPreferences();
         document.body.dataset.palette = state.palette || "default";
         $("#palette").value = state.palette || "default";
         document.body.classList.toggle("skip-cinematics", skip);
@@ -9084,7 +9358,7 @@ function trapArt(type) {
           state.party
             .map((h, i) => {
               let status = injury(h);
-              return `<article data-gear-target="${i}" class="hero ${status} ${state.target === i ? "selected" : ""}" id="hero-${i}"><div class="hero-dossier"><button class="portrait" id="portrait-${i}" data-target="${i}" aria-label="Healing target: ${h.name}" aria-pressed="${state.target === i}" ${busy || !alive(h) ? "disabled" : ""}>${portraitArt(h.job, h)}${statusMarkup(h)}</button><div class="hero-name">${h.name}<small>${className(h.job)} · Lv.${h.level}</small></div>${equipmentMarkup(h, i)}</div><div class="hero-controls"><div class="hero-title-line"><span class="hp-info">HP ${h.hp} / ${h.maxHp}</span><span class="injury ${status}">${h.stun ? "stunned" : status}</span></div>${healthMarkup(h)}${drawMachine("hero-" + i, h.last, { hero: i, disabled: busy || !state.enemy || !h.hp || state.over })}<div class="bars"><div class="healthbar exp" title="Experience"><i style="width:${(h.xp / (h.level * 12)) * 100}%"></i></div></div><div class="edit-line"><span>${h.xp}/${h.level * 12} EXP</span><button class="edit-button" data-edit="${i}" ${busy || state.over ? "disabled" : ""} aria-label="Edit ${h.name}'s reels">✎ ${h.points} points</button></div></div></article>`;
+              return `<article data-gear-target="${i}" class="hero ${status} ${state.target === i ? "selected" : ""}" id="hero-${i}"><div class="hero-dossier"><button class="portrait" id="portrait-${i}" data-target="${i}" aria-label="Healing target: ${h.name}" aria-pressed="${state.target === i}" ${busy || !alive(h) ? "disabled" : ""}>${portraitArt(h.job, h)}${statusMarkup(h)}${traitMarkup(h)}</button><div class="hero-name">${h.name}<small>${className(h.job)} · Lv.${h.level}</small></div>${equipmentMarkup(h, i)}</div><div class="hero-controls"><div class="hero-title-line"><span class="hp-info">HP ${h.hp} / ${h.maxHp}</span><span class="injury ${status}">${h.stun ? "stunned" : status}</span></div>${healthMarkup(h)}${drawMachine("hero-" + i, h.last, { hero: i, disabled: busy || !state.enemy || !h.hp || state.over })}<div class="bars"><div class="healthbar exp" title="Experience"><i style="width:${(h.xp / (h.level * 12)) * 100}%"></i></div></div><div class="edit-line"><span>${h.xp}/${h.level * 12} EXP</span><button class="edit-button" data-edit="${i}" ${busy || state.over ? "disabled" : ""} aria-label="Edit ${h.name}'s reels">✎ ${h.points} points</button></div></div></article>`;
             })
             .join("") +
           Array.from(
@@ -9093,12 +9367,26 @@ function trapArt(type) {
               `<div class="empty-slot">${icon("recruit")}<span>A name yet to be written.</span><small>Wanderers are rare. Keep a light for them.</small></div>`,
           ).join("");
       }
+      function enemyActionText(e) {
+        if (e.hp <= 0) return "Defeated";
+        if (e.stun) return "Stunned · turn skipped";
+        if (e.actionPhase) return e.actionPhase;
+        return `Waiting · ${e.countdown} spin${e.countdown === 1 ? "" : "s"}`;
+      }
+      function enemyMachineCaption(e) {
+        return `<span class="enemy-action-state">${escapeHTML(enemyActionText(e))}</span>${enemyTraitMarkup(e)}`;
+      }
+      function setEnemyPhase(e, phase) {
+        e.actionPhase = phase;
+        syncEnemy(e);
+      }
+
       function renderEncounter() {
         const enemies = battleEnemies(),
           paired = enemies.length > 1;
         $("#encounter").classList.toggle("paired-enemies", paired);
         $("#encounter").innerHTML = enemies.length
-          ? `<h3 class="enemy-label">${paired ? "Enemies · click a target" : "Enemy"}</h3><div class="enemy-roster">${enemies.map((e, k) => `<div class="enemy-box ${e.elite ? "elite-enemy" : ""} ${e === state.enemy ? "selected-enemy" : ""} ${e.hp <= 0 ? "enemy-corpse" : ""}" id="${k ? "enemy-2" : "enemy"}" data-enemy-id="${e.id}"><button class="enemy-art" id="${k ? "enemy-art-2" : "enemy-art"}" data-enemy-target="${e.id}" aria-label="Damage target: ${e.name}" aria-pressed="${e === state.enemy}" ${busy || e.hp <= 0 ? "disabled" : ""}>${portraitArt(e.art, e)}${statusMarkup(e)}</button><div class="enemy-info"><h4>${e.name}${e.elite ? (e.boss ? " · BOSS" : " · ELITE") : ""}</h4><span class="enemy-health-label">HP ${e.hp} / ${e.maxHp} · <span class="injury ${injury(e)}">${injury(e)}</span></span>${healthMarkup(e, "enemy-hp")}<span class="enemy-clock">${e.hp <= 0 ? "Slain" : e.stun ? "Stunned · one turn" : "Attacks in " + e.countdown + (e.countdown === 1 ? " spin" : " spins")}</span><p class="enemy-stats">${e.strikes} strike${e.strikes > 1 ? "s" : ""} · base ${e.damage} damage<br>Every ${e.frequency} spins${e.affix ? " · " + e.affix : ""}${e.block ? " · " + e.block + " block" : ""}</p></div>${drawMachine(k ? "enemy-2" : "enemy", e.last, { enemy: true, title: enemyTraitMarkup(e) || (paired ? e.name + " rolls here" : "The enemy prepares its attack…"), disabled: true })}</div>`).join("")}</div>`
+          ? `<h3 class="enemy-label">${paired ? "Enemies · click a target" : "Enemy"}</h3><div class="enemy-roster">${enemies.map((e, k) => `<div class="enemy-box ${e.elite ? "elite-enemy" : ""} ${e === state.enemy ? "selected-enemy" : ""} ${e.hp <= 0 ? "enemy-corpse" : ""}" id="${k ? "enemy-2" : "enemy"}" data-enemy-id="${e.id}"><button class="enemy-art" id="${k ? "enemy-art-2" : "enemy-art"}" data-enemy-target="${e.id}" aria-label="Damage target: ${e.name}" aria-pressed="${e === state.enemy}" ${busy || e.hp <= 0 ? "disabled" : ""}>${portraitArt(e.art, e)}${statusMarkup(e)}</button><div class="enemy-info"><h4>${e.name}${e.elite ? (e.boss ? " · BOSS" : " · ELITE") : ""}</h4><span class="enemy-health-label">HP ${e.hp} / ${e.maxHp} · <span class="injury ${injury(e)}">${injury(e)}</span></span>${healthMarkup(e, "enemy-hp")}<span class="enemy-clock">${e.hp <= 0 ? "Slain" : e.stun ? "Stunned · one turn" : "Attacks in " + e.countdown + (e.countdown === 1 ? " spin" : " spins")}</span><p class="enemy-stats">${e.strikes} strike${e.strikes > 1 ? "s" : ""} · base ${e.damage} damage<br>Every ${e.frequency} spins${e.affix ? " · " + e.affix : ""}${e.block ? " · " + e.block + " block" : ""}</p></div>${drawMachine(k ? "enemy-2" : "enemy", e.last, { enemy: true, title: enemyMachineCaption(e), disabled: true })}</div>`).join("")}</div>`
           : `<h3 class="enemy-label">The margins</h3><div class="peace">${portraitArt("fighter", state.party.find(alive) || state.party[0])}<p>${state.over ? (state.won ? "Ten floors, one very stubborn party. You wrote the ending." : "Every expedition leaves a story. A fresh page is waiting.") : "A moment between monsters.<br>Gather your nerve. The next floor is waiting."}</p></div>`;
       }
 
@@ -9345,6 +9633,7 @@ function trapArt(type) {
             c.fogSince = state.exploreTime || 0;
             state.position = i;
             state.steps++;
+            GameSound.play("step");
             c.lastVisitedStep = state.steps;
             $("#map .player-cell")?.classList.remove("player-cell");
             $(`[data-tile="${i}"]`)?.classList.add("player-cell", "visited");
@@ -9458,6 +9747,7 @@ function trapArt(type) {
           let around = beaconTiles(state.position).filter(
             (i) => !state.map[i].seen,
           );
+          state.party.filter(alive).forEach(h=>evaluateTraitEvent(h,"beacon"));
           pulseBeacon();
           for (let ring of [
             around.filter((i) => neighbors(state.position).includes(i)),
@@ -9764,25 +10054,29 @@ function trapArt(type) {
           species = null,
         } = {},
       ) {
-        const growth = Math.max(0, depth - 3);
+        const growth = Math.max(0, depth - 3),
+          pressure = depth >= 3 && depth <= 6 ? 1 + (depth - 2) * 0.02 : 1,
+          midDamage = depth >= 4 && depth <= 7 ? 1 : 0;
         return {
           maxHp: boss
-            ? Math.ceil(30 + depth * 9 + growth * growth * 3.2)
+            ? Math.ceil((30 + depth * 9 + growth * growth * 3.2) * pressure)
             : Math.ceil(
                 (16 + depth * 5 + growth * growth * 0.45) *
                   (elite ? 1.38 : 1) *
                   (stronghold ? 1.5 : 1) *
                   (mimic ? 1.2 : 1) *
                   (pair ? 0.78 : 1) *
-                  (ENEMY_PROFILES[species]?.hp || 1),
+                  (ENEMY_PROFILES[species]?.hp || 1) *
+                  pressure,
               ),
           damage: boss
-            ? 3 + Math.floor((depth - 1) * 0.8)
+            ? 3 + Math.floor((depth - 1) * 0.8) + midDamage
             : Math.max(
                 1,
                 Math.floor(
                   (2 +
                     Math.floor((depth - 1) * 0.6) +
+                    midDamage +
                     (elite ? 1 : 0) +
                     (stronghold ? 1 : 0)) *
                     (pair ? 0.8 : 1),
@@ -9912,7 +10206,8 @@ function trapArt(type) {
           passive("guard") +
           state.party
             .filter(alive)
-            .reduce((n, h) => n + equipmentBonus(h, "guard"), 0);
+            .reduce((n, h) => n + equipmentBonus(h, "guard") + traitBonus(h, "guard"), 0);
+        beginTraitBattle();
         log(
           `${state.enemies.map((e) => e.name).join(" and ")} appear. Team block resets for this battle.`,
         );
@@ -10025,6 +10320,7 @@ function trapArt(type) {
         return a;
       }
       async function runMachine(id, reels, { results = null } = {}) {
+        GameSound.play("lever");
         let symbols = results || reels.map((r) => ({ ...weightedPick(r) })),
           root = $("#machine-" + id);
         if (!root) return symbols;
@@ -10039,8 +10335,8 @@ function trapArt(type) {
         lever.classList.remove("pulling");
         void lever.offsetWidth;
         lever.classList.add("pulling");
-        root.querySelector(".machine-footnote").textContent =
-          "Click the machine to land it now…";
+        const enemyReelsUI = id === "enemy" || id === "enemy-2";
+        root.querySelector(".machine-footnote").textContent = enemyReelsUI ? "" : "Click to land the reels…";
         await Promise.all(
           symbols.map(async (final, k) => {
             let win = root.querySelector(`[data-reel="${k}"]`),
@@ -10050,6 +10346,7 @@ function trapArt(type) {
             win.classList.remove("locked");
             for (let t = 0; t < steps; t++) {
               if (skip || ctx.fast || sceneFast) break;
+              GameSound.play("tick");
               let next =
                 t === steps - 1 ? final : weightedPick(reels[k], fxRandom);
               let duration = 45 + Math.pow(t / (steps - 1), 2.2) * 420;
@@ -10075,6 +10372,7 @@ function trapArt(type) {
             track.classList.add("single");
             track.innerHTML = `<span class="slot-symbol">${symbolMarkup(final)}</span>`;
             win.classList.add("locked");
+            GameSound.play("lock");
             burst(win, "paper", k === symbols.length - 1 ? 14 : 5);
             shakeElement(root, 1.2);
             await pause(110, ctx);
@@ -10085,7 +10383,7 @@ function trapArt(type) {
         lever.classList.remove("pulling");
         lever.disabled = true;
         root.querySelector(".machine-footnote").textContent =
-          "The ink has spoken.";
+          enemyReelsUI ? "" : "Result locked.";
         burst(root, "paper", 18);
         shakeBook(1.6);
         await pause(230, ctx);
@@ -10131,7 +10429,7 @@ function trapArt(type) {
             drawMachine(
               "critical",
               [{ type: "multiplier", value: "?", tier: 1 }],
-              { one: true, title: "Critical multiplier" },
+              { one: true, title: "Multiplier" },
             ) +
             '<div class="critical-summary"><div class="stage-result" id="critical-result">Three of a kind!</div><div class="critical-math" id="critical-math"></div></div>';
         state.lastCritical = {
@@ -10143,6 +10441,8 @@ function trapArt(type) {
           context: options.context || "combat",
         };
         log(`${owner}: triple match! ×${rolled.value} critical.`);
+        GameSound.play("critical");
+        if (preferences().skipCriticals) return rolled.value;
         let region;
         if (inline) {
           region = $("#event-critical");
@@ -10226,7 +10526,7 @@ function trapArt(type) {
         root.querySelector(".injury").className = "injury " + status;
         root.querySelector(".hp-bar").outerHTML = healthMarkup(h);
         root.querySelector(".portrait").innerHTML =
-          portraitArt(h.job, h) + statusMarkup(h);
+          portraitArt(h.job, h) + statusMarkup(h) + traitMarkup(h);
         syncStatusFX();
       }
       function syncEnemy(e = null) {
@@ -10251,6 +10551,7 @@ function trapArt(type) {
                   foe.countdown +
                   (foe.countdown === 1 ? " spin" : " spins");
           root.classList.toggle("enemy-corpse", foe.hp <= 0);
+          const caption=root.querySelector(".machine-title");if(caption)caption.innerHTML=enemyMachineCaption(foe);
         }
         renderBlock();
         syncStatusFX();
@@ -10258,6 +10559,12 @@ function trapArt(type) {
 
       function addXP(h, n) {
         if (!alive(h)) return;
+        if (traitBonus(h, "xp")) {
+          const extra = n * traitBonus(h, "xp") + (h.traitXpRemainder || 0);
+          const bonus = Math.floor(extra + 1e-9);
+          n += bonus;
+          h.traitXpRemainder = Math.max(0, extra - bonus);
+        }
         h.xp += n;
         h.stats ??= emptyStats();
         h.stats.xpEarned += n;
@@ -10277,6 +10584,7 @@ function trapArt(type) {
           burst($("#portrait-" + i), "gold", 20);
         }
       }
+
       function partyCardFeedback(i, kind) {
         const card = $("#hero-" + i);
         if (!card) return;
@@ -10306,10 +10614,12 @@ function trapArt(type) {
       function healHero(i, n) {
         let h = state.party[i];
         if (!alive(h)) return 0;
-        let actual = Math.min(n, h.maxHp - h.hp);
+        const offered = n > 0 ? Math.max(1, n + traitBonus(h, "healingReceived")) : 0;
+        let actual = Math.min(offered, h.maxHp - h.hp);
         h.hp += actual;
         syncHero(i);
         if (actual) {
+          GameSound.play("heal");
           h.stats ??= emptyStats();
           h.stats.healingReceived += actual;
           partyCardFeedback(i, "heal");
@@ -10326,6 +10636,7 @@ function trapArt(type) {
         let h = state.party[i];
         if (!alive(h)) return 0;
         h.stats ??= emptyStats();
+        if (n > 0 && !piercing) n += traitBonus(h, "vulnerability");
         const resisted = piercing ? 0 : Math.min(n, defenceBonus(h));
         n -= resisted;
         let blocked = piercing ? 0 : Math.min(state.block, n);
@@ -10333,6 +10644,11 @@ function trapArt(type) {
         let actual = Math.min(h.hp, n - blocked);
         h.hp -= actual;
         h.stats.damageTaken += actual;
+        if (h.battleMemo && state.enemy) {
+          h.battleMemo.minFraction = Math.min(h.battleMemo.minFraction, h.hp/h.maxHp);
+          if (/critical/.test(source)) h.battleMemo.criticalHits++;
+        }
+        GameSound.play(actual ? "hit" : "shield");
         h.stats.damageBlocked += blocked + resisted;
         syncHero(i);
         partyCardFeedback(i, actual ? "hit" : "shield");
@@ -10372,6 +10688,7 @@ function trapArt(type) {
           actual = Math.min(e.hp, n - blocked);
         e.block -= blocked;
         e.hp -= actual;
+        GameSound.play(actual ? "hit" : "shield");
         if (e.hp === 0 && !e.corpseRecorded) {
           e.corpseRecorded = true;
           leaveCorpse(e.art, e.name, true);
@@ -10468,6 +10785,7 @@ function trapArt(type) {
 
       function checkDefeat() {
         if (state.party.some(alive)) return false;
+        GameSound.play("death");
         state.over = true;
         clearBattleStatuses();
         state.enemy = null;
@@ -10501,10 +10819,12 @@ function trapArt(type) {
           mage: "NOVA",
         })[job] || "CLASS";
       const attackBonus = (entity) =>
+        traitBonus(entity, "attack") +
         (entity.rage || 0) +
         (entity.stimulant ? 1 + Math.floor(entity.stimulant.power / 3) : 0);
       const defenceBonus = (entity) =>
         (entity.passive?.key === "carapace" ? (state.depth >= 8 ? 2 : 1) : 0) +
+        traitBonus(entity, "defence") +
         equipmentBonus(entity, "defence") +
         Math.floor((entity.rage || 0) / 3) +
         (entity.stimulant ? 1 + Math.floor(entity.stimulant.power / 5) : 0);
@@ -10562,7 +10882,7 @@ function trapArt(type) {
         entity.poison = {
           turns: Math.min(
             8,
-            Math.max(entity.poison?.turns || 0, 1 + Math.ceil(amount)),
+            Math.max(entity.poison?.turns || 0, 1 + Math.ceil(amount) + traitBonus(source, "poisonDuration")),
           ),
           damage: Math.max(entity.poison?.damage || 1, damage),
           sourceId: source?.id || null,
@@ -10606,7 +10926,7 @@ function trapArt(type) {
             );
             if (source) {
               source.stats.damageDealt += n;
-              if (entity.hp === 0) source.stats.kills++;
+              if (entity.hp === 0) { source.stats.kills++; if(source.battleMemo) source.battleMemo.poisonKills++; }
               if (source.death) {
                 source.death.stats.damageDealt += n;
                 if (entity.hp === 0) source.death.stats.kills++;
@@ -10682,8 +11002,8 @@ function trapArt(type) {
             };
           }
         }
-        if (base.attack) base.attack += passive("attack") + attackBonus(h);
-        else if (base.magic) base.magic += passive("attack") + attackBonus(h);
+        if (base.attack) base.attack = Math.max(1, base.attack + passive("attack") + attackBonus(h));
+        else if (base.magic) base.magic = Math.max(1, base.magic + passive("attack") + attackBonus(h));
         if (base.attack || base.magic) {
           if (base.attack) base.attack += equipmentBonus(h, "attack");
           else base.magic += equipmentBonus(h, "attack");
@@ -10703,7 +11023,11 @@ function trapArt(type) {
           h.stats.spins % equipmentBonus(h, "stimEvery") === 0
         )
           base.stimulant += 2;
-        if (base.block) base.block += passive("block");
+        if (base.block) base.block += passive("block") + traitBonus(h, "block");
+        if (base.heal) base.heal = Math.max(1, base.heal + traitBonus(h, "heal"));
+        if (base.teamHeal) base.teamHeal = Math.max(1, base.teamHeal + traitBonus(h, "heal"));
+        if (base.stun) base.stun += traitBonus(h, "stun");
+        if (seals && h.battleMemo) h.battleMemo.seals++;
         const regular =
           (base.attack || 0) +
           (base.magic || 0) -
@@ -10726,6 +11050,7 @@ function trapArt(type) {
         )
           return;
         busy = true;
+        state.currentHero = i;
         sceneFast = false;
         const selected = state.enemy,
           foes = battleEnemies().slice();
@@ -10945,6 +11270,7 @@ function trapArt(type) {
           }
         } finally {
           actingEnemy = null;
+          state.currentHero = null;
           busy = false;
           sceneFast = false;
           render();
@@ -10967,6 +11293,7 @@ function trapArt(type) {
           let target = pick(living),
             victim = state.party[target];
           sayEnemy("attack");
+          setEnemyPhase(e, `Rolling · ${strike+1}/${e.strikes}`);
           lunge(enemyArtEl(e), true);
           let symbols = await runMachine(enemyMachine(e), e.reels);
           e.last = symbols;
@@ -10998,15 +11325,21 @@ function trapArt(type) {
             damage: totals.attack,
           };
           if (totals.stimulant) {
+            setEnemyPhase(e,"Gathering power");
             applyStimulant(e, totals.stimulant);
             notes.push("power gathers");
           }
           if (totals.poison) {
+            setEnemyPhase(e,"Spreading poison");
             applyPoison(victim, totals.poison, e);
             notes.push("poison on " + victim.name);
           }
-          if (totals.stun) notes.push(stunHero(target, totals.stun));
+          if (totals.stun) {
+            setEnemyPhase(e,"Disrupting the party");
+            notes.push(stunHero(target, totals.stun));
+          }
           if (totals.attack) {
+            setEnemyPhase(e, `Attacking · ${strike+1}/${e.strikes}`);
             let n = 0;
             const hits =
               multiplier > 1
@@ -11040,6 +11373,7 @@ function trapArt(type) {
             await pause(380);
           }
           if (totals.heal) {
+            setEnemyPhase(e,"Recovering health");
             let n = Math.min(e.maxHp - e.hp, totals.heal);
             e.hp += n;
             if (n) {
@@ -11049,6 +11383,7 @@ function trapArt(type) {
             }
           }
           if (totals.block) {
+            setEnemyPhase(e,"Raising armour");
             e.block += totals.block;
             notes.push("+" + totals.block + " enemy armour");
           }
@@ -11062,6 +11397,7 @@ function trapArt(type) {
         }
         tickEnemyPassive(e);
         if (e.stimulant && --e.stimulant.turns <= 0) e.stimulant = null;
+        setEnemyPhase(e,null);
         actingEnemy = null;
       }
       function floorSnapshot() {
@@ -11130,6 +11466,7 @@ function trapArt(type) {
         return `<div class="floor-summary" aria-label="Floor ${summary.depth} statistics">${stats.map(([value, label]) => `<div><b>${value}</b><span>${label}</span></div>`).join("")}</div>`;
       }
       async function celebrateFloorClear() {
+        GameSound.play("victory");
         const summary = recordFloorClear();
         showSpotlight(
           "FLOOR " + state.depth + " CLEARED!",
@@ -11193,6 +11530,7 @@ function trapArt(type) {
           await feedbackPause(skip ? 180 : Math.max(180, 600 / pace()));
         }
         state.battlesWon++;
+        for (const h of state.party.filter(alive)) evaluateTraitEvent(h, "victory", {hard:!!(e.boss || e.elite || e.stronghold || state.depth>=4),ambush:!!state.encounterReward?.ambush});
         if (state.encounterReward?.ambush) clearFogAfterVictory();
         clearBattleStatuses();
         state.enemy = null;
@@ -11423,6 +11761,7 @@ function trapArt(type) {
           { id: "stage-confirm", label: "Carry on ↗", value: true },
         ]);
         closeSpotlight();
+        let trapActualDamage=0;
         if (n) {
           beam(
             $(`[data-tile="${state.position}"]`),
@@ -11434,6 +11773,7 @@ function trapArt(type) {
             n,
             title + (multiplier > 1 ? " (×" + multiplier + " critical)" : ""),
           );
+          trapActualDamage=actual;
           result(
             `<span class="damage">${icon("trap")}${name}: −${actual} HP · ${title}</span>`,
           );
@@ -11443,6 +11783,7 @@ function trapArt(type) {
           result(icon("safe") + " A narrow escape · no damage");
           burst($("#map-player"), "paper", 18);
         }
+        if (alive(state.party[target])) evaluateTraitEvent(state.party[target], "trap", {damage: trapActualDamage});
         state.block = 0;
         renderBlock();
         await processDeaths();
@@ -12128,8 +12469,8 @@ function trapArt(type) {
           <p><b>Act freely.</b> Any living hero can spin repeatedly. Click a hero portrait to select healing; click an enemy portrait to select damage. On deep floors two enemies may attack with independent clocks. Magic attacks work like blades. Poisoned portraits show purple. Wheel poison deals one damage per action; stronger venom supplies can deal more. Stimulants boost damage and protection. Tier III / IV attacks and criticals hit ALL enemies.</p>
           <p><b>Three of a kind.</b> Three identical type-and-tier symbols roll a ×2–×4 critical. A class seal completes two matching symbols while also casting its ability. Blanks never crit. Event criticals stay in their original panel. Click rolling reels or press Space to land them. “Strike now” skips a critical result’s hold. Confirm event results with a button.</p>
           <p><b>Armour and stun.</b> Shared team armour absorbs damage and clears after battle. Any armour blocks a stun, consuming up to six armour per power. A stunned hero misses one go without advancing enemy clocks.</p>
-          <p><b>Live and learn.</b> Victory gives EXP and editing points. Each level adds 6 maximum HP and 4 personal points. Edit all three reels with ✎. Class specialties start at 4 / 9 / 16 points for tiers II / III / IV; off-role symbols cost more. Healers favour healing, mages magic, rogues blades and poison, tanks blades and shields. Blank faces cost three points to inscribe. Rage, poison, stun and buffs end with combat.</p>
-          <p><b>The fallen.</b> A Revive Stone in your pack can be consumed once to restore a fallen hero at 75% health. Otherwise dead heroes leave corpses. Survivors confirm a burial with their cause, origin, time and statistics. Names remembered keeps those records. Healing never revives the dead.</p>
+          <p><b>Live and learn.</b> Victory gives EXP and editing points. Each level adds 6 maximum HP and 4 personal points. Edit all three reels with ✎. All seven powers can reach tier IV. Class specialties start at 4 / 9 / 16 points for tiers II / III / IV; off-role symbols cost more. Healers favour healing, mages magic, rogues blades and poison, tanks blades and shields. Blank faces cost three points to inscribe. Rage, poison, stun and buffs end with combat.</p>
+          <p><b>Traits.</b> Fifteen small traits are earned through battles, traps, wells and beacons. One trait per hero; a later experience can replace it automatically. Hover the small portrait badge for its effect and origin. Positive and negative traits remain between fights.</p><p><b>The fallen.</b> A Revive Stone in your pack can be consumed once to restore a fallen hero at 75% health. Otherwise dead heroes leave corpses. Survivors confirm a burial with their cause, origin, time and statistics. Names remembered keeps those records. Healing never revives the dead.</p>
           <p><b>Discoveries.</b> Wells can be left for later; they roll 30% HP plus a bonus. Ruins can be ignored or examined for loot against trap damage. Cave rooms reveal together without activating anything. Rare walled strongholds house bosses with rich loot.</p>
           <p><b>Supplies.</b> Carry three item types; matching items stack. Drag class equipment onto a hero to fill their personal equipment slot. Eight unique pieces grant damage, protection or abilities. Inspect the satchel to use or discard stacks. With a full bag, use a find, swap a stack or leave it. Ink bombs roll damage and poison. Fortified, potent and masterwork supplies appear from floors 4, 7 and 10; their strength stays fixed when carried deeper. Equip one passive artefact. Shops sell supplies and healing. Adventurers join only if invited, up to three heroes; a fourth can replace a current companion. Retired companions remain in the final records.</p>
           <p><b>Read the page.</b> Health bars move from green through yellow to red and flash below 25%. Faint hints suggest neighbouring discoveries without revealing them. The field log and final memorial roster scroll; other panels fit their content.</p>
@@ -12281,18 +12622,25 @@ function trapArt(type) {
         else fxLast = 0;
       }
       function shakeElement(el, amount = 3) {
+        amount *= preferences().shake;
+        if (!amount) return null;
         animate(
           el,
           [
             { transform: "translate(0,0) rotate(0)" },
-            { transform: `translate(${-amount}px,1px) rotate(-1deg)` },
-            { transform: `translate(${amount}px,-1px) rotate(1deg)` },
+            {
+              transform: `translate(${-amount}px,${preferences().shake}px) rotate(${-preferences().shake}deg)`,
+            },
+            {
+              transform: `translate(${amount}px,${-preferences().shake}px) rotate(${preferences().shake}deg)`,
+            },
             { transform: `translate(${-amount * 0.4}px,0)` },
             { transform: "translate(0,0) rotate(0)" },
           ],
           { duration: 170, easing: "ease-out", juice: true },
         );
       }
+
       function pulseBeacon() {
         if (skip) return;
         let cell = $(`[data-tile="${state.position}"]`),
@@ -13149,15 +13497,18 @@ function trapArt(type) {
       function healthMarkup(h, extra = "") {
         const fraction = h.hp / h.maxHp,
           tone =
-            fraction <= 0.25
-              ? "critical"
-              : fraction <= 0.4
-                ? "red"
-                : fraction <= 0.65
-                  ? "yellow"
-                  : "green";
+            h.hp <= 0 || h.dead
+              ? "dead"
+              : fraction <= 0.25
+                ? "critical"
+                : fraction <= 0.4
+                  ? "red"
+                  : fraction <= 0.65
+                    ? "yellow"
+                    : "green";
         return `<div class="healthbar hp-bar ${tone} ${extra}" aria-label="${h.hp} of ${h.maxHp} health"><i style="width:${Math.max(0, fraction * 100)}%"></i></div>`;
       }
+
       function selectEnemy(id) {
         if (busy || !state.enemy) return;
         const e = battleEnemies().find(
@@ -13181,6 +13532,579 @@ function trapArt(type) {
           return {};
         }
       }
+      // User preferences are independent of a run and validated at every entry.
+      const DEFAULT_PREFERENCES = Object.freeze({
+        masterVolume: 0.7,
+        sfxVolume: 0.7,
+        musicVolume: 0.16,
+        ambienceVolume: 0.25,
+        muted: false,
+        brightness: 1,
+        shake: 1,
+        ambientEffects: true,
+        skipCriticals: false,
+        resolution: "auto",
+        language: "en",
+        displayMode: "windowed",
+        quality: "standard",
+      });
+      function normalisePreferences(input = {}) {
+        input = input && typeof input === "object" ? input : {};
+        const out = { ...DEFAULT_PREFERENCES };
+        for (const key of [
+          "masterVolume",
+          "sfxVolume",
+          "musicVolume",
+          "ambienceVolume",
+          "brightness",
+          "shake",
+        ]) {
+          const low = key === "brightness" ? 0.5 : 0,
+            high = ["brightness", "shake"].includes(key) ? 1.5 : 1;
+          if (typeof input[key] === "number" && Number.isFinite(input[key]))
+            out[key] = Math.max(low, Math.min(high, input[key]));
+        }
+        for (const key of ["muted", "ambientEffects", "skipCriticals"])
+          if (typeof input[key] === "boolean") out[key] = input[key];
+        for (const [key, values] of Object.entries({
+          resolution: ["auto", "1920x1080", "1280x800", "1280x720"],
+          language: ["en", "fr", "de", "es", "ja"],
+          displayMode: ["windowed", "borderless", "fullscreen"],
+          quality: ["low", "standard", "high"],
+        }))
+          if (values.includes(input[key])) out[key] = input[key];
+        return out;
+      }
+      function preferences() {
+        return state?.preferences || DEFAULT_PREFERENCES;
+      }
+      function applyPreferences() {
+        const p = preferences();
+        document.documentElement.style.setProperty(
+          "--scene-brightness",
+          p.brightness,
+        );
+        document.body.classList.toggle("ambient-disabled", !p.ambientEffects);
+        let lighting = document.getElementById("screen-lighting");
+        if (!lighting) {
+          lighting = document.createElement("div");
+          lighting.id = "screen-lighting";
+          lighting.setAttribute("aria-hidden", "true");
+          document.body.append(lighting);
+        }
+        GameSound.configure(p);
+      }
+      function setPreference(key, value) {
+        if (!Object.hasOwn(DEFAULT_PREFERENCES, key)) return;
+        state.preferences = normalisePreferences({ ...preferences(), [key]: value });
+        applyPreferences();
+        save();
+      }
+      // Small, replaceable synthesis cues. Web Audio is unlocked only by a real
+      // user gesture; unsupported/blocked audio never interrupts gameplay.
+      const SOUND_CUES = {
+        click: {
+          frequencies: [530],
+          duration: 0.045,
+          gain: 0.08,
+          type: "triangle",
+          cooldown: 45,
+        },
+        step: {
+          frequencies: [95],
+          duration: 0.07,
+          gain: 0.05,
+          noise: true,
+          cooldown: 90,
+        },
+        lever: {
+          frequencies: [150, 105],
+          duration: 0.14,
+          gain: 0.12,
+          type: "triangle",
+          cooldown: 60,
+        },
+        tick: {
+          frequencies: [710],
+          duration: 0.026,
+          gain: 0.035,
+          type: "square",
+          cooldown: 35,
+        },
+        lock: {
+          frequencies: [220, 330],
+          duration: 0.12,
+          gain: 0.1,
+          type: "triangle",
+          cooldown: 30,
+        },
+        hit: {
+          frequencies: [120, 58],
+          duration: 0.18,
+          gain: 0.16,
+          noise: true,
+          cooldown: 35,
+        },
+        heal: {
+          frequencies: [392, 523, 659],
+          duration: 0.32,
+          gain: 0.09,
+          type: "sine",
+          cooldown: 70,
+        },
+        shield: {
+          frequencies: [180, 360],
+          duration: 0.16,
+          gain: 0.1,
+          type: "triangle",
+          cooldown: 50,
+        },
+        coin: {
+          frequencies: [784, 1175],
+          duration: 0.18,
+          gain: 0.07,
+          type: "sine",
+          cooldown: 80,
+        },
+        critical: {
+          frequencies: [262, 392, 523, 784],
+          duration: 0.55,
+          gain: 0.12,
+          type: "triangle",
+          cooldown: 100,
+        },
+        victory: {
+          frequencies: [262, 330, 392, 523, 659],
+          duration: 0.8,
+          gain: 0.1,
+          type: "triangle",
+          cooldown: 200,
+        },
+        death: {
+          frequencies: [196, 147, 98],
+          duration: 0.7,
+          gain: 0.12,
+          type: "triangle",
+          cooldown: 100,
+        },
+        trait: {
+          frequencies: [330, 440, 554],
+          duration: 0.3,
+          gain: 0.08,
+          type: "sine",
+          cooldown: 80,
+        },
+      };
+      const GameSound = (() => {
+        let context = null,
+          master = null,
+          buses = {},
+          noise = null,
+          timer = null,
+          note = 0;
+        const active = new Set(),
+          last = new Map(),
+          gainTargets = new WeakMap();
+        const stats = { played: 0, peakVoices: 0 };
+        function configure(p) {
+          if (!context) return;
+          const now = context.currentTime;
+          const update = (node, target) => {
+            // Rendering damage/HP must not queue identical audio automation.
+            if (gainTargets.get(node) === target) return;
+            gainTargets.set(node, target);
+            node.gain.cancelScheduledValues(now);
+            node.gain.setTargetAtTime(target, now, 0.03);
+          };
+          update(master, p.muted ? 0 : p.masterVolume);
+          for (const key of ["sfx", "music", "ambience"])
+            update(buses[key], p[key + "Volume"]);
+        }
+        async function unlock() {
+          try {
+            if (!context) {
+              const C = window.AudioContext || window.webkitAudioContext;
+              if (!C) return;
+              context = new C();
+              master = context.createGain();
+              const limiter = context.createDynamicsCompressor();
+              limiter.threshold.value = -14;
+              limiter.ratio.value = 8;
+              master.connect(limiter);
+              limiter.connect(context.destination);
+              for (const key of ["sfx", "music", "ambience"]) {
+                buses[key] = context.createGain();
+                buses[key].connect(master);
+              }
+              noise = context.createBuffer(
+                1,
+                Math.floor(context.sampleRate * 0.5),
+                context.sampleRate,
+              );
+              const data = noise.getChannelData(0);
+              let seed = 1234567;
+              for (let i = 0; i < data.length; i++) {
+                seed ^= seed << 13;
+                seed ^= seed >>> 17;
+                seed ^= seed << 5;
+                data[i] = (seed >>> 0) / 2147483648 - 1;
+              }
+              configure(preferences());
+            }
+            if (document.hidden) return;
+            await context.resume();
+            if (!timer) {
+              background();
+              timer = setInterval(background, 1800);
+            }
+          } catch {
+            /* Audio is optional; the notebook remains playable. */
+          }
+        }
+        function voice(cue, channel = "sfx") {
+          if (
+            !context ||
+            context.state !== "running" ||
+            document.hidden ||
+            preferences().muted ||
+            active.size >= 20 ||
+            preferences()[channel + "Volume"] === 0 ||
+            preferences().masterVolume === 0
+          )
+            return false;
+          const now = context.currentTime,
+            group = { nodes: [], gain: context.createGain() };
+          group.gain.connect(buses[channel]);
+          group.gain.gain.setValueAtTime(0, now);
+          group.gain.gain.linearRampToValueAtTime(cue.gain, now + 0.012);
+          group.gain.gain.exponentialRampToValueAtTime(0.0001, now + cue.duration);
+          const cleanup = () => {
+            if (!active.delete(group)) return;
+            group.gain.disconnect();
+            for (const node of group.nodes) node.disconnect();
+          };
+          cue.frequencies.forEach((frequency, i) => {
+            const node = cue.noise
+              ? context.createBufferSource()
+              : context.createOscillator();
+            if (cue.noise) {
+              node.buffer = noise;
+              node.playbackRate.value = frequency / 120;
+            } else {
+              node.type = cue.type || "sine";
+              node.frequency.value = frequency;
+            }
+            node.connect(group.gain);
+            group.nodes.push(node);
+            node.start(
+              now + i * Math.min(0.075, cue.duration / cue.frequencies.length),
+            );
+            node.stop(now + cue.duration + 0.06);
+            if (i === 0) node.onended = cleanup;
+          });
+          active.add(group);
+          stats.played++;
+          stats.peakVoices = Math.max(stats.peakVoices, active.size);
+          return true;
+        }
+        function play(id) {
+          const cue = SOUND_CUES[id];
+          if (!cue) return false;
+          const now = performance.now();
+          if (now - (last.get(id) || -Infinity) < (cue.cooldown || 0)) return false;
+          last.set(id, now);
+          return voice(cue);
+        }
+        function background() {
+          if (!context || document.hidden) return;
+          const tones = [110, 130.81, 164.81, 146.83];
+          voice(
+            {
+              frequencies: [tones[note++ % tones.length], 220],
+              duration: 1.7,
+              gain: 0.028,
+              type: "sine",
+            },
+            "music",
+          );
+          voice(
+            { frequencies: [60], duration: 1.7, gain: 0.025, noise: true },
+            "ambience",
+          );
+        }
+        document.addEventListener("pointerdown", unlock, { passive: true });
+        document.addEventListener("keydown", (e) => {
+          if (!e.repeat) unlock();
+        });
+        document.addEventListener("click", (e) => {
+          if (e.target.closest("button,input,select")) play("click");
+        });
+        document.addEventListener("visibilitychange", () => {
+          if (document.hidden) {
+            if (timer) clearInterval(timer);
+            timer = null;
+            context?.suspend().catch(() => {});
+          } else if (context) unlock();
+        });
+        return {
+          unlock,
+          play,
+          configure,
+          stats,
+          get activeVoices() {
+            return active.size;
+          },
+          get context() {
+            return context;
+          },
+          get gains() {
+            return {
+              master: master?.gain.value,
+              ...Object.fromEntries(
+                Object.entries(buses).map(([k, v]) => [k, v.gain.value]),
+              ),
+            };
+          },
+        };
+      })();
+
+      // Exactly one active, event-earned trait. Values are deliberately small.
+      const HERO_TRAITS = Object.freeze({
+        heroic: {
+          name: "Heroic",
+          icon: "sword",
+          kind: "positive",
+          description: "+1 damage on damaging rolls.",
+          effects: { attack: 1 },
+        },
+        hardy: {
+          name: "Hardy",
+          icon: "block",
+          kind: "positive",
+          description: "Resist 1 damage from incoming hits.",
+          effects: { defence: 1 },
+        },
+        cowardly: {
+          name: "Cowardly",
+          icon: "block",
+          kind: "mixed",
+          description: "+1 block on shield rolls; −1 damage on damaging rolls.",
+          effects: { block: 1, attack: -1 },
+        },
+        scarred: {
+          name: "Scarred",
+          icon: "skull",
+          kind: "negative",
+          description: "Receive 1 less HP from each healing effect (minimum 1).",
+          effects: { healingReceived: -1 },
+        },
+        stoic: {
+          name: "Stoic",
+          icon: "ward",
+          kind: "positive",
+          description: "Add 1 opening team block each battle.",
+          effects: { guard: 1 },
+        },
+        merciful: {
+          name: "Merciful",
+          icon: "heal",
+          kind: "positive",
+          description: "+1 HP on healing rolls, including party heals.",
+          effects: { heal: 1 },
+        },
+        reckless: {
+          name: "Reckless",
+          icon: "rage",
+          kind: "mixed",
+          description:
+            "+2 damage on damaging rolls; incoming hits deal 1 extra damage.",
+          effects: { attack: 2, vulnerability: 1 },
+        },
+        venomous: {
+          name: "Venomous",
+          icon: "poison",
+          kind: "positive",
+          description: "Poison you inflict lasts 1 extra action (up to 8).",
+          effects: { poisonDuration: 1 },
+        },
+        haunted: {
+          name: "Haunted",
+          icon: "ghost",
+          kind: "negative",
+          description: "−1 damage on damaging rolls.",
+          effects: { attack: -1 },
+        },
+        focused: {
+          name: "Focused",
+          icon: "stun",
+          kind: "positive",
+          description: "+1 power on stun rolls, stripping more armour.",
+          effects: { stun: 1 },
+        },
+        stubborn: {
+          name: "Stubborn",
+          icon: "block",
+          kind: "mixed",
+          description:
+            "Resist 1 damage; healing rolls restore 1 less HP (minimum 1).",
+          effects: { defence: 1, heal: -1 },
+        },
+        wary: {
+          name: "Wary",
+          icon: "safe",
+          kind: "positive",
+          description: "Add 1 opening team block each battle.",
+          effects: { guard: 1 },
+        },
+        scorched: {
+          name: "Scorched",
+          icon: "flame",
+          kind: "negative",
+          description: "Healing rolls restore 1 less HP (minimum 1).",
+          effects: { heal: -1 },
+        },
+        invigorated: {
+          name: "Invigorated",
+          icon: "well",
+          kind: "positive",
+          description: "Receive 1 extra HP from each healing effect.",
+          effects: { healingReceived: 1 },
+        },
+        bookish: {
+          name: "Bookish",
+          icon: "chalk",
+          kind: "positive",
+          description: "Earn 5% extra battle EXP; fractional bonuses accumulate.",
+          effects: { xp: 0.05 },
+        },
+      });
+      function traitBonus(h, key) {
+        return h && alive(h) && Object.hasOwn(HERO_TRAITS, h.trait?.id)
+          ? HERO_TRAITS[h.trait.id].effects[key] || 0
+          : 0;
+      }
+      function traitMarkup(h) {
+        const t = HERO_TRAITS[h.trait?.id];
+        if (!t) return "";
+        const text = t.name + " · " + t.description + " Earned: " + h.trait.reason;
+        return `<span class="trait-badge trait-${t.kind}" tabindex="0" role="img" aria-label="${escapeHTML(text)}" title="${escapeHTML(text)}">${icon(t.icon)}</span>`;
+      }
+      function grantTrait(h, id, reason) {
+        if (!alive(h) || !Object.hasOwn(HERO_TRAITS, id) || h.trait?.id === id)
+          return false;
+        if (
+          h.trait &&
+          state.steps - h.trait.step < 8 &&
+          state.battlesWon - h.trait.battles < 2
+        )
+          return false;
+        const previous = HERO_TRAITS[h.trait?.id]?.name;
+        h.trait = {
+          id,
+          reason,
+          step: state.steps,
+          battles: state.battlesWon,
+          depth: state.depth,
+          at: Date.now(),
+        };
+        h.traitsGained = (h.traitsGained || 0) + 1;
+        h.traitXpRemainder = 0;
+        log(
+          `${h.name} becomes ${HERO_TRAITS[id].name}${previous ? " (replacing " + previous + ")" : ""}. ${reason} ${HERO_TRAITS[id].description}`,
+        );
+        const i = state.party.indexOf(h);
+        syncHero(i);
+        actionLabel($("#portrait-" + i), HERO_TRAITS[id].name.toUpperCase());
+        burst($("#portrait-" + i), "paper", 16);
+        GameSound.play("trait");
+        save();
+        return true;
+      }
+      function beginTraitBattle() {
+        const alone = state.party.filter(alive).length === 1;
+        for (const h of state.party.filter(alive))
+          h.battleMemo = {
+            alone,
+            minFraction: h.hp / h.maxHp,
+            criticalHits: 0,
+            stuns: 0,
+            seals: 0,
+            poisonKills: 0,
+            stats: { ...h.stats },
+          };
+      }
+      function evaluateTraitEvent(h, event, data = {}) {
+        if (!alive(h)) return false;
+        let id = null,
+          reason = "";
+        if (event === "victory") {
+          const m = h.battleMemo;
+          if (!m) return false;
+          const delta = (key) => (h.stats[key] || 0) - (m.stats[key] || 0),
+            hard = data.hard;
+          if (m.criticalHits >= 2 && m.minFraction <= 0.1) {
+            id = "scarred";
+            reason = "Survived repeated critical wounds.";
+          } else if (data.ambush && m.minFraction < 0.4) {
+            id = "haunted";
+            reason = "Barely escaped an ambush.";
+          } else if (m.minFraction <= 0.2 && h.stun) {
+            id = "cowardly";
+            reason = "Survived badly wounded and stunned.";
+          } else if (m.minFraction <= 0.2 && delta("damageTaken") >= h.maxHp * 0.3) {
+            id = "hardy";
+            reason = "Endured a battle on the edge of death.";
+          } else if (m.alone && hard && m.minFraction >= 0.3) {
+            id = "heroic";
+            reason = "Defeated a formidable foe alone.";
+          } else if (m.poisonKills) {
+            id = "venomous";
+            reason = "Won a fight with a fatal dose of poison.";
+          } else if (m.stuns >= 3) {
+            id = "focused";
+            reason = "Repeatedly disrupted an enemy's attacks.";
+          } else if (delta("healingDone") >= 16) {
+            id = "merciful";
+            reason = "Mended the party through a long fight.";
+          } else if (delta("damageBlocked") >= 12 && delta("damageTaken") < 6) {
+            id = "stoic";
+            reason = "Withstood a barrage behind shared armour.";
+          } else if (delta("damageTaken") >= 15 && delta("damageBlocked") >= 6) {
+            id = "stubborn";
+            reason = "Held firm through pain and battered shields.";
+          } else if (
+            delta("spins") >= 5 &&
+            delta("damageDealt") >= 40 &&
+            m.minFraction < 0.4 &&
+            !delta("healingDone")
+          ) {
+            id = "reckless";
+            reason = "Pressed the attack despite dangerous wounds.";
+          }
+        } else if (
+          event === "trap" &&
+          data.damage > 0 &&
+          data.damage >= h.maxHp * 0.15
+        ) {
+          id = "scorched";
+          reason = "Survived a painful trap.";
+        } else if (event === "trap" && !data.damage) {
+          id = "wary";
+          reason = "Escaped a hidden trap unharmed.";
+        } else if (event === "well" && data.healed >= h.maxHp * 0.2) {
+          id = "invigorated";
+          reason = "Recovered deeply at a healing well.";
+        } else if (event === "beacon") {
+          h.traitProgress ??= {};
+          h.traitProgress.beacons = (h.traitProgress.beacons || 0) + 1;
+          if (h.traitProgress.beacons >= 2) {
+            id = "bookish";
+            reason = "Studied the light of two ancient beacons.";
+          }
+        }
+        return id ? grantTrait(h, id, reason) : false;
+      }
+
       function setPalette(value) {
         if (!["default", "dark", "warm"].includes(value)) return;
         state.palette = value;
@@ -13223,6 +14147,9 @@ function trapArt(type) {
           fitText($("#field-note"), 18, 11);
           fitText($("#hover-name"), 16, 10);
           fitText($("#map-status"), 16, 11);
+          document.querySelectorAll(".equipment-slot span").forEach(el=>fitText(el,12,9));
+          document.querySelectorAll(".machine-footnote").forEach(el=>fitText(el,12,10));
+          document.querySelectorAll(".enemy-action-state").forEach(el=>fitText(el,innerWidth<=760?12:15,10));
           document.querySelectorAll(".enemy-info h4").forEach((title) =>
             fitText(title, $("#encounter").classList.contains("paired-enemies") ? 21 : 32, 14));
         });
@@ -13389,7 +14316,7 @@ function trapArt(type) {
       }
       const tierName = (tier) => ["", "I", "II", "III", "IV"][tier];
       const maxFaceTier = (type) =>
-        ["attack", "magic"].includes(type) ? 4 : type === "class" ? 1 : 3;
+        ["attack", "magic", "heal", "block", "stun", "poison", "stimulant"].includes(type) ? 4 : type === "class" ? 1 : 3;
       // All manual edits, recruitment and automation share these class prices.
       const CLASS_PRICES = {
         fighter: {
@@ -13632,6 +14559,7 @@ function trapArt(type) {
       }
       function recordDeath(h, cause) {
         if (h.dead && h.death) return;
+        GameSound.play("death");
         h.dead = true;
         h.hp = 0;
         h.stun = 0;
@@ -13646,6 +14574,7 @@ function trapArt(type) {
           cause,
           points: h.points,
           equipment: h.equipment,
+          trait: h.trait ? {...h.trait} : null,
           reels: h.reels.map((r) => r.map((f) => ({ ...f }))),
           depth: state.depth,
           tile: state.position,
@@ -13842,11 +14771,19 @@ function trapArt(type) {
           log(`${e.name} blocks stun, spending ${cost} armour.`);
           return "stun blocked · −" + cost + " enemy armour";
         }
+        const newlyStunned = !e.stun;
         e.stun = 1;
+        if (
+          newlyStunned &&
+          state.currentHero != null &&
+          state.party[state.currentHero]?.battleMemo
+        )
+          state.party[state.currentHero].battleMemo.stuns++;
         burst(enemyArtEl(e), "gold", 12);
         log(`${e.name} is stunned and will miss one attack turn.`);
         return "one enemy turn stunned";
       }
+
       function scaleEffects(base, multiplier) {
         return Object.fromEntries(
           Object.entries(base).map(([k, n]) => [k, Math.ceil(n * multiplier)]),
@@ -13985,7 +14922,7 @@ function trapArt(type) {
               const dead = fallen.some((d) => d.id === h.id),
                 away = !!h.retiredAt,
                 stats = { ...emptyStats(), ...h.stats };
-              return `<article class="fallen-entry"><div class="fallen-portrait">${dead ? corpseArt(h.job) : portraitArt(h.job, h)}</div><div class="memorial-stats"><p><b>${escapeHTML(h.name)}</b> · ${className(h.job)} · Lv.${h.level} · ${dead ? "FALLEN" : away ? "RETIRED" : "SURVIVOR"}</p><dl><dt>Health / EXP / points</dt><dd>${dead ? "0" : h.hp} / ${h.maxHp} HP · ${h.xp || 0} EXP · ${h.points ?? "—"} points</dd><dt>Found</dt><dd>${escapeHTML(foundText(h.origin))}</dd><dt>Time with party</dt><dd>${elapsedText((h.diedAt || h.retiredAt || state.finishedAt || Date.now()) - h.joinedAt)} · ${h.stepsWithParty ?? Math.max(0, state.steps - (h.joinedSteps || 0))} steps</dd>${dead ? `<dt>Cause / resting place</dt><dd>${escapeHTML(h.cause)} · floor ${h.depth}, column ${(h.tile % W) + 1}, row ${Math.floor(h.tile / W) + 1}</dd>` : ""}<dt>Equipment</dt><dd>${EQUIPMENT_DEFS[h.equipment]?.name || "None"}</dd>${Object.entries(
+              return `<article class="fallen-entry"><div class="fallen-portrait">${dead ? corpseArt(h.job) : portraitArt(h.job, h)}</div><div class="memorial-stats"><p><b>${escapeHTML(h.name)}</b> · ${className(h.job)} · Lv.${h.level} · ${dead ? "FALLEN" : away ? "RETIRED" : "SURVIVOR"}</p><dl><dt>Health / EXP / points</dt><dd>${dead ? "0" : h.hp} / ${h.maxHp} HP · ${h.xp || 0} EXP · ${h.points ?? "—"} points</dd><dt>Found</dt><dd>${escapeHTML(foundText(h.origin))}</dd><dt>Time with party</dt><dd>${elapsedText((h.diedAt || h.retiredAt || state.finishedAt || Date.now()) - h.joinedAt)} · ${h.stepsWithParty ?? Math.max(0, state.steps - (h.joinedSteps || 0))} steps</dd>${dead ? `<dt>Cause / resting place</dt><dd>${escapeHTML(h.cause)} · floor ${h.depth}, column ${(h.tile % W) + 1}, row ${Math.floor(h.tile / W) + 1}</dd>` : ""}<dt>Equipment</dt><dd>${EQUIPMENT_DEFS[h.equipment]?.name || "None"}</dd><dt>Trait</dt><dd>${HERO_TRAITS[h.trait?.id]?.name || "None"}${h.trait ? " · " + escapeHTML(HERO_TRAITS[h.trait.id]?.description || "") : ""}</dd>${Object.entries(
                 labels,
               )
                 .map(
@@ -14217,6 +15154,7 @@ function trapArt(type) {
         closeSpotlight();
         c.event = null;
         c.feature = "well";
+        const wellHealthBefore = state.party.map(h=>h.hp);
         state.party.forEach((h, i) => {
           if (alive(h))
             healHero(
@@ -14231,6 +15169,7 @@ function trapArt(type) {
               ? "×" + multiplier + " critical healing"
               : "30% health + " + bonus + " rolled HP"),
         );
+        state.party.forEach((h,i)=>evaluateTraitEvent(h,"well",{healed:h.hp-wellHealthBefore[i]}));
         log("The fountain is spent. It cannot revive the dead.");
         await feedbackPause(500);
         return true;
@@ -14274,6 +15213,7 @@ function trapArt(type) {
         shower();
       }
       function goldCelebration(gold, massive = false) {
+        GameSound.play("coin");
         const anchor = !$("#spotlight").hidden
           ? $("#stage-card")
           : !$("#overlay").hidden
@@ -14557,6 +15497,8 @@ function trapArt(type) {
           if (neighbors(state.position).includes(n)) move(n);
         }
       });
+      document.fonts.ready.then(requestFitUI);
+      document.fonts.addEventListener("loadingdone", requestFitUI);
       addEventListener("resize", () => {
         sizeCanvas();
         fitNotebook();
@@ -14909,6 +15851,7 @@ function trapArt(type) {
         return true;
       }
       function levelUpFX(h) {
+        GameSound.play("trait");
         h.levelUpAt = Date.now();
         const i = state.party.indexOf(h),
           hero = $("#hero-" + i),
@@ -14930,6 +15873,7 @@ function trapArt(type) {
         shakeElement(hero, 3);
       }
       function finishVictory() {
+        GameSound.play("victory");
         const finalFloorSummary = recordFloorClear();
         state.over = true;
         state.won = true;
@@ -15186,6 +16130,11 @@ function trapArt(type) {
             equipmentBonus(h, "magic") +
             passive("attack");
         if (out.heal) out.heal += equipmentBonus(h, "heal") + passive("heal");
+        if(out.heal)out.heal=Math.max(1,out.heal+traitBonus(h,"heal"));
+        if(out.teamHeal)out.teamHeal=Math.max(1,out.teamHeal+traitBonus(h,"heal"));
+        if(out.block)out.block+=traitBonus(h,"block");
+        if(out.stun)out.stun+=traitBonus(h,"stun");
+        out.damage=Math.max(0,out.damage);
         out.teamHeal += equipmentBonus(h, "teamHeal");
         out.block += equipmentBonus(h, "block");
         return out;
@@ -15860,23 +16809,142 @@ function trapArt(type) {
         );
       }
 
-      function optionsPage() {
+      let optionsTab = "play";
+      function optionsPage(tab = optionsTab) {
         if (busy) {
           toast("Finish this moment before turning the options page.");
           return;
         }
+        if (!["play", "audio", "display", "future"].includes(tab)) tab = "play";
+        optionsTab = tab;
+        const p = preferences();
+        const range = (key, label, min, max) =>
+          `<label class="setting-slider" for="setting-${key}"><span>${label}<output id="value-${key}" for="setting-${key}">${Math.round(p[key] * 100)}%</output></span><input type="range" id="setting-${key}" data-setting="${key}" min="${min}" max="${max}" step="1" value="${Math.round(p[key] * 100)}"></label>`;
+        const check = (key, label, detail = "") =>
+          `<label class="setting-check"><input type="checkbox" id="setting-${key}" data-setting="${key}" ${p[key] ? "checked" : ""}><span>${label}${detail ? `<small>${detail}</small>` : ""}</span></label>`;
+        const select = (key, label, choices) =>
+          `<label>${label}<select id="setting-${key}" data-setting="${key}">${choices.map(([value, text]) => `<option value="${value}" ${p[key] === value ? "selected" : ""}>${text}</option>`).join("")}</select></label>`;
+        const panes = {
+          play: `<div class="settings-grid"><label>Animation speed<select id="option-speed">${["1", "2", "3", "5", "skip"].map((v) => `<option value="${v}" ${v === state.speed ? "selected" : ""}>${v === "skip" ? "Skip cinematics" : v + "×"}</option>`).join("")}</select></label>${check("skipCriticals", "Skip critical roll visuals", "Multipliers still roll and apply. Combat hits and event results remain visible.")}<label class="setting-check"><input type="checkbox" id="option-auto" ${state.autoresolve ? "checked" : ""}><span>Autoresolve battles<small>Choose heroes, targets and supplies automatically.</small></span></label><label class="setting-check"><input type="checkbox" id="option-autoplay" ${state.autoplay ? "checked" : ""}><span>Autoplay exploration<small>Explore, collect, upgrade and descend. Pair with Autofight for a hands-free run.</small></span></label></div>`,
+          audio: `<p class="settings-note">Sound starts after a click or key press. Audio pauses while this tab is hidden.</p><div class="settings-grid">${range("masterVolume", "Master volume", 0, 100)}${range("sfxVolume", "Sound effects", 0, 100)}${range("musicVolume", "Music", 0, 100)}${range("ambienceVolume", "Ambient sound", 0, 100)}${check("muted", "Mute all audio")}<button id="sound-preview">Test sound</button></div>`,
+          display: `<div class="settings-grid">${range("brightness", "Brightness", 50, 150)}${range("shake", "Shake magnitude", 0, 150)}${check("ambientEffects", "Torchlight & ambient screen effects", "A soft flicker over the page. This only affects lighting, not gameplay particles.")}<label>Paper & ink<select id="option-palette">${["default", "dark", "warm"].map((v) => `<option value="${v}" ${v === state.palette ? "selected" : ""}>${v[0].toUpperCase() + v.slice(1)}</option>`).join("")}</select></label><button id="setting-fullscreen">${document.fullscreenElement ? "Leave fullscreen" : "Enter fullscreen"}</button><button id="shake-preview">Test shake</button></div>`,
+          future: `<p class="settings-note">Preview settings: selections are saved, but resolution, translation and desktop display controls are not active yet.</p><div class="settings-grid">${select(
+            "resolution",
+            "Resolution (preview)",
+            [
+              ["auto", "Fit window"],
+              ["1920x1080", "1920 × 1080"],
+              ["1280x800", "1280 × 800"],
+              ["1280x720", "1280 × 720"],
+            ],
+          )}${select("language", "Language (preview)", [
+            ["en", "English"],
+            ["fr", "Français"],
+            ["de", "Deutsch"],
+            ["es", "Español"],
+            ["ja", "日本語"],
+          ])}${select("displayMode", "Display mode (preview)", [
+            ["windowed", "Windowed"],
+            ["borderless", "Borderless"],
+            ["fullscreen", "Fullscreen"],
+          ])}${select("quality", "Graphics quality (preview)", [
+            ["low", "Low"],
+            ["standard", "Standard"],
+            ["high", "High"],
+          ])}</div>`,
+        };
         openModal(
           "Options",
-          `<div class="options-grid"><label>Animation speed<select id="option-speed">${["1", "2", "3", "5", "skip"].map((v) => `<option value="${v}" ${v === state.speed ? "selected" : ""}>${v === "skip" ? "Skip cinematics" : v + "×"}</option>`).join("")}</select><small>Shakes and hit feedback remain at every speed.</small></label><label>Paper & ink<select id="option-palette">${["default", "dark", "warm"].map((v) => `<option value="${v}" ${v === state.palette ? "selected" : ""}>${v[0].toUpperCase() + v.slice(1)}</option>`).join("")}</select></label><label class="auto-option"><input type="checkbox" id="option-auto" ${state.autoresolve ? "checked" : ""}> Autoresolve battles<small>Chooses attacks, healing, protection, targets and useful supplies. Rewards and choices wait unless Autoplay is enabled.</small></label><label class="auto-option"><input type="checkbox" id="option-autoplay" ${state.autoplay ? "checked" : ""}> Autoplay exploration<small>Collect useful visible finds, save wells until hurt, improve reels and equipment, then seek the stairs. Handles discoveries and descent; enable Autofight too for a hands-free run. Turning this off stops travel after the current step.</small></label></div><div class="modal-actions"><button id="option-guide">Read the field guide</button><button id="option-download">Download HTML backup</button><button class="primary" data-close>Back to this page</button></div>`,
+          `<div class="settings-tabs" role="tablist" aria-label="Options pages">${[
+            ["play", "Play"],
+            ["audio", "Audio"],
+            ["display", "Display"],
+            ["future", "Coming later"],
+          ]
+            .map(
+              ([id, name]) =>
+                `<button id="tab-${id}" role="tab" aria-controls="settings-panel" aria-selected="${id === tab}" data-settings-tab="${id}">${name}</button>`,
+            )
+            .join(
+              "",
+            )}</div><section class="settings-panel" role="tabpanel" id="settings-panel" aria-labelledby="tab-${tab}">${panes[tab]}</section><div class="modal-actions"><button id="option-guide">Field guide</button><button id="option-download">Save HTML</button><button id="option-reset">Reset settings</button><button class="primary" data-close>Back to game</button></div>`,
           "options",
         );
-        $("#option-speed").onchange = (e) => setPace(e.target.value);
-        $("#option-palette").onchange = (e) => setPalette(e.target.value);
-        $("#option-auto").onchange = (e) => setAutoresolve(e.target.checked);
-        $("#option-autoplay").onchange = (e) => setAutoplay(e.target.checked);
+        document.querySelectorAll("[data-settings-tab]").forEach(
+          (b) =>
+            (b.onclick = () => {
+              optionsPage(b.dataset.settingsTab);
+              $("#tab-" + optionsTab).focus();
+            }),
+        );
+        $(".settings-tabs").onkeydown = (e) => {
+          if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(e.key)) return;
+          e.preventDefault();
+          const tabs = ["play", "audio", "display", "future"],
+            i = tabs.indexOf(optionsTab);
+          optionsPage(
+            e.key === "Home"
+              ? tabs[0]
+              : e.key === "End"
+                ? tabs[3]
+                : tabs[(i + (e.key === "ArrowRight" ? 1 : 3)) % 4],
+          );
+          $("#tab-" + optionsTab).focus();
+        };
+        document.querySelectorAll("[data-setting]").forEach((input) => {
+          const update = () => {
+            const value =
+              input.type === "checkbox"
+                ? input.checked
+                : input.type === "range"
+                  ? Number(input.value) / 100
+                  : input.value;
+            setPreference(input.dataset.setting, value);
+            const output = $("#value-" + input.dataset.setting);
+            if (output) output.textContent = Math.round(value * 100) + "%";
+          };
+          input.oninput = update;
+          input.onchange = update;
+        });
+        if ($("#option-speed"))
+          $("#option-speed").onchange = (e) => setPace(e.target.value);
+        if ($("#option-palette"))
+          $("#option-palette").onchange = (e) => setPalette(e.target.value);
+        if ($("#option-auto"))
+          $("#option-auto").onchange = (e) => setAutoresolve(e.target.checked);
+        if ($("#option-autoplay"))
+          $("#option-autoplay").onchange = (e) => setAutoplay(e.target.checked);
+        if ($("#sound-preview"))
+          $("#sound-preview").onclick = async () => {
+            await GameSound.unlock();
+            GameSound.play("heal");
+          };
+        if ($("#shake-preview"))
+          $("#shake-preview").onclick = () => shakeElement($("#modal"), 8);
+        if ($("#setting-fullscreen"))
+          $("#setting-fullscreen").onclick = async () => {
+            try {
+              if (document.fullscreenElement) await document.exitFullscreen();
+              else await document.documentElement.requestFullscreen();
+              optionsPage("display");
+            } catch {
+              toast("Fullscreen is unavailable in this window.");
+            }
+          };
         $("#option-guide").onclick = help;
         $("#option-download").onclick = () => $("#download").click();
+        $("#option-reset").onclick = () => {
+          state.preferences = { ...DEFAULT_PREFERENCES };
+          setAutoresolve(false);
+          setAutoplay(false);
+          setPace("1");
+          setPalette("default");
+          applyPreferences();
+          save();
+          optionsPage(tab);
+        };
       }
+
       function chooseStartingClass(initial = false) {
         if (initial) {
           state.awaitingStarter = true;

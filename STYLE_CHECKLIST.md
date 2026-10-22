@@ -23,7 +23,8 @@
 - [ ] All three hero rows and bag pockets fit; transient content doesn't shift
       controls; only the log and final roster scroll inside the interface.
 - [ ] Map token alignment, active-event badges, walls, rivers and stairs are clear.
-- [ ] Long names, Masterwork supply labels/effects, paired enemies, floor-clear
+- [ ] All options pages, worn equipment labels, trait tooltips, dead/non-flashing
+      bars, torn-paper sheets, Masterwork supply labels/effects, paired enemies, floor-clear
       summaries, popup choices and compact layouts were checked.
 - [ ] Changes don't consume gameplay RNG, modify outcomes, timings or balance.
 - [ ] `npm run build:ui` and `npm test` pass; `npm run review:ui` screenshots were

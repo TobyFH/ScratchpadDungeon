@@ -118,6 +118,14 @@ const output = path.join(root, "test-results/ui-review");
       particles = [];
     });
     await shot("08-options");
+    for (const tab of ["audio", "display", "future"]) {
+      await page.locator("#tab-" + tab).click();
+      await shot("08-options-" + tab);
+    }
+    await page.setViewportSize({ width: 390, height: 844 });
+    await shot("08-options-mobile");
+    await page.setViewportSize({ width: 1920, height: 1080 });
+
     await page.evaluate(() => help());
     await shot("09-field-guide");
     await page.evaluate(() => {
@@ -151,6 +159,28 @@ const output = path.join(root, "test-results/ui-review");
       state.enemies[0].passive = { key: "summoner", turns: 1 };
       state.enemies[1].passive = { key: "carapace" };
       state.party[1].hp = 6;
+      state.party[0].trait = {
+        id: "heroic",
+        reason: "Defeated a guardian alone.",
+        step: 0,
+        battles: 0,
+      };
+      state.party[1].trait = {
+        id: "merciful",
+        reason: "Mended the party through a long fight.",
+        step: 0,
+        battles: 0,
+      };
+      state.party[2].trait = {
+        id: "stubborn",
+        reason: "Held firm under pressure.",
+        step: 0,
+        battles: 0,
+      };
+      state.party[0].equipment = "silentBoots";
+      state.party[1].equipment = "glassRosary";
+      state.party[2].equipment = "bulwarkBadge";
+
       state.party[1].poison = { turns: 4, damage: 1 };
       state.party[2].stun = 1;
       state.bag = { potion_3: 1, bomb_3: 1, firebomb_3: 1 };

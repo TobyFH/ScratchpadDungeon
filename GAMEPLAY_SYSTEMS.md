@@ -119,3 +119,95 @@ automatic campaigns, and focused decisions/costs/items/passives/pursuit tests.
 `npm run review:ui` produces desktop, Steam Deck-sized and phone captures plus
 an offline HTML backup. Review status colours, EXP/lever/editor spacing and long
 variant names in all palettes; numeric bounds alone do not prove readability.
+
+## Preferences, audio and lighting (version 12)
+
+`DEFAULT_PREFERENCES`, `normalisePreferences()` and `setPreference()` are the
+shared settings contract. Preferences are saved both with progress and in the
+independent settings record, and survive a new expedition. Numbers are clamped;
+unknown enum values and invalid booleans fall back to defaults. Brightness is
+50–150%, shake 0–150%, volumes 0–100%. Zero shake returns before creating an
+animation. Lighting uses a non-interactive viewport overlay, so brightness does
+not move fixed dialogs, tokens or hitboxes. Torchlight is independent of gameplay
+particles and can be switched off; reduced-motion preferences suppress flicker.
+
+Options has Play, Audio, Display and Coming later pages. Controls use native
+inputs and keyboard navigation; only one settings panel is laid out at a time.
+Master, SFX, music, ambience, mute, brightness, shake, ambient lighting, animation
+pace, critical presentation, palette, automation and browser fullscreen work.
+Resolution, language, desktop window mode and quality are **saved previews**.
+They intentionally do not change resolution, translate text or apply graphics
+quality. Don't remove their visible preview explanation until implemented.
+
+`GameSound` owns a single gesture-unlocked Web Audio context, separate gain
+buses, a compressor, throttled cues and a maximum of 20 concurrent voice groups.
+`SOUND_CUES` describes replaceable oscillator/noise sounds. Background music is
+an intentionally simple repeating low-note sequence; ambience is quiet noise.
+No audio files, downloads, paid services or gameplay RNG are used. Hidden tabs
+suspend audio and resume it after earlier activation. Context startup failure
+leaves the game playable. Chromium can defer idle gain-node evaluation; volume
+tests play a cue before inspecting the active bus, rather than reading stale
+idle values. Tune cues or replace synthesis in this module without changing the
+combat call sites. Test actual audibility on speakers/headphones before treating
+these temporary sounds as finished audio production.
+
+`rollCritical()` always chooses and records the multiplier before checking
+`skipCriticals`. The opt-in setting skips the critical machine, popup/inline
+panel and hold. It keeps the same gameplay RNG, calculations, combat impacts and
+ordinary event confirmation. This differs from Skip cinematics, which still
+shows the critical result unless this new setting is enabled.
+
+## Tier IV and mid-floor pressure
+
+`maxFaceTier()` allows IV for attack, magic, heal, block, stun, poison and
+stimulant faces; class seals remain I. Existing class prices apply to IV, and
+save validation accepts every supported tier. Tier-IV attacks retain 11 base
+power; healing is 8, the other support powers 4. Enemy promotion retains its own
+attack-IV/support-III caps. Hero upgrades do not silently buff enemy reels.
+
+Floors 3–6 add 2/4/6/8% HP through `enemyBalance()`. Floors 4–7 add one base
+damage, then merge into the existing later curve; floor 7 bridges the transition
+so floor 8 does not become weaker. Floors 1–2 and the final guardian's three
+strikes/top-tier faces are unchanged. Earlier saved combats refresh damage but
+retain existing HP, except pre-version-7 saves that already use HP migration.
+
+## Hero traits
+
+`HERO_TRAITS` is the authoritative set of 15 stable IDs and effects.
+`beginTraitBattle()` records each living hero's start stats and lowest HP;
+`evaluateTraitEvent()` selects a qualifying outcome, and `grantTrait()` replaces
+one trait automatically, without a dialog. A repeat of the same trait does
+nothing. Replacements wait until eight further steps **or** two more victories,
+limiting rapid feedback churn. The reason/depth/time stays with the hero and
+in their death record. Hover/focus the portrait badge to inspect its effect and
+origin. Traits survive combat cleanup; buffs, poison and stun still expire.
+
+| ID | Trigger | Minor effect |
+| --- | --- | --- |
+| heroic | Win a hard battle alone, staying above 30% HP | +1 damaging-roll power |
+| hardy | Survive at/below 20% HP after taking at least 30% max HP in damage | Resist 1 damage |
+| cowardly | Win after reaching 20% HP while still stunned | +1 shield-roll block, −1 damage |
+| scarred | Survive repeated critical wounds at/below 10% HP | Receive 1 less healing |
+| stoic | Block at least 12 damage while taking less than 6 | +1 opening team block |
+| merciful | Heal at least 16 HP in battle | +1 healing-roll power |
+| reckless | At least 5 spins, 40 damage, under 40% HP, no healing given | +2 damage, take 1 extra per hit |
+| venomous | Kill an enemy with poison and survive | Poison lasts 1 extra action, cap 8 |
+| haunted | Win an ambush after falling below 40% HP | −1 damage |
+| focused | Successfully apply at least 3 new stuns | +1 stun-roll power |
+| stubborn | Take at least 15 damage and block at least 6 | Resist 1 damage, −1 healing power |
+| wary | Escape a trap without HP damage | +1 opening team block |
+| scorched | Survive trap damage of at least 15% maximum HP | −1 healing power |
+| invigorated | Recover at least 20% maximum HP from a well | Receive 1 extra healing |
+| bookish | Examine two beacons | +5% EXP, fractions accumulate |
+
+Survival conditions have priority over role-based battle traits; the ordering is
+explicit in `evaluateTraitEvent()`. Damage/healing penalties cannot turn an
+otherwise positive effect negative (minimum 1); no healing bonus creates healing
+on a blank roll. Traits never rewrite reels or consume gameplay randomness.
+Bookish fractions reset on replacement. Automated decisions include active
+trait modifiers in their expected effects.
+
+Enemy captions use `enemyActionText()` / `setEnemyPhase()`, independently of
+passive labels. Idle clocks, rolling, attacks, poison, stun, healing, shields and
+death get current captions. Transient phases are cleared on reload. The enemy
+machine footnote is deliberately empty; its reserved height keeps layout stable.

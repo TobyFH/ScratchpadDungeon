@@ -123,3 +123,25 @@ look like another part of the same drawn notebook, not a separate application.
   button or automatically dismisses the result in manual play. Final victory
   retains the full roster and appends final-floor statistics inside its existing
   scrollable records; don't compress all adventurer text to fit an extra grid.
+
+## Detached sheets and settings
+
+- Dialogs and event/critical panels share `--torn-paper` and the three
+  `ui/assets/torn-paper*.svg` assets. These nine-slice images supply an opaque
+  paper centre and transparent, fibrous perimeter. Do not reintroduce a second
+  straight/dashed frame inside the torn sheet. Borders are decorative; content
+  remains in rectangular accessible DOM controls with unchanged focus hooks.
+- Settings use `.settings-tabs`, `.settings-panel`, `.settings-grid`,
+  `.setting-slider` and `.setting-check`. All four pages fit at small sizes;
+  don't put every control in one long scrolling sheet. Range controls have
+  explicit labels/outputs. Preview settings must say they are not active.
+- Equipment names use a fixed single text line measured by `fitText()`;
+  preserve their full name/effect in the accessible label and tooltip. Check
+  all eight pieces, not only the empty slot. Enemy machine state captions
+  share a reserved row with passive information; phones reserve two short lines.
+- A `.trait-badge` sits in a portrait corner, distinct from bottom status badges.
+  It has a meaningful icon, accessible name, effect and origin tooltip. Positive,
+  negative and mixed traits use the existing green/red/gold semantics. It adds
+  no new card row and never opens a mandatory choice.
+- Dead health bars use `.dead`, never `.critical`, and have no flashing animation.
+  Re-run title fitting after embedded fonts finish loading, as well as on resize.

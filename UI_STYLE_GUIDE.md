@@ -197,3 +197,9 @@ explicit dark-palette counterparts and preserve graphite linework. Low health
 uses the existing danger red; active rolling uses a faint gold card wash.
 These are gameplay cues, not a broader decorative palette. Keep HP numbers,
 injury/status labels, shield indicators and the river's blocked symbol.
+
+Detached event sheets now use local `torn-paper.svg`, `torn-paper-dark.svg` and
+`torn-paper-warm.svg` assets rather than a rectangular frame. Their slight edge
+variation, fibres and quiet grain are purposeful material marks. Keep the paper
+centre clean and do not add decorative writing. Audio and lighting controls use
+the same paper buttons, native readable controls and restrained colours as play.

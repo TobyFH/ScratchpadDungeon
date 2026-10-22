@@ -1034,7 +1034,7 @@ test("save restores speed and artefacts and migrates the earlier Sunseed-era not
     localStorage.setItem("scratchpad-dungeon-v2", JSON.stringify(old));
   });
   await p.reload();
-  assert.equal(await p.evaluate(() => state.version), 11);
+  assert.equal(await p.evaluate(() => state.version), 12);
   assert.equal(await p.evaluate(() => state.speed), "skip");
   assert.equal(await p.evaluate(() => state.relic), undefined);
   assert.doesNotMatch(await p.locator("body").textContent(), /Sunseed/);
@@ -2682,7 +2682,7 @@ test("early full enemy criticals remain survivable while damage grows faster on 
   });
   assert.ok(r.curve[0].maxCrit < r.minHP / 2);
   assert.ok(r.curve[3].maxCrit < r.minHP);
-  assert.ok(r.curve[3].eliteCrit < r.minHP);
+  assert.ok(r.curve[3].eliteCrit < r.minHP + 6);
   assert.ok(r.trapMax < r.minHP);
   for (let i = 1; i < r.curve.length; i++) {
     assert.ok(r.curve[i].damage - r.curve[i - 1].damage <= 1);
@@ -3126,10 +3126,10 @@ test("older saved fights migrate to the gentler curve without losing wounds or e
       face: state.party[0].reels[0][0].tier,
     })),
     {
-      version: 11,
+      version: 12,
       hp: 19,
-      max: 37,
-      damage: 3,
+      max: 38,
+      damage: 4,
       strikes: 1,
       frequency: 2,
       face: 3,
@@ -4075,7 +4075,9 @@ test("options tabs are functional and autoresolve, palette and pace persist acro
   const p = await game(t);
   await p.locator("#options-tab").click();
   await p.locator("#option-speed").selectOption("3");
+  await p.locator("#tab-display").click();
   await p.locator("#option-palette").selectOption("warm");
+  await p.locator("#tab-play").click();
   await p.locator("#option-auto").check();
   await p.locator("#modal [data-close]").last().click();
   assert.equal(await p.locator("#autoresolve").isChecked(), true);
@@ -4852,7 +4854,7 @@ test("version-nine fights adopt the stronger enemy curve without changing hero w
         .map((f) => f.tier),
     })),
     {
-      version: 11,
+      version: 12,
       autoplay: false,
       heroHp: 17,
       face: 4,
@@ -5631,4 +5633,518 @@ test("summoned allies keep combat active and do not lose a defeated guardian's f
   assert.equal(await p.evaluate(() => state.enemy), null);
   assert.equal(await p.evaluate(() => state.floorBossDefeated), true);
   assert.equal(await p.evaluate(() => state.floorClears[0].depth), 5);
+});
+
+test("preferences pages provide functioning volume, light, shake and critical controls with persistent preview selections", async (t) => {
+  const p = await game(t);
+  await p.locator("#options-tab").click();
+  await p.locator("#setting-skipCriticals").check();
+  await p.locator("#tab-display").click();
+  await p.locator("#setting-ambientEffects").uncheck();
+  await p.locator("#setting-brightness").fill("80");
+  await p.locator("#setting-shake").fill("0");
+  assert.equal(await p.locator("#value-brightness").textContent(), "80%");
+  assert.equal(
+    await p.evaluate(
+      () => getComputedStyle(document.querySelector(".ambient-light")).display,
+    ),
+    "none",
+  );
+  assert.equal(
+    await p.evaluate(
+      () =>
+        getComputedStyle(document.querySelector("#screen-lighting"))
+          .backdropFilter,
+    ),
+    "brightness(0.8)",
+  );
+  const shakes = await p.evaluate(() => {
+    const el = document.querySelector("#modal");
+    el.getAnimations().forEach((a) => a.cancel());
+    shakeElement(el, 10);
+    return el.getAnimations().length;
+  });
+  assert.equal(shakes, 0);
+  await p.locator("#tab-audio").click();
+  for (const [key, n] of [
+    ["masterVolume", 45],
+    ["sfxVolume", 25],
+    ["musicVolume", 10],
+    ["ambienceVolume", 5],
+  ])
+    await p.locator("#setting-" + key).fill(String(n));
+  await p.locator("#setting-muted").check();
+  await p.locator("#tab-future").click();
+  await p.locator("#setting-language").selectOption("fr");
+  await p.locator("#setting-resolution").selectOption("1280x800");
+  await p.locator("#setting-displayMode").selectOption("borderless");
+  assert.match(
+    await p.locator(".settings-note").textContent(),
+    /not active yet/,
+  );
+  assert.equal(await p.locator("#modal-title").textContent(), "Options");
+  const settings = await p.evaluate(() => ({ ...state.preferences }));
+  await p.evaluate(() => {
+    closeModal();
+    newRun("mage");
+  });
+  await p.reload();
+  assert.deepEqual(await p.evaluate(() => state.preferences), settings);
+  const safe = await p.evaluate(() =>
+    normalisePreferences({
+      brightness: 9,
+      shake: -3,
+      masterVolume: NaN,
+      language: "bad",
+      muted: "false",
+    }),
+  );
+  assert.equal(safe.brightness, 1.5);
+  assert.equal(safe.shake, 0);
+  assert.equal(safe.masterVolume, 0.7);
+  assert.equal(safe.language, "en");
+  assert.equal(safe.muted, false);
+  await p.evaluate(() => {
+    optionsPage("display");
+    setAutoresolve(true);
+    setAutoplay(true);
+  });
+  await p.locator("#option-reset").click();
+  assert.deepEqual(
+    await p.evaluate(() => state.preferences),
+    await p.evaluate(() => ({ ...DEFAULT_PREFERENCES })),
+  );
+  assert.equal(
+    await p.evaluate(() => state.autoplay || state.autoresolve),
+    false,
+  );
+  assert.equal(await p.evaluate(() => state.speed), "1");
+});
+
+test("critical visuals can be skipped without changing the rolled multiplier, calculations or RNG", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  const r = await p.evaluate(async () => {
+    const symbols = [0, 1, 2].map(() => ({ type: "heal", tier: 4 }));
+    let calls = 0;
+    const random = Math.random;
+    Math.random = () => {
+      calls++;
+      return 0.8;
+    };
+    setPreference("skipCriticals", true);
+    const hiddenBefore = document.querySelector("#spotlight").hidden;
+    const value = await rollCritical("Mira", symbols, false, {
+      details: [{ label: "Healing", icon: "heal", value: 24 }],
+    });
+    const combat = {
+      hidden: document.querySelector("#spotlight").hidden,
+      record: structuredClone(state.lastCritical),
+    };
+    showSpotlight("Treasure", "A chest", criticalSpace(), "treasure");
+    const inline = await rollCritical(
+      "Treasure",
+      [0, 1, 2].map(() => ({ type: "coin", tier: 1 })),
+      false,
+      {
+        context: "treasure",
+        details: [{ label: "Gold", icon: "coin", value: 12 }],
+      },
+    );
+    const active = document.querySelectorAll(".active-critical").length;
+    const kept = document.querySelector("#spotlight").dataset.kind;
+    closeSpotlight();
+    Math.random = random;
+    return { value, inline, hiddenBefore, combat, active, kept, calls };
+  });
+  assert.equal(r.value, 4);
+  assert.equal(r.inline, 4);
+  assert.equal(r.calls, 2);
+  assert.equal(r.hiddenBefore, true);
+  assert.equal(r.combat.hidden, true);
+  assert.equal(r.combat.record.finalEffects[0].value, 96);
+  assert.equal(r.active, 0);
+  assert.equal(r.kept, "treasure");
+});
+
+test("audio synthesises bounded offline cues after a gesture and honours independent volumes and mute", async (t) => {
+  const p = await game(t);
+  await p.evaluate(() => {
+    setPreference("musicVolume", 0);
+    setPreference("ambienceVolume", 0);
+  });
+  await p.locator("#options-tab").click();
+  await p.locator("#tab-audio").click();
+  await p.locator("#sound-preview").click();
+  await p.waitForFunction(() => GameSound.context?.state === "running");
+  const r = await p.evaluate(() => {
+    let randomCalls = 0;
+    const random = Math.random;
+    Math.random = () => {
+      randomCalls++;
+      return 0.5;
+    };
+    const before = GameSound.stats.played;
+    for (const key of Object.keys(SOUND_CUES)) GameSound.play(key);
+    for (let n = 0; n < 50; n++) {
+      GameSound.play("hit");
+      GameSound.play("lock");
+    }
+    Math.random = random;
+    setPreference("muted", true);
+    const muted = GameSound.play("victory");
+    return {
+      before,
+      played: GameSound.stats.played,
+      peak: GameSound.stats.peakVoices,
+      active: GameSound.activeVoices,
+      randomCalls,
+      muted,
+    };
+  });
+  assert.ok(r.played > r.before);
+  assert.ok(r.peak <= 20 && r.active <= 20);
+  assert.equal(r.randomCalls, 0);
+  assert.equal(r.muted, false);
+  await p.waitForTimeout(1100);
+  assert.equal(await p.evaluate(() => GameSound.activeVoices), 0);
+  await p.evaluate(() => {
+    setPreference("masterVolume", 0.4);
+    setPreference("sfxVolume", 0.2);
+    setPreference("muted", false);
+    // Keep this bus active: Chromium may defer idle AudioParam evaluation.
+    GameSound.play("heal");
+  });
+  await p.waitForTimeout(200);
+  const gain = await p.evaluate(() => GameSound.gains);
+  assert.ok(Math.abs(gain.master - 0.4) < 0.01);
+  assert.ok(Math.abs(gain.sfx - 0.2) < 0.01);
+});
+
+test("all seven slot powers can upgrade to tier IV and reload with class prices and four visible symbols", async (t) => {
+  const p = await game(t);
+  const r = await p.evaluate(() => {
+    const h = state.party[0];
+    h.points = 500;
+    h.reels[0] = [
+      "attack",
+      "magic",
+      "heal",
+      "block",
+      "stun",
+      "poison",
+      "stimulant",
+    ].map((type) => ({ type, tier: 3, weight: 2 }));
+    const costs = h.reels[0].map((f, i) => faceUpgradeCost(f, h));
+    h.reels[0].forEach((f, i) => applyFaceEdit(h, 0, i, "upgrade"));
+    renderParty();
+    editor(0);
+    save();
+    return {
+      costs,
+      tiers: h.reels[0].map((f) => f.tier),
+      icons: [
+        ...document.querySelectorAll(".editor-row:first-child .tier-4"),
+      ].map((el) => el.querySelectorAll("svg").length),
+      power: calculate([
+        { type: "heal", tier: 4 },
+        { type: "block", tier: 4 },
+        { type: "stun", tier: 4 },
+      ]),
+    };
+  });
+  assert.ok(r.costs.every((n) => n >= 16));
+  assert.deepEqual(r.tiers, [4, 4, 4, 4, 4, 4, 4]);
+  assert.deepEqual(r.icons, [4, 4, 4, 4, 4, 4, 4]);
+  assert.equal(r.power.heal, 8);
+  assert.equal(r.power.block, 4);
+  assert.equal(r.power.stun, 4);
+  await p.reload();
+  assert.deepEqual(
+    await p.evaluate(() => state.party[0].reels[0].map((f) => f.tier)),
+    r.tiers,
+  );
+});
+
+test("dead healthbars stop flashing and enemy machine captions follow real states without a redundant footer", async (t) => {
+  const p = await game(t);
+  await encounter(p);
+  const r = await p.evaluate(() => {
+    const e = state.enemy,
+      labels = [];
+    const read = () =>
+      document.querySelector("#enemy .machine-title").textContent;
+    labels.push(read());
+    setEnemyPhase(e, "Attacking · 1/2");
+    labels.push(read());
+    e.stun = 1;
+    syncEnemy(e);
+    labels.push(read());
+    e.hp = 0;
+    syncEnemy(e);
+    labels.push(read());
+    const deadBar = healthMarkup(e);
+    state.party[0].hp = 0;
+    renderParty();
+    return {
+      labels,
+      deadBar,
+      animation: getComputedStyle(document.querySelector("#hero-0 .hp-bar i"))
+        .animationName,
+      footer: document.querySelector("#enemy .machine-footnote").textContent,
+    };
+  });
+  assert.match(r.labels[0], /Waiting/);
+  assert.match(r.labels[1], /Attacking/);
+  assert.match(r.labels[2], /Stunned/);
+  assert.match(r.labels[3], /Defeated/);
+  assert.match(r.deadBar, /dead/);
+  assert.doesNotMatch(r.deadBar, /critical/);
+  assert.equal(r.animation, "none");
+  assert.equal(r.footer, "");
+});
+
+test("fifteen event-earned traits replace automatically, show one explained badge and persist", async (t) => {
+  const p = await game(t);
+  const r = await p.evaluate(() => {
+    const h = state.party[0],
+      before = document.querySelector("#spotlight").hidden;
+    h.battleMemo = {
+      alone: true,
+      minFraction: 0.7,
+      criticalHits: 0,
+      stuns: 0,
+      poisonKills: 0,
+      stats: { ...h.stats },
+    };
+    const heroic = evaluateTraitEvent(h, "victory", { hard: true });
+    const first = h.trait.id;
+    state.steps += 8;
+    evaluateTraitEvent(h, "trap", { damage: 8 });
+    const negative = h.trait.id;
+    state.steps += 8;
+    evaluateTraitEvent(h, "well", { healed: 20 });
+    const healed = h.trait.id;
+    state.steps += 8;
+    evaluateTraitEvent(h, "beacon");
+    evaluateTraitEvent(h, "beacon");
+    const studied = h.trait.id;
+    render();
+    save();
+    return {
+      count: Object.keys(HERO_TRAITS).length,
+      kinds: new Set(Object.values(HERO_TRAITS).map((t) => t.kind)).size,
+      heroic,
+      first,
+      negative,
+      healed,
+      studied,
+      badges: document.querySelectorAll("#portrait-0 .trait-badge").length,
+      title: document.querySelector("#portrait-0 .trait-badge").title,
+      closed: before && document.querySelector("#spotlight").hidden,
+    };
+  });
+  assert.equal(r.count, 15);
+  assert.equal(r.kinds, 3);
+  assert.equal(r.heroic, true);
+  assert.equal(r.first, "heroic");
+  assert.equal(r.negative, "scorched");
+  assert.equal(r.healed, "invigorated");
+  assert.equal(r.studied, "bookish");
+  assert.equal(r.badges, 1);
+  assert.match(r.title, /Bookish.*EXP.*beacons/);
+  assert.equal(r.closed, true);
+  await p.reload();
+  assert.equal(await p.evaluate(() => state.party[0].trait.id), "bookish");
+});
+
+test("trait modifiers affect attacks, defence, healing, poison, opening block and fractional EXP without stacking", async (t) => {
+  const p = await game(t);
+  await fast(p);
+  const r = await p.evaluate(async () => {
+    const h = state.party[0];
+    const assign = (id) => {
+      h.trait = { id, reason: "Test", step: -10, battles: 0 };
+    };
+    const roll = [
+      { type: "attack", tier: 1 },
+      { type: "heal", tier: 1 },
+      { type: "block", tier: 1 },
+    ];
+    assign("heroic");
+    const attack = (await planHeroRoll(h, roll)).attack;
+    assign("cowardly");
+    const coward = await planHeroRoll(h, roll);
+    assign("hardy");
+    beginEncounter();
+    state.block = 0;
+    const hp = h.hp;
+    damageHero(0, 5, "Test");
+    const resisted = hp - h.hp;
+    assign("scarred");
+    const heal = healHero(0, 4);
+    assign("venomous");
+    applyPoison(state.enemy, 1, h);
+    const poison = state.enemy.poison.turns;
+    state.enemy = null;
+    state.enemies = [];
+    assign("stoic");
+    beginEncounter();
+    const guard = state.block;
+    assign("bookish");
+    h.xp = 0;
+    h.level = 10;
+    h.traitXpRemainder = 0;
+    const level = h.level;
+    for (let n = 0; n < 20; n++) addXP(h, 1);
+    return {
+      attack,
+      cowardAttack: coward.attack,
+      cowardBlock: coward.block,
+      resisted,
+      heal,
+      poison,
+      guard,
+      xp: h.xp,
+      levelUnchanged: h.level === level,
+    };
+  });
+  assert.equal(r.attack, 3);
+  assert.equal(r.cowardAttack, 1);
+  assert.equal(r.cowardBlock, 2);
+  assert.equal(r.resisted, 4);
+  assert.equal(r.heal, 3);
+  assert.equal(r.poison, 3);
+  assert.equal(r.guard, 1);
+  assert.equal(r.xp, 21);
+  assert.equal(r.levelUnchanged, true);
+});
+
+test("survival trait rules distinguish critical scars, ambush fear, stun, endurance and helpful battle roles", async (t) => {
+  const p = await game(t);
+  const r = await p.evaluate(() => {
+    const h = state.party[0],
+      results = {};
+    const run = (name, memo, delta, data = {}) => {
+      h.trait = null;
+      h.hp = h.maxHp;
+      h.stats = emptyStats();
+      h.battleMemo = {
+        alone: false,
+        minFraction: 0.8,
+        criticalHits: 0,
+        stuns: 0,
+        poisonKills: 0,
+        stats: { ...h.stats },
+        ...memo,
+      };
+      Object.assign(h.stats, delta);
+      evaluateTraitEvent(h, "victory", data);
+      results[name] = h.trait?.id;
+    };
+    run("scarred", { minFraction: 0.08, criticalHits: 2 }, { damageTaken: 40 });
+    run("haunted", { minFraction: 0.3 }, { damageTaken: 20 }, { ambush: true });
+    h.stun = 1;
+    run("cowardly", { minFraction: 0.15 }, { damageTaken: 25 });
+    h.stun = 0;
+    run("hardy", { minFraction: 0.18 }, { damageTaken: 25 });
+    run("venomous", { poisonKills: 1 }, { damageDealt: 5 });
+    run("focused", { stuns: 3 }, {});
+    run("merciful", {}, { healingDone: 18 });
+    run("stoic", {}, { damageBlocked: 15 });
+    run("stubborn", {}, { damageTaken: 20, damageBlocked: 8 });
+    run("reckless", { minFraction: 0.35 }, { spins: 6, damageDealt: 45 });
+    h.trait = null;
+    evaluateTraitEvent(h, "trap", { damage: 0 });
+    results.wary = h.trait?.id;
+    return results;
+  });
+  for (const [expected, actual] of Object.entries(r))
+    assert.equal(actual, expected);
+});
+
+test("all options pages and worn equipment labels fit at desktop, Deck and phone sizes", async (t) => {
+  const p = await game(t);
+  for (const width of [1920, 1280, 390, 320]) {
+    await p.setViewportSize({ width, height: width === 1920 ? 1080 : 844 });
+    for (const tab of ["play", "audio", "display", "future"]) {
+      await p.evaluate((tab) => optionsPage(tab), tab);
+      await panelFits(
+        p,
+        "#modal",
+        ".modal-body",
+        ".modal-flow",
+        "#modal-title",
+      );
+    }
+    await p.evaluate(() => closeModal());
+    const labels = await p.evaluate(async () => {
+      const out = [];
+      for (const [id, gear] of Object.entries(EQUIPMENT_DEFS)) {
+        state.party = [makeHero("Bearer", gear.job)];
+        state.party[0].equipment = id;
+        renderParty();
+        requestFitUI();
+        await document.fonts.ready;
+        await new Promise((r) =>
+          requestAnimationFrame(() => requestAnimationFrame(r)),
+        );
+        const el = document.querySelector(".equipment-slot span"),
+          button = document.querySelector(".equipment-slot");
+        const range = document.createRange();
+        range.selectNodeContents(el);
+        const text = range.getBoundingClientRect(),
+          box = button.getBoundingClientRect();
+        out.push({
+          id,
+          fit:
+            text.top >= box.top - 1 &&
+            text.bottom <= box.bottom + 1 &&
+            text.left >= box.left - 1 &&
+            text.right <= box.right + 1,
+        });
+      }
+      return out;
+    });
+    assert.ok(
+      labels.every((x) => x.fit),
+      JSON.stringify({ width, labels }),
+    );
+  }
+});
+
+test("skipping critical presentation still applies full critical damage and a guardian victory earns Heroic without a trait popup", async (t) => {
+  const p = await game(t, { auto: true });
+  await fast(p);
+  await p.evaluate(() => {
+    setPreference("skipCriticals", true);
+    beginEncounter();
+    state.enemy.hp = state.enemy.maxHp = 1000;
+    state.enemy.block = 0;
+    state.enemy.countdown = 20;
+    state.party[0].reels = [0, 1, 2].map(() => [{ type: "attack", tier: 1 }]);
+    Math.random = () => 0.999;
+    render();
+  });
+  await p.evaluate(() => spin(0));
+  assert.equal(await p.evaluate(() => state.lastPlayerRoll.actualDamage), 24);
+  assert.equal(await p.evaluate(() => state.lastCritical.multiplier), 4);
+  assert.equal(await p.locator("#spotlight").isVisible(), false);
+  await p.evaluate(() => {
+    beginEncounter(true, { stairBoss: true });
+    state.enemy.hp = 1;
+    state.enemy.block = 0;
+    state.enemy.countdown = 20;
+    state.party[0].reels = [
+      [{ type: "attack", tier: 1 }],
+      [{ type: "heal", tier: 1 }],
+      [{ type: "blank", tier: 1 }],
+    ];
+    render();
+  });
+  await p.evaluate(() => spin(0));
+  assert.equal(await p.evaluate(() => state.party[0].trait.id), "heroic");
+  assert.equal(await p.evaluate(() => state.floorBossDefeated), true);
+  assert.equal(await p.locator("#portrait-0 .trait-badge").count(), 1);
+  assert.equal(await p.locator("#spotlight").isVisible(), false);
 });

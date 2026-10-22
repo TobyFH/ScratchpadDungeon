@@ -57,7 +57,7 @@ From floor three, revealing enough walkable tiles can awaken **The Unwritten** f
 
 ## Reels and combat
 
-Heroes have six ordinary weighted faces on each outer reel and seven faces on the middle reel, including its **single class seal**. Each reel starts with a permanent EMPTY face. Empty faces have no effect and never crit. Personal points can inscribe over them for **3 points**. Base tier prices are 1 / 4 / 9 / 16 points; class affinities make off-role symbols more expensive. A tank pays 8 points to upgrade healing I → II, a healer 4 and a mage 5; a mage pays 8 to upgrade blade I → II. The editor displays the exact price, including the destination class affinity for symbol changes; tier IV is available for blade and magic attacks. Edits preserve face weights, which the editor displays.
+Heroes have six ordinary weighted faces on each outer reel and seven faces on the middle reel, including its **single class seal**. Each reel starts with a permanent EMPTY face. Empty faces have no effect and never crit. Personal points can inscribe over them for **3 points**. Base tier prices are 1 / 4 / 9 / 16 points; class affinities make off-role symbols more expensive. A tank pays 8 points to upgrade healing I → II, a healer 4 and a mage 5; a mage pays 8 to upgrade blade I → II. The editor displays the exact price, including the destination class affinity for symbol changes; tier IV is available for all seven attack/support powers. Edits preserve face weights, which the editor displays.
 
 | Class  | Style                                                  | Middle-reel ability                                                                 |
 | ------ | ------------------------------------------------------ | ----------------------------------------------------------------------------------- |
@@ -66,7 +66,7 @@ Heroes have six ordinary weighted faces on each outer reel and seven faces on th
 | Rogue  | 26 HP; damage and poison, little protection            | **Flurry:** roll three extra attacks and deliver three separate quick hits          |
 | Mage   | 28 HP; magic, poison and stimulants                    | **Nova:** magic against every enemy                                                 |
 
-Blade and magic tiers deal 2 / 4 / 7 / 11 damage per face. Healing tiers offer 2 / 4 / 6 HP. Block and stun tiers contribute 1 / 2 / 3 power. **Three identical type-and-tier symbols crit**; a middle class seal can complete two matching meaningful symbols while also casting its ability. A pair alone never crits. Critical multipliers are ×2, ×2.5, ×3 or ×4, with displayed before-and-after calculations.
+Blade and magic tiers deal 2 / 4 / 7 / 11 damage per face. Healing tiers offer 2 / 4 / 6 / 8 HP. Block and stun tiers contribute 1 / 2 / 3 / 4 power. **Three identical type-and-tier symbols crit**; a middle class seal can complete two matching meaningful symbols while also casting its ability. A pair alone never crits. Critical multipliers are ×2, ×2.5, ×3 or ×4, with displayed before-and-after calculations.
 
 Normal combat rolls stay on the right page. Criticals get a multiplier popup that lingers automatically; **Strike now** skips its result hold. Treasure, fountain and other event criticals stay inside their original panel and still require confirmation. Critical damage lands as the original hit followed by a separate bonus hit, each with its own beam, number and impact. Flurries likewise produce separate hits. Criticals and tier III / IV attacks hit every enemy. Click portraits to choose damage and healing targets.
 
@@ -81,8 +81,8 @@ intact.
 
 | Base damage | Floor 1 | Floor 5 | Floor 10 |
 | --- | --- | --- | --- |
-| Ordinary enemy | 2 | 4 | 7 |
-| Stair guardian | 3 | 6 | 10 |
+| Ordinary enemy | 2 | 5 | 7 |
+| Stair guardian | 3 | 7 | 10 |
 
 **Poison** from wheels deals one armour-piercing damage per completed action for a limited duration; stronger venom supplies can deal more, with visible status ticks and kill credit. **Stimulants** increase damage and protection and show a fiery glow. Rage, poison, stun and buffs end with combat. Level-ups add 6 maximum HP and 4 personal editing points, with portrait and machine effects. EXP comes only from successful battles; surviving heroes also gain one editing point per victory.
 
@@ -153,6 +153,36 @@ The bottom bar displays keyboard and mouse prompts. Tab / Shift+Tab and Enter re
 | N / G           | New run / download HTML                  |
 | Space           | Land rolling reels or skip critical hold |
 
+## Sound, lighting and options
+
+The Options tab now has **Play / Audio / Display / Coming later** pages.
+Working controls include master, effects, music and ambience volume, mute,
+brightness, shake strength, torchlight, fullscreen, pace, palette and automation.
+Settings persist across fresh runs and reloads. **Skip critical roll visuals**
+still rolls and applies the same multiplier, with normal damage and event results;
+it only removes the critical machine, popup/inline animation and wait.
+
+Audio consists of quiet, temporary synthesised cues, a simple music pattern and
+ambient noise. A click or key unlocks sound; hidden tabs pause it. No external
+audio files or network service are needed. Torch flicker covers the screen and
+can be disabled independently of gameplay particles. At zero shake, impact
+numbers/particles remain but nothing is shaken.
+
+Resolution, language, desktop display mode and graphics quality are selectable,
+saved **preview controls**. They do not yet resize, translate or change the game.
+Browser fullscreen works separately from the future desktop-mode selector.
+
+## Learned traits
+
+Adventurers can earn **15 minor traits** from battles, traps, wells and beacons.
+There is only one active trait per hero; later experiences can replace it
+without a prompt. Hover the portrait badge for its effect and origin. Heroic,
+Hardy, Stoic, Merciful, Venomous, Focused, Wary, Invigorated and Bookish are
+positive; Scarred, Haunted and Scorched are negative; Cowardly, Reckless and
+Stubborn trade an advantage for a drawback. Traits persist between fights,
+while ordinary combat statuses still clear. Full trigger/effect details are in
+[GAMEPLAY_SYSTEMS.md](GAMEPLAY_SYSTEMS.md).
+
 ## Development and browser tests
 
 The pencil presentation has editable sources in `ui/`; the playable distribution
@@ -166,13 +196,13 @@ npm run check:ui   # verify checked-in HTML matches the editable sources
 npm run review:ui  # generate visual-review screenshots and an HTML backup
 ```
 
-The build uses Node's standard library and embeds fonts/textures directly. No
+The build uses Node's standard library and embeds fonts, textures and torn-paper sheets directly. No
 build step or network access is required to play a downloaded copy. Commit the
 generated HTML with its source changes. `npm test` checks freshness first, then
 runs gameplay and visual-system browser tests. Review output goes into ignored
 `test-results/ui-review/`; it includes the default, warm and dark palettes,
 1920×1080 and 1280×800 combat, a stacked mobile page, menus and a treasure crit.
-Additional fixtures show purple poison, critical health, enemy passives, stronger supplies, blue rivers and desktop/mobile floor-clear summaries. Those are review fixtures, not new gameplay rules.
+Additional fixtures show purple poison, critical health, enemy passives, stronger supplies, blue rivers and desktop/mobile floor-clear summaries. Additional captures cover every options page, trait badges and worn gear. Those are review fixtures, not new gameplay rules.
 
 ```sh
 npm ci
