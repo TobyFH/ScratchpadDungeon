@@ -119,12 +119,12 @@ contrast respectively against the main paper in every palette.
 - Portraits use a 120×150 viewBox, expressive faces, soft contour changes and
   small areas of pencil hatching. Keep the class/species recognisable at map
   token size. The new hero drawings and shaggy Candle Gnawer are examples.
-- The Candle Gnawer uses `illustrations/candle-gnawer.png`: an original generated
-  graphite illustration with transparent edges, embedded through `@asset(...)`
-  in the portrait SVG. Keep its shaggy triangular silhouette, candle, crooked
-  fangs and spindly limbs. Do not replace it with a clean polygon icon. Scanned
-  pencil art skips the contour filter; dark mode reverses graphite into pale
-  pencil. Injury overlays and corpse art keep the normal portrait contract.
+- The Candle Gnawer uses the same sparse SVG contour system as the other
+  enemies: a shaggy triangular wax body, small candle, fangs and skinny limbs.
+  Keep its silhouette recognisable without dense fur or tonal shading. Its old
+  `illustrations/candle-gnawer.png` is retained as unused reference only and is
+  not embedded in the game. Injury overlays and corpse art keep the normal
+  portrait contract.
 - Show severe injury clearly, while retaining the character's identity.
   Corpses must remain unmistakably fallen; don't substitute a healthy portrait.
 - `pencilIllustration()` normalises older illustration fills to palette tokens

@@ -295,13 +295,12 @@ function wallArt() {
 let artSerial = 0;
 
 function specialEnemyArt(kind, entity) {
-  // Embedded original graphite illustration. Retain the portrait SVG contract
-  // so injuries, corpses, targeting and action choreography work as before.
-  if (kind === "gnawer")
-    return `<svg class="pencil-art horror-art species-gnawer pencil-scan" viewBox="0 0 120 150" aria-hidden="true"><image href="@asset(illustrations/candle-gnawer.png)" x="0" y="0" width="120" height="150" preserveAspectRatio="xMidYMid meet"/></svg>`;
+  // Every species uses the same sparse contours and material hatching. Keep
+  // silhouettes legible at map-token size, without a detailed scan outlier.
   const body = {
-    moth:
-      "M53 57Q18 13 8 46q-13 29 39 48-37 2-31 31 14 24 40-22M69 57q35-45 44-10 10 28-39 47 37 2 29 31-15 23-39-22M49 57q11-18 23 0l-3 58-10 15-9-16ZM51 64l18 2m-20 10 20 2m-19 10 18 1m-17 11 16 1M54 49 42 26m25 23 14-25M20 55l16 14-13 6Zm77 0-15 15 13 5ZM30 107l12-2-10 15m55-14-13-2 8 16M53 56l5 3m5 0 5-4",
+    gnawer:
+      "M47 39l-9 17 5-2-13 20 6-2-15 25 7-2-12 27 13-4-3 10 20-3 13 5 17-5 17 3-3-9 14 3-13-26 6 2-14-26 5 2-14-21 3-10ZM47 39l2-15 22 1 3 15M50 27l-1 16q4 7 6-1l1-9m10-5 1 15q5 5 5-1M59 24l1-7M60 17q-8-4 1-15-1 7 4 9 2 5-5 6M41 64l12 5-9 1m20-2 12-6-4 8M42 80l6-3 5 7 8-5 9 3 4-6M44 81l2 9 4-10m17 2 2 8 3-12M27 92l-16 10-3 16 6-4m-6 4 2 5m82-31 15 11 3 14-6-3m6 3-1 6M43 126l-4 14-12 3 19 1m26-17 6 13 12 3-18 1M32 104l4-7m0 19 5-8m39 2 5 7M53 49l-3 6",
+    moth: "M53 57Q18 13 8 46q-13 29 39 48-37 2-31 31 14 24 40-22M69 57q35-45 44-10 10 28-39 47 37 2 29 31-15 23-39-22M49 57q11-18 23 0l-3 58-10 15-9-16ZM51 64l18 2m-20 10 20 2m-19 10 18 1m-17 11 16 1M54 49 42 26m25 23 14-25M20 55l16 14-13 6Zm77 0-15 15 13 5ZM30 107l12-2-10 15m55-14-13-2 8 16M53 56l5 3m5 0 5-4",
     rustmite:
       "M28 57q-11-39 33-44 42 5 34 46l-8 52-26 20-29-17ZM35 49q23-16 52-1M32 65l27-9 32 8M31 82l29-8 29 8M33 100l27-8 28 8M60 18v107M38 112l-18 16-10-2m72-14 19 17 10-4M29 60 11 50 4 61m88 0 17-12 7 14M29 82 9 86 4 98m86-16 18 4 7 12M49 128l-9 13 15-5m17-8 9 13-15-4M45 35l9 2m13 0 10-3M38 27l9-4m27 1 8 5m-39 43 8-4m17 4 10 3",
     sporepilgrim:

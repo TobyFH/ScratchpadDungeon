@@ -93,6 +93,12 @@ const output = path.join(root, "test-results/ui-review");
       await page.evaluate((value) => setPalette(value), palette);
       await shot("04-combat-" + palette);
     }
+    await page.evaluate(() => setPalette("default"));
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await shot("03-gnawer-1280");
+    await page.setViewportSize({ width: 390, height: 844 });
+    await shot("03-gnawer-mobile", true);
+    await page.setViewportSize({ width: 1920, height: 1080 });
     await page.evaluate(() => {
       setPalette("default");
       state.party.push(

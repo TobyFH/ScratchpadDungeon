@@ -175,21 +175,24 @@ test("pencil drawings cover every species and injury state without consuming gam
     geometry: true,
   });
   assert.equal(
+    await page.locator("#art-review .species-gnawer image").count(),
+    0,
+    "Candle Gnawer uses the same sparse pencil paths as the other species",
+  );
+  assert.equal(
     await page
-      .locator("#art-review .species-gnawer image")
+      .locator("#art-review .species-gnawer")
       .first()
-      .evaluate(async (el) => {
-        const bitmap = new Image();
-        bitmap.src = el.getAttribute("href");
-        await bitmap.decode();
-        return (
-          bitmap.src.startsWith("data:image/png;base64,") &&
-          bitmap.naturalWidth > 0 &&
-          bitmap.naturalHeight > 0
-        );
-      }),
-    true,
-    "the graphite creature scan decodes from the offline HTML itself",
+      .getAttribute("viewBox"),
+    "0 0 120 150",
+  );
+  assert.ok(
+    (await page
+      .locator("#art-review .species-gnawer")
+      .first()
+      .locator("path")
+      .count()) <= 4,
+    "simple silhouette, contour echo and a little hatching, rather than a detailed scan",
   );
   await page.screenshot({ path: path.join(output, "pencil-art-gallery.png") });
 });

@@ -218,8 +218,11 @@ Audio combines synthesised cues, an original 64-step minor-key melody with
 plucked tones, bass and soft chord layers, plus quiet ambient noise. Every enemy
 type and hero class has a distinct short creature call; enemies call on appearance
 and death, and heroes on death. Calls use the effects volume; music and ambience
-retain their own sliders. A click or key unlocks sound; hidden tabs pause it. No external
-audio files or network service are needed. Torch flicker covers the screen and
+retain their own sliders. The five supplied WAV recordings replace tile erasing,
+smoke puffs, reel ticks, ordinary reel locks and large single-reel locks.
+A click or key unlocks sound; hidden tabs pause it. All recordings are embedded;
+no external audio files or network service are needed. See
+[Audio assets](docs/AUDIO_ASSETS.md) for replacement and testing. Torch flicker covers the screen and
 can be disabled independently of gameplay particles. **Display → Full screen
 effects** separately controls coloured edge pulses for wounds, poison, healing,
 traps, gold and criticals. It keeps the centre clear and respects reduced motion;

@@ -15,7 +15,9 @@ const assets = (name) => {
       ? "font/ttf"
       : name.endsWith(".png")
         ? "image/png"
-        : null;
+        : name.endsWith(".wav")
+          ? "audio/wav"
+          : null;
   if (!mime) throw Error(`Unsupported UI asset: ${name}`);
   return `data:${mime};base64,${fs.readFileSync(file).toString("base64")}`;
 };
@@ -61,6 +63,13 @@ embed(
   "// BEGIN GENERATED CAMP PROGRESSION",
   "// END GENERATED CAMP PROGRESSION",
   read("game/progression.js"),
+);
+embed(
+  "// BEGIN GENERATED AUDIO SAMPLES",
+  "// END GENERATED AUDIO SAMPLES",
+  read("ui/audio-samples.js").replace(/@asset\(([^)]+)\)/g, (_, asset) =>
+    assets(asset),
+  ),
 );
 if (process.argv.includes("--check")) {
   if (html !== read("index.html")) {
