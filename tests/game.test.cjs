@@ -39,6 +39,9 @@ async function game(t, { auto = false, width = 1440 } = {}) {
   page.on("pageerror", (e) => errors.push(e.message));
   await page.addInitScript(() => {
     let seed = 107;
+    window.addEventListener("DOMContentLoaded", () => {
+      temperamentEffects = (h, base) => base;
+    });
     Math.random = () => {
       seed = (seed * 16807) % 2147483647;
       return (seed - 1) / 2147483646;
@@ -47,7 +50,11 @@ async function game(t, { auto = false, width = 1440 } = {}) {
   await page.goto(baseURL);
   await page.evaluate(() => {
     localStorage.clear();
+    // These mechanical regressions isolate base values from temperament, which
+    // has dedicated real-build tests in combat-builds.test.cjs.
+    temperamentEffects = (h, base) => base;
     newRun();
+    setPreference("combatEffects", "beams");
   });
   if (auto) await autoEvents(page);
   t.after(async () => {
@@ -87,7 +94,7 @@ async function encounter(page, { hp = 1000, countdown = 20 } = {}) {
       beginEncounter(false, { count: 1 });
       state.enemy.hp = state.enemy.maxHp = hp;
       state.enemy.countdown = countdown;
-      state.enemy.block = 0;
+      setEnemyBlock(0);
       render();
     },
     { hp, countdown },
@@ -426,14 +433,14 @@ test("well can be declined and revisited; the rolled heal affects only living he
   });
   await p.locator("#well-use").click();
   await p.waitForSelector("#stage-confirm");
-  assert.equal(await p.evaluate(() => state.lastWellRoll.bonus), 6);
+  assert.equal(await p.evaluate(() => state.lastWellRoll.bonus), 3);
   await p.locator("#stage-confirm").click();
   await p.waitForFunction(
     () => document.querySelectorAll(".healing-glyph").length >= 8,
   );
   assert.deepEqual(
     await p.evaluate(() => state.party.map((h) => h.hp)),
-    [21, 17],
+    [11, 9],
   );
   await finish(p);
   await p.evaluate(() => (Math.random = window.savedRandom));
@@ -601,7 +608,14 @@ test("rare adventurers preview class, art and dialogue; decline, accept, and the
   );
   assert.equal(await p.locator("#stage-card .stage-art svg").count(), 1);
   assert.ok((await p.locator(".encounter-quote").textContent()).length > 10);
+  await p.evaluate(() => {
+    window.legacyRefusalRandom = Math.random;
+    Math.random = () => 0.9;
+  });
   await p.locator("#recruit-decline").click();
+  await p.evaluate(() => {
+    Math.random = window.legacyRefusalRandom;
+  });
   await p.evaluate(() => window.testAction);
   assert.equal(await p.evaluate(() => state.party.length), 1);
   await startEval(p, "recruitEncounter()");
@@ -614,7 +628,14 @@ test("rare adventurers preview class, art and dialogue; decline, accept, and the
   await startEval(p, "recruitEncounter()");
   await p.waitForSelector("#recruit-decline");
   assert.equal(await p.locator("#recruit-accept").count(), 1);
+  await p.evaluate(() => {
+    window.legacyRefusalRandom = Math.random;
+    Math.random = () => 0.9;
+  });
   await p.locator("#recruit-decline").click();
+  await p.evaluate(() => {
+    Math.random = window.legacyRefusalRandom;
+  });
   assert.equal(await p.evaluate(() => state.party.length), 3);
 });
 
@@ -660,7 +681,7 @@ test("shop purchases deduct gold, enforce stock and funds, heal the team, and re
   await p.locator('[data-buy="heal"]').click();
   assert.deepEqual(
     await p.evaluate(() => state.party.map((h) => h.hp)),
-    [44, 32],
+    [44, 28],
   );
   await p.locator('[data-buy="reveal"]').click();
   assert.equal(await p.evaluate(() => state.exitFound), true);
@@ -925,7 +946,7 @@ test("victory levels grant HP and personal editing points; weighted editing pres
   assert.equal(await p.evaluate(() => state.party[0].level), 2);
   assert.equal(await p.evaluate(() => state.party[0].maxHp), 50);
   assert.equal((await p.evaluate(() => state.party[0].points)) >= 8, true);
-  await p.locator('[data-edit="0"]').click();
+  await p.locator('.edit-button[data-edit="0"]').click();
   let points = await p.evaluate(() => state.party[0].points);
   await p.locator('[data-upgrade="0,0,0"]').click();
   assert.equal(await p.evaluate(() => state.party[0].points), points - 4);
@@ -1034,7 +1055,7 @@ test("save restores speed and artefacts and migrates the earlier Sunseed-era not
     localStorage.setItem("scratchpad-dungeon-v2", JSON.stringify(old));
   });
   await p.reload();
-  assert.equal(await p.evaluate(() => state.version), 15);
+  assert.equal(await p.evaluate(() => state.version), 16);
   assert.equal(await p.evaluate(() => state.speed), "skip");
   assert.equal(await p.evaluate(() => state.relic), undefined);
   assert.doesNotMatch(await p.locator("body").textContent(), /Sunseed/);
@@ -1262,7 +1283,7 @@ test("any positive team armour can block stun and loses a large amount; enemies 
     state.block = 0;
     stunHero(0, 2);
     let unprotected = state.party[0].stun;
-    state.enemy.block = 2;
+    setEnemyBlock(2);
     stunEnemy(3);
     let enemyProtected = { block: state.enemy.block, stun: state.enemy.stun };
     stunEnemy(3);
@@ -1478,16 +1499,16 @@ test("fountain triple heals crit within the same popup at instant speed and show
     await p.locator("#stage-title").textContent(),
     "The water wheel turns",
   );
-  assert.match(await p.locator("#critical-math").textContent(), /20.*2.*40/);
+  assert.match(await p.locator("#critical-math").textContent(), /10.*1.25.*13/);
   await p.waitForSelector("#stage-confirm");
   assert.equal(
     await p.locator("#stage-title").textContent(),
     "The water wheel turns",
   );
-  assert.equal(await p.evaluate(() => state.lastWellRoll.multiplier), 2);
+  assert.equal(await p.evaluate(() => state.lastWellRoll.multiplier), 1.25);
   await p.locator("#stage-confirm").click();
   await finish(p);
-  assert.equal(await p.evaluate(() => state.party[0].hp), 41);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 14);
   await p.evaluate(() => (Math.random = window.previousRandom));
 });
 
@@ -1523,10 +1544,9 @@ test("a lethal critical is visibly dealt before the victory popup opens", async 
   assert.equal(await p.locator(".fx-beam.lethal").count(), 1);
   assert.equal(
     await p.evaluate(() =>
-      [...document.querySelectorAll(".combat-number")].reduce(
-        (n, e) => n + Number(e.dataset.value),
-        0,
-      ),
+      [
+        ...document.querySelectorAll('.combat-number[data-summed="true"]'),
+      ].reduce((n, e) => n + Number(e.dataset.value), 0),
     ),
     10,
   );
@@ -1618,7 +1638,7 @@ test("all 1000 generated floors have a path to the stairs; the safety carve repa
   });
   assert.equal(valid, true);
   assert.ok(
-    Math.abs((await p.evaluate(() => recruitChance(1))) - 0.425) < 0.00001,
+    Math.abs((await p.evaluate(() => recruitChance(1))) - 0.47) < 0.00001,
   );
   assert.ok(
     Math.abs((await p.evaluate(() => recruitChance(2))) - 0.355) < 0.00001,
@@ -1687,12 +1707,14 @@ test("starting blanks are actual editable reel faces with an icon; inscription r
     state.party[0].points = 9;
     render();
   });
-  await p.locator('[data-edit="0"]').click();
+  await p.locator('.edit-button[data-edit="0"]').click();
   for (let r = 0; r < 3; r++) {
     let f = before[r].findIndex((s) => s.type === "blank");
+    await p.locator(`[data-editor-reel="${r}"]`).click();
+    await p.locator(`[data-editor-face="${f}"]`).click();
     assert.match(
       await p.locator(`[data-upgrade="0,${r},${f}"]`).textContent(),
-      /Inscribe attack I · 3pt/,
+      /Inscribe Blade damage.*Spend 3 points/,
     );
     await p.locator(`[data-upgrade="0,${r},${f}"]`).click();
   }
@@ -1763,9 +1785,7 @@ test("fatal enemy and hero damage immediately draws collapsed corpses and leaves
     2,
   );
   assert.equal(
-    await p
-      .locator('.tile.has-corpse .corpse-art[data-corpse="healer"]')
-      .count(),
+    await p.locator('.tile.has-corpse .corpse-art[data-corpse="mage"]').count(),
     1,
   );
 });
@@ -1776,7 +1796,7 @@ test("fully blocked damage puts a persistent shield overlay over the specific he
   await p.evaluate(() => {
     state.block = 5;
     damageHero(0, 5, "A claw");
-    state.enemy.block = 7;
+    setEnemyBlock(7);
     damageEnemy(7, "Alden");
     render(); // Impact feedback survives the on-page UI refresh.
   });
@@ -1874,9 +1894,9 @@ test("a fountain critical lists uncapped before and after healing for every hero
       nodes.map((n) => [+n.dataset.before, +n.dataset.after]),
     );
   assert.deepEqual(math, [
-    [20, 40],
-    [16, 32],
-    [14, 28],
+    [10, 13],
+    [8, 10],
+    [7, 9],
   ]);
   await panelFits(
     p,
@@ -1905,7 +1925,7 @@ test("a fountain critical lists uncapped before and after healing for every hero
   );
   assert.deepEqual(
     await p.evaluate(() => state.lastWellRoll.planned.map((h) => h.value)),
-    [40, 32, 28],
+    [13, 10, 9],
   );
   await p.evaluate(() => (Math.random = window.oldRandom));
 });
@@ -1985,7 +2005,11 @@ test("retargeting to another hidden tile during erasure cancels the original enc
   });
   await p.locator('[data-tile="79"]').click();
   await p.waitForSelector('[data-tile="79"].erasing');
-  await p.locator('[data-tile="67"].fog').click();
+  const replacement = p.locator('[data-tile="67"].fog');
+  assert.equal(await replacement.isEnabled(), true);
+  // Send a real pointer click during erasure. Playwright's usual stability
+  // wait can outlast this short animation and enter the original fight first.
+  await replacement.click({ force: true });
   await finish(p);
   assert.equal(await p.evaluate(() => state.position), 67);
   assert.equal(await p.evaluate(() => state.map[79].seen), true);
@@ -2246,7 +2270,7 @@ test("paired encounters use portrait targeting; tier III damage and critical att
     render();
   });
   await p.locator("#enemy-art-2").click();
-  await p.locator("#portrait-1").click();
+  await p.locator('#targets [data-target="1"]').click();
   assert.equal(await p.evaluate(() => state.enemy === state.enemies[1]), true);
   assert.equal(await p.evaluate(() => state.target), 1);
   await faces(p, [
@@ -2395,6 +2419,7 @@ test("deep floors use new horror art and a rare stronghold boss guarantees an ar
     // Isolate the stronghold reward here; second-form behaviour has its own test.
     if (state.enemy.passive) state.enemy.passive.used = true;
     state.enemy.hp = 1;
+    setEnemyBlock(0);
     render();
   });
   assert.equal(await p.evaluate(() => state.enemy.elite), true);
@@ -2449,12 +2474,12 @@ test("ruins can be ignored, revisited, then roll a real balance of loot and dama
       gold: state.lastRuinRoll.gold,
       damage: state.lastRuinRoll.damage,
     })),
-    { gold: 12, damage: 1 },
+    { gold: 12, damage: 2 },
   );
   await p.locator("#stage-confirm").click();
   await finish(p);
   assert.equal(await p.evaluate(() => state.gold), 12);
-  assert.equal(await p.evaluate(() => state.party[0].hp), 43);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 42);
   assert.equal(await p.evaluate(() => state.map[79].event), null);
   await p.evaluate(() => (Math.random = window.oldRandom));
 });
@@ -2549,10 +2574,24 @@ test("long adventurer titles and all nineteen editor faces fit without clipping 
       ".scene-layout",
       "#stage-title",
     );
+    await p.evaluate(() => {
+      window.beforeRefusalRandom = Math.random;
+      Math.random = () => 0.9;
+    });
+    await p.evaluate(() => {
+      window.legacyRefusalRandom = Math.random;
+      Math.random = () => 0.9;
+    });
     await p.locator("#recruit-decline").click();
-    await p.evaluate(() => window.testAction);
+    await p.evaluate(() => {
+      Math.random = window.legacyRefusalRandom;
+    });
+    await p.evaluate(async () => {
+      await window.testAction;
+      Math.random = window.beforeRefusalRandom;
+    });
     await p.evaluate(() => editor(0));
-    assert.equal(await p.locator("[data-cycle]").count(), 19);
+    assert.equal(await p.locator(".workshop-faces button").count(), 6);
     await panelFits(p, "#modal", ".modal-body", ".modal-flow", "#modal-title");
     await p.locator("#modal [data-close]").first().click();
   }
@@ -2571,7 +2610,7 @@ test("only the field log scrolls; health bars and capitalised class names commun
   });
   assert.deepEqual(await p.locator(".hero-name small").allTextContents(), [
     "Tank · Lv.1",
-    "Healer · Lv.1",
+    "Mage · Lv.1",
     "Rogue · Lv.1",
   ]);
   assert.equal(await p.locator("#combat-title").textContent(), "Your Party");
@@ -2721,7 +2760,7 @@ test("tier IV attacks can be bought, saved and used as area damage with clear pe
   });
   await p.locator('[data-upgrade="0,0,0"]').click();
   assert.equal(await p.evaluate(() => state.party[0].points), 4);
-  assert.equal(await p.locator(".editor-slot .tier-4 svg").count(), 4);
+  assert.equal(await p.locator(".workshop-preview .tier-4 svg").count(), 4);
   await p.locator("#modal [data-close]").first().click();
   await p.reload();
   assert.equal(await p.evaluate(() => state.party[0].reels[0][0].tier), 4);
@@ -2795,7 +2834,14 @@ test("recruit pity increases after missed floors, resets on meeting even if decl
   assert.equal(await p.evaluate(() => state.recruitPity), 1);
   await startEval(p, "recruitEncounter()");
   await p.waitForSelector("#recruit-decline");
+  await p.evaluate(() => {
+    window.legacyRefusalRandom = Math.random;
+    Math.random = () => 0.9;
+  });
   await p.locator("#recruit-decline").click();
+  await p.evaluate(() => {
+    Math.random = window.legacyRefusalRandom;
+  });
   await p.evaluate(() => window.testAction);
   assert.equal(await p.evaluate(() => state.recruitPity), 0);
   assert.equal(await p.evaluate(() => state.recruitFoundThisFloor), true);
@@ -2823,7 +2869,13 @@ test("recruit pity increases after missed floors, resets on meeting even if decl
         points: h.points,
         hp: h.hp,
         expected:
-          (h.job === "fighter" ? 44 : h.job === "healer" ? 32 : 26) + 18,
+          (h.job === "fighter"
+            ? 44
+            : h.job === "mage"
+              ? 28
+              : h.job === "ranger"
+                ? 30
+                : 26) + 18,
       };
     }),
     await p.evaluate(() => ({
@@ -3130,7 +3182,7 @@ test("older saved fights migrate to the gentler curve without losing wounds or e
       face: state.party[0].reels[0][0].tier,
     })),
     {
-      version: 15,
+      version: 16,
       hp: 19,
       max: 38,
       damage: 4,
@@ -3468,7 +3520,7 @@ test("each class starts with a single class seal on its middle reel; a seal comp
       assert.equal(await p.locator("#hero-0.raging").count(), 1);
     }
     if (job === "healer") {
-      assert.equal(await p.evaluate(() => state.block), 8);
+      assert.equal(await p.evaluate(() => state.block), 0);
       assert.deepEqual(
         await p.evaluate(() => state.party.map((h) => h.hp)),
         [13, 21],
@@ -3726,7 +3778,7 @@ test("bag stacks matching items but limits types to three; overflow can replace 
   );
   await p.reload();
   assert.equal(await p.evaluate(() => state.bag.ration), 2);
-  assert.equal(await p.evaluate(() => Object.keys(ITEM_DEFS).length), 44);
+  assert.equal(await p.evaluate(() => Object.keys(ITEM_DEFS).length), 45);
 });
 
 test("full bag lets the player use a new item immediately, use an existing last item to free a pocket, or decline the find", async (t) => {
@@ -4067,12 +4119,12 @@ test("mixed blade and magic criticals show correct rounded components and tier I
   );
 });
 
-test("first opening offers all four classes, opens the cover, and fresh runs turn a page", async (t) => {
+test("first opening offers three base classes, opens the cover, and fresh runs turn a page", async (t) => {
   const p = await game(t);
   await p.evaluate(() => localStorage.clear());
   await p.reload();
   await p.waitForSelector('[data-start-job="mage"]');
-  assert.equal(await p.locator(".starter-grid button").count(), 4);
+  assert.equal(await p.locator(".starter-grid button").count(), 3);
   assert.equal(
     await p.locator("#modal-title").textContent(),
     "Who opens the notebook?",
@@ -4081,8 +4133,10 @@ test("first opening offers all four classes, opens the cover, and fresh runs tur
   assert.equal(await p.evaluate(() => state.party[0].job), "mage");
   assert.equal(await p.locator(".turning-page").count(), 1);
   await p.locator("#new-game").click();
-  await p.locator('[data-start-job="healer"]').click();
-  assert.equal(await p.evaluate(() => state.party[0].job), "healer");
+  await p.locator("#starter-role").selectOption("heal");
+  await p.locator('[data-start-job="mage"]').click();
+  assert.equal(await p.evaluate(() => state.party[0].job), "mage");
+  assert.equal(await p.evaluate(() => state.party[0].mageRole), "heal");
 });
 
 test("options tabs are functional and autoresolve, palette and pace persist across fresh pages", async (t) => {
@@ -4631,7 +4685,7 @@ test("outer reels cannot acquire class seals and inscribing one blank consumes t
     const h = state.party[0];
     h.points = 50;
     h.reels[0][0] = { type: "stun", tier: 1, weight: 9 };
-    editFace("0,0,0", "cycle");
+    editFace("0,0,0", "swap", "blank");
     const outer = h.reels[0][0].type;
     closeModal();
     const f = h.reels[2].findIndex((s) => s.type === "blank"),
@@ -4716,7 +4770,7 @@ test("reloading before the starting class choice keeps the choice pending", asyn
   await p.reload();
   await p.waitForSelector('[data-start-job="rogue"]');
   await p.reload();
-  assert.equal(await p.locator(".starter-grid button").count(), 4);
+  assert.equal(await p.locator(".starter-grid button").count(), 3);
   await p.locator('[data-start-job="rogue"]').click();
   await p.reload();
   assert.equal(await p.evaluate(() => state.party[0].job), "rogue");
@@ -4875,7 +4929,7 @@ test("version-nine fights adopt the stronger enemy curve without changing hero w
         .map((f) => f.tier),
     })),
     {
-      version: 15,
+      version: 16,
       autoplay: false,
       heroHp: 17,
       face: 4,
@@ -5070,7 +5124,7 @@ test("autoplay settings persist through fresh runs and reloads without bypassing
   assert.equal(await p.evaluate(() => state.autoplay), true);
   await p.waitForTimeout(500);
   assert.equal(await p.evaluate(() => state.steps), 0);
-  assert.equal(await p.locator("[data-start-job]").count(), 4);
+  assert.equal(await p.locator("[data-start-job]").count(), 3);
   await p.locator("#autoplay").uncheck();
   await p.reload();
   assert.equal(await p.evaluate(() => state.autoplay), false);
@@ -5110,7 +5164,7 @@ test("autoplay resolves a full satchel, class equipment, revives and permanent d
     damageHero(1, 999, "A test ambush");
   });
   await p.evaluate(() => processDeaths());
-  assert.equal(await p.evaluate(() => state.party[1].hp), 24);
+  assert.equal(await p.evaluate(() => state.party[1].hp), 21);
   assert.equal(
     await p.evaluate(() => state.artefacts.some((a) => a.key === "revive")),
     false,
@@ -5169,10 +5223,10 @@ test("decision rules price off-role upgrades and conversions consistently and pr
       ),
     };
   });
-  assert.deepEqual(data.prices, [8, 4, 5, 8]);
+  assert.deepEqual(data.prices, [8, 4, 4, 8]);
   assert.equal(data.spent, 11);
   assert.equal(data.tier, 2);
-  assert.ok(data.label.includes("18pt"));
+  assert.ok(data.label.includes("18 points"));
   assert.equal(data.changeCost, 3);
   assert.deepEqual(data.seals, [0, 1, 0]);
 });
@@ -5864,9 +5918,9 @@ test("all seven slot powers can upgrade to tier IV and reload with class prices 
     return {
       costs,
       tiers: h.reels[0].map((f) => f.tier),
-      icons: [
-        ...document.querySelectorAll(".editor-row:first-child .tier-4"),
-      ].map((el) => el.querySelectorAll("svg").length),
+      icons: [...document.querySelectorAll(".workshop-faces .tier-4")].map(
+        (el) => el.querySelectorAll("svg").length,
+      ),
       power: calculate([
         { type: "heal", tier: 4 },
         { type: "block", tier: 4 },
@@ -6147,7 +6201,7 @@ test("skipping critical presentation still applies full critical damage and a gu
     setPreference("skipCriticals", true);
     beginEncounter();
     state.enemy.hp = state.enemy.maxHp = 1000;
-    state.enemy.block = 0;
+    setEnemyBlock(0);
     state.enemy.countdown = 20;
     state.party[0].reels = [0, 1, 2].map(() => [{ type: "attack", tier: 1 }]);
     Math.random = () => 0.999;
@@ -6160,7 +6214,7 @@ test("skipping critical presentation still applies full critical damage and a gu
   await p.evaluate(() => {
     beginEncounter(true, { stairBoss: true });
     state.enemy.hp = 1;
-    state.enemy.block = 0;
+    setEnemyBlock(0);
     state.enemy.countdown = 20;
     state.party[0].reels = [
       [{ type: "attack", tier: 1 }],
@@ -6305,7 +6359,7 @@ test("camp purchases are persistent and Ranger is the only class unlock without 
   assert.equal(await p.evaluate(() => campProfile().gold), 860);
 });
 
-test("Ranger has exactly one middle seal, saves Aim for a later hit and clears it after battle", async (t) => {
+test("Ranger has exactly one middle seal, saves Execute patience for a later hit and clears it after battle", async (t) => {
   const p = await game(t);
   await p.evaluate(() => {
     state.party = [makeHero("Rowan", "ranger")];
@@ -6329,6 +6383,7 @@ test("Ranger has exactly one middle seal, saves Aim for a later hit and clears i
       { type: "class", tier: 1, job: "ranger" },
       blank,
     ]);
+    advanceRangerPatience(h, false, true);
     const charge = h.charge;
     const second = await planHeroRoll(h, [attack, blank, blank]);
     const consumed = h.charge;
@@ -6347,8 +6402,8 @@ test("Ranger has exactly one middle seal, saves Aim for a later hit and clears i
     };
   });
   assert.deepEqual(r, {
-    charge: 5,
-    damage: 7,
+    charge: 2,
+    damage: 3,
     consumed: 0,
     after: 0,
     attack: 0,
@@ -6922,7 +6977,7 @@ test("removed Ranger enhancements refund their costs once and unlock Ranger star
   assert.equal(await p.evaluate(() => readProfile().gold), 350);
 });
 
-test("Ranger Aim meter shows stored damage, release and battle cleanup without adding a hero row", async (t) => {
+test("Ranger Execute meter shows patience, release and battle cleanup without adding a hero row", async (t) => {
   const p = await game(t);
   await p.evaluate(async () => {
     state.party = [makeHero("Rowan", "ranger")];
@@ -6934,12 +6989,13 @@ test("Ranger Aim meter shows stored damage, release and battle cleanup without a
       { type: "class", tier: 1, job: "ranger" },
       blank,
     ]);
+    advanceRangerPatience(state.party[0], false, true);
   });
   assert.equal(
     await p.locator(".aim-meter").getAttribute("aria-valuenow"),
-    "5",
+    "2",
   );
-  assert.match(await p.locator(".aim-meter").textContent(), /\+5 next hit/);
+  assert.match(await p.locator(".aim-meter").textContent(), /EXECUTE 2\/6/);
   assert.ok(
     await p
       .locator(".aim-track i")
@@ -6957,7 +7013,7 @@ test("Ranger Aim meter shows stored damage, release and battle cleanup without a
     "0",
   );
   await p.evaluate(() => {
-    state.party[0].charge = 18;
+    state.party[0].charge = 6;
     syncHero(0);
     clearBattleStatuses();
   });
@@ -6973,7 +7029,7 @@ test("Ranger Aim meter shows stored damage, release and battle cleanup without a
         .locator(".aim-meter")
         .evaluate((el) => el.scrollWidth <= el.clientWidth + 1),
       true,
-      "Aim caption fits " + width,
+      "Execute caption fits " + width,
     );
   }
 });
@@ -7339,13 +7395,16 @@ test("hero card clicks and keyboard activation spin once while portrait and edit
   await finish(p);
   assert.equal(await p.evaluate(() => state.party[0].stats.spins), 1);
   await p.locator("#portrait-1").click();
+  assert.equal(await p.evaluate(() => modalKind), "editor");
+  await p.locator("#modal [data-close]").first().click();
+  await p.locator('#targets [data-target="1"]').click();
   assert.equal(await p.evaluate(() => state.target), 1);
   assert.equal(await p.evaluate(() => state.party[1].stats.spins), 0);
   await p.locator("#hero-0").focus();
   await p.keyboard.press("Enter");
   await finish(p);
   assert.equal(await p.evaluate(() => state.party[0].stats.spins), 2);
-  await p.locator("#hero-0 [data-edit]").click();
+  await p.locator("#hero-0 .edit-button").click();
   assert.equal(await p.evaluate(() => modalKind), "editor");
   assert.equal(await p.evaluate(() => state.party[0].stats.spins), 2);
 });
@@ -7363,7 +7422,7 @@ test("portrait hover shows current lifetime statistics and respects nested statu
     h.poison = { turns: 3, damage: 1 };
     render();
   });
-  await p.locator("#portrait-0").hover({ position: { x: 10, y: 10 } });
+  await p.locator("#portrait-0").hover({ position: { x: 40, y: 20 } });
   assert.match(
     await p.locator("#status-tooltip").textContent(),
     /Damage dealt112/,
@@ -7376,7 +7435,7 @@ test("portrait hover shows current lifetime statistics and respects nested statu
   );
   await p.mouse.move(1, 1);
   await p.evaluate(() => (state.party[0].stats.kills = 8));
-  await p.locator("#portrait-0").hover({ position: { x: 10, y: 10 } });
+  await p.locator("#portrait-0").hover({ position: { x: 40, y: 20 } });
   assert.match(await p.locator("#status-tooltip").textContent(), /Kills8/);
   await p.locator("#portrait-0 .poison-badge").hover();
   assert.match(await p.locator("#status-tooltip").textContent(), /Poison/);
@@ -7387,7 +7446,7 @@ test("portrait hover shows current lifetime statistics and respects nested statu
     false,
   );
   await p.setViewportSize({ width: 320, height: 700 });
-  await p.locator("#portrait-0").hover({ position: { x: 10, y: 10 } });
+  await p.locator("#portrait-0").hover({ position: { x: 40, y: 20 } });
   const box = await p.locator("#status-tooltip").boundingBox();
   assert.ok(
     box.x >= 0 &&

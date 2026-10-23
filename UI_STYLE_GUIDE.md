@@ -211,8 +211,16 @@ the same paper buttons, native readable controls and restrained colours as play.
 Camp upgrades reuse the torn sheets, pencil cards and readable paper tabs; the
 catalogue and persistent profile live in `game/progression.js` and are embedded
 by the same offline builder. The Ranger's bow and quiver are purposeful class
-art, with an Aim status badge rather than a decorative flame. Ambient lighting
+art, with an Execute status badge rather than a decorative flame. Ambient lighting
 is concentrated at the outer edges so torch flicker is visible while the paper's
 centre stays legible. Room text is a single contextual description of the actual
 current terrain/environment, explicitly requested gameplay presentation, never
 unrelated handwritten filler.
+
+Combat feedback lives in `ui/combat-feedback.js`, while `game/hero-builds.js`,
+`game/reel-upgrades.js` and `game/encounter-presentation.js` provide embedded build
+and encounter sources. Rebuild these with the same offline builder. The workshop
+uses one selected weighted face and large labelled actions; never return to an
+unexplained cycling button. Symbol flights and small component numbers stay
+pointer-transparent. Pun names/art are explicitly requested meaningful enemy
+identities, not permission to add decorative filler writing.

@@ -295,6 +295,7 @@ function wallArt() {
 let artSerial = 0;
 
 function specialEnemyArt(kind, entity) {
+  if (kind.startsWith("pun-")) return punEnemyArt(kind.slice(4));
   // Every species uses the same sparse contours and material hatching. Keep
   // silhouettes legible at map-token size, without a detailed scan outlier.
   const body = {
@@ -325,6 +326,11 @@ function specialEnemyArt(kind, entity) {
 }
 
 function portraitArt(kind, entity = { hp: 1, maxHp: 1 }) {
+  if (
+    (entity.punId || String(entity.id || "").startsWith("enemy-")) &&
+    preferences().punMode
+  )
+    kind = "pun-" + punIdentity(entity);
   let art =
     entity.hp > 0 && !entity.dead
       ? specialEnemyArt(kind, entity) || basePortraitArt(kind, entity)
@@ -422,4 +428,82 @@ function trapArt(type) {
         ? '<path d="M5 7h32v76H5z M5 27h32M5 51h32M20 7v20m3 24v31 M36 41h14"/><g class="flying-arrow"><path d="M54 42h90l-12-10m12 10-12 10M56 42l-10-9m17 9-11-9m4 9-10 9m17-9-11 9"/></g>'
         : '<path d="M5 78h190"/><g class="rolling-boulder"><circle cx="83" cy="45" r="31" fill="var(--paper-shade)"/><path d="m65 27 10-7 17 3 14 13-4 28-15 11-22-8-9-17z M72 31l-6 9 13 9-3 14m14-37 5 13-5 12 10 5"/></g>';
   return `<div class="trap-art ${type}"><svg class="pencil-art" viewBox="0 0 200 90" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${body}</svg></div>`;
+}
+
+// Purposeful stationery silhouettes for Pun-nishing Mode. These are ordinary
+// palette-aware pencil paths, with the same portrait/injury/corpse contract.
+function punEnemyArt(id) {
+  if (id === "fullstop")
+    return `<svg class="horror-art species-pun-fullstop" viewBox="0 0 120 150" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M60 31C7 29 5 120 59 123c56 2 58-93 1-92Z" fill="currentColor"/><g stroke="var(--paper)" stroke-width="3"><path d="m31 60 20 8m20 0 18-9M43 75h4m27 0h4M39 100q20-24 42-1"/></g><path d="m20 127 20-2m39 4 18-1" opacity=".5"/></svg>`;
+  const shapes = {
+    ruler:
+      "M35 15l47 2-3 103-49-1ZM43 20v10m10-10v6m10-6v10m10-10v6M39 91v18m10-18v10m10-10v18m10-18v10",
+    sketch:
+      "M36 28q30-20 51 7l-7 49-44 2-8-37ZM28 44l63-5m-53-8 2 18m11-24 1 20m10-21 2 19m10-16 2 15M36 86l-9 31 61 1-9-32M42 98l24 6m-26 4 31 4",
+    penknight:
+      "M36 39 60 3l25 36-10 70-32 1ZM42 37h36M60 10v22M42 70l34-2M44 90l30-2M94 37v77m-11-19h23M16 64l13-7 3 43-16 9Z",
+    glue: "M35 45V24l12-7h26l11 8v20l6 17-5 57H31l-3-58ZM39 24h39M35 46h48M46 25v17m12-17v17m12-17v17M39 88q20 11 40-2v23H39Z",
+    scissors:
+      "M36 75 14 10l47 53 45-52-23 64M35 76q-32 1-23 32 17 29 39 0l9-23 13 25q26 25 37-2 8-28-25-30M31 90q-17-1-10 16 13 15 20-2M85 92q18-4 15 12-10 16-19 4M57 73h6",
+    exclamation: "M40 17l42-1-9 68H49ZM49 99q14-14 26 0v18H49Z",
+    question:
+      "M28 37Q28-1 67 8q46 10 19 48L66 73v15H49V67l19-18q11-20-10-19-13 0-13 15ZM49 101q14-12 25 0v17H49Z",
+    comma: "M40 54q13-23 37-8 27 30-23 72l-13-8q22-16 19-25-23 9-20-31Z",
+    apostrophe:
+      "M40 20q20-20 38-1 18 27-25 56L40 63q23-18 17-21-24 4-17-22ZM29 85l31-9 31 12-10 31H35Z",
+    punch2: "M25 58h72l9 31-10 27H24L14 89ZM27 58V38q34-23 69 0v20M29 43l64-1",
+    punch3: "M17 57h87l8 32-10 28H18L8 89ZM20 57V35q42-20 82 0v22M24 42l73 1",
+    alphabat:
+      "M48 53 15 19 4 85l22-13 14 23 20-15 22 15 15-23 18 13-11-67-34 36M49 44l-2-20 14 12 13-12-2 22M46 55l15-13 15 14-5 39H50ZM28 57l-4 12m70-13 3 13M55 68l5-12 5 12m-13 6h17",
+    crook:
+      "M32 37l22-27 35 13-4 66-45 15ZM32 37l32 7 25-21M64 45v46M19 50l-8 13 21 10m56-8 20-13M43 105l-4 19m35-24 11 24M46 24l11 7m13-9 10 3",
+    inkuisitor:
+      "M32 48 60 5l30 44-15-4-7 74H39l-8-64ZM43 63l30-2M46 79l25-2M17 43l7 80m-13-21h24M83 84l25-9-3 32-19 13Z",
+    protractor:
+      "M10 105q1-91 99-12l-9 16ZM29 96q17-39 55 0ZM21 87l8 4m-1-23 9 7m5-20 4 10m11-15v11m13-8-4 9m18 2-7 9m18 8-9 4M46 107l-8 22m43-22 6 22M22 72 5 63m91 7 17-15",
+    postit:
+      "M29 28l65-1-2 79-19 16-49-5ZM74 121l-1-22 18 7M33 37h51M34 45h36M35 94l15-2m17 2h15",
+    stego:
+      "M12 93l23-28 37-7 25 16 14 37-27-13-38 6-15 17-6-19ZM30 65l5-21 16 15 10-24 14 24 16-13 4 24M33 101l-4 28m22-26 1 26m26-29 6 30M16 87 6 72m12 12-4 9M93 82l8 1",
+    spelleton:
+      "M36 37q-5-35 25-33 31 0 25 34L74 53H49ZM43 28l10 5m14 0 12-6M54 45h15M60 53v45M37 64l24 10 24-12M37 80l25 8 21-9M29 59l-15 31 9 17m64-50 18 31-7 18M60 98l-22 30m22-30 21 30M31 40l9-29m44 1 8 30",
+    police:
+      "M32 33l1-18 28-9 28 10v18ZM30 34h62M41 37v32l19 17 19-18V37M36 82l-11 37h70L83 81M49 90l11 11 12-11M73 95l7-2 7 6-8 12-9-10ZM18 50v48M11 91h16",
+    trex: "M84 17l25 9 2 21-26 7-11 27 11 36-21-4-16-22-27 11-14-9 36-27 11-36ZM89 31l10 2M85 45h24l-5 10-6-7-5 8-5-7M49 90l-14 40 21 1m13-13 6 13h20M71 67l13 3 3 11M57 29l7-14 12 7",
+    pencil:
+      "M41 39 60 5l22 35-6 79H36ZM47 39l1 67m12-65v65m11-67-2 67M43 107h30l2 13H36ZM56 13l9 1M41 121l-8 13m40-14 10 13",
+    goat: "M36 46l-7-36 21 23 22-3 20-23-6 41 8 15-14 33H39L24 69ZM36 55l12 5m19-1 13-7M49 78l13 8 9-9M38 95l-6 29m17-29-2 30m25-29 4 29m8-30 10 28M22 58l-11-5 14 17m68-14 14-6-11 18M50 87l11 16 11-17",
+    ghostit:
+      "M29 22l64 1-4 96-13-10-16 12-17-12-16 10ZM40 45l13 6m16-1 12-5M48 74q13-16 26 1M37 30l46 1M29 90 11 79m80 8 17-17",
+    pagemage:
+      "M29 50 59 6l34 45-19-6-2 75H37l-1-74ZM29 86l30 8 33-10-6 28-27 11-32-11ZM59 96v23M40 65l13 3m14-1 11-4M11 42l8 83m-17-29h27",
+    tankerchief:
+      "M24 39l68-17 7 89-31-10-33 18-12-40ZM32 46l50-14 8 66-22-8-25 18ZM35 51l19 5m13-5 15-7M47 75l29-3M42 99l9-10m26-5 5 5",
+    eraser:
+      "M25 37l53-17 21 26-2 65-58 17-20-31ZM25 38l19 24 54-16M44 62l-5 65M22 86l19 25 55-17M29 99l13 18m10-6 14-4m8-3 15-4",
+  };
+  const body = shapes[id] || shapes.sketch;
+  const holes =
+    id === "punch2" ? [42, 78] : id === "punch3" ? [30, 60, 90] : [];
+  const punchMarks = holes
+    .map(
+      (x) => `<circle cx="${x}" cy="92" r="${holes.length === 3 ? 7 : 10}"/>`,
+    )
+    .join("");
+  const eyes = [
+    "comma",
+    "apostrophe",
+    "punch2",
+    "punch3",
+    "alphabat",
+    "police",
+    "trex",
+    "goat",
+    "ghostit",
+    "pagemage",
+    "tankerchief",
+  ].includes(id)
+    ? ""
+    : "M43 55l11 5m12 0 12-6M48 76l23-2";
+  return `<svg class="horror-art species-pun-${id}" viewBox="0 0 120 150" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${body}" fill="var(--paper-shade)"/><path d="${eyes}"/>${punchMarks}<path d="M39 120l-8 18h15m30-18 9 18h14M26 75l-12 11m81-14 13 14"/><path d="m35 107 5-5m39-12 5-6" opacity=".5" stroke-width=".8"/></svg>`;
 }

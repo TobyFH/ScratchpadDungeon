@@ -154,8 +154,8 @@ page currently has one illustrated Ranger invitation, not empty upgrade cards.
 Descriptions are real
 effects; do not add decorative camp notes. Purchases and enable/disable actions
 must be distinct, with visible costs and `aria-pressed` for toggles. Fit whole
-pages without another scrolling panel. The fifth starting class uses
-`.starter-grid.five-classes`, with a three-column compact layout.
+pages without another scrolling panel. The Ranger adds a fourth starting class after its camp unlock. The starter
+grid also keeps the `.five-classes` hook for older layout integrations.
 
 `.banking-panel` contains four equal choices plus a status line. Banking does
 not dismiss floor/victory records. Update the line and disable the four choices
@@ -186,8 +186,7 @@ entry and tile hint. Floor changes still dismiss obsolete callouts quickly.
 Victory banking uses a concise `.victory-banking` receipt, not percentage
 buttons. Fireworks remain behind meaningful content and require no extra click.
 
-Ranger's `.aim-meter` uses the existing `.machine-footnote` row: labelled stored
-power, short fill track and next-hit bonus. Do not add a row, move EXP, or rely
+Ranger's Execute `.aim-meter` uses the existing `.machine-footnote` row: labelled patience, short fill track and next-hit bonus. Do not add a row, move EXP, or rely
 on colour alone. Keep the meter and portrait badge consistent through storage,
 release and cleanup; its shared tooltip explains the cap and timing.
 
@@ -196,3 +195,14 @@ the shared damage/healing/poison/value tokens. It is fixed, non-interactive and
 masked away from central information. Never shake or recolour the entire
 document to implement it. Keep its persisted Display toggle separate from
 Torchlight, and respect reduced motion without changing gameplay outcomes.
+
+The reel workshop uses `.workshop-tabs`, `.workshop-faces` and
+`.workshop-detail`: face odds remain visible; Upgrade, Downgrade/refund and an
+explicit destination select/Swap have distinct fixed hitboxes. The permanent
+middle class seal gets a clear locked explanation. Mage roles reuse a native
+select. Portraits open this workshop; healing-target buttons remain separate.
+`.points-prompt` may pulse its paint/shadow, never move its button geometry.
+The enemy block row reserves space above the enemy roster, shared in double
+fights. `.entrance-member` keeps every foe's name and portrait together before
+its individual flight to combat. `.rolled-projectile`, `.symbol-arrival` and
+minor combat numbers are fixed overlays without input capture or layout effects.

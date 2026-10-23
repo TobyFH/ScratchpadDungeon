@@ -40,14 +40,12 @@ options have actual gameplay hooks, not preview-only controls.
 ## Ranger
 
 Rangers start at 30 HP, with blade attacks, some poison, stun and block, plus
-ordinary upgradable EMPTY faces. Exactly one **Aim** face appears on their
-middle reel. Aim stores `4 + ceil(level / 2)` damage,
-up to 18. A later damaging roll releases all previously stored power as bonus
-damage before its critical multiplier. If Aim and damage land together, existing
-power is released and the newly gained power waits for another roll. Stored
-power expires after battle. A meter in the reserved caption beneath its reels
-shows `AIM n/18`, a fill bar and `+n next hit`; the portrait also has a hoverable
-bow badge. Both update on storage, release and battle cleanup.
+ordinary upgradable EMPTY faces. Its middle **Execute** seal strengthens a
+patient finishing shot. Each party action without the Ranger attacking builds
+patience up to six; a nondamaging seal roll adds two. Its next damaging roll
+consumes that charge for a bonus based on the selected enemy's missing health.
+The meter and bow tooltip show charge and the current bonus. See
+[Combat builds](COMBAT_BUILDS.md) for the formula and migration.
 
 Notched Longbow (+2 damage) and Scout Cloak (1 resistance, 2 opening team block)
 are matching Ranger equipment. They only enter loot pools in Ranger-unlocked
@@ -87,7 +85,7 @@ expeditions. Starting as a Ranger requires only the invitation.
   in the same profile write. An interrupted/failed write leaves the old profile
   available for retry, not a partial refund. These exceptional retirement refunds
   do not make ordinary purchases refundable. Existing hero HP is retained;
-  removed bonuses no longer affect new heroes, Aim gain or saved expedition rules.
+  removed bonuses no longer affect new heroes, Execute gain or saved expedition rules.
 - This is browser-local persistence, not a server economy or cross-device sync.
   Use one active game tab when banking or purchasing. Clearing site data removes
   the camp as well as the run. Different sites/browser profiles have different

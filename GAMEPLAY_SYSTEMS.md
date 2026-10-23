@@ -1,8 +1,9 @@
 # Gameplay systems and automation
 
-The distributable remains one offline `index.html`. Gameplay definitions and
-functions live in its non-generated script; camp progression is embedded from
-`game/progression.js`. UI sources remain in `ui/`; rebuild
+The distributable remains one offline `index.html`. The core runtime lives in
+its non-generated script; hero builds, reel editing, encounter
+presentation and camp progression are embedded from `game/`. See
+[Combat builds](docs/COMBAT_BUILDS.md) for the current module contracts. UI sources remain in `ui/`; rebuild
 with `npm run build:ui` after presentation edits. There is no new runtime package,
 external AI service or separate data file required to play.
 
@@ -17,7 +18,7 @@ external AI service or separate data file required to play.
 - `CLASS_PRICES` multiplies base `FACE_COST` by the destination symbol's affinity.
   `faceUpgradeCost()` and `faceEditCost()` are authoritative. `applyFaceEdit()`
   validates and spends personal points, retains weights, clamps tiers and keeps
-  at most one class seal on the middle reel. The editor, automation and recruited
+  one permanent class seal on the middle reel. The editor, automation and recruited
   heroes use these prices. Do not introduce a cheaper automated edit path.
 - `ITEM_POWER` stores base consumable effects; `ITEM_DEFS` carries those effects
   and the user-facing descriptions. Supply variants are generated once, with
@@ -25,8 +26,8 @@ external AI service or separate data file required to play.
   quality when finding/buying an item, never when using it. Existing stacks do
   not silently improve as the player descends. Equipment uses `EQUIPMENT_DEFS`.
 - Affinities encourage specialties without forbidding off-role builds. Tanks
-  favour blades, shields and stun; healers healing, shields and stun; mages
-  magic, poison and stimulants; rogues blades and poison. Stronger upgrade tiers
+  favour blades, shields and stun; Mages can specialise in healing, shields,
+  magic or poison; rogues favour blades and poison. Stronger upgrade tiers
   retain their existing rising base prices. Blank inscriptions still cost three.
 
 ## Automatic decisions
@@ -123,7 +124,8 @@ recovery cannot repeatedly concentrate their per-hero grants onto one hero.
 
 Hero card background/name/HP clicks and Enter/Space activate its reels. Nested
 portrait, equipment, edit and reel controls keep their explicit actions.
-`heroStatsMarkup()` derives live lifetime values on hover/focus, sharing
+`heroStatsMarkup()` shows battle-focused values in combat and live lifetime values
+outside combat, sharing
 `HERO_STAT_LABELS` with the final roster. Nested status/trait badges take priority.
 
 `syncStatusFX()` derives low/critical HP and poison/buff classes from live state.
@@ -140,7 +142,7 @@ all combatants, updates portraits and removes stale status labels at battle end.
 
 ## Floor records and saves
 
-Version 15 loads older saves, retaining wounds, personal points, edited hero
+Version 16 loads older saves, retaining wounds, personal points, edited hero
 reels and base supply IDs. Enemy powers/traits can refresh under the new rules;
 ongoing enemy HP is retained. Saved Unwritten encounters refresh health and damage
 once, preserving their remaining HP fraction; the migration runs after older
@@ -210,7 +212,8 @@ enemy species and hero class. `GameSound.cry()` synthesises an appearance call
 or lower, stretched death variation on the SFX bus. Encounters and summons call
 on appearance; final enemy deaths call once, after any split/recovery passive.
 Hero death recording calls once per death, including a later death after revival.
-No audio files, downloads, paid services or gameplay RNG are used. Hidden tabs
+The five supplied WAV recordings are embedded from `ui/audio-samples.js`;
+cries/music remain synthesised. No external downloads, paid services or gameplay RNG are used. Hidden tabs
 suspend audio and resume it after earlier activation. Context startup failure
 leaves the game playable. Chromium can defer idle gain-node evaluation; volume
 tests play a cue before inspecting the active bus, rather than reading stale
@@ -310,13 +313,10 @@ hero and event critical multipliers remain 2/2.5/3/4. The final guardian retains
 three strikes, frequency one and tier-IV offence. Camp difficulty hooks apply
 inside `enemyBalance()` so summoned enemies and migrations use the same rules.
 
-Ranger has one middle Aim seal. A damaging roll consumes existing `charge`;
-a seal adds new power afterwards, up to 18, for a later roll. New power cannot
-consume itself on the same roll. `RANGER_AIM_CAP` and `rangerAimGain()` are shared
-by rolls, expected effects and the meter tooltip; `syncRangerAim()` updates the
-existing machine-caption row without resizing the card. `clearBattleStatuses()` also clears charge.
-`expectedHeroEffects()` accounts for Aim and stored power so Autofight can
-select the Ranger. Ranger gear is gated from loot until its class is unlocked.
+Ranger now uses Execute rather than stored flat Aim damage. All build, refund,
+Mage migration, shared-enemy-block, consumable protection and new feedback rules
+are described in [docs/COMBAT_BUILDS.md](docs/COMBAT_BUILDS.md), with authoritative
+source paths. Keep both player and automation paths on those shared operations.
 
 `statusBadge()` is the shared source for live status explanations; hover and
 focus share a viewport tooltip. Room descriptions derive from the current

@@ -71,6 +71,14 @@ embed(
     assets(asset),
   ),
 );
+for (const [label, file] of [
+  ["HERO BUILDS", "game/hero-builds.js"],
+  ["REEL UPGRADES", "game/reel-upgrades.js"],
+  ["ENCOUNTER PRESENTATION", "game/encounter-presentation.js"],
+  ["COMBAT FEEDBACK", "ui/combat-feedback.js"],
+]) {
+  embed(`// BEGIN GENERATED ${label}`, `// END GENERATED ${label}`, read(file));
+}
 if (process.argv.includes("--check")) {
   if (html !== read("index.html")) {
     console.error(

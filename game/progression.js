@@ -9,7 +9,7 @@ const CAMP_UNLOCKS = {
     cost: 80,
     permanent: true,
     description:
-      "Unlock Ranger as a starting class and wandering companion. Aim stores power for a later hit.",
+      "Unlock Ranger as a starting class and wandering companion. Execute builds patience between attacks and punishes wounded enemies.",
   },
   provisions: {
     name: "A little spending money",

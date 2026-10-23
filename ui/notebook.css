@@ -2161,6 +2161,9 @@ body[data-palette="warm"] {
   border-color: var(--green);
   background: var(--heal-wash, var(--paper-shade));
 }
+.starter-grid {
+  grid-template-columns: repeat(var(--starter-count, 4), minmax(0, 1fr));
+}
 .starter-grid.five-classes {
   grid-template-columns: repeat(5, minmax(0, 1fr));
 }
@@ -2198,6 +2201,9 @@ body[data-palette="warm"] {
   .bank-choices {
     gap: 4px;
   }
+  .starter-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
   .starter-grid.five-classes {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -2210,7 +2216,7 @@ body[data-palette="warm"] {
   }
 }
 
-/* Aim uses the reel's existing caption row so cards keep their fixed height. */
+/* Execute uses the reel's existing caption row so cards keep their fixed height. */
 .aim-meter {
   display: flex;
   align-items: center;
@@ -2433,4 +2439,498 @@ body[data-palette="dark"] {
 .shielded-overlay b {
   background: var(--block-silver);
   border-color: var(--block-blue);
+}
+
+/* Reel workshop: choose a reel, then a face, then an explicit action. */
+.workshop-summary {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: 20px;
+}
+.workshop-summary strong {
+  color: var(--gold);
+}
+.hero-specialism {
+  color: var(--soft);
+}
+.workshop-ability,
+.workshop-note {
+  margin: 8px 0;
+  font-size: 16px;
+}
+.workshop-tabs {
+  display: flex;
+  gap: 8px;
+  margin: 10px 0;
+}
+.workshop-tabs button {
+  flex: 1;
+  min-height: 36px;
+}
+.workshop-tabs [aria-selected="true"],
+.workshop-faces [aria-pressed="true"] {
+  background: var(--ui-label);
+  outline: 2px solid var(--focus);
+  outline-offset: -3px;
+}
+.reel-workshop {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(300px, 1.3fr);
+  gap: 22px;
+  min-height: 350px;
+}
+.workshop-faces {
+  display: grid;
+  grid-template-rows: repeat(7, 42px);
+  gap: 5px;
+}
+.workshop-faces button {
+  display: grid;
+  grid-template-columns: 62px 1fr 36px;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 8px;
+  text-align: left;
+  font-size: 18px;
+}
+.workshop-faces .tier-symbol,
+.workshop-faces .class-face {
+  height: 29px;
+  min-height: 0;
+}
+.workshop-faces svg {
+  width: 22px;
+  height: 26px;
+}
+.workshop-detail {
+  padding: 10px 15px;
+  border: 1px dashed var(--line);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 9px;
+}
+.workshop-preview {
+  display: flex;
+  justify-content: center;
+  height: 66px;
+}
+.workshop-preview .tier-symbol {
+  height: 64px;
+}
+.workshop-preview svg {
+  width: 44px;
+  height: 54px;
+}
+.workshop-detail h3 {
+  text-align: center;
+  margin: 0;
+  font-size: 26px;
+}
+.workshop-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.workshop-actions button,
+.swap-face {
+  min-height: 55px;
+  font-size: 23px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.workshop-actions small,
+.swap-face small {
+  font-size: 17px;
+}
+.swap-choice,
+.mage-role-choice {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  font-size: 19px;
+}
+.swap-choice select {
+  flex: 1;
+  min-width: 0;
+}
+.mage-role-choice {
+  flex-wrap: wrap;
+  margin: 8px 0;
+}
+.mage-role-choice span {
+  font-size: 16px;
+}
+.locked-seal {
+  text-align: center;
+  line-height: 1.7;
+  font-size: 20px;
+}
+.locked-seal svg {
+  display: block;
+  width: 58px;
+  height: 58px;
+  margin: 8px auto;
+}
+.starter-build {
+  display: flex;
+  gap: 16px;
+  margin: 8px 0;
+}
+.starter-build label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.specialism-badge {
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  width: 20px;
+  height: 23px;
+}
+.specialism-badge svg {
+  width: 17px;
+  height: 20px;
+}
+.hero-dossier {
+  position: relative;
+}
+.points-prompt {
+  position: absolute;
+  top: -9px;
+  left: 0;
+  z-index: 5;
+  white-space: nowrap;
+  font-size: 14px;
+  padding: 3px 7px;
+  background: var(--paper-raised);
+  color: var(--gold);
+  box-shadow: 0 2px 4px #0003;
+  animation: points-notice 1.8s ease-in-out infinite;
+}
+@keyframes points-notice {
+  50% {
+    box-shadow: 0 3px 8px #ae863b55;
+    background: var(--ui-label);
+  }
+}
+/* Fixed enemy protection row, shared by one or two foes. */
+.enemy-team-block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 35px;
+  background: color-mix(in srgb, var(--block-blue) 12%, transparent);
+  border: 1px dashed var(--line);
+  color: var(--block-blue);
+  font-size: 17px;
+}
+.enemy-team-block svg {
+  width: 25px;
+  height: 29px;
+}
+.enemy-team-block strong {
+  font-size: 24px;
+}
+.enemy-team-block span {
+  line-height: 1;
+}
+.enemy-team-block small {
+  display: block;
+  font-size: 12px;
+  color: var(--soft);
+}
+#encounter:has(.enemy-roster) {
+  display: grid;
+  grid-template-rows: 26px 39px minmax(0, 1fr);
+  gap: 6px;
+}
+#encounter .enemy-label {
+  margin: 0;
+}
+#encounter .enemy-roster {
+  min-height: 0;
+  height: 100%;
+}
+#block.invulnerable {
+  outline: 2px solid var(--block-blue);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--block-silver) 45%, transparent);
+}
+/* Both enemies have their own arrival portrait and their own flight target. */
+.entrance-roster {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  min-height: 270px;
+}
+.entrance-member {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  max-width: 45%;
+  flex: 1;
+}
+.entrance-member b {
+  font: 700 28px var(--hand-display);
+  text-align: center;
+  line-height: 1.1;
+}
+.entrance-member small {
+  font-size: 16px;
+  text-align: center;
+}
+.entrance-portrait {
+  height: 230px;
+  width: 180px;
+  max-width: 100%;
+}
+.entrance-portrait > svg {
+  width: 100%;
+  height: 100%;
+}
+/* Launched marks remain detached from layout and never intercept input. */
+.rolled-projectile,
+.symbol-arrival {
+  position: fixed;
+  z-index: 1900;
+  pointer-events: none;
+  width: 40px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--red);
+  filter: drop-shadow(0 1px 2px var(--paper));
+}
+.rolled-projectile svg,
+.symbol-arrival svg {
+  width: 30px;
+  height: 38px;
+}
+.rolled-projectile .tier-symbol,
+.symbol-arrival .tier-symbol {
+  gap: 0;
+}
+.rolled-projectile.heal,
+.symbol-arrival.heal {
+  color: var(--green);
+}
+.rolled-projectile.block,
+.symbol-arrival.block {
+  color: var(--block-blue);
+}
+.rolled-projectile.poison,
+.symbol-arrival.poison {
+  color: var(--poison);
+}
+.rolled-projectile.magic,
+.symbol-arrival.magic {
+  color: var(--gold);
+}
+.critical-projectile {
+  width: 52px;
+  height: 58px;
+  filter: drop-shadow(0 0 4px var(--gold));
+}
+.combat-number {
+  animation: impact-number-rise 1.5s both;
+}
+.combat-number.minor {
+  font-size: 23px;
+  z-index: 1910;
+  animation: impact-number-rise 1.6s both;
+  font-weight: normal;
+}
+@keyframes impact-number-rise {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 0) scale(0.65);
+  }
+  12% {
+    opacity: 1;
+    transform: translate(-50%, -10px) scale(1.14);
+  }
+  35% {
+    opacity: 1;
+    transform: translate(calc(-50% + var(--number-drift, 0px)), -28px) scale(1);
+  }
+  80% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--number-drift, 0px)), -100px)
+      scale(0.85);
+  }
+}
+.desk-top .effect-control {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+@media (max-width: 760px) {
+  .reel-workshop {
+    grid-template-columns: minmax(115px, 0.75fr) minmax(170px, 1fr);
+    gap: 7px;
+    min-height: 310px;
+  }
+  .workshop-faces {
+    grid-template-rows: repeat(7, 38px);
+    gap: 4px;
+  }
+  .workshop-faces button {
+    grid-template-columns: 34px 1fr;
+    gap: 2px;
+    font-size: 14px;
+    padding: 2px 4px;
+  }
+  .workshop-faces small {
+    display: none;
+  }
+  .workshop-faces svg {
+    width: 17px;
+    height: 22px;
+  }
+  .workshop-preview {
+    height: 48px;
+  }
+  .workshop-preview svg {
+    width: 29px;
+    height: 39px;
+  }
+  .workshop-detail {
+    padding: 6px;
+    gap: 6px;
+  }
+  .workshop-detail h3 {
+    font-size: 22px;
+  }
+  .workshop-actions {
+    gap: 5px;
+  }
+  .workshop-actions button,
+  .swap-face {
+    font-size: 18px;
+    min-height: 48px;
+    padding: 3px;
+  }
+  .workshop-actions small,
+  .swap-face small {
+    font-size: 13px;
+  }
+  .swap-choice {
+    display: block;
+    font-size: 15px;
+  }
+  .swap-choice select {
+    width: 100%;
+  }
+  .workshop-summary {
+    font-size: 17px;
+    gap: 5px;
+  }
+  .workshop-summary > span:last-child {
+    font-size: 14px;
+  }
+  .workshop-note {
+    font-size: 13px;
+    line-height: 1.2;
+  }
+  .mage-role-choice {
+    font-size: 17px;
+    gap: 6px;
+    margin: 4px 0;
+  }
+  .mage-role-choice span {
+    font-size: 14px;
+  }
+  .starter-build {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .entrance-roster {
+    min-height: 220px;
+    gap: 15px;
+  }
+  .entrance-portrait {
+    height: 170px;
+    width: 125px;
+  }
+  .entrance-member b {
+    font-size: 23px;
+  }
+  .enemy-team-block {
+    font-size: 13px;
+    min-height: 30px;
+    gap: 5px;
+  }
+  .points-prompt {
+    left: 0;
+    top: -5px;
+    font-size: 11px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .points-prompt {
+    animation: none;
+  }
+}
+@media (min-width: 761px) {
+  .fit-notebook .desk-top label,
+  .fit-notebook .desk-top button,
+  .fit-notebook .desk-top select {
+    font-size: 16px;
+    white-space: nowrap;
+  }
+  .fit-notebook .desk-top nav {
+    gap: 6px;
+  }
+  .fit-notebook #encounter:not(.paired-enemies) .enemy-art {
+    height: 168px;
+  }
+  .fit-notebook .paired-enemies .enemy-box {
+    grid-template-rows: 117px 78px;
+  }
+  .fit-notebook .paired-enemies .enemy-art {
+    height: 112px;
+  }
+}
+@media (max-width: 1259px) {
+  .paired-enemies .enemy-art {
+    height: 88px;
+  }
+  .paired-enemies .enemy-stats {
+    height: 32px;
+  }
+  .paired-enemies .machine-footnote {
+    height: 16px;
+    min-height: 16px;
+    margin-top: 2px;
+  }
+  .enemy-side:not(.paired-enemies) .enemy-art {
+    height: 160px;
+  }
+}
+.rolled-projectile.patience,
+.symbol-arrival.patience {
+  color: var(--gold);
+}
+.rolled-projectile small,
+.symbol-arrival small {
+  display: none;
+}
+.rolled-projectile .tier-symbol svg,
+.symbol-arrival .tier-symbol svg {
+  width: 16px;
+  height: 30px;
 }

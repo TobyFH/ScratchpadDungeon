@@ -246,7 +246,7 @@ const output = path.join(root, "test-results/ui-review");
       localStorage.setItem(PROFILE_KEY, JSON.stringify(p));
       chooseStartingClass(false);
     });
-    await shot("18-five-starting-classes");
+    await shot("18-four-starting-classes");
     await page.locator("#camp-open").click();
     await shot("19-camp-adventurers");
     for (const tab of ["boons", "challenges", "oddities"]) {
@@ -258,11 +258,11 @@ const output = path.join(root, "test-results/ui-review");
     await page.setViewportSize({ width: 1280, height: 800 });
     await page.evaluate(() => {
       newRun("ranger");
-      state.party[0].charge = 9;
+      state.party[0].charge = 4;
       state.party[0].equipment = "trailBow";
       state.depth = 4;
       beginEncounter(true, { stairBoss: true });
-      state.party[0].charge = 9;
+      state.party[0].charge = 4;
       render();
       particles = [];
     });
@@ -366,10 +366,10 @@ const output = path.join(root, "test-results/ui-review");
       });
       render();
     });
-    await page.locator("#portrait-0").hover({ position: { x: 10, y: 10 } });
+    await page.locator("#portrait-0").hover({ position: { x: 40, y: 20 } });
     await shot("33-hero-statistics");
     await page.setViewportSize({ width: 320, height: 800 });
-    await page.locator("#portrait-0").hover({ position: { x: 10, y: 10 } });
+    await page.locator("#portrait-0").hover({ position: { x: 40, y: 20 } });
     await shot("34-hero-statistics-mobile");
     await page.mouse.move(1, 1);
     await page.setViewportSize({ width: 1920, height: 1080 });
@@ -387,6 +387,151 @@ const output = path.join(root, "test-results/ui-review");
     });
     await shot("36-victory-bank-fireworks");
     await page.evaluate(() => closeModal());
+    // Current build system, shared shields, symbolic impacts and optional puns.
+    await page.evaluate(() => {
+      newRun("mage", { mageRole: "heal", specialism: "defence" });
+      setPace("skip");
+      state.party.push(
+        makeHero("Rowan", "ranger", null, [], { specialism: "offence" }),
+        makeHero("Alden", "fighter", null, [], { specialism: "offence" }),
+      );
+      state.party[0].points = 28;
+      state.party[0].hp = 12;
+      state.party[1].charge = 4;
+      state.depth = 6;
+      beginEncounter(false, { count: 2 });
+      setEnemyBlock(12);
+      state.party[1].charge = 4;
+      state.block = 8;
+      render();
+      particles = [];
+    });
+    await shot("37-hero-builds-shared-block");
+    await page.evaluate(() => {
+      setPace("1");
+      setPreference("combatEffects", "icons");
+      state.party[0].last = [
+        { type: "heal", tier: 1 },
+        { type: "class", tier: 1, job: "mage", mageRole: "heal" },
+        { type: "heal", tier: 2 },
+      ];
+      state.currentHero = 0;
+      render();
+      beam($("#portrait-0"), $("#portrait-1"), "heal");
+      combatNumber($("#portrait-1"), 9, "heal");
+    });
+    await page.evaluate(() =>
+      document
+        .querySelectorAll(".rolled-projectile,.fx-beam,.combat-number")
+        .forEach((n) =>
+          n.getAnimations().forEach((a) => {
+            a.pause();
+            a.currentTime = 180;
+          }),
+        ),
+    );
+    await shot("38-rolled-healing-symbols", false, "allow");
+    await page.evaluate(() =>
+      document
+        .querySelectorAll(".rolled-projectile,.fx-beam,.combat-number")
+        .forEach((n) => n.getAnimations().forEach((a) => a.play())),
+    );
+    await page.evaluate(() => {
+      document
+        .querySelectorAll(".combat-number,.symbol-arrival,.rolled-projectile")
+        .forEach((n) => n.remove());
+      setPreference("combatEffects", "both");
+      state.party[1].last = [
+        { type: "attack", tier: 1 },
+        { type: "attack", tier: 2 },
+        { type: "attack", tier: 3 },
+      ];
+      state.currentHero = 1;
+      render();
+      beam($("#portrait-1"), enemyArtEl(state.enemy), "attack", {
+        critical: true,
+      });
+      combatNumber(enemyArtEl(state.enemy), 13, "attack");
+    });
+    await page.evaluate(() =>
+      document
+        .querySelectorAll(".rolled-projectile,.fx-beam,.combat-number")
+        .forEach((n) =>
+          n.getAnimations().forEach((a) => {
+            a.pause();
+            a.currentTime = 180;
+          }),
+        ),
+    );
+    await shot("38-symbols-and-beam-critical", false, "allow");
+    await page.evaluate(() =>
+      document
+        .querySelectorAll(".rolled-projectile,.fx-beam,.combat-number")
+        .forEach((n) => n.getAnimations().forEach((a) => a.play())),
+    );
+    await page.evaluate(() => {
+      state.currentHero = null;
+      setPace("skip");
+      editor(0);
+    });
+    await page.locator('[data-editor-face="1"]').click();
+    await page.locator("#face-destination").selectOption("poison");
+    await shot("39-workshop-upgrade-refund-swap");
+    await page.setViewportSize({ width: 390, height: 844 });
+    await shot("39-workshop-mobile");
+    await page.setViewportSize({ width: 1920, height: 1080 });
+    await page.locator('[data-editor-reel="1"]').click();
+    await page.locator('[data-editor-face="6"]').click();
+    await shot("40-permanent-class-seal");
+    await page.evaluate(() => {
+      closeModal();
+      optionsPage("play");
+    });
+    await shot("41-effects-pun-options");
+    await page.evaluate(() => {
+      closeModal();
+      setPreference("punMode", true);
+      setPace("1");
+      window.reviewArrival = encounterEntrance();
+    });
+    await page.waitForSelector("#stage-confirm:not(:disabled)");
+    await shot("42-paired-pun-arrival");
+    await page.locator("#stage-confirm").click();
+    await shot("42-two-portrait-flights", false, "allow");
+    await page.evaluate(() => window.reviewArrival);
+    await page.evaluate(() => {
+      const gallery = document.createElement("div");
+      gallery.id = "pun-gallery";
+      gallery.style.cssText =
+        "position:fixed;inset:12px;z-index:9000;background:var(--paper);color:var(--ink);display:grid;grid-template-columns:repeat(9,1fr);grid-template-rows:repeat(3,1fr);gap:12px;padding:20px";
+      gallery.innerHTML = Object.entries(PUN_ENEMIES)
+        .map(
+          ([id, name]) =>
+            `<section class="pencil-card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px"><div style="height:210px;width:160px">${pencilIllustration(punEnemyArt(id))}</div><b style="font-size:20px;text-align:center">${name}</b></section>`,
+        )
+        .join("");
+      document.body.append(gallery);
+    });
+    await shot("43-stationery-enemy-sketches");
+    await page.evaluate(() => {
+      $("#pun-gallery").remove();
+      setPace("skip");
+      state.depth = 10;
+      state.enemies = [state.enemies[0]];
+      state.enemy = state.enemies[0];
+      state.enemy.boss = true;
+      applyEnemyPresentation(state.enemy);
+      state.enemy.hp = 211;
+      state.enemy.maxHp = 500;
+      state.invulnerable = { enemyId: null };
+      setEnemyBlock(18);
+      render();
+      particles = [];
+    });
+    await shot("44-full-stop-and-unbroken-page");
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await shot("44-full-stop-1280");
+    await page.setViewportSize({ width: 1920, height: 1080 });
     const download = page.waitForEvent("download");
     await page.locator("#download").click();
     await (

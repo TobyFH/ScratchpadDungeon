@@ -34,7 +34,7 @@
       ownership, next-run toggles and the camp balance are easy to distinguish.
 - [ ] Status tooltips show actual effects within the viewport, and quiet travel
       does not flash treasure/inspection controls or active combat counters.
-- [ ] Ranger Aim amount, bar, next-hit bonus and tooltip fit beneath reels at
+- [ ] Ranger Execute amount, bar, next-hit bonus and tooltip fit beneath reels at
       1920, 1280, 390 and 320px without touching EXP or expanding the card.
 - [ ] Full-screen edge effects leave the centre/inputs clear, use functional
       colours, respect reduced motion and stop immediately when toggled off.
@@ -44,3 +44,15 @@
       statistics stay readable within compact viewports and use current values.
 - [ ] Options tabs preserve their title; clues linger before fading; final victory
       shows an automatic deposit receipt with amount-scaled coins and fireworks.
+
+- [ ] Rolled symbols leave the actual contributing windows and land on the right
+      recipient, including shared shields, self buffs and party heals. Icon/beam
+      preferences and Skip retain clear, bounded feedback without altering RNG.
+- [ ] The workshop shows face odds, explicit symbol choices, clear upgrade costs
+      and downgrade refunds; the middle class seal cannot be removed or copied.
+      Its controls remain readable and keyboard operable at compact sizes.
+- [ ] Execute charge and points reminders fit reserved card space. Reminders
+      animate paint only; portraits open the workshop and heal targets stay clear.
+- [ ] Both arrival names/portraits and their separate combat destinations are
+      present. Pun identities retain pencil style, stats and species IDs; the
+      shared enemy protection row never pushes reels into target controls.

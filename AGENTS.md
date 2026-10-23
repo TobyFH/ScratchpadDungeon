@@ -22,3 +22,11 @@ Camp progression, stable unlock IDs and persistent banking transactions live in
 generated HTML block. Enabled rules are snapshotted per expedition; deposits
 use a separate profile ledger. Read `docs/CAMP_PROGRESSION.md` before changing
 that economy or its save migration/recovery.
+
+Hero builds, reel edits and encounter presentation are embedded from
+`game/hero-builds.js`, `game/reel-upgrades.js` and
+`game/encounter-presentation.js`. Rolled-symbol flights and combat numbers come
+from `ui/combat-feedback.js`. Read `docs/COMBAT_BUILDS.md` for shared rules and
+save migration. Manual controls and autoplay must use the same edit validators,
+prices and roll calculations; feedback and cosmetic modes must not consume
+gameplay RNG. Rebuild and commit their generated HTML alongside these sources.
