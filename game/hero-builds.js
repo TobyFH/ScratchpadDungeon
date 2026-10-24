@@ -2,12 +2,13 @@
 const SPECIALISMS = Object.freeze({
   offence: {
     name: "Aggressive",
-    description: "+1 damage, poison and stun power on relevant rolls.",
+    description:
+      "Starts with more offensive marks. Rebuild freely; marks keep their usual power.",
   },
   defence: {
     name: "Defensive",
     description:
-      "+1 healing, shared block and stimulant power on relevant rolls.",
+      "Starts with more support marks. Rebuild freely; marks keep their usual power.",
   },
 });
 const MAGE_POWERS = Object.freeze({
@@ -44,7 +45,9 @@ const BERSERKER_SUSTAIN = Object.freeze({
 });
 const bloodrushHealing = (h) =>
   BERSERKER_SUSTAIN.bloodrushHeal +
-  Math.floor(Math.max(0, h.level - 1) / BERSERKER_SUSTAIN.healLevelInterval);
+  Math.floor(
+    Math.max(0, (h?.level || 1) - 1) / BERSERKER_SUSTAIN.healLevelInterval,
+  );
 const furyLeechRate = (h) =>
   h?.job === "berserker"
     ? Math.min(
@@ -58,6 +61,7 @@ const heroJobs = (rules = state?.runRules || []) => [
   ...BASE_JOBS,
   ...(rules.includes("ranger") ? ["ranger"] : []),
   ...(rules.includes("berserker") ? ["berserker"] : []),
+  ...(rules.includes("jester") ? ["jester"] : []),
 ];
 function mageResonance(h, symbols = null) {
   // A property of the marks actually rolled, falling back to weighted wheels.
@@ -93,6 +97,23 @@ function normaliseHeroBuild(h) {
   if (h.job === "healer") h.job = "mage";
   delete h.mageRole;
   normaliseTacticalStatuses(h);
+  h.momentReceipts =
+    h.momentReceipts &&
+    typeof h.momentReceipts === "object" &&
+    !Array.isArray(h.momentReceipts)
+      ? h.momentReceipts
+      : {};
+  h.reelGifts = Array.isArray(h.reelGifts)
+    ? h.reelGifts.filter(
+        (g) =>
+          Number.isInteger(g.reel) &&
+          g.reel >= 0 &&
+          g.reel < 3 &&
+          Number.isInteger(g.uses) &&
+          g.uses > 0 &&
+          g.uses <= 2,
+      )
+    : [];
   if (!Object.hasOwn(SPECIALISMS, h.specialism))
     h.specialism =
       Math.floor(Number(h.id) || h.name?.length || 0) % 2
@@ -113,7 +134,9 @@ function normaliseHeroBuild(h) {
       delete face.mageRole;
       if (
         h.job === "berserker" &&
-        !["attack", "heal", "selfharm", "blank", "class"].includes(face.type)
+        !["attack", "heal", "selfharm", "stimulant", "blank", "class"].includes(
+          face.type,
+        )
       ) {
         face.type = "blank";
         face.tier = 1;
@@ -143,6 +166,7 @@ function classAbilityName(hero) {
       healer: "RESONANCE",
       ranger: "EXECUTE",
       berserker: "BLOODRUSH",
+      jester: "WILDCARD",
     }[job] || "CLASS"
   );
 }
@@ -150,6 +174,8 @@ function classAbilityDescription(hero) {
   const job = typeof hero === "string" ? hero : hero?.job;
   return (
     {
+      jester:
+        "Wildcard: tricks ink enemy reels, gild allied reels, reverse a foe’s roll, or scatter damage and healing. They usually favour your party.",
       fighter:
         "Rage: build damage and a little resistance until this fight ends.",
       rogue: "Flurry: roll three extra attacks; each blade lands separately.",
@@ -162,19 +188,122 @@ function classAbilityDescription(hero) {
   );
 }
 function temperamentEffects(h, base) {
-  if (h.specialism === "offence") {
-    if (base.attack) base.attack++;
-    else if (base.magic) base.magic++;
-    if (base.poison) base.poison++;
-    if (base.stun) base.stun++;
-  } else if (h.specialism === "defence") {
-    if (base.heal) base.heal++;
-    else if (base.teamHeal) base.teamHeal++;
-    else if (base.selfHeal) base.selfHeal++;
-    if (base.block) base.block++;
-    if (base.stimulant) base.stimulant++;
-  }
+  // Temperament selects a starting palette, never changes a mark's stated power.
   return base;
+}
+const CLASS_FACE_TYPES = Object.freeze({
+  fighter: ["attack", "block", "heal", "stun", "stimulant", "blank"],
+  rogue: ["attack", "poison", "stun", "stimulant", "heal", "blank"],
+  mage: ["magic", "heal", "block", "poison", "stun", "stimulant", "blank"],
+  ranger: ["attack", "stun", "heal", "stimulant", "poison", "blank"],
+  berserker: ["attack", "heal", "selfharm", "stimulant", "blank"],
+});
+function startingFaces(job, temperament) {
+  const defensive = temperament === "defence";
+  return {
+    fighter: defensive
+      ? [
+          ["attack", 1],
+          ["block", 1],
+          ["block", 2],
+          ["heal", 1],
+          ["stun", 1],
+          ["blank", 1],
+        ]
+      : [
+          ["attack", 1],
+          ["attack", 2],
+          ["block", 1],
+          ["heal", 1],
+          ["stun", 1],
+          ["blank", 1],
+        ],
+    rogue: defensive
+      ? [
+          ["attack", 1],
+          ["poison", 1],
+          ["poison", 1],
+          ["stun", 1],
+          ["stimulant", 1],
+          ["blank", 1],
+        ]
+      : [
+          ["attack", 1],
+          ["attack", 2],
+          ["poison", 1],
+          ["stun", 1],
+          ["stimulant", 1],
+          ["blank", 1],
+        ],
+    mage: defensive
+      ? [
+          ["heal", 1],
+          ["heal", 2],
+          ["magic", 1],
+          ["block", 1],
+          ["stimulant", 1],
+          ["blank", 1],
+        ]
+      : [
+          ["magic", 1],
+          ["magic", 2],
+          ["poison", 1],
+          ["heal", 1],
+          ["stimulant", 1],
+          ["blank", 1],
+        ],
+    ranger: defensive
+      ? [
+          ["attack", 1],
+          ["stun", 1],
+          ["stun", 2],
+          ["heal", 1],
+          ["stimulant", 1],
+          ["blank", 1],
+        ]
+      : [
+          ["attack", 1],
+          ["attack", 2],
+          ["stun", 1],
+          ["heal", 1],
+          ["stimulant", 1],
+          ["blank", 1],
+        ],
+    berserker: defensive
+      ? [
+          ["attack", 1],
+          ["heal", 1],
+          ["heal", 2],
+          ["selfharm", 1],
+          ["stimulant", 1],
+          ["blank", 1],
+        ]
+      : [
+          ["attack", 1],
+          ["attack", 2],
+          ["heal", 1],
+          ["selfharm", 1],
+          ["heal", 2],
+          ["blank", 1],
+        ],
+    jester: defensive
+      ? [
+          ["attack", 1],
+          ["heal", 1],
+          ["block", 1],
+          ["stimulant", 1],
+          ["stun", 1],
+          ["blank", 1],
+        ]
+      : [
+          ["attack", 1],
+          ["magic", 1],
+          ["poison", 1],
+          ["heal", 1],
+          ["stun", 1],
+          ["blank", 1],
+        ],
+  }[job];
 }
 function makeHero(
   name,
@@ -188,70 +317,19 @@ function makeHero(
   const specialism = Object.hasOwn(SPECIALISMS, build.specialism)
     ? build.specialism
     : pick(["offence", "defence"]);
-  const faces = {
-    fighter: [
-      ["attack", 1],
-      ["attack", 2],
-      ["block", 1],
-      ["block", 2],
-      ["heal", 1],
-      ["blank", 1],
-    ],
-    rogue: [
-      ["attack", 1],
-      ["attack", 2],
-      ["attack", 3],
-      ["poison", 1],
-      ["block", 1],
-      ["blank", 1],
-    ],
-    ranger: [
-      ["attack", 1],
-      ["attack", 2],
-      ["poison", 1],
-      ["block", 1],
-      ["stun", 1],
-      ["blank", 1],
-    ],
-    berserker: [
-      ["attack", 1],
-      ["attack", 2],
-      ["heal", 1],
-      ["selfharm", 1],
-      ["heal", 2],
-      ["blank", 1],
-    ],
-    mage: legacyHealer
-      ? [
-          ["heal", 1],
-          ["heal", 2],
-          ["block", 1],
-          ["stun", 1],
-          ["magic", 1],
-          ["blank", 1],
-        ]
-      : specialism === "defence"
-        ? [
-            ["heal", 1],
-            ["heal", 2],
-            ["block", 1],
-            ["magic", 1],
-            ["poison", 1],
-            ["blank", 1],
-          ]
-        : [
-            ["magic", 1],
-            ["magic", 2],
-            ["poison", 1],
-            ["heal", 1],
-            ["block", 1],
-            ["blank", 1],
-          ],
-  };
+  const faces = startingFaces(job, specialism);
   const maxHp = Math.round(
-    ({ fighter: 44, rogue: 26, mage: 28, ranger: 30, berserker: 38 }[job] +
+    ({
+      fighter: 48,
+      rogue: 26,
+      mage: 28,
+      ranger: 30,
+      berserker: 38,
+      jester: 30,
+    }[job] +
       (rules.includes("hearty") ? 4 : 0)) *
-      (1 + 0.1 * campTier("vitality", rules)),
+      (1 + lessonBonus("vitality", rules) / 100) *
+      (rules.includes("glass") ? 0.85 : 1),
   );
   const h = {
     id: Date.now() + Math.random(),
@@ -271,6 +349,8 @@ function makeHero(
     stun: 0,
     stunAge: 0,
     blackout: [],
+    reelGifts: [],
+    momentReceipts: {},
     stunGrace: 0,
     poison: null,
     stimulant: null,
@@ -288,7 +368,7 @@ function makeHero(
     },
     stats: emptyStats(),
     reels: [0, 1, 2].map((reel) => [
-      ...faces[job].map(([type, tier]) => ({ type, tier, weight: 1 })),
+      ...faces.map(([type, tier]) => ({ type, tier, weight: 1 })),
       ...(reel === 1 ? [{ type: "class", tier: 1, weight: 1, job }] : []),
     ]),
     last: [],
@@ -298,13 +378,22 @@ function makeHero(
   );
   return h;
 }
+// Shared by actual recovery and the fountain's uncapped offered totals.
+function offeredHealing(h, amount) {
+  return amount > 0
+    ? Math.max(
+        1,
+        amount + traitBonus(h, "healingReceived") + lessonBonus("recovery"),
+      )
+    : 0;
+}
 function specialismBadge(h) {
   const s = SPECIALISMS[h.specialism] || SPECIALISMS.offence;
   return `<span class="specialism-badge ${h.specialism}" data-tooltip="${escapeHTML(s.name + ": " + s.description)}" aria-label="${s.name} temperament">${icon(h.specialism === "defence" ? "block" : "sword")}</span>`;
 }
 function heroBuildMarkup(h) {
   const s = SPECIALISMS[h.specialism] || SPECIALISMS.offence;
-  return `<span class="hero-specialism ${h.specialism}" data-tooltip="${escapeHTML(s.description)}">${icon(h.specialism === "defence" ? "block" : "sword")}<b>${s.name}</b> · ${h.specialism === "defence" ? "+1 healing · block · buffs" : "+1 damage · poison · stun"}<small>Fixed temperament</small></span>`;
+  return `<span class="hero-specialism ${h.specialism}" data-tooltip="${escapeHTML(s.description)}">${icon(h.specialism === "defence" ? "block" : "sword")}<b>${s.name}</b> · ${h.specialism === "defence" ? "supporting start" : "attacking start"}<small>Fixed temperament</small></span>`;
 }
 function executionBonus(
   h,
@@ -357,6 +446,10 @@ function setEnemyBlock(amount) {
   }
   document.querySelectorAll(".enemy-team-block").forEach((el) => {
     el.querySelector("strong").textContent = state.enemyBlock;
+    el.style.setProperty(
+      "--block-strength",
+      Math.min(20, state.enemyBlock) / 20,
+    );
     el.setAttribute("aria-label", "Shared enemy block: " + state.enemyBlock);
   });
 }
@@ -364,7 +457,7 @@ function gainEnemyBlock(amount) {
   setEnemyBlock(enemyBlock() + amount);
 }
 function enemyBlockMarkup(index = 0) {
-  return `<div id="enemy-team-block${index ? "-2" : ""}" class="enemy-team-block" aria-label="Enemy team block: ${enemyBlock()}">${icon("block")}<strong>${enemyBlock()}</strong><span>TEAM BLOCK<small>Shared pool</small></span></div>`;
+  return `<div id="enemy-team-block${index ? "-2" : ""}" class="enemy-team-block" style="--block-strength:${Math.min(20, enemyBlock()) / 20}" aria-label="Enemy team block: ${enemyBlock()}">${icon("block")}<strong>${enemyBlock()}</strong><span>TEAM BLOCK<small>Shared pool</small></span></div>`;
 }
 function wardActive(e = actingEnemy) {
   return !!(

@@ -31,7 +31,13 @@ function automaticReadDelay(kind = "reward") {
   return Math.max(AUTOMATION_PACING.minimum, base / Math.sqrt(referenceSpeed));
 }
 function automaticConfirmReady(button, kind = "reward") {
-  if (!button || button.disabled || utilityOpen || document.hidden)
+  if (
+    !button ||
+    button.disabled ||
+    utilityOpen ||
+    document.hidden ||
+    $("#artefact-loot")?.dataset.presenting === "true"
+  )
     return false;
   if (
     !automaticReading ||

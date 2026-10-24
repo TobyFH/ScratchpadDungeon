@@ -14,49 +14,27 @@ companions for subsequent expeditions. Their locked starter cards remain visible
 click one to open its camp purchase. Tank, Rogue and Mage are available initially.
 Existing heroes are retained when migrating a run.
 
-Permanent training applies automatically to future expeditions. Other modifiers
-start disabled and can be freely toggled for the next run. Purchases do not
-rewrite a current expedition's snapshotted rules and cannot be refunded. Nothing
-requires an account or network connection.
+Lesson ownership is permanent. **Campfire Lessons** lets you choose an active
+rank from zero to the highest rank bought, using minus/plus buttons. Selections
+and optional challenge/oddity toggles are snapshotted into the next expedition.
+Purchases never rewrite the current run. There is no account or network service.
 
 ## Unlock catalogue
 
-The catalogue in `game/progression.js` is authoritative; stable IDs survive price
-changes. Gold income is unchanged. Existing owned purchases remain owned without
-an additional charge.
+`game/progression.js` owns costs, stable IDs and prerequisites. There are 55
+purchases: three adventurer invitations, forty lesson ranks (eight families ×
+five ranks), eight untiered challenges and four oddities. The Provisions page
+has been replaced; old purchases migrate without losing bank/deposit records.
 
-| Page        | Stable ID    | Unlock                  |  Cost | Effect when enabled                               |
-| ----------- | ------------ | ----------------------- | ----: | ------------------------------------------------- |
-| Adventurers | `ranger`     | A ranger's invitation   |   900 | Permanent Ranger starts/recruits                  |
-| Adventurers | `berserker`  | A berserker's oath      |   750 | Permanent Berserker starts/recruits               |
-| Provisions  | `provisions` | A little spending money |   900 | Start with 150 gold                               |
-| Provisions  | `hearty`     | A hearty breakfast      | 1,100 | +4 base maximum HP before training                |
-| Provisions  | `company`    | Spread the word         | 1,500 | Recruit probability ×1.25, capped at 95%          |
-| Provisions  | `springs`    | Follow the water        | 1,800 | One extra well per floor                          |
-| Challenges  | `iron`       | Iron margins            |   600 | Enemy HP ×1.2, damage ×1.1, rounded up            |
-| Challenges  | `crowded`    | Never alone             |   700 | Double chance +8 percentage points, cap 33%       |
-| Challenges  | `drought`    | Dry ink                 |   500 | One fewer well per floor                          |
-| Challenges  | `hunted`     | Restless pages          |   650 | Pursuer threshold 12 revealed tiles, from floor 3 |
-| Oddities    | `golden`     | Heavy pockets           | 1,900 | One extra chest per floor                         |
-| Oddities    | `lanterns`   | Leave a light on        | 1,200 | One extra beacon per floor                        |
-| Oddities    | `markets`    | Travelling market       | 2,200 | Shop chance rises from 36% to 66%                 |
-| Oddities    | `sharp`      | Both ends sharpened     |   800 | Damaging hero rolls +1; enemy base damage +1      |
+[Campfire update](CAMPFIRE_UPDATE.md) documents all eight lesson effects, active
+rank selection, the four legacy Provisions mappings, the eight challenges, Jester
+rules, save version 19, luck events, command-aged ambushes and UI contracts.
 
-The fifth page, **Training**, shows each family's next tier. Higher tiers require
-the preceding tier. Bonuses are the highest owned rank, **not the sum of ranks**.
-These purchases are permanent, automatically enabled, and snapshotted next run.
-
-| Stable IDs                    | Tiers | Cost of each successive tier        | Total bonus at each tier              |
-| ----------------------------- | ----: | ----------------------------------- | ------------------------------------- |
-| `vitality1` … `vitality5`     |     5 | 750 / 1,500 / 3,000 / 5,500 / 9,000 | +10 / 20 / 30 / 40 / 50% base HP      |
-| `power1` … `power3`           |     3 | 900 / 2,000 / 4,500                 | +5 / 10 / 15% blade/magic roll damage |
-| `experience1` … `experience3` |     3 | 800 / 1,800 / 4,000                 | +5 / 10 / 15% battle EXP              |
-
-New hero HP is `round((classBaseHP + heartyBonus) * (1 + .1*vitalityRank))`.
-Level-up gains remain +6 HP. Strike training rounds the multiplied damaging roll;
-EXP training carries fractional bonus EXP forward per hero to avoid losing small
-awards to rounding. There are 25 stable purchase IDs across the five pages.
-Provisions and challenges can coexist; an extra well and Dry ink cancel out.
+Classes always remain available once purchased. Lessons preserve all bought
+ranks even when a lower rank is active. For an old profile without explicit
+selections, the highest owned rank is active. New ranks follow the currently
+active maximum; deliberately reduced ranks stay selected. Only the highest
+**selected** rank applies, never a sum of all previous purchases.
 
 ## Shop spending
 
@@ -88,10 +66,10 @@ permanent middle seal. See [Combat builds](COMBAT_BUILDS.md) and
   transactions and camp UI. `tools/build-ui.cjs` embeds it into the standalone
   HTML; never edit its generated HTML region directly.
 - `scratchpad-dungeon-camp-v1` stores profile version 1, bank balance, purchased
-  IDs, enabled IDs and the deposit ledger. It is independent of the expedition
+  IDs, enabled IDs, active lesson ranks and the deposit ledger. It is independent of the expedition
   and preference keys. New run never deletes it.
-- Expedition save version 18 retains the version-13 `runId`, `bankedFloors` and
-  snapshot of enabled `runRules`. Versions 1–17 still migrate; old expeditions start
+- Expedition save version 19 retains the version-13 `runId`, `bankedFloors` and
+  snapshot of enabled `runRules`. Versions 1–18 still migrate; old expeditions start
   without new modifiers and retain their wounds, equipment and edited reels.
 - A deposit is keyed by `runId:floor`. The profile write commits the transaction
   before the expedition is updated. If the expedition write is interrupted,
@@ -136,5 +114,5 @@ persistence, interrupted-write recovery, unavailable storage, invalid fractions,
 unearned transfers, prerequisites, escalating training tiers, purchase costs, class locks, rule snapshots, Ranger charge,
 real map/stat modifier hooks and the final victory banking buttons. Camp and
 bank sheets are measured at 1920, 1280, 390 and 320 pixel widths. Visual review
-adds camp categories, a five-class chooser, Ranger combat and a real status
+adds camp categories, a six-class chooser, Ranger combat and a real status
 hover. See the main README for browser installation and review commands.

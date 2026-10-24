@@ -39,6 +39,11 @@ async function notebook(t) {
     }
     return route.continue();
   });
+  await page.addInitScript(() => {
+    window.addEventListener("DOMContentLoaded", () => {
+      characterLuck = () => 0.999999;
+    });
+  });
   await page.goto(url);
   await page.evaluate(() => {
     newRun("fighter");

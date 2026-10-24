@@ -33,7 +33,8 @@ async function oldTravelEvent(c, kind) {
     )}${criticalSpace()}<div class="stage-result" id="rockfall-result">Keep your head down…</div>`,
     "rockfall",
   );
-  shakeBook(9);
+  shakeBook(7, "rumble");
+  shakeElement($("#stage-card"), 8, "rumble");
   burst($("#stage-card"), "dust", 85);
   const faces = [
       { type: "safe", tier: 1, weight: 7 },
@@ -259,34 +260,38 @@ function addLavaPuddles(map, depth) {
 }
 let revealingLava = false;
 function revealLavaLight(i) {
-  if (revealingLava) return;
-  const sources = [i, ...neighbors(i)].filter(
-    (j) => state.map[j].terrain === "lava",
+  if (
+    revealingLava ||
+    !state.map[i] ||
+    (state.map[i].wall && state.map[i].terrain !== "lava")
+  )
+    return;
+  const queue = [i, ...neighbors(i)].filter(
+    (j) => state.map[j].terrain === "lava" && lineOfSight(i, j),
   );
-  if (!sources.length) return;
+  if (!queue.length) return;
   revealingLava = true;
   try {
-    const lit = new Set(sources.flatMap((j) => [j, ...neighbors(j)]));
-    let expanded = true;
-    while (expanded) {
-      expanded = false;
-      for (const j of [...lit])
-        for (const source of [j, ...neighbors(j)].filter(
-          (k) => state.map[k].terrain === "lava",
-        ))
-          for (const k of [source, ...neighbors(source)])
-            if (!lit.has(k)) {
-              lit.add(k);
-              expanded = true;
-            }
+    const visited = new Set(),
+      lit = new Set();
+    for (const source of queue) {
+      if (visited.has(source)) continue;
+      visited.add(source);
+      for (const j of [source, ...neighbors(source)]) {
+        if (!lineOfSight(source, j)) continue;
+        lit.add(j);
+        if (state.map[j].terrain === "lava" && !visited.has(j)) queue.push(j);
+      }
     }
+    let newlyLit = 0;
     for (const j of lit)
       if (!state.map[j].seen) {
         markSeen(j);
         state.map[j].lavaLitAt = Date.now();
         burst($(`[data-tile="${j}"]`), "gold", 7);
+        newlyLit++;
       }
-    log("Lava lights the neighbouring stones.");
+    if (newlyLit) log("Lava lights the neighbouring stones.");
   } finally {
     revealingLava = false;
   }
@@ -304,8 +309,8 @@ function chaserRewardFaces(faces) {
 }
 
 // Optional paired passages never replace a stair, discovery or obstructed tile.
-function addTunnels(map) {
-  if (Math.random() >= 0.14) return;
+function addTunnels(map, rules = state?.runRules || []) {
+  if (Math.random() >= (rules.includes("echoes") ? 0.5 : 0.14)) return;
   const pairs = Math.random() < 0.08 ? 2 : 1;
   for (let pair = 0; pair < pairs; pair++) {
     const free = [...mapDistances(map).keys()].filter(
@@ -365,13 +370,15 @@ async function tunnelEncounter(c) {
   smokePoof($("#map-player"), true);
   await feedbackPause(skip ? 100 : 260);
   markSeen(destination);
+  renderMap();
+  await tunnelTransit(source, destination);
   state.position = destination;
   const end = state.map[destination];
   end.visited = true;
   end.activated = true;
   end.lastVisitedStep = state.steps;
   end.fogged = false;
-  end.fogSince = state.exploreTime || 0;
+  end.lastNearCommand = state.moveCommands || 0;
   renderMap();
   smokePoof($("#map-player"), true);
   positionPlayer(false);

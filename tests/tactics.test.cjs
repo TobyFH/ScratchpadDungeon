@@ -28,6 +28,11 @@ async function game(t) {
   const p = await browser.newPage({ viewport: { width: 1920, height: 1080 } }),
     errors = [];
   p.on("pageerror", (e) => errors.push(e.message));
+  await p.addInitScript(() => {
+    window.addEventListener("DOMContentLoaded", () => {
+      characterLuck = () => 0.999999;
+    });
+  });
   await p.goto(url);
   await p.evaluate(() => {
     newRun("fighter", { specialism: "offence" });
@@ -79,7 +84,7 @@ test("temperament is only selectable at the start, Mages have no role stat or se
   });
   assert.deepEqual(result, {
     loaded: true,
-    version: 18,
+    version: 19,
     hp: 11,
     points: 29,
     tier: 4,
@@ -160,8 +165,8 @@ test("Berserker Fury comes from HP wounds and Blood Price, scales damage, has a 
     damageHero(0, 6, "Test wound");
     const wound = { hp: h.hp, fury: h.fury };
     h.points = 40;
-    const illegal = ["magic", "poison", "block", "stun", "stimulant"].map(
-      (type) => applyFaceEdit(h, 0, 0, "swap", type),
+    const illegal = ["magic", "poison", "block", "stun"].map((type) =>
+      applyFaceEdit(h, 0, 0, "swap", type),
     );
     h.reels = [
       [{ type: "selfharm", tier: 2 }],
@@ -190,7 +195,11 @@ test("Berserker Fury comes from HP wounds and Blood Price, scales damage, has a 
   );
   assert.equal(result.charged.fury, 19);
   assert.equal(result.charged.bonus, 4);
-  assert.ok(result.charged.damage >= 10);
+  assert.equal(
+    result.charged.damage,
+    9,
+    "rank-II blade + Bloodrush + pre-roll Fury, without a temperament damage modifier",
+  );
   assert.match(result.bar, /FURY 19\/20/);
   assert.equal(result.cleared, 0);
 });
@@ -229,7 +238,7 @@ test("early damage rises per floor, the middle-floor Unwritten is stronger, and 
     ),
   );
   assert.ok(r.items.length > 5);
-  assert.match(r.marketDescription, /36% to 66%/);
+  assert.match(r.marketDescription, /66%.*36%/);
   assert.ok(r.items.every((i) => !i.scalable || i.quality >= 3));
   assert.ok(
     r.weights.shopChance > 0.3 &&
@@ -330,8 +339,8 @@ test("initiative boosts only the first party roll and is forfeited when a differ
     await spin(0);
     return { bonus, ordinary: state.lastPlayerRoll.totals.attack, expired };
   });
-  assert.equal(r.bonus, 9);
-  assert.equal(r.ordinary, 7);
+  assert.equal(r.bonus, 8);
+  assert.equal(r.ordinary, 6);
   assert.equal(r.expired, true);
 });
 
@@ -847,7 +856,7 @@ test("field guide topics remain readable without scrolling on desktop, Deck and 
   const p = await game(t);
   await p.evaluate(() => help());
   const count = await p.locator("#guide-topic option").count();
-  assert.equal(count, 11);
+  assert.equal(count, 12);
   for (const width of [1920, 1280, 390, 320]) {
     await p.setViewportSize({
       width,
@@ -857,7 +866,7 @@ test("field guide topics remain readable without scrolling on desktop, Deck and 
       await p.locator("#guide-topic").selectOption(String(i));
       const layout = await p.evaluate(() => {
         const flow = document.querySelector(".modal-flow"),
-          text = document.querySelector(".guide-grid p"),
+          text = document.querySelector(".guide-grid li"),
           content = flow.getBoundingClientRect(),
           bounds = flow.parentElement.getBoundingClientRect();
         return {

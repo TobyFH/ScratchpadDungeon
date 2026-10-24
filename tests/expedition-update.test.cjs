@@ -28,6 +28,11 @@ async function game(t) {
   const p = await browser.newPage({ viewport: { width: 1920, height: 1080 } }),
     errors = [];
   p.on("pageerror", (e) => errors.push(e.message));
+  await p.addInitScript(() => {
+    window.addEventListener("DOMContentLoaded", () => {
+      characterLuck = () => 0.999999;
+    });
+  });
   await p.goto(url);
   await p.evaluate(async () => {
     newRun("fighter", { specialism: "offence" });
@@ -72,7 +77,7 @@ test("hero faces begin equally likely; migration removes authored weights but pr
   });
   assert.equal(r.loaded, true);
   assert.ok(r.fresh.flat().every((w) => w === 1));
-  assert.equal(r.migrated.version, 18);
+  assert.equal(r.migrated.version, 19);
   assert.equal(r.migrated.tier, 4);
   assert.equal(r.migrated.points, 50);
   assert.ok(r.migrated.weights.every((w) => w === 1));
@@ -127,7 +132,7 @@ test("weight purchases use personal points, retain class-seal restrictions, and 
   );
 });
 
-test("Ranger and Berserker remain visible but locked; purchasing Berserker unlocks starts and recruits and its initial wheel contains healing", async (t) => {
+test("Ranger, Berserker and Jester remain visible but locked; purchasing Berserker unlocks starts and recruits and its initial wheel contains healing", async (t) => {
   const p = await game(t);
   await p.evaluate(() => {
     const profile = emptyProfile();
@@ -135,7 +140,7 @@ test("Ranger and Berserker remain visible but locked; purchasing Berserker unloc
     localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
     chooseStartingClass();
   });
-  assert.equal(await p.locator("[data-unlock-class]").count(), 2);
+  assert.equal(await p.locator("[data-unlock-class]").count(), 3);
   assert.equal(await p.locator('[data-start-job="berserker"]').count(), 0);
   await p.locator('[data-unlock-class="berserker"]').click();
   await p.locator('[data-camp-buy="berserker"]').click();

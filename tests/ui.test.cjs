@@ -47,6 +47,11 @@ async function notebook(t) {
     }
     return route.continue();
   });
+  await page.addInitScript(() => {
+    window.addEventListener("DOMContentLoaded", () => {
+      characterLuck = () => 0.999999;
+    });
+  });
   await page.goto(url);
   await page.evaluate(async () => {
     newRun("rogue");
@@ -365,7 +370,7 @@ test("notebook palettes keep contrast, embedded typography, stable tabs and keyb
   assert.ok(
     await page.evaluate(() => {
       const flow = document.querySelector(".modal-flow");
-      const text = document.querySelector(".guide-grid p");
+      const text = document.querySelector(".guide-grid li");
       return (
         parseFloat(getComputedStyle(text).fontSize) *
           Number(flow.style.zoom || 1) >=

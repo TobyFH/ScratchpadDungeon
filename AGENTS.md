@@ -34,7 +34,7 @@ gameplay RNG. Rebuild and commit their generated HTML alongside these sources.
 Temporary combat state, openings, statuses and focused enemy intent live in
 `game/battle-tactics.js`; travel choices and lava lighting live in
 `game/world-events.js`. Read `docs/BATTLE_TACTICS.md` for current rules and
-version-18 migration. Mage Resonance is derived from rolled marks, never an
+version-19 migration. Mage Resonance is derived from rolled marks, never an
 editable role. Temperament is fixed outside the starting choice. Berserker edits
 must use `editableTypes()` and the same validators as player/autoplay edits.
 
@@ -50,7 +50,7 @@ browsing. All are embedded by the builder. New hero faces start at weight one;
 only validated paid weighting changes odds. Class marks remain unique/permanent.
 Utility pages must suspend an existing confirmation without discarding its DOM
 callbacks. Keep journal encounter/death receipts idempotent across reloads.
-Camp training uses highest owned rank, not additive ranks, and future-run rules.
+Camp lessons use the highest selected rank, bounded by ownership, never additive ranks; selections apply to future runs.
 Lava stays impassable; floor generation and save repair preserve the stair route.
 
 Automatic confirmation/arrival timing lives in `game/automation-pacing.js`.
@@ -61,3 +61,14 @@ Damage flights return completion promises; Fury lifesteal waits for outgoing
 arrivals, then sends healing back from victims before restoring caster HP.
 Poison uses its own purple identity and does not consume direct-hit Vulnerable.
 Bridge terrain art is independent of active/spent discovery icons and never fades.
+
+Read `docs/CAMPFIRE_UPDATE.md` for version-19 rules before editing progression,
+reel presets, luck or exploration. Campfire Lessons separates owned and active
+ranks; eight families have five ranks each, and eight Challenges are untiered.
+`game/character-events.js` owns the saved personal luck stream/receipts;
+`game/auto-builds.js` owns AI editing preferences and paid solo repairs;
+`game/jester.js` owns distinct-kind Jackpots, post-effect backfires and one free
+encore per action; `game/exploration-rules.js` owns command-aged ambushes and
+reserved fountain rows. All are embedded sources. Ambush age must never resume
+using wall-clock time. Bridges have no discoveries. Future UI should preserve
+bulleted guide pages, equal unlock cards and stationary paginated camp controls.

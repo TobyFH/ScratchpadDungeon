@@ -26,7 +26,8 @@
 - [ ] All options pages, worn equipment labels, trait tooltips, dead/non-flashing
       bars, torn-paper sheets, Masterwork supply labels/effects, paired enemies, floor-clear
       summaries, popup choices and compact layouts were checked.
-- [ ] Changes don't consume gameplay RNG, modify outcomes, timings or balance.
+- [ ] Cosmetic changes don't consume gameplay RNG or modify outcomes/timings/balance;
+      any requested rule changes have their own meaningful regression checks.
 - [ ] `npm run build:ui` and `npm test` pass; `npm run review:ui` screenshots were
       visually compared with the reference, not merely generated.
 - [ ] The generated `index.html` still runs and downloads without external assets.
@@ -86,3 +87,13 @@
 - [ ] Blackouts poof in/out, poison reads POISON in purple, and drain healing
       returns only after outgoing damage arrives. Automatic reading holds and
       manual skipping both work at every speed.
+
+- [ ] Guide bullets, equal class cards, active lesson controls and camp leaf
+      navigation stay readable and stationary at 1920, 1280, 390 and 320px.
+- [ ] Round is hidden out of combat; toolbar text fits and redundant guide/export
+      actions are available from Options and the side tab instead.
+- [ ] Well result rows exist before the roll; new values never shift the scene.
+- [ ] Jester Jackpot/backfire/encore and temporary reel tricks are distinct;
+      ordinary matching rules for other classes remain unchanged.
+- [ ] Ambushes age only by accepted move commands; bridges carry no discoveries,
+      and lava reveal/glow is occluded by stone and obeys ambient settings.

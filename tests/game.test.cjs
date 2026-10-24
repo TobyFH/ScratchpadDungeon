@@ -41,6 +41,7 @@ async function game(t, { auto = false, width = 1440 } = {}) {
     let seed = 107;
     window.addEventListener("DOMContentLoaded", () => {
       temperamentEffects = (h, base) => base;
+      characterLuck = () => 0.999999;
       // These regressions isolate established base rules. Tactics has dedicated
       // real-rule tests for opening bonuses and random vulnerability.
       setupBattleOpening = () => {
@@ -481,13 +482,21 @@ test("well can be declined and revisited; the rolled heal affects only living he
   await p.locator("#well-use").click();
   await p.waitForSelector("#stage-confirm");
   assert.equal(await p.evaluate(() => state.lastWellRoll.bonus), 3);
+  await p.evaluate(() => {
+    window.healingGlyphsCreated = 0;
+    new MutationObserver((rows) =>
+      rows.forEach((r) =>
+        r.addedNodes.forEach((n) => {
+          if (n.matches?.(".healing-glyph")) window.healingGlyphsCreated++;
+        }),
+      ),
+    ).observe(document.body, { childList: true, subtree: true });
+  });
   await p.locator("#stage-confirm").click();
-  await p.waitForFunction(
-    () => document.querySelectorAll(".healing-glyph").length >= 8,
-  );
+  await p.waitForFunction(() => window.healingGlyphsCreated >= 8);
   assert.deepEqual(
     await p.evaluate(() => state.party.map((h) => h.hp)),
-    [11, 9],
+    [12, 9],
   );
   await finish(p);
   await p.evaluate(() => (Math.random = window.savedRandom));
@@ -534,7 +543,9 @@ test("equal faces retain thematic class powers without hidden author weights", a
   let odds = await p.evaluate(() =>
     Object.fromEntries(
       ["fighter", "healer", "rogue"].map((job) => {
-        let r = makeHero("Test", job).reels[0],
+        let r = makeHero("Test", job, null, [], {
+            specialism: job === "rogue" ? "offence" : "defence",
+          }).reels[0],
           sum = r.reduce((n, s) => n + s.weight, 0);
         return [
           job,
@@ -554,7 +565,7 @@ test("equal faces retain thematic class powers without hidden author weights", a
   assert.equal(odds.healer.heal, 2 / 6);
   assert.ok(odds.healer.attack < 0.08);
   assert.equal(odds.rogue.heal, 0);
-  assert.equal(odds.rogue.attack, 3 / 6);
+  assert.equal(odds.rogue.attack, 2 / 6);
 });
 
 test("shared block absorbs multi-strikes, animates protection, and clears after victory and before the next fight", async (t) => {
@@ -728,7 +739,7 @@ test("shop purchases deduct gold, enforce stock and funds, heal the team, and re
   await p.locator('[data-buy="heal"]').click();
   assert.deepEqual(
     await p.evaluate(() => state.party.map((h) => h.hp)),
-    [44, 28],
+    [48, 28],
   );
   await p.locator('[data-buy="reveal"]').click();
   assert.equal(await p.evaluate(() => state.exitFound), true);
@@ -991,7 +1002,7 @@ test("victory levels grant HP and personal editing points; weighted editing pres
   await p.locator('[data-spin="0"]').click();
   await finish(p);
   assert.equal(await p.evaluate(() => state.party[0].level), 2);
-  assert.equal(await p.evaluate(() => state.party[0].maxHp), 50);
+  assert.equal(await p.evaluate(() => state.party[0].maxHp), 54);
   assert.equal((await p.evaluate(() => state.party[0].points)) >= 8, true);
   await p.locator('.edit-button[data-edit="0"]').click();
   let points = await p.evaluate(() => state.party[0].points);
@@ -1102,7 +1113,7 @@ test("save restores speed and artefacts and migrates the earlier Sunseed-era not
     localStorage.setItem("scratchpad-dungeon-v2", JSON.stringify(old));
   });
   await p.reload();
-  assert.equal(await p.evaluate(() => state.version), 18);
+  assert.equal(await p.evaluate(() => state.version), 19);
   assert.equal(await p.evaluate(() => state.speed), "skip");
   assert.equal(await p.evaluate(() => state.relic), undefined);
   assert.doesNotMatch(await p.locator("body").textContent(), /Sunseed/);
@@ -1111,7 +1122,8 @@ test("save restores speed and artefacts and migrates the earlier Sunseed-era not
 test("downloaded HTML remains self-contained and playable offline with mandatory confirmations", async (t) => {
   let p = await game(t);
   let next = p.waitForEvent("download");
-  await p.locator("#download").click();
+  await p.evaluate(() => optionsPage("play"));
+  await p.locator("#option-download").click();
   let d = await next,
     backup = path.join(root, "test-results/Scratchpad-Dungeon.html");
   await d.saveAs(backup);
@@ -1261,7 +1273,7 @@ test("movement scales at half the animation-speed increase; instant uses fastest
   await finish(p);
 });
 
-test("every class has empty faces, the rogue has low HP and shields, and starting as rogue is available", async (t) => {
+test("every class has empty faces, the rogue has low HP and poison, and starting as rogue is available", async (t) => {
   let p = await game(t);
   let classes = await p.evaluate(() =>
     ["fighter", "healer", "rogue"].map((job) => {
@@ -1273,6 +1285,7 @@ test("every class has empty faces, the rogue has low HP and shields, and startin
         attack: h.reels[0]
           .filter((s) => s.type === "attack")
           .reduce((n, s) => n + s.weight, 0),
+        poison: h.reels[0].filter((f) => f.type === "poison").length,
         block: h.reels[0]
           .filter((s) => s.type === "block")
           .reduce((n, s) => n + s.weight, 0),
@@ -1282,7 +1295,8 @@ test("every class has empty faces, the rogue has low HP and shields, and startin
   assert.ok(classes.every((c) => c.blank));
   assert.equal(classes[2].hp, 26);
   assert.ok(classes[2].block < classes[0].block);
-  assert.ok(classes[2].attack > classes[0].attack);
+  assert.ok(classes[2].attack > 0);
+  assert.ok(classes[2].poison > 0);
   await p.getByRole("button", { name: "New run", exact: true }).click();
   await p.locator('[data-start-job="rogue"]').click();
   assert.equal(await p.evaluate(() => state.party[0].job), "rogue");
@@ -1427,14 +1441,14 @@ test("enemy multi-strikes pause for death and burial, then retarget a surviving 
   );
   await p.waitForSelector("#death-confirm");
   assert.equal(await p.evaluate(() => busy), true);
-  assert.equal(await p.evaluate(() => state.party[0].hp), 44);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 48);
   assert.equal(await p.evaluate(() => state.party[1].dead), true);
   await p.locator("#death-confirm").click();
   await p.waitForSelector("#burial-confirm");
   await p.locator("#burial-confirm").click();
   await p.evaluate(() => window.testAction);
   assert.equal(await p.evaluate(() => state.party.length), 1);
-  assert.equal(await p.evaluate(() => state.party[0].hp), 38);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 42);
   assert.equal(
     await p.evaluate(() => state.lastEnemyRoll.heroId),
     await p.evaluate(() => state.party[0].id),
@@ -1556,7 +1570,7 @@ test("fountain triple heals crit within the same popup at instant speed and show
     await p
       .locator(".critical-payoff")
       .evaluate((n) => [+n.dataset.before, +n.dataset.after]),
-    [10, 13],
+    [11, 14],
   );
   await p.waitForSelector("#stage-confirm");
   assert.equal(
@@ -1566,7 +1580,7 @@ test("fountain triple heals crit within the same popup at instant speed and show
   assert.equal(await p.evaluate(() => state.lastWellRoll.multiplier), 1.25);
   await p.locator("#stage-confirm").click();
   await finish(p);
-  assert.equal(await p.evaluate(() => state.party[0].hp), 14);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 15);
   await p.evaluate(() => (Math.random = window.previousRandom));
 });
 
@@ -1584,7 +1598,7 @@ test("three safe trap faces keep confirmation without a pointless critical", asy
   assert.equal(await p.locator("#stage-title").textContent(), "A hidden trap");
   await p.locator("#stage-confirm").click();
   await p.evaluate(() => window.testAction);
-  assert.equal(await p.evaluate(() => state.party[0].hp), 44);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 48);
 });
 
 test("a lethal critical is visibly dealt before the victory popup opens", async (t) => {
@@ -1596,11 +1610,21 @@ test("a lethal critical is visibly dealt before the victory popup opens", async 
     ["attack", 1],
     ["attack", 1],
   ]);
+  await p.evaluate(() => {
+    window.lethalBeams = 0;
+    new MutationObserver((rows) =>
+      rows.forEach((r) =>
+        r.addedNodes.forEach((n) => {
+          if (n.matches?.(".fx-beam.lethal")) window.lethalBeams++;
+        }),
+      ),
+    ).observe(document.body, { childList: true });
+  });
   await p.locator('[data-spin="0"]').click();
   await p.waitForSelector(".critical-locked #critical-result strong");
   assert.equal(await p.evaluate(() => state.enemy.hp), 10);
   await p.waitForFunction(() => state.enemy?.hp === 0);
-  assert.equal(await p.locator(".fx-beam.lethal").count(), 1);
+  assert.equal(await p.evaluate(() => window.lethalBeams), 1);
   assert.equal(
     await p.evaluate(() =>
       [
@@ -1867,7 +1891,7 @@ test("fully blocked damage puts a persistent shield overlay over the specific he
     await p.locator('.shielded-overlay[data-target="enemy-art"] svg').count(),
     1,
   );
-  assert.equal(await p.evaluate(() => state.party[0].hp), 44);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 48);
   assert.equal(await p.evaluate(() => state.enemy.hp), 1000);
   await p.screenshot({ path: path.join(root, "test-results/shielded.png") });
   await p.evaluate(() => {
@@ -1876,7 +1900,7 @@ test("fully blocked damage puts a persistent shield overlay over the specific he
     damageHero(0, 5, "A claw");
   });
   assert.equal(await p.locator(".shielded-overlay").count(), 0);
-  assert.equal(await p.evaluate(() => state.party[0].hp), 40);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 44);
 });
 
 test("rivers and stone are blocked, bridges are traversable, and marked stairs stay highlighted", async (t) => {
@@ -1954,7 +1978,7 @@ test("a fountain critical retains uncapped offered healing for every hero while 
     ]),
   );
   assert.deepEqual(math, [
-    [10, 13],
+    [11, 14],
     [8, 10],
     [7, 9],
   ]);
@@ -1985,7 +2009,7 @@ test("a fountain critical retains uncapped offered healing for every hero while 
   );
   assert.deepEqual(
     await p.evaluate(() => state.lastWellRoll.planned.map((h) => h.value)),
-    [13, 10, 9],
+    [14, 10, 9],
   );
   await p.evaluate(() => (Math.random = window.oldRandom));
 });
@@ -2266,7 +2290,7 @@ test("old visited rooms silently age and can generate a wandering fight on reent
       seen: true,
       lastVisitedStep: 0,
       fogged: true,
-      fogSince: Date.now() - FOG_DELAY - 100,
+      lastNearCommand: (state.moveCommands || 0) - AMBUSH_COMMAND_AGE - 1,
       event: null,
     });
     render();
@@ -2299,7 +2323,7 @@ test("an unactivated well in old fog resolves its own event and never rolls a wa
       seen: true,
       lastVisitedStep: 0,
       fogged: true,
-      fogSince: Date.now() - FOG_DELAY - 100,
+      lastNearCommand: (state.moveCommands || 0) - AMBUSH_COMMAND_AGE - 1,
       event: "well",
       feature: "well",
     });
@@ -2408,14 +2432,14 @@ test("each enemy has its own countdown and a stunned hero advances neither enemy
   ]);
   await p.locator('[data-spin="0"]').click();
   await finish(p);
-  assert.equal(await p.evaluate(() => state.party[0].hp), 38);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 42);
   assert.deepEqual(
     await p.evaluate(() => state.enemies.map((e) => e.countdown)),
     [3, 1],
   );
   await p.locator('[data-spin="0"]').click();
   await finish(p);
-  assert.equal(await p.evaluate(() => state.party[0].hp), 32);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 36);
   assert.deepEqual(
     await p.evaluate(() => state.enemies.map((e) => e.countdown)),
     [2, 4],
@@ -2528,7 +2552,7 @@ test("ruins can be ignored, revisited, then roll a real balance of loot and dama
   });
   await p.locator("#ruin-examine").click();
   await p.waitForSelector("#stage-confirm");
-  assert.equal(await p.evaluate(() => state.party[0].hp), 44);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 48);
   assert.deepEqual(
     await p.evaluate(() => ({
       gold: state.lastRuinRoll.gold,
@@ -2539,7 +2563,7 @@ test("ruins can be ignored, revisited, then roll a real balance of loot and dama
   await p.locator("#stage-confirm").click();
   await finish(p);
   assert.equal(await p.evaluate(() => state.gold), 12);
-  assert.equal(await p.evaluate(() => state.party[0].hp), 42);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 46);
   assert.equal(await p.evaluate(() => state.map[79].event), null);
   await p.evaluate(() => (Math.random = window.oldRandom));
 });
@@ -2805,7 +2829,7 @@ test("early full enemy criticals remain survivable while damage grows faster on 
   });
   await p.locator('[data-spin="0"]').click();
   await finish(p);
-  assert.equal(await p.evaluate(() => state.party[0].hp), 40);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 44);
   assert.equal(await p.evaluate(() => state.lastEnemyRoll.damage), 4);
 });
 
@@ -3015,7 +3039,7 @@ test("Revive Stone is held without an equipment slot, revives at 75%, consumes o
   });
   await p.reload();
   await p.waitForSelector("#revive-use");
-  assert.match(await p.locator("#stage-card").textContent(), /33 \/ 44 HP/);
+  assert.match(await p.locator("#stage-card").textContent(), /36 \/ 48 HP/);
   await p.locator("#revive-use").click();
   await finish(p);
   assert.deepEqual(
@@ -3030,7 +3054,7 @@ test("Revive Stone is held without an equipment slot, revives at 75%, consumes o
       corpse: state.map[state.position].corpses.length,
     })),
     {
-      hp: 33,
+      hp: 36,
       dead: false,
       death: false,
       graveyard: 0,
@@ -3041,7 +3065,7 @@ test("Revive Stone is held without an equipment slot, revives at 75%, consumes o
     },
   );
   await p.reload();
-  assert.equal(await p.evaluate(() => state.party[0].hp), 33);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 36);
   await startEval(
     p,
     "(async()=>{damageHero(0,999,'A second fall');await processDeaths();checkDefeat();render()})()",
@@ -3139,20 +3163,20 @@ test("final death opens a scrollable complete memorial roster instead of a buria
   }
 });
 
-test("timed fog preserves drawings, excludes unseen and impassable tiles, and refreshes nearby un-fogged tiles", async (t) => {
+test("command-aged ambush readiness preserves drawings, excludes unseen and impassable tiles, and refreshes nearby un-fogged tiles", async (t) => {
   const p = await game(t);
   await fast(p);
   await p.evaluate(blankFloor);
   const r = await p.evaluate(() => {
-    const now = 100_000;
-    state.exploreTime = now;
+    const now = 100;
+    state.moveCommands = now;
     exploreWasAllowed = false;
     state.map.forEach((c) =>
       Object.assign(c, {
         seen: true,
         visited: false,
         fogged: false,
-        fogSince: now - FOG_DELAY - 10,
+        lastNearCommand: now - AMBUSH_COMMAND_AGE - 1,
         event: null,
         feature: null,
       }),
@@ -3170,8 +3194,8 @@ test("timed fog preserves drawings, excludes unseen and impassable tiles, and re
       unseen: isStale(state.map[pos(9, 3)]),
       river: isStale(state.map[pos(7, 2)]),
       wall: isStale(state.map[pos(8, 2)]),
-      clock: state.map[pos(2, 6)].fogSince,
-      now: state.exploreTime,
+      clock: state.map[pos(2, 6)].lastNearCommand,
+      now: state.moveCommands,
     };
   });
   assert.deepEqual(
@@ -3244,7 +3268,7 @@ test("older saved fights migrate to the gentler curve without losing wounds or e
       face: state.party[0].reels[0][0].tier,
     })),
     {
-      version: 18,
+      version: 19,
       hp: 19,
       max: 38,
       damage: 6,
@@ -3307,40 +3331,40 @@ test("long travel crosses stairs and fog without opening the stairs menu; select
   await p.waitForSelector("#descend");
 });
 
-test("fog uses elapsed time since proximity, resets before spawning, persists after spawning and survives reload", async (t) => {
+test("ambush readiness uses commands since proximity, resets before spawning, persists after spawning and survives reload", async (t) => {
   const p = await game(t);
   await fast(p);
   await p.evaluate(blankFloor);
   const r = await p.evaluate(() => {
-    const now = 100_000,
+    const now = 100,
       index = pos(5, 4),
       c = state.map[index];
-    state.exploreTime = now;
+    state.moveCommands = now;
     exploreWasAllowed = false;
     const advance = (clock) => {
-      state.exploreTime = clock;
+      state.moveCommands = clock;
       exploreWasAllowed = false;
       refreshStaleMap();
     };
     Object.assign(c, {
       seen: true,
       visited: false,
-      fogSince: now - FOG_DELAY / 2,
+      lastNearCommand: now - AMBUSH_COMMAND_AGE / 2,
       fogged: false,
     });
     state.position = pos(1, 7);
     advance(now);
     const initial = c.fogged;
     state.position = pos(4, 4);
-    advance(now + 1000);
-    const refreshed = c.fogSince;
+    advance(now + 1);
+    const refreshed = c.lastNearCommand;
     state.position = pos(1, 7);
-    advance(refreshed + FOG_DELAY - 1);
+    advance(refreshed + AMBUSH_COMMAND_AGE - 1);
     const before = c.fogged;
-    advance(refreshed + FOG_DELAY);
+    advance(refreshed + AMBUSH_COMMAND_AGE);
     const spawned = c.fogged;
     state.position = pos(4, 4);
-    advance(refreshed + FOG_DELAY + 100);
+    advance(refreshed + AMBUSH_COMMAND_AGE + 100);
     const nearby = c.fogged;
     render();
     save();
@@ -3659,7 +3683,7 @@ test("poison ticks for one armour-piercing damage per action, expires, and can w
       block: state.block,
       turns: state.enemy.poison.turns,
     })),
-    { hp: 43, enemy: 999, block: 50, turns: 2 },
+    { hp: 47, enemy: 999, block: 50, turns: 2 },
   );
   assert.equal(await p.locator("#portrait-0 .poison-badge").count(), 1);
   for (let n = 0; n < 2; n++) {
@@ -3860,7 +3884,7 @@ test("full bag lets the player use a new item immediately, use an existing last 
   await p.waitForSelector("#item-use-found");
   await p.locator("#item-use-found").click();
   await p.evaluate(() => window.testAction);
-  assert.equal(await p.evaluate(() => state.party[0].hp), 15);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 16);
   assert.equal(await p.evaluate(() => state.bag.ration || 0), 0);
   assert.equal(await p.evaluate(() => Object.keys(state.bag).length), 3);
   await p.evaluate(() => (state.pendingItems = [{ type: "ration", count: 1 }]));
@@ -3944,7 +3968,7 @@ test("ten new consumables have usable effects and respect targets and combat res
     stunned: 1,
     poison: 3,
     fire: 10,
-    ration: 15,
+    ration: 16,
     prevented: true,
     chalk: 0,
     revealed: true,
@@ -4190,7 +4214,7 @@ test("first opening offers four base classes, opens the cover, and fresh runs tu
   await p.evaluate(() => localStorage.clear());
   await p.reload();
   await p.waitForSelector('[data-start-job="mage"]');
-  assert.equal(await p.locator(".starter-grid button").count(), 5);
+  assert.equal(await p.locator(".starter-grid button").count(), 6);
   assert.equal(
     await p.locator("#modal-title").textContent(),
     "Who opens the notebook?",
@@ -4234,44 +4258,50 @@ test("options tabs are functional and autoresolve, palette and pace persist acro
   assert.equal(await p.locator("#save-status").isVisible(), false);
 });
 
-test("ambush age pauses in combat and every popup, then resumes invisibly on the map", async (t) => {
+test("waiting in combat, popups and the map cannot age ambushes without another command", async (t) => {
   const p = await game(t);
   await p.evaluate(blankFloor);
   const r = await p.evaluate(() => {
     const c = state.map[pos(6, 4)];
-    Object.assign(c, { seen: true, wall: false, fogSince: 0, fogged: false });
-    state.exploreTime = FOG_DELAY - 100;
+    Object.assign(c, {
+      seen: true,
+      wall: false,
+      lastNearCommand: 0,
+      fogged: false,
+    });
+    state.moveCommands = AMBUSH_COMMAND_AGE - 1;
     exploreWasAllowed = true;
     exploreTickAt = 1000;
     beginEncounter();
     refreshStaleMap(2000);
-    const combat = state.exploreTime;
+    const combat = state.moveCommands;
     state.enemy = null;
     state.enemies = [];
     showSpotlight("A find", "Wait", "<div>Still deciding</div>", "treasure");
     refreshStaleMap(3000);
-    const popup = state.exploreTime;
+    const popup = state.moveCommands;
     closeSpotlight();
     openModal("Options", "<p>Choosing</p>", "options");
     refreshStaleMap(4000);
-    const menu = state.exploreTime;
+    const menu = state.moveCommands;
     closeModal();
     refreshStaleMap(5000);
     refreshStaleMap(5300);
+    registerMoveCommand();
     render();
     return {
       combat,
       popup,
       menu,
-      end: state.exploreTime,
+      end: state.moveCommands,
       aged: c.fogged,
       visual: !!document.querySelector(".stale-fog"),
     };
   });
-  assert.equal(r.combat, 59900);
+  assert.equal(r.combat, 11);
   assert.equal(r.popup, r.combat);
   assert.equal(r.menu, r.combat);
-  assert.equal(r.end, 60200);
+  assert.equal(r.end, 12);
   assert.equal(r.aged, true);
   assert.equal(r.visual, false);
 });
@@ -4836,7 +4866,7 @@ test("reloading before the starting class choice keeps the choice pending", asyn
   await p.reload();
   await p.waitForSelector('[data-start-job="rogue"]');
   await p.reload();
-  assert.equal(await p.locator(".starter-grid button").count(), 5);
+  assert.equal(await p.locator(".starter-grid button").count(), 6);
   await p.locator('[data-start-job="rogue"]').click();
   await p.reload();
   assert.equal(await p.evaluate(() => state.party[0].job), "rogue");
@@ -4995,7 +5025,7 @@ test("version-nine fights adopt the stronger enemy curve without changing hero w
         .map((f) => f.tier),
     })),
     {
-      version: 18,
+      version: 19,
       autoplay: false,
       heroHp: 17,
       face: 4,
@@ -5162,7 +5192,13 @@ test("Autoplay and Autofight handle discoveries, recruit, descend and win withou
   await p.waitForFunction(() => state.over, null, { timeout: 90000 });
   assert.equal(await p.evaluate(() => state.won), true);
   assert.equal(await p.evaluate(() => state.depth), 10);
-  assert.ok(await p.evaluate(() => state.party.length > 1));
+  assert.ok(
+    await p.evaluate(
+      () =>
+        state.party.length + state.graveyard.length + state.retired.length > 1,
+    ),
+    "the recruited adventurer remains in the living or fallen expedition roster",
+  );
   const scenes = await p.evaluate(() => [...new Set(window.autoplayScenes)]);
   for (const type of ["treasure", "trap", "recruit", "well", "enemy-intro"])
     assert.ok(
@@ -5712,7 +5748,7 @@ test("autoplay shops for needed healing and a map, claims better full-bag suppli
     window.shopping = shopEncounter({ shop: { heal: 1, reveal: 1 } });
   });
   await p.evaluate(() => shopping);
-  assert.equal(await p.evaluate(() => state.party[0].hp), 44);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 48);
   assert.equal(await p.evaluate(() => state.gold), 744);
   assert.equal(await p.evaluate(() => state.exitFound), true);
   await p.evaluate(async () => {
@@ -5724,13 +5760,15 @@ test("autoplay shops for needed healing and a map, claims better full-bag suppli
   assert.equal(await p.evaluate(() => Object.keys(state.bag).length), 3);
   const replacement = await p.evaluate(() => {
     state.party = [
-      makeHero("A", "fighter"),
-      makeHero("B", "fighter"),
-      makeHero("C", "fighter"),
+      makeHero("A", "fighter", null, [], { specialism: "offence" }),
+      makeHero("B", "fighter", null, [], { specialism: "offence" }),
+      makeHero("C", "fighter", null, [], { specialism: "offence" }),
     ];
     recruitOffer = makeHero("Mira", "healer");
     const wanted = autoReplacement();
-    recruitOffer = makeHero("D", "fighter");
+    recruitOffer = makeHero("D", "fighter", null, [], {
+      specialism: "offence",
+    });
     const declined = autoReplacement();
     recruitOffer = null;
     return { wanted, declined };
@@ -6405,9 +6443,10 @@ test("camp purchases persist and class invitations remain separate from tiered t
   assert.equal(await p.evaluate(() => purchaseUnlock("ranger")), false);
   assert.equal(await p.locator('[data-camp-buy="rangerFocus"]').count(), 0);
   await p.evaluate(() => {
-    campPage("boons");
-    purchaseUnlock("provisions");
-    toggleUnlock("provisions");
+    campPage("training");
+    purchaseUnlock("purse1");
+    purchaseUnlock("purse2");
+    purchaseUnlock("purse3");
   });
   assert.equal(await p.evaluate(() => state.gold), 0);
   await p.locator("#camp-return").click();
@@ -6419,10 +6458,10 @@ test("camp purchases persist and class invitations remain separate from tiered t
       ranger: ruleEnabled("ranger"),
       pool: campProfile().gold,
     })),
-    { gold: 150, ranger: true, pool: 3200 },
+    { gold: 150, ranger: true, pool: 1500 },
   );
   await p.reload();
-  assert.equal(await p.evaluate(() => campProfile().gold), 3200);
+  assert.equal(await p.evaluate(() => campProfile().gold), 1500);
 });
 
 test("Ranger has exactly one middle seal, saves Execute patience for a later hit and clears it after battle", async (t) => {
@@ -6686,7 +6725,7 @@ test("camp modifiers change real generation, recruits, gear, starting health and
     };
   });
   assert.equal(r.ranger, 34);
-  assert.equal(r.fighter, 48);
+  assert.equal(r.fighter, 52);
   assert.equal(r.hard.maxHp, Math.ceil(r.normal.maxHp * 1.2));
   assert.equal(r.hard.damage, Math.ceil(r.normal.damage * 1.1) + 1);
   assert.deepEqual(r.events, [3, 4, 2, 1]);
@@ -6805,12 +6844,12 @@ test("the camp can be navigated with keyboard tabs and cannot dismiss an initial
   await p.keyboard.press("ArrowRight");
   assert.equal(
     await p.evaluate(() => document.activeElement.dataset.campTab),
-    "boons",
+    "training",
   );
   await p.keyboard.press("End");
   assert.equal(
     await p.evaluate(() => document.activeElement.dataset.campTab),
-    "training",
+    "oddities",
   );
   await p.locator("#camp-return").focus();
   await p.keyboard.press("Enter");
@@ -7583,7 +7622,7 @@ test("healing items recover another hero when the selected hero is full, but kee
   });
   await p.evaluate(() => useItem("potion"));
   assert.equal(await p.evaluate(() => state.target), 0);
-  assert.equal(await p.evaluate(() => state.party[0].hp), 44);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 48);
   await p.evaluate(() => {
     state.party.forEach((h) => (h.hp = h.maxHp));
   });

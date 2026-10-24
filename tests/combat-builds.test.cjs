@@ -39,6 +39,11 @@ async function game(t, { width = 1920, height = 1080 } = {}) {
     }
     return r.continue();
   });
+  await page.addInitScript(() => {
+    window.addEventListener("DOMContentLoaded", () => {
+      characterLuck = () => 0.999999;
+    });
+  });
   await page.goto(url);
   await page.evaluate(() => {
     newRun("fighter", { specialism: "offence" });
@@ -146,7 +151,7 @@ test("downgrades refund one tier, repeated respecs cannot manufacture points, sw
     applyFaceEdit(h, 0, 0, "upgrade");
     applyFaceEdit(h, 0, 0, "weaken");
     const afterLoop = h.points;
-    const chosen = applyFaceEdit(h, 0, 0, "swap", "poison"),
+    const chosen = applyFaceEdit(h, 0, 0, "swap", "stun"),
       type = face.type,
       weight = face.weight;
     const j = h.reels[1].findIndex((f) => f.type === "class"),
@@ -175,7 +180,7 @@ test("downgrades refund one tier, repeated respecs cannot manufacture points, sw
   assert.deepEqual(r.refunds, [8, 4, 2]);
   assert.ok(r.afterLoop < r.afterRefund);
   assert.equal(r.chosen, true);
-  assert.equal(r.type, "poison");
+  assert.equal(r.type, "stun");
   assert.equal(r.weight, 1);
   assert.deepEqual(r.sealActions, [false, false, false, false]);
   assert.equal(r.copy, false);
@@ -199,12 +204,9 @@ test("workshop exposes large explicit controls, keeps the selected face after ed
   const before = await p.evaluate(() => state.party[0].points);
   await p.locator("[data-weaken]").click();
   assert.equal(await p.evaluate(() => state.party[0].points), before + 2);
-  await p.locator("#face-destination").selectOption("poison");
+  await p.locator("#face-destination").selectOption("stun");
   await p.locator("#face-swap").click();
-  assert.equal(
-    await p.evaluate(() => state.party[0].reels[0][1].type),
-    "poison",
-  );
+  assert.equal(await p.evaluate(() => state.party[0].reels[0][1].type), "stun");
   assert.equal(
     await p.locator('[data-editor-face="1"]').getAttribute("aria-pressed"),
     "true",
@@ -222,7 +224,7 @@ test("workshop exposes large explicit controls, keeps the selected face after ed
   assert.equal(await p.evaluate(() => modalKind), "editor");
 });
 
-test("offence and defence add small relevant roll bonuses without changing wheel odds", async (t) => {
+test("temperament no longer changes rolled mark power or edited wheel odds", async (t) => {
   const p = await game(t);
   const r = await p.evaluate(async () => {
     const symbols = [
@@ -249,11 +251,11 @@ test("offence and defence add small relevant roll bonuses without changing wheel
       same: reels === JSON.stringify(h.reels),
     };
   });
-  assert.equal(r.attack.attack, r.neutral.attack + 1);
+  assert.equal(r.attack.attack, r.neutral.attack);
   assert.equal(r.attack.heal, r.neutral.heal);
   assert.equal(r.guard.attack, r.neutral.attack);
-  assert.equal(r.guard.heal, r.neutral.heal + 1);
-  assert.equal(r.guard.block, r.neutral.block + 1);
+  assert.equal(r.guard.heal, r.neutral.heal);
+  assert.equal(r.guard.block, r.neutral.block);
   assert.equal(r.same, true);
 });
 
@@ -696,8 +698,8 @@ test("wells have lower base healing and smaller critical multipliers; depth make
   }));
   assert.equal(r.roll.multiplier, 1.25);
   assert.equal(r.roll.bonus, 3);
-  assert.equal(r.roll.base[0].value, 10);
-  assert.equal(r.roll.planned[0].value, 13);
+  assert.equal(r.roll.base[0].value, 11);
+  assert.equal(r.roll.planned[0].value, 14);
   assert.ok(r.trap10 > r.trap1);
   assert.ok(r.trap10 > 2);
   assert.ok(r.solo > 0.425 && r.solo < 0.5);
@@ -707,7 +709,7 @@ test("wells have lower base healing and smaller critical multipliers; depth make
     await window.well;
     Math.random = window.savedRandom;
   });
-  assert.equal(await p.evaluate(() => state.party[0].hp), 14);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 15);
 });
 
 test("declined adventurers can leave peacefully, offer confirmed gold, or become a real hostile encounter", async (t) => {

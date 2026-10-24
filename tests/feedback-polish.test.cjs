@@ -28,6 +28,11 @@ async function game(t) {
   const p = await browser.newPage({ viewport: { width: 1920, height: 1080 } }),
     errors = [];
   p.on("pageerror", (e) => errors.push(e.message));
+  await p.addInitScript(() => {
+    window.addEventListener("DOMContentLoaded", () => {
+      characterLuck = () => 0.999999;
+    });
+  });
   await p.goto(url);
   await p.evaluate(async () => {
     newRun("fighter");
@@ -492,7 +497,7 @@ test("workshop explanatory text and Done stay below all edits, including long cl
     [320, 800],
   ]) {
     await p.setViewportSize({ width, height });
-    for (const job of ["mage", "berserker"]) {
+    for (const job of ["mage", "berserker", "jester"]) {
       await p.evaluate((job) => {
         newRun(job);
         state.party[0].points = 60;
@@ -547,6 +552,9 @@ test("workshop explanatory text and Done stay below all edits, including long cl
           detail = document.querySelector(".workshop-detail");
         return {
           headerClear,
+          meaningful: !document
+            .querySelector("#modal")
+            .textContent.includes("undefined"),
           sealFits:
             seal.getBoundingClientRect().bottom <=
             detail.getBoundingClientRect().bottom + 1,
@@ -556,6 +564,11 @@ test("workshop explanatory text and Done stay below all edits, including long cl
           controls: Math.max(...controls),
         };
       });
+      assert.equal(
+        result.meaningful,
+        true,
+        `${width} ${job}: class summary is defined`,
+      );
       assert.ok(
         result.headerClear,
         `${width} ${job}: close button clears title`,

@@ -81,6 +81,11 @@ for (const [label, file] of [
   ["ENCOUNTER PRESENTATION", "game/encounter-presentation.js"],
   ["COMBAT FEEDBACK", "ui/combat-feedback.js"],
   ["AUTOMATION PACING", "game/automation-pacing.js"],
+  ["CHARACTER EVENTS", "game/character-events.js"],
+  ["AUTO BUILDS", "game/auto-builds.js"],
+  ["JESTER", "game/jester.js"],
+  ["EXPLORATION RULES", "game/exploration-rules.js"],
+  ["REWARD AUDIO", "ui/reward-audio.js"],
   ["NOTEBOOK PAGES", "ui/notebook-pages.js"],
   ["FIELD GUIDE", "ui/field-guide.js"],
 ]) {

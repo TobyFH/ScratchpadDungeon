@@ -1,5 +1,9 @@
 # Expedition economy, reels and notebook pages
 
+Current rules are extended by [Campfire update](CAMPFIRE_UPDATE.md), including
+active lesson ranks, new starting faces and command-based ambush age. The earlier
+starting-face table below records the version-18 baseline.
+
 This is an update to the existing self-contained game, not a new packaging or
 production-infrastructure system. `index.html` remains the offline distribution.
 The canonical pencil style, uploaded recordings, keyboard/mouse controls and
@@ -58,7 +62,7 @@ rounding and the special final-victory payout vary.
 
 Camp purchases now cost hundreds/thousands. Ranger costs 900; Berserker costs 750. The starting-gold provision grants 150 instead of 20. Five health-training
 tiers grant +10% through +50% base HP, with three damage and three EXP tiers.
-Training applies automatically on future expeditions; optional modifiers remain
+Selected Campfire Lesson ranks apply on future expeditions; optional modifiers remain
 toggleable. See [Camp progression](CAMP_PROGRESSION.md) for every cost and stable
 ID. This creates room for incremental progress without making completion depend
 on buying training or changing the requested enemy-difficulty curve.
@@ -219,3 +223,8 @@ holds and blackout smoke. Bridges now use the same faded river path under the
 wooden deck in an independent terrain layer; visiting or resolving a discovery
 never fades that layer. No save-version bump or edited-wheel replacement is
 needed for these changes.
+
+Version 19 supersedes the earlier starting-face table and time-based ambush rules:
+see [Campfire update](CAMPFIRE_UPDATE.md). Temperament changes initial face palettes,
+Tank starts at 48 HP, and the Jester has distinct-kind Jackpot rules. Lesson ranks
+are owned separately from their selected active rank. Existing edited reels remain.

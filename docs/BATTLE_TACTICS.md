@@ -11,11 +11,10 @@ in `ui/notebook.css`, artwork in `ui/drawings.js`.
 
 Aggressive (`offence`) and Defensive (`defence`) are permanent temperaments.
 Only the starting screen offers a choice; recruits receive one randomly.
-Aggressive adds one to meaningful damage, poison and stun effects. Defensive adds
-one to healing, block and stimulants. Blank results never gain an effect.
-Temperament appears once as an icon on the portrait, with hover details; the
-workshop spells out its name and bonuses.
-It is separate from the single earned character trait.
+Aggressive and Defensive now select different level-one face palettes. They do
+not change a rolled mark's numeric strength. Rank power is shared across classes;
+class abilities, earned traits, equipment and temporary buffs still apply. See
+[Campfire update](CAMPFIRE_UPDATE.md) for version-19 presets, Jester and luck rules.
 
 A Mage has no role selection or saved speciality. Resonance examines the ordinary
 marks in the current roll: magic, healing, shields and poison are compared by
@@ -27,7 +26,7 @@ adds `3 + ceil(level/2)` HP per ally and clears all allied stuns; shields add
 against all enemies. There is no hidden editable Mage role.
 
 Berserker starts at 38 HP. Its allowed ordinary marks are blades, healing,
-**Blood Price** and blanks. All edit paths, recruitment upgrades and save
+**Blood Price**, stimulants and blanks. All edit paths, recruitment upgrades and save
 normalisation enforce this list. Blood Price pays up to two HP per rank, leaving
 at least one HP, and grants three extra Fury per rank. Actual HP wounds add
 `ceil(damage * 1.5)` Fury, including Blood Price. Fury caps at twenty and each four

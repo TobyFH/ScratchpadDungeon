@@ -164,6 +164,13 @@ function heroPortraitArt(kind, entity) {
       <path d="m36 20-4 14m52-10 5 17M22 130l7-6m-6 12 8-6m55 5 6-6m-6 11 8-7" stroke-width=".75" opacity=".65"/>
       <circle cx="61" cy="106" r="4"/>
       ${hurt ? '<path d="m39 39 13 8m-12-3 11 9m27-15-6 10" stroke="var(--red)"/>' : ""}`;
+  } else if (kind === "jester") {
+    drawing = `<path d="M14 146q1-33 24-49l19-9 25 9q22 15 24 49" fill="${shade}"/>
+      ${face}<path d="M29 44Q19 13 9 18q8-23 36 8Q58-12 71 13q22-12 37 7-21-4-20 24l-22-8-18 4Z" fill="var(--paper-shade)"/>
+      <circle cx="9" cy="19" r="4"/><circle cx="70" cy="12" r="4"/><circle cx="108" cy="20" r="4"/>
+      <path d="m36 90 13 6 12-6 10 7 14-7-5 21-13-5-8 13-10-12-13 5Z" fill="var(--paper)"/>
+      <path d="m42 49 12 3m13-1 11-4M51 73q12 13 24-2m-21 5 16-1M61 120v24m-32-19 12-3 6 11-13 8Zm49-3 11 6-7 13-10-6Z"/>
+      <path d="m20 128 9-13m-7 23 9-12m58 12 9-11m-57-17 6 6m25-5 7-7" stroke-width=".7" opacity=".6"/>`;
   } else if (kind === "berserker") {
     drawing = `<path d="M12 146q-2-31 23-49l14-7 26 1 21 15 11 40" fill="${shade}"/>
       ${face}<path d="M32 57 25 33 37 35 35 15 49 19 58 5 64 18 81 10 81 28 95 32 84 50 79 37 65 32 51 38 42 35Z" fill="var(--paper-shade)"/>
@@ -192,7 +199,7 @@ function heroPortraitArt(kind, entity) {
       drawing +=
         '<path d="M27 38Q45 21 58 1q10 20 32 36l9 4-38 5-40-2Z" fill="var(--paper-shade)"/><path d="m48 28 11-18 4 17m-37 12 66 1M92 143l7-71m-4-6 5-10 6 9-7 8Z"/>';
   }
-  return `<svg class="hero-illustration" viewBox="0 0 120 150" fill="none" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${definitions}${drawing}</svg>`;
+  return `<svg class="hero-illustration" viewBox="0 0 120 150" fill="none" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${definitions}<g class="portrait-drawing"${kind === "berserker" ? ' transform="translate(-4 0)"' : ""}>${drawing}</g></svg>`;
 }
 
 function leverArt() {
@@ -200,6 +207,8 @@ function leverArt() {
   return `<svg class="pencil-art" viewBox="0 0 35 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 78 11-.5.5 13-12 .5Z M14 78l8-56 4 .5-7 57" fill="var(--paper-shade)"/><path d="m15 76 8-53m-15 60 8-.5m-8 5 8-.5M7 95l18-.5" stroke-width=".7"/><path d="M25 2q12 1 11 12-1 10-12 10-10-1-10-12Q15 2 25 2Z" fill="var(--paper)"/><path d="M25 5q9 1 8 9-1 8-9 7-7-1-7-8 0-7 8-8Zm-7 8 6-7m-6 12L30 6m-7 15 10-10" stroke-width=".65"/><path class="pencil-echo" d="m5 79 1 14 14-1M13 77l8-53"/></svg>`;
 }
 const paths = {
+  jester:
+    "M4 14Q1 1 10 7l6 6 5-7q10-7 7 8l-2 10H7ZM4 14l12 5 12-5M4 12a2 2 0 1 0 0 .1M21 5a2 2 0 1 0 0 .1M9 24v4h16v-4",
   tunnel:
     "M3 29V15C3-3 29-3 29 15v14H3ZM8 28V16C8 4 24 4 24 16v12M3 15h5m16 0h5M5 8l5 3m12 0 5-3M13 24l3-10 4 10",
   eraser: "M3 20 17 3l12 10-14 17H9ZM10 12l13 11M4 22l7 6m7 1h12",
@@ -289,7 +298,7 @@ const paths = {
 function icon(name) {
   if (name === "wall") return wallArt();
   if (name === "lava")
-    return `<svg class="pencil-art pencil-icon lava-barrier" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" aria-hidden="true"><path d="M1 29V12l7-8 5 8 6-10 6 9 6-4v22Z" fill="var(--paper-shade)"/><path d="m2 25 8-3 5 4 7-5 9 4M8 4l2 15m9-17-2 17m8-8-3 8M4 28l5-1m6 2 8-2"/><path d="m12 23 4-9 3 8m5 5 3-7" stroke="var(--lava-ink)" stroke-width="2.5"/></svg>`;
+    return `<svg class="pencil-art pencil-icon lava-barrier" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" aria-hidden="true"><path class="terrain-boundary" d="M.7 1 31.1 .6 31.4 31 1 31.4Z" fill="var(--paper-shade)" stroke-width="1.4"/><path d="M1 29V12l7-8 5 8 6-10 6 9 6-4v22Z" fill="var(--paper-shade)"/><path d="m2 25 8-3 5 4 7-5 9 4M8 4l2 15m9-17-2 17m8-8-3 8M4 28l5-1m6 2 8-2"/><path d="m12 23 4-9 3 8m5 5 3-7" stroke="var(--lava-ink)" stroke-width="2.5"/></svg>`;
   if (name === "bridge") {
     const water = pencilPath(paths.river, 0.32);
     return `<svg class="pencil-art pencil-icon bridge-art" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="bridge-water" stroke="var(--water-ink)" opacity=".45"><path class="pencil-echo" d="${water}" transform="translate(.38 -.28)"/><path d="${water}"/></g><g class="bridge-deck"><path d="M3 11h26v11H3Z" fill="var(--paper)"/><path d="M3 11h26M3 22h26M6 11v11m5-11v11m5-11v11m5-11v11m5-11v11M3 8v18m26-18v18"/></g></svg>`;
@@ -377,6 +386,7 @@ function basePortraitArt(kind, entity = { hp: 1, maxHp: 1 }) {
       "mage",
       "ranger",
       "berserker",
+      "jester",
     ].includes(kind)
   )
     return heroPortraitArt(kind, entity);
@@ -537,4 +547,11 @@ function punEnemyArt(id) {
     ? ""
     : "M43 55l11 5m12 0 12-6M48 76l23-2";
   return `<svg class="horror-art species-pun-${id}" viewBox="0 0 120 150" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${body}" fill="var(--paper-shade)"/><path d="${eyes}"/>${punchMarks}<path d="M39 120l-8 18h15m30-18 9 18h14M26 75l-12 11m81-14 13 14"/><path d="m35 107 5-5m39-12 5-6" opacity=".5" stroke-width=".8"/></svg>`;
+}
+
+// An illustration of the actual descent, with hatching for the dark stairwell.
+function stairwayArt() {
+  return pencilIllustration(
+    `<svg class="descent-sketch" viewBox="0 0 200 130" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><defs><pattern id="stair-hatch" width="5" height="5" patternUnits="userSpaceOnUse"><path d="M0 5 5 0" stroke="currentColor" stroke-width=".6"/></pattern></defs><path d="M47 121V48q2-44 53-44 48 2 51 44v73Z" fill="url(#stair-hatch)"/><path d="M59 119V49q1-32 40-34 38 1 40 34v70"/><path d="M61 58h77v12H61m0 0h63v11H61m0 0h49v12H61m0 0h35v12H61m0 0h21v15H61" fill="var(--paper-shade)"/><path d="m61 58 18-8h59M61 70l17-7m-17 18 17-7m-17 19 17-7m-17 19 17-7M43 121h113M46 47l12 1m-7-21 12 7m5-23 7 11m23-17v10m24-5-6 11m23 6-11 7m21 14-11 1M24 121l11-2m127 1 13 2"/><path d="m26 105 7-61 9 1-6 62m-12-64 10-16 13 18-23-2Z" fill="var(--paper)"/><path d="m35 40-3-13q9 6 5 14" stroke="var(--gold)"/><path d="m63 121 28 1m15 1 30-2M46 62l1 37m106-37-1 43" stroke-width=".65" opacity=".5"/></svg>`,
+  );
 }

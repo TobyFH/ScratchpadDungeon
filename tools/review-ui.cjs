@@ -41,6 +41,9 @@ const output = path.join(root, "test-results/ui-review");
         ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
     });
     await page.goto(`http://127.0.0.1:${server.address().port}`);
+    await page.evaluate(() => {
+      characterLuck = () => 0.999999;
+    });
     const shots = [];
     async function shot(name, fullPage = false, animations = "disabled") {
       await page.evaluate(async () => {
@@ -259,7 +262,7 @@ const output = path.join(root, "test-results/ui-review");
     await shot("18-five-starting-classes");
     await page.locator("#camp-open").click();
     await shot("19-camp-adventurers");
-    for (const tab of ["boons", "challenges", "oddities"]) {
+    for (const tab of ["training", "challenges", "oddities"]) {
       await page.locator(`[data-camp-tab="${tab}"]`).click();
       await shot("20-camp-" + tab);
     }
@@ -1047,8 +1050,199 @@ const output = path.join(root, "test-results/ui-review");
     if (await page.locator("#stage-confirm").isVisible())
       await page.locator("#stage-confirm").click();
     await page.evaluate(() => window.spectatorReview);
+    // Campfire edition: real source components, fixed layout and unusual rules.
+    await page.evaluate(() => {
+      newRun("fighter", { specialism: "defence" });
+      setPace("skip");
+      const profile = emptyProfile();
+      profile.gold = 90000;
+      profile.owned = Object.keys(CAMP_UNLOCKS);
+      profile.enabled = ["glass", "richFoes"];
+      profile.activeTraining = Object.fromEntries(
+        Object.keys(CAMP_LESSONS).map((f) => [f, 3]),
+      );
+      localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+      campInitial = false;
+      campPage("classes");
+    });
+    await shot("72-equal-camp-adventurers-1920");
+    await page.setViewportSize({ width: 390, height: 844 });
+    await shot("72-equal-camp-adventurers-390");
+    await page.evaluate(() => campPage("training", 0));
+    await shot("73-active-lessons-390");
+    await page.locator("#camp-next").click();
+    await shot("73-more-lessons-390");
+    await page.setViewportSize({ width: 320, height: 800 });
+    await shot("73-active-lessons-320");
+    await page.setViewportSize({ width: 1920, height: 1080 });
+    await page.evaluate(() => campPage("training", 0));
+    await shot("73-active-lessons-1920");
+    await page.evaluate(() => campPage("training", 1));
+    await shot("73-eight-lesson-families");
+    await page.evaluate(() => campPage("challenges", 1));
+    await shot("74-eight-untiered-challenges");
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.evaluate(() => help("statuses"));
+    await shot("75-scannable-guide-390");
+    await page.evaluate(() => help("jester"));
+    await shot("75-jester-guide-390");
+    await page.evaluate(() => {
+      closeModal();
+      newRun("jester");
+      setPace("skip");
+      beginEncounter(false, { count: 1 });
+      state.opening = null;
+      render();
+    });
+    await page.setViewportSize({ width: 1920, height: 1080 });
+    await shot("76-jester-and-combat-round");
+    await page.evaluate(() => {
+      state.enemy = null;
+      state.enemies = [];
+      render();
+    });
+    await shot("76-round-hidden-between-fights");
+    await page.evaluate(() => {
+      newRun("mage");
+      setPace("skip");
+      setPreference("ambientEffects", true);
+      const lava = pos(2, 7);
+      Object.assign(state.map[lava], {
+        terrain: "lava",
+        wall: true,
+        seen: true,
+        event: null,
+        feature: null,
+      });
+      render();
+    });
+    await shot("77-lava-boundary-and-warm-edge");
+    await page.evaluate(() => setPalette("dark"));
+    await shot("77-lava-dark-palette");
+    await page.evaluate(() => {
+      newRun("fighter");
+      setPace("skip");
+      setPalette("default");
+      setPreference("skipCriticals", true);
+      state.party.push(makeHero("Mira", "mage"), makeHero("Wren", "rogue"));
+      state.party.forEach((h) => (h.hp = 2));
+      render();
+      window.reviewWellMachine = runMachine;
+      runMachine = (id, reels, options = {}) =>
+        id === "fountain"
+          ? new Promise((r) => (window.finishReviewWell = r))
+          : window.reviewWellMachine(id, reels, options);
+      window.reviewWell = wellEncounter({ event: "well" });
+    });
+    await page.locator("#well-use").click();
+    await page.waitForSelector("#fountain-result .well-heal-total");
+    await shot("78-well-reserved-recipients");
+    await page.setViewportSize({ width: 390, height: 844 });
+    await shot("78-well-reserved-recipients-390");
+    await page.evaluate(() =>
+      window.finishReviewWell([
+        { type: "heal", tier: 1 },
+        { type: "heal", tier: 1 },
+        { type: "heal", tier: 1 },
+      ]),
+    );
+    await page.waitForSelector("#stage-confirm");
+    await shot("78-well-calculated-recipients-390");
+    await page.locator("#stage-confirm").click();
+    await page.evaluate(async () => {
+      await window.reviewWell;
+      runMachine = window.reviewWellMachine;
+      busy = false;
+      state.exitFound = state.exitReached = state.floorBossDefeated = true;
+      stairs();
+    });
+    await shot("79-illustrated-descent-390");
+    await page.setViewportSize({ width: 1920, height: 1080 });
+    await shot("79-illustrated-descent-1920");
+    await page.evaluate(() => {
+      closeModal();
+      newRun("jester");
+      setPace("1");
+      setPreference("shake", 0.5);
+      setPreference("skipCriticals", false);
+      beginEncounter(false, { count: 2 });
+      state.opening = null;
+      render();
+      window.reviewJackpotHold = criticalHold;
+      criticalHold = () => new Promise((r) => (window.releaseJackpot = r));
+      window.reviewJackpot = rollCritical(
+        "Quill",
+        [
+          { type: "attack", tier: 1 },
+          { type: "heal", tier: 1 },
+          { type: "block", tier: 1 },
+        ],
+        false,
+        {
+          actor: state.party[0],
+          forceCrit: true,
+          jackpot: true,
+          details: [{ icon: "sword", label: "Damage", value: 8 }],
+        },
+      );
+    });
+    await page.waitForSelector("#machine-critical.rolling");
+    await shot("80-jackpot-original-number", false, "allow");
+    await page.locator("#stage-skip").click();
+    await page.waitForSelector(".critical-locked");
+    await shot("80-jackpot-payoff", false, "allow");
+    await page.setViewportSize({ width: 390, height: 844 });
+    await shot("80-jackpot-payoff-390", false, "allow");
+    await page.evaluate(async () => {
+      window.releaseJackpot();
+      await window.reviewJackpot;
+      criticalHold = window.reviewJackpotHold;
+      setPace("skip");
+    });
+    await page.setViewportSize({ width: 1920, height: 1080 });
+    await page.evaluate(async () => {
+      const real = Math.random;
+      Math.random = () => 0.01;
+      await jesterWildcard(state.party[0]);
+      Math.random = () => 0.18;
+      await jesterWildcard(state.party[0]);
+      Math.random = real;
+      render();
+    });
+    await shot("81-gilded-party-reel-and-enemy-blackout");
+    await page.evaluate(() => {
+      newRun("fighter");
+      setPace("skip");
+      beginEncounter(false, { count: 1 });
+      state.opening = null;
+      render();
+      characterLuck = () => 0;
+      damageHero(0, 1000, "A guardian's blow", { piercing: true });
+      characterLuck = () => 0.999999;
+    });
+    await shot("82-heroic-last-stand", false, "allow");
+    await page.evaluate(() => {
+      newRun("fighter");
+      setPace("skip");
+      optionsPage("play");
+    });
+    await shot("83-options-progress-reset");
+    await page.evaluate(() => confirmProgressReset());
+    await shot("83-confirm-progress-reset");
+    await page.evaluate(() => {
+      closeModal();
+      setPace("1");
+      const from = state.position,
+        to = pos(7, 2);
+      markSeen(to);
+      renderMap();
+      window.reviewTunnel = tunnelTransit(from, to);
+    });
+    await shot("84-directed-tunnel-travel", false, "allow");
+    await page.evaluate(() => window.reviewTunnel);
+    await page.evaluate(() => optionsPage("play"));
     const download = page.waitForEvent("download");
-    await page.locator("#download").click();
+    await page.locator("#option-download").click();
     await (
       await download
     ).saveAs(path.join(output, "ScratchpadDungeon-pencil-notebook.html"));

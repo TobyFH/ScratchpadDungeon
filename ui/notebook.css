@@ -4326,7 +4326,7 @@ body.utility-open .combat-callout {
   height: 120px;
   min-height: 120px;
 }
-.stage-card.treasure .active-critical .inline-critical-body {
+.stage-card:is(.treasure,.well) .active-critical .inline-critical-body {
   grid-template-columns: 135px minmax(0, 1fr);
   height: 140px;
   align-items: center;
@@ -4587,7 +4587,7 @@ body.utility-open .combat-callout {
     height: 145px;
     min-height: 145px;
   }
-  .stage-card.treasure .active-critical .inline-critical-body {
+  .stage-card:is(.treasure,.well) .active-critical .inline-critical-body {
     grid-template-columns: 90px minmax(0, 1fr);
     height: 120px;
   }
@@ -5138,42 +5138,42 @@ body.utility-open .combat-callout {
 .stage-card.treasure .scene-layout {
   --loot-machine-height: 105px;
 }
-.stage-card.treasure .scene-layout > .machine-shell {
+.stage-card:is(.treasure,.well) .scene-layout > .machine-shell {
   display: grid;
   grid-template-rows: 20px minmax(0, 1fr) 20px;
   height: var(--loot-machine-height);
   margin: 0 auto;
 }
-.stage-card.treasure .scene-layout > .machine-shell .machine-title,
-.stage-card.treasure .scene-layout > .machine-shell .machine-footnote {
+.stage-card:is(.treasure,.well) .scene-layout > .machine-shell .machine-title,
+.stage-card:is(.treasure,.well) .scene-layout > .machine-shell .machine-footnote {
   height: 20px;
   min-height: 20px;
   line-height: 20px;
   margin: 0;
 }
-.stage-card.treasure .scene-layout > .machine-shell .machine-face {
+.stage-card:is(.treasure,.well) .scene-layout > .machine-shell .machine-face {
   height: 100%;
   min-height: 0;
 }
-.stage-card.treasure .scene-layout > .machine-shell .lever {
+.stage-card:is(.treasure,.well) .scene-layout > .machine-shell .lever {
   top: 20px;
   height: calc(var(--loot-machine-height) - 40px);
 }
-.stage-card.treasure .event-critical.active-critical {
+.stage-card:is(.treasure,.well) .event-critical.active-critical {
   display: grid;
   grid-template-rows: 22px minmax(0, 1fr);
 }
-.stage-card.treasure .inline-critical-title {
+.stage-card:is(.treasure,.well) .inline-critical-title {
   height: 22px;
   line-height: 22px;
 }
-.stage-card.treasure .active-critical .inline-critical-body,
-.stage-card.treasure .active-critical .critical-summary,
-.stage-card.treasure .active-critical .critical-payoff {
+.stage-card:is(.treasure,.well) .active-critical .inline-critical-body,
+.stage-card:is(.treasure,.well) .active-critical .critical-summary,
+.stage-card:is(.treasure,.well) .active-critical .critical-payoff {
   height: 100%;
   min-height: 0;
 }
-.stage-card.treasure .active-critical .critical-payoff {
+.stage-card:is(.treasure,.well) .active-critical .critical-payoff {
   grid-template-rows: 26px minmax(0, 1fr);
 }
 @media (max-width: 760px) {
@@ -5333,4 +5333,255 @@ body.utility-open .combat-callout {
   .modal:has(.reel-workshop) #modal-title {
     padding-right: 50px;
   }
+}
+
+/* CAMPFIRE EDITION: shared, fixed geometry for readable pages and discoveries. */
+.desk-top .pace-control {
+  padding: 4px 7px;
+  gap: 8px;
+  overflow: visible;
+  min-width: max-content;
+}
+.desk-top .pace-control > span {
+  display: inline-block;
+  padding-left: 2px;
+  line-height: 1.4;
+}
+.desk-top [hidden] { display: none !important; }
+.combat-heading {
+  justify-content: flex-start;
+  gap: 18px;
+}
+.combat-heading #round {
+  position: static;
+  transform: none;
+  width: auto;
+  min-width: 82px;
+  height: 35px;
+  padding: 4px 10px;
+  font-size: 18px;
+  line-height: 24px;
+  align-self: center;
+  background: var(--tape) center / 100% 100% no-repeat;
+  border: 0;
+  border-image: none;
+}
+.combat-heading #round[hidden] { display: none !important; }
+.team-block, .enemy-team-block {
+  --protection-ink: color-mix(in srgb, var(--ink), var(--block-blue) calc(30% + var(--block-strength, 0) * 70%));
+  color: var(--protection-ink);
+  background: color-mix(in srgb, var(--paper-raised), var(--block-silver) calc(10% + var(--block-strength, 0) * 60%));
+  transition: background-color .2s, color .2s;
+}
+.team-block strong, .team-block > svg,
+.enemy-team-block strong, .enemy-team-block > svg { color: var(--protection-ink); }
+.guide-takeaways {
+  list-style: disc;
+  margin: 0;
+  padding: 4px 12px 4px 25px;
+}
+.guide-takeaways li {
+  font-size: 22px;
+  line-height: 1.4;
+  margin: 0 0 15px;
+  padding-left: 3px;
+}
+.guide-takeaways li::marker { color: var(--soft); font-size: .75em; }
+.guide-takeaways b { font-weight: bold; color: var(--ink); }
+.camp-leaf-nav {
+  display: grid;
+  grid-template-columns: 112px minmax(0,1fr) 112px;
+  gap: 10px;
+  align-items: center;
+  height: 42px;
+  margin: 5px 0 10px;
+  text-align: center;
+}
+.camp-leaf-nav button { height: 34px; font-size: 18px; }
+.camp-grid, .camp-grid[data-category="classes"] {
+  height: 430px;
+  min-height: 430px;
+  grid-template-rows: repeat(2,minmax(0,1fr));
+}
+.camp-card { padding: 10px; min-width: 0; }
+.camp-card h3 { min-height: 30px; font-size: 23px; line-height: 1.1; }
+.camp-card p { font-size: 18px; line-height: 1.25; }
+.camp-card > button { min-height: 35px; font-size: 19px; }
+.active-lesson {
+  display: grid;
+  grid-template-columns: 32px minmax(0,1fr) 32px;
+  gap: 6px;
+  align-items: center;
+  margin: 3px 0 6px;
+  min-height: 45px;
+}
+.active-lesson button { height: 34px; font-size: 24px; padding: 0; }
+.active-lesson span { text-align: center; font-size: 18px; line-height: 1.1; }
+.active-lesson small { display: block; font-size: 15px; margin-top: 3px; }
+.camp-grid[data-category="classes"] {
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  grid-template-rows: minmax(0,1fr);
+}
+.camp-grid[data-category="classes"] .camp-card {
+  padding: 12px;
+  display: grid;
+  grid-template-rows: 156px 52px minmax(0,1fr) 44px;
+  gap: 6px;
+  text-align: center;
+}
+.camp-grid[data-category="classes"] .camp-card .camp-class-art {
+  position: static;
+  width: 100%;
+  height: 156px;
+  margin: 0;
+  display: grid;
+  place-items: center;
+}
+.camp-grid[data-category="classes"] .camp-card .camp-class-art svg {
+  position: static;
+  display: block;
+  width: 120px;
+  height: 150px;
+  margin: 0 auto;
+  transform: none;
+}
+.camp-grid[data-category="classes"] .camp-card h3 { margin: 0; align-self: center; }
+.camp-grid[data-category="classes"] .camp-card p { margin: 0; }
+.camp-grid[data-category="classes"] .camp-card > button,
+.camp-grid[data-category="classes"] .camp-owned { align-self: center; margin: 0; }
+.starter-grid.five-classes {
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  grid-auto-rows: 214px;
+  gap: 10px;
+}
+.starter-grid > button, .starter-grid > .locked-class {
+  display: grid;
+  grid-template-rows: 66px 26px 24px 28px minmax(0,1fr);
+  align-items: center;
+  justify-items: center;
+  gap: 3px;
+  padding: 7px;
+  white-space: normal;
+  min-width: 0;
+}
+.starter-grid > button > svg { grid-row: 1; width: 56px; height: 66px; margin: 0; }
+.starter-grid > button > b { grid-row: 2; font-size: 22px; }
+.starter-grid > button > strong { grid-row: 3; font-size: 16px; }
+.starter-grid > button > small { grid-row: 4; font-size: 16px; }
+.starter-grid > button > span { grid-row: 5; font-size: 18px; line-height: 1.2; }
+.descent-art { height: 190px; width: 100%; display: grid; place-items: center; }
+.descent-art > svg { width: 290px; height: 190px; max-width: 100%; }
+.descent-flavour { text-align: center; font-size: 22px; line-height: 1.4; margin: 8px auto 18px; max-width: 580px; }
+.incoming-item > svg, .reset-progress .stage-art > svg {
+  display: block;
+  width: 98px;
+  height: 98px;
+  margin: 8px auto 12px;
+  flex: none;
+  align-self: center;
+}
+.danger-button { color: var(--red); border-color: var(--red); }
+.reset-progress { max-width: 620px; margin: auto; }
+.reset-progress p { font-size: 21px; line-height: 1.45; }
+.tile.wall:not(.fog) { box-shadow: inset 0 0 0 1.5px var(--ink), inset 0 0 0 3px var(--pencil-light); }
+.tile.lava-tile:not(.fog) { border-color: var(--ink); }
+#lava-lighting {
+  position: fixed;
+  inset: 0;
+  z-index: 9995;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 0% 85%,#ed691c80,transparent 42%),radial-gradient(ellipse at 100% 80%,#e1642280,transparent 42%);
+  opacity: var(--lava-strength,0);
+  transition: opacity .55s ease;
+  animation: lava-breath 4s ease-in-out infinite alternate;
+}
+body.ambient-disabled #lava-lighting { opacity: 0; }
+@keyframes lava-breath { from {filter: brightness(.86)} to {filter: brightness(1.2)} }
+.tunnel-transit { position: fixed; inset: 0; z-index: 9200; pointer-events: none; }
+.tunnel-transit > svg { position: absolute; inset: 0; overflow: visible; }
+.tunnel-transit path { fill: none; stroke: var(--focus); stroke-width: 4; stroke-linecap: round; }
+.tunnel-transit > span { position: absolute; left: 0; top: 0; width: 34px; height: 34px; color: var(--focus); background: var(--paper); border-radius: 50%; }
+.tunnel-transit > span > svg { width: 100%; height: 100%; }
+.gifted-reel { outline: 2px solid var(--gold); outline-offset: -3px; background: color-mix(in srgb,var(--gold) 12%,var(--paper)); }
+.gift-badge { color: var(--gold); }
+/* A well reserves all three recipient rows before any healing is calculated. */
+.stage-card.well:has(#machine-fountain) .scene-layout {
+  --loot-machine-height: 120px;
+  display: grid;
+  grid-template-rows: 75px 120px 170px 150px;
+  height: 515px;
+  align-items: center;
+  gap: 0;
+}
+.stage-card.well .trap-art { width: 100%; max-width: none; height: 75px; min-height: 75px; margin: 0; }
+.stage-card.well .trap-art > svg { width: 65px; height: 65px; }
+.stage-card.well #event-critical { height: 170px; min-height: 170px; margin: 0; }
+.stage-card.well .active-critical .inline-critical-body { grid-template-columns: 135px minmax(0,1fr); }
+.stage-card.well .critical-payoff strong { font-size: 68px; }
+.stage-card.well #fountain-result { display: grid; grid-template-rows: repeat(3,36px) 30px; height: 150px; min-height: 150px; margin: 0; gap: 0; align-content: center; }
+.well-heal-total { display: grid; grid-template-columns: minmax(0,1fr) 100px 90px; gap: 7px; align-items: center; height: 36px; min-height: 36px; padding: 0; text-align: left; font-size: 21px; }
+.well-heal-total strong { color: var(--green); font-size: 27px; text-align: right; }
+.well-heal-total small { font-size: 16px; text-align: right; }
+.well-total-note { font-size: 16px; }
+@media (max-width:760px) {
+  .guide-takeaways { padding-left: 22px; }
+  .guide-takeaways li { font-size: 23px; line-height: 1.35; margin-bottom: 15px; }
+  .camp-leaf-nav { grid-template-columns: 84px minmax(0,1fr) 84px; gap: 6px; height: 42px; }
+  .camp-leaf-nav button { font-size: 18px; }
+  .camp-leaf-nav span { font-size: 17px; }
+  .camp-grid { height: 450px; min-height: 450px; gap: 9px; }
+  .camp-card h3 { font-size: 23px; min-height: 48px; }
+  .camp-card p { font-size: 19px; }
+  .camp-card > button { font-size: 20px; min-height: 36px; }
+  .active-lesson span { font-size: 19px; }
+  .active-lesson small { font-size: 16px; }
+  .camp-grid[data-category="classes"] { grid-template-columns: minmax(0,1fr); grid-template-rows: repeat(3,minmax(0,1fr)); height: 450px; min-height: 450px; gap: 8px; }
+  .camp-grid[data-category="classes"] .camp-card { grid-template-columns: 76px minmax(0,1fr); grid-template-rows: 32px minmax(0,1fr) 34px; padding: 8px; text-align: left; gap: 3px 10px; }
+  .camp-grid[data-category="classes"] .camp-card .camp-class-art { grid-row: 1/4; grid-column: 1; height: 118px; }
+  .camp-grid[data-category="classes"] .camp-card .camp-class-art svg { width: 76px; height: 110px; }
+  .camp-grid[data-category="classes"] .camp-card h3 { min-height: 0; font-size: 22px; }
+  .camp-grid[data-category="classes"] .camp-card p { font-size: 19px; }
+  .camp-grid[data-category="classes"] .camp-card > button { font-size: 19px; min-height: 32px; }
+  .starter-grid.five-classes { grid-template-columns: repeat(2,minmax(0,1fr)); grid-auto-rows: 166px; gap: 7px; }
+  .starter-grid > button, .starter-grid > .locked-class { grid-template-rows: 47px 23px 22px 23px minmax(0,1fr); gap: 1px; padding: 5px; }
+  .starter-grid > button > svg { width: 40px; height: 47px; }
+  .starter-grid > button > b { font-size: 22px; }
+  .starter-grid > button > strong, .starter-grid > button > small { font-size: 16px; }
+  .starter-grid > button > span { font-size: 17px; line-height: 1.15; }
+  .stage-card.well:has(#machine-fountain) .scene-layout { --loot-machine-height:105px; grid-template-rows: 55px 105px 145px 145px; height:450px; }
+  .stage-card.well .trap-art { height:55px; min-height:55px; }
+  .stage-card.well .trap-art > svg { width:50px; height:50px; }
+  .stage-card.well #event-critical { height:145px; min-height:145px; }
+  .stage-card.well .active-critical .inline-critical-body { grid-template-columns:90px minmax(0,1fr); }
+  .stage-card.well .critical-payoff strong { font-size:58px; }
+  .well-heal-total { grid-template-columns: minmax(0,1fr) 80px 72px; font-size:21px; }
+  .well-heal-total strong { font-size:25px; }
+  .well-heal-total small { font-size:16px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  #lava-lighting { animation: none; transition: none; }
+}
+@media (max-width:760px) {
+  .camp-grid:not([data-category="classes"]) { grid-template-columns: minmax(0,1fr); grid-template-rows: repeat(2,minmax(0,1fr)); }
+  .camp-leaf-nav { grid-template-columns: 108px minmax(0,1fr) 108px; }
+  .camp-leaf-nav button { white-space: nowrap; padding: 3px 5px; }
+  .camp-card h3 { min-height: 32px; font-size: 25px; }
+  .camp-card p { font-size: 22px; line-height: 1.25; }
+  .active-lesson { min-height: 48px; }
+  .active-lesson span { font-size: 21px; }
+  .active-lesson small { font-size: 18px; }
+}
+.combat-heading { display: flex; }
+.combat-heading > h2 { flex: 0 1 auto; }
+.combat-heading #round { flex: 0 0 auto; }
+/* Multiplier lettering fits both the decimal inline reel and large Jackpots. */
+.one-reel .slot-window { container-type: size; }
+.one-reel .slot-window .multiplier-value {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  line-height: 1;
+  font-size: clamp(18px,min(72cqh,calc(170cqw / var(--multiplier-length,3)),82px),82px);
 }

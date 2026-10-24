@@ -130,21 +130,110 @@ function lootFindCarousel(entries) {
     target.innerHTML = "";
     return;
   }
-  let page = 0;
+  let page = 0,
+    sequence = 0;
+  const run = state;
   target.innerHTML = `<div class="loot-carousel"><div class="loot-find-page"></div><nav aria-label="Loot finds"><button id="loot-previous">←</button><span id="loot-count"></span><button id="loot-next">→</button></nav></div>`;
   const show = () => {
-    target.querySelector(".loot-find-page").innerHTML = entries[page];
+    const find = target.querySelector(".loot-find-page");
+    find.innerHTML = entries[page];
     $("#loot-count").textContent = `Find ${page + 1} / ${entries.length}`;
     $("#loot-previous").disabled = page === 0;
     $("#loot-next").disabled = page === entries.length - 1;
+    GameSound.play("itemFind");
+    animate(
+      find,
+      [
+        { opacity: 0, transform: "scale(.88) translateY(8px)" },
+        { opacity: 1, transform: "scale(1.04)" },
+        { opacity: 1, transform: "none" },
+      ],
+      { duration: 360, juice: true },
+    );
+    burst(find, "gold", 18);
   };
-  $("#loot-previous").onclick = () => {
-    page--;
+  const manuallyShow = (delta) => {
+    sequence++;
+    target.dataset.presenting = "false";
+    page += delta;
     show();
   };
-  $("#loot-next").onclick = () => {
-    page++;
-    show();
-  };
+  $("#loot-previous").onclick = () => manuallyShow(-1);
+  $("#loot-next").onclick = () => manuallyShow(1);
   show();
+  if (entries.length > 1) {
+    target.dataset.presenting = "true";
+    const version = sequence;
+    (async () => {
+      while (page < entries.length - 1) {
+        await feedbackPause(Math.max(240, 650 / Math.sqrt(skip ? 5 : pace())));
+        if (
+          state !== run ||
+          !target.isConnected ||
+          !$("#spotlight").contains(target) ||
+          $("#spotlight").hidden ||
+          version !== sequence
+        )
+          return;
+        page++;
+        show();
+      }
+      target.dataset.presenting = "false";
+    })();
+  }
+}
+
+// Reset only this game's progress namespace; option preferences live separately.
+function confirmProgressReset() {
+  if (busy) {
+    toast("Finish the current journey or event before resetting progress.");
+    return;
+  }
+  openModal(
+    "Start an empty notebook?",
+    `<div class="reset-progress"><div class="stage-art">${icon("eraser")}</div><p>This erases the current run, banked gold, unlocked adventurers, camp lessons, bestiary and remembered companions.</p><p><b>Your options stay as they are.</b> Sound, lighting, controls and animation preferences are kept.</p></div><div class="modal-actions"><button id="confirm-save-reset" class="danger-button">Erase all progress</button><button class="primary" id="cancel-save-reset">Keep my notebook</button></div>`,
+    "reset-save",
+  );
+  $("#cancel-save-reset").onclick = () => optionsPage("play");
+  $("#confirm-save-reset").onclick = resetSaveProgress;
+}
+function resetSaveProgress() {
+  if (busy || modalKind !== "reset-save") return false;
+  const preserved = readSettings(),
+    keys = [],
+    backup = new Map();
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (
+        key.startsWith("scratchpad-dungeon-") &&
+        key !== "scratchpad-dungeon-settings"
+      )
+        keys.push(key);
+    }
+    for (const key of keys) backup.set(key, localStorage.getItem(key));
+    for (const key of keys) localStorage.removeItem(key);
+    localStorage.setItem(
+      "scratchpad-dungeon-settings",
+      JSON.stringify(preserved),
+    );
+  } catch (error) {
+    for (const [key, value] of backup)
+      try {
+        localStorage.setItem(key, value);
+      } catch {}
+    toast("The notebook could not be reset: " + error.message);
+    return false;
+  }
+  if (utilityOpen) closeUtilityPage();
+  stopCoinRain();
+  document
+    .querySelectorAll(".speech-bubble,.discovery-whisper,.rolled-projectile")
+    .forEach((el) => el.remove());
+  newRun();
+  state.awaitingStarter = true;
+  chooseStartingClass(true);
+  save();
+  toast("A clean notebook. Your options have been kept.");
+  return true;
 }

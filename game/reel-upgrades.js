@@ -88,9 +88,12 @@ const FACE_LABELS = Object.freeze({
 const primaryFace = (h) =>
   h.job === "mage" ? (h.specialism === "defence" ? "heal" : "magic") : "attack";
 function editableTypes(h) {
-  return h.job === "berserker"
-    ? ["attack", "heal", "selfharm", "blank"]
-    : EDITABLE_TYPES.filter((t) => t !== "selfharm");
+  return h.job === "jester"
+    ? EDITABLE_TYPES
+    : [
+        ...(CLASS_FACE_TYPES[h.job] ||
+          EDITABLE_TYPES.filter((t) => t !== "selfharm")),
+      ];
 }
 function faceDescription(face, h) {
   const tier = face.tier || 1;
@@ -156,6 +159,8 @@ function reelProbabilities(reel) {
   return result;
 }
 function heroCriticalOdds(h) {
+  if (h.job === "jester")
+    return [{ type: "class", tier: 1, chance: jesterOdds(h).jackpot }];
   const [a, b, c] = h.reels.map(reelProbabilities),
     rows = [];
   for (const [key, p] of Object.entries(a)) {
@@ -167,6 +172,10 @@ function heroCriticalOdds(h) {
   return rows.sort((a, b) => b.chance - a.chance);
 }
 function criticalOddsMarkup(h) {
+  if (h.job === "jester") {
+    const odds = jesterOdds(h);
+    return `<section class="workshop-critpage workshop-page" ${editorView === "crits" ? "" : "hidden inert"}><h3>Jackpot · ${(100 * odds.jackpot).toFixed(2)}% per roll</h3><ul class="guide-takeaways"><li><b>Three different kinds:</b> double the usual critical multiplier and one free encore. Ranks do not need to match.</li><li><b>No blanks:</b> empty marks cannot complete a Jackpot.</li><li><b>Matching triples:</b> ${(100 * odds.backfire).toFixed(2)}% chance of self-stun instead.</li><li><b>One encore:</b> free rolls can Jackpot but do not chain more free rolls.</li></ul></section>`;
+  }
   const rows = heroCriticalOdds(h),
     total = rows.reduce((n, r) => n + r.chance, 0);
   return `<section class="workshop-critpage workshop-page" ${editorView === "crits" ? "" : "hidden inert"}><h3>Three of a kind · ${(total * 100).toFixed(2)}% per roll</h3><p>The middle class mark also completes two matching outer marks. Empty faces never crit. These odds include your edits and purchased weighting.</p><div class="crit-odds-grid">${rows.map((row) => `<div class="crit-odds-row">${symbolMarkup(row)}<b>${FACE_LABELS[row.type]} ${tierName(row.tier)}</b><strong>${(row.chance * 100).toFixed(2)}%</strong></div>`).join("") || "<p>No matching combinations yet. Put the same type and rank on both outer reels to start a combo.</p>"}</div></section>`;
@@ -368,6 +377,8 @@ function workshopAbilitySummary(h) {
     rogue: "Roll three extra blade attacks.",
     mage: "Echo the rolled magic, healing, shield or poison marks across the whole team.",
     ranger: "Charge patience for a stronger finishing shot.",
+    jester:
+      "Wildcard plays a random trick. Different kinds win a Jackpot; matching triples backfire.",
     berserker:
       "Heal yourself, gain 4 Fury and +2 blade damage. Charged Fury adds damage and lifesteal.",
   }[h.job];

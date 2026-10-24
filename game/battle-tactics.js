@@ -196,6 +196,7 @@ function clearBattleStatuses() {
     entity.surprised = false;
     entity.stunAge = 0;
     entity.blackout = [];
+    entity.reelGifts = [];
   }
   state.opening = null;
   state.invulnerable = null;
@@ -304,6 +305,11 @@ function stunHero(i, power) {
   if (!hit.applied) {
     shieldedFX(entityArt(h));
     return `${h.name} protected from stun (−${hit.spent} armour)`;
+  }
+  if (characterMoment("ironWill", h)) {
+    h.stunGrace = 1;
+    syncHero(i);
+    return h.name + " shrugs off the stun";
   }
   h.stun = 1;
   h.stunAge = 0;

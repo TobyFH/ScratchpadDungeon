@@ -52,8 +52,12 @@ function campTier(family, rules = state?.runRules || []) {
       .map((id) => CAMP_UNLOCKS[id].rank),
   );
 }
+function lessonBonus(family, rules = state?.runRules || []) {
+  return campTier(family, rules) * (CAMP_LESSONS[family]?.step || 0);
+}
 function campRollBonus(base) {
-  const multiplier = 1 + campTier("power") * 0.05;
+  const multiplier =
+    1 + lessonBonus("power") / 100 + (ruleEnabled("glass") ? 0.1 : 0);
   for (const key of ["attack", "magic"])
     if (base[key]) base[key] = Math.round(base[key] * multiplier);
   return base;

@@ -1,59 +1,64 @@
-// Short topics share one fixed page frame; invisible pages reserve the longest text.
+// Short, scannable topics share one fixed notebook frame. No filler text.
 const FIELD_GUIDE = Object.freeze([
   {
     id: "explore",
     title: "Exploration",
-    body: "<p><b>Explore.</b> Click a frontier tile to uncover it, or a known tile to follow a shortest route. Routes avoid active fights and traps. Redirect while walking or erasing. Known wells, shops and ruins are ignored when passing through. Walls, rivers and deep-floor lava block movement; bridges cross water. Lava lights its own tile and its four direct neighbours when any one is discovered.</p>\n<p><b>Old passages.</b> Explored rooms can hide an ambush after a minute away. Battles and menus pause that timer. Winning clears nearby ambush age. From floor three, The Unwritten can awaken and follow one tile per footstep. Watch its moving mark.</p>",
+    body: '<ul class="guide-takeaways"><li><b>Move.</b> Click an adjacent unknown tile to reveal it. Click a known tile for a shortest route.</li><li><b>Change course.</b> Click a new valid destination while walking. Routes prefer to avoid active fights and traps.</li><li><b>Terrain.</b> Stone, rivers and lava block walking. Bridges are clear crossings; tunnels offer optional travel.</li><li><b>Old passages.</b> After 12 move commands away, explored tiles can hide an ambush. Long routes count once; waiting does not age tiles.</li><li><b>The Unwritten.</b> From floor three, watch for a hunter that moves one tile for each of your footsteps.</li></ul>',
   },
   {
     id: "floors",
     title: "Floors & discoveries",
-    body: "<p><b>Descend.</b> Select marked stairs to open their menu; passing through does not stop you. Each staircase has a guardian. Defeat it, then descend from anywhere or keep exploring. Stairs are reachable and at least eight steps from camp. Defeating the tenth guardian wins.</p>\n<p><b>Discoveries.</b> Leave wells active until needed: they roll 15% maximum HP plus half a healing bonus. Beacons and cave rooms reveal nearby discoveries without triggering them; beacon light cannot cross stone. Ruins risk trap damage for loot. Rare strongholds hold dangerous champions. Paired tunnels offer optional travel between two distant entrances.</p>",
+    body: '<ul class="guide-takeaways"><li><b>Win.</b> Defeat each staircase guardian. Beating the tenth guardian completes the dungeon.</li><li><b>Descend.</b> Select stairs to open their menu. After victory, descend from anywhere or keep exploring.</li><li><b>Wells.</b> Save an unused fountain for later. It offers 15% maximum HP plus half its healing roll; triples can crit.</li><li><b>Light.</b> Beacons, cave rooms and lava reveal nearby tiles without activating events. Stone blocks beacon and lava light.</li><li><b>Other finds.</b> Ruins trade risk for loot. Strongholds shelter powerful enemies. Paired tunnels stay open after use.</li></ul>',
   },
   {
     id: "combat",
     title: "Combat & criticals",
-    body: "<p><b>Act freely.</b> Any living hero can spin repeatedly. Click a hero card to spin, its portrait to edit, target buttons to heal and an enemy portrait to target damage. Double battles become more common, especially through floors one to four; each enemy has its own clock. Tier III/IV attacks and criticals hit all enemies.</p>\n<p><b>Three of a kind.</b> Three matching type-and-tier symbols roll a critical: ×2–×4 for heroes and loot, ×1.25–×1.75 for enemies and fountains. A middle class seal completes two matching symbols and casts its ability. Blanks never crit. Click rolling reels or press Space to land them. Confirm event outcomes; “Strike now” skips a critical hold.</p>",
+    body: '<ul class="guide-takeaways"><li><b>Act freely.</b> Use any living hero repeatedly. Click their card or handle to roll; their portrait opens reel editing.</li><li><b>Choose targets.</b> Click an enemy portrait to aim damage. Use the healing target control for healing and buffs.</li><li><b>Critical.</b> Three matching kinds AND ranks roll a multiplier. The middle class mark completes two matching outer marks. Blanks do nothing.</li><li><b>Big hits.</b> Criticals and tier III–IV attacks hit all enemies. Each foe has its own attack countdown.</li><li><b>Keep moving.</b> Click rolling reels or press Space to land them. Event results still need confirmation. Hero criticals grant 1 EXP.</li></ul>',
   },
   {
     id: "statuses",
     title: "Block, stun & Vulnerable",
-    body: "<p><b>Block and stun.</b> Each side shares its own block pool. It absorbs damage, wears away and expires after battle. Unbroken page blocks the next enemy’s entire turn. Weak stuns are stopped by block; stronger ones consume more and can break through. Stun or magic may expose Vulnerable: the next damaging hit gains 25%. Healing can clear stun; stronger heals help and heavy block reduces the chance. A stunned hero misses an attempt without advancing enemy clocks. Recovery chance rises with each roll; most stuns break within one to three checks. Hover status badges for exact effects.</p>",
+    body: '<ul class="guide-takeaways"><li><b>Team block.</b> Each side has one shared pool. It absorbs damage, is consumed as it protects and expires after battle.</li><li><b>Stun.</b> Miss an attempt without advancing enemy clocks. Recovery becomes likelier each roll; most stuns end after 1–3 checks.</li><li><b>Break through.</b> Stronger stuns strip more block and can penetrate shields. Healing can clear stun; Mage healing Resonance clears all allies.</li><li><b>Vulnerable.</b> The next direct hit deals 25% extra damage. Healing and poison ticks do not consume it.</li><li><b>Details.</b> Hover any condition icon for its actual effect and remaining strength or duration.</li></ul>',
   },
   {
     id: "openings",
     title: "Openings & poison",
-    body: "<p><b>Openings and poison.</b> Initiative sometimes offers one hero a 25% bonus if they take the first roll. A fresh hidden encounter may surprise some heroes: a ready companion must open. If everyone is surprised, enemies go first. Intent names the enemy’s focus; reels still decide the result. Poison holds at most three turns; repeated doses increase tick damage.</p>",
+    body: '<ul class="guide-takeaways"><li><b>Initiative.</b> A marked hero gains 25% stronger effects if chosen for the first roll.</li><li><b>Surprise.</b> Surprised heroes cannot open. If everyone is surprised, the enemies attack first.</li><li><b>Enemy intent.</b> The short line names a goal and target. Reels still decide what actually happens.</li><li><b>Poison.</b> Ticks bypass block. Doses load up to three turns; repeated doses then increase tick damage.</li><li><b>Temporary effects.</b> Poison, stun, Rage, Fury, Execute and buffs all clear after combat.</li></ul>',
   },
   {
     id: "heroes",
     title: "Reel editing",
-    body: "<p><b>Reels and levels.</b> Victories give EXP and personal editing points. Levels add 6 maximum HP and 4 points. Click a portrait to edit a symbol. Starting faces are equally likely; spend points to weight one more heavily. The Critical odds page lists every possible matching combination. Downgrades refund points. Your middle class mark is permanent.</p>",
+    body: '<ul class="guide-takeaways"><li><b>Earn points.</b> Victories grant EXP and personal points. A level adds 6 maximum HP and 4 points.</li><li><b>Edit.</b> Choose a reel, then a mark. Upgrade raises power; Replace lets you choose its type.</li><li><b>Refund.</b> Downgrade returns half the rank cost. Rebuild support heroes if they must fight alone.</li><li><b>Odds.</b> Faces start equally likely. Paid Weight increases a face’s chance. The Critical odds page shows your combinations.</li><li><b>Permanent mark.</b> Only the middle reel has the class mark. It cannot be removed, copied or upgraded.</li></ul>',
   },
   {
     id: "classes",
     title: "Classes & temperament",
-    body: "<p><b>Your build.</b> Aggressive or Defensive temperament is fixed, chosen only for your first hero. Mage Resonance echoes the rolled power across its appropriate team; healing Resonance also clears all allied stuns. Ranger Execute fills between attacks for a stronger finishing shot. Berserkers turn wounds and Blood Price into Fury: every four Fury adds one damage. Their wheels allow blades, healing, Blood Price and blanks. Temporary statuses clear after battle.</p>",
+    body: '<ul class="guide-takeaways"><li><b>Temperament.</b> Aggressive and Defensive choose different starting marks. They do not change a mark’s stated power. Rebuild either way.</li><li><b>Tank & Rogue.</b> Tanks favour blades, block and stun. Rogues favour blades, poison and tricks; Flurry throws three extra attacks.</li><li><b>Mage.</b> Use magic, healing, poison, shields or buffs. Resonance echoes rolled marks across the appropriate team.</li><li><b>Ranger.</b> Wait between attacks to fill Execute. Spend that patience on a stronger finishing shot.</li><li><b>Berserker.</b> Wounds and Blood Price build Fury. Bloodrush heals; charged attacks return a little stolen health.</li></ul>',
+  },
+  {
+    id: "jester",
+    title: "Jester & Jackpots",
+    body: '<ul class="guide-takeaways"><li><b>Unlock.</b> Buy the Jester’s invitation at camp. Jesters can inscribe every ordinary mark type.</li><li><b>Jackpot.</b> Roll three different non-empty KINDS. Ranks do not matter. Gain double a usual critical multiplier.</li><li><b>Encore.</b> A Jackpot adds one free roll before enemy clocks advance. An encore can Jackpot, but cannot chain another encore.</li><li><b>Backfire.</b> A normal matching triple stuns the Jester instead. Matching outer marks plus the middle class mark also backfire.</li><li><b>Wildcard.</b> Six tricks can black out an enemy reel, strengthen an allied reel, reverse enemy rolls, throw pies, scatter healing or deal a sharp card.</li></ul>',
   },
   {
     id: "companions",
     title: "Traits & fallen companions",
-    body: "<p><b>Traits.</b> Related experiences sometimes leave a lasting trait. At most one adventurer gains a trait from each experience. One trait per hero; new traits replace old ones automatically. Hover its portrait badge for effects and origin. Traits persist between battles.</p>\n<p><b>The fallen.</b> A carried Revive Stone can restore a fallen hero once, at 75% health. Otherwise death is permanent. Survivors acknowledge a burial; Names remembered keeps their statistics. Final records include every survivor, retired companion and fallen adventurer.</p>",
+    body: '<ul class="guide-takeaways"><li><b>Traits.</b> Relevant experiences sometimes grant one hero a trait. Only one trait is active; a later trait can replace it.</li><li><b>Rare moments.</b> A hero might hold at 1 HP, shrug off stun, parry, rally or roll with inspiration. Each fight permits at most two such moments.</li><li><b>On the road.</b> Coins, insight, a warning, a second breath or sure footing may reward one adventurer. Moments can occasionally leave a related trait.</li><li><b>Death.</b> A carried Revive Stone can restore a fallen hero at 75% HP. Otherwise death is permanent.</li><li><b>Records.</b> Names remembered and the final roster keep the stories and statistics of fallen and retired companions.</li></ul>',
   },
   {
     id: "supplies",
     title: "Supplies & equipment",
-    body: "<p><b>Supplies and company.</b> Carry three item types; matching items stack. Inspect to use/discard; a full bag offers use, swap or leave. Ink bombs roll damage and poison. Stronger supplies appear from floors 4, 7 and 10 and keep their acquired strength. Generic equipment fits every class; class-bound gear is clearly labelled. Drag compatible equipment onto heroes; equip one passive artefact. Invite up to three companions, or replace one. Refusals can lead to farewells, gifts or fights.</p>",
+    body: '<ul class="guide-takeaways"><li><b>Satchel.</b> Carry three item types; matching supplies stack. Inspect to use or discard. A full bag offers swap, use or leave.</li><li><b>Spend supplies.</b> Later floors offer stronger variants. Ink bombs roll damage and poison; Unbroken page blocks one full enemy turn.</li><li><b>Equipment.</b> Drag compatible gear onto a hero. Class-bound items say who can wear them; generic gear fits anyone.</li><li><b>Artefacts.</b> One equipped artefact provides a passive bonus. Revive Stones work from the pack without equipping.</li><li><b>Companions.</b> Invite up to three, or replace one. Declining at either invitation step can bring a farewell, gift or fight.</li></ul>',
   },
   {
     id: "camp",
-    title: "Camp progression",
-    body: "<p><b>Camp.</b> After a guardian, bank 25/50/75/100% of carried gold or keep it for shops. Banked gold survives new runs. Upgrades in the starting menu unlocks Ranger, Berserker, tiered permanent training and optional next-run modifiers. Purchased modifiers start disabled; choose which to enable.</p>",
+    title: "By the campfire",
+    body: '<ul class="guide-takeaways"><li><b>Bank gold.</b> After floors 1–9, bank 25%, 50%, 75% or all carried gold. Victory banks everything. Banked gold survives failed runs.</li><li><b>Adventurers.</b> Unlock Ranger, Berserker and Jester starts and wandering companions.</li><li><b>Campfire Lessons.</b> Eight improvements have five tiers each. Buy tiers permanently; use − and + to choose an active rank, including zero.</li><li><b>Other rules.</b> Challenges add danger, sometimes with rewards. Oddities change discoveries and routes. Purchases start disabled.</li><li><b>Next run.</b> Lesson ranks and toggles are chosen before an expedition. Purchases never rewrite a run already in progress.</li></ul>',
   },
   {
     id: "controls",
     title: "Controls & automation",
-    body: "<p><b>Controls.</b> Tab/Enter and the bottom bar cover navigation. Options includes audio, pace, palette, lighting, shake and cosmetic Pun-nishing Mode. Effects selects icons, beams or both. Autofight chooses combat actions; Autoplay explores, upgrades and seeks supplies/experience when behind. Enable both for a hands-free attempt. Autoplay banks 25% after ordinary floors; final records stay open. Menus pause exploration. Save HTML downloads the offline game, not browser-local progress.</p>",
+    body: '<ul class="guide-takeaways"><li><b>Navigate.</b> Use Tab and Enter, or the shortcuts in the bottom bar. Side tabs stay available during events.</li><li><b>Autofight.</b> Chooses heroes, targets and occasional supplies. Autoplay explores, edits reels and seeks useful discoveries.</li><li><b>Builds.</b> Autoplay keeps a preferred build for each hero, while retaining damage and rebuilding a support-only survivor.</li><li><b>Options.</b> Adjust sound, motion, lighting, palette and icon/beam feedback. Reset progress keeps these settings.</li><li><b>Backup.</b> Save HTML in Options downloads the offline game, not browser-local progress.</li></ul>',
   },
 ]);
 function help(topic = "explore") {

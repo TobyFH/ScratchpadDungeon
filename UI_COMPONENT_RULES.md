@@ -148,14 +148,17 @@ look like another part of the same drawn notebook, not a separate application.
 
 ## Camp and banking
 
-Camp uses the existing torn-sheet modal, `.settings-tabs` navigation and a
-`.camp-grid` of `.pencil-card` entries, up to four per category. The Adventurers
-page currently has one illustrated Ranger invitation, not empty upgrade cards.
-Descriptions are real
-effects; do not add decorative camp notes. Purchases and enable/disable actions
-must be distinct, with visible costs and `aria-pressed` for toggles. Fit whole
-pages without another scrolling panel. The Ranger adds a fourth starting class after its camp unlock. The starter
-grid also keeps the `.five-classes` hook for older layout integrations.
+Camp uses the existing torn-sheet modal and four `.settings-tabs` categories:
+Adventurers, Campfire Lessons, Challenges and Oddities. Three illustrated class
+cards share one explicit grid with identical row heights. Their art stays centred
+in a fixed container. Compact layouts stack those three equal cards.
+
+`.camp-leaf-nav` always precedes the fixed `.camp-grid`. Lessons and Challenges
+show four choices per desktop leaf, two per compact leaf. Responsive repagination
+must preserve the visible region and footer. A lesson's purchase and active-rank
+minus/plus controls are distinct; changing active rank never changes ownership.
+The six-class starter grid retains `.five-classes` as a compatibility hook but
+uses six equal cards and concise actual ability summaries. No filler camp notes.
 
 `.banking-panel` contains four equal choices plus a status line. Banking does
 not dismiss floor/victory records. Update the line and disable the four choices
@@ -232,7 +235,7 @@ width before reducing text size. Check every topic at compact sizes.
 - Field-guide topics share one grid cell. Inactive topics are inert and invisible
   but reserve the longest page's space. Navigation always precedes the body.
 - Camp navigation and balance have fixed rows above a fixed card region; changing
-  a category must not move its controls. Training shows the next tier per family.
+  a category must not move its controls. Campfire Lessons shows the next purchase and separate active-rank controls.
 - The compact workshop uses a native face selector and fixed Power, Replace and
   Weight operation pages. Use the same validators and descriptions as desktop.
   Never shrink the desktop face-list's small lettering into unreadable type.
@@ -280,3 +283,22 @@ width before reducing text size. Check every topic at compact sizes.
   number may remain red. Do not label damage-over-time HIT or consume Vulnerable.
 - Automated confirmations get a speed-aware reading hold; manual interaction
   stays enabled. See `game/automation-pacing.js`, including Skip's 5× reference.
+
+## Campfire component additions
+
+- Guide topics use `.guide-takeaways` bullet lists with bold action words; keep
+  each to five short takeaways. Navigation and page count retain fixed rows.
+- Round is a compact tape beside Combat, hidden outside a fight. Removing it
+  must not change the battle-stage position.
+- Fountain scenes reserve three `.well-heal-total` rows before rolling. Update
+  text in place, including uncapped offered healing, without moving art/reels.
+- Both block controls share a slight blue tint at zero and a strength curve
+  through twenty; blue does not imply a second pool or a cap on stored block.
+- Lava has the universal impassable graphite frame. Its proximity layer follows
+  ambient lighting, not the event-vignette toggle. Walls occlude its reveal/glow.
+- Tunnel routes and reel-gift marks are meaningful temporary feedback, with no
+  input capture or persistent edits. Jester Jackpots use the existing critical
+  sheet; their eyebrow says different marks, never three of a kind.
+- Reward finds pulse/chime sequentially in the fixed browser. Automatic confirm
+  waits for presentation; manual navigation stays immediate. Use bounded shake
+  profiles from `ui/reward-audio.js`, always through the shared shake control.

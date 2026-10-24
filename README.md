@@ -22,16 +22,16 @@ The remainder stays available for this expedition; banked gold survives deaths
 and new runs. Each ordinary floor permits one deposit. **Winning floor 10
 automatically banks everything carried, including the final reward**, with no
 percentage choices. Its coin shower scales with the actual amount transferred.
-**Upgrades** in the starting-class menu spends this pool on 25 purchases across
-Adventurers, Provisions, Challenges, Oddities and Training. Permanent training
-adds up to +50% base HP, +15% damaging roll power and +15% battle EXP in
-increasingly expensive tiers. Purchased modifiers are optional,
-start disabled, and apply to subsequent expeditions when enabled. Autoplay banks
-25% on ordinary floor-clear sheets; it leaves the final adventurer records open
-and never purchases camp unlocks.
+**Upgrades** in the starting menu spends this pool on **55 purchases** across
+Adventurers, Campfire Lessons, Challenges and Oddities. Eight lesson families
+have five ranks each; buy ranks permanently, then choose the active rank with
+minus/plus controls. Health reaches +50%, roll power and EXP +25%; the other
+families improve starting gold, recovery, opening block, recruitment and loot.
+Eight untiered challenges and four oddities are optional and apply next run.
+Autoplay banks 25% on ordinary floor clears and never purchases camp unlocks.
 
-Ranger's invitation (900 gold) and Berserker's oath (750) unlock their starting
-and wandering classes. Fresh runs use the owned class pool; existing heroes stay.
+Ranger's invitation (900 gold), Berserker's oath (750) and Jester's invitation
+(1,400) unlock starts and wandering companions. Existing edited heroes are kept.
 Gold income is unchanged, but shops and camp purchases now require meaningful
 savings: a first-floor tonic costs 92 and a solo full heal 150.
 There are no separate Ranger upgrades; previously purchased enhancements are refunded
@@ -129,23 +129,25 @@ least one point). Class seals cannot be removed or copied. Base tier prices are
 1 / 4 / 9 / 16 with class affinities; a Tank pays 8 to upgrade healing I → II,
 a Mage 4. Every normal power supports tier IV.
 
-Each hero also has **Aggressive** (+1 relevant damage/poison/stun power) or
-**Defensive** (+1 relevant healing/block/stimulant power), separate from their
-class and earned trait. Choose it for your first hero; wanderers vary.
+Each hero has **Aggressive** or **Defensive** temperament, selecting a different
+level-one mark palette without changing a rolled mark's power. Rebuild either
+way. Choose it for your first hero; wanderers vary. It is separate from class
+and any earned trait.
 
 | Class     | Starting style                                         | Middle-reel ability                                           |
 | --------- | ------------------------------------------------------ | ------------------------------------------------------------- |
-| Tank      | 44 HP; blades and team protection                      | Rage builds damage and some resistance                        |
+| Tank      | 48 HP; blades and team protection                      | Rage builds damage and some resistance                        |
 | Rogue     | 26 HP; damage and poison                               | Flurry rolls three extra attacks                              |
 | Mage      | 28 HP; build healing, shields, poison or spell damage  | Resonance echoes the rolled marks across the appropriate team |
 | Berserker | 38 HP; unlock at camp; blades, healing and Blood Price | Bloodrush heals; charged Fury adds damage and lifesteal       |
+| Jester    | 30 HP; unlock at camp | Different kinds win a Jackpot and one free encore |
 | Ranger    | 30 HP; unlock at camp                                  | Execute rewards patience and finishing wounded enemies        |
 
 Former Healers migrate to Mages with their existing stats and edited wheels.
 There is no Mage role selector: builds follow the marks on their reels. See
 [Combat builds](docs/COMBAT_BUILDS.md) for exact rules, migration and source files.
 
-Blade and magic tiers deal 2 / 4 / 7 / 11 damage per face. Healing tiers offer 2 / 4 / 6 / 8 HP. Block and stun tiers contribute 1 / 2 / 3 / 4 power. **Three identical type-and-tier symbols crit**; a middle class seal can complete two matching meaningful symbols while also casting its ability. A pair alone never crits. Hero and other event critical multipliers are ×2, ×2.5, ×3 or ×4; wells use ×1.25–×1.75, with the original value pulsing into the amplified total.
+Blade and magic tiers deal 2 / 4 / 7 / 11 damage per face. Healing tiers offer 2 / 4 / 6 / 8 HP. Block and stun tiers contribute 1 / 2 / 3 / 4 power. **Three identical type-and-tier symbols crit** for ordinary classes; a middle class seal can complete two matching meaningful symbols while also casting its ability. A pair alone never crits. Jesters instead Jackpot on three different non-empty kinds: ×4/×5/×6/×8 plus one free encore; matching triples self-stun. Hero and other event critical multipliers are ×2, ×2.5, ×3 or ×4; wells use ×1.25–×1.75, with the original value pulsing into the amplified total.
 
 Normal combat rolls stay on the right page. Criticals get a multiplier popup that lingers automatically; **Strike now** skips its result hold. Treasure, fountain and other event criticals stay inside their original panel and still require confirmation. Criticals show the original value while spinning, then pulse the same readout to
 the final number; no calculation box appears. Critical damage lands as the
@@ -329,7 +331,7 @@ npm test
 
 Tests use `/usr/bin/chromium` when present or Playwright's browser; `CHROMIUM_PATH` selects another executable. They start a loopback server and put screenshots and downloaded HTML in ignored `test-results/`.
 
-Coverage includes camp transactions/unlocks and interrupted saves, Ranger charge, optional run modifiers, conservative enemy criticals, status tooltips and full ten-floor progression, stair bosses and immediate victory, class selection and page animations, equipment drag/effects/swaps, autoresolve, pursuers, floor-specific species and elite odds, hidden exploration-only ambush timers, rockfalls and bodies, beacon sight lines, save migration, inventory decisions, permanent death, revives, critical and multi-hit calculations, map generation and connectivity, mobile/desktop layout and offline downloads. The campaign integration test uses controlled attack faces and extra health to exercise real navigation, encounters, rewards and progression independently of luck. Separate tests verify ordinary combat and failure paths. The offline test executes downloaded bytes with networking disabled because managed Chromium restricts `file://` navigation.
+Coverage includes camp transactions/unlocks and interrupted saves, Ranger charge, optional run modifiers, conservative enemy criticals, status tooltips and full ten-floor progression, stair bosses and immediate victory, class selection and page animations, equipment drag/effects/swaps, autoresolve, pursuers, floor-specific species and elite odds, hidden command-aged ambush readiness, rockfalls and bodies, beacon sight lines, save migration, inventory decisions, permanent death, revives, critical and multi-hit calculations, map generation and connectivity, mobile/desktop layout and offline downloads. The campaign integration test uses controlled attack faces and extra health to exercise real navigation, encounters, rewards and progression independently of luck. Separate tests verify ordinary combat and failure paths. The offline test executes downloaded bytes with networking disabled because managed Chromium restricts `file://` navigation.
 
 ## Credits
 
@@ -368,3 +370,9 @@ a better item reel from floor four. Shops, rivers and artefacts are slightly mor
 common. Lower-floor lava lights its orthogonal neighbours without activating
 discoveries. Three additional optional travel events and generic equipment use
 the existing bag and confirmation systems; full-bag purchases warn before payment.
+
+The [Campfire update](docs/CAMPFIRE_UPDATE.md) adds eight five-tier improvements
+with selectable active ranks, eight optional challenges, the unlockable Jester,
+rare personal moments and archetype-guided Autoplay. Temperament now changes
+starting marks rather than their numeric power. Ambushes age by move commands,
+not waiting time. Options can reset progression while preserving settings.

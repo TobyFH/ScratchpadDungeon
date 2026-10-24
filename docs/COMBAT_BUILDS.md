@@ -17,14 +17,14 @@ source modules; edit the sources and regenerate rather than editing marked HTML:
 
 ## Builds
 
-New adventurers have **Aggressive** or **Defensive** temperament, independently of
-class and earned trait. Starting heroes let the player choose; wanderers receive
-one randomly. Aggressive adds one to a damaging roll (blade or magic), poison power
-and stun power when present. Defensive adds one to healing (targeted or party),
-team block and stimulant power when present. Blanks never gain an effect. These
-bonuses apply before critical multipliers and are included in Autofight estimates.
+New adventurers have **Aggressive** or **Defensive** temperament, independently
+of class and earned trait. It selects a different level-one face palette, not a
+flat bonus to rolled mark power. First heroes choose it; companions vary. Reels
+can be rebuilt toward either direction. Tank starts at 48 base HP. Current
+class palettes, Jester rules and automated build preferences are documented in
+[Campfire update](CAMPFIRE_UPDATE.md); existing edited faces are preserved.
 
-Tank, Rogue and Mage are initially available; Ranger and Berserker require
+Tank, Rogue and Mage are initially available; Ranger, Berserker and Jester require
 permanent camp unlocks. Mage
 replaces the old Healer. Mages have no chosen speciality or role stat. Resonance
 follows the actual healing, shield, poison or spell marks rolled, with the
@@ -56,7 +56,7 @@ The workshop selects one reel and one weighted face at a time. Its edit and
 critical pages reserve their shared maximum content height, so the note and Done
 button cannot overlap long descriptions. Compact headers omit repeated context
 while retaining the actual effect and editing controls. All seven
-shared powers, plus Berserker Blood Price, support tier IV. Upgrade costs retain class affinities; Mage
+shared powers, plus Berserker/Jester Blood Price, support tier IV. Upgrade costs retain class affinities; Mage
 healing, shields, magic and poison share its favourable affinity. Empty-face
 inscription costs three for the class/temperament's primary type. Symbol swaps
 have an explicit destination dropdown and show their price before committing.
@@ -76,7 +76,7 @@ for the formula. On compact screens, a native face selector and fixed Power,
 Replace and Weight pages keep text and controls legible without internal scrolling.
 Exactly one class seal is mandatory on the
 middle reel: it cannot be upgraded, downgraded, swapped away or copied by any
-manual or automated edit. Autoplay evaluates explicit legal swaps and upgrades
+manual or automated edit. Autoplay keeps a preferred build, values support coverage and retains offensive capability. It evaluates explicit legal swaps and upgrades
 through the same validator and prices.
 
 ## Protection and encounters
