@@ -35,7 +35,22 @@ adds one blade damage; it remains until battle ends. **Bloodrush** adds four Fur
 and two blade damage alongside the other rolled marks. Opening bonuses and
 criticals can increase the positive effects. HP damage absorbed by block does
 not feed Fury. Blood Price criticals multiply its extra Fury, never its HP cost.
-The reserved caption beneath its machine contains the Fury bar.
+The reserved caption beneath its machine contains the Fury bar. Starting reels
+now contain Blade I/II, Healing I/II, Blood Price I and Empty (all equally likely).
+Bloodrush additionally restores `4 + floor((level-1)/3)` HP to its **caster**,
+independently of the selected healing recipient. Criticals scale that positive
+heal normally. Existing edited/saved reels are preserved; fresh recruits/starts
+use the new preset.
+
+Every four Fury also grants 4% lifesteal, capped at 20%. A damaging roll offers
+`ceil(actualEnemyHPDamage * rate)` healing, clamped by missing HP and adjusted by
+normal healing-received traits. Fully blocked damage grants none. Fury is not
+spent. Outgoing damage icon/beam promises must finish before healing marks travel
+from the damaged enemy portraits back to the Berserker; HP recovery occurs when
+those return marks arrive. Multiple victims contribute to one rounded offer.
+This works in Icons, Beams and Both, respects utility-page suspension and never
+changes damage based on a particle's position. Autoplay scores caster-only
+recovery separately from healing a selected ally and accounts for self-damage.
 
 Tank, Rogue and Mage are base classes; Ranger and Berserker require camp unlocks.
 Each hero has exactly one permanent middle-reel class mark. Its odds cannot be
@@ -89,6 +104,10 @@ A heal can clear its recipient's stun with chance
 `offeredHealing / (offeredHealing + sharedBlock + 4)`. A full-HP stunned target
 remains a valid heal recipient. Healing Resonance guarantees cleansing every
 living ally, including those whose HP is full.
+
+Poison ticks have purple POISON labels/particles and red damage values. They
+bypass block and do not consume or amplify Vulnerable; healing never consumes
+Vulnerable either. The next real hit retains that status.
 
 Poison has at most three remaining turns. Reapplications fill those turns and
 bank excess duration potency; each three surplus points adds one tick damage,
@@ -160,9 +179,11 @@ unrevealed contents.
 
 Flying icons are larger and their normal flight is 520ms at 1x, easing along a
 shallow arc; other animation speeds scale it and Skip retains a brief impact.
-Every tier, including IV, shares a constrained reel-window layout. Critical
-calculations appear first, then a large pulsing final damage/heal/gold number
-becomes the focus. The advance button remains enabled. Class marks, initiative,
+Every tier, including IV, shares a constrained reel-window layout. Criticals
+show the original value in one reserved readout while the multiplier spins,
+then pulse that same node to the final damage/heal/gold number. No calculation
+grid or result box is inserted. Effect-by-effect rounding and base/final values
+remain in `state.lastCritical`, not extra on-screen blocks. The advance button remains enabled. Class marks, initiative,
 passive activations, boss/elite tags and the second foe's entrance have distinct
 bounded callouts. Reduced motion and existing FX/audio preferences apply.
 
@@ -180,3 +201,19 @@ workshops, paired shields, large numbers, tier-IV faces, lava and status labels
 at 1920x1080, 1280x800 and compact sizes. The topic-based field guide in
 `ui/field-guide.js` must remain readable at each size. The HTML must remain self-contained,
 including all five supplied recordings.
+
+## Watching automation
+
+`game/automation-pacing.js` owns automatic confirmation timing. Encounter choices
+wait 1,500 ms (1,800 for duals), normal results/choices 1,100 ms, shop purchases
+700 ms, and memorials 1,500 ms at 1×. Times divide by the square root of the
+selected animation speed, with a 320 ms minimum; Skip uses 5× as its reference.
+Timing begins when the relevant button becomes available. Manual clicks are
+never gated. Options/guide/bestiary suspension also pauses this reading clock.
+
+An automated encounter pauses a further 680 ms (with the same scaling/minimum)
+after portraits/statuses arrive. A fully surprised party also gets that moment
+after the warning and before the enemies' opening actions. These are presentation
+holds, not extra combat actions or changes to countdowns/RNG. Keep both drivers
+on the shared `automaticConfirmReady()` gate; do not restore immediate `.click()`
+calls in one driver. Different sequential confirmations receive their own hold.

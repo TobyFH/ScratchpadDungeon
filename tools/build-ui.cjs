@@ -80,6 +80,7 @@ for (const [label, file] of [
   ["REEL UPGRADES", "game/reel-upgrades.js"],
   ["ENCOUNTER PRESENTATION", "game/encounter-presentation.js"],
   ["COMBAT FEEDBACK", "ui/combat-feedback.js"],
+  ["AUTOMATION PACING", "game/automation-pacing.js"],
   ["NOTEBOOK PAGES", "ui/notebook-pages.js"],
   ["FIELD GUIDE", "ui/field-guide.js"],
 ]) {

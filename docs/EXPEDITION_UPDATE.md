@@ -72,14 +72,14 @@ Rank-I, rank-II and rank-III versions are separate faces, not a single weighted
 symbol. Identical edited faces add their probabilities together. Enemy and
 special event reels retain their deliberately authored distributions.
 
-| Hero            | Six ordinary starting faces, repeated on all three reels        |
-| --------------- | --------------------------------------------------------------- |
-| Tank            | Blade I, Blade II, Block I, Block II, Heal I, Empty             |
-| Rogue           | Blade I, Blade II, Blade III, Poison I, Block I, Empty          |
-| Ranger          | Blade I, Blade II, Poison I, Block I, Stun I, Empty             |
-| Berserker       | Blade I, Blade II, Heal I, Blood Price I, Blood Price II, Empty |
-| Aggressive Mage | Magic I, Magic II, Poison I, Heal I, Block I, Empty             |
-| Defensive Mage  | Heal I, Heal II, Block I, Magic I, Poison I, Empty              |
+| Hero            | Six ordinary starting faces, repeated on all three reels |
+| --------------- | -------------------------------------------------------- |
+| Tank            | Blade I, Blade II, Block I, Block II, Heal I, Empty      |
+| Rogue           | Blade I, Blade II, Blade III, Poison I, Block I, Empty   |
+| Ranger          | Blade I, Blade II, Poison I, Block I, Stun I, Empty      |
+| Berserker       | Blade I, Blade II, Heal I, Heal II, Blood Price I, Empty |
+| Aggressive Mage | Magic I, Magic II, Poison I, Heal I, Block I, Empty      |
+| Defensive Mage  | Heal I, Heal II, Block I, Magic I, Poison I, Empty       |
 
 Mage temperament influences its initial faces, but is not a selected Mage role.
 Recruited/edited heroes can naturally develop other builds. Legacy Healers keep
@@ -106,7 +106,9 @@ Fully safe trap results never launch a zero-damage critical.
 
 On compact screens, a native face selector replaces the desktop face list.
 Fixed **Power**, **Replace** and **Weight odds** operation pages expose the same
-validated edits while keeping readable type and stationary controls. Manual play
+validated edits while keeping readable type and stationary controls. Edit/critical
+pages share a grid sized to the larger page, keeping the explanatory note and
+Done control below actual content rather than an undersized fixed-height box. Manual play
 and Autoplay share validators, prices and actual weighted expectations.
 
 ## Combat and encounters
@@ -172,7 +174,9 @@ it closes. An options page must never silently confirm or discard an event.
 Guide bodies share a reserved grid cell, so every page's navigation stays put.
 Camp balance, tabs and card region also reserve their geometry. Treasure has
 fixed artwork, main-machine, inline-critical, result and loot regions; changing
-marks never changes machine width. Multiple finds use a stationary reward
+marks never changes machine width. The critical region starts blank. Its original
+value becomes the final value in one fixed readout, without a calculation grid.
+Both chest and battle-skull art use the full reserved row for centring. Multiple finds use a stationary reward
 browser. Well art is larger/centred. All ranks use the same centred icon grid.
 
 The bestiary contains 37 records, including ten separate guardians. Unknown
@@ -208,3 +212,10 @@ modal actions, exact reel centring, fixed treasure geometry, compact editing,
 portrait settings and stable guide/camp navigation. Existing tests continue to
 exercise the established combat and exploration rules. The five supplied WAV
 recordings remain byte-for-byte embedded in the standalone game.
+
+The subsequent [combat feedback update](BATTLE_TACTICS.md) adds Berserker
+Bloodrush recovery/Fury lifesteal, poison-specific feedback, automatic reading
+holds and blackout smoke. Bridges now use the same faded river path under the
+wooden deck in an independent terrain layer; visiting or resolving a discovery
+never fades that layer. No save-version bump or edited-wheel replacement is
+needed for these changes.

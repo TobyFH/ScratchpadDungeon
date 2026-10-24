@@ -76,3 +76,13 @@
       without resizing. Wells are centred; trap saves never show a zero-effect crit.
 - [ ] Creature remains match their species without an upright contour ghost;
       portrait movement honours both its slider and reduced-motion preferences.
+
+- [ ] Enemy tape fits its text and reserved row; chest/skull artwork is centred.
+- [ ] Critical original/final values use one stable readout, with no calculation
+      grid, pending result box, layout shift or altered rounding.
+- [ ] Workshop note/footer clear every edit mode and long class description at
+      desktop and compact widths; text remains readable after fitting.
+- [ ] Bridge wood never fades with a visited/resolved state; water matches rivers.
+- [ ] Blackouts poof in/out, poison reads POISON in purple, and drain healing
+      returns only after outgoing damage arrives. Automatic reading holds and
+      manual skipping both work at every speed.

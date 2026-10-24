@@ -52,3 +52,12 @@ Utility pages must suspend an existing confirmation without discarding its DOM
 callbacks. Keep journal encounter/death receipts idempotent across reloads.
 Camp training uses highest owned rank, not additive ranks, and future-run rules.
 Lava stays impassable; floor generation and save repair preserve the stair route.
+
+Automatic confirmation/arrival timing lives in `game/automation-pacing.js`.
+Both drivers must share its gate; manual buttons remain immediately usable.
+Critical presentation uses `criticalFigures`/`criticalPayoff` and updates one
+reserved number node. Do not reinsert a calculation grid or transient result box.
+Damage flights return completion promises; Fury lifesteal waits for outgoing
+arrivals, then sends healing back from victims before restoring caster HP.
+Poison uses its own purple identity and does not consume direct-hit Vulnerable.
+Bridge terrain art is independent of active/spent discovery icons and never fades.

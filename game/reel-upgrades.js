@@ -169,7 +169,7 @@ function heroCriticalOdds(h) {
 function criticalOddsMarkup(h) {
   const rows = heroCriticalOdds(h),
     total = rows.reduce((n, r) => n + r.chance, 0);
-  return `<section class="workshop-critpage workshop-page" ${editorView === "crits" ? "" : "hidden"}><h3>Three of a kind · ${(total * 100).toFixed(2)}% per roll</h3><p>The middle class mark also completes two matching outer marks. Empty faces never crit. These odds include your edits and purchased weighting.</p><div class="crit-odds-grid">${rows.map((row) => `<div class="crit-odds-row">${symbolMarkup(row)}<b>${FACE_LABELS[row.type]} ${tierName(row.tier)}</b><strong>${(row.chance * 100).toFixed(2)}%</strong></div>`).join("") || "<p>No matching combinations yet. Put the same type and rank on both outer reels to start a combo.</p>"}</div></section>`;
+  return `<section class="workshop-critpage workshop-page" ${editorView === "crits" ? "" : "hidden inert"}><h3>Three of a kind · ${(total * 100).toFixed(2)}% per roll</h3><p>The middle class mark also completes two matching outer marks. Empty faces never crit. These odds include your edits and purchased weighting.</p><div class="crit-odds-grid">${rows.map((row) => `<div class="crit-odds-row">${symbolMarkup(row)}<b>${FACE_LABELS[row.type]} ${tierName(row.tier)}</b><strong>${(row.chance * 100).toFixed(2)}%</strong></div>`).join("") || "<p>No matching combinations yet. Put the same type and rank on both outer reels to start a combo.</p>"}</div></section>`;
 }
 function faceEditCost(h, reel, index, operation, destination = null) {
   const face = h?.reels[reel]?.[index];
@@ -250,7 +250,7 @@ function editor(i) {
     `${h.name}’s reel workshop`,
     `<div class="workshop-summary"><strong>${h.points} personal points</strong>${heroBuildMarkup(h)}</div>
     <p class="workshop-ability">Middle class mark: <b>${classAbilityName(h)}</b> · ${workshopAbilitySummary(h)}</p>
-    <nav class="workshop-nav" aria-label="Workshop pages"><button data-workshop-view="edit" aria-pressed="${editorView === "edit"}">Edit reels</button><button data-workshop-view="crits" aria-pressed="${editorView === "crits"}">Critical odds · ${(heroCriticalOdds(h).reduce((n, r) => n + r.chance, 0) * 100).toFixed(1)}%</button></nav><div class="workshop-editpage workshop-page" ${editorView === "edit" ? "" : "hidden"}>
+    <nav class="workshop-nav" aria-label="Workshop pages"><button data-workshop-view="edit" aria-pressed="${editorView === "edit"}">Edit reels</button><button data-workshop-view="crits" aria-pressed="${editorView === "crits"}">Critical odds · ${(heroCriticalOdds(h).reduce((n, r) => n + r.chance, 0) * 100).toFixed(1)}%</button></nav><div class="workshop-pages"><div class="workshop-editpage workshop-page" ${editorView === "edit" ? "" : "hidden inert"}>
     <div class="workshop-step-label"><b>1. Choose a reel</b><span>Each reel rolls one mark. Faces begin equally likely.</span></div>
     <div class="workshop-tabs" role="tablist" aria-label="Choose reel">${h.reels.map((_, r) => `<button role="tab" aria-selected="${r === k}" data-editor-reel="${r}">Reel ${r + 1}${r === 1 ? " · permanent class mark" : ""}</button>`).join("")}</div>
     <div class="reel-workshop"><div class="workshop-mark-list"><b class="workshop-step-label">2. Choose a mark to edit</b><label class="workshop-face-picker">Mark<select id="workshop-face-picker">${h.reels[k].map((f, n) => `<option value="${n}" ${n === j ? "selected" : ""}>${f.type === "class" ? classAbilityName(h) : FACE_LABELS[f.type] + (f.type !== "blank" ? " " + tierName(f.tier) : "")} · ${((100 * (f.weight || 1)) / h.reels[k].reduce((sum, x) => sum + (x.weight || 1), 0)).toFixed(1)}%</option>`).join("")}</select></label><div class="workshop-faces" role="group" aria-label="Weighted faces on reel ${k + 1}">${h.reels[k].map((f, n) => `<button data-editor-face="${n}" aria-pressed="${n === j}" title="${escapeHTML(faceDescription(f, h))}">${symbolMarkup(f)}<span>${f.type === "class" ? classAbilityName(h) : FACE_LABELS[f.type]}${!["class", "blank"].includes(f.type) ? " " + tierName(f.tier) : ""}</span><small>${((100 * (f.weight || 1)) / h.reels[k].reduce((sum, x) => sum + (x.weight || 1), 0)).toFixed(1)}% chance</small></button>`).join("")}</div></div>
@@ -271,7 +271,7 @@ function editor(i) {
               "",
             )}</select></label><p class="swap-effect" id="swap-effect"></p><button class="swap-face" id="face-swap">Replace symbol <small id="swap-price"></small></button></div>`
     }
-    <div class="weight-face"><button id="face-weight" ${!faceWeightCost(face) || h.points < faceWeightCost(face) ? "disabled" : ""}>Weight this face +1 <small>${faceWeightCost(face) ? "Spend " + faceWeightCost(face) + " pts" : "Maximum weight"}</small></button><small>Weight ${face.weight || 1}/${FACE_WEIGHT_MAX} · ${faceWeightCost(face) ? `After buying: ${((((face.weight || 1) + 1) / (h.reels[k].reduce((n, f) => n + (f.weight || 1), 0) + 1)) * 100).toFixed(1)}% chance` : "Maximum weighting reached."}</small></div></section></div></div>${criticalOddsMarkup(h)}<p class="workshop-note">Upgrades change power. Weighting changes odds. Downgrades refund half the paid rank cost (at least 1 point).</p><div class="modal-actions"><button class="primary" data-close>Done · back to the adventure</button></div>`,
+    <div class="weight-face"><button id="face-weight" ${!faceWeightCost(face) || h.points < faceWeightCost(face) ? "disabled" : ""}>Weight this face +1 <small>${faceWeightCost(face) ? "Spend " + faceWeightCost(face) + " pts" : "Maximum weight"}</small></button><small>Weight ${face.weight || 1}/${FACE_WEIGHT_MAX} · ${faceWeightCost(face) ? `After buying: ${((((face.weight || 1) + 1) / (h.reels[k].reduce((n, f) => n + (f.weight || 1), 0) + 1)) * 100).toFixed(1)}% chance` : "Maximum weighting reached."}</small></div></section></div></div>${criticalOddsMarkup(h)}</div><p class="workshop-note">Upgrade: more power. Weight: higher odds. Downgrade: half the rank cost back.</p><div class="modal-actions"><button class="primary" data-close>Done · back to the adventure</button></div>`,
     "editor",
   );
   document.querySelectorAll("[data-workshop-view]").forEach(
@@ -368,6 +368,7 @@ function workshopAbilitySummary(h) {
     rogue: "Roll three extra blade attacks.",
     mage: "Echo the rolled magic, healing, shield or poison marks across the whole team.",
     ranger: "Charge patience for a stronger finishing shot.",
-    berserker: "Gain 4 Fury and +2 blade damage. Every 4 Fury adds 1 damage.",
+    berserker:
+      "Heal yourself, gain 4 Fury and +2 blade damage. Charged Fury adds damage and lifesteal.",
   }[h.job];
 }

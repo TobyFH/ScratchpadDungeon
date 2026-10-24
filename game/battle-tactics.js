@@ -29,7 +29,7 @@ function gainFury(h, damage = 0, extra = 0) {
 const furyBonus = (h) =>
   h?.job === "berserker" ? Math.floor((h.fury || 0) / 4) : 0;
 function furyMarkup(h) {
-  return `<span class="fury-meter" role="meter" aria-label="Berserker Fury" aria-valuemin="0" aria-valuemax="20" aria-valuenow="${h.fury || 0}" data-tooltip="Wounds feed Fury: 1.5 per HP lost. Every 4 Fury adds 1 damage, up to +5. Blood Price grants extra Fury. Clears after battle."><b>FURY ${h.fury || 0}/20</b><span><i style="width:${(h.fury || 0) * 5}%"></i></span><small>+${furyBonus(h)} damage</small></span>`;
+  return `<span class="fury-meter" role="meter" aria-label="Berserker Fury" aria-valuemin="0" aria-valuemax="20" aria-valuenow="${h.fury || 0}" data-tooltip="Wounds feed Fury: 1.5 per HP lost. Every 4 Fury adds 1 damage and 4% lifesteal, up to +5 damage / 20%. Bloodrush also heals you. Blood Price grants extra Fury. Clears after battle."><b>FURY ${h.fury || 0}/20</b><span><i style="width:${(h.fury || 0) * 5}%"></i></span><small>+${furyBonus(h)} damage</small></span>`;
 }
 function setupBattleOpening({ fresh = false } = {}) {
   const living = state.party.filter(alive);
@@ -74,6 +74,7 @@ async function resolveBattleOpening() {
   if (living.length && living.every((h) => h.surprised)) {
     result(icon("stun") + "Caught off guard · enemies take the opening turn!");
     combatCallout($("#encounter"), "ENEMIES GO FIRST", "danger");
+    await automaticOpeningPause();
     for (const e of livingEnemies()) {
       await enemyTurn(e);
       await processDeaths();
@@ -450,16 +451,26 @@ function pencilBlackout(e) {
     candidates.length,
     state.party.filter(alive).length + 1,
   );
+  const added = [];
   for (let n = 0; n < count; n++) {
     const { h, k } = candidates.splice(rand(candidates.length), 1)[0];
     h.blackout ??= [];
     h.blackout.push(k);
+    added.push({ i: state.party.indexOf(h), k });
   }
   passiveFX(e, "PENCIL BLACKOUT!", "blackout");
   renderParty();
-  document
-    .querySelectorAll(".blacked-out")
-    .forEach((el) => burst(el, "dust", 12));
+  for (const { i, k } of added) {
+    const el = $(`#machine-hero-${i} [data-reel="${k}"]`);
+    el?.classList.add("blackout-forming");
+    smokePoof(el);
+    if (el)
+      animate(
+        el,
+        [{ filter: "brightness(1.8)" }, { filter: "brightness(1)" }],
+        { duration: 300, juice: true },
+      );
+  }
   log(
     e.name +
       " blacks out party reels. Roll each affected machine to erase its covering.",
@@ -470,7 +481,7 @@ function clearRolledBlackout(h, i) {
   h.blackout = [];
   document.querySelectorAll(`#machine-hero-${i} .blacked-out`).forEach((el) => {
     el.classList.add("blackout-erased");
-    burst(el, "dust", 16);
+    smokePoof(el);
     setTimeout(
       () => el.classList.remove("blacked-out", "blackout-erased"),
       180,
@@ -492,4 +503,43 @@ function announceEnemyBadges(e) {
       { duration: 480 + i * 70, juice: true },
     );
   });
+}
+
+// Damage must land before the stolen health travels back. No state/RNG is read
+// from particle positions; only real HP damage determines the offered healing.
+async function settleFuryLeech(h, recipients, flights) {
+  const rate = furyLeechRate(h),
+    damage = recipients.reduce((n, r) => n + r.damage, 0);
+  if (!rate || !damage || !alive(h) || h.hp >= h.maxHp) return 0;
+  const offered = Math.ceil(damage * rate),
+    run = state;
+  await Promise.all(flights);
+  await waitForUtility();
+  if (state !== run || !alive(h)) return 0;
+  const record = (state.lastLifesteal = {
+    heroId: h.id,
+    damage,
+    rate,
+    offered,
+    outboundArrivedAt: Date.now(),
+    returnStartedAt: Date.now(),
+    targets: recipients.map((r) => r.enemy.id),
+  });
+  combatCallout(entityArt(h), "FURY · LIFESTEAL", "heal");
+  await Promise.all(
+    recipients.map(({ enemy }) =>
+      beam(enemyArtEl(enemy), entityArt(h), "heal", {
+        symbols: [{ type: "heal", tier: 1 }],
+        fromPortrait: true,
+        kind: "lifesteal",
+      }),
+    ),
+  );
+  await waitForUtility();
+  if (state !== run || !alive(h)) return 0;
+  const actual = healHero(state.party.indexOf(h), offered);
+  h.stats.healingDone += actual;
+  record.actual = actual;
+  record.healedAt = Date.now();
+  return actual;
 }

@@ -9,6 +9,7 @@ source modules; edit the sources and regenerate rather than editing marked HTML:
 | `game/reel-upgrades.js`          | Prices, refunds, edit validation and the reel workshop                     |
 | `game/economy.js`                | Shared shop prices and permanent training lookup                           |
 | `game/encounter-journal.js`      | Persistent creature records and returned adventurers                       |
+| `game/automation-pacing.js`      | Shared reading/arrival holds for both automatic drivers                    |
 | `ui/notebook-pages.js`           | Suspended utility pages, portrait motion and fixed loot browsing           |
 | `game/encounter-presentation.js` | Cosmetic pun identities, paired arrivals and declined-recruit outcomes     |
 | `ui/combat-feedback.js`          | Rolled-symbol flights, beam selection and split numeric feedback           |
@@ -51,7 +52,10 @@ healing recipient. In combat, portrait hover shows battle information; outside
 combat it retains lifetime statistics. A reminder appears at
 `points >= max(6, level * 3)` and never moves its clickable hitbox.
 
-The workshop selects one reel and one weighted face at a time. All seven
+The workshop selects one reel and one weighted face at a time. Its edit and
+critical pages reserve their shared maximum content height, so the note and Done
+button cannot overlap long descriptions. Compact headers omit repeated context
+while retaining the actual effect and editing controls. All seven
 shared powers, plus Berserker Blood Price, support tier IV. Upgrade costs retain class affinities; Mage
 healing, shields, magic and poison share its favourable affinity. Empty-face
 inscription costs three for the class/temperament's primary type. Symbol swaps
@@ -103,7 +107,8 @@ positions/effects without waiting for travel.
 
 Wells now offer `ceil(maxHP * .15) + ceil(rolledHealing * .5)`. Triple matches
 multiply the entire offered amount by 1.25/1.25/1.5/1.75, preserving visible
-before/after math even when missing HP is lower. Traps use
+uncapped base/final offers even when missing HP is lower. The critical readout
+transforms its original number to the total; it does not insert a calculation box. Traps use
 `0.5 + floor * .2` power per danger tier. Solo companion discovery gains an
 additional 4.5/3/1.5 percentage points on floors 1/2/3; later-floor pity remains.
 Aged explored tiles still use the existing invisible ambush clock, which pauses

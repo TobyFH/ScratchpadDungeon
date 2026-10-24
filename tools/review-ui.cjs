@@ -618,7 +618,7 @@ const output = path.join(root, "test-results/ui-review");
         { details: [{ label: "Damage power", icon: "sword", value: 38 }] },
       );
     });
-    await page.waitForSelector(".critical-payoff");
+    await page.waitForSelector(".critical-locked .critical-payoff");
     await page.waitForTimeout(450);
     await shot("48-critical-big-payoff", false, "allow");
     await page.evaluate(() => window.reviewBigCrit);
@@ -878,6 +878,175 @@ const output = path.join(root, "test-results/ui-review");
       closeModal();
     });
     await page.setViewportSize({ width: 1920, height: 1080 });
+    await page.evaluate(() => {
+      setPace("1");
+      setPreference("shake", 0);
+      setPreference("skipCriticals", false);
+      sceneFast = false;
+      setAutoresolve(false);
+      setAutoplay(false);
+      // Hold the real payoff while taking a still: captures can outlast its
+      // normal automatic linger on a busy browser worker.
+      window.reviewCriticalHold = criticalHold;
+      criticalHold = () =>
+        new Promise((resolve) => {
+          window.releaseReviewCritical = resolve;
+        });
+      window.numberReview = rollCritical(
+        "Alden",
+        [0, 1, 2].map(() => ({ type: "attack", tier: 1 })),
+        false,
+        { details: [{ icon: "sword", label: "Damage", value: 18 }] },
+      );
+    });
+    await page.waitForSelector("#machine-critical.rolling");
+    await shot("64-critical-original-number", false, "allow");
+    await page.locator("#stage-skip").click();
+    await page.waitForSelector(".critical-locked");
+    await shot("65-critical-transformed-number", false, "allow");
+    await page.evaluate(() => {
+      window.releaseReviewCritical();
+      return window.numberReview;
+    });
+    await page.evaluate(() => {
+      sceneFast = false;
+      window.reviewMachine = runMachine;
+      runMachine = (id, reels, options = {}) =>
+        window.reviewMachine(
+          id,
+          reels,
+          id === "treasure"
+            ? { results: [0, 1, 2].map(() => ({ type: "coin", tier: 1 })) }
+            : options,
+        );
+      busy = true;
+      window.spoilsReview = treasureRoll("battle");
+    });
+    await page.waitForSelector("#machine-treasure.rolling");
+    await shot("66-centred-battle-spoils");
+    await page.locator("#stage-skip").click();
+    await page.waitForSelector("#machine-critical.rolling");
+    await page.setViewportSize({ width: 390, height: 844 });
+    await shot("66-spoils-critical-original-mobile", false, "allow");
+    await page.locator("#stage-skip").click();
+    await page.waitForSelector(".critical-locked");
+    await shot("66-spoils-critical-payoff-mobile", false, "allow");
+    await page.evaluate(() => window.releaseReviewCritical());
+    await page.waitForSelector("#stage-confirm");
+    await page.locator("#stage-confirm").click();
+    await page.evaluate(async () => {
+      await window.spoilsReview;
+      runMachine = window.reviewMachine;
+      criticalHold = window.reviewCriticalHold;
+      busy = false;
+      setPace("skip");
+    });
+    await page.setViewportSize({ width: 1920, height: 1080 });
+    await page.evaluate(() => {
+      newRun("berserker", { specialism: "offence" });
+      setPace("1");
+      setPreference("skipCriticals", true);
+      setPreference("combatEffects", "icons");
+      beginEncounter(false, { count: 1 });
+      state.opening = null;
+      const h = state.party[0];
+      h.initiative = null;
+      h.hp = 10;
+      h.fury = 20;
+      h.reels = [
+        [{ type: "attack", tier: 2 }],
+        [{ type: "blank", tier: 1 }],
+        [{ type: "blank", tier: 1 }],
+      ];
+      state.enemy.hp = state.enemy.maxHp = 1000;
+      state.enemy.countdown = 99;
+      state.enemy.passive = null;
+      render();
+      window.furyReview = spin(0);
+    });
+    await page.waitForSelector('.rolled-projectile[data-effect="lifesteal"]');
+    await shot("67-berserker-returning-lifesteal", false, "allow");
+    await page.evaluate(() => window.furyReview);
+    await page.evaluate(() => {
+      setPace("skip");
+      state.actionSerial = 5;
+      state.party[0].poison = {
+        turns: 3,
+        damage: 1,
+        appliedAt: 0,
+        sourceName: "Venom",
+      };
+      state.enemy.poison = {
+        turns: 3,
+        damage: 1,
+        appliedAt: 0,
+        sourceName: "Venom",
+      };
+      window.poisonReview = tickPoison();
+    });
+    await page.waitForSelector(".combat-number.poison");
+    await shot("68-poison-feedback", false, "allow");
+    await page.evaluate(() => window.poisonReview);
+    await page.evaluate(() => {
+      state.enemy = null;
+      state.enemies = [];
+      clearBattleStatuses();
+      const ids = [pos(3, 5), pos(4, 5), pos(5, 5)];
+      ids.forEach((i, k) =>
+        Object.assign(state.map[i], {
+          wall: false,
+          seen: true,
+          terrain: "bridge",
+          event: null,
+          feature: k === 2 ? "treasure" : k === 1 ? "bridge" : null,
+          visited: k > 0,
+          corpses: [],
+        }),
+      );
+      Object.assign(state.map[pos(3, 4)], {
+        wall: true,
+        seen: true,
+        terrain: "river",
+        event: null,
+        feature: null,
+      });
+      render();
+    });
+    await shot("69-bridges-retain-their-terrain");
+    await page.evaluate(() => {
+      newRun("mage");
+      state.party[0].points = 60;
+      editor(0);
+      editorSelection.reel = 1;
+      editorSelection.face = 6;
+      editor(0);
+    });
+    await shot("70-workshop-class-note-fit");
+    await page.setViewportSize({ width: 320, height: 800 });
+    await shot("70-workshop-class-note-fit-320");
+    await page.evaluate(() => closeModal());
+    await page.setViewportSize({ width: 1920, height: 1080 });
+    await page.evaluate(() => {
+      beginEncounter(false, { count: 2 });
+      window.reviewReadDelay = automaticReadDelay;
+      automaticReadDelay = (kind) =>
+        kind === "enemy-intro" ? 5000 : window.reviewReadDelay(kind);
+      setAutoresolve(true);
+      window.spectatorReview = (async () => {
+        busy = true;
+        await encounterEntrance();
+        busy = false;
+      })();
+    });
+    await page.waitForSelector("#stage-confirm");
+    await shot("71-autofight-reads-dual-arrivals");
+    await page.evaluate(() => {
+      setAutoresolve(false);
+      automaticReadDelay = window.reviewReadDelay;
+    });
+    if (await page.locator("#stage-confirm").isVisible())
+      await page.locator("#stage-confirm").click();
+    await page.evaluate(() => window.spectatorReview);
     const download = page.waitForEvent("download");
     await page.locator("#download").click();
     await (

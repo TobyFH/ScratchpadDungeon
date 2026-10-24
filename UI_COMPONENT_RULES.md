@@ -255,3 +255,28 @@ width before reducing text size. Check every topic at compact sizes.
   second untransformed contour that resembles a live ghost behind the remains.
 - Portrait motion is independent of shake, respects reduced motion and its own
   strength slider, and must leave actual button hitboxes stationary.
+
+## Criticals, return effects and readable automation
+
+- Keep one `.critical-payoff` node from original roll value through final payoff.
+  Update its number/label and animate paint only. Pending event critical regions
+  are blank reserved space; no dashed placeholder or calculation grid appears.
+- Treasure and battle-spoil icons centre across their full scene row. The trap
+  illustration's old 200px maximum must not constrain these standalone icons.
+- A loot machine's reserved row includes its title and result caption. The inline
+  critical has its own title row; neither caption may spill into that heading.
+- Enemy tape labels use a content-sized width within the 26px encounter heading
+  row. Do not stretch a tiny title across the whole enemy column or exceed its row.
+- Bridge water reuses the exact river path at reduced opacity; the wooden deck
+  stays bold. The terrain layer is separate from any discovery/corpse marker.
+- Edit and critical workshop pages share a grid cell and reserve the larger
+  intrinsic content height. Inactive pages are inert/invisible, retaining their
+  geometry; note/footer follow that grid. Do not restore rigid page heights that
+  let long face descriptions overlap the explanatory line.
+- Outgoing projectile completion is part of the feedback contract. A life-drain
+  return starts at the victim portrait after outgoing damage has arrived; the
+  heal number/pulse occurs after the return. Utility suspension preserves it.
+- Poison identity is purple text/particles and an explicit POISON label; its HP
+  number may remain red. Do not label damage-over-time HIT or consume Vulnerable.
+- Automated confirmations get a speed-aware reading hold; manual interaction
+  stays enabled. See `game/automation-pacing.js`, including Skip's 5× reference.

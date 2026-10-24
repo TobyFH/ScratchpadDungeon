@@ -290,8 +290,10 @@ function icon(name) {
   if (name === "wall") return wallArt();
   if (name === "lava")
     return `<svg class="pencil-art pencil-icon lava-barrier" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" aria-hidden="true"><path d="M1 29V12l7-8 5 8 6-10 6 9 6-4v22Z" fill="var(--paper-shade)"/><path d="m2 25 8-3 5 4 7-5 9 4M8 4l2 15m9-17-2 17m8-8-3 8M4 28l5-1m6 2 8-2"/><path d="m12 23 4-9 3 8m5 5 3-7" stroke="var(--lava-ink)" stroke-width="2.5"/></svg>`;
-  if (name === "bridge")
-    return `<svg class="pencil-art pencil-icon bridge-art" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" aria-hidden="true"><path d="M1 5q5-3 10 0t10 0 10 0M1 29q5-3 10 0t10 0 10 0M1 9q6-2 11 0m10 0 9-1M1 25l10 1m11-1 9 1" stroke="var(--water-ink)" opacity=".45"/><path d="M3 11h26v11H3Z" fill="var(--paper)"/><path d="M3 11h26M3 22h26M6 11v11m5-11v11m5-11v11m5-11v11m5-11v11M3 8v18m26-18v18"/></svg>`;
+  if (name === "bridge") {
+    const water = pencilPath(paths.river, 0.32);
+    return `<svg class="pencil-art pencil-icon bridge-art" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="bridge-water" stroke="var(--water-ink)" opacity=".45"><path class="pencil-echo" d="${water}" transform="translate(.38 -.28)"/><path d="${water}"/></g><g class="bridge-deck"><path d="M3 11h26v11H3Z" fill="var(--paper)"/><path d="M3 11h26M3 22h26M6 11v11m5-11v11m5-11v11m5-11v11m5-11v11M3 8v18m26-18v18"/></g></svg>`;
+  }
   const line = pencilPath(paths[name] || paths.sword, 0.32);
   return `<svg class="pencil-art pencil-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="pencil-echo" d="${line}" transform="translate(.38 -.28)"/><path d="${line}"/></svg>`;
 }

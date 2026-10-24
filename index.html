@@ -10844,6 +10844,289 @@ body.utility-open .combat-callout {
     font-size: 19px;
   }
 }
+
+/* A tape label sizes to its lettering, inside the reserved encounter row. */
+#encounter > .enemy-label {
+  justify-self: start;
+  align-self: start;
+  width: max-content;
+  max-width: 100%;
+  height: 26px;
+  min-height: 26px;
+  border: 0;
+  padding: 2px 12px;
+  display: flex;
+  align-items: center;
+  font-size: 22px;
+  line-height: 1;
+}
+#encounter.paired-enemies > .enemy-label {
+  font-size: 20px;
+}
+
+/* The payoff changes its existing number, never inserts a new calculation box. */
+.critical-summary {
+  width: 100%;
+  min-width: 0;
+  height: 156px;
+  display: grid;
+  place-items: center;
+}
+.critical-summary .critical-payoff {
+  width: 100%;
+  height: 140px;
+  min-height: 140px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  display: grid;
+  grid-template-rows: 30px 100px;
+  align-content: center;
+  align-items: center;
+  text-align: center;
+}
+.critical-summary .critical-payoff small {
+  font-size: 19px;
+  line-height: 1.1;
+  color: var(--soft);
+}
+.critical-summary .critical-payoff strong {
+  font-size: 82px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  animation: none;
+}
+.critical-payoff[data-phase="rolling"] {
+  color: var(--ink);
+}
+.critical-payoff[data-phase="locked"] {
+  color: var(--gold);
+}
+.critical-locked .critical-payoff strong {
+  animation: critical-big-number 0.65s ease-in-out infinite alternate;
+}
+.event-critical:empty {
+  border: 0;
+  background: transparent;
+}
+.stage-card.treasure .critical-summary,
+.stage-card.treasure .critical-summary .critical-payoff {
+  height: 140px;
+  min-height: 140px;
+}
+.stage-card.treasure .critical-payoff strong {
+  font-size: 68px;
+}
+.stage-card.treasure .critical-payoff small {
+  font-size: 17px;
+}
+.stage-card.treasure .trap-art {
+  max-width: none;
+  justify-self: stretch;
+  width: 100%;
+}
+/* Fit the complete loot machine, including its captions, inside its reserved
+ * row. The inline multiplier owns a separate title row beneath it. */
+.stage-card.treasure .scene-layout {
+  --loot-machine-height: 105px;
+}
+.stage-card.treasure .scene-layout > .machine-shell {
+  display: grid;
+  grid-template-rows: 20px minmax(0, 1fr) 20px;
+  height: var(--loot-machine-height);
+  margin: 0 auto;
+}
+.stage-card.treasure .scene-layout > .machine-shell .machine-title,
+.stage-card.treasure .scene-layout > .machine-shell .machine-footnote {
+  height: 20px;
+  min-height: 20px;
+  line-height: 20px;
+  margin: 0;
+}
+.stage-card.treasure .scene-layout > .machine-shell .machine-face {
+  height: 100%;
+  min-height: 0;
+}
+.stage-card.treasure .scene-layout > .machine-shell .lever {
+  top: 20px;
+  height: calc(var(--loot-machine-height) - 40px);
+}
+.stage-card.treasure .event-critical.active-critical {
+  display: grid;
+  grid-template-rows: 22px minmax(0, 1fr);
+}
+.stage-card.treasure .inline-critical-title {
+  height: 22px;
+  line-height: 22px;
+}
+.stage-card.treasure .active-critical .inline-critical-body,
+.stage-card.treasure .active-critical .critical-summary,
+.stage-card.treasure .active-critical .critical-payoff {
+  height: 100%;
+  min-height: 0;
+}
+.stage-card.treasure .active-critical .critical-payoff {
+  grid-template-rows: 26px minmax(0, 1fr);
+}
+@media (max-width: 760px) {
+  .stage-card.treasure .scene-layout {
+    --loot-machine-height: 90px;
+  }
+}
+
+/* Terrain remains legible when a discovery on top of a bridge has been used. */
+.tile.bridge-tile,
+.tile.bridge-tile.spent,
+.tile.bridge-tile.visited {
+  background:
+    linear-gradient(
+      color-mix(in srgb, var(--water-wash) 50%, transparent),
+      color-mix(in srgb, var(--water-wash) 50%, transparent)
+    ),
+    var(--paper-shade);
+}
+.bridge-layer {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+.tile.bridge-tile .bridge-layer > svg {
+  width: 74%;
+  height: 74%;
+  opacity: 1;
+  color: var(--ink);
+}
+.tile.bridge-tile > svg,
+.tile.bridge-tile > svg:last-child:not(:first-child) {
+  position: absolute;
+  width: 43%;
+  height: 43%;
+  left: 55%;
+  top: 1%;
+  background: var(--paper-raised);
+}
+.combat-float.poison {
+  color: var(--poison);
+  font-weight: bold;
+}
+.combat-number.poison {
+  color: var(--red);
+  text-shadow:
+    0 1px var(--paper),
+    0 0 9px var(--poison-wash);
+}
+.combat-number.poison {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+.combat-number.poison .poison-label {
+  color: var(--poison);
+  font-size: clamp(14px, 0.42em, 25px);
+  line-height: 1.1;
+}
+.blacked-out.blackout-forming::after {
+  animation: blackout-form 0.2s ease-out both;
+}
+@keyframes blackout-form {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .blacked-out.blackout-forming::after {
+    animation: none;
+  }
+}
+.skip-cinematics .blacked-out.blackout-forming::after {
+  animation: none;
+}
+
+/* Grid siblings reserve the largest workshop page, including its real content.
+ * This keeps the explanatory note and Done row below the edit controls. */
+.workshop-pages {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+.workshop-pages > .workshop-page {
+  grid-area: 1/1;
+  height: auto;
+  min-height: 505px;
+}
+.modal .workshop-pages > .workshop-page[hidden] {
+  display: block !important;
+  visibility: hidden;
+  pointer-events: none;
+}
+.workshop-note {
+  position: static;
+  margin: 10px 0 6px;
+}
+@media (max-width: 760px) {
+  .workshop-pages > .workshop-page {
+    height: auto;
+    min-height: 455px;
+  }
+  .workshop-detail {
+    height: 310px;
+  }
+  .workshop-detail .face-effect {
+    height: 92px;
+    min-height: 92px;
+  }
+  .stage-card.treasure .critical-summary,
+  .stage-card.treasure .critical-summary .critical-payoff {
+    height: 120px;
+    min-height: 120px;
+  }
+  .critical-summary .critical-payoff {
+    grid-template-rows: 26px 84px;
+  }
+  .stage-card.treasure .critical-payoff strong {
+    font-size: 58px;
+  }
+}
+/* Compact workshop headers omit repeated context, reserving readable type for
+ * the selected mark and its controls. Full class/temperament details remain in
+ * the header tooltip and the permanent class face's description. */
+@media (max-width: 760px) {
+  .modal:has(.reel-workshop) > .eyebrow {
+    display: none;
+  }
+  .workshop-summary .hero-specialism > small,
+  .workshop-step-label > span {
+    display: none;
+  }
+  .workshop-detail .face-effect {
+    font-size: 21px;
+  }
+  .workshop-detail .locked-seal {
+    margin: 6px 0;
+    line-height: 1.35;
+  }
+  .workshop-detail .locked-seal svg {
+    width: 48px;
+    height: 48px;
+    margin: 4px auto;
+  }
+  .modal-flow > .workshop-note {
+    font-size: 18px;
+  }
+}
+@media (max-width: 760px) {
+  .modal:has(.reel-workshop) #modal-title {
+    padding-right: 50px;
+  }
+}
 /* END GENERATED NOTEBOOK CSS */
     </style>
   </head>
@@ -11327,8 +11610,10 @@ function icon(name) {
   if (name === "wall") return wallArt();
   if (name === "lava")
     return `<svg class="pencil-art pencil-icon lava-barrier" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" aria-hidden="true"><path d="M1 29V12l7-8 5 8 6-10 6 9 6-4v22Z" fill="var(--paper-shade)"/><path d="m2 25 8-3 5 4 7-5 9 4M8 4l2 15m9-17-2 17m8-8-3 8M4 28l5-1m6 2 8-2"/><path d="m12 23 4-9 3 8m5 5 3-7" stroke="var(--lava-ink)" stroke-width="2.5"/></svg>`;
-  if (name === "bridge")
-    return `<svg class="pencil-art pencil-icon bridge-art" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" aria-hidden="true"><path d="M1 5q5-3 10 0t10 0 10 0M1 29q5-3 10 0t10 0 10 0M1 9q6-2 11 0m10 0 9-1M1 25l10 1m11-1 9 1" stroke="var(--water-ink)" opacity=".45"/><path d="M3 11h26v11H3Z" fill="var(--paper)"/><path d="M3 11h26M3 22h26M6 11v11m5-11v11m5-11v11m5-11v11m5-11v11M3 8v18m26-18v18"/></svg>`;
+  if (name === "bridge") {
+    const water = pencilPath(paths.river, 0.32);
+    return `<svg class="pencil-art pencil-icon bridge-art" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="bridge-water" stroke="var(--water-ink)" opacity=".45"><path class="pencil-echo" d="${water}" transform="translate(.38 -.28)"/><path d="${water}"/></g><g class="bridge-deck"><path d="M3 11h26v11H3Z" fill="var(--paper)"/><path d="M3 11h26M3 22h26M6 11v11m5-11v11m5-11v11m5-11v11m5-11v11M3 8v18m26-18v18"/></g></svg>`;
+  }
   const line = pencilPath(paths[name] || paths.sword, 0.32);
   return `<svg class="pencil-art pencil-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="pencil-echo" d="${line}" transform="translate(.38 -.28)"/><path d="${line}"/></svg>`;
 }
@@ -12245,6 +12530,23 @@ const MAGE_POWERS = Object.freeze({
 });
 const RANGER_AIM_CAP = 6,
   BERSERKER_FURY_CAP = 20;
+// Sustain applies to the caster. Fury remains a battle-long bar, never spent.
+const BERSERKER_SUSTAIN = Object.freeze({
+  bloodrushHeal: 4,
+  healLevelInterval: 3,
+  leechPerPower: 0.04,
+  maxLeech: 0.2,
+});
+const bloodrushHealing = (h) =>
+  BERSERKER_SUSTAIN.bloodrushHeal +
+  Math.floor(Math.max(0, h.level - 1) / BERSERKER_SUSTAIN.healLevelInterval);
+const furyLeechRate = (h) =>
+  h?.job === "berserker"
+    ? Math.min(
+        BERSERKER_SUSTAIN.maxLeech,
+        furyBonus(h) * BERSERKER_SUSTAIN.leechPerPower,
+      )
+    : 0;
 const rangerAimGain = () => 2;
 const BASE_JOBS = Object.freeze(["fighter", "rogue", "mage"]);
 const heroJobs = (rules = state?.runRules || []) => [
@@ -12350,8 +12652,7 @@ function classAbilityDescription(hero) {
       healer: "Resonance echoes your rolled marks across the appropriate team.",
       ranger:
         "Execute: wait between attacks to fill patience. The next damaging roll gains a bonus against wounded enemies; the seal strengthens that shot.",
-      berserker:
-        "Bloodrush: gain 4 Fury and strike for extra blade damage. Wounds and Blood Price faces feed Fury; every 4 Fury adds 1 damage until battle ends.",
+      berserker: `Bloodrush: restore ${bloodrushHealing(hero && typeof hero === "object" ? hero : { level: 1 })} HP to yourself, gain 4 Fury and +2 blade damage. Charged Fury adds damage and up to 20% lifesteal.`,
     }[job] || "Your permanent signature mark, alongside the other two results."
   );
 }
@@ -12364,6 +12665,7 @@ function temperamentEffects(h, base) {
   } else if (h.specialism === "defence") {
     if (base.heal) base.heal++;
     else if (base.teamHeal) base.teamHeal++;
+    else if (base.selfHeal) base.selfHeal++;
     if (base.block) base.block++;
     if (base.stimulant) base.stimulant++;
   }
@@ -12411,7 +12713,7 @@ function makeHero(
       ["attack", 2],
       ["heal", 1],
       ["selfharm", 1],
-      ["selfharm", 2],
+      ["heal", 2],
       ["blank", 1],
     ],
     mage: legacyHealer
@@ -13525,7 +13827,9 @@ function wardActive(e = actingEnemy) {
         const locked = (busy && !travel) || !!state.enemy || state.over;
         $("#map").innerHTML = state.map
           .map((c, i) => {
-            const active = c.seen && !!c.event,
+            const feature = c.feature === "bridge" ? null : c.feature,
+              bridge = c.seen && c.terrain === "bridge",
+              active = c.seen && !!c.event,
               battle =
                 active && ["enemy", "guardian", "stronghold"].includes(c.event),
               water = c.wall && c.terrain === "river",
@@ -13534,14 +13838,16 @@ function wardActive(e = actingEnemy) {
                 ? ""
                 : corpse && !c.event
                   ? corpseArt(corpse.kind)
-                  : c.event || c.feature
+                  : c.event || feature
                     ? icon(
-                        ["enemy", "guardian"].includes(c.event || c.feature)
+                        ["enemy", "guardian"].includes(c.event || feature)
                           ? "skull"
-                          : c.event || c.feature,
+                          : c.event || feature,
                       )
-                    : floorArt(c, i);
-            return `<button class="tile ${c.seen ? "" : "fog"} ${c.wall && c.seen ? "wall" : ""} ${water && c.seen ? "water-block " + c.terrain : ""} ${c.visited ? "visited" : ""} ${c.feature && !c.event ? "spent" : ""} ${active ? "active-event" : ""} ${battle ? "active-battle" : ""} ${active && c.event === "well" ? "active-well" : ""} ${active && c.event === "stairs" ? "active-stairs" : ""} ${corpse ? "has-corpse" : ""} ${!c.seen && c.hint ? "has-hint" : ""}  ${c.room && c.seen ? "cave-room" : ""} ${Date.now() - (c.roomRevealedAt || 0) < 1200 ? "room-reveal" : ""} ${c.seen && c.terrain === "bridge" ? "bridge-tile" : ""} ${c.seen && c.terrain === "lava" ? "lava-tile" : ""} ${i === state.position ? "player-cell" : ""} ${travel?.goal === i ? "travel-goal" : ""}" data-tile="${i}" data-event="${c.seen ? c.event || c.feature || "empty" : "unknown"}" data-state="${!c.seen ? "unknown" : active ? "active" : c.feature ? "used" : "empty"}" aria-label="${escapeHTML(tileName(c))}, column ${(i % W) + 1}, row ${Math.floor(i / W) + 1}" ${locked || (c.seen && c.wall) ? "disabled" : ""}>${c.seen && c.terrain === "bridge" && (c.event || c.feature) ? icon("bridge") : ""}${art}${c.seen && c.wall ? '<span class="terrain-stop" aria-hidden="true">×</span>' : ""}${active ? `<span class="tile-status" aria-hidden="true">${c.event === "stairs" ? "↓" : c.event === "tunnel" ? "↔" + ((c.tunnelPair || 0) + 1) : "!"}</span>` : c.seen && c.feature ? '<span class="tile-status used" aria-hidden="true">✓</span>' : ""}${!c.seen && c.hint ? `<span class="tile-whisper" title="${escapeHTML(c.hint.text)}" aria-hidden="true">${icon(c.hint.kind)}</span>` : ""}${corpse && c.event ? '<span class="corpse-mark" aria-hidden="true">†</span>' : ""}</button>`;
+                    : bridge
+                      ? ""
+                      : floorArt(c, i);
+            return `<button class="tile ${c.seen ? "" : "fog"} ${c.wall && c.seen ? "wall" : ""} ${water && c.seen ? "water-block " + c.terrain : ""} ${c.visited ? "visited" : ""} ${feature && !c.event ? "spent" : ""} ${active ? "active-event" : ""} ${battle ? "active-battle" : ""} ${active && c.event === "well" ? "active-well" : ""} ${active && c.event === "stairs" ? "active-stairs" : ""} ${corpse ? "has-corpse" : ""} ${!c.seen && c.hint ? "has-hint" : ""}  ${c.room && c.seen ? "cave-room" : ""} ${Date.now() - (c.roomRevealedAt || 0) < 1200 ? "room-reveal" : ""} ${c.seen && c.terrain === "bridge" ? "bridge-tile" : ""} ${c.seen && c.terrain === "lava" ? "lava-tile" : ""} ${i === state.position ? "player-cell" : ""} ${travel?.goal === i ? "travel-goal" : ""}" data-tile="${i}" data-event="${c.seen ? c.event || feature || "empty" : "unknown"}" data-state="${!c.seen ? "unknown" : active ? "active" : feature ? "used" : "empty"}" aria-label="${escapeHTML(tileName(c))}, column ${(i % W) + 1}, row ${Math.floor(i / W) + 1}" ${locked || (c.seen && c.wall) ? "disabled" : ""}>${bridge ? `<span class="map-terrain bridge-layer" aria-hidden="true">${icon("bridge")}</span>` : ""}${art}${c.seen && c.wall ? '<span class="terrain-stop" aria-hidden="true">×</span>' : ""}${active ? `<span class="tile-status" aria-hidden="true">${c.event === "stairs" ? "↓" : c.event === "tunnel" ? "↔" + ((c.tunnelPair || 0) + 1) : "!"}</span>` : c.seen && feature ? '<span class="tile-status used" aria-hidden="true">✓</span>' : ""}${!c.seen && c.hint ? `<span class="tile-whisper" title="${escapeHTML(c.hint.text)}" aria-hidden="true">${icon(c.hint.kind)}</span>` : ""}${corpse && c.event ? '<span class="corpse-mark" aria-hidden="true">†</span>' : ""}</button>`;
           })
           .join("");
         let leader = state.party.find(alive) || state.party[0];
@@ -15073,6 +15379,7 @@ async function encounterEntrance() {
   );
   sayEnemy("entrance");
   await resolveBattleOpening();
+  await automaticOpeningPause();
 }
 async function declinedRecruit(h) {
   const outcome = Math.random();
@@ -15279,7 +15586,7 @@ function encounterTags(enemies) {
               one: true,
               title: "Multiplier",
             }) +
-            '<div class="critical-summary"><div class="stage-result" id="critical-result">Three of a kind!</div><div class="critical-math" id="critical-math"></div></div>';
+            `<div class="critical-summary" id="critical-result">${criticalPayoff(details, rolled.value, { pending: true })}</div>`;
         state.lastCritical = {
           owner,
           matches: 3,
@@ -15309,26 +15616,15 @@ function encounterTags(enemies) {
         } else {
           showSpotlight(
             enemy ? "Enemy critical!" : "Critical!",
-            "Three identical symbols · every mark matters.",
+            "Three matching marks. The multiplier strengthens this roll.",
             body,
             "critical",
           );
           region = $("#stage-card");
         }
         await runMachine("critical", [pool], { results: [rolled] });
-        $("#critical-result").innerHTML =
-          `<strong class="multiplier-value">×${rolled.value}</strong> ${inline ? "Critical locked!" : "to the original roll"}`;
-        $("#critical-math").innerHTML = criticalMath(details, rolled.value);
-        $("#critical-result").insertAdjacentHTML(
-          "afterend",
-          criticalPayoff(details, rolled.value),
-        );
+        revealCriticalPayoff(region, details, rolled.value);
         region.classList.add("critical-locked");
-        const mathNode = $("#critical-math");
-        setTimeout(() => {
-          if (mathNode?.isConnected) mathNode.hidden = true;
-        }, 420);
-        fitDialogs();
         const skipButton = $("#stage-skip");
         if (skipButton) {
           skipButton.disabled = false;
@@ -15522,6 +15818,7 @@ function encounterTags(enemies) {
         } = {},
       ) {
         let h = state.party[i];
+        const poisonHit = impact.type === "poison" || /^Poison from /.test(source);
         if (!alive(h)) return 0;
         h.stats ??= emptyStats();
         if (n > 0 && !piercing) n += traitBonus(h, "vulnerability");
@@ -15532,7 +15829,7 @@ function encounterTags(enemies) {
         if (!invulnerable) state.block -= blocked;
         let actual = Math.min(
           h.hp,
-          selfInflicted ? n - blocked : vulnerableDamage(h, n - blocked),
+          selfInflicted || poisonHit ? n - blocked : vulnerableDamage(h, n - blocked),
         );
         // A blocked segment lands on the shared shield. Only overflow reaches
         // the victim; both use this exact damage calculation, including armour.
@@ -15573,16 +15870,22 @@ function encounterTags(enemies) {
           );
         h.stats.damageBlocked += blocked + resisted;
         syncHero(i);
-        partyCardFeedback(i, actual ? "hit" : "shield");
+        partyCardFeedback(i, actual ? (poisonHit ? "poison" : "hit") : "shield");
         renderBlock();
         if (blocked && !invulnerable)
           armourFX(blocked, "Damage blocked", { announce: !!actual });
         if ((blocked || resisted) && !actual) shieldedFX($("#portrait-" + i));
-        if (actual || !blocked)
-          floatAt($("#portrait-" + i), actual ? "HIT" : "Protected", false, !actual);
+        if ((actual || !blocked) && !poisonHit)
+          floatAt(
+            $("#portrait-" + i),
+            actual ? (poisonHit ? "POISON" : "HIT") : "Protected",
+            false,
+            !actual,
+            poisonHit ? "poison" : "",
+          );
         burst(
           actual || !blocked ? $("#portrait-" + i) : $("#block"),
-          actual ? "damage" : "shield",
+          actual ? (poisonHit ? "poison" : "damage") : "shield",
           16,
         );
         shakeElement(
@@ -15594,7 +15897,8 @@ function encounterTags(enemies) {
         log(
           `${source} → ${h.name}: ${actual} damage${blocked ? " (" + blocked + " team armour consumed)" : ""}.`,
         );
-        if (actual) combatNumber($("#portrait-" + i), actual, "attack");
+        if (actual)
+          combatNumber($("#portrait-" + i), actual, poisonHit ? "poison" : "attack");
         else if (blocked || resisted)
           combatNumber(
             blocked ? $("#block") : $("#portrait-" + i),
@@ -15620,6 +15924,7 @@ function encounterTags(enemies) {
         { piercing = false, attacker = null, impact = {} } = {},
       ) {
         if (!e || e.hp <= 0) return 0;
+        const poisonHit = impact.type === "poison" || /^Poison from /.test(source);
         const resisted = piercing ? 0 : Math.min(n, defenceBonus(e));
         if (resisted && e.passive?.key === "carapace" && !e.passive.announced) {
           e.passive.announced = true;
@@ -15627,7 +15932,10 @@ function encounterTags(enemies) {
         }
         n -= resisted;
         const blocked = piercing ? 0 : Math.min(enemyBlock(), n),
-          actual = Math.min(e.hp, vulnerableDamage(e, n - blocked));
+          actual = Math.min(
+            e.hp,
+            poisonHit ? n - blocked : vulnerableDamage(e, n - blocked),
+          );
         setEnemyBlock(enemyBlock() - blocked);
         if (attacker) {
           const from = $("#portrait-" + state.party.indexOf(attacker));
@@ -15666,7 +15974,7 @@ function encounterTags(enemies) {
         }
         syncEnemy(e);
         const art = enemyArtEl(e);
-        if (actual) combatNumber(art, actual, "attack");
+        if (actual) combatNumber(art, actual, poisonHit ? "poison" : "attack");
         else if (blocked || resisted)
           combatNumber(
             blocked ? enemyShieldEl(e) : art,
@@ -15675,7 +15983,7 @@ function encounterTags(enemies) {
           );
         if ((blocked || resisted) && !actual) shieldedFX(art);
         if (!actual) floatAt(art, "Blocked", false, true);
-        burst(art, actual ? "damage" : "paper", 22);
+        burst(art, actual ? (poisonHit ? "poison" : "damage") : "paper", 22);
         shakeElement(art, 6);
         shakeBook(2.5);
         if (e.hp > 0) {
@@ -15887,6 +16195,7 @@ function encounterTags(enemies) {
           }
           if (h.job === "berserker") {
             base.fury = 4;
+            base.selfHeal = bloodrushHealing(h);
             base.attack += 2;
           }
           if (h.job === "rogue") {
@@ -15973,6 +16282,14 @@ function encounterTags(enemies) {
           base.poison += equipmentBonus(h, "poison");
         }
         if (base.heal) base.heal += passive("heal") + equipmentBonus(h, "heal");
+        if (base.selfHeal)
+          base.selfHeal = Math.max(
+            1,
+            base.selfHeal +
+              passive("heal") +
+              equipmentBonus(h, "heal") +
+              traitBonus(h, "heal"),
+          );
         base.teamHeal = (base.teamHeal || 0) + equipmentBonus(h, "teamHeal");
         base.block += equipmentBonus(h, "block");
         if (
@@ -16137,6 +16454,8 @@ function encounterTags(enemies) {
           const damage = (sums.attack || 0) + (sums.magic || 0);
           if (damage) {
             let dealt = 0;
+            const damageFlights = [],
+              leechTargets = new Map();
             const segments = base.hitSegments?.length
               ? [...base.hitSegments]
               : [(base.attack || 0) + (base.magic || 0)];
@@ -16159,10 +16478,18 @@ function encounterTags(enemies) {
                     impact: {
                       type: sums.magic ? "magic" : "attack",
                       critical: criticalImpact,
+                      flights: damageFlights,
                     },
                   },
                 );
                 dealt += n;
+                if (n) {
+                  const previous = leechTargets.get(e.id);
+                  leechTargets.set(e.id, {
+                    enemy: e,
+                    damage: (previous?.damage || 0) + n,
+                  });
+                }
                 h.stats.damageDealt += n;
                 if (e.hp === 0) h.stats.kills++;
                 state.lastPlayerRoll.hits.push({
@@ -16179,6 +16506,16 @@ function encounterTags(enemies) {
             parts.push(
               `<span class="damage combat-total">${icon(sums.magic ? "magic" : "sword")} <strong>−${dealt}</strong> HP${area && foes.length > 1 ? " across ALL enemies" : ""}${multiplier > 1 ? " · " + (base.attack && base.magic ? sums.attack + " blade + " + sums.magic + " magic" : (base.attack || 0) + (base.magic || 0) + " × " + multiplier + " = " + damage) : ""}</span>`,
             );
+            const stolen = await settleFuryLeech(
+              h,
+              [...leechTargets.values()],
+              damageFlights,
+            );
+            state.lastPlayerRoll.actualLifesteal = stolen;
+            if (stolen)
+              parts.push(
+                `<span class="healing">${icon("heal")}FURY · +${stolen} HP</span>`,
+              );
             await pause(380);
           }
           if (sums.poison) {
@@ -16210,6 +16547,18 @@ function encounterTags(enemies) {
             h.stats.healingDone += total;
             parts.push(
               `<span class="healing">${icon("blessing")}RESONANCE · <strong>+${total} party HP</strong></span>`,
+            );
+          }
+          if (sums.selfHeal) {
+            const n = healHero(i, sums.selfHeal);
+            h.stats.healingDone += n;
+            state.lastPlayerRoll.selfHealing = n;
+            beam(entityArt(h), entityArt(h), "heal", {
+              symbols: [{ type: "heal", tier: 1 }],
+              fromPortrait: true,
+            });
+            parts.push(
+              `<span class="healing">${icon("heal")}BLOODRUSH · +${n} HP</span>`,
             );
           }
           if (sums.heal) {
@@ -17699,7 +18048,7 @@ function heroCriticalOdds(h) {
 function criticalOddsMarkup(h) {
   const rows = heroCriticalOdds(h),
     total = rows.reduce((n, r) => n + r.chance, 0);
-  return `<section class="workshop-critpage workshop-page" ${editorView === "crits" ? "" : "hidden"}><h3>Three of a kind · ${(total * 100).toFixed(2)}% per roll</h3><p>The middle class mark also completes two matching outer marks. Empty faces never crit. These odds include your edits and purchased weighting.</p><div class="crit-odds-grid">${rows.map((row) => `<div class="crit-odds-row">${symbolMarkup(row)}<b>${FACE_LABELS[row.type]} ${tierName(row.tier)}</b><strong>${(row.chance * 100).toFixed(2)}%</strong></div>`).join("") || "<p>No matching combinations yet. Put the same type and rank on both outer reels to start a combo.</p>"}</div></section>`;
+  return `<section class="workshop-critpage workshop-page" ${editorView === "crits" ? "" : "hidden inert"}><h3>Three of a kind · ${(total * 100).toFixed(2)}% per roll</h3><p>The middle class mark also completes two matching outer marks. Empty faces never crit. These odds include your edits and purchased weighting.</p><div class="crit-odds-grid">${rows.map((row) => `<div class="crit-odds-row">${symbolMarkup(row)}<b>${FACE_LABELS[row.type]} ${tierName(row.tier)}</b><strong>${(row.chance * 100).toFixed(2)}%</strong></div>`).join("") || "<p>No matching combinations yet. Put the same type and rank on both outer reels to start a combo.</p>"}</div></section>`;
 }
 function faceEditCost(h, reel, index, operation, destination = null) {
   const face = h?.reels[reel]?.[index];
@@ -17780,7 +18129,7 @@ function editor(i) {
     `${h.name}’s reel workshop`,
     `<div class="workshop-summary"><strong>${h.points} personal points</strong>${heroBuildMarkup(h)}</div>
     <p class="workshop-ability">Middle class mark: <b>${classAbilityName(h)}</b> · ${workshopAbilitySummary(h)}</p>
-    <nav class="workshop-nav" aria-label="Workshop pages"><button data-workshop-view="edit" aria-pressed="${editorView === "edit"}">Edit reels</button><button data-workshop-view="crits" aria-pressed="${editorView === "crits"}">Critical odds · ${(heroCriticalOdds(h).reduce((n, r) => n + r.chance, 0) * 100).toFixed(1)}%</button></nav><div class="workshop-editpage workshop-page" ${editorView === "edit" ? "" : "hidden"}>
+    <nav class="workshop-nav" aria-label="Workshop pages"><button data-workshop-view="edit" aria-pressed="${editorView === "edit"}">Edit reels</button><button data-workshop-view="crits" aria-pressed="${editorView === "crits"}">Critical odds · ${(heroCriticalOdds(h).reduce((n, r) => n + r.chance, 0) * 100).toFixed(1)}%</button></nav><div class="workshop-pages"><div class="workshop-editpage workshop-page" ${editorView === "edit" ? "" : "hidden inert"}>
     <div class="workshop-step-label"><b>1. Choose a reel</b><span>Each reel rolls one mark. Faces begin equally likely.</span></div>
     <div class="workshop-tabs" role="tablist" aria-label="Choose reel">${h.reels.map((_, r) => `<button role="tab" aria-selected="${r === k}" data-editor-reel="${r}">Reel ${r + 1}${r === 1 ? " · permanent class mark" : ""}</button>`).join("")}</div>
     <div class="reel-workshop"><div class="workshop-mark-list"><b class="workshop-step-label">2. Choose a mark to edit</b><label class="workshop-face-picker">Mark<select id="workshop-face-picker">${h.reels[k].map((f, n) => `<option value="${n}" ${n === j ? "selected" : ""}>${f.type === "class" ? classAbilityName(h) : FACE_LABELS[f.type] + (f.type !== "blank" ? " " + tierName(f.tier) : "")} · ${((100 * (f.weight || 1)) / h.reels[k].reduce((sum, x) => sum + (x.weight || 1), 0)).toFixed(1)}%</option>`).join("")}</select></label><div class="workshop-faces" role="group" aria-label="Weighted faces on reel ${k + 1}">${h.reels[k].map((f, n) => `<button data-editor-face="${n}" aria-pressed="${n === j}" title="${escapeHTML(faceDescription(f, h))}">${symbolMarkup(f)}<span>${f.type === "class" ? classAbilityName(h) : FACE_LABELS[f.type]}${!["class", "blank"].includes(f.type) ? " " + tierName(f.tier) : ""}</span><small>${((100 * (f.weight || 1)) / h.reels[k].reduce((sum, x) => sum + (x.weight || 1), 0)).toFixed(1)}% chance</small></button>`).join("")}</div></div>
@@ -17801,7 +18150,7 @@ function editor(i) {
               "",
             )}</select></label><p class="swap-effect" id="swap-effect"></p><button class="swap-face" id="face-swap">Replace symbol <small id="swap-price"></small></button></div>`
     }
-    <div class="weight-face"><button id="face-weight" ${!faceWeightCost(face) || h.points < faceWeightCost(face) ? "disabled" : ""}>Weight this face +1 <small>${faceWeightCost(face) ? "Spend " + faceWeightCost(face) + " pts" : "Maximum weight"}</small></button><small>Weight ${face.weight || 1}/${FACE_WEIGHT_MAX} · ${faceWeightCost(face) ? `After buying: ${((((face.weight || 1) + 1) / (h.reels[k].reduce((n, f) => n + (f.weight || 1), 0) + 1)) * 100).toFixed(1)}% chance` : "Maximum weighting reached."}</small></div></section></div></div>${criticalOddsMarkup(h)}<p class="workshop-note">Upgrades change power. Weighting changes odds. Downgrades refund half the paid rank cost (at least 1 point).</p><div class="modal-actions"><button class="primary" data-close>Done · back to the adventure</button></div>`,
+    <div class="weight-face"><button id="face-weight" ${!faceWeightCost(face) || h.points < faceWeightCost(face) ? "disabled" : ""}>Weight this face +1 <small>${faceWeightCost(face) ? "Spend " + faceWeightCost(face) + " pts" : "Maximum weight"}</small></button><small>Weight ${face.weight || 1}/${FACE_WEIGHT_MAX} · ${faceWeightCost(face) ? `After buying: ${((((face.weight || 1) + 1) / (h.reels[k].reduce((n, f) => n + (f.weight || 1), 0) + 1)) * 100).toFixed(1)}% chance` : "Maximum weighting reached."}</small></div></section></div></div>${criticalOddsMarkup(h)}</div><p class="workshop-note">Upgrade: more power. Weight: higher odds. Downgrade: half the rank cost back.</p><div class="modal-actions"><button class="primary" data-close>Done · back to the adventure</button></div>`,
     "editor",
   );
   document.querySelectorAll("[data-workshop-view]").forEach(
@@ -17898,7 +18247,8 @@ function workshopAbilitySummary(h) {
     rogue: "Roll three extra blade attacks.",
     mage: "Echo the rolled magic, healing, shield or poison marks across the whole team.",
     ranger: "Charge patience for a stronger finishing shot.",
-    berserker: "Gain 4 Fury and +2 blade damage. Every 4 Fury adds 1 damage.",
+    berserker:
+      "Heal yourself, gain 4 Fury and +2 blade damage. Charged Fury adds damage and lifesteal.",
   }[h.job];
 }
 // END GENERATED REEL UPGRADES
@@ -18209,12 +18559,15 @@ function help(topic = "explore") {
       function lunge(el, enemy) {
         portraitMotion(el, "attack", enemy);
       }
-      function floatAt(el, label, heal = false, block = false) {
+      function floatAt(el, label, heal = false, block = false, kind = "") {
         if (!el) return;
 
         let r = el.getBoundingClientRect(),
           node = document.createElement("span");
-        node.className = "combat-float" + (heal ? " healing" : block ? " block" : "");
+        node.className =
+          "combat-float" +
+          (heal ? " healing" : block ? " block" : "") +
+          (kind ? " " + kind : "");
         node.textContent = label;
         node.style.left = r.left + r.width / 2 + "px";
         node.style.top = r.top + r.height * 0.25 + "px";
@@ -18274,7 +18627,14 @@ function help(topic = "explore") {
           burst(from, "paper", 15);
         }
         document.body.append(el);
-        setTimeout(() => el.remove(), 550);
+        const duration = skip ? 100 : Math.max(210, 550 / Math.sqrt(pace()));
+        el.style.animationDuration = duration + "ms";
+        return new Promise((resolve) =>
+          setTimeout(() => {
+            el.remove();
+            resolve();
+          }, duration),
+        );
       }
       function setSkip(value) {
         setPace(value ? "skip" : "1");
@@ -20402,18 +20762,9 @@ const SOUND_SAMPLES = Object.freeze({
         setTimeout(() => node.remove(), 1050);
       }
       function criticalSpace() {
-        return '<div class="event-critical" id="event-critical"><span class="critical-placeholder">Fortune is listening.</span></div>';
+        return '<div class="event-critical" id="event-critical" aria-live="polite"></div>';
       }
-      function criticalMath(details, multiplier) {
-        return (
-          details
-            .map(
-              (d) =>
-                `<div data-before="${d.value}" data-after="${Math.ceil(d.value * multiplier)}">${icon(d.icon || "stun")}<span>${escapeHTML(d.label)}<br><b>${d.value}</b> × ${multiplier} = <strong>${Math.ceil(d.value * multiplier)}</strong></span></div>`,
-            )
-            .join("") || "<div>Three safe marks. A spectacular escape.</div>"
-        );
-      }
+
       const DISCOVERY_HINTS = {
         ruin: ["draft", "A forgotten archway in the dark…"],
         stronghold: ["sound", "A monstrous heartbeat behind stone…"],
@@ -20549,7 +20900,7 @@ const SOUND_SAMPLES = Object.freeze({
             ["Temperament", SPECIALISMS[h.specialism]?.name || "Offence"],
             [
               "Average roll",
-              `${fx.damage.toFixed(1)} damage · ${(fx.heal + fx.teamHeal).toFixed(1)} healing · ${fx.block.toFixed(1)} block`,
+              `${fx.damage.toFixed(1)} damage · ${(fx.heal + fx.teamHeal + (fx.selfHeal || 0)).toFixed(1)} healing · ${fx.block.toFixed(1)} block`,
             ],
             ["Class ability", classAbilityDescription(h)],
             ["Statuses", statuses],
@@ -20801,7 +21152,7 @@ const SOUND_SAMPLES = Object.freeze({
       }
       function effectDetails(base) {
         return Object.entries(base)
-          .filter(([k, n]) => !["blank","selfharm","class"].includes(k) && n > 0)
+          .filter(([k, n]) => !["blank", "selfharm", "class"].includes(k) && n > 0)
           .map(([k, value]) => ({
             label:
               {
@@ -20811,12 +21162,18 @@ const SOUND_SAMPLES = Object.freeze({
                 stimulant: "Stimulant power",
                 bloodFury: "Extra Fury",
                 rage: "Rage",
+                selfHeal: "Bloodrush healing",
                 teamHeal: "Healing per ally",
                 heal: "Healing power",
                 block: "Armour",
                 stun: "Stun power",
               }[k] || k,
-            icon: k === "bloodFury" ? "bloodprice" : ICONS[k] || k,
+            icon:
+              k === "selfHeal"
+                ? "heal"
+                : k === "bloodFury"
+                  ? "bloodprice"
+                  : ICONS[k] || k,
             value,
           }));
       }
@@ -20969,7 +21326,7 @@ function gainFury(h, damage = 0, extra = 0) {
 const furyBonus = (h) =>
   h?.job === "berserker" ? Math.floor((h.fury || 0) / 4) : 0;
 function furyMarkup(h) {
-  return `<span class="fury-meter" role="meter" aria-label="Berserker Fury" aria-valuemin="0" aria-valuemax="20" aria-valuenow="${h.fury || 0}" data-tooltip="Wounds feed Fury: 1.5 per HP lost. Every 4 Fury adds 1 damage, up to +5. Blood Price grants extra Fury. Clears after battle."><b>FURY ${h.fury || 0}/20</b><span><i style="width:${(h.fury || 0) * 5}%"></i></span><small>+${furyBonus(h)} damage</small></span>`;
+  return `<span class="fury-meter" role="meter" aria-label="Berserker Fury" aria-valuemin="0" aria-valuemax="20" aria-valuenow="${h.fury || 0}" data-tooltip="Wounds feed Fury: 1.5 per HP lost. Every 4 Fury adds 1 damage and 4% lifesteal, up to +5 damage / 20%. Bloodrush also heals you. Blood Price grants extra Fury. Clears after battle."><b>FURY ${h.fury || 0}/20</b><span><i style="width:${(h.fury || 0) * 5}%"></i></span><small>+${furyBonus(h)} damage</small></span>`;
 }
 function setupBattleOpening({ fresh = false } = {}) {
   const living = state.party.filter(alive);
@@ -21014,6 +21371,7 @@ async function resolveBattleOpening() {
   if (living.length && living.every((h) => h.surprised)) {
     result(icon("stun") + "Caught off guard · enemies take the opening turn!");
     combatCallout($("#encounter"), "ENEMIES GO FIRST", "danger");
+    await automaticOpeningPause();
     for (const e of livingEnemies()) {
       await enemyTurn(e);
       await processDeaths();
@@ -21390,16 +21748,26 @@ function pencilBlackout(e) {
     candidates.length,
     state.party.filter(alive).length + 1,
   );
+  const added = [];
   for (let n = 0; n < count; n++) {
     const { h, k } = candidates.splice(rand(candidates.length), 1)[0];
     h.blackout ??= [];
     h.blackout.push(k);
+    added.push({ i: state.party.indexOf(h), k });
   }
   passiveFX(e, "PENCIL BLACKOUT!", "blackout");
   renderParty();
-  document
-    .querySelectorAll(".blacked-out")
-    .forEach((el) => burst(el, "dust", 12));
+  for (const { i, k } of added) {
+    const el = $(`#machine-hero-${i} [data-reel="${k}"]`);
+    el?.classList.add("blackout-forming");
+    smokePoof(el);
+    if (el)
+      animate(
+        el,
+        [{ filter: "brightness(1.8)" }, { filter: "brightness(1)" }],
+        { duration: 300, juice: true },
+      );
+  }
   log(
     e.name +
       " blacks out party reels. Roll each affected machine to erase its covering.",
@@ -21410,7 +21778,7 @@ function clearRolledBlackout(h, i) {
   h.blackout = [];
   document.querySelectorAll(`#machine-hero-${i} .blacked-out`).forEach((el) => {
     el.classList.add("blackout-erased");
-    burst(el, "dust", 16);
+    smokePoof(el);
     setTimeout(
       () => el.classList.remove("blacked-out", "blackout-erased"),
       180,
@@ -21432,6 +21800,45 @@ function announceEnemyBadges(e) {
       { duration: 480 + i * 70, juice: true },
     );
   });
+}
+
+// Damage must land before the stolen health travels back. No state/RNG is read
+// from particle positions; only real HP damage determines the offered healing.
+async function settleFuryLeech(h, recipients, flights) {
+  const rate = furyLeechRate(h),
+    damage = recipients.reduce((n, r) => n + r.damage, 0);
+  if (!rate || !damage || !alive(h) || h.hp >= h.maxHp) return 0;
+  const offered = Math.ceil(damage * rate),
+    run = state;
+  await Promise.all(flights);
+  await waitForUtility();
+  if (state !== run || !alive(h)) return 0;
+  const record = (state.lastLifesteal = {
+    heroId: h.id,
+    damage,
+    rate,
+    offered,
+    outboundArrivedAt: Date.now(),
+    returnStartedAt: Date.now(),
+    targets: recipients.map((r) => r.enemy.id),
+  });
+  combatCallout(entityArt(h), "FURY · LIFESTEAL", "heal");
+  await Promise.all(
+    recipients.map(({ enemy }) =>
+      beam(enemyArtEl(enemy), entityArt(h), "heal", {
+        symbols: [{ type: "heal", tier: 1 }],
+        fromPortrait: true,
+        kind: "lifesteal",
+      }),
+    ),
+  );
+  await waitForUtility();
+  if (state !== run || !alive(h)) return 0;
+  const actual = healHero(state.party.indexOf(h), offered);
+  h.stats.healingDone += actual;
+  record.actual = actual;
+  record.healedAt = Date.now();
+  return actual;
 }
 // END GENERATED BATTLE TACTICS
       // BEGIN GENERATED WORLD EVENTS
@@ -21824,6 +22231,65 @@ async function tunnelEncounter(c) {
   return true;
 }
 // END GENERATED WORLD EVENTS
+      // BEGIN GENERATED AUTOMATION PACING
+// Spectator pacing is independent of reel outcomes and gameplay RNG. A manual
+// click always works immediately; only automated confirmation waits to read.
+const AUTOMATION_PACING = Object.freeze({
+  encounter: 1500,
+  dual: 1800,
+  choice: 1100,
+  reward: 1100,
+  shop: 700,
+  memorial: 1500,
+  opening: 680,
+  minimum: 320,
+});
+let automaticReading = null,
+  automaticReadPausedAt = null;
+function automaticReadDelay(kind = "reward") {
+  const referenceSpeed = skip ? 5 : pace();
+  const base =
+    kind === "enemy-intro"
+      ? battleEnemies().length > 1
+        ? AUTOMATION_PACING.dual
+        : AUTOMATION_PACING.encounter
+      : ["death", "burial"].includes(kind)
+        ? AUTOMATION_PACING.memorial
+        : kind === "shop"
+          ? AUTOMATION_PACING.shop
+          : kind === "opening"
+            ? AUTOMATION_PACING.opening
+            : kind === "choice"
+              ? AUTOMATION_PACING.choice
+              : AUTOMATION_PACING.reward;
+  return Math.max(AUTOMATION_PACING.minimum, base / Math.sqrt(referenceSpeed));
+}
+function automaticConfirmReady(button, kind = "reward") {
+  if (!button || button.disabled || utilityOpen || document.hidden)
+    return false;
+  if (
+    !automaticReading ||
+    automaticReading.button !== button ||
+    automaticReading.run !== state
+  )
+    automaticReading = { button, run: state, shownAt: performance.now() };
+  return (
+    performance.now() - automaticReading.shownAt >= automaticReadDelay(kind)
+  );
+}
+function pauseAutomaticReading() {
+  automaticReadPausedAt ??= performance.now();
+}
+function resumeAutomaticReading() {
+  if (automaticReading && automaticReadPausedAt !== null)
+    automaticReading.shownAt += performance.now() - automaticReadPausedAt;
+  automaticReadPausedAt = null;
+}
+async function automaticOpeningPause() {
+  if (state.autoresolve || state.autoplay)
+    await feedbackPause(automaticReadDelay("opening"));
+}
+// END GENERATED AUTOMATION PACING
       // BEGIN GENERATED NOTEBOOK PAGES
 // Side pages suspend the current interaction rather than replacing its DOM or
 // resolving its promise. Keeping the nodes preserves shop/equipment callbacks.
@@ -21849,6 +22315,7 @@ function openUtilityPage(kind) {
       focus: document.activeElement,
     };
     while (modal.firstChild) fragment.append(modal.firstChild);
+    pauseAutomaticReading();
     utilityOpen = true;
     document.body.classList.add("utility-open");
     for (const animation of liveAnimations)
@@ -21872,6 +22339,7 @@ function closeUtilityPage() {
   modalKind = context.kind;
   modalPrevious = context.previous;
   utilityOpen = false;
+  resumeAutomaticReading();
   utilityContext = null;
   document.body.classList.remove("utility-open");
   for (const animation of liveAnimations)
@@ -22000,13 +22468,15 @@ const numberBursts = new WeakMap();
 function effectSymbols(from, type, impact = {}) {
   const hero = state.party.findIndex((_, i) => from?.id === "portrait-" + i),
     enemy = battleEnemies().find((e) => enemyArtEl(e) === from),
-    machine = impact.machineId
-      ? $("#machine-" + impact.machineId)
-      : hero >= 0
-        ? $("#machine-hero-" + hero)
-        : enemy
-          ? $("#machine-" + enemyMachine(enemy))
-          : null,
+    machine = impact.fromPortrait
+      ? null
+      : impact.machineId
+        ? $("#machine-" + impact.machineId)
+        : hero >= 0
+          ? $("#machine-hero-" + hero)
+          : enemy
+            ? $("#machine-" + enemyMachine(enemy))
+            : null,
     symbols =
       impact.symbols ||
       machine?.rolledSymbols ||
@@ -22037,101 +22507,121 @@ function launchRolledSymbols(from, to, type, impact = {}) {
       y: destination.top + destination.height / 2,
     },
     reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  effectSymbols(from, type, impact)
-    .slice(0, 3)
-    .forEach(({ symbol, origin }, i) => {
-      const rect = (origin || from).getBoundingClientRect(),
-        start = {
-          x: rect.left + rect.width / 2,
-          y: rect.top + rect.height / 2,
-        },
-        node = document.createElement("div");
-      node.className =
-        "rolled-projectile " +
-        type +
-        (impact.critical ? " critical-projectile" : "");
-      node.innerHTML = symbolMarkup(symbol);
-      node.dataset.target = to.id;
-      node.dataset.symbol = symbol.type;
-      node.setAttribute("aria-hidden", "true");
-      Object.assign(node.style, { left: start.x + "px", top: start.y + "px" });
-      document.body.append(node);
-      const dx = end.x - start.x,
-        dy = end.y - start.y,
-        arc = Math.min(100, Math.max(28, Math.abs(dx) * 0.18)),
-        duration =
-          reduced || skip ? 100 : Math.max(210, 520 / Math.sqrt(pace())),
-        frames = [];
-      for (let k = 0; k <= 12; k++) {
-        const t = k / 12,
-          e = t * t * (3 - 2 * t);
-        frames.push({
-          offset: t,
-          transform: `translate(${dx * e}px,${dy * e - Math.sin(e * Math.PI) * arc}px) scale(${0.8 + Math.sin(t * Math.PI) * 0.35}) rotate(${(i % 2 ? 1 : -1) * t * 28}deg)`,
-          opacity: k === 12 ? 0 : 1,
+  return Promise.all(
+    effectSymbols(from, type, impact)
+      .slice(0, 3)
+      .map(({ symbol, origin }, i) => {
+        const rect = (origin || from).getBoundingClientRect(),
+          start = {
+            x: rect.left + rect.width / 2,
+            y: rect.top + rect.height / 2,
+          },
+          node = document.createElement("div");
+        node.className =
+          "rolled-projectile " +
+          type +
+          (impact.critical ? " critical-projectile" : "");
+        node.innerHTML = symbolMarkup(symbol);
+        node.dataset.target = to.id;
+        node.dataset.symbol = symbol.type;
+        if (impact.kind) node.dataset.effect = impact.kind;
+        node.setAttribute("aria-hidden", "true");
+        Object.assign(node.style, {
+          left: start.x + "px",
+          top: start.y + "px",
         });
-      }
-      const anim = node.animate(frames, {
-        duration,
-        delay: reduced || skip ? 0 : i * 35,
-        easing: "linear",
-        fill: "forwards",
-      });
-      anim.finished
-        .then(() => {
-          const liveTarget =
-            document.getElementById(to.id || to.closest("[id]")?.id) || to;
-          if (state !== run || !liveTarget.isConnected) {
+        document.body.append(node);
+        const dx = end.x - start.x,
+          dy = end.y - start.y,
+          arc = Math.min(100, Math.max(28, Math.abs(dx) * 0.18)),
+          duration =
+            reduced || skip ? 100 : Math.max(210, 520 / Math.sqrt(pace())),
+          frames = [];
+        for (let k = 0; k <= 12; k++) {
+          const t = k / 12,
+            e = t * t * (3 - 2 * t);
+          frames.push({
+            offset: t,
+            transform: `translate(${dx * e}px,${dy * e - Math.sin(e * Math.PI) * arc}px) scale(${0.8 + Math.sin(t * Math.PI) * 0.35}) rotate(${(i % 2 ? 1 : -1) * t * 28}deg)`,
+            opacity: k === 12 ? 0 : 1,
+          });
+        }
+        const anim = node.animate(frames, {
+          duration,
+          delay: reduced || skip ? 0 : i * 35,
+          easing: "linear",
+          fill: "forwards",
+        });
+        anim.juice = true;
+        liveAnimations.add(anim);
+        if (utilityOpen) {
+          anim.pause();
+          anim.utilityPaused = true;
+        }
+        return anim.finished
+          .then(() => {
+            const liveTarget =
+              document.getElementById(to.id || to.closest("[id]")?.id) || to;
+            if (state !== run || !liveTarget.isConnected) {
+              node.remove();
+              return;
+            }
+            const splash = document.createElement("div");
+            splash.className = "symbol-arrival " + type;
+            splash.dataset.target = liveTarget.id;
+            splash.innerHTML = symbolMarkup(symbol);
+            splash.style.left = end.x + "px";
+            splash.style.top = end.y + "px";
+            document.body.append(splash);
+            burst(
+              liveTarget,
+              type === "heal"
+                ? "heal"
+                : type === "block"
+                  ? "shield"
+                  : type === "poison"
+                    ? "poison"
+                    : "paper",
+              impact.critical ? 26 : 12,
+            );
+            shakeElement(liveTarget, impact.critical ? 6 : 2);
+            if (impact.critical) impactFlash(liveTarget, i);
+            splash
+              .animate(
+                [
+                  { transform: "translate(-50%,-50%) scale(.7)", opacity: 1 },
+                  {
+                    transform: "translate(-50%,-50%) scale(1.7)",
+                    opacity: 1,
+                    offset: 0.45,
+                  },
+                  { transform: "translate(-50%,-50%) scale(2.1)", opacity: 0 },
+                ],
+                { duration: reduced ? 100 : 320 },
+              )
+              .finished.finally(() => splash.remove());
             node.remove();
-            return;
-          }
-          const splash = document.createElement("div");
-          splash.className = "symbol-arrival " + type;
-          splash.dataset.target = liveTarget.id;
-          splash.innerHTML = symbolMarkup(symbol);
-          splash.style.left = end.x + "px";
-          splash.style.top = end.y + "px";
-          document.body.append(splash);
-          burst(
-            liveTarget,
-            type === "heal"
-              ? "heal"
-              : type === "block"
-                ? "shield"
-                : type === "poison"
-                  ? "poison"
-                  : "paper",
-            impact.critical ? 26 : 12,
-          );
-          shakeElement(liveTarget, impact.critical ? 6 : 2);
-          if (impact.critical) impactFlash(liveTarget, i);
-          splash
-            .animate(
-              [
-                { transform: "translate(-50%,-50%) scale(.7)", opacity: 1 },
-                {
-                  transform: "translate(-50%,-50%) scale(1.7)",
-                  opacity: 1,
-                  offset: 0.45,
-                },
-                { transform: "translate(-50%,-50%) scale(2.1)", opacity: 0 },
-              ],
-              { duration: reduced ? 100 : 320 },
-            )
-            .finished.finally(() => splash.remove());
-          node.remove();
-        })
-        .catch(() => node.remove());
-    });
+          })
+          .catch(() => node.remove())
+          .finally(() => liveAnimations.delete(anim));
+      }),
+  );
 }
 function beam(from, to, type, impact = {}) {
-  if (!from || !to) return;
-  const mode = preferences().combatEffects;
-  if (mode !== "beams") launchRolledSymbols(from, to, type, impact);
-  if (mode !== "icons") drawBeam(from, to, type, impact);
+  if (!from || !to) return Promise.resolve();
+  const mode = preferences().combatEffects,
+    flights = [];
+  if (mode !== "beams")
+    flights.push(launchRolledSymbols(from, to, type, impact));
+  if (mode !== "icons") flights.push(drawBeam(from, to, type, impact));
+  const completed = Promise.all(flights);
+  impact.flights?.push(completed);
+  return completed;
 }
+
 function impactNumberParts(value, type) {
-  if (!state.enemy || value < 2 || type === "block") return [];
+  if (!state.enemy || value < 2 || ["block", "poison"].includes(type))
+    return [];
   const actor =
       actingEnemy ||
       (state.currentHero != null ? state.party[state.currentHero] : null),
@@ -22177,15 +22667,29 @@ function combatNumber(el, value, type) {
     const node = document.createElement("div");
     node.className =
       "combat-number " +
-      (type === "heal" ? "healing" : type === "block" ? "blocked" : "damage") +
+      (type === "heal"
+        ? "healing"
+        : type === "block"
+          ? "blocked"
+          : type === "poison"
+            ? "poison damage"
+            : "damage") +
       (minor ? " minor" : "");
     node.dataset.target = el.id;
     node.dataset.value = amount;
     node.dataset.summed = String(!minor);
+    node.dataset.kind = type;
     node.textContent =
       type === "block"
         ? amount + " BLOCKED"
         : (type === "heal" ? "+" : "−") + amount;
+    if (type === "poison") {
+      const label = document.createElement("small");
+      label.className = "poison-label";
+      label.textContent = "POISON";
+      node.append(label);
+      node.setAttribute("aria-label", `${amount} poison damage`);
+    }
     node.style.left =
       rect.left +
       rect.width / 2 +
@@ -22331,7 +22835,8 @@ function passiveFX(e, text, kind = "danger") {
   shakeElement(enemyArtEl(e), 5);
   GameSound.play("trait");
 }
-function criticalPayoff(details, multiplier) {
+// One reserved number readout is used throughout the roll and the payoff.
+function criticalFigures(details, multiplier) {
   let marks = details.filter((d) =>
     ["sword", "attack", "magic"].includes(d.icon),
   );
@@ -22342,22 +22847,43 @@ function criticalPayoff(details, multiplier) {
       .slice(0, 1);
   if (!marks.length)
     marks = [...details].sort((a, b) => b.value - a.value).slice(0, 1);
-  const original = marks.reduce((n, d) => n + d.value, 0),
-    total = marks.reduce((n, d) => n + Math.ceil(d.value * multiplier), 0);
-  const label = marks.some((d) => d.icon === "coin")
-    ? "GOLD"
-    : marks.some((d) => ["heal", "blessing"].includes(d.icon))
-      ? "HEALING"
-      : marks.some((d) => ["sword", "attack", "magic"].includes(d.icon))
-        ? "DAMAGE"
-        : "POWER";
-  // Each effect rounds independently. A combined equation could imply a
-  // different total for mixed blade/magic rolls (5 + 5 at ×2.5 is 13 + 13).
-  const math =
-    marks.length > 1
-      ? `×${multiplier} per effect`
-      : `${original} × ${multiplier}`;
-  return `<div class="critical-payoff" aria-label="Critical ${label.toLowerCase()}: ${total}"><small>${math} · CRITICAL ${label}</small><strong>${total}</strong></div>`;
+  return {
+    original: marks.reduce((n, d) => n + d.value, 0),
+    total: marks.reduce((n, d) => n + Math.ceil(d.value * multiplier), 0),
+    label: marks.some((d) => d.icon === "coin")
+      ? "GOLD"
+      : marks.some((d) => ["heal", "blessing"].includes(d.icon))
+        ? "HEALING"
+        : marks.some((d) => ["sword", "attack", "magic"].includes(d.icon))
+          ? "DAMAGE"
+          : "POWER",
+  };
+}
+function criticalPayoff(details, multiplier, { pending = false } = {}) {
+  const { original, total, label } = criticalFigures(details, multiplier);
+  return `<div class="critical-payoff" data-before="${original}" data-after="${total}" data-phase="${pending ? "rolling" : "locked"}" aria-label="${pending ? "Original" : "Critical"} ${label.toLowerCase()}: ${pending ? original : total}"><small>${pending ? "ORIGINAL" : "CRITICAL"} ${label}</small><strong>${pending ? original : total}</strong></div>`;
+}
+function revealCriticalPayoff(region, details, multiplier) {
+  const { total, label } = criticalFigures(details, multiplier),
+    payoff = region.querySelector(".critical-payoff");
+  payoff.dataset.phase = "locked";
+  payoff.setAttribute(
+    "aria-label",
+    `Critical ${label.toLowerCase()}: ${total}`,
+  );
+  payoff.querySelector("small").textContent = "CRITICAL " + label;
+  const number = payoff.querySelector("strong");
+  number.textContent = total;
+  animate(
+    number,
+    [
+      { transform: "scale(.82)", filter: "brightness(1)" },
+      { transform: "scale(1.22)", filter: "brightness(1.5)", offset: 0.4 },
+      { transform: "scale(1)", filter: "brightness(1)" },
+    ],
+    { duration: 520, juice: true },
+  );
+  burst(number, label === "HEALING" ? "heal" : "gold", 55);
 }
 // END GENERATED COMBAT FEEDBACK
       function popTitle(el) {
@@ -23530,6 +24056,7 @@ function criticalPayoff(details, multiplier) {
           crit: 0,
           selfharm: 0,
           fury: 0,
+          selfHeal: 0,
         };
         const chances = h.reels.map((reel) => {
           const total = reel.reduce((n, f) => n + (f.weight || 1), 0),
@@ -23547,6 +24074,7 @@ function criticalPayoff(details, multiplier) {
               if (h.job === "berserker") {
                 out.damage += 2 * p;
                 out.fury += 4 * p;
+                out.selfHeal += bloodrushHealing(h) * p;
               }
               if (h.job === "ranger") out.damage += executionBonus(h) * p;
             } else if (Object.hasOwn(out, t)) out[t] += POWER[t] * face.tier * p;
@@ -23580,7 +24108,15 @@ function criticalPayoff(details, multiplier) {
             ((chances[1][key] || 0) + (chances[1]["class:1"] || 0)) *
             (chances[2][key] || 0);
         }
-        for (const key of ["damage", "heal", "teamHeal", "block", "stun", "poison"])
+        for (const key of [
+          "damage",
+          "heal",
+          "selfHeal",
+          "teamHeal",
+          "block",
+          "stun",
+          "poison",
+        ])
           out[key] *= 1 + out.crit * 1.7;
         if (out.damage)
           out.damage +=
@@ -23599,6 +24135,7 @@ function criticalPayoff(details, multiplier) {
         const temperament = temperamentEffects(h, {
           attack: out.damage,
           heal: out.heal,
+          selfHeal: out.selfHeal,
           teamHeal: out.teamHeal,
           block: out.block,
           poison: out.poison,
@@ -23608,6 +24145,7 @@ function criticalPayoff(details, multiplier) {
         Object.assign(out, {
           damage: temperament.attack,
           heal: temperament.heal,
+          selfHeal: temperament.selfHeal,
           teamHeal: temperament.teamHeal,
           block: temperament.block,
           poison: temperament.poison,
@@ -23618,8 +24156,17 @@ function criticalPayoff(details, multiplier) {
         out.teamHeal += equipmentBonus(h, "teamHeal");
         out.block += equipmentBonus(h, "block");
         if (h.initiative && state.opening?.firstRoll)
-          for (const key of ["damage", "heal", "teamHeal", "block", "stun", "poison"])
+          for (const key of [
+            "damage",
+            "heal",
+            "selfHeal",
+            "teamHeal",
+            "block",
+            "stun",
+            "poison",
+          ])
             out[key] *= TACTICS.initiativeMultiplier;
+        out.selfHeal += out.damage * furyLeechRate(h);
         return out;
       }
       function autoHealth() {
@@ -23686,10 +24233,17 @@ function criticalPayoff(details, multiplier) {
         return (
           damage * (h.initiative && state.opening?.firstRoll ? 1.4 : 1) +
           healing * urgency +
+          Math.min(h.maxHp - h.hp, fx.selfHeal || 0) *
+            (h.hp / h.maxHp < 0.4 ? 4 : 1.2) -
+          fx.selfharm * (h.hp / h.maxHp < 0.4 ? 2 : 0.35) +
           block * (ratio < 0.6 ? 2 : 1.1) +
           fx.stun * (foes.some((e) => e.countdown <= 1 && !e.stun) ? 3 : 0.6) +
           fx.poison *
-            (foes.some((e) => e.hp > fx.damage * 2 + 4 && (!e.poison || e.poison.damage<4)) ? 1.6 : 0.05) +
+            (foes.some(
+              (e) => e.hp > fx.damage * 2 + 4 && (!e.poison || e.poison.damage < 4),
+            )
+              ? 1.6
+              : 0.05) +
           fx.stimulant * (health.party.some(({ h }) => !h.stimulant) ? 2 : 0.1) +
           fx.rage * ((h.rage || 0) < 4 ? 2.2 : 0)
         );
@@ -23697,7 +24251,7 @@ function criticalPayoff(details, multiplier) {
       function autoUpgradeValue(h) {
         const f = expectedHeroEffects(h),
           role = {
-            berserker: { damage: 1.35, heal: 0.6, selfharm: -0.12, fury: 0.3 },
+            berserker: { damage: 1.35, heal: 0.6, selfHeal: .8, selfharm: -0.12, fury: 0.3 },
             fighter: { damage: 1.2, block: 1, stun: 0.55, heal: 0.2, poison: 0.3 },
             healer: { damage: 0.3, heal: 1.3, teamHeal: 1.8, block: 0.9, stun: 0.5 },
             mage: {
@@ -24306,12 +24860,21 @@ function criticalPayoff(details, multiplier) {
         ) {
           const deposit = $('[data-bank="25"]:not(:disabled)');
           if (deposit) {
+            if (!automaticConfirmReady(deposit, "floor-clear")) return false;
             deposit.click();
             autoplayNextAt = Date.now() + 600;
             return true;
           }
         }
-        if (!button || button.disabled) return false;
+        if (
+          !button ||
+          button.disabled ||
+          !automaticConfirmReady(
+            button,
+            !$("#overlay").hidden ? modalKind : $("#spotlight").dataset.kind,
+          )
+        )
+          return false;
         button.click();
         autoplayNextAt = Date.now() + Math.max(240, 600 / pace());
         return true;
@@ -24426,8 +24989,11 @@ function criticalPayoff(details, multiplier) {
           if (
             ["enemy-intro", "bomb-roll"].includes($("#spotlight").dataset.kind) ||
             document.body.dataset.scene === "enemy-intro"
-          )
-            $("#stage-confirm:not(:disabled)")?.click();
+          ) {
+            const confirm = $("#stage-confirm:not(:disabled)");
+            if (automaticConfirmReady(confirm, $("#spotlight").dataset.kind))
+              confirm.click();
+          }
           // Event rewards and decisions remain yours; only combat presentation is automated.
           return;
         }

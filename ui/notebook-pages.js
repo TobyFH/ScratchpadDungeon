@@ -22,6 +22,7 @@ function openUtilityPage(kind) {
       focus: document.activeElement,
     };
     while (modal.firstChild) fragment.append(modal.firstChild);
+    pauseAutomaticReading();
     utilityOpen = true;
     document.body.classList.add("utility-open");
     for (const animation of liveAnimations)
@@ -45,6 +46,7 @@ function closeUtilityPage() {
   modalKind = context.kind;
   modalPrevious = context.previous;
   utilityOpen = false;
+  resumeAutomaticReading();
   utilityContext = null;
   document.body.classList.remove("utility-open");
   for (const animation of liveAnimations)

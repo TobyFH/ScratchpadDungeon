@@ -35,6 +35,23 @@ const MAGE_POWERS = Object.freeze({
 });
 const RANGER_AIM_CAP = 6,
   BERSERKER_FURY_CAP = 20;
+// Sustain applies to the caster. Fury remains a battle-long bar, never spent.
+const BERSERKER_SUSTAIN = Object.freeze({
+  bloodrushHeal: 4,
+  healLevelInterval: 3,
+  leechPerPower: 0.04,
+  maxLeech: 0.2,
+});
+const bloodrushHealing = (h) =>
+  BERSERKER_SUSTAIN.bloodrushHeal +
+  Math.floor(Math.max(0, h.level - 1) / BERSERKER_SUSTAIN.healLevelInterval);
+const furyLeechRate = (h) =>
+  h?.job === "berserker"
+    ? Math.min(
+        BERSERKER_SUSTAIN.maxLeech,
+        furyBonus(h) * BERSERKER_SUSTAIN.leechPerPower,
+      )
+    : 0;
 const rangerAimGain = () => 2;
 const BASE_JOBS = Object.freeze(["fighter", "rogue", "mage"]);
 const heroJobs = (rules = state?.runRules || []) => [
@@ -140,8 +157,7 @@ function classAbilityDescription(hero) {
       healer: "Resonance echoes your rolled marks across the appropriate team.",
       ranger:
         "Execute: wait between attacks to fill patience. The next damaging roll gains a bonus against wounded enemies; the seal strengthens that shot.",
-      berserker:
-        "Bloodrush: gain 4 Fury and strike for extra blade damage. Wounds and Blood Price faces feed Fury; every 4 Fury adds 1 damage until battle ends.",
+      berserker: `Bloodrush: restore ${bloodrushHealing(hero && typeof hero === "object" ? hero : { level: 1 })} HP to yourself, gain 4 Fury and +2 blade damage. Charged Fury adds damage and up to 20% lifesteal.`,
     }[job] || "Your permanent signature mark, alongside the other two results."
   );
 }
@@ -154,6 +170,7 @@ function temperamentEffects(h, base) {
   } else if (h.specialism === "defence") {
     if (base.heal) base.heal++;
     else if (base.teamHeal) base.teamHeal++;
+    else if (base.selfHeal) base.selfHeal++;
     if (base.block) base.block++;
     if (base.stimulant) base.stimulant++;
   }
@@ -201,7 +218,7 @@ function makeHero(
       ["attack", 2],
       ["heal", 1],
       ["selfharm", 1],
-      ["selfharm", 2],
+      ["heal", 2],
       ["blank", 1],
     ],
     mage: legacyHealer

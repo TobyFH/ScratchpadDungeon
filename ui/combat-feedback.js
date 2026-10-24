@@ -23,13 +23,15 @@ const numberBursts = new WeakMap();
 function effectSymbols(from, type, impact = {}) {
   const hero = state.party.findIndex((_, i) => from?.id === "portrait-" + i),
     enemy = battleEnemies().find((e) => enemyArtEl(e) === from),
-    machine = impact.machineId
-      ? $("#machine-" + impact.machineId)
-      : hero >= 0
-        ? $("#machine-hero-" + hero)
-        : enemy
-          ? $("#machine-" + enemyMachine(enemy))
-          : null,
+    machine = impact.fromPortrait
+      ? null
+      : impact.machineId
+        ? $("#machine-" + impact.machineId)
+        : hero >= 0
+          ? $("#machine-hero-" + hero)
+          : enemy
+            ? $("#machine-" + enemyMachine(enemy))
+            : null,
     symbols =
       impact.symbols ||
       machine?.rolledSymbols ||
@@ -60,101 +62,121 @@ function launchRolledSymbols(from, to, type, impact = {}) {
       y: destination.top + destination.height / 2,
     },
     reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  effectSymbols(from, type, impact)
-    .slice(0, 3)
-    .forEach(({ symbol, origin }, i) => {
-      const rect = (origin || from).getBoundingClientRect(),
-        start = {
-          x: rect.left + rect.width / 2,
-          y: rect.top + rect.height / 2,
-        },
-        node = document.createElement("div");
-      node.className =
-        "rolled-projectile " +
-        type +
-        (impact.critical ? " critical-projectile" : "");
-      node.innerHTML = symbolMarkup(symbol);
-      node.dataset.target = to.id;
-      node.dataset.symbol = symbol.type;
-      node.setAttribute("aria-hidden", "true");
-      Object.assign(node.style, { left: start.x + "px", top: start.y + "px" });
-      document.body.append(node);
-      const dx = end.x - start.x,
-        dy = end.y - start.y,
-        arc = Math.min(100, Math.max(28, Math.abs(dx) * 0.18)),
-        duration =
-          reduced || skip ? 100 : Math.max(210, 520 / Math.sqrt(pace())),
-        frames = [];
-      for (let k = 0; k <= 12; k++) {
-        const t = k / 12,
-          e = t * t * (3 - 2 * t);
-        frames.push({
-          offset: t,
-          transform: `translate(${dx * e}px,${dy * e - Math.sin(e * Math.PI) * arc}px) scale(${0.8 + Math.sin(t * Math.PI) * 0.35}) rotate(${(i % 2 ? 1 : -1) * t * 28}deg)`,
-          opacity: k === 12 ? 0 : 1,
+  return Promise.all(
+    effectSymbols(from, type, impact)
+      .slice(0, 3)
+      .map(({ symbol, origin }, i) => {
+        const rect = (origin || from).getBoundingClientRect(),
+          start = {
+            x: rect.left + rect.width / 2,
+            y: rect.top + rect.height / 2,
+          },
+          node = document.createElement("div");
+        node.className =
+          "rolled-projectile " +
+          type +
+          (impact.critical ? " critical-projectile" : "");
+        node.innerHTML = symbolMarkup(symbol);
+        node.dataset.target = to.id;
+        node.dataset.symbol = symbol.type;
+        if (impact.kind) node.dataset.effect = impact.kind;
+        node.setAttribute("aria-hidden", "true");
+        Object.assign(node.style, {
+          left: start.x + "px",
+          top: start.y + "px",
         });
-      }
-      const anim = node.animate(frames, {
-        duration,
-        delay: reduced || skip ? 0 : i * 35,
-        easing: "linear",
-        fill: "forwards",
-      });
-      anim.finished
-        .then(() => {
-          const liveTarget =
-            document.getElementById(to.id || to.closest("[id]")?.id) || to;
-          if (state !== run || !liveTarget.isConnected) {
+        document.body.append(node);
+        const dx = end.x - start.x,
+          dy = end.y - start.y,
+          arc = Math.min(100, Math.max(28, Math.abs(dx) * 0.18)),
+          duration =
+            reduced || skip ? 100 : Math.max(210, 520 / Math.sqrt(pace())),
+          frames = [];
+        for (let k = 0; k <= 12; k++) {
+          const t = k / 12,
+            e = t * t * (3 - 2 * t);
+          frames.push({
+            offset: t,
+            transform: `translate(${dx * e}px,${dy * e - Math.sin(e * Math.PI) * arc}px) scale(${0.8 + Math.sin(t * Math.PI) * 0.35}) rotate(${(i % 2 ? 1 : -1) * t * 28}deg)`,
+            opacity: k === 12 ? 0 : 1,
+          });
+        }
+        const anim = node.animate(frames, {
+          duration,
+          delay: reduced || skip ? 0 : i * 35,
+          easing: "linear",
+          fill: "forwards",
+        });
+        anim.juice = true;
+        liveAnimations.add(anim);
+        if (utilityOpen) {
+          anim.pause();
+          anim.utilityPaused = true;
+        }
+        return anim.finished
+          .then(() => {
+            const liveTarget =
+              document.getElementById(to.id || to.closest("[id]")?.id) || to;
+            if (state !== run || !liveTarget.isConnected) {
+              node.remove();
+              return;
+            }
+            const splash = document.createElement("div");
+            splash.className = "symbol-arrival " + type;
+            splash.dataset.target = liveTarget.id;
+            splash.innerHTML = symbolMarkup(symbol);
+            splash.style.left = end.x + "px";
+            splash.style.top = end.y + "px";
+            document.body.append(splash);
+            burst(
+              liveTarget,
+              type === "heal"
+                ? "heal"
+                : type === "block"
+                  ? "shield"
+                  : type === "poison"
+                    ? "poison"
+                    : "paper",
+              impact.critical ? 26 : 12,
+            );
+            shakeElement(liveTarget, impact.critical ? 6 : 2);
+            if (impact.critical) impactFlash(liveTarget, i);
+            splash
+              .animate(
+                [
+                  { transform: "translate(-50%,-50%) scale(.7)", opacity: 1 },
+                  {
+                    transform: "translate(-50%,-50%) scale(1.7)",
+                    opacity: 1,
+                    offset: 0.45,
+                  },
+                  { transform: "translate(-50%,-50%) scale(2.1)", opacity: 0 },
+                ],
+                { duration: reduced ? 100 : 320 },
+              )
+              .finished.finally(() => splash.remove());
             node.remove();
-            return;
-          }
-          const splash = document.createElement("div");
-          splash.className = "symbol-arrival " + type;
-          splash.dataset.target = liveTarget.id;
-          splash.innerHTML = symbolMarkup(symbol);
-          splash.style.left = end.x + "px";
-          splash.style.top = end.y + "px";
-          document.body.append(splash);
-          burst(
-            liveTarget,
-            type === "heal"
-              ? "heal"
-              : type === "block"
-                ? "shield"
-                : type === "poison"
-                  ? "poison"
-                  : "paper",
-            impact.critical ? 26 : 12,
-          );
-          shakeElement(liveTarget, impact.critical ? 6 : 2);
-          if (impact.critical) impactFlash(liveTarget, i);
-          splash
-            .animate(
-              [
-                { transform: "translate(-50%,-50%) scale(.7)", opacity: 1 },
-                {
-                  transform: "translate(-50%,-50%) scale(1.7)",
-                  opacity: 1,
-                  offset: 0.45,
-                },
-                { transform: "translate(-50%,-50%) scale(2.1)", opacity: 0 },
-              ],
-              { duration: reduced ? 100 : 320 },
-            )
-            .finished.finally(() => splash.remove());
-          node.remove();
-        })
-        .catch(() => node.remove());
-    });
+          })
+          .catch(() => node.remove())
+          .finally(() => liveAnimations.delete(anim));
+      }),
+  );
 }
 function beam(from, to, type, impact = {}) {
-  if (!from || !to) return;
-  const mode = preferences().combatEffects;
-  if (mode !== "beams") launchRolledSymbols(from, to, type, impact);
-  if (mode !== "icons") drawBeam(from, to, type, impact);
+  if (!from || !to) return Promise.resolve();
+  const mode = preferences().combatEffects,
+    flights = [];
+  if (mode !== "beams")
+    flights.push(launchRolledSymbols(from, to, type, impact));
+  if (mode !== "icons") flights.push(drawBeam(from, to, type, impact));
+  const completed = Promise.all(flights);
+  impact.flights?.push(completed);
+  return completed;
 }
+
 function impactNumberParts(value, type) {
-  if (!state.enemy || value < 2 || type === "block") return [];
+  if (!state.enemy || value < 2 || ["block", "poison"].includes(type))
+    return [];
   const actor =
       actingEnemy ||
       (state.currentHero != null ? state.party[state.currentHero] : null),
@@ -200,15 +222,29 @@ function combatNumber(el, value, type) {
     const node = document.createElement("div");
     node.className =
       "combat-number " +
-      (type === "heal" ? "healing" : type === "block" ? "blocked" : "damage") +
+      (type === "heal"
+        ? "healing"
+        : type === "block"
+          ? "blocked"
+          : type === "poison"
+            ? "poison damage"
+            : "damage") +
       (minor ? " minor" : "");
     node.dataset.target = el.id;
     node.dataset.value = amount;
     node.dataset.summed = String(!minor);
+    node.dataset.kind = type;
     node.textContent =
       type === "block"
         ? amount + " BLOCKED"
         : (type === "heal" ? "+" : "−") + amount;
+    if (type === "poison") {
+      const label = document.createElement("small");
+      label.className = "poison-label";
+      label.textContent = "POISON";
+      node.append(label);
+      node.setAttribute("aria-label", `${amount} poison damage`);
+    }
     node.style.left =
       rect.left +
       rect.width / 2 +
@@ -354,7 +390,8 @@ function passiveFX(e, text, kind = "danger") {
   shakeElement(enemyArtEl(e), 5);
   GameSound.play("trait");
 }
-function criticalPayoff(details, multiplier) {
+// One reserved number readout is used throughout the roll and the payoff.
+function criticalFigures(details, multiplier) {
   let marks = details.filter((d) =>
     ["sword", "attack", "magic"].includes(d.icon),
   );
@@ -365,20 +402,41 @@ function criticalPayoff(details, multiplier) {
       .slice(0, 1);
   if (!marks.length)
     marks = [...details].sort((a, b) => b.value - a.value).slice(0, 1);
-  const original = marks.reduce((n, d) => n + d.value, 0),
-    total = marks.reduce((n, d) => n + Math.ceil(d.value * multiplier), 0);
-  const label = marks.some((d) => d.icon === "coin")
-    ? "GOLD"
-    : marks.some((d) => ["heal", "blessing"].includes(d.icon))
-      ? "HEALING"
-      : marks.some((d) => ["sword", "attack", "magic"].includes(d.icon))
-        ? "DAMAGE"
-        : "POWER";
-  // Each effect rounds independently. A combined equation could imply a
-  // different total for mixed blade/magic rolls (5 + 5 at ×2.5 is 13 + 13).
-  const math =
-    marks.length > 1
-      ? `×${multiplier} per effect`
-      : `${original} × ${multiplier}`;
-  return `<div class="critical-payoff" aria-label="Critical ${label.toLowerCase()}: ${total}"><small>${math} · CRITICAL ${label}</small><strong>${total}</strong></div>`;
+  return {
+    original: marks.reduce((n, d) => n + d.value, 0),
+    total: marks.reduce((n, d) => n + Math.ceil(d.value * multiplier), 0),
+    label: marks.some((d) => d.icon === "coin")
+      ? "GOLD"
+      : marks.some((d) => ["heal", "blessing"].includes(d.icon))
+        ? "HEALING"
+        : marks.some((d) => ["sword", "attack", "magic"].includes(d.icon))
+          ? "DAMAGE"
+          : "POWER",
+  };
+}
+function criticalPayoff(details, multiplier, { pending = false } = {}) {
+  const { original, total, label } = criticalFigures(details, multiplier);
+  return `<div class="critical-payoff" data-before="${original}" data-after="${total}" data-phase="${pending ? "rolling" : "locked"}" aria-label="${pending ? "Original" : "Critical"} ${label.toLowerCase()}: ${pending ? original : total}"><small>${pending ? "ORIGINAL" : "CRITICAL"} ${label}</small><strong>${pending ? original : total}</strong></div>`;
+}
+function revealCriticalPayoff(region, details, multiplier) {
+  const { total, label } = criticalFigures(details, multiplier),
+    payoff = region.querySelector(".critical-payoff");
+  payoff.dataset.phase = "locked";
+  payoff.setAttribute(
+    "aria-label",
+    `Critical ${label.toLowerCase()}: ${total}`,
+  );
+  payoff.querySelector("small").textContent = "CRITICAL " + label;
+  const number = payoff.querySelector("strong");
+  number.textContent = total;
+  animate(
+    number,
+    [
+      { transform: "scale(.82)", filter: "brightness(1)" },
+      { transform: "scale(1.22)", filter: "brightness(1.5)", offset: 0.4 },
+      { transform: "scale(1)", filter: "brightness(1)" },
+    ],
+    { duration: 520, juice: true },
+  );
+  burst(number, label === "HEALING" ? "heal" : "gold", 55);
 }

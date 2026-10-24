@@ -205,6 +205,7 @@ async function encounterEntrance() {
   );
   sayEnemy("entrance");
   await resolveBattleOpening();
+  await automaticOpeningPause();
 }
 async function declinedRecruit(h) {
   const outcome = Math.random();

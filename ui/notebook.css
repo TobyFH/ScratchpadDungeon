@@ -5051,3 +5051,286 @@ body.utility-open .combat-callout {
     font-size: 19px;
   }
 }
+
+/* A tape label sizes to its lettering, inside the reserved encounter row. */
+#encounter > .enemy-label {
+  justify-self: start;
+  align-self: start;
+  width: max-content;
+  max-width: 100%;
+  height: 26px;
+  min-height: 26px;
+  border: 0;
+  padding: 2px 12px;
+  display: flex;
+  align-items: center;
+  font-size: 22px;
+  line-height: 1;
+}
+#encounter.paired-enemies > .enemy-label {
+  font-size: 20px;
+}
+
+/* The payoff changes its existing number, never inserts a new calculation box. */
+.critical-summary {
+  width: 100%;
+  min-width: 0;
+  height: 156px;
+  display: grid;
+  place-items: center;
+}
+.critical-summary .critical-payoff {
+  width: 100%;
+  height: 140px;
+  min-height: 140px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  display: grid;
+  grid-template-rows: 30px 100px;
+  align-content: center;
+  align-items: center;
+  text-align: center;
+}
+.critical-summary .critical-payoff small {
+  font-size: 19px;
+  line-height: 1.1;
+  color: var(--soft);
+}
+.critical-summary .critical-payoff strong {
+  font-size: 82px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  animation: none;
+}
+.critical-payoff[data-phase="rolling"] {
+  color: var(--ink);
+}
+.critical-payoff[data-phase="locked"] {
+  color: var(--gold);
+}
+.critical-locked .critical-payoff strong {
+  animation: critical-big-number 0.65s ease-in-out infinite alternate;
+}
+.event-critical:empty {
+  border: 0;
+  background: transparent;
+}
+.stage-card.treasure .critical-summary,
+.stage-card.treasure .critical-summary .critical-payoff {
+  height: 140px;
+  min-height: 140px;
+}
+.stage-card.treasure .critical-payoff strong {
+  font-size: 68px;
+}
+.stage-card.treasure .critical-payoff small {
+  font-size: 17px;
+}
+.stage-card.treasure .trap-art {
+  max-width: none;
+  justify-self: stretch;
+  width: 100%;
+}
+/* Fit the complete loot machine, including its captions, inside its reserved
+ * row. The inline multiplier owns a separate title row beneath it. */
+.stage-card.treasure .scene-layout {
+  --loot-machine-height: 105px;
+}
+.stage-card.treasure .scene-layout > .machine-shell {
+  display: grid;
+  grid-template-rows: 20px minmax(0, 1fr) 20px;
+  height: var(--loot-machine-height);
+  margin: 0 auto;
+}
+.stage-card.treasure .scene-layout > .machine-shell .machine-title,
+.stage-card.treasure .scene-layout > .machine-shell .machine-footnote {
+  height: 20px;
+  min-height: 20px;
+  line-height: 20px;
+  margin: 0;
+}
+.stage-card.treasure .scene-layout > .machine-shell .machine-face {
+  height: 100%;
+  min-height: 0;
+}
+.stage-card.treasure .scene-layout > .machine-shell .lever {
+  top: 20px;
+  height: calc(var(--loot-machine-height) - 40px);
+}
+.stage-card.treasure .event-critical.active-critical {
+  display: grid;
+  grid-template-rows: 22px minmax(0, 1fr);
+}
+.stage-card.treasure .inline-critical-title {
+  height: 22px;
+  line-height: 22px;
+}
+.stage-card.treasure .active-critical .inline-critical-body,
+.stage-card.treasure .active-critical .critical-summary,
+.stage-card.treasure .active-critical .critical-payoff {
+  height: 100%;
+  min-height: 0;
+}
+.stage-card.treasure .active-critical .critical-payoff {
+  grid-template-rows: 26px minmax(0, 1fr);
+}
+@media (max-width: 760px) {
+  .stage-card.treasure .scene-layout {
+    --loot-machine-height: 90px;
+  }
+}
+
+/* Terrain remains legible when a discovery on top of a bridge has been used. */
+.tile.bridge-tile,
+.tile.bridge-tile.spent,
+.tile.bridge-tile.visited {
+  background:
+    linear-gradient(
+      color-mix(in srgb, var(--water-wash) 50%, transparent),
+      color-mix(in srgb, var(--water-wash) 50%, transparent)
+    ),
+    var(--paper-shade);
+}
+.bridge-layer {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+.tile.bridge-tile .bridge-layer > svg {
+  width: 74%;
+  height: 74%;
+  opacity: 1;
+  color: var(--ink);
+}
+.tile.bridge-tile > svg,
+.tile.bridge-tile > svg:last-child:not(:first-child) {
+  position: absolute;
+  width: 43%;
+  height: 43%;
+  left: 55%;
+  top: 1%;
+  background: var(--paper-raised);
+}
+.combat-float.poison {
+  color: var(--poison);
+  font-weight: bold;
+}
+.combat-number.poison {
+  color: var(--red);
+  text-shadow:
+    0 1px var(--paper),
+    0 0 9px var(--poison-wash);
+}
+.combat-number.poison {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+.combat-number.poison .poison-label {
+  color: var(--poison);
+  font-size: clamp(14px, 0.42em, 25px);
+  line-height: 1.1;
+}
+.blacked-out.blackout-forming::after {
+  animation: blackout-form 0.2s ease-out both;
+}
+@keyframes blackout-form {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .blacked-out.blackout-forming::after {
+    animation: none;
+  }
+}
+.skip-cinematics .blacked-out.blackout-forming::after {
+  animation: none;
+}
+
+/* Grid siblings reserve the largest workshop page, including its real content.
+ * This keeps the explanatory note and Done row below the edit controls. */
+.workshop-pages {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+.workshop-pages > .workshop-page {
+  grid-area: 1/1;
+  height: auto;
+  min-height: 505px;
+}
+.modal .workshop-pages > .workshop-page[hidden] {
+  display: block !important;
+  visibility: hidden;
+  pointer-events: none;
+}
+.workshop-note {
+  position: static;
+  margin: 10px 0 6px;
+}
+@media (max-width: 760px) {
+  .workshop-pages > .workshop-page {
+    height: auto;
+    min-height: 455px;
+  }
+  .workshop-detail {
+    height: 310px;
+  }
+  .workshop-detail .face-effect {
+    height: 92px;
+    min-height: 92px;
+  }
+  .stage-card.treasure .critical-summary,
+  .stage-card.treasure .critical-summary .critical-payoff {
+    height: 120px;
+    min-height: 120px;
+  }
+  .critical-summary .critical-payoff {
+    grid-template-rows: 26px 84px;
+  }
+  .stage-card.treasure .critical-payoff strong {
+    font-size: 58px;
+  }
+}
+/* Compact workshop headers omit repeated context, reserving readable type for
+ * the selected mark and its controls. Full class/temperament details remain in
+ * the header tooltip and the permanent class face's description. */
+@media (max-width: 760px) {
+  .modal:has(.reel-workshop) > .eyebrow {
+    display: none;
+  }
+  .workshop-summary .hero-specialism > small,
+  .workshop-step-label > span {
+    display: none;
+  }
+  .workshop-detail .face-effect {
+    font-size: 21px;
+  }
+  .workshop-detail .locked-seal {
+    margin: 6px 0;
+    line-height: 1.35;
+  }
+  .workshop-detail .locked-seal svg {
+    width: 48px;
+    height: 48px;
+    margin: 4px auto;
+  }
+  .modal-flow > .workshop-note {
+    font-size: 18px;
+  }
+}
+@media (max-width: 760px) {
+  .modal:has(.reel-workshop) #modal-title {
+    padding-right: 50px;
+  }
+}

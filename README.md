@@ -60,7 +60,10 @@ heading for a guardian, preferring exploration or reachable supplies when behind
 It can seek ordinary fights for experience and eventually commits when no useful
 preparation remains.
 
-Enable **Autofight** alongside it for a hands-free attempt. Autofight estimates
+Enable **Autofight** alongside it for a hands-free attempt. Both modes briefly
+linger on confirmations so their animations and contents can be watched; an
+extra arrival pause leaves time to see enemy traits and party openings. Reading
+holds scale with animation speed, using 5× for Skip, and manual clicks stay immediate. Autofight estimates
 what each hero's actual weighted wheels can deliver, balancing damage, healing,
 team protection, stun, poison and buffs. It selects targets and useful items,
 including the ink bomb's confirmed roll. Repeated support turns give way to
@@ -135,16 +138,18 @@ class and earned trait. Choose it for your first hero; wanderers vary.
 | Tank      | 44 HP; blades and team protection                      | Rage builds damage and some resistance                        |
 | Rogue     | 26 HP; damage and poison                               | Flurry rolls three extra attacks                              |
 | Mage      | 28 HP; build healing, shields, poison or spell damage  | Resonance echoes the rolled marks across the appropriate team |
-| Berserker | 38 HP; unlock at camp; blades, healing and Blood Price | Bloodrush and wounds fill Fury for bonus damage               |
+| Berserker | 38 HP; unlock at camp; blades, healing and Blood Price | Bloodrush heals; charged Fury adds damage and lifesteal       |
 | Ranger    | 30 HP; unlock at camp                                  | Execute rewards patience and finishing wounded enemies        |
 
 Former Healers migrate to Mages with their existing stats and edited wheels.
 There is no Mage role selector: builds follow the marks on their reels. See
 [Combat builds](docs/COMBAT_BUILDS.md) for exact rules, migration and source files.
 
-Blade and magic tiers deal 2 / 4 / 7 / 11 damage per face. Healing tiers offer 2 / 4 / 6 / 8 HP. Block and stun tiers contribute 1 / 2 / 3 / 4 power. **Three identical type-and-tier symbols crit**; a middle class seal can complete two matching meaningful symbols while also casting its ability. A pair alone never crits. Hero and other event critical multipliers are ×2, ×2.5, ×3 or ×4; wells use ×1.25–×1.75, with displayed before-and-after calculations.
+Blade and magic tiers deal 2 / 4 / 7 / 11 damage per face. Healing tiers offer 2 / 4 / 6 / 8 HP. Block and stun tiers contribute 1 / 2 / 3 / 4 power. **Three identical type-and-tier symbols crit**; a middle class seal can complete two matching meaningful symbols while also casting its ability. A pair alone never crits. Hero and other event critical multipliers are ×2, ×2.5, ×3 or ×4; wells use ×1.25–×1.75, with the original value pulsing into the amplified total.
 
-Normal combat rolls stay on the right page. Criticals get a multiplier popup that lingers automatically; **Strike now** skips its result hold. Treasure, fountain and other event criticals stay inside their original panel and still require confirmation. Critical damage lands as the original hit followed by a separate bonus hit, each with its own selected icon/beam feedback, number and impact. Flurries likewise produce separate hits. Criticals and tier III / IV attacks hit every enemy. Click a hero card's name, statistics or blank space to spin; portraits open upgrades, and equipment/editor buttons keep their own actions. A focused card also spins with Enter or Space. Hover a portrait for compact battle statistics during combat and lifetime statistics outside it; status badges keep their own tooltips. A points reminder opens the workshop when points accumulate. Healing targets retain their dedicated buttons and Shift+1–3 shortcuts.
+Normal combat rolls stay on the right page. Criticals get a multiplier popup that lingers automatically; **Strike now** skips its result hold. Treasure, fountain and other event criticals stay inside their original panel and still require confirmation. Criticals show the original value while spinning, then pulse the same readout to
+the final number; no calculation box appears. Critical damage lands as the
+original hit followed by a separate bonus hit, each with its own selected icon/beam feedback, number and impact. Flurries likewise produce separate hits. Criticals and tier III / IV attacks hit every enemy. Click a hero card's name, statistics or blank space to spin; portraits open upgrades, and equipment/editor buttons keep their own actions. A focused card also spins with Enter or Space. Hover a portrait for compact battle statistics during combat and lifetime statistics outside it; status badges keep their own tooltips. A points reminder opens the workshop when points accumulate. Healing targets retain their dedicated buttons and Shift+1–3 shortcuts.
 
 A single-target healing roll or tonic aimed at a full-health, unstunned hero redirects to
 the living wounded hero with the **lowest raw HP**, not the lowest percentage.
@@ -166,7 +171,12 @@ encounters use this curve; migrations preserve hero wounds and edited reels.
 | Ordinary enemy | 2       | 7       | 9        |
 | Stair guardian | 3       | 9       | 12       |
 
-**Poison** holds at most three remaining turns. Repeated doses increase its armour-piercing tick damage rather than building a long duration, with visible ticks and kill credit. **Stimulants** increase damage and protection and show a fiery glow. Rage, Execute, Fury, poison, stun, Vulnerable and opening buffs end with combat. Level-ups add 6 maximum HP and 4 personal editing points, with portrait and machine effects. EXP comes only from successful battles; surviving heroes also gain one editing point per victory.
+Berserkers begin with Healing I and II on every reel. Bloodrush heals the caster
+and fills Fury; each four Fury adds 4% lifesteal, up to 20%. Real unblocked damage
+lands before healing marks return from the enemy and restore HP.
+
+**Poison** has purple POISON callouts and does not trigger Vulnerable. Healing
+also leaves Vulnerable for the next actual hit. Poison holds at most three remaining turns. Repeated doses increase its armour-piercing tick damage rather than building a long duration, with visible ticks and kill credit. **Stimulants** increase damage and protection and show a fiery glow. Rage, Execute, Fury, poison, stun, Vulnerable and opening buffs end with combat. Level-ups add 6 maximum HP and 4 personal editing points, with portrait and machine effects. EXP comes only from successful battles; surviving heroes also gain one editing point per victory.
 
 The **Autofight** checkbox (Autoresolve in Options) chooses heroes, targets and occasional useful emergency supplies. It preserves the selected animation speed and all combat feedback. Enemy entrances confirm automatically; other choices wait for the player unless Autoplay is also enabled. Untick it to take over between actions.
 

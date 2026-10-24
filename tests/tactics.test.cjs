@@ -183,7 +183,11 @@ test("Berserker Fury comes from HP wounds and Blood Price, scales damage, has a 
   assert.equal(result.wound.hp, 36);
   assert.equal(result.wound.fury, 3);
   assert.ok(result.illegal.every((x) => x === false));
-  assert.equal(result.charged.hp, 32);
+  assert.equal(
+    result.charged.hp,
+    38,
+    "Bloodrush and Fury lifesteal offset the Blood Price wound",
+  );
   assert.equal(result.charged.fury, 19);
   assert.equal(result.charged.bonus, 4);
   assert.ok(result.charged.damage >= 10);
@@ -703,7 +707,7 @@ test("new travel events offer a real choice, warn before a paid full-bag trade a
   assert.ok(await p.evaluate(() => state.gold > 100));
 });
 
-test("locked criticals keep their calculation but give the final number a large pulsing payoff and an enabled fast-forward", async (t) => {
+test("critical readouts pulse from the original value to a large final number with an enabled fast-forward", async (t) => {
   const p = await game(t);
   await p.evaluate(() => {
     setPace("1");
@@ -717,12 +721,12 @@ test("locked criticals keep their calculation but give the final number a large 
   });
   await p.waitForSelector("#machine-critical");
   await p.locator("#stage-skip").click();
-  await p.waitForSelector(".critical-payoff strong");
+  await p.waitForSelector(".critical-locked .critical-payoff strong");
   await p.waitForTimeout(450);
   assert.ok(
     Number(await p.locator(".critical-payoff strong").textContent()) >= 24,
   );
-  assert.equal(await p.locator("#critical-math").isHidden(), true);
+  assert.equal(await p.locator("#critical-math").count(), 0);
   assert.ok(
     await p
       .locator(".critical-payoff strong")
@@ -746,7 +750,7 @@ test("locked criticals keep their calculation but give the final number a large 
     };
   });
   assert.equal(mixed.total, "26", "mixed effects retain independent rounding");
-  assert.match(mixed.math, /per effect/);
+  assert.match(mixed.math, /CRITICAL DAMAGE/);
 });
 
 test("a pending surprise opening resumes after reload without rerolling its restrictions or trapping the party", async (t) => {

@@ -311,7 +311,7 @@ test("a matching pair does not crit; three identical symbols roll an automatic, 
     ["attack", 1],
   ]);
   await p.locator('[data-spin="0"]').click();
-  await p.waitForSelector("#critical-result strong");
+  await p.waitForSelector(".critical-locked #critical-result strong");
   let info = await p.evaluate(() => ({
     hp: state.enemy.hp,
     m: state.lastCritical.multiplier,
@@ -1486,16 +1486,22 @@ test("the final companion gets a death acknowledgement without a burial, then th
   assert.equal(await p.evaluate(() => healHero(0, 100)), 0);
 });
 
-test("treasure critical stays inside its original event, shows reward math and pours large coins", async (t) => {
+test("treasure critical stays inside its original event, transforms its reward value and pours large coins", async (t) => {
   let p = await game(t);
   await fast(p);
   await startEval(
     p,
     "(async()=>{let old=Math.random;Math.random=()=>0;try{await treasureRoll()}finally{Math.random=old}})()",
   );
-  await p.waitForSelector("#critical-result strong");
+  await p.waitForSelector(".critical-locked #critical-result strong");
   assert.equal(await p.locator("#stage-title").textContent(), "Treasure!");
-  assert.match(await p.locator("#critical-math").textContent(), /18.*2.*36/);
+  assert.deepEqual(
+    await p
+      .locator(".critical-payoff")
+      .evaluate((n) => [+n.dataset.before, +n.dataset.after]),
+    [18, 36],
+  );
+  assert.equal(await p.locator("#critical-math").count(), 0);
   // Layout dimensions stay fixed while intentional scale/shake effects can
   // temporarily alter the painted bounding box.
   const size = () =>
@@ -1541,12 +1547,17 @@ test("fountain triple heals crit within the same popup at instant speed and show
     Math.random = () => 0;
   });
   await p.locator("#well-use").click();
-  await p.waitForSelector("#critical-result strong");
+  await p.waitForSelector(".critical-locked #critical-result strong");
   assert.equal(
     await p.locator("#stage-title").textContent(),
     "The water wheel turns",
   );
-  assert.match(await p.locator("#critical-math").textContent(), /10.*1.25.*13/);
+  assert.deepEqual(
+    await p
+      .locator(".critical-payoff")
+      .evaluate((n) => [+n.dataset.before, +n.dataset.after]),
+    [10, 13],
+  );
   await p.waitForSelector("#stage-confirm");
   assert.equal(
     await p.locator("#stage-title").textContent(),
@@ -1586,7 +1597,7 @@ test("a lethal critical is visibly dealt before the victory popup opens", async 
     ["attack", 1],
   ]);
   await p.locator('[data-spin="0"]').click();
-  await p.waitForSelector("#critical-result strong");
+  await p.waitForSelector(".critical-locked #critical-result strong");
   assert.equal(await p.evaluate(() => state.enemy.hp), 10);
   await p.waitForFunction(() => state.enemy?.hp === 0);
   assert.equal(await p.locator(".fx-beam.lethal").count(), 1);
@@ -1909,7 +1920,7 @@ test("rivers and stone are blocked, bridges are traversable, and marked stairs s
   assert.equal(await p.evaluate(() => state.exitPromptPending), false);
 });
 
-test("a fountain critical lists uncapped before and after healing for every hero even near full health", async (t) => {
+test("a fountain critical retains uncapped offered healing for every hero while showing a single payoff", async (t) => {
   let p = await game(t);
   await fast(p);
   await p.setViewportSize({ width: 390, height: 844 });
@@ -1928,7 +1939,7 @@ test("a fountain critical lists uncapped before and after healing for every hero
     window.originalReels = document.querySelector("#machine-fountain");
   });
   await p.locator("#well-use").click();
-  await p.waitForSelector("#critical-math [data-before]");
+  await p.waitForSelector(".critical-locked .critical-payoff");
   assert.equal(
     await p.evaluate(
       () => document.querySelector("#stage-card") === window.originalCard,
@@ -1936,11 +1947,12 @@ test("a fountain critical lists uncapped before and after healing for every hero
     true,
   );
   assert.equal(await p.locator("#stage-card.critical").count(), 0);
-  const math = await p
-    .locator("#critical-math [data-before]")
-    .evaluateAll((nodes) =>
-      nodes.map((n) => [+n.dataset.before, +n.dataset.after]),
-    );
+  const math = await p.evaluate(() =>
+    state.lastCritical.baseEffects.map((d) => [
+      d.value,
+      Math.ceil(d.value * state.lastCritical.multiplier),
+    ]),
+  );
   assert.deepEqual(math, [
     [10, 13],
     [8, 10],
@@ -2542,12 +2554,12 @@ test("ruin triple matches keep their critical inside the original ruin panel", a
     Math.random = () => 0;
   });
   await p.locator("#ruin-examine").click();
-  await p.waitForSelector("#critical-result strong");
+  await p.waitForSelector(".critical-locked #critical-result strong");
   assert.equal(
     await p.locator("#stage-title").textContent(),
     "The ruin’s mechanism",
   );
-  assert.equal(await p.locator("#event-critical #critical-math").count(), 1);
+  assert.equal(await p.locator("#event-critical #critical-math").count(), 0);
   await p.waitForSelector("#stage-confirm");
   assert.equal(await p.evaluate(() => state.lastRuinRoll.gold), 48);
   await p.locator("#stage-confirm").click();
@@ -3786,7 +3798,7 @@ test("ink bombs roll damage and poison, show an inline critical when matched and
   assert.equal(await p.evaluate(() => state.enemy.countdown), 20);
   await p.evaluate(() => (Math.random = () => 0));
   await startEval(p, "useBomb()");
-  await p.waitForSelector("#event-critical #critical-math");
+  await p.waitForSelector("#event-critical.critical-locked .critical-payoff");
   assert.equal(await p.locator("#stage-title").textContent(), "Ink bomb!");
   await p.waitForSelector("#stage-confirm");
   await p.locator("#stage-confirm").click();
@@ -4153,11 +4165,12 @@ test("mixed blade and magic criticals show correct rounded components and tier I
   await p.locator('[data-spin="0"]').click();
   await p.waitForFunction(() => !!criticalHoldResolver);
   assert.deepEqual(
-    await p
-      .locator("#critical-math [data-before]")
-      .evaluateAll((nodes) =>
-        nodes.map((n) => [+n.dataset.before, +n.dataset.after]),
-      ),
+    await p.evaluate(() =>
+      state.lastCritical.baseEffects.map((d) => [
+        d.value,
+        Math.ceil(d.value * state.lastCritical.multiplier),
+      ]),
+    ),
     [
       [5, 13],
       [5, 13],
@@ -6819,9 +6832,10 @@ test("autoplay drinks a selected moderately needed well instead of declining and
   assert.equal(tile, 79);
   await startEval(p, `move(${tile})`);
   await p.waitForSelector("#well-use");
-  assert.equal(await p.evaluate(() => autoplayPrompt()), true);
+  assert.equal(await p.evaluate(() => autoplayPrompt()), false);
+  await p.waitForFunction(() => autoplayPrompt());
   await p.waitForSelector("#stage-confirm");
-  await p.evaluate(() => autoplayPrompt());
+  await p.waitForFunction(() => autoplayPrompt());
   await finish(p);
   assert.equal(await p.evaluate(() => state.map[79].event), null);
   assert.equal(
@@ -6855,13 +6869,21 @@ test("autoplay takes an unused fountain before descending even for one missing H
       autoplayPrompt() && document.querySelector("#overlay").hidden;
     return { well, goal: autoplayGoal(), closed };
   });
-  assert.equal(goals.closed, true);
+  assert.equal(
+    goals.closed,
+    false,
+    "Autoplay reads the stair sheet before responding",
+  );
+  await p.waitForFunction(() => {
+    autoplayPrompt();
+    return document.querySelector("#overlay").hidden;
+  });
   assert.equal(goals.goal, goals.well);
   await startEval(p, `move(${goals.well})`);
   await p.waitForSelector("#well-use");
-  await p.evaluate(() => autoplayPrompt());
+  await p.waitForFunction(() => autoplayPrompt());
   await p.waitForSelector("#stage-confirm");
-  await p.evaluate(() => autoplayPrompt());
+  await p.waitForFunction(() => autoplayPrompt());
   await finish(p);
   assert.equal(
     await p.evaluate(() => state.party[0].hp),
