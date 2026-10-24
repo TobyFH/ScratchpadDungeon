@@ -5,7 +5,7 @@ source modules; edit the sources and regenerate rather than editing marked HTML:
 
 | Source | Responsibility |
 | --- | --- |
-| `game/hero-builds.js` | Temperaments, Mage roles, Execute, shared enemy block helpers |
+| `game/hero-builds.js` | Temperaments, natural Resonance, Fury, Execute, shared enemy block helpers |
 | `game/reel-upgrades.js` | Prices, refunds, edit validation and the reel workshop |
 | `game/encounter-presentation.js` | Cosmetic pun identities, paired arrivals and declined-recruit outcomes |
 | `ui/combat-feedback.js` | Rolled-symbol flights, beam selection and split numeric feedback |
@@ -13,28 +13,19 @@ source modules; edit the sources and regenerate rather than editing marked HTML:
 
 ## Builds
 
-New adventurers have **Offence** or **Defence** temperament, independently of
+New adventurers have **Aggressive** or **Defensive** temperament, independently of
 class and earned trait. Starting heroes let the player choose; wanderers receive
-one randomly. Offence adds one to a damaging roll (blade or magic), poison power
-and stun power when present. Defence adds one to healing (targeted or party),
+one randomly. Aggressive adds one to a damaging roll (blade or magic), poison power
+and stun power when present. Defensive adds one to healing (targeted or party),
 team block and stimulant power when present. Blanks never gain an effect. These
 bonuses apply before critical multipliers and are included in Autofight estimates.
 
-Classes are Tank, Rogue, Mage and the camp-unlocked Ranger. Mage replaces the old
-Healer class. A Mage's role is **spell damage, healing, shields or poison**,
-selected at camp and changeable in its workshop. Its single middle **Resonance**
-seal applies the role to every appropriate target:
-
-- Magic: `4 + floor(level/2)` magic to every enemy.
-- Healing: `3 + ceil(level/2)` HP to every living ally.
-- Shields: `4 + floor(level/3)` shared party block.
-- Poison: `2 + floor(level/3)` poison power against every enemy.
-
-The other two rolled faces retain their own effects. An offensive magic seal,
-criticals and tier III/IV damage can hit all enemies; a healing/shield seal alone
-does not spread otherwise single-target damage. Role is an explicit choice,
-not a hidden majority calculation based on the wheel. Mage healing equipment
-keeps its stable item IDs and is now usable by any Mage.
+Classes are Tank, Rogue, Mage, Berserker and the camp-unlocked Ranger. Mage
+replaces the old Healer. Mages have no chosen speciality or role stat. Resonance
+follows the actual healing, shield, poison or spell marks rolled, with the
+weighted wheel as a fallback. Healing Resonance also clears every ally's stun.
+See [Battle tactics](BATTLE_TACTICS.md) for the formulas, fixed Aggressive/Defensive
+temperaments, Berserker Fury, openings and status interactions.
 
 Ranger **Execute** stores patience, from zero to six. Each party action on which
 that Ranger does not attack adds one; its own nondamaging seal roll adds two.
@@ -57,10 +48,10 @@ combat it retains lifetime statistics. A reminder appears at
 `points >= max(6, level * 3)` and never moves its clickable hitbox.
 
 The workshop selects one reel and one weighted face at a time. All seven
-ordinary powers support tier IV. Upgrade costs retain class affinities; Mage
+shared powers, plus Berserker Blood Price, support tier IV. Upgrade costs retain class affinities; Mage
 healing, shields, magic and poison share its favourable affinity. Empty-face
-inscription costs three for the class/role's primary type. Symbol swaps have an
-explicit destination dropdown and show their price before committing.
+inscription costs three for the class/temperament's primary type. Symbol swaps
+have an explicit destination dropdown and show their price before committing.
 
 Downgrade removes **one tier** and refunds half that tier's actual paid price,
 rounded down, with a minimum of one point. `face.investments[tier]` records paid
@@ -75,12 +66,12 @@ through the same validator and prices.
 ## Protection and encounters
 
 `state.enemyBlock` is the sole enemy block pool. Every living enemy can add to it
-and damage to either enemy consumes it. Legacy `e.block` accessors alias this value (without duplicating it in saves)
-for compatibility; gameplay writers must use `setEnemyBlock` /
+and damage to either enemy consumes it. Legacy `e.block` accessors alias this
+value (without duplicating it in saves) for compatibility; gameplay writers must use `setEnemyBlock` /
 `gainEnemyBlock`, never write individual fields. Piercing poison bypasses it;
-stun consumes up to six block per power and is stopped by any positive pool.
-The fixed enemy protection row shows its current count. Intercepted attacks hit
-that shield, with a separate flight/beam for HP overflow.
+stun consumes up to six block per power; greater power can pierce protection.
+Protection readouts below the enemy portraits show the same shared count.
+Intercepted attacks hit that shield, with a separate flight/beam for HP overflow.
 
 The **Unbroken page** consumable blocks every damage hit during the next actual
 enemy's complete turn, including every strike/critical segment. The enemy still
@@ -123,14 +114,14 @@ Normal and pun species have distinct synthesised cries. Cries take priority over
 a background/older voice when the shared twenty-voice pool is full, so large FX
 bursts cannot silently drop an entrance or death. Mute/SFX volume still apply.
 
-Version 16 migrates earlier saves without losing points, wounds, edited faces,
-equipment or history: Healers become healing Mages, existing middle seals are
-retained, stray seals become blanks at the same weight, and a missing middle
+Version 17 migrates earlier saves without losing points, wounds, edited faces,
+equipment or history: Healers become Mages retaining their healing faces; the old
+Mage speciality field is removed, existing middle seals are retained, stray seals become blanks at the same weight, and a missing middle
 seal is restored. Existing enemy block is consolidated once. New preferences
 are validated, saved and retained across runs.
 
 Run `npm test` and `npm run review:ui`. `tests/combat-builds.test.cjs` exercises
-actual browser interactions, refunds/invariants, migration, role effects, Execute,
+actual browser interactions, refunds/invariants, migration, Resonance effects, Execute,
 shared block, immunity, paired arrivals, pun presentation, voice saturation,
 projectiles, numeric feedback and compact workshop layout. Older mechanical
 fixtures use neutral temperament to isolate their base-value assertions; the

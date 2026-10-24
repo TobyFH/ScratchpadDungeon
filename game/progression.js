@@ -78,7 +78,10 @@ const CAMP_UNLOCKS = {
     name: "Travelling market",
     category: "oddities",
     cost: 100,
-    description: "Shop chance rises from 30% to 60% per floor.",
+    get description() {
+      // Read current spawn chances so camp copy cannot drift after balancing.
+      return `Shop chance rises from ${Math.round(WORLD_BALANCE.shopChance * 100)}% to ${Math.round(WORLD_BALANCE.marketChance * 100)}% per floor.`;
+    },
   },
   sharp: {
     name: "Both ends sharpened",

@@ -73,9 +73,12 @@ embed(
 );
 for (const [label, file] of [
   ["HERO BUILDS", "game/hero-builds.js"],
+  ["BATTLE TACTICS", "game/battle-tactics.js"],
+  ["WORLD EVENTS", "game/world-events.js"],
   ["REEL UPGRADES", "game/reel-upgrades.js"],
   ["ENCOUNTER PRESENTATION", "game/encounter-presentation.js"],
   ["COMBAT FEEDBACK", "ui/combat-feedback.js"],
+  ["FIELD GUIDE", "ui/field-guide.js"],
 ]) {
   embed(`// BEGIN GENERATED ${label}`, `// END GENERATED ${label}`, read(file));
 }

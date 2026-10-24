@@ -224,3 +224,7 @@ uses one selected weighted face and large labelled actions; never return to an
 unexplained cycling button. Symbol flights and small component numbers stay
 pointer-transparent. Pun names/art are explicitly requested meaningful enemy
 identities, not permission to add decorative filler writing.
+
+The field guide uses short topic pages in `ui/field-guide.js`; native topic
+selection and fixed previous/next controls retain legible reading sizes. Keep
+new instructions on focused topics rather than extending a single dense sheet.

@@ -29,6 +29,7 @@ const PUN_ENEMIES = Object.freeze({
   fullstop: "THE FULL STOP",
 });
 const PUN_SPECIES = Object.freeze({
+  berserker: "scissors",
   rat: "comma",
   ghost: "ghostit",
   slime: "glue",
@@ -113,7 +114,7 @@ async function encounterEntrance() {
           : first.elite
             ? "ELITE · " + first.affix
             : "An enemy steps out of the margins.",
-    `<div class="entrance-roster ${enemies.length > 1 ? "paired-intro" : ""}" id="entrance-art">${enemies.map((e) => `<div class="entrance-member" data-entrance-enemy="${e.id}"><div class="entrance-portrait">${portraitArt(e.art, e)}</div><b>${escapeHTML(e.name)}</b><small>${e.strikes} strike${e.strikes > 1 ? "s" : ""} · every ${e.frequency} spins</small></div>`).join("")}<div class="scare-lines"></div></div><p class="encounter-quote">“${enemyLine(first, "entrance")}”</p>`,
+    `${encounterTags(enemies)}<div class="entrance-roster ${enemies.length > 1 ? "paired-intro" : ""}" id="entrance-art">${enemies.map((e, i) => `<div class="entrance-member ${i ? "awaiting-second" : ""}" data-entrance-enemy="${e.id}"><div class="entrance-portrait">${portraitArt(e.art, e)}</div><b>${escapeHTML(e.name)}</b><small>${e.strikes} strike${e.strikes > 1 ? "s" : ""} · every ${e.frequency} spins</small></div>`).join("")}<div class="scare-lines"></div></div><p class="encounter-quote">“${enemyLine(first, "entrance")}”</p>`,
     "enemy-intro",
   );
   burst($("#entrance-art"), "scary", 36);
@@ -125,7 +126,18 @@ async function encounterEntrance() {
     $("#entrance-art").append(banner);
   }
   shakeBook(4);
-  await pause(600);
+  if (enemies.length > 1) {
+    await pause(260);
+    const second = $(".entrance-member.awaiting-second");
+    second.classList.remove("awaiting-second");
+    if (!skip && !matchMedia("(prefers-reduced-motion: reduce)").matches)
+      second.classList.add("arriving-second");
+    combatCallout(second, "ANOTHER FOE!", "danger");
+    burst(second, "scary", 38);
+    shakeBook(4);
+    GameSound.play("encounter");
+  }
+  await pause(400);
   await eventChoice([
     {
       id: "stage-confirm",
@@ -182,6 +194,7 @@ async function encounterEntrance() {
       `${escapeHTML(enemies.map((e) => e.name).join(" and "))} ${enemies.length > 1 ? "block" : "blocks"} the way. Choose any living hero.`,
   );
   sayEnemy("entrance");
+  await resolveBattleOpening();
 }
 async function declinedRecruit(h) {
   const outcome = Math.random();
@@ -211,4 +224,32 @@ async function declinedRecruit(h) {
     log(`${h.name} says goodbye and continues down another passage.`);
     result(icon("recruit") + "A quiet farewell in the margins.");
   }
+}
+
+function encounterTags(enemies) {
+  const tags = [];
+  if (enemies.some((e) => e.pursuer))
+    tags.push(
+      '<span class="encounter-tag passive">PURSUER · VALUABLE SPOILS</span>',
+    );
+  if (enemies.length > 1)
+    tags.push('<span class="encounter-tag dual">DUAL BATTLE</span>');
+  if (state.opening?.surprise)
+    tags.push('<span class="encounter-tag">SURPRISE ATTACK</span>');
+  for (const e of enemies) {
+    if (e.elite)
+      tags.push(
+        `<span class="encounter-tag">${e.boss ? "BOSS" : "ELITE"}${e.affix ? " · " + escapeHTML(e.affix) : ""}</span>`,
+      );
+    if (e.passive)
+      tags.push(
+        `<span class="encounter-tag passive" data-tooltip="${escapeHTML(ENEMY_TRAITS[e.passive.key]?.description || "")}">${ENEMY_TRAITS[e.passive.key]?.name || ""}</span>`,
+      );
+  }
+  const quick = state.party.find((h) => h.initiative);
+  if (quick)
+    tags.push(
+      `<span class="encounter-tag passive">${escapeHTML(quick.name)} · INITIATIVE</span>`,
+    );
+  return `<div class="encounter-tags">${tags.join("")}</div>`;
 }

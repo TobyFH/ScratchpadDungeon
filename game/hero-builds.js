@@ -1,16 +1,16 @@
-// Persistent hero builds. Shared by the editor, actual rolls and autoplay.
+// Hero identity and build rules; shared by play, recruitment, saves and automation.
 const SPECIALISMS = Object.freeze({
   offence: {
-    name: "Offence",
+    name: "Aggressive",
     description: "+1 damage, poison and stun power on relevant rolls.",
   },
   defence: {
-    name: "Defence",
+    name: "Defensive",
     description:
       "+1 healing, shared block and stimulant power on relevant rolls.",
   },
 });
-const MAGE_ROLES = Object.freeze({
+const MAGE_POWERS = Object.freeze({
   magic: {
     name: "Spell damage",
     icon: "magic",
@@ -19,7 +19,8 @@ const MAGE_ROLES = Object.freeze({
   heal: {
     name: "Healing",
     icon: "heal",
-    description: "Resonance heals every living ally.",
+    description:
+      "Resonance heals every living ally and clears all allied stuns.",
   },
   block: {
     name: "Shields",
@@ -32,38 +33,76 @@ const MAGE_ROLES = Object.freeze({
     description: "Resonance poisons every enemy.",
   },
 });
-const RANGER_AIM_CAP = 6;
+const RANGER_AIM_CAP = 6,
+  BERSERKER_FURY_CAP = 20;
 const rangerAimGain = () => 1;
-function mageRole(h) {
-  return Object.hasOwn(MAGE_ROLES, h?.mageRole) ? h.mageRole : "magic";
+const BASE_JOBS = Object.freeze(["fighter", "rogue", "mage", "berserker"]);
+const heroJobs = (rules = state?.runRules || []) => [
+  ...BASE_JOBS,
+  ...(rules.includes("ranger") ? ["ranger"] : []),
+];
+function mageResonance(h, symbols = null) {
+  // A property of the marks actually rolled, falling back to weighted wheels.
+  // It is never a selectable or saved Mage role.
+  const scores = Object.fromEntries(
+    Object.keys(MAGE_POWERS).map((t) => [t, 0]),
+  );
+  const add = (f, weight) => {
+    if (f && Object.hasOwn(scores, f.type))
+      scores[f.type] +=
+        (f.type === "magic" ? ATTACK_POWER[f.tier] : POWER[f.type] * f.tier) *
+        weight;
+  };
+  if (symbols) symbols.forEach((f) => add(f, 1));
+  if (!Object.values(scores).some(Boolean))
+    for (const reel of h?.reels || []) {
+      const total = reel.reduce((n, f) => n + (f.weight || 1), 0);
+      reel.forEach((f) => add(f, (f.weight || 1) / total));
+    }
+  if (h?.specialism === "defence") {
+    scores.heal *= 1.12;
+    scores.block *= 1.12;
+  } else {
+    scores.magic *= 1.12;
+    scores.poison *= 1.12;
+  }
+  return Object.keys(scores).sort((a, b) => scores[b] - scores[a])[0];
 }
+// Compatibility name for old integrations; always derived, with no role field.
+const mageRole = (h) => mageResonance(h);
 function normaliseHeroBuild(h) {
   if (!h) return;
-  if (h.job === "healer") {
-    h.job = "mage";
-    h.mageRole = "heal";
-  }
+  if (h.job === "healer") h.job = "mage";
+  delete h.mageRole;
+  normaliseTacticalStatuses(h);
   if (!Object.hasOwn(SPECIALISMS, h.specialism))
     h.specialism =
       Math.floor(Number(h.id) || h.name?.length || 0) % 2
         ? "offence"
         : "defence";
-  if (h.job === "mage") h.mageRole = mageRole(h);
   h.charge = Math.min(RANGER_AIM_CAP, Math.max(0, h.charge || 0));
+  h.fury = Math.min(BERSERKER_FURY_CAP, Math.max(0, h.fury || 0));
   if (!h.reels) return;
   for (const face of h.last || [])
     if (face.type === "class") {
       face.job = h.job;
-      if (h.job === "mage") face.mageRole = mageRole(h);
+      delete face.mageRole;
     }
   h.reels.forEach((reel, k) => {
     let seal = false;
     for (const face of reel) {
+      delete face.mageRole;
+      if (
+        h.job === "berserker" &&
+        !["attack", "heal", "selfharm", "blank", "class"].includes(face.type)
+      ) {
+        face.type = "blank";
+        face.tier = 1;
+      }
       if (face.type !== "class") continue;
       if (k === 1 && !seal) {
         seal = true;
         face.job = h.job;
-        if (h.job === "mage") face.mageRole = mageRole(h);
         face.tier = 1;
       } else {
         face.type = "blank";
@@ -72,13 +111,7 @@ function normaliseHeroBuild(h) {
       }
     }
     if (k === 1 && !seal)
-      reel.push({
-        type: "class",
-        tier: 1,
-        weight: 3,
-        job: h.job,
-        ...(h.job === "mage" ? { mageRole: mageRole(h) } : {}),
-      });
+      reel.push({ type: "class", tier: 1, weight: 3, job: h.job });
   });
 }
 function classAbilityName(hero) {
@@ -90,23 +123,24 @@ function classAbilityName(hero) {
       mage: "RESONANCE",
       healer: "RESONANCE",
       ranger: "EXECUTE",
+      berserker: "BLOODRUSH",
     }[job] || "CLASS"
   );
 }
 function classAbilityDescription(hero) {
   const job = typeof hero === "string" ? hero : hero?.job;
-  if (job === "mage" || job === "healer")
-    return typeof hero === "object"
-      ? MAGE_ROLES[mageRole(hero)].description
-      : "Resonance: apply your chosen healing, shield, poison or magic role to the whole appropriate side.";
   return (
     {
       fighter:
-        "Rage: gain damage for the rest of this battle, with a little protection as rage builds.",
-      rogue: "Flurry: roll three extra attack reels; matching blades can crit.",
+        "Rage: build damage and a little resistance until this fight ends.",
+      rogue: "Flurry: roll three extra attacks; each blade lands separately.",
+      mage: "Resonance echoes the strongest healing, shield, poison or magic marks in this roll across the appropriate whole team. Healing also clears every ally’s stun.",
+      healer: "Resonance echoes your rolled marks across the appropriate team.",
       ranger:
-        "Execute: wait between attacks to fill the bar. Your next damaging roll gains more damage against a wounded target; the seal strengthens that shot. Charge clears after battle.",
-    }[job] || "A signature ability alongside the other two reel results."
+        "Execute: wait between attacks to fill patience. The next damaging roll gains a bonus against wounded enemies; the seal strengthens that shot.",
+      berserker:
+        "Bloodrush: gain 4 Fury and strike for extra blade damage. Wounds and Blood Price faces feed Fury; every 4 Fury adds 1 damage until battle ends.",
+    }[job] || "Your permanent signature mark, alongside the other two results."
   );
 }
 function temperamentEffects(h, base) {
@@ -122,6 +156,132 @@ function temperamentEffects(h, base) {
     if (base.stimulant) base.stimulant++;
   }
   return base;
+}
+function makeHero(
+  name,
+  job,
+  origin = null,
+  rules = state?.runRules || [],
+  build = {},
+) {
+  const legacyHealer = job === "healer";
+  if (legacyHealer) job = "mage";
+  const specialism = Object.hasOwn(SPECIALISMS, build.specialism)
+    ? build.specialism
+    : pick(["offence", "defence"]);
+  const faces = {
+    fighter: [
+      ["attack", 1, 9],
+      ["attack", 2, 5],
+      ["block", 1, 7],
+      ["block", 2, 3],
+      ["heal", 1, 1],
+      ["blank", 1, 5],
+    ],
+    rogue: [
+      ["attack", 1, 11],
+      ["attack", 2, 10],
+      ["attack", 3, 3],
+      ["poison", 1, 2],
+      ["block", 1, 1],
+      ["blank", 1, 4],
+    ],
+    ranger: [
+      ["attack", 1, 12],
+      ["attack", 2, 5],
+      ["poison", 1, 3],
+      ["block", 1, 2],
+      ["stun", 1, 2],
+      ["blank", 1, 6],
+    ],
+    berserker: [
+      ["attack", 1, 10],
+      ["attack", 2, 6],
+      ["heal", 1, 4],
+      ["selfharm", 1, 5],
+      ["selfharm", 2, 2],
+      ["blank", 1, 5],
+    ],
+    mage: legacyHealer
+      ? [
+          ["heal", 1, 14],
+          ["heal", 2, 12],
+          ["block", 1, 2],
+          ["stun", 1, 1],
+          ["magic", 1, 1],
+          ["blank", 1, 4],
+        ]
+      : specialism === "defence"
+        ? [
+            ["heal", 1, 10],
+            ["heal", 2, 5],
+            ["block", 1, 5],
+            ["magic", 1, 6],
+            ["poison", 1, 2],
+            ["blank", 1, 5],
+          ]
+        : [
+            ["magic", 1, 11],
+            ["magic", 2, 7],
+            ["poison", 1, 4],
+            ["heal", 1, 4],
+            ["block", 1, 2],
+            ["blank", 1, 5],
+          ],
+  };
+  const maxHp =
+    { fighter: 44, rogue: 26, mage: 28, ranger: 30, berserker: 38 }[job] +
+    (rules.includes("hearty") ? 4 : 0);
+  const h = {
+    id: Date.now() + Math.random(),
+    name,
+    job,
+    specialism,
+    level: 1,
+    xp: 0,
+    hp: maxHp,
+    maxHp,
+    charge: 0,
+    fury: 0,
+    points: 3,
+    equipment: null,
+    trait: null,
+    traitProgress: {},
+    stun: 0,
+    stunGrace: 0,
+    poison: null,
+    stimulant: null,
+    rage: 0,
+    vulnerable: null,
+    initiative: null,
+    surprised: false,
+    dead: false,
+    joinedAt: Date.now(),
+    joinedSteps: state?.steps || 0,
+    origin: origin || {
+      depth: state?.depth || 1,
+      tile: state?.position ?? pos(1, 7),
+      description: "A wandering adventurer in the dungeon",
+    },
+    stats: emptyStats(),
+    reels: [0, 1, 2].map((reel) => [
+      ...faces[job].map(([type, tier, weight]) => ({ type, tier, weight })),
+      ...(reel === 1 ? [{ type: "class", tier: 1, weight: 3, job }] : []),
+    ]),
+    last: [],
+  };
+  h.last = [h.reels[0][0], h.reels[1][1], { type: "blank", tier: 1 }].map(
+    (f) => ({ ...f }),
+  );
+  return h;
+}
+function specialismBadge(h) {
+  const s = SPECIALISMS[h.specialism] || SPECIALISMS.offence;
+  return `<span class="specialism-badge ${h.specialism}" data-tooltip="${escapeHTML(s.name + ": " + s.description)}" aria-label="${s.name} temperament">${icon(h.specialism === "defence" ? "block" : "sword")}<small>${s.name}</small></span>`;
+}
+function heroBuildMarkup(h) {
+  const s = SPECIALISMS[h.specialism] || SPECIALISMS.offence;
+  return `<span class="hero-specialism ${h.specialism}" data-tooltip="${escapeHTML(s.description)}">${icon(h.specialism === "defence" ? "block" : "sword")}<b>${s.name}</b> · ${h.specialism === "defence" ? "+1 healing · block · buffs" : "+1 damage · poison · stun"}<small>Fixed temperament</small></span>`;
 }
 function executionBonus(
   h,
@@ -155,9 +315,6 @@ function pointsNeedAttention(h) {
     h.points >= Math.max(6, h.level * 3)
   );
 }
-function heroBuildMarkup(h) {
-  return `<span class="hero-specialism" data-tooltip="${escapeHTML(SPECIALISMS[h.specialism]?.description || "")}">${SPECIALISMS[h.specialism]?.name || "Offence"}${h.job === "mage" ? " · " + MAGE_ROLES[mageRole(h)].name : ""}</span>`;
-}
 function enemyBlock() {
   return Math.max(0, state.enemyBlock || 0);
 }
@@ -174,14 +331,16 @@ function setEnemyBlock(amount) {
       set: (value) => setEnemyBlock(value),
     });
   }
-  const readout = $("#enemy-team-block strong");
-  if (readout) readout.textContent = state.enemyBlock;
+  document.querySelectorAll(".enemy-team-block").forEach((el) => {
+    el.querySelector("strong").textContent = state.enemyBlock;
+    el.setAttribute("aria-label", "Shared enemy block: " + state.enemyBlock);
+  });
 }
 function gainEnemyBlock(amount) {
   setEnemyBlock(enemyBlock() + amount);
 }
-function enemyBlockMarkup() {
-  return `<div id="enemy-team-block" class="enemy-team-block" aria-label="Enemy team block: ${enemyBlock()}">${icon("block")}<strong>${enemyBlock()}</strong><span>ENEMY TEAM BLOCK<small>Shared by all enemies</small></span></div>`;
+function enemyBlockMarkup(index = 0) {
+  return `<div id="enemy-team-block${index ? "-2" : ""}" class="enemy-team-block" aria-label="Enemy team block: ${enemyBlock()}">${icon("block")}<strong>${enemyBlock()}</strong><span>TEAM BLOCK<small>Shared pool</small></span></div>`;
 }
 function wardActive(e = actingEnemy) {
   return !!(

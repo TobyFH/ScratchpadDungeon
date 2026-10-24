@@ -199,10 +199,30 @@ Torchlight, and respect reduced motion without changing gameplay outcomes.
 The reel workshop uses `.workshop-tabs`, `.workshop-faces` and
 `.workshop-detail`: face odds remain visible; Upgrade, Downgrade/refund and an
 explicit destination select/Swap have distinct fixed hitboxes. The permanent
-middle class seal gets a clear locked explanation. Mage roles reuse a native
-select. Portraits open this workshop; healing-target buttons remain separate.
+middle class seal gets a clear locked explanation. Mage Resonance follows the
+actual rolled marks; it has no role selector. Portraits open this workshop;
+healing-target buttons remain separate.
 `.points-prompt` may pulse its paint/shadow, never move its button geometry.
-The enemy block row reserves space above the enemy roster, shared in double
+Enemy protection reserves space below each portrait, sharing one pool in double
 fights. `.entrance-member` keeps every foe's name and portrait together before
 its individual flight to combat. `.rolled-projectile`, `.symbol-arrival` and
 minor combat numbers are fixed overlays without input capture or layout effects.
+
+Tactical additions use the same notebook primitives. Enemy shields sit inside
+`.enemy-presence`, directly below each portrait, and mirror one shared pool.
+`.enemy-action-state` shares a reserved caption with the passive label.
+`.encounter-tag` labels real boss, elite, dual, surprise and passive states; the second enemy has its own entrance.
+`.critical-payoff` reserves the large final number while arithmetic settles.
+`.fury-meter` reuses the reel caption; it never pushes EXP down. Temperament stays
+visible on portraits/health captions and the workshop without an in-run selector.
+The workshop's three numbered steps and `faceDescription()` explain every mark.
+Its fitting uses the full sheet width before reducing text size. Rank-IV symbols
+share the constrained grid inside `.slot-window`; never let a fourth icon clip.
+Lava paint is meaningful illumination and impassable terrain, with a muted orange
+token. Keep all callouts input-transparent and respect reduced motion.
+
+Long-form instructions live in `ui/field-guide.js`, embedded by the same builder.
+Use short topic pages with a native topic selector and previous/next buttons,
+not one shrinking wall of instructions. Keep topic changes within the existing
+sheet and preserve keyboard focus. The fitting routine uses the full available
+width before reducing text size. Check every topic at compact sizes.

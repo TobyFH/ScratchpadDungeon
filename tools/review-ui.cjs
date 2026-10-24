@@ -134,6 +134,16 @@ const output = path.join(root, "test-results/ui-review");
 
     await page.evaluate(() => help());
     await shot("09-field-guide");
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.evaluate(() => help("statuses"));
+    await shot("09-field-guide-statuses-1280");
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.evaluate(() => help("heroes"));
+    await shot("09-field-guide-heroes-mobile");
+    await page.setViewportSize({ width: 320, height: 844 });
+    await page.evaluate(() => help("statuses"));
+    await shot("09-field-guide-statuses-320");
+    await page.setViewportSize({ width: 1920, height: 1080 });
     await page.evaluate(() => {
       closeModal();
       editor(0);
@@ -246,7 +256,7 @@ const output = path.join(root, "test-results/ui-review");
       localStorage.setItem(PROFILE_KEY, JSON.stringify(p));
       chooseStartingClass(false);
     });
-    await shot("18-four-starting-classes");
+    await shot("18-five-starting-classes");
     await page.locator("#camp-open").click();
     await shot("19-camp-adventurers");
     for (const tab of ["boons", "challenges", "oddities"]) {
@@ -389,7 +399,7 @@ const output = path.join(root, "test-results/ui-review");
     await page.evaluate(() => closeModal());
     // Current build system, shared shields, symbolic impacts and optional puns.
     await page.evaluate(() => {
-      newRun("mage", { mageRole: "heal", specialism: "defence" });
+      newRun("mage", { specialism: "defence" });
       setPace("skip");
       state.party.push(
         makeHero("Rowan", "ranger", null, [], { specialism: "offence" }),
@@ -532,6 +542,147 @@ const output = path.join(root, "test-results/ui-review");
     await page.setViewportSize({ width: 1280, height: 800 });
     await shot("44-full-stop-1280");
     await page.setViewportSize({ width: 1920, height: 1080 });
+    await page.evaluate(() => {
+      newRun("berserker", { specialism: "offence" });
+      setPace("skip");
+      setPreference("skipCriticals", true);
+      state.party.push(
+        makeHero("Mira", "mage", null, [], { specialism: "defence" }),
+        makeHero("Wren", "rogue", null, [], { specialism: "offence" }),
+      );
+      state.depth = 5;
+      beginEncounter(false, { count: 2 });
+      state.party[0].fury = 16;
+      state.party[0].points = 22;
+      state.party[0].hp = 18;
+      state.party[1].poison = { turns: 3, damage: 3 };
+      state.party[2].vulnerable = { createdAction: 0 };
+      state.opening = { firstRoll: true, pending: true, resolved: true };
+      state.party[0].initiative = { multiplier: 1.25 };
+      state.party[1].surprised = true;
+      state.enemies.forEach((e, i) => {
+        e.elite = true;
+        e.passive = { key: i ? "secondWind" : "carapace", used: false };
+      });
+      setEnemyBlock(14);
+      render();
+      particles = [];
+    });
+    await shot("45-berserker-tactical-party-1920");
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await shot("45-berserker-tactical-party-1280");
+    await page.setViewportSize({ width: 1920, height: 1080 });
+    await page.evaluate(() => {
+      editor(0);
+      editorSelection.face = 3;
+      editor(0);
+    });
+    await shot("46-blood-price-workshop");
+    for (const width of [390, 320]) {
+      await page.setViewportSize({ width, height: 844 });
+      await shot("46-blood-price-workshop-" + width);
+    }
+    await page.setViewportSize({ width: 1920, height: 1080 });
+    await page.evaluate(() => {
+      closeModal();
+      setPace("1");
+      setPreference("combatEffects", "both");
+      state.party[0].last = [
+        { type: "attack", tier: 4 },
+        { type: "attack", tier: 3 },
+        { type: "attack", tier: 2 },
+      ];
+      render();
+      beam($("#portrait-0"), enemyArtEl(state.enemy), "attack", {
+        critical: true,
+      });
+      document.querySelectorAll(".rolled-projectile,.fx-beam").forEach((el) =>
+        el.getAnimations().forEach((a) => {
+          a.pause();
+          a.currentTime = 210;
+        }),
+      );
+    });
+    await shot("47-large-launched-marks", false, "allow");
+    await page.evaluate(() =>
+      document
+        .querySelectorAll(".rolled-projectile,.fx-beam")
+        .forEach((el) => el.remove()),
+    );
+    await page.evaluate(() => {
+      setPreference("skipCriticals", false);
+      window.reviewBigCrit = rollCritical(
+        "Bram",
+        [0, 1, 2].map(() => ({ type: "attack", tier: 3 })),
+        false,
+        { details: [{ label: "Damage power", icon: "sword", value: 38 }] },
+      );
+    });
+    await page.waitForSelector(".critical-payoff");
+    await page.waitForTimeout(450);
+    await shot("48-critical-big-payoff", false, "allow");
+    await page.evaluate(() => window.reviewBigCrit);
+    await page.evaluate(() => {
+      state.opening = {
+        pending: true,
+        firstRoll: true,
+        resolved: true,
+        surprise: true,
+      };
+      state.party[0].surprised = true;
+      setPace("1");
+      window.reviewTacticalArrival = encounterEntrance();
+    });
+    await page.waitForSelector("#stage-confirm:not(:disabled)");
+    await shot("49-elite-dual-surprise-arrival");
+    await page.locator("#stage-confirm").click();
+    await page.evaluate(() => window.reviewTacticalArrival);
+    await page.evaluate(() => {
+      newRun("mage", { specialism: "defence" });
+      setPace("skip");
+      state.depth = 6;
+      state.map = generateFloor(6);
+      const i = pos(5, 4);
+      state.map.forEach((c) => {
+        c.seen = c.wall;
+        c.room = null;
+      });
+      [i, ...neighbors(i)].forEach((j) =>
+        Object.assign(state.map[j], {
+          wall: false,
+          event: null,
+          feature: null,
+          terrain: "floor",
+        }),
+      );
+      Object.assign(state.map[i], { wall: true, terrain: "lava", seen: false });
+      state.map[i + 1].event = "treasure";
+      state.map[i + 1].feature = "treasure";
+      markSeen(i - 1);
+      state.map[state.position].seen = true;
+      render();
+      particles = [];
+    });
+    await shot("50-lava-light-cross");
+    await page.evaluate(() => {
+      state.gold = 100;
+      state.bag = { bomb: 1, ward: 1, antidote: 1 };
+      render();
+      window.reviewShop = shopEncounter({ shop: { potion: 1 } });
+    });
+    await page.locator('[data-buy="potion"]').click();
+    await page.waitForSelector("#shop-cancel");
+    await shot("51-shop-bag-warning-before-payment");
+    await page.locator("#shop-cancel").click();
+    await page.evaluate(() => closeModal());
+    await page.evaluate(() => window.reviewShop);
+    await page.evaluate(() => {
+      window.reviewTravel = choiceTravelEvent("altar");
+    });
+    await page.waitForSelector("#travel-leave");
+    await shot("52-offering-bowl-choice");
+    await page.locator("#travel-leave").click();
+    await page.evaluate(() => window.reviewTravel);
     const download = page.waitForEvent("download");
     await page.locator("#download").click();
     await (

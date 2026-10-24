@@ -164,6 +164,14 @@ function heroPortraitArt(kind, entity) {
       <path d="m36 20-4 14m52-10 5 17M22 130l7-6m-6 12 8-6m55 5 6-6m-6 11 8-7" stroke-width=".75" opacity=".65"/>
       <circle cx="61" cy="106" r="4"/>
       ${hurt ? '<path d="m39 39 13 8m-12-3 11 9m27-15-6 10" stroke="var(--red)"/>' : ""}`;
+  } else if (kind === "berserker") {
+    drawing = `<path d="M12 146q-2-31 23-49l14-7 26 1 21 15 11 40" fill="${shade}"/>
+      ${face}<path d="M32 57 25 33 37 35 35 15 49 19 58 5 64 18 81 10 81 28 95 32 84 50 79 37 65 32 51 38 42 35Z" fill="var(--paper-shade)"/>
+      <path d="m42 76 7 14 13 13 15-19 3-17-11 15-12-1Z" fill="var(--paper-shade)"/>
+      <path d="m35 99 9 17 12-7 8 13 14-15 11 13M24 124l15 2m-10 7 14 2m37-9 15 2m-14 8 13 1M58 109l-4 36m11-32 2 33M45 43l9 8m18-9-6 8"/>
+      <path d="M96 143 101 67m-10 4 4-29 21 7-9 25Z" fill="var(--paper-shade)"/>
+      <path d="m96 49 15 5m-81 72 6-7m-7 15 9-6m39 5 9 7M43 61l9 4m18-2 6-3" stroke-width=".8"/>
+      ${hurt?'<path d="m34 101 13 10m-13-4 13 10m29-62 8 5" stroke="var(--red)"/>':""}`;
   } else {
     drawing = `<path d="M12 146q5-38 23-54l-5-40Q20 7 57 4q40-4 37 46l-7 43q20 22 22 53Z" fill="var(--paper-shade)"/>
       <path d="M33 86Q8 39 40 12q26-20 47 9 10 20-4 62l-11 13 25 48H22l26-48Z" fill="${shade}"/>
@@ -192,6 +200,9 @@ function leverArt() {
   return `<svg class="pencil-art" viewBox="0 0 35 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 78 11-.5.5 13-12 .5Z M14 78l8-56 4 .5-7 57" fill="var(--paper-shade)"/><path d="m15 76 8-53m-15 60 8-.5m-8 5 8-.5M7 95l18-.5" stroke-width=".7"/><path d="M25 2q12 1 11 12-1 10-12 10-10-1-10-12Q15 2 25 2Z" fill="var(--paper)"/><path d="M25 5q9 1 8 9-1 8-9 7-7-1-7-8 0-7 8-8Zm-7 8 6-7m-6 12L30 6m-7 15 10-10" stroke-width=".65"/><path class="pencil-echo" d="m5 79 1 14 14-1M13 77l8-53"/></svg>`;
 }
 const paths = {
+  bloodprice: "M16 2C12 9 5 16 6 23c2 10 19 10 21-1 1-7-7-14-11-20ZM11 20l10 0m-5-5v10",
+  question: "M8 10q0-10 9-8 14 4 2 14l-4 4v3M15 28h1",
+  lava: "M2 23q4-6 8-1t10-1 10 2M2 28h28M8 19q-5-6 1-12m7 12q5-6-1-12m9 12q-5-7 1-14",
   bow: "M10 3Q29 16 10 29L17 16ZM5 16h23m-5-4 5 4-5 4M10 3l7 13-7 13",
   sword: "M6 23 23 6l3-1-1 3L9 26M5 19l8 8M7 25l-3 3m1-4 3 3",
   heal: "M13 5h6v8h8v6h-8v8h-6v-8H5v-6h8z",
@@ -343,7 +354,7 @@ function portraitArt(kind, entity = { hp: 1, maxHp: 1 }) {
 }
 function basePortraitArt(kind, entity = { hp: 1, maxHp: 1 }) {
   if (entity.hp <= 0 || entity.dead) return corpseArt(kind);
-  if (["fighter", "hero", "healer", "rogue", "mage", "ranger"].includes(kind))
+  if (["fighter", "hero", "healer", "rogue", "mage", "ranger", "berserker"].includes(kind))
     return heroPortraitArt(kind, entity);
   if (["revenant", "demon", "lich", "abomination"].includes(kind))
     return horrorArt(kind, entity);
@@ -370,7 +381,7 @@ function basePortraitArt(kind, entity = { hp: 1, maxHp: 1 }) {
 }
 function floorArt(c, i) {
   if (c.terrain === "bridge") return icon("bridge");
-  if (c.wall) return icon(c.terrain === "river" ? c.terrain : "wall");
+  if (c.wall) return icon(["river","lava"].includes(c.terrain) ? c.terrain : "wall");
   const variants = [
     paths.floor,
     "M5 24q7-2 12 0l10-2M9 23l-3-6m11 7 5 4",

@@ -1,3 +1,7 @@
+> Current build, opening, status, terrain and reward rules are documented in
+> [Battle tactics](docs/BATTLE_TACTICS.md). Its embedded sources extend the core
+> runtime; historical implementation notes below should be read with those rules.
+
 # Gameplay systems and automation
 
 The distributable remains one offline `index.html`. The core runtime lives in
@@ -142,7 +146,7 @@ all combatants, updates portraits and removes stale status labels at battle end.
 
 ## Floor records and saves
 
-Version 16 loads older saves, retaining wounds, personal points, edited hero
+Version 17 loads older saves, retaining wounds, personal points, edited hero
 reels and base supply IDs. Enemy powers/traits can refresh under the new rules;
 ongoing enemy HP is retained. Saved Unwritten encounters refresh health and damage
 once, preserving their remaining HP fraction; the migration runs after older

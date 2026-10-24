@@ -30,3 +30,13 @@ from `ui/combat-feedback.js`. Read `docs/COMBAT_BUILDS.md` for shared rules and
 save migration. Manual controls and autoplay must use the same edit validators,
 prices and roll calculations; feedback and cosmetic modes must not consume
 gameplay RNG. Rebuild and commit their generated HTML alongside these sources.
+
+Temporary combat state, openings, statuses and focused enemy intent live in
+`game/battle-tactics.js`; travel choices and lava lighting live in
+`game/world-events.js`. Read `docs/BATTLE_TACTICS.md` for current rules and
+version-17 migration. Mage Resonance is derived from rolled marks, never an
+editable role. Temperament is fixed outside the starting choice. Berserker edits
+must use `editableTypes()` and the same validators as player/autoplay edits.
+
+Field-guide text and topic navigation live in `ui/field-guide.js`, embedded by
+the same builder. Keep topics short enough to read without internal scrolling.

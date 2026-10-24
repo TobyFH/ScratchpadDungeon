@@ -56,3 +56,12 @@
 - [ ] Both arrival names/portraits and their separate combat destinations are
       present. Pun identities retain pencil style, stats and species IDs; the
       shared enemy protection row never pushes reels into target controls.
+
+- [ ] Every rank-IV icon fits, including Rogue/Berserker windows; flying marks
+      are readable without covering controls.
+- [ ] Temperament is fixed and visible; no Mage role selector has reappeared.
+      The workshop explains odds, effects, destination and point changes.
+- [ ] Shared shields sit below enemy portraits; intent, dual/elite/boss arrivals,
+      initiative, surprise, passives, Fury and Vulnerable are distinct and legible.
+- [ ] Criticals settle on a large final number, new travel choices remain explicit,
+      and full bags warn before a purchase takes gold.

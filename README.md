@@ -12,7 +12,7 @@ python3 -m http.server 8000
 
 Open `http://localhost:8000`. **Save HTML** downloads a complete offline copy of the game. Progress stays in this browser's local storage; the HTML download does not export a saved expedition. Older saves preserve edited faces and migrate to one middle-reel class seal. Surplus inventory types wait for explicit keep, use or discard decisions.
 
-The notebook opens with a choice of **Tank, Rogue or Mage**, plus Ranger after its camp unlocks. A new expedition turns to fresh pages. Start with one hero and no items; keep at most three heroes. Every staircase has an elite guardian. Defeat it to descend when you choose. **Defeating the tenth guardian wins immediately**, with a celebration and a scrollable record of every survivor, fallen companion and retired adventurer.
+The notebook opens with a choice of **Tank, Rogue, Mage or Berserker**, plus Ranger after its camp unlocks. A new expedition turns to fresh pages. Start with one hero and no items; keep at most three heroes. Every staircase has an elite guardian. Defeat it to descend when you choose. **Defeating the tenth guardian wins immediately**, with a celebration and a scrollable record of every survivor, fallen companion and retired adventurer.
 
 ## Camp and banked gold
 
@@ -79,7 +79,7 @@ Walls and connected underground rivers block movement. Wooden bridges cross rive
 - **Wells:** use one now or leave it active for later. Each hero receives 15% maximum HP plus half a healing roll. Fountain criticals multiply the complete offered amount by 1.25–1.75. Portrait effects show actual healing.
 - **Beacons:** reveal adjacent cells in staggered waves. Sometimes another one to five cells in the next ring are lit. Stone blocks sight, including closed diagonal corners; rivers do not. Revealed events remain untriggered.
 - **Wanderers:** preview a companion's class, level, health and introduction before accepting. Discovery odds rise after missed floors, with a small solo and early-floor bonus. Newcomers match the rounded average party level and arrive with some level-earned points spent on upgrades. With a full party, accepting opens a replacement choice. Companions who leave alive remain in the final records.
-- **Shops:** a 30% chance per floor. Buy limited supplies, a full-party heal or a map marking the stairs. Buying a map never opens a descent prompt.
+- **Shops:** a 36% chance per floor. Buy limited supplies, a full-party heal or a map marking the stairs. Buying a map never opens a descent prompt.
 - **Ruins and strongholds:** optional mechanisms balance trap damage against loot. Rare walled strongholds hold a dangerous champion with rich spoils and a guaranteed stronger artefact.
 - **Travel discoveries:** rare rockfalls roll a danger check; a forgotten traveller may have a satchel worth searching. Such discoveries can occasionally hold something valuable. Quiet movement itself never shakes the book.
 
@@ -111,45 +111,45 @@ least one point). Class seals cannot be removed or copied. Base tier prices are
 1 / 4 / 9 / 16 with class affinities; a Tank pays 8 to upgrade healing I → II,
 a Mage 4. Every normal power supports tier IV.
 
-Each hero also has **Offence** (+1 relevant damage/poison/stun power) or
-**Defence** (+1 relevant healing/block/stimulant power), separate from their
+Each hero also has **Aggressive** (+1 relevant damage/poison/stun power) or
+**Defensive** (+1 relevant healing/block/stimulant power), separate from their
 class and earned trait. Choose it for your first hero; wanderers vary.
 
 | Class | Starting style | Middle-reel ability |
 | --- | --- | --- |
 | Tank | 44 HP; blades and team protection | Rage builds damage and some resistance |
 | Rogue | 26 HP; damage and poison | Flurry rolls three extra attacks |
-| Mage | 28 HP; choose healing, shields, poison or spell damage | Resonance applies its selected role to all allies or all enemies |
+| Mage | 28 HP; build healing, shields, poison or spell damage | Resonance echoes the rolled marks across the appropriate team |
+| Berserker | 38 HP; blades, healing and Blood Price | Bloodrush and wounds fill Fury for bonus damage |
 | Ranger | 30 HP; unlock at camp | Execute rewards patience and finishing wounded enemies |
 
-Former Healers migrate to healing-role Mages with their existing stats and
-edited wheels. Change a Mage's role in its workshop. See
+Former Healers migrate to Mages with their existing stats and edited wheels.
+There is no Mage role selector: builds follow the marks on their reels. See
 [Combat builds](docs/COMBAT_BUILDS.md) for exact rules, migration and source files.
 
 Blade and magic tiers deal 2 / 4 / 7 / 11 damage per face. Healing tiers offer 2 / 4 / 6 / 8 HP. Block and stun tiers contribute 1 / 2 / 3 / 4 power. **Three identical type-and-tier symbols crit**; a middle class seal can complete two matching meaningful symbols while also casting its ability. A pair alone never crits. Hero and other event critical multipliers are ×2, ×2.5, ×3 or ×4; wells use ×1.25–×1.75, with displayed before-and-after calculations.
 
 Normal combat rolls stay on the right page. Criticals get a multiplier popup that lingers automatically; **Strike now** skips its result hold. Treasure, fountain and other event criticals stay inside their original panel and still require confirmation. Critical damage lands as the original hit followed by a separate bonus hit, each with its own selected icon/beam feedback, number and impact. Flurries likewise produce separate hits. Criticals and tier III / IV attacks hit every enemy. Click a hero card's name, statistics or blank space to spin; portraits open upgrades, and equipment/editor buttons keep their own actions. A focused card also spins with Enter or Space. Hover a portrait for compact battle statistics during combat and lifetime statistics outside it; status badges keep their own tooltips. A points reminder opens the workshop when points accumulate. Healing targets retain their dedicated buttons and Shift+1–3 shortcuts.
 
-A single-target healing roll or tonic aimed at a full-health hero redirects to
+A single-target healing roll or tonic aimed at a full-health, unstunned hero redirects to
 the living wounded hero with the **lowest raw HP**, not the lowest percentage.
 A partially wounded selection stays selected even if some healing is wasted.
 Party heals, wells and floor recovery retain their individual per-hero amounts.
 
-**Enemy team block** is now shared too, with a fixed visible shield/count. **Unbroken page** blocks the next enemy’s complete turn, including all strikes, while preserving normal block. **Party team block** is a shared consumable pool, depleted point for point by damage and cleared after combat. Intercepted enemy attacks strike the team shield; any HP overflow also fires at the wounded hero. A fully absorbed hit shows a shield on its recipient. Its blue-silver tint deepens from 0 to 20 block; protection itself is uncapped. Any positive armour blocks a stun but consumes up to six armour per power. A stunned hero misses one go without advancing or resetting enemy clocks. Enemy attack frequency determines how many player actions occur between attacks; difficult enemies can make multiple separately rolled strikes.
+**Enemy team block** is now shared too, with a fixed visible shield/count. **Unbroken page** blocks the next enemy’s complete turn, including all strikes, while preserving normal block. **Party team block** is a shared consumable pool, depleted point for point by damage and cleared after combat. Intercepted enemy attacks strike the team shield; any HP overflow also fires at the wounded hero. A fully absorbed hit shows a shield on its recipient. Its blue-silver tint deepens from 0 to 20 block; protection itself is uncapped. Weak stuns are stopped by any positive armour; stronger stuns consume more and can penetrate it. A stunned hero misses one go without advancing or resetting enemy clocks. Enemy attack frequency determines how many player actions occur between attacks; difficult enemies can make multiple separately rolled strikes.
 
 Enemy damage now grows faster with depth. Attack and magic faces advance on
 floors 5 and 9; species keep their usual mix of powers. The final guardian acts
 after every player action with **three independently rolled strikes**, tier-IV
-attack/magic faces and tier-III support faces, with no dud entries. Existing
-saved enemy encounters adopt this curve while hero wounds and edited reels stay
-intact.
+attack/magic faces and tier-III support faces, with no dud entries. New
+encounters use this curve; migrations preserve hero wounds and edited reels.
 
 | Base damage    | Floor 1 | Floor 5 | Floor 10 |
 | -------------- | ------- | ------- | -------- |
-| Ordinary enemy | 2       | 5       | 7        |
-| Stair guardian | 3       | 7       | 10       |
+| Ordinary enemy | 2       | 7       | 9        |
+| Stair guardian | 3       | 9       | 12       |
 
-**Poison** from wheels deals one armour-piercing damage per completed action for a limited duration; stronger venom supplies can deal more, with visible status ticks and kill credit. **Stimulants** increase damage and protection and show a fiery glow. Rage, Execute, poison, stun and buffs end with combat. Level-ups add 6 maximum HP and 4 personal editing points, with portrait and machine effects. EXP comes only from successful battles; surviving heroes also gain one editing point per victory.
+**Poison** holds at most three remaining turns. Repeated doses increase its armour-piercing tick damage rather than building a long duration, with visible ticks and kill credit. **Stimulants** increase damage and protection and show a fiery glow. Rage, Execute, Fury, poison, stun, Vulnerable and opening buffs end with combat. Level-ups add 6 maximum HP and 4 personal editing points, with portrait and machine effects. EXP comes only from successful battles; surviving heroes also gain one editing point per victory.
 
 The **Autofight** checkbox (Autoresolve in Options) chooses heroes, targets and occasional useful emergency supplies. It preserves the selected animation speed and all combat feedback. Enemy entrances confirm automatically; other choices wait for the player unless Autoplay is also enabled. Untick it to take over between actions.
 
@@ -325,3 +325,14 @@ target. Totals have smaller offset component values that rise and fade.
 changing enemy stats; the final boss becomes **THE FULL STOP**. Declining a
 companion may lead to a farewell, a gift or a fight. Early solo companion odds
 are slightly higher; deeper traps are a little stronger.
+
+## Tactical update
+
+See [Battle tactics and exploration](docs/BATTLE_TACTICS.md) for fixed temperaments,
+natural Mage Resonance, Berserker Fury/Blood Price, initiative and surprise
+openings, focused enemy intent, stronger stuns, Vulnerable, healing cleanses and
+stacking poison. The Unwritten is tougher, especially mid-dungeon, and guarantees
+a better item reel from floor four. Shops, rivers and artefacts are slightly more
+common. Lower-floor lava lights its orthogonal neighbours without activating
+discoveries. Three additional optional travel events and generic equipment use
+the existing bag and confirmation systems; full-bag purchases warn before payment.

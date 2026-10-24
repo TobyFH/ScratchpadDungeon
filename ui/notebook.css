@@ -2934,3 +2934,945 @@ body[data-palette="dark"] {
   width: 16px;
   height: 30px;
 }
+
+/* Tactical feedback: functional labels, stable geometry, bounded overlays. */
+:root {
+  --lava-ink: #b36d34;
+  --lava-wash: #d9a15c33;
+}
+body[data-palette="dark"] {
+  --lava-ink: #e2ac76;
+  --lava-wash: #d9a15c22;
+}
+.slot-window .tier-symbol {
+  display: grid;
+  grid-template-columns: repeat(var(--tier-count, 1), minmax(0, 1fr));
+  width: 100%;
+  max-width: 100%;
+  gap: 0;
+  flex-wrap: nowrap;
+}
+.slot-window .tier-symbol > svg {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  height: clamp(24px, 4vw, 42px);
+  margin: 0;
+}
+.rolled-projectile,
+.symbol-arrival {
+  width: 76px;
+  height: 62px;
+}
+.rolled-projectile > .pencil-icon,
+.symbol-arrival > .pencil-icon,
+.rolled-projectile .class-face svg,
+.symbol-arrival .class-face svg {
+  width: 46px;
+  height: 52px;
+}
+.rolled-projectile .tier-symbol,
+.symbol-arrival .tier-symbol {
+  display: flex;
+  width: 100%;
+  gap: 0;
+}
+.rolled-projectile .tier-symbol svg,
+.symbol-arrival .tier-symbol svg {
+  flex: 1;
+  min-width: 0;
+  width: auto;
+  max-width: 46px;
+  height: 48px;
+}
+.rolled-projectile.selfharm,
+.symbol-arrival.selfharm {
+  color: var(--red);
+}
+.combat-callout {
+  position: fixed;
+  z-index: 2000;
+  pointer-events: none;
+  max-width: min(360px, 90vw);
+  padding: 7px 12px;
+  border: 1px solid var(--line);
+  border-image: var(--frame) 7 fill / 4px;
+  background: var(--paper-raised);
+  color: var(--gold);
+  text-align: center;
+  font: 700 25px var(--hand-display);
+  line-height: 1.05;
+  text-shadow: 0 1px var(--paper);
+}
+.combat-callout.danger {
+  color: var(--red);
+}
+.combat-callout.heal {
+  color: var(--green);
+}
+.combat-callout.ability {
+  font-size: 30px;
+  border-color: var(--gold);
+  box-shadow: 0 0 12px #b08d4f55;
+}
+.hero-specialism {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  font-size: 16px;
+  line-height: 1.12;
+}
+.hero-specialism > svg {
+  width: 20px;
+  height: 23px;
+}
+.hero-specialism > small {
+  flex-basis: 100%;
+  font-size: 12px;
+  color: var(--soft);
+}
+.hero-specialism.offence b {
+  color: var(--red);
+}
+.hero-specialism.defence b {
+  color: var(--block-blue);
+}
+.specialism-badge {
+  gap: 2px;
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+  left: 0;
+  top: 0;
+  background: var(--paper-raised);
+}
+.specialism-badge small {
+  font-size: 10px;
+  line-height: 1;
+}
+.specialism-badge svg {
+  width: 12px;
+  height: 14px;
+}
+.specialism-badge.offence {
+  color: var(--red);
+}
+.specialism-badge.defence {
+  color: var(--block-blue);
+}
+.points-prompt {
+  animation: points-alert 2.6s ease-in-out infinite;
+}
+.points-prompt::before,
+.points-prompt::after {
+  content: "";
+  position: absolute;
+  width: 9px;
+  height: 10px;
+  border-top: 2px solid var(--gold);
+  border-bottom: 2px solid var(--gold);
+  top: -4px;
+  pointer-events: none;
+  animation: points-rays 2.6s ease-in-out infinite;
+}
+.points-prompt::before {
+  left: -9px;
+  transform: rotate(27deg);
+}
+.points-prompt::after {
+  right: -9px;
+  transform: rotate(-27deg);
+}
+@keyframes points-alert {
+  0%,
+  65%,
+  100% {
+    background: var(--paper-raised);
+    box-shadow: 0 1px 3px #0002;
+  }
+  30%,
+  45% {
+    background: var(--ui-label);
+    box-shadow: 0 0 9px #bd914d88;
+    color: var(--ink);
+  }
+}
+@keyframes points-rays {
+  0%,
+  65%,
+  100% {
+    opacity: 0.15;
+  }
+  30%,
+  45% {
+    opacity: 1;
+  }
+}
+.fury-meter {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--red);
+}
+.fury-meter > span {
+  flex: 1;
+  min-width: 15px;
+  height: 5px;
+  border: 1px solid var(--red);
+}
+.fury-meter i {
+  display: block;
+  height: 100%;
+  background: var(--red);
+  transition: width 0.18s;
+}
+.fury-meter small {
+  font-size: 11px;
+}
+.portrait-conditions .initiative-badge {
+  color: var(--gold);
+  background: var(--paper-raised);
+}
+.portrait-conditions .surprised-badge,
+.portrait-conditions .vulnerable-badge {
+  color: var(--red);
+  background: var(--paper-raised);
+}
+.hero.has-initiative {
+  box-shadow: inset 0 0 0 2px var(--gold);
+}
+.hero.surprised {
+  border-color: var(--red);
+}
+.hero.vulnerable {
+  outline: 1px dashed var(--red);
+  outline-offset: -3px;
+}
+#encounter:has(.enemy-roster) {
+  grid-template-rows: 26px minmax(0, 1fr);
+}
+.enemy-presence {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  min-width: 0;
+  min-height: 0;
+  gap: 2px;
+}
+.enemy-presence .enemy-art {
+  width: 100%;
+  min-height: 0;
+  flex: 1;
+}
+.enemy-presence .enemy-team-block {
+  min-height: 28px;
+  gap: 5px;
+  padding: 1px 3px;
+  font-size: 12px;
+  line-height: 1;
+}
+.enemy-presence .enemy-team-block strong {
+  font-size: 19px;
+}
+.enemy-presence .enemy-team-block svg {
+  width: 18px;
+  height: 22px;
+}
+.enemy-presence .enemy-team-block small {
+  font-size: 10px;
+}
+.enemy-intent {
+  font-size: 14px;
+  line-height: 1.1;
+  margin: 3px 0;
+  color: var(--red);
+  min-height: 16px;
+}
+.enemy-info .enemy-stats {
+  margin-bottom: 2px;
+}
+.encounter-tags {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  min-height: 28px;
+  align-items: center;
+  margin: 3px 0;
+}
+.encounter-tag {
+  background: var(--ui-label);
+  border: 1px solid var(--line);
+  padding: 3px 7px;
+  font: 700 20px var(--hand-display);
+  color: var(--red);
+}
+.encounter-tag.passive {
+  color: var(--gold);
+  font-size: 16px;
+}
+.encounter-tag.dual {
+  color: var(--red);
+}
+.entrance-member.awaiting-second {
+  visibility: hidden;
+}
+.entrance-member.arriving-second {
+  animation: second-foe 0.45s cubic-bezier(0.15, 0.75, 0.3, 1.15) both;
+}
+@keyframes second-foe {
+  from {
+    opacity: 0;
+    transform: translateX(220px) rotate(12deg) scale(0.75);
+  }
+  70% {
+    opacity: 1;
+    transform: translateX(-12px) rotate(-4deg) scale(1.05);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.critical-payoff {
+  text-align: center;
+  min-height: 130px;
+  color: var(--gold);
+  margin: 4px 0;
+}
+.critical-payoff small {
+  display: block;
+  font-size: 18px;
+  color: var(--ink);
+}
+.critical-payoff strong {
+  display: block;
+  font: 700 clamp(56px, 8vw, 96px) / 1 var(--display);
+  animation: critical-big-number 0.65s ease-in-out infinite alternate;
+}
+@keyframes critical-big-number {
+  to {
+    transform: scale(1.12);
+    text-shadow: 0 0 12px #bb8c4888;
+  }
+}
+.critical-locked .critical-summary > .stage-result {
+  font-size: 18px;
+  min-height: 22px;
+}
+.critical-locked .critical-summary > .stage-result .multiplier-value {
+  font-size: 22px;
+}
+.critical-locked .critical-math {
+  font-size: 13px;
+  opacity: 0.6;
+}
+.equipment-scope {
+  display: inline-block;
+  color: var(--gold);
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+}
+.tile.lava-tile {
+  background: var(--lava-wash);
+  box-shadow: inset 0 0 12px var(--lava-wash);
+  color: var(--lava-ink);
+}
+.tile.lava-tile > svg,
+.tile.lava-tile .terrain-stop {
+  color: var(--lava-ink);
+}
+.tile.lava-tile > svg {
+  animation: lava-pulse 3s ease-in-out infinite alternate;
+}
+@keyframes lava-pulse {
+  to {
+    filter: drop-shadow(0 0 3px var(--lava-ink));
+    opacity: 0.72;
+  }
+}
+/* Workshop steps and effect explanations use reserved spaces, never scrolling. */
+.workshop-summary {
+  gap: 8px;
+  align-items: start;
+}
+.workshop-summary > strong {
+  font-size: 22px;
+  white-space: nowrap;
+}
+.workshop-summary .hero-specialism {
+  flex: 1;
+  min-width: 220px;
+}
+.workshop-ability {
+  font-size: 15px;
+  line-height: 1.2;
+  margin: 6px 0;
+  min-height: 36px;
+}
+.workshop-step-label {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 16px;
+  line-height: 1.15;
+  margin: 4px 0;
+}
+.workshop-step-label span {
+  color: var(--soft);
+  font-size: 14px;
+}
+.workshop-tabs {
+  margin: 5px 0 8px;
+}
+.reel-workshop {
+  grid-template-columns: minmax(245px, 1fr) minmax(310px, 1.3fr);
+  gap: 16px;
+  min-height: 385px;
+}
+.workshop-mark-list {
+  min-width: 0;
+}
+.workshop-faces {
+  grid-template-rows: repeat(7, 42px);
+  gap: 4px;
+}
+.workshop-faces button {
+  grid-template-columns: 55px minmax(0, 1fr) 58px;
+  gap: 5px;
+  font-size: 16px;
+}
+.workshop-faces small {
+  font-size: 13px;
+  text-align: right;
+  line-height: 1.1;
+}
+.workshop-detail {
+  padding: 10px;
+  gap: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.workshop-selected {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 54px;
+}
+.workshop-preview {
+  height: 52px;
+  min-height: 52px;
+}
+.workshop-preview svg {
+  height: 45px;
+  width: 32px;
+}
+.workshop-detail h3 {
+  font-size: 22px;
+  margin: 0;
+}
+.face-effect {
+  font-size: 16px;
+  line-height: 1.15;
+  min-height: 56px;
+  margin: 1px 0 5px;
+}
+.workshop-actions button {
+  min-height: 65px;
+  font-size: 21px;
+  padding: 5px;
+}
+.workshop-actions small,
+.swap-face small {
+  font-size: 14px;
+  line-height: 1.1;
+}
+.swap-choice {
+  font-size: 16px;
+  line-height: 1.15;
+}
+.swap-effect {
+  font-size: 14px;
+  line-height: 1.1;
+  min-height: 44px;
+  margin: 1px 0;
+}
+.swap-face {
+  min-height: 48px;
+  font-size: 20px;
+}
+.workshop-note {
+  font-size: 14px;
+  line-height: 1.2;
+  margin: 7px 0;
+  min-height: 32px;
+}
+@media (min-width: 761px) {
+  .fit-notebook .paired-enemies .enemy-box {
+    grid-template-rows: 128px 78px;
+  }
+  .fit-notebook .paired-enemies .enemy-presence {
+    height: 128px;
+  }
+  .fit-notebook .paired-enemies .enemy-art {
+    height: 96px;
+  }
+  .fit-notebook .enemy-side:not(.paired-enemies) .enemy-presence {
+    height: 188px;
+  }
+  .fit-notebook .enemy-side:not(.paired-enemies) .enemy-art {
+    height: 154px;
+  }
+  .fit-notebook .paired-enemies .enemy-intent {
+    font-size: 14px;
+    min-height: 17px;
+  }
+}
+@media (max-width: 1259px) {
+  .paired-enemies .enemy-presence {
+    height: 114px;
+  }
+  .paired-enemies .enemy-presence .enemy-art {
+    height: 82px;
+  }
+  .enemy-side:not(.paired-enemies) .enemy-presence {
+    height: 180px;
+  }
+  .enemy-intent {
+    font-size: 13px;
+  }
+}
+@media (max-width: 760px) {
+  .reel-workshop {
+    grid-template-columns: minmax(100px, 1fr) minmax(138px, 1.3fr);
+    gap: 7px;
+    min-height: 350px;
+  }
+  .workshop-summary > strong {
+    font-size: 18px;
+  }
+  .workshop-summary .hero-specialism {
+    min-width: 0;
+    font-size: 14px;
+  }
+  .hero-specialism > small {
+    font-size: 11px;
+  }
+  .workshop-ability {
+    font-size: 12px;
+    min-height: 38px;
+  }
+  .workshop-step-label {
+    font-size: 12px;
+  }
+  .workshop-step-label span {
+    font-size: 11px;
+  }
+  .workshop-faces {
+    grid-template-rows: repeat(7, 39px);
+    gap: 4px;
+  }
+  .workshop-faces button {
+    grid-template-columns: 30px minmax(0, 1fr);
+    gap: 3px;
+    padding: 3px;
+    font-size: 12px;
+    position: relative;
+  }
+  .workshop-faces small {
+    grid-column: 2;
+    font-size: 10px;
+    text-align: left;
+  }
+  .workshop-faces button > span:nth-child(2) {
+    align-self: end;
+  }
+  .workshop-faces .tier-symbol,
+  .workshop-faces .class-face {
+    grid-row: 1/3;
+  }
+  .workshop-faces svg {
+    width: 12px;
+    height: 19px;
+  }
+  .workshop-detail {
+    padding: 5px;
+    gap: 3px;
+  }
+  .workshop-selected {
+    flex-direction: column;
+    gap: 0;
+    min-height: 52px;
+  }
+  .workshop-preview {
+    height: 29px;
+    min-height: 29px;
+  }
+  .workshop-preview svg {
+    height: 26px;
+    width: 19px;
+  }
+  .workshop-detail h3 {
+    font-size: 15px;
+  }
+  .face-effect {
+    font-size: 12px;
+    line-height: 1.1;
+    min-height: 69px;
+  }
+  .workshop-actions {
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+  }
+  .workshop-actions button {
+    font-size: 14px;
+    min-height: 65px;
+    padding: 3px;
+  }
+  .workshop-actions small,
+  .swap-face small {
+    font-size: 11px;
+  }
+  .swap-choice {
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .swap-choice select {
+    width: 100%;
+    font-size: 13px;
+  }
+  .swap-effect {
+    font-size: 11px;
+    min-height: 53px;
+  }
+  .swap-face {
+    font-size: 15px;
+    min-height: 44px;
+  }
+  .workshop-note {
+    font-size: 11px;
+    min-height: 44px;
+  }
+  .combat-callout {
+    font-size: 19px;
+  }
+  .combat-callout.ability {
+    font-size: 22px;
+  }
+  .fury-meter {
+    font-size: 10px;
+    gap: 3px;
+  }
+  .fury-meter small {
+    font-size: 9px;
+  }
+  .enemy-presence .enemy-team-block {
+    font-size: 10px;
+    min-height: 24px;
+    gap: 2px;
+  }
+  .enemy-presence .enemy-team-block strong {
+    font-size: 16px;
+  }
+  .enemy-presence .enemy-team-block small {
+    font-size: 9px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .points-prompt,
+  .points-prompt::before,
+  .points-prompt::after,
+  .critical-payoff strong,
+  .tile.lava-tile > svg {
+    animation: none;
+  }
+}
+.enemy-presence .enemy-team-block span {
+  white-space: nowrap;
+  font-size: 10px;
+}
+.enemy-presence .enemy-team-block small {
+  font-size: 10px;
+}
+.enemy-presence .enemy-art {
+  flex: 1 0 0;
+}
+.hero-title-line .injury {
+  font-size: 13px;
+}
+.temperament-word {
+  font-weight: normal;
+}
+.workshop-selected .tier-symbol {
+  display: flex;
+  flex-wrap: nowrap;
+}
+.workshop-selected .workshop-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 70px;
+  width: auto;
+}
+.workshop-selected .tier-symbol svg {
+  flex: 0 1 32px;
+  min-width: 0;
+}
+.workshop-mark-list .workshop-step-label {
+  justify-content: start;
+}
+@media (max-width: 760px) {
+  .modal:has(.reel-workshop) {
+    padding: 24px 20px 20px;
+  }
+  .modal:has(.reel-workshop) h2 {
+    font-size: 30px;
+    min-height: 38px;
+    line-height: 1.05;
+    margin-bottom: 10px;
+  }
+  .modal:has(.reel-workshop) .eyebrow {
+    margin-bottom: 10px;
+  }
+  .modal:has(.reel-workshop) .modal-body {
+    padding: 0;
+  }
+  .workshop-summary {
+    align-items: center;
+    gap: 5px;
+  }
+  .workshop-summary .hero-specialism {
+    font-size: 14px;
+    line-height: 1.05;
+  }
+  .workshop-summary .hero-specialism > small {
+    font-size: 11px;
+  }
+  .workshop-ability {
+    font-size: 13px;
+    min-height: 28px;
+    margin: 5px 0;
+  }
+  .workshop-tabs button {
+    font-size: 13px;
+    min-height: 38px;
+    padding: 4px;
+  }
+  .reel-workshop {
+    grid-template-columns: minmax(106px, 1fr) minmax(151px, 1.3fr);
+    min-height: 320px;
+  }
+  .workshop-faces {
+    grid-template-rows: repeat(7, 36px);
+    gap: 3px;
+  }
+  .workshop-detail {
+    gap: 3px;
+  }
+  .workshop-selected {
+    flex-direction: row;
+    min-height: 33px;
+    gap: 3px;
+  }
+  .workshop-selected .workshop-preview {
+    min-width: 28px;
+    height: 30px;
+    min-height: 30px;
+  }
+  .workshop-selected .tier-symbol svg {
+    flex-basis: 14px;
+    height: 25px;
+  }
+  .workshop-selected h3 {
+    font-size: 14px;
+  }
+  .face-effect {
+    font-size: 13px;
+    min-height: 56px;
+    margin: 0 0 2px;
+  }
+  .workshop-actions button {
+    font-size: 15px;
+    min-height: 53px;
+  }
+  .workshop-actions small {
+    font-size: 11px;
+  }
+  .swap-effect {
+    font-size: 12px;
+    min-height: 46px;
+  }
+  .swap-face {
+    min-height: 39px;
+  }
+  .workshop-note {
+    font-size: 12px;
+    min-height: 38px;
+    margin: 5px 0;
+  }
+  .modal:has(.reel-workshop) .modal-actions {
+    margin-top: 5px;
+  }
+}
+.slot-window .tier-symbol {
+  height: 100%;
+  grid-template-rows: minmax(0, 1fr);
+  align-items: center;
+}
+.slot-window .tier-symbol > svg {
+  height: 100%;
+  max-height: 36px;
+  align-self: center;
+}
+.workshop-faces small {
+  display: block;
+}
+.workshop-selected .workshop-preview {
+  flex: 0 1 auto;
+}
+.workshop-summary .hero-specialism {
+  font-size: 15px;
+}
+@media (max-width: 760px) {
+  .workshop-summary .hero-specialism {
+    font-size: 13px;
+  }
+  .workshop-summary .hero-specialism > small {
+    font-size: 11px;
+  }
+  .workshop-summary .hero-specialism b {
+    flex-basis: 70%;
+  }
+}
+.temperament-word.offence {
+  color: var(--red);
+}
+.temperament-word.defence {
+  color: var(--block-blue);
+}
+.combat-callout.block {
+  color: var(--block-blue);
+}
+/* Intent and passive share the reserved machine caption without overlapping. */
+.enemy-box .machine-title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 28px;
+  height: 28px;
+  gap: 6px;
+  font-size: 14px;
+  line-height: 1.05;
+}
+.enemy-box .enemy-action-state {
+  position: static;
+  flex: 1;
+  min-width: 0;
+  height: auto;
+  width: auto;
+  white-space: normal;
+  text-align: left;
+}
+.enemy-box .enemy-trait {
+  position: static;
+  flex: 0 1 auto;
+  max-width: 42%;
+  height: auto;
+  white-space: normal;
+  font-size: 13px;
+  line-height: 1.05;
+}
+.enemy-box .machine-footnote:empty {
+  display: none;
+  min-height: 0;
+  height: 0;
+  margin: 0;
+}
+.paired-enemies .enemy-box .machine-face {
+  height: 48px;
+}
+@media (min-width: 761px) {
+  .fit-notebook .paired-enemies .machine-title {
+    height: 28px;
+    min-height: 28px;
+    font-size: 14px;
+  }
+  .fit-notebook .paired-enemies .machine-face {
+    height: 48px;
+  }
+}
+@media (max-width: 760px) {
+  .paired-enemies .enemy-box .machine-title {
+    flex-direction: row;
+    gap: 4px;
+    height: 30px;
+    min-height: 30px;
+    font-size: 12px;
+  }
+  .paired-enemies .enemy-action-state {
+    width: auto;
+    height: auto;
+    text-align: left;
+  }
+  .paired-enemies .enemy-box .enemy-trait {
+    font-size: 11px;
+    line-height: 1.05;
+  }
+}
+
+/* Reading pages use short topics, never an ever-shrinking wall of text. */
+.field-guide .guide-grid {
+  columns: 1;
+  max-width: 900px;
+  margin: 24px auto;
+}
+.field-guide .guide-grid > p {
+  font-size: 20px;
+  line-height: 1.45;
+  margin: 0 0 20px;
+}
+.guide-navigation {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 14px;
+  align-items: end;
+}
+.guide-navigation label {
+  display: grid;
+  gap: 5px;
+  font-size: 18px;
+}
+.guide-navigation button {
+  min-height: 40px;
+}
+.guide-page-count {
+  text-align: center;
+  color: var(--soft);
+  font-size: 16px;
+}
+@media (max-width: 760px) {
+  .guide-navigation {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .guide-navigation label {
+    grid-column: 1 / -1;
+  }
+  .field-guide .guide-grid {
+    margin: 14px 0;
+  }
+  .field-guide .guide-grid > p {
+    font-size: 18px;
+    line-height: 1.35;
+    margin-bottom: 14px;
+  }
+}

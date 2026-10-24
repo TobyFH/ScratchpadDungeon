@@ -8727,6 +8727,948 @@ body[data-palette="dark"] {
   width: 16px;
   height: 30px;
 }
+
+/* Tactical feedback: functional labels, stable geometry, bounded overlays. */
+:root {
+  --lava-ink: #b36d34;
+  --lava-wash: #d9a15c33;
+}
+body[data-palette="dark"] {
+  --lava-ink: #e2ac76;
+  --lava-wash: #d9a15c22;
+}
+.slot-window .tier-symbol {
+  display: grid;
+  grid-template-columns: repeat(var(--tier-count, 1), minmax(0, 1fr));
+  width: 100%;
+  max-width: 100%;
+  gap: 0;
+  flex-wrap: nowrap;
+}
+.slot-window .tier-symbol > svg {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  height: clamp(24px, 4vw, 42px);
+  margin: 0;
+}
+.rolled-projectile,
+.symbol-arrival {
+  width: 76px;
+  height: 62px;
+}
+.rolled-projectile > .pencil-icon,
+.symbol-arrival > .pencil-icon,
+.rolled-projectile .class-face svg,
+.symbol-arrival .class-face svg {
+  width: 46px;
+  height: 52px;
+}
+.rolled-projectile .tier-symbol,
+.symbol-arrival .tier-symbol {
+  display: flex;
+  width: 100%;
+  gap: 0;
+}
+.rolled-projectile .tier-symbol svg,
+.symbol-arrival .tier-symbol svg {
+  flex: 1;
+  min-width: 0;
+  width: auto;
+  max-width: 46px;
+  height: 48px;
+}
+.rolled-projectile.selfharm,
+.symbol-arrival.selfharm {
+  color: var(--red);
+}
+.combat-callout {
+  position: fixed;
+  z-index: 2000;
+  pointer-events: none;
+  max-width: min(360px, 90vw);
+  padding: 7px 12px;
+  border: 1px solid var(--line);
+  border-image: var(--frame) 7 fill / 4px;
+  background: var(--paper-raised);
+  color: var(--gold);
+  text-align: center;
+  font: 700 25px var(--hand-display);
+  line-height: 1.05;
+  text-shadow: 0 1px var(--paper);
+}
+.combat-callout.danger {
+  color: var(--red);
+}
+.combat-callout.heal {
+  color: var(--green);
+}
+.combat-callout.ability {
+  font-size: 30px;
+  border-color: var(--gold);
+  box-shadow: 0 0 12px #b08d4f55;
+}
+.hero-specialism {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  font-size: 16px;
+  line-height: 1.12;
+}
+.hero-specialism > svg {
+  width: 20px;
+  height: 23px;
+}
+.hero-specialism > small {
+  flex-basis: 100%;
+  font-size: 12px;
+  color: var(--soft);
+}
+.hero-specialism.offence b {
+  color: var(--red);
+}
+.hero-specialism.defence b {
+  color: var(--block-blue);
+}
+.specialism-badge {
+  gap: 2px;
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+  left: 0;
+  top: 0;
+  background: var(--paper-raised);
+}
+.specialism-badge small {
+  font-size: 10px;
+  line-height: 1;
+}
+.specialism-badge svg {
+  width: 12px;
+  height: 14px;
+}
+.specialism-badge.offence {
+  color: var(--red);
+}
+.specialism-badge.defence {
+  color: var(--block-blue);
+}
+.points-prompt {
+  animation: points-alert 2.6s ease-in-out infinite;
+}
+.points-prompt::before,
+.points-prompt::after {
+  content: "";
+  position: absolute;
+  width: 9px;
+  height: 10px;
+  border-top: 2px solid var(--gold);
+  border-bottom: 2px solid var(--gold);
+  top: -4px;
+  pointer-events: none;
+  animation: points-rays 2.6s ease-in-out infinite;
+}
+.points-prompt::before {
+  left: -9px;
+  transform: rotate(27deg);
+}
+.points-prompt::after {
+  right: -9px;
+  transform: rotate(-27deg);
+}
+@keyframes points-alert {
+  0%,
+  65%,
+  100% {
+    background: var(--paper-raised);
+    box-shadow: 0 1px 3px #0002;
+  }
+  30%,
+  45% {
+    background: var(--ui-label);
+    box-shadow: 0 0 9px #bd914d88;
+    color: var(--ink);
+  }
+}
+@keyframes points-rays {
+  0%,
+  65%,
+  100% {
+    opacity: 0.15;
+  }
+  30%,
+  45% {
+    opacity: 1;
+  }
+}
+.fury-meter {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--red);
+}
+.fury-meter > span {
+  flex: 1;
+  min-width: 15px;
+  height: 5px;
+  border: 1px solid var(--red);
+}
+.fury-meter i {
+  display: block;
+  height: 100%;
+  background: var(--red);
+  transition: width 0.18s;
+}
+.fury-meter small {
+  font-size: 11px;
+}
+.portrait-conditions .initiative-badge {
+  color: var(--gold);
+  background: var(--paper-raised);
+}
+.portrait-conditions .surprised-badge,
+.portrait-conditions .vulnerable-badge {
+  color: var(--red);
+  background: var(--paper-raised);
+}
+.hero.has-initiative {
+  box-shadow: inset 0 0 0 2px var(--gold);
+}
+.hero.surprised {
+  border-color: var(--red);
+}
+.hero.vulnerable {
+  outline: 1px dashed var(--red);
+  outline-offset: -3px;
+}
+#encounter:has(.enemy-roster) {
+  grid-template-rows: 26px minmax(0, 1fr);
+}
+.enemy-presence {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  min-width: 0;
+  min-height: 0;
+  gap: 2px;
+}
+.enemy-presence .enemy-art {
+  width: 100%;
+  min-height: 0;
+  flex: 1;
+}
+.enemy-presence .enemy-team-block {
+  min-height: 28px;
+  gap: 5px;
+  padding: 1px 3px;
+  font-size: 12px;
+  line-height: 1;
+}
+.enemy-presence .enemy-team-block strong {
+  font-size: 19px;
+}
+.enemy-presence .enemy-team-block svg {
+  width: 18px;
+  height: 22px;
+}
+.enemy-presence .enemy-team-block small {
+  font-size: 10px;
+}
+.enemy-intent {
+  font-size: 14px;
+  line-height: 1.1;
+  margin: 3px 0;
+  color: var(--red);
+  min-height: 16px;
+}
+.enemy-info .enemy-stats {
+  margin-bottom: 2px;
+}
+.encounter-tags {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  min-height: 28px;
+  align-items: center;
+  margin: 3px 0;
+}
+.encounter-tag {
+  background: var(--ui-label);
+  border: 1px solid var(--line);
+  padding: 3px 7px;
+  font: 700 20px var(--hand-display);
+  color: var(--red);
+}
+.encounter-tag.passive {
+  color: var(--gold);
+  font-size: 16px;
+}
+.encounter-tag.dual {
+  color: var(--red);
+}
+.entrance-member.awaiting-second {
+  visibility: hidden;
+}
+.entrance-member.arriving-second {
+  animation: second-foe 0.45s cubic-bezier(0.15, 0.75, 0.3, 1.15) both;
+}
+@keyframes second-foe {
+  from {
+    opacity: 0;
+    transform: translateX(220px) rotate(12deg) scale(0.75);
+  }
+  70% {
+    opacity: 1;
+    transform: translateX(-12px) rotate(-4deg) scale(1.05);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.critical-payoff {
+  text-align: center;
+  min-height: 130px;
+  color: var(--gold);
+  margin: 4px 0;
+}
+.critical-payoff small {
+  display: block;
+  font-size: 18px;
+  color: var(--ink);
+}
+.critical-payoff strong {
+  display: block;
+  font: 700 clamp(56px, 8vw, 96px) / 1 var(--display);
+  animation: critical-big-number 0.65s ease-in-out infinite alternate;
+}
+@keyframes critical-big-number {
+  to {
+    transform: scale(1.12);
+    text-shadow: 0 0 12px #bb8c4888;
+  }
+}
+.critical-locked .critical-summary > .stage-result {
+  font-size: 18px;
+  min-height: 22px;
+}
+.critical-locked .critical-summary > .stage-result .multiplier-value {
+  font-size: 22px;
+}
+.critical-locked .critical-math {
+  font-size: 13px;
+  opacity: 0.6;
+}
+.equipment-scope {
+  display: inline-block;
+  color: var(--gold);
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+}
+.tile.lava-tile {
+  background: var(--lava-wash);
+  box-shadow: inset 0 0 12px var(--lava-wash);
+  color: var(--lava-ink);
+}
+.tile.lava-tile > svg,
+.tile.lava-tile .terrain-stop {
+  color: var(--lava-ink);
+}
+.tile.lava-tile > svg {
+  animation: lava-pulse 3s ease-in-out infinite alternate;
+}
+@keyframes lava-pulse {
+  to {
+    filter: drop-shadow(0 0 3px var(--lava-ink));
+    opacity: 0.72;
+  }
+}
+/* Workshop steps and effect explanations use reserved spaces, never scrolling. */
+.workshop-summary {
+  gap: 8px;
+  align-items: start;
+}
+.workshop-summary > strong {
+  font-size: 22px;
+  white-space: nowrap;
+}
+.workshop-summary .hero-specialism {
+  flex: 1;
+  min-width: 220px;
+}
+.workshop-ability {
+  font-size: 15px;
+  line-height: 1.2;
+  margin: 6px 0;
+  min-height: 36px;
+}
+.workshop-step-label {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 16px;
+  line-height: 1.15;
+  margin: 4px 0;
+}
+.workshop-step-label span {
+  color: var(--soft);
+  font-size: 14px;
+}
+.workshop-tabs {
+  margin: 5px 0 8px;
+}
+.reel-workshop {
+  grid-template-columns: minmax(245px, 1fr) minmax(310px, 1.3fr);
+  gap: 16px;
+  min-height: 385px;
+}
+.workshop-mark-list {
+  min-width: 0;
+}
+.workshop-faces {
+  grid-template-rows: repeat(7, 42px);
+  gap: 4px;
+}
+.workshop-faces button {
+  grid-template-columns: 55px minmax(0, 1fr) 58px;
+  gap: 5px;
+  font-size: 16px;
+}
+.workshop-faces small {
+  font-size: 13px;
+  text-align: right;
+  line-height: 1.1;
+}
+.workshop-detail {
+  padding: 10px;
+  gap: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.workshop-selected {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 54px;
+}
+.workshop-preview {
+  height: 52px;
+  min-height: 52px;
+}
+.workshop-preview svg {
+  height: 45px;
+  width: 32px;
+}
+.workshop-detail h3 {
+  font-size: 22px;
+  margin: 0;
+}
+.face-effect {
+  font-size: 16px;
+  line-height: 1.15;
+  min-height: 56px;
+  margin: 1px 0 5px;
+}
+.workshop-actions button {
+  min-height: 65px;
+  font-size: 21px;
+  padding: 5px;
+}
+.workshop-actions small,
+.swap-face small {
+  font-size: 14px;
+  line-height: 1.1;
+}
+.swap-choice {
+  font-size: 16px;
+  line-height: 1.15;
+}
+.swap-effect {
+  font-size: 14px;
+  line-height: 1.1;
+  min-height: 44px;
+  margin: 1px 0;
+}
+.swap-face {
+  min-height: 48px;
+  font-size: 20px;
+}
+.workshop-note {
+  font-size: 14px;
+  line-height: 1.2;
+  margin: 7px 0;
+  min-height: 32px;
+}
+@media (min-width: 761px) {
+  .fit-notebook .paired-enemies .enemy-box {
+    grid-template-rows: 128px 78px;
+  }
+  .fit-notebook .paired-enemies .enemy-presence {
+    height: 128px;
+  }
+  .fit-notebook .paired-enemies .enemy-art {
+    height: 96px;
+  }
+  .fit-notebook .enemy-side:not(.paired-enemies) .enemy-presence {
+    height: 188px;
+  }
+  .fit-notebook .enemy-side:not(.paired-enemies) .enemy-art {
+    height: 154px;
+  }
+  .fit-notebook .paired-enemies .enemy-intent {
+    font-size: 14px;
+    min-height: 17px;
+  }
+}
+@media (max-width: 1259px) {
+  .paired-enemies .enemy-presence {
+    height: 114px;
+  }
+  .paired-enemies .enemy-presence .enemy-art {
+    height: 82px;
+  }
+  .enemy-side:not(.paired-enemies) .enemy-presence {
+    height: 180px;
+  }
+  .enemy-intent {
+    font-size: 13px;
+  }
+}
+@media (max-width: 760px) {
+  .reel-workshop {
+    grid-template-columns: minmax(100px, 1fr) minmax(138px, 1.3fr);
+    gap: 7px;
+    min-height: 350px;
+  }
+  .workshop-summary > strong {
+    font-size: 18px;
+  }
+  .workshop-summary .hero-specialism {
+    min-width: 0;
+    font-size: 14px;
+  }
+  .hero-specialism > small {
+    font-size: 11px;
+  }
+  .workshop-ability {
+    font-size: 12px;
+    min-height: 38px;
+  }
+  .workshop-step-label {
+    font-size: 12px;
+  }
+  .workshop-step-label span {
+    font-size: 11px;
+  }
+  .workshop-faces {
+    grid-template-rows: repeat(7, 39px);
+    gap: 4px;
+  }
+  .workshop-faces button {
+    grid-template-columns: 30px minmax(0, 1fr);
+    gap: 3px;
+    padding: 3px;
+    font-size: 12px;
+    position: relative;
+  }
+  .workshop-faces small {
+    grid-column: 2;
+    font-size: 10px;
+    text-align: left;
+  }
+  .workshop-faces button > span:nth-child(2) {
+    align-self: end;
+  }
+  .workshop-faces .tier-symbol,
+  .workshop-faces .class-face {
+    grid-row: 1/3;
+  }
+  .workshop-faces svg {
+    width: 12px;
+    height: 19px;
+  }
+  .workshop-detail {
+    padding: 5px;
+    gap: 3px;
+  }
+  .workshop-selected {
+    flex-direction: column;
+    gap: 0;
+    min-height: 52px;
+  }
+  .workshop-preview {
+    height: 29px;
+    min-height: 29px;
+  }
+  .workshop-preview svg {
+    height: 26px;
+    width: 19px;
+  }
+  .workshop-detail h3 {
+    font-size: 15px;
+  }
+  .face-effect {
+    font-size: 12px;
+    line-height: 1.1;
+    min-height: 69px;
+  }
+  .workshop-actions {
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+  }
+  .workshop-actions button {
+    font-size: 14px;
+    min-height: 65px;
+    padding: 3px;
+  }
+  .workshop-actions small,
+  .swap-face small {
+    font-size: 11px;
+  }
+  .swap-choice {
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .swap-choice select {
+    width: 100%;
+    font-size: 13px;
+  }
+  .swap-effect {
+    font-size: 11px;
+    min-height: 53px;
+  }
+  .swap-face {
+    font-size: 15px;
+    min-height: 44px;
+  }
+  .workshop-note {
+    font-size: 11px;
+    min-height: 44px;
+  }
+  .combat-callout {
+    font-size: 19px;
+  }
+  .combat-callout.ability {
+    font-size: 22px;
+  }
+  .fury-meter {
+    font-size: 10px;
+    gap: 3px;
+  }
+  .fury-meter small {
+    font-size: 9px;
+  }
+  .enemy-presence .enemy-team-block {
+    font-size: 10px;
+    min-height: 24px;
+    gap: 2px;
+  }
+  .enemy-presence .enemy-team-block strong {
+    font-size: 16px;
+  }
+  .enemy-presence .enemy-team-block small {
+    font-size: 9px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .points-prompt,
+  .points-prompt::before,
+  .points-prompt::after,
+  .critical-payoff strong,
+  .tile.lava-tile > svg {
+    animation: none;
+  }
+}
+.enemy-presence .enemy-team-block span {
+  white-space: nowrap;
+  font-size: 10px;
+}
+.enemy-presence .enemy-team-block small {
+  font-size: 10px;
+}
+.enemy-presence .enemy-art {
+  flex: 1 0 0;
+}
+.hero-title-line .injury {
+  font-size: 13px;
+}
+.temperament-word {
+  font-weight: normal;
+}
+.workshop-selected .tier-symbol {
+  display: flex;
+  flex-wrap: nowrap;
+}
+.workshop-selected .workshop-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 70px;
+  width: auto;
+}
+.workshop-selected .tier-symbol svg {
+  flex: 0 1 32px;
+  min-width: 0;
+}
+.workshop-mark-list .workshop-step-label {
+  justify-content: start;
+}
+@media (max-width: 760px) {
+  .modal:has(.reel-workshop) {
+    padding: 24px 20px 20px;
+  }
+  .modal:has(.reel-workshop) h2 {
+    font-size: 30px;
+    min-height: 38px;
+    line-height: 1.05;
+    margin-bottom: 10px;
+  }
+  .modal:has(.reel-workshop) .eyebrow {
+    margin-bottom: 10px;
+  }
+  .modal:has(.reel-workshop) .modal-body {
+    padding: 0;
+  }
+  .workshop-summary {
+    align-items: center;
+    gap: 5px;
+  }
+  .workshop-summary .hero-specialism {
+    font-size: 14px;
+    line-height: 1.05;
+  }
+  .workshop-summary .hero-specialism > small {
+    font-size: 11px;
+  }
+  .workshop-ability {
+    font-size: 13px;
+    min-height: 28px;
+    margin: 5px 0;
+  }
+  .workshop-tabs button {
+    font-size: 13px;
+    min-height: 38px;
+    padding: 4px;
+  }
+  .reel-workshop {
+    grid-template-columns: minmax(106px, 1fr) minmax(151px, 1.3fr);
+    min-height: 320px;
+  }
+  .workshop-faces {
+    grid-template-rows: repeat(7, 36px);
+    gap: 3px;
+  }
+  .workshop-detail {
+    gap: 3px;
+  }
+  .workshop-selected {
+    flex-direction: row;
+    min-height: 33px;
+    gap: 3px;
+  }
+  .workshop-selected .workshop-preview {
+    min-width: 28px;
+    height: 30px;
+    min-height: 30px;
+  }
+  .workshop-selected .tier-symbol svg {
+    flex-basis: 14px;
+    height: 25px;
+  }
+  .workshop-selected h3 {
+    font-size: 14px;
+  }
+  .face-effect {
+    font-size: 13px;
+    min-height: 56px;
+    margin: 0 0 2px;
+  }
+  .workshop-actions button {
+    font-size: 15px;
+    min-height: 53px;
+  }
+  .workshop-actions small {
+    font-size: 11px;
+  }
+  .swap-effect {
+    font-size: 12px;
+    min-height: 46px;
+  }
+  .swap-face {
+    min-height: 39px;
+  }
+  .workshop-note {
+    font-size: 12px;
+    min-height: 38px;
+    margin: 5px 0;
+  }
+  .modal:has(.reel-workshop) .modal-actions {
+    margin-top: 5px;
+  }
+}
+.slot-window .tier-symbol {
+  height: 100%;
+  grid-template-rows: minmax(0, 1fr);
+  align-items: center;
+}
+.slot-window .tier-symbol > svg {
+  height: 100%;
+  max-height: 36px;
+  align-self: center;
+}
+.workshop-faces small {
+  display: block;
+}
+.workshop-selected .workshop-preview {
+  flex: 0 1 auto;
+}
+.workshop-summary .hero-specialism {
+  font-size: 15px;
+}
+@media (max-width: 760px) {
+  .workshop-summary .hero-specialism {
+    font-size: 13px;
+  }
+  .workshop-summary .hero-specialism > small {
+    font-size: 11px;
+  }
+  .workshop-summary .hero-specialism b {
+    flex-basis: 70%;
+  }
+}
+.temperament-word.offence {
+  color: var(--red);
+}
+.temperament-word.defence {
+  color: var(--block-blue);
+}
+.combat-callout.block {
+  color: var(--block-blue);
+}
+/* Intent and passive share the reserved machine caption without overlapping. */
+.enemy-box .machine-title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 28px;
+  height: 28px;
+  gap: 6px;
+  font-size: 14px;
+  line-height: 1.05;
+}
+.enemy-box .enemy-action-state {
+  position: static;
+  flex: 1;
+  min-width: 0;
+  height: auto;
+  width: auto;
+  white-space: normal;
+  text-align: left;
+}
+.enemy-box .enemy-trait {
+  position: static;
+  flex: 0 1 auto;
+  max-width: 42%;
+  height: auto;
+  white-space: normal;
+  font-size: 13px;
+  line-height: 1.05;
+}
+.enemy-box .machine-footnote:empty {
+  display: none;
+  min-height: 0;
+  height: 0;
+  margin: 0;
+}
+.paired-enemies .enemy-box .machine-face {
+  height: 48px;
+}
+@media (min-width: 761px) {
+  .fit-notebook .paired-enemies .machine-title {
+    height: 28px;
+    min-height: 28px;
+    font-size: 14px;
+  }
+  .fit-notebook .paired-enemies .machine-face {
+    height: 48px;
+  }
+}
+@media (max-width: 760px) {
+  .paired-enemies .enemy-box .machine-title {
+    flex-direction: row;
+    gap: 4px;
+    height: 30px;
+    min-height: 30px;
+    font-size: 12px;
+  }
+  .paired-enemies .enemy-action-state {
+    width: auto;
+    height: auto;
+    text-align: left;
+  }
+  .paired-enemies .enemy-box .enemy-trait {
+    font-size: 11px;
+    line-height: 1.05;
+  }
+}
+
+/* Reading pages use short topics, never an ever-shrinking wall of text. */
+.field-guide .guide-grid {
+  columns: 1;
+  max-width: 900px;
+  margin: 24px auto;
+}
+.field-guide .guide-grid > p {
+  font-size: 20px;
+  line-height: 1.45;
+  margin: 0 0 20px;
+}
+.guide-navigation {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 14px;
+  align-items: end;
+}
+.guide-navigation label {
+  display: grid;
+  gap: 5px;
+  font-size: 18px;
+}
+.guide-navigation button {
+  min-height: 40px;
+}
+.guide-page-count {
+  text-align: center;
+  color: var(--soft);
+  font-size: 16px;
+}
+@media (max-width: 760px) {
+  .guide-navigation {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .guide-navigation label {
+    grid-column: 1 / -1;
+  }
+  .field-guide .guide-grid {
+    margin: 14px 0;
+  }
+  .field-guide .guide-grid > p {
+    font-size: 18px;
+    line-height: 1.35;
+    margin-bottom: 14px;
+  }
+}
 /* END GENERATED NOTEBOOK CSS */
     </style>
   </head>
@@ -9084,6 +10026,14 @@ function heroPortraitArt(kind, entity) {
       <path d="m36 20-4 14m52-10 5 17M22 130l7-6m-6 12 8-6m55 5 6-6m-6 11 8-7" stroke-width=".75" opacity=".65"/>
       <circle cx="61" cy="106" r="4"/>
       ${hurt ? '<path d="m39 39 13 8m-12-3 11 9m27-15-6 10" stroke="var(--red)"/>' : ""}`;
+  } else if (kind === "berserker") {
+    drawing = `<path d="M12 146q-2-31 23-49l14-7 26 1 21 15 11 40" fill="${shade}"/>
+      ${face}<path d="M32 57 25 33 37 35 35 15 49 19 58 5 64 18 81 10 81 28 95 32 84 50 79 37 65 32 51 38 42 35Z" fill="var(--paper-shade)"/>
+      <path d="m42 76 7 14 13 13 15-19 3-17-11 15-12-1Z" fill="var(--paper-shade)"/>
+      <path d="m35 99 9 17 12-7 8 13 14-15 11 13M24 124l15 2m-10 7 14 2m37-9 15 2m-14 8 13 1M58 109l-4 36m11-32 2 33M45 43l9 8m18-9-6 8"/>
+      <path d="M96 143 101 67m-10 4 4-29 21 7-9 25Z" fill="var(--paper-shade)"/>
+      <path d="m96 49 15 5m-81 72 6-7m-7 15 9-6m39 5 9 7M43 61l9 4m18-2 6-3" stroke-width=".8"/>
+      ${hurt?'<path d="m34 101 13 10m-13-4 13 10m29-62 8 5" stroke="var(--red)"/>':""}`;
   } else {
     drawing = `<path d="M12 146q5-38 23-54l-5-40Q20 7 57 4q40-4 37 46l-7 43q20 22 22 53Z" fill="var(--paper-shade)"/>
       <path d="M33 86Q8 39 40 12q26-20 47 9 10 20-4 62l-11 13 25 48H22l26-48Z" fill="${shade}"/>
@@ -9112,6 +10062,9 @@ function leverArt() {
   return `<svg class="pencil-art" viewBox="0 0 35 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 78 11-.5.5 13-12 .5Z M14 78l8-56 4 .5-7 57" fill="var(--paper-shade)"/><path d="m15 76 8-53m-15 60 8-.5m-8 5 8-.5M7 95l18-.5" stroke-width=".7"/><path d="M25 2q12 1 11 12-1 10-12 10-10-1-10-12Q15 2 25 2Z" fill="var(--paper)"/><path d="M25 5q9 1 8 9-1 8-9 7-7-1-7-8 0-7 8-8Zm-7 8 6-7m-6 12L30 6m-7 15 10-10" stroke-width=".65"/><path class="pencil-echo" d="m5 79 1 14 14-1M13 77l8-53"/></svg>`;
 }
 const paths = {
+  bloodprice: "M16 2C12 9 5 16 6 23c2 10 19 10 21-1 1-7-7-14-11-20ZM11 20l10 0m-5-5v10",
+  question: "M8 10q0-10 9-8 14 4 2 14l-4 4v3M15 28h1",
+  lava: "M2 23q4-6 8-1t10-1 10 2M2 28h28M8 19q-5-6 1-12m7 12q5-6-1-12m9 12q-5-7 1-14",
   bow: "M10 3Q29 16 10 29L17 16ZM5 16h23m-5-4 5 4-5 4M10 3l7 13-7 13",
   sword: "M6 23 23 6l3-1-1 3L9 26M5 19l8 8M7 25l-3 3m1-4 3 3",
   heal: "M13 5h6v8h8v6h-8v8h-6v-8H5v-6h8z",
@@ -9263,7 +10216,7 @@ function portraitArt(kind, entity = { hp: 1, maxHp: 1 }) {
 }
 function basePortraitArt(kind, entity = { hp: 1, maxHp: 1 }) {
   if (entity.hp <= 0 || entity.dead) return corpseArt(kind);
-  if (["fighter", "hero", "healer", "rogue", "mage", "ranger"].includes(kind))
+  if (["fighter", "hero", "healer", "rogue", "mage", "ranger", "berserker"].includes(kind))
     return heroPortraitArt(kind, entity);
   if (["revenant", "demon", "lich", "abomination"].includes(kind))
     return horrorArt(kind, entity);
@@ -9290,7 +10243,7 @@ function basePortraitArt(kind, entity = { hp: 1, maxHp: 1 }) {
 }
 function floorArt(c, i) {
   if (c.terrain === "bridge") return icon("bridge");
-  if (c.wall) return icon(c.terrain === "river" ? c.terrain : "wall");
+  if (c.wall) return icon(["river","lava"].includes(c.terrain) ? c.terrain : "wall");
   const variants = [
     paths.floor,
     "M5 24q7-2 12 0l10-2M9 23l-3-6m11 7 5 4",
@@ -9430,12 +10383,16 @@ function punEnemyArt(id) {
 // END GENERATED NOTEBOOK ART
       function symbolMarkup(s) {
         if (s.type === "class") {
-          const owner = { job: s.job || "fighter", mageRole: s.mageRole };
+          const owner = { job: s.job || "fighter" };
           const mark =
             owner.job === "mage"
-              ? MAGE_ROLES[mageRole(owner)].icon
-              : { fighter: "rage", rogue: "flurry", ranger: "bow" }[owner.job] ||
-                "class";
+              ? "magic"
+              : {
+                  fighter: "rage",
+                  rogue: "flurry",
+                  ranger: "bow",
+                  berserker: "bloodprice",
+                }[owner.job] || "class";
           return `<span class="class-face" title="${classAbilityDescription(owner)}">${icon(mark)}<small>${classAbilityName(owner)}</small></span>`;
         }
         if (s.type === "blank")
@@ -9443,7 +10400,7 @@ function punEnemyArt(id) {
         if (s.type === "multiplier")
           return `<span class="multiplier-value">×${s.value}</span>`;
         let type = ICONS[s.type] || ITEM_DEFS[s.type]?.icon || s.type;
-        return `<span class="tier-symbol tier-${s.tier || 1} ${s.type}" title="${s.type} tier ${s.tier || 1}">${Array.from({ length: s.tier || 1 }, () => icon(type)).join("")}</span>`;
+        return `<span class="tier-symbol tier-${s.tier || 1} ${s.type}" style="--tier-count:${s.tier || 1}" title="${s.type} tier ${s.tier || 1}">${Array.from({ length: s.tier || 1 }, () => icon(type)).join("")}</span>`;
       }
       const TYPES = [
           "attack",
@@ -9454,9 +10411,11 @@ function punEnemyArt(id) {
           "block",
           "stun",
           "class",
+          "selfharm",
           "blank",
         ],
         ICONS = {
+          selfharm: "bloodprice",
           attack: "sword",
           magic: "magic",
           poison: "poison",
@@ -9470,6 +10429,7 @@ function punEnemyArt(id) {
           blank: "blank",
         },
         POWER = {
+          selfharm: 2,
           attack: 2,
           magic: 2,
           poison: 1,
@@ -9588,7 +10548,10 @@ const CAMP_UNLOCKS = {
     name: "Travelling market",
     category: "oddities",
     cost: 100,
-    description: "Shop chance rises from 30% to 60% per floor.",
+    get description() {
+      // Read current spawn chances so camp copy cannot drift after balancing.
+      return `Shop chance rises from ${Math.round(WORLD_BALANCE.shopChance * 100)}% to ${Math.round(WORLD_BALANCE.marketChance * 100)}% per floor.`;
+    },
   },
   sharp: {
     name: "Both ends sharpened",
@@ -9927,19 +10890,19 @@ function wireSettingsTabs() {
 }
 // END GENERATED CAMP PROGRESSION
       // BEGIN GENERATED HERO BUILDS
-// Persistent hero builds. Shared by the editor, actual rolls and autoplay.
+// Hero identity and build rules; shared by play, recruitment, saves and automation.
 const SPECIALISMS = Object.freeze({
   offence: {
-    name: "Offence",
+    name: "Aggressive",
     description: "+1 damage, poison and stun power on relevant rolls.",
   },
   defence: {
-    name: "Defence",
+    name: "Defensive",
     description:
       "+1 healing, shared block and stimulant power on relevant rolls.",
   },
 });
-const MAGE_ROLES = Object.freeze({
+const MAGE_POWERS = Object.freeze({
   magic: {
     name: "Spell damage",
     icon: "magic",
@@ -9948,7 +10911,8 @@ const MAGE_ROLES = Object.freeze({
   heal: {
     name: "Healing",
     icon: "heal",
-    description: "Resonance heals every living ally.",
+    description:
+      "Resonance heals every living ally and clears all allied stuns.",
   },
   block: {
     name: "Shields",
@@ -9961,38 +10925,76 @@ const MAGE_ROLES = Object.freeze({
     description: "Resonance poisons every enemy.",
   },
 });
-const RANGER_AIM_CAP = 6;
+const RANGER_AIM_CAP = 6,
+  BERSERKER_FURY_CAP = 20;
 const rangerAimGain = () => 1;
-function mageRole(h) {
-  return Object.hasOwn(MAGE_ROLES, h?.mageRole) ? h.mageRole : "magic";
+const BASE_JOBS = Object.freeze(["fighter", "rogue", "mage", "berserker"]);
+const heroJobs = (rules = state?.runRules || []) => [
+  ...BASE_JOBS,
+  ...(rules.includes("ranger") ? ["ranger"] : []),
+];
+function mageResonance(h, symbols = null) {
+  // A property of the marks actually rolled, falling back to weighted wheels.
+  // It is never a selectable or saved Mage role.
+  const scores = Object.fromEntries(
+    Object.keys(MAGE_POWERS).map((t) => [t, 0]),
+  );
+  const add = (f, weight) => {
+    if (f && Object.hasOwn(scores, f.type))
+      scores[f.type] +=
+        (f.type === "magic" ? ATTACK_POWER[f.tier] : POWER[f.type] * f.tier) *
+        weight;
+  };
+  if (symbols) symbols.forEach((f) => add(f, 1));
+  if (!Object.values(scores).some(Boolean))
+    for (const reel of h?.reels || []) {
+      const total = reel.reduce((n, f) => n + (f.weight || 1), 0);
+      reel.forEach((f) => add(f, (f.weight || 1) / total));
+    }
+  if (h?.specialism === "defence") {
+    scores.heal *= 1.12;
+    scores.block *= 1.12;
+  } else {
+    scores.magic *= 1.12;
+    scores.poison *= 1.12;
+  }
+  return Object.keys(scores).sort((a, b) => scores[b] - scores[a])[0];
 }
+// Compatibility name for old integrations; always derived, with no role field.
+const mageRole = (h) => mageResonance(h);
 function normaliseHeroBuild(h) {
   if (!h) return;
-  if (h.job === "healer") {
-    h.job = "mage";
-    h.mageRole = "heal";
-  }
+  if (h.job === "healer") h.job = "mage";
+  delete h.mageRole;
+  normaliseTacticalStatuses(h);
   if (!Object.hasOwn(SPECIALISMS, h.specialism))
     h.specialism =
       Math.floor(Number(h.id) || h.name?.length || 0) % 2
         ? "offence"
         : "defence";
-  if (h.job === "mage") h.mageRole = mageRole(h);
   h.charge = Math.min(RANGER_AIM_CAP, Math.max(0, h.charge || 0));
+  h.fury = Math.min(BERSERKER_FURY_CAP, Math.max(0, h.fury || 0));
   if (!h.reels) return;
   for (const face of h.last || [])
     if (face.type === "class") {
       face.job = h.job;
-      if (h.job === "mage") face.mageRole = mageRole(h);
+      delete face.mageRole;
     }
   h.reels.forEach((reel, k) => {
     let seal = false;
     for (const face of reel) {
+      delete face.mageRole;
+      if (
+        h.job === "berserker" &&
+        !["attack", "heal", "selfharm", "blank", "class"].includes(face.type)
+      ) {
+        face.type = "blank";
+        face.tier = 1;
+      }
       if (face.type !== "class") continue;
       if (k === 1 && !seal) {
         seal = true;
         face.job = h.job;
-        if (h.job === "mage") face.mageRole = mageRole(h);
         face.tier = 1;
       } else {
         face.type = "blank";
@@ -10001,13 +11003,7 @@ function normaliseHeroBuild(h) {
       }
     }
     if (k === 1 && !seal)
-      reel.push({
-        type: "class",
-        tier: 1,
-        weight: 3,
-        job: h.job,
-        ...(h.job === "mage" ? { mageRole: mageRole(h) } : {}),
-      });
+      reel.push({ type: "class", tier: 1, weight: 3, job: h.job });
   });
 }
 function classAbilityName(hero) {
@@ -10019,23 +11015,24 @@ function classAbilityName(hero) {
       mage: "RESONANCE",
       healer: "RESONANCE",
       ranger: "EXECUTE",
+      berserker: "BLOODRUSH",
     }[job] || "CLASS"
   );
 }
 function classAbilityDescription(hero) {
   const job = typeof hero === "string" ? hero : hero?.job;
-  if (job === "mage" || job === "healer")
-    return typeof hero === "object"
-      ? MAGE_ROLES[mageRole(hero)].description
-      : "Resonance: apply your chosen healing, shield, poison or magic role to the whole appropriate side.";
   return (
     {
       fighter:
-        "Rage: gain damage for the rest of this battle, with a little protection as rage builds.",
-      rogue: "Flurry: roll three extra attack reels; matching blades can crit.",
+        "Rage: build damage and a little resistance until this fight ends.",
+      rogue: "Flurry: roll three extra attacks; each blade lands separately.",
+      mage: "Resonance echoes the strongest healing, shield, poison or magic marks in this roll across the appropriate whole team. Healing also clears every ally’s stun.",
+      healer: "Resonance echoes your rolled marks across the appropriate team.",
       ranger:
-        "Execute: wait between attacks to fill the bar. Your next damaging roll gains more damage against a wounded target; the seal strengthens that shot. Charge clears after battle.",
-    }[job] || "A signature ability alongside the other two reel results."
+        "Execute: wait between attacks to fill patience. The next damaging roll gains a bonus against wounded enemies; the seal strengthens that shot.",
+      berserker:
+        "Bloodrush: gain 4 Fury and strike for extra blade damage. Wounds and Blood Price faces feed Fury; every 4 Fury adds 1 damage until battle ends.",
+    }[job] || "Your permanent signature mark, alongside the other two results."
   );
 }
 function temperamentEffects(h, base) {
@@ -10051,6 +11048,132 @@ function temperamentEffects(h, base) {
     if (base.stimulant) base.stimulant++;
   }
   return base;
+}
+function makeHero(
+  name,
+  job,
+  origin = null,
+  rules = state?.runRules || [],
+  build = {},
+) {
+  const legacyHealer = job === "healer";
+  if (legacyHealer) job = "mage";
+  const specialism = Object.hasOwn(SPECIALISMS, build.specialism)
+    ? build.specialism
+    : pick(["offence", "defence"]);
+  const faces = {
+    fighter: [
+      ["attack", 1, 9],
+      ["attack", 2, 5],
+      ["block", 1, 7],
+      ["block", 2, 3],
+      ["heal", 1, 1],
+      ["blank", 1, 5],
+    ],
+    rogue: [
+      ["attack", 1, 11],
+      ["attack", 2, 10],
+      ["attack", 3, 3],
+      ["poison", 1, 2],
+      ["block", 1, 1],
+      ["blank", 1, 4],
+    ],
+    ranger: [
+      ["attack", 1, 12],
+      ["attack", 2, 5],
+      ["poison", 1, 3],
+      ["block", 1, 2],
+      ["stun", 1, 2],
+      ["blank", 1, 6],
+    ],
+    berserker: [
+      ["attack", 1, 10],
+      ["attack", 2, 6],
+      ["heal", 1, 4],
+      ["selfharm", 1, 5],
+      ["selfharm", 2, 2],
+      ["blank", 1, 5],
+    ],
+    mage: legacyHealer
+      ? [
+          ["heal", 1, 14],
+          ["heal", 2, 12],
+          ["block", 1, 2],
+          ["stun", 1, 1],
+          ["magic", 1, 1],
+          ["blank", 1, 4],
+        ]
+      : specialism === "defence"
+        ? [
+            ["heal", 1, 10],
+            ["heal", 2, 5],
+            ["block", 1, 5],
+            ["magic", 1, 6],
+            ["poison", 1, 2],
+            ["blank", 1, 5],
+          ]
+        : [
+            ["magic", 1, 11],
+            ["magic", 2, 7],
+            ["poison", 1, 4],
+            ["heal", 1, 4],
+            ["block", 1, 2],
+            ["blank", 1, 5],
+          ],
+  };
+  const maxHp =
+    { fighter: 44, rogue: 26, mage: 28, ranger: 30, berserker: 38 }[job] +
+    (rules.includes("hearty") ? 4 : 0);
+  const h = {
+    id: Date.now() + Math.random(),
+    name,
+    job,
+    specialism,
+    level: 1,
+    xp: 0,
+    hp: maxHp,
+    maxHp,
+    charge: 0,
+    fury: 0,
+    points: 3,
+    equipment: null,
+    trait: null,
+    traitProgress: {},
+    stun: 0,
+    stunGrace: 0,
+    poison: null,
+    stimulant: null,
+    rage: 0,
+    vulnerable: null,
+    initiative: null,
+    surprised: false,
+    dead: false,
+    joinedAt: Date.now(),
+    joinedSteps: state?.steps || 0,
+    origin: origin || {
+      depth: state?.depth || 1,
+      tile: state?.position ?? pos(1, 7),
+      description: "A wandering adventurer in the dungeon",
+    },
+    stats: emptyStats(),
+    reels: [0, 1, 2].map((reel) => [
+      ...faces[job].map(([type, tier, weight]) => ({ type, tier, weight })),
+      ...(reel === 1 ? [{ type: "class", tier: 1, weight: 3, job }] : []),
+    ]),
+    last: [],
+  };
+  h.last = [h.reels[0][0], h.reels[1][1], { type: "blank", tier: 1 }].map(
+    (f) => ({ ...f }),
+  );
+  return h;
+}
+function specialismBadge(h) {
+  const s = SPECIALISMS[h.specialism] || SPECIALISMS.offence;
+  return `<span class="specialism-badge ${h.specialism}" data-tooltip="${escapeHTML(s.name + ": " + s.description)}" aria-label="${s.name} temperament">${icon(h.specialism === "defence" ? "block" : "sword")}<small>${s.name}</small></span>`;
+}
+function heroBuildMarkup(h) {
+  const s = SPECIALISMS[h.specialism] || SPECIALISMS.offence;
+  return `<span class="hero-specialism ${h.specialism}" data-tooltip="${escapeHTML(s.description)}">${icon(h.specialism === "defence" ? "block" : "sword")}<b>${s.name}</b> · ${h.specialism === "defence" ? "+1 healing · block · buffs" : "+1 damage · poison · stun"}<small>Fixed temperament</small></span>`;
 }
 function executionBonus(
   h,
@@ -10084,9 +11207,6 @@ function pointsNeedAttention(h) {
     h.points >= Math.max(6, h.level * 3)
   );
 }
-function heroBuildMarkup(h) {
-  return `<span class="hero-specialism" data-tooltip="${escapeHTML(SPECIALISMS[h.specialism]?.description || "")}">${SPECIALISMS[h.specialism]?.name || "Offence"}${h.job === "mage" ? " · " + MAGE_ROLES[mageRole(h)].name : ""}</span>`;
-}
 function enemyBlock() {
   return Math.max(0, state.enemyBlock || 0);
 }
@@ -10103,14 +11223,16 @@ function setEnemyBlock(amount) {
       set: (value) => setEnemyBlock(value),
     });
   }
-  const readout = $("#enemy-team-block strong");
-  if (readout) readout.textContent = state.enemyBlock;
+  document.querySelectorAll(".enemy-team-block").forEach((el) => {
+    el.querySelector("strong").textContent = state.enemyBlock;
+    el.setAttribute("aria-label", "Shared enemy block: " + state.enemyBlock);
+  });
 }
 function gainEnemyBlock(amount) {
   setEnemyBlock(enemyBlock() + amount);
 }
-function enemyBlockMarkup() {
-  return `<div id="enemy-team-block" class="enemy-team-block" aria-label="Enemy team block: ${enemyBlock()}">${icon("block")}<strong>${enemyBlock()}</strong><span>ENEMY TEAM BLOCK<small>Shared by all enemies</small></span></div>`;
+function enemyBlockMarkup(index = 0) {
+  return `<div id="enemy-team-block${index ? "-2" : ""}" class="enemy-team-block" aria-label="Enemy team block: ${enemyBlock()}">${icon("block")}<strong>${enemyBlock()}</strong><span>TEAM BLOCK<small>Shared pool</small></span></div>`;
 }
 function wardActive(e = actingEnemy) {
   return !!(
@@ -10119,155 +11241,7 @@ function wardActive(e = actingEnemy) {
   );
 }
 // END GENERATED HERO BUILDS
-      function makeHero(
-        name,
-        job,
-        origin = null,
-        rules = state?.runRules || [],
-        build = {},
-      ) {
-        const legacyHealer = job === "healer";
-        if (legacyHealer) job = "mage";
-        const role = legacyHealer
-          ? "heal"
-          : Object.hasOwn(MAGE_ROLES, build.mageRole)
-            ? build.mageRole
-            : "magic";
-        const faces = {
-            ranger: [
-              ["attack", 1, 12],
-              ["attack", 2, 5],
-              ["poison", 1, 3],
-              ["block", 1, 2],
-              ["stun", 1, 2],
-              ["blank", 1, 6],
-            ],
-            mage: [
-              ["magic", 1, 11],
-              ["magic", 2, 7],
-              ["poison", 1, 3],
-              ["stimulant", 1, 3],
-              ["block", 1, 2],
-              ["blank", 1, 5],
-            ],
-            fighter: [
-              ["attack", 1, 9],
-              ["attack", 2, 5],
-              ["block", 1, 7],
-              ["block", 2, 3],
-              ["heal", 1, 1],
-              ["blank", 1, 5],
-            ],
-            healer: [
-              ["heal", 1, 14],
-              ["heal", 2, 12],
-              ["block", 1, 2],
-              ["stun", 1, 1],
-              ["magic", 1, 1],
-              ["blank", 1, 4],
-            ],
-            rogue: [
-              ["attack", 1, 11],
-              ["attack", 2, 10],
-              ["attack", 3, 3],
-              ["poison", 1, 2],
-              ["block", 1, 1],
-              ["blank", 1, 4],
-            ],
-          },
-          maxHp =
-            job === "fighter"
-              ? 44
-              : job === "rogue"
-                ? 26
-                : job === "mage"
-                  ? 28
-                  : job === "ranger"
-                    ? 30
-                    : 32;
-        const startingHp = maxHp + (rules.includes("hearty") ? 4 : 0);
-        return {
-          id: Date.now() + Math.random(),
-          name,
-          job,
-          specialism: Object.hasOwn(SPECIALISMS, build.specialism)
-            ? build.specialism
-            : pick(["offence", "defence"]),
-          mageRole: job === "mage" ? role : null,
-          level: 1,
-          xp: 0,
-          hp: startingHp,
-          maxHp: startingHp,
-          charge: 0,
-          points: 3,
-          equipment: null,
-          trait: null,
-          traitProgress: {},
-          stun: 0,
-          stunGrace: 0,
-          poison: null,
-          stimulant: null,
-          rage: 0,
-          dead: false,
-          joinedAt: Date.now(),
-          joinedSteps: state?.steps || 0,
-          origin: origin || {
-            depth: state?.depth || 1,
-            tile: state?.position ?? pos(1, 7),
-            description: "A wandering adventurer in the dungeon",
-          },
-          stats: emptyStats(),
-          reels: [0, 1, 2].map((reel) => [
-            ...(job === "mage" && role === "heal" ? faces.healer : faces[job]).map(
-              ([type, tier, weight]) => ({
-                type:
-                  job === "mage" &&
-                  ["block", "poison"].includes(role) &&
-                  type === "magic"
-                    ? role
-                    : type,
-                tier,
-                weight,
-              }),
-            ),
-            ...(reel === 1
-              ? [
-                  {
-                    type: "class",
-                    tier: 1,
-                    weight: 3,
-                    job,
-                    ...(job === "mage" ? { mageRole: role } : {}),
-                  },
-                ]
-              : []),
-          ]),
-          last:
-            job === "mage"
-              ? [
-                  { type: role, tier: 1 },
-                  {
-                    type: role === "magic" ? "stimulant" : role,
-                    tier: role === "magic" ? 1 : 2,
-                  },
-                  { type: "blank", tier: 1 },
-                ]
-              : job === "healer"
-                ? [
-                    { type: "heal", tier: 1 },
-                    { type: "heal", tier: 2 },
-                    { type: "blank", tier: 1 },
-                  ]
-                : [
-                    { type: "attack", tier: 1 },
-                    {
-                      type: job === "rogue" ? "attack" : "block",
-                      tier: job === "rogue" ? 3 : 1,
-                    },
-                    { type: "blank", tier: 1 },
-                  ],
-        };
-      }
+
       function neighbors(i, diagonal = false) {
         let x = i % W,
           y = Math.floor(i / W),
@@ -10325,7 +11299,7 @@ function wardActive(e = actingEnemy) {
               Object.assign(map[pos(x, y)], { wall: true, terrain: "stone" });
         // Most floors are dry. Very occasionally two separate streams cross a floor.
         const riverRoll = Math.random(),
-          riverCount = riverRoll < 0.012 ? 2 : riverRoll < 0.35 ? 1 : 0;
+          riverCount = riverRoll < WORLD_BALANCE.doubleRiverChance ? 2 : riverRoll < WORLD_BALANCE.riverChance ? 1 : 0;
         for (let stream = 0; stream < riverCount; stream++) {
           const horizontal = riverCount === 1 && Math.random() < 0.45,
             low = riverCount === 2 ? (stream === 0 ? 2 : 6) : 2,
@@ -10459,11 +11433,12 @@ function wardActive(e = actingEnemy) {
           )
         )
           events.push("recruit");
-        if (Math.random() < (rules.includes("markets") ? 0.6 : 0.3))
+        if (Math.random() < (rules.includes("markets") ? WORLD_BALANCE.marketChance : WORLD_BALANCE.shopChance))
           events.push("shop");
         if (Math.random() < 0.32) events.push("ruin");
         for (const e of events)
           if (free.length) place(free.splice(rand(free.length), 1)[0], e);
+        addLavaPuddles(map,depth);
         ensureStairsPath(map);
         const connected = mapDistances(map);
         map.forEach((c, i) => {
@@ -10527,7 +11502,7 @@ function wardActive(e = actingEnemy) {
         travel = null;
         document.querySelectorAll(".speech-bubble").forEach((e) => e.remove());
         state = {
-          version: 16,
+          version: 17,
           runId: newExpeditionId(),
           bankedFloors: {},
           runRules: rules,
@@ -10553,6 +11528,7 @@ function wardActive(e = actingEnemy) {
                 mage: "Orin",
                 healer: "Mira",
                 ranger: "Rowan",
+                berserker: "Bram",
               }[job] || "Alden",
               job,
               {
@@ -10622,7 +11598,7 @@ function wardActive(e = actingEnemy) {
           );
           if (
             !s ||
-            ![1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16].includes(
+            ![1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17].includes(
               s.version,
             ) ||
             s.map?.length !== W * H ||
@@ -10657,9 +11633,9 @@ function wardActive(e = actingEnemy) {
             oldFog = s.version < 8,
             oldRules = s.version < 9,
             retuneEnemies = s.version < 12,
-            tunePursuer = s.version < 14;
+            tunePursuer = s.version < 17;
           state = s;
-          state.version = 16;
+          state.version = 17;
           state.autoCombat = null;
           state.runRules = Array.isArray(state.runRules)
             ? state.runRules.filter((id) => Object.hasOwn(CAMP_UNLOCKS, id))
@@ -10829,20 +11805,31 @@ function wardActive(e = actingEnemy) {
             ...state.party.map((h) => h.death).filter(Boolean),
           ])
             normaliseHeroBuild(h);
+          state.opening ??= null;
+          if (
+            state.opening?.resolved &&
+            state.opening.firstRoll &&
+            state.party.filter(alive).every((h) => h.surprised)
+          )
+            finishOpeningRoll();
           state.invulnerable ??= null;
           state.enemyBlock ??= battleEnemies().reduce(
             (n, e) => n + (e.block || 0),
             0,
           );
           setEnemyBlock(state.enemy ? state.enemyBlock : 0);
-          battleEnemies().forEach(applyEnemyPresentation);
+          battleEnemies().forEach((e) => {
+            applyEnemyPresentation(e);
+            normaliseTacticalStatuses(e);
+          });
           state.floorClears ??= [];
           state.floorStart ??= floorSnapshot();
           if (!state.enemy) clearBattleStatuses();
           skip = state.speed === "skip";
           if (state.won && state.depth === 10) bankVictoryGold();
           return true;
-        } catch {
+        } catch (error) {
+          console.warn("The saved expedition could not be restored.", error);
           return false;
         }
       }
@@ -10936,13 +11923,14 @@ function wardActive(e = actingEnemy) {
               : "steady";
       }
       function rangerAimMarkup(h) {
+        if (h.job === "berserker") return furyMarkup(h);
         const charge = h.charge || 0,
           bonus = executionBonus(h),
           text = `Execute: ${charge}/${RANGER_AIM_CAP} patience. Each party action without this Ranger attacking adds one (two for its seal). The next damaging roll consumes it; wounded enemies take more. Current target bonus: +${bonus}. Clears after battle.`;
         return `<span class="aim-meter ${charge ? "charged" : ""}" role="meter" aria-label="Execute patience" aria-valuemin="0" aria-valuemax="${RANGER_AIM_CAP}" aria-valuenow="${charge}" data-tooltip="${escapeHTML(text)}"><b>EXECUTE ${charge}/${RANGER_AIM_CAP}</b><span class="aim-track"><i style="width:${(charge / RANGER_AIM_CAP) * 100}%"></i></span><small>hit +${bonus}</small></span>`;
       }
       function syncRangerAim(h) {
-        if (h.job !== "ranger") return;
+        if (!["ranger","berserker"].includes(h.job)) return;
         const root = $("#hero-" + state.party.indexOf(h)),
           caption = root?.querySelector(".machine-footnote");
         if (caption) caption.innerHTML = rangerAimMarkup(h);
@@ -10965,7 +11953,7 @@ function wardActive(e = actingEnemy) {
             : enemy
               ? "Enemy reels"
               : "Fast-forward this slot machine";
-        return `<div class="machine-shell ${one ? "one-reel" : ""}" id="machine-${id}" data-machine="${id}">${title ? `<div class="machine-title">${title}</div>` : ""}<button class="machine-face" data-roll-area="${id}" aria-label="${label}" ${disabled ? "disabled" : ""}>${last.map((s, k) => `<span class="slot-window" data-reel="${k}"><span class="symbol-track single"><span class="slot-symbol">${symbolMarkup(s)}</span></span></span>`).join("")}</button><button class="lever" ${active ? `data-spin="${hero}"` : `data-fast-machine="${id}"`} ${disabled ? "disabled" : ""} aria-label="${active ? "Pull " + state.party[hero].name + "’s slot handle" : "Fast-forward " + (enemy ? "enemy" : "event") + " reels"}">${leverArt()}</button><div class="machine-footnote">${active ? (state.party[hero].job === "ranger" ? rangerAimMarkup(state.party[hero]) : state.enemy ? (state.party[hero].stun ? "Pull to shake off stun" : "Pull handle to spin") : "Waiting for an encounter") : enemy ? "" : "Click during the roll to land it"}</div></div>`;
+        return `<div class="machine-shell ${one ? "one-reel" : ""}" id="machine-${id}" data-machine="${id}">${title ? `<div class="machine-title">${title}</div>` : ""}<button class="machine-face" data-roll-area="${id}" aria-label="${label}" ${disabled ? "disabled" : ""}>${last.map((s, k) => `<span class="slot-window" data-reel="${k}"><span class="symbol-track single"><span class="slot-symbol">${symbolMarkup(s)}</span></span></span>`).join("")}</button><button class="lever" ${active ? `data-spin="${hero}"` : `data-fast-machine="${id}"`} ${disabled ? "disabled" : ""} aria-label="${active ? "Pull " + state.party[hero].name + "’s slot handle" : "Fast-forward " + (enemy ? "enemy" : "event") + " reels"}">${leverArt()}</button><div class="machine-footnote">${active ? (["ranger","berserker"].includes(state.party[hero].job) ? rangerAimMarkup(state.party[hero]) : state.enemy ? (state.party[hero].stun ? "Pull to shake off stun" : "Pull handle to spin") : "Waiting for an encounter") : enemy ? "" : "Click during the roll to land it"}</div></div>`;
       }
       function render() {
         statusTooltip.hidden = true;
@@ -11144,6 +12132,7 @@ function wardActive(e = actingEnemy) {
             ? "Unknown / " + c.hint.text
             : "Unknown / pencil-covered tile";
         if (c.terrain === "bridge" && !c.event) return "River bridge / traversable";
+        if(c.terrain === "lava")return "Lava puddle / impassable / lights adjacent tiles";
         if (c.wall)
           return c.terrain === "river"
             ? "Underground river / impassable"
@@ -11195,7 +12184,7 @@ function wardActive(e = actingEnemy) {
                           : c.event || c.feature,
                       )
                     : floorArt(c, i);
-            return `<button class="tile ${c.seen ? "" : "fog"} ${c.wall && c.seen ? "wall" : ""} ${water && c.seen ? "water-block " + c.terrain : ""} ${c.visited ? "visited" : ""} ${c.feature && !c.event ? "spent" : ""} ${active ? "active-event" : ""} ${battle ? "active-battle" : ""} ${active && c.event === "well" ? "active-well" : ""} ${active && c.event === "stairs" ? "active-stairs" : ""} ${corpse ? "has-corpse" : ""} ${!c.seen && c.hint ? "has-hint" : ""}  ${c.room && c.seen ? "cave-room" : ""} ${Date.now() - (c.roomRevealedAt || 0) < 1200 ? "room-reveal" : ""} ${c.terrain === "bridge" ? "bridge-tile" : ""} ${i === state.position ? "player-cell" : ""} ${travel?.goal === i ? "travel-goal" : ""}" data-tile="${i}" data-event="${c.seen ? c.event || c.feature || "empty" : "unknown"}" data-state="${!c.seen ? "unknown" : active ? "active" : c.feature ? "used" : "empty"}" aria-label="${escapeHTML(tileName(c))}, column ${(i % W) + 1}, row ${Math.floor(i / W) + 1}" ${locked || (c.seen && c.wall) ? "disabled" : ""}>${art}${c.seen && c.wall ? '<span class="terrain-stop" aria-hidden="true">×</span>' : ""}${active ? `<span class="tile-status" aria-hidden="true">${c.event === "stairs" ? "↓" : "!"}</span>` : c.seen && c.feature ? '<span class="tile-status used" aria-hidden="true">✓</span>' : ""}${!c.seen && c.hint ? `<span class="tile-whisper" title="${escapeHTML(c.hint.text)}" aria-hidden="true">${icon(c.hint.kind)}</span>` : ""}${corpse && c.event ? '<span class="corpse-mark" aria-hidden="true">†</span>' : ""}</button>`;
+            return `<button class="tile ${c.seen ? "" : "fog"} ${c.wall && c.seen ? "wall" : ""} ${water && c.seen ? "water-block " + c.terrain : ""} ${c.visited ? "visited" : ""} ${c.feature && !c.event ? "spent" : ""} ${active ? "active-event" : ""} ${battle ? "active-battle" : ""} ${active && c.event === "well" ? "active-well" : ""} ${active && c.event === "stairs" ? "active-stairs" : ""} ${corpse ? "has-corpse" : ""} ${!c.seen && c.hint ? "has-hint" : ""}  ${c.room && c.seen ? "cave-room" : ""} ${Date.now() - (c.roomRevealedAt || 0) < 1200 ? "room-reveal" : ""} ${c.terrain === "bridge" ? "bridge-tile" : ""} ${c.seen && c.terrain === "lava" ? "lava-tile" : ""} ${i === state.position ? "player-cell" : ""} ${travel?.goal === i ? "travel-goal" : ""}" data-tile="${i}" data-event="${c.seen ? c.event || c.feature || "empty" : "unknown"}" data-state="${!c.seen ? "unknown" : active ? "active" : c.feature ? "used" : "empty"}" aria-label="${escapeHTML(tileName(c))}, column ${(i % W) + 1}, row ${Math.floor(i / W) + 1}" ${locked || (c.seen && c.wall) ? "disabled" : ""}>${art}${c.seen && c.wall ? '<span class="terrain-stop" aria-hidden="true">×</span>' : ""}${active ? `<span class="tile-status" aria-hidden="true">${c.event === "stairs" ? "↓" : "!"}</span>` : c.seen && c.feature ? '<span class="tile-status used" aria-hidden="true">✓</span>' : ""}${!c.seen && c.hint ? `<span class="tile-whisper" title="${escapeHTML(c.hint.text)}" aria-hidden="true">${icon(c.hint.kind)}</span>` : ""}${corpse && c.event ? '<span class="corpse-mark" aria-hidden="true">†</span>' : ""}</button>`;
           })
           .join("");
         let leader = state.party.find(alive) || state.party[0];
@@ -11223,7 +12212,7 @@ function wardActive(e = actingEnemy) {
           state.party
             .map((h, i) => {
               let status = injury(h);
-              return `<article data-hero-roll="${i}" tabindex="${state.enemy && alive(h) && !state.over ? "0" : "-1"}" role="group" aria-label="${escapeHTML(h.name)} · click card or press Enter to spin; portrait opens upgrades" data-gear-target="${i}" class="hero ${status} ${state.target === i ? "selected" : ""}" id="hero-${i}"><div class="hero-dossier"><button class="portrait" id="portrait-${i}" data-hero-stats="${i}" data-edit="${i}" aria-label="Upgrade ${h.name} · ${h.points} points" aria-pressed="${state.target === i}" ${busy || !alive(h) ? "disabled" : ""}>${portraitArt(h.job, h)}${statusMarkup(h)}${traitMarkup(h)}<span class="specialism-badge" data-tooltip="${escapeHTML((SPECIALISMS[h.specialism]?.name || "Offence") + ": " + (SPECIALISMS[h.specialism]?.description || ""))}">${icon(h.specialism === "defence" ? "block" : "sword")}</span></button>${pointsNeedAttention(h) ? `<button class="points-prompt" data-edit="${i}" aria-label="Spend ${h.points} personal points" title="Spend ${h.points} personal points" ${busy ? "disabled" : ""}>✎ ${h.points} pts</button>` : ""}<div class="hero-name">${h.name}<small>${className(h.job)} · Lv.${h.level}</small></div>${equipmentMarkup(h, i)}</div><div class="hero-controls"><div class="hero-title-line"><span class="hp-info">HP ${h.hp} / ${h.maxHp}</span><span class="injury ${status}">${h.stun ? "stunned" : status}</span></div>${healthMarkup(h)}${drawMachine("hero-" + i, h.last, { hero: i, disabled: busy || !state.enemy || !h.hp || state.over })}<div class="bars"><div class="healthbar exp" title="Experience"><i style="width:${(h.xp / (h.level * 12)) * 100}%"></i></div></div><div class="edit-line"><span>${h.xp}/${h.level * 12} EXP</span><button class="edit-button" data-edit="${i}" ${busy || state.over ? "disabled" : ""} aria-label="Edit ${h.name}'s reels">✎ ${h.points} points</button></div></div></article>`;
+              return `<article data-hero-roll="${i}" data-surprised="${!openingEligible(h)}" tabindex="${state.enemy && alive(h) && !state.over ? "0" : "-1"}" role="group" aria-label="${escapeHTML(h.name)} · click card or press Enter to spin; portrait opens upgrades" data-gear-target="${i}" class="hero ${status} ${state.target === i ? "selected" : ""}" id="hero-${i}"><div class="hero-dossier"><button class="portrait" id="portrait-${i}" data-hero-stats="${i}" data-edit="${i}" aria-label="Upgrade ${h.name} · ${h.points} points" aria-pressed="${state.target === i}" ${busy || !alive(h) ? "disabled" : ""}>${portraitArt(h.job, h)}${statusMarkup(h)}${traitMarkup(h)}${specialismBadge(h)}</button>${pointsNeedAttention(h) ? `<button class="points-prompt" data-edit="${i}" aria-label="Spend ${h.points} personal points" title="Spend ${h.points} personal points" ${busy ? "disabled" : ""}>✎ ${h.points} pts</button>` : ""}<div class="hero-name">${h.name}<small>${className(h.job)} · Lv.${h.level}</small></div>${equipmentMarkup(h, i)}</div><div class="hero-controls"><div class="hero-title-line"><span class="hp-info">HP ${h.hp} / ${h.maxHp}</span><span class="injury ${status}"><b class="temperament-word ${h.specialism}">${(SPECIALISMS[h.specialism] || SPECIALISMS.offence).name}</b> · ${h.stun ? "stunned" : status}</span></div>${healthMarkup(h)}${drawMachine("hero-" + i, h.last, { hero: i, disabled: busy || !state.enemy || !h.hp || state.over })}<div class="bars"><div class="healthbar exp" title="Experience"><i style="width:${(h.xp / (h.level * 12)) * 100}%"></i></div></div><div class="edit-line"><span>${h.xp}/${h.level * 12} EXP</span><button class="edit-button" data-edit="${i}" ${busy || state.over ? "disabled" : ""} aria-label="Edit ${h.name}'s reels">✎ ${h.points} points</button></div></div></article>`;
             })
             .join("") +
           Array.from(
@@ -11236,7 +12225,10 @@ function wardActive(e = actingEnemy) {
         if (e.hp <= 0) return "Defeated";
         if (e.stun) return "Stunned · turn skipped";
         if (e.actionPhase) return e.actionPhase;
-        return `Waiting · ${e.countdown} spin${e.countdown === 1 ? "" : "s"}`;
+        const target=state.party.find(h=>h.id===e.intent?.targetId&&alive(h)) || state.party.find(alive);
+        const goal=({attack:"Hunt ",finish:"Finish ",stun:"Stun ",poison:"Poison "})[e.intent?.goal];
+        const intent=goal?goal+(target?.name || "party"):e.intent?.goal==="heal"?"Seek healing":e.intent?.goal==="block"?"Raise block":"Waiting";
+        return `${e.countdown} spin${e.countdown === 1 ? "" : "s"} · ${intent}`;
       }
       function enemyMachineCaption(e) {
         return `<span class="enemy-action-state">${escapeHTML(enemyActionText(e))}</span>${enemyTraitMarkup(e)}`;
@@ -11251,7 +12243,7 @@ function wardActive(e = actingEnemy) {
           paired = enemies.length > 1;
         $("#encounter").classList.toggle("paired-enemies", paired);
         $("#encounter").innerHTML = enemies.length
-          ? `<h3 class="enemy-label">${paired ? "Enemies · click a target" : "Enemy"}</h3>${enemyBlockMarkup()}<div class="enemy-roster">${enemies.map((e, k) => `<div class="enemy-box ${e.elite ? "elite-enemy" : ""} ${e === state.enemy ? "selected-enemy" : ""} ${e.hp <= 0 ? "enemy-corpse" : ""}" id="${k ? "enemy-2" : "enemy"}" data-enemy-id="${e.id}"><button class="enemy-art" id="${k ? "enemy-art-2" : "enemy-art"}" data-enemy-target="${e.id}" aria-label="Damage target: ${e.name}" aria-pressed="${e === state.enemy}" ${busy || e.hp <= 0 ? "disabled" : ""}>${portraitArt(e.art, e)}${statusMarkup(e)}</button><div class="enemy-info"><h4>${e.name}${e.elite ? (e.boss ? " · BOSS" : " · ELITE") : ""}</h4><span class="enemy-health-label">HP ${e.hp} / ${e.maxHp} · <span class="injury ${injury(e)}">${injury(e)}</span></span>${healthMarkup(e, "enemy-hp")}<span class="enemy-clock">${e.hp <= 0 ? "Slain" : e.stun ? "Stunned · one turn" : "Attacks in " + e.countdown + (e.countdown === 1 ? " spin" : " spins")}</span><p class="enemy-stats">${e.strikes} strike${e.strikes > 1 ? "s" : ""} · base ${e.damage} damage<br>Every ${e.frequency} spins${e.affix ? " · " + e.affix : ""}</p></div>${drawMachine(k ? "enemy-2" : "enemy", e.last, { enemy: true, title: enemyMachineCaption(e), disabled: true })}</div>`).join("")}</div>`
+          ? `<h3 class="enemy-label">${paired ? "Enemies · click a target" : "Enemy"}</h3><div class="enemy-roster">${enemies.map((e, k) => `<div class="enemy-box ${e.elite ? "elite-enemy" : ""} ${e === state.enemy ? "selected-enemy" : ""} ${e.hp <= 0 ? "enemy-corpse" : ""}" id="${k ? "enemy-2" : "enemy"}" data-enemy-id="${e.id}"><div class="enemy-presence"><button class="enemy-art" id="${k ? "enemy-art-2" : "enemy-art"}" data-enemy-target="${e.id}" aria-label="Damage target: ${e.name}" aria-pressed="${e === state.enemy}" ${busy || e.hp <= 0 ? "disabled" : ""}>${portraitArt(e.art, e)}${statusMarkup(e)}</button>${enemyBlockMarkup(k)}</div><div class="enemy-info"><h4>${e.name}${e.elite ? (e.boss ? " · BOSS" : " · ELITE") : ""}</h4><span class="enemy-health-label">HP ${e.hp} / ${e.maxHp} · <span class="injury ${injury(e)}">${injury(e)}</span></span>${healthMarkup(e, "enemy-hp")}<span class="enemy-clock">${e.hp <= 0 ? "Slain" : e.stun ? "Stunned · one turn" : "Attacks in " + e.countdown + (e.countdown === 1 ? " spin" : " spins")}</span><p class="enemy-stats">${e.strikes} strike${e.strikes > 1 ? "s" : ""} · base ${e.damage} damage<br>Every ${e.frequency} spins${e.affix ? " · " + e.affix : ""}</p></div>${drawMachine(k ? "enemy-2" : "enemy", e.last, { enemy: true, title: enemyMachineCaption(e), disabled: true })}</div>`).join("")}</div>`
           : `<h3 class="enemy-label">The margins</h3><div class="peace">${portraitArt("fighter", state.party.find(alive) || state.party[0])}<p>${state.over ? (state.won ? "Ten floors, one very stubborn party. You wrote the ending." : "Every expedition leaves a story. A fresh page is waiting.") : "A moment between monsters.<br>Gather your nerve. The next floor is waiting."}</p></div>`;
       }
 
@@ -11372,6 +12364,7 @@ function wardActive(e = actingEnemy) {
           c.roomRevealedAt = Date.now();
           log("The torch opens onto a cave room. Its contents wait untouched.");
         }
+        revealLavaLight(i);
         if (c.event === "stairs" && !state.exitFound) {
           state.exitFound = true;
           log("Stairs marked. Reach them before your first descent.");
@@ -11534,7 +12527,7 @@ function wardActive(e = actingEnemy) {
               if (!state.floorBossDefeated && !c.bossDefeated) {
                 state.exitPromptPending = i === travel.goal;
                 travel = null;
-                beginEncounter(true, { stairBoss: true });
+                beginEncounter(true, { stairBoss: true, fresh });
                 renderMap();
                 renderEncounter();
                 await encounterEntrance();
@@ -11549,7 +12542,7 @@ function wardActive(e = actingEnemy) {
             if (c.event && !passOptional) {
               travel = null;
               renderMap();
-              let stop = await resolveTile(c);
+              let stop = await resolveTile(c, {fresh});
               maybeDiscoveryHint(i);
               if (stop || state.over) break;
             }
@@ -11567,7 +12560,7 @@ function wardActive(e = actingEnemy) {
           }
         }
       }
-      async function resolveTile(c) {
+      async function resolveTile(c, {fresh=false}={}) {
         let type = c.event;
         if (!type) return false;
         c.feature = type;
@@ -11578,7 +12571,7 @@ function wardActive(e = actingEnemy) {
         }
         if (type === "treasure") {
           if (!c.room && Math.random() < 0.025) {
-            beginEncounter(false, { mimic: true, count: 1 });
+            beginEncounter(false, { mimic: true, count: 1, fresh });
             renderEncounter();
             log("The chest yawns open. Those are teeth!");
             await encounterEntrance();
@@ -11643,7 +12636,7 @@ function wardActive(e = actingEnemy) {
           return true;
         }
         if (["enemy", "guardian", "stronghold"].includes(type)) {
-          beginEncounter(type === "guardian", { elite: type === "stronghold" });
+          beginEncounter(type === "guardian", { fresh, elite: type === "stronghold" });
           renderEncounter();
           $("#combat-title").textContent = "Combat!";
           await encounterEntrance();
@@ -12044,17 +13037,22 @@ function wardActive(e = actingEnemy) {
                 ? 2
                 : 1,
         };
+        stats.damage += Math.round(Math.min(3, Math.max(0, depth - 1)) * 0.6);
+        if (species === "pursuer") {
+          const middle = depth >= 4 && depth <= 7;
+          stats.maxHp = Math.ceil(stats.maxHp * (middle ? 1.45 : 1.16));
+          stats.damage = Math.ceil(stats.damage * (middle ? 1.3 : 1.15));
+          if (depth >= 8) stats.strikes = Math.max(2, stats.strikes);
+        }
         stats.maxHp = Math.ceil(stats.maxHp * (ruleEnabled("iron") ? 1.2 : 1));
         stats.damage =
           Math.ceil(
             stats.damage *
               (ENEMY_PROFILES[species]?.damage || 1) *
               (ruleEnabled("iron") ? 1.1 : 1),
-          ) +
-          (ruleEnabled("sharp") ? 1 : 0);
+          ) + (ruleEnabled("sharp") ? 1 : 0);
         return stats;
       }
-
       function doubleBattleChance(depth) {
         return Math.min(
           ruleEnabled("crowded") ? 0.33 : 0.25,
@@ -12172,6 +13170,10 @@ function wardActive(e = actingEnemy) {
         state.enemies.forEach((e) => {
           if (options.adventurer) {
             e.hostileRecruit = true;
+            if (options.adventurer.job === "berserker") {
+              e.job = "berserker";
+              e.fury = 0;
+            }
             e.reels = options.adventurer.reels.map((r) =>
               r.map((f) =>
                 f.type === "class"
@@ -12193,6 +13195,7 @@ function wardActive(e = actingEnemy) {
           stronghold,
           stairBoss: !!options.stairBoss,
           ambush: !!options.wandering,
+          pursuer: !!options.pursuer,
         };
         state.autoCombat = {
           supportSpins: 0,
@@ -12209,6 +13212,7 @@ function wardActive(e = actingEnemy) {
               0,
             );
         beginTraitBattle();
+        setupBattleOpening({ fresh: !!options.fresh });
         log(
           `${state.enemies.map((e) => e.name).join(" and ")} appear. Team block resets for this battle.`,
         );
@@ -12247,6 +13251,7 @@ const PUN_ENEMIES = Object.freeze({
   fullstop: "THE FULL STOP",
 });
 const PUN_SPECIES = Object.freeze({
+  berserker: "scissors",
   rat: "comma",
   ghost: "ghostit",
   slime: "glue",
@@ -12331,7 +13336,7 @@ async function encounterEntrance() {
           : first.elite
             ? "ELITE · " + first.affix
             : "An enemy steps out of the margins.",
-    `<div class="entrance-roster ${enemies.length > 1 ? "paired-intro" : ""}" id="entrance-art">${enemies.map((e) => `<div class="entrance-member" data-entrance-enemy="${e.id}"><div class="entrance-portrait">${portraitArt(e.art, e)}</div><b>${escapeHTML(e.name)}</b><small>${e.strikes} strike${e.strikes > 1 ? "s" : ""} · every ${e.frequency} spins</small></div>`).join("")}<div class="scare-lines"></div></div><p class="encounter-quote">“${enemyLine(first, "entrance")}”</p>`,
+    `${encounterTags(enemies)}<div class="entrance-roster ${enemies.length > 1 ? "paired-intro" : ""}" id="entrance-art">${enemies.map((e, i) => `<div class="entrance-member ${i ? "awaiting-second" : ""}" data-entrance-enemy="${e.id}"><div class="entrance-portrait">${portraitArt(e.art, e)}</div><b>${escapeHTML(e.name)}</b><small>${e.strikes} strike${e.strikes > 1 ? "s" : ""} · every ${e.frequency} spins</small></div>`).join("")}<div class="scare-lines"></div></div><p class="encounter-quote">“${enemyLine(first, "entrance")}”</p>`,
     "enemy-intro",
   );
   burst($("#entrance-art"), "scary", 36);
@@ -12343,7 +13348,18 @@ async function encounterEntrance() {
     $("#entrance-art").append(banner);
   }
   shakeBook(4);
-  await pause(600);
+  if (enemies.length > 1) {
+    await pause(260);
+    const second = $(".entrance-member.awaiting-second");
+    second.classList.remove("awaiting-second");
+    if (!skip && !matchMedia("(prefers-reduced-motion: reduce)").matches)
+      second.classList.add("arriving-second");
+    combatCallout(second, "ANOTHER FOE!", "danger");
+    burst(second, "scary", 38);
+    shakeBook(4);
+    GameSound.play("encounter");
+  }
+  await pause(400);
   await eventChoice([
     {
       id: "stage-confirm",
@@ -12400,6 +13416,7 @@ async function encounterEntrance() {
       `${escapeHTML(enemies.map((e) => e.name).join(" and "))} ${enemies.length > 1 ? "block" : "blocks"} the way. Choose any living hero.`,
   );
   sayEnemy("entrance");
+  await resolveBattleOpening();
 }
 async function declinedRecruit(h) {
   const outcome = Math.random();
@@ -12429,6 +13446,34 @@ async function declinedRecruit(h) {
     log(`${h.name} says goodbye and continues down another passage.`);
     result(icon("recruit") + "A quiet farewell in the margins.");
   }
+}
+
+function encounterTags(enemies) {
+  const tags = [];
+  if (enemies.some((e) => e.pursuer))
+    tags.push(
+      '<span class="encounter-tag passive">PURSUER · VALUABLE SPOILS</span>',
+    );
+  if (enemies.length > 1)
+    tags.push('<span class="encounter-tag dual">DUAL BATTLE</span>');
+  if (state.opening?.surprise)
+    tags.push('<span class="encounter-tag">SURPRISE ATTACK</span>');
+  for (const e of enemies) {
+    if (e.elite)
+      tags.push(
+        `<span class="encounter-tag">${e.boss ? "BOSS" : "ELITE"}${e.affix ? " · " + escapeHTML(e.affix) : ""}</span>`,
+      );
+    if (e.passive)
+      tags.push(
+        `<span class="encounter-tag passive" data-tooltip="${escapeHTML(ENEMY_TRAITS[e.passive.key]?.description || "")}">${ENEMY_TRAITS[e.passive.key]?.name || ""}</span>`,
+      );
+  }
+  const quick = state.party.find((h) => h.initiative);
+  if (quick)
+    tags.push(
+      `<span class="encounter-tag passive">${escapeHTML(quick.name)} · INITIATIVE</span>`,
+    );
+  return `<div class="encounter-tags">${tags.join("")}</div>`;
 }
 // END GENERATED ENCOUNTER PRESENTATION
       const liveAnimations = new Set();
@@ -12600,6 +13645,10 @@ async function declinedRecruit(h) {
         $("#critical-result").innerHTML =
           `<strong class="multiplier-value">×${rolled.value}</strong> ${inline ? "Critical locked!" : "to the original roll"}`;
         $("#critical-math").innerHTML = criticalMath(details, rolled.value);
+        $("#critical-result").insertAdjacentHTML("afterend",criticalPayoff(details,rolled.value));
+        region.classList.add("critical-locked");
+        const mathNode=$("#critical-math");
+        setTimeout(()=>{if(mathNode?.isConnected)mathNode.hidden=true;},420);
         fitDialogs();
         const skipButton = $("#stage-skip");
         if (skipButton) {
@@ -12651,11 +13700,11 @@ async function declinedRecruit(h) {
         root.classList.remove("steady", "bruised", "wounded", "downed");
         root.classList.add(status);
         root.querySelector(".hp-info").textContent = `HP ${h.hp} / ${h.maxHp}`;
-        root.querySelector(".injury").textContent = h.stun ? "stunned" : status;
+        root.querySelector(".injury").innerHTML = `<b class="temperament-word ${h.specialism}">${(SPECIALISMS[h.specialism] || SPECIALISMS.offence).name}</b> · ${h.stun ? "stunned" : status}`;
         root.querySelector(".injury").className = "injury " + status;
         root.querySelector(".hp-bar").outerHTML = healthMarkup(h);
         root.querySelector(".portrait").innerHTML =
-          portraitArt(h.job, h) + statusMarkup(h) + traitMarkup(h);
+          portraitArt(h.job, h) + statusMarkup(h) + traitMarkup(h) + specialismBadge(h);
         syncRangerAim(h);
         syncStatusFX();
       }
@@ -12678,6 +13727,7 @@ async function declinedRecruit(h) {
                   foe.countdown +
                   (foe.countdown === 1 ? " spin" : " spins");
           root.classList.toggle("enemy-corpse", foe.hp <= 0);
+          const intent=root.querySelector(".enemy-intent");if(intent)intent.textContent=enemyIntent(foe);
           const caption = root.querySelector(".machine-title");
           if (caption) caption.innerHTML = enemyMachineCaption(foe);
         }
@@ -12743,7 +13793,7 @@ async function declinedRecruit(h) {
       // deliberately call healHero directly, preserving their per-hero amounts.
       function healingTarget(preferred = state.target) {
         const selected = state.party[preferred];
-        if (alive(selected) && selected.hp < selected.maxHp) return preferred;
+        if (alive(selected) && (selected.hp < selected.maxHp || selected.stun)) return preferred;
         return (
           state.party
             .map((h, i) => ({ h, i }))
@@ -12754,6 +13804,7 @@ async function declinedRecruit(h) {
       function healHero(i, n) {
         let h = state.party[i];
         if (!alive(h)) return 0;
+        if (n>0) clearStuns(h,n);
         const offered = n > 0 ? Math.max(1, n + traitBonus(h, "healingReceived")) : 0;
         let actual = Math.min(offered, h.maxHp - h.hp);
         h.hp += actual;
@@ -12777,7 +13828,12 @@ async function declinedRecruit(h) {
         i,
         n,
         source,
-        { piercing = false, attacker = null, impact = {} } = {},
+        {
+          piercing = false,
+          attacker = null,
+          impact = {},
+          selfInflicted = false,
+        } = {},
       ) {
         let h = state.party[i];
         if (!alive(h)) return 0;
@@ -12788,7 +13844,10 @@ async function declinedRecruit(h) {
         const invulnerable = !!attacker && wardActive(attacker);
         let blocked = invulnerable ? n : piercing ? 0 : Math.min(state.block, n);
         if (!invulnerable) state.block -= blocked;
-        let actual = Math.min(h.hp, n - blocked);
+        let actual = Math.min(
+          h.hp,
+          selfInflicted ? n - blocked : vulnerableDamage(h, n - blocked),
+        );
         // A blocked segment lands on the shared shield. Only overflow reaches
         // the victim; both use this exact damage calculation, including armour.
         if (attacker) {
@@ -12807,6 +13866,7 @@ async function declinedRecruit(h) {
             );
         }
         h.hp -= actual;
+        gainFury(h, actual);
         h.stats.damageTaken += actual;
         if (h.battleMemo && state.enemy) {
           h.battleMemo.minFraction = Math.min(
@@ -12855,6 +13915,14 @@ async function declinedRecruit(h) {
             blocked || resisted,
             "block",
           );
+        if (actual && impact.type === "magic")
+          maybeVulnerable(
+            h,
+            attacker?.last
+              ?.filter((f) => f.type === "magic")
+              .reduce((n, f) => n + f.tier, 0) || 1,
+            "Magic",
+          );
         if (h.hp === 0) recordDeath(h, source);
         return actual;
       }
@@ -12866,14 +13934,18 @@ async function declinedRecruit(h) {
       ) {
         if (!e || e.hp <= 0) return 0;
         const resisted = piercing ? 0 : Math.min(n, defenceBonus(e));
+        if (resisted && e.passive?.key === "carapace" && !e.passive.announced) {
+          e.passive.announced = true;
+          passiveFX(e, `ARMOURED · ${resisted} RESISTED`, "block");
+        }
         n -= resisted;
         const blocked = piercing ? 0 : Math.min(enemyBlock(), n),
-          actual = Math.min(e.hp, n - blocked);
+          actual = Math.min(e.hp, vulnerableDamage(e, n - blocked));
         setEnemyBlock(enemyBlock() - blocked);
         if (attacker) {
           const from = $("#portrait-" + state.party.indexOf(attacker));
           if (blocked)
-            beam(from, $("#enemy-team-block"), "block", {
+            beam(from, enemyShieldEl(e), "block", {
               ...impact,
               sourceType: impact.type || "attack",
             });
@@ -12884,12 +13956,21 @@ async function declinedRecruit(h) {
             });
         }
         e.hp -= actual;
+        gainFury(e, actual);
         GameSound.play(actual ? "hit" : "shield");
         if (e.hp === 0 && !e.corpseRecorded) {
           e.corpseRecorded = true;
           leaveCorpse(e.art, e.name, true);
         }
         resolveEnemyWoundTrait(e);
+        if (actual && e.hp > 0 && impact.type === "magic")
+          maybeVulnerable(
+            e,
+            attacker?.last
+              ?.filter((f) => f.type === "magic")
+              .reduce((n, f) => n + f.tier, 0) || 1,
+            "Magic",
+          );
         if (e.hp <= 0 && !e.deathCryPlayed) {
           e.deathCryPlayed = true;
           enemyCry(e, "death");
@@ -12899,7 +13980,7 @@ async function declinedRecruit(h) {
         if (actual) combatNumber(art, actual, "attack");
         else if (blocked || resisted)
           combatNumber(
-            blocked ? $("#enemy-team-block") : art,
+            blocked ? enemyShieldEl(e) : art,
             blocked || resisted,
             "block",
           );
@@ -12925,6 +14006,7 @@ async function declinedRecruit(h) {
         if (!trait || trait.used) return;
         if (trait.key === "secondWind" && e.hp > 0 && e.hp <= e.maxHp * 0.3) {
           trait.used = true;
+          passiveFX(e,"SECOND WIND!","heal");
           const n = Math.min(e.maxHp - e.hp, Math.ceil(e.maxHp * 0.25));
           e.hp += n;
           floatAt(enemyArtEl(e), "+" + n + " · SECOND WIND", true);
@@ -12933,11 +14015,12 @@ async function declinedRecruit(h) {
         } else if (trait.key === "split" && e.hp === 0) {
           trait.used = true;
           e.fragment = true;
+          passiveFX(e,"FRACTURES!","danger");
           e.name = "Fragment of " + e.name;
           e.maxHp = Math.max(1, Math.ceil(e.maxHp * 0.35));
           e.hp = e.maxHp;
           e.damage = Math.max(1, Math.ceil(e.damage * 0.65));
-          e.block = enemyBlock();
+          setEnemyBlock(enemyBlock());
           e.poison = null;
           e.stun = 0;
           e.rage = 0;
@@ -12983,7 +14066,8 @@ async function declinedRecruit(h) {
         if (empty >= 0) state.enemies[empty] = ally;
         else state.enemies.push(ally);
         applyEnemyPresentation(ally);
-        ally.block = enemyBlock();
+        setEnemyBlock(enemyBlock());
+        passiveFX(e, "SUMMONING AN ALLY!", "danger");
         renderEncounter();
         enemyCry(ally, "appear");
         actionLabel(enemyArtEl(ally), "SUMMONED!");
@@ -13013,7 +14097,7 @@ async function declinedRecruit(h) {
         return true;
       }
       const attackBonus = (entity) =>
-        traitBonus(entity, "attack") +
+        furyBonus(entity) + traitBonus(entity, "attack") +
         (entity.rage || 0) +
         (entity.stimulant ? 1 + Math.floor(entity.stimulant.power / 3) : 0);
       const defenceBonus = (entity) =>
@@ -13029,7 +14113,7 @@ async function declinedRecruit(h) {
         if (entity.hp <= 0 || entity.dead) return "";
         const poison = entity.poison,
           buff = entity.stimulant;
-        return `<span class="portrait-conditions">${poison?.turns ? statusBadge("Poison", `${poison.damage || 1} damage each turn for ${poison.turns} more turns. Cleared after battle.`, "poison-badge", "poison", poison.turns) : ""}${entity.rage ? statusBadge("Rage", `+${entity.rage} damage and ${Math.floor(entity.rage / 3)} damage resistance until battle ends.`, "rage-badge", "rage", "+" + entity.rage) : ""}${buff ? statusBadge("Stimulant", `+${1 + Math.floor(buff.power / 3)} damage and ${1 + Math.floor(buff.power / 5)} damage resistance; ${buff.turns} turns remaining.`, "buff-badge", "flame", buff.turns) : ""}${entity.stun ? statusBadge("Stunned", "Misses one action. A hero's missed action does not advance enemy attack countdowns.", "stun-badge", "stun", "1") : ""}${entity.charge ? statusBadge("Execute", `${entity.charge}/${RANGER_AIM_CAP} patience. Bonus grows with the target’s missing health; consumed on the next damaging roll. Cleared after battle.`, "aim-badge", "bow", entity.charge) : ""}${entity.elite ? statusBadge(entity.boss ? "Boss" : "Elite", `${entity.affix || "Empowered"}. ${entity.affix === "Frenzied" ? `Attacks every ${entity.frequency} spin${entity.frequency === 1 ? "" : "s"}.` : entity.affix === "Venomous" ? "Damaging rolls also add poison." : `Begins battle with ${2 + state.depth} extra block.`}${entity.passive ? " " + (ENEMY_TRAITS[entity.passive.key]?.description || "") : ""}`, "elite-badge", "artefact") : ""}</span>`;
+        return `<span class="portrait-conditions">${poison?.turns ? statusBadge("Poison", `${poison.damage || 1} damage each turn for ${poison.turns} more turns. Further doses stack damage once three turns are loaded. Cleared after battle.`, "poison-badge", "poison", poison.turns) : ""}${entity.rage ? statusBadge("Rage", `+${entity.rage} damage and ${Math.floor(entity.rage / 3)} damage resistance until battle ends.`, "rage-badge", "rage", "+" + entity.rage) : ""}${buff ? statusBadge("Stimulant", `+${1 + Math.floor(buff.power / 3)} damage and ${1 + Math.floor(buff.power / 5)} damage resistance; ${buff.turns} turns remaining.`, "buff-badge", "flame", buff.turns) : ""}${entity.stun ? statusBadge("Stunned", "Misses one action. A hero's missed action does not advance enemy attack countdowns.", "stun-badge", "stun", "1") : ""}${entity.charge ? statusBadge("Execute", `${entity.charge}/${RANGER_AIM_CAP} patience. Bonus grows with the target’s missing health; consumed on the next damaging roll. Cleared after battle.`, "aim-badge", "bow", entity.charge) : ""}${entity.initiative && state.opening?.firstRoll ? statusBadge("Initiative","Use this hero for the first roll: +25% to its effects. Lost if another hero acts first.","initiative-badge","beacon","+25%") : ""}${entity.surprised && state.opening?.firstRoll ? statusBadge("Surprised","Cannot make the first party roll. If everyone is surprised, enemies go first.","surprised-badge","question","!") : ""}${entity.vulnerable ? statusBadge("Vulnerable","The next damaging hit after this action deals 25% more HP damage.","vulnerable-badge","stun","+25%") : ""}${entity.elite ? statusBadge(entity.boss ? "Boss" : "Elite", `${entity.affix || "Empowered"}. ${entity.affix === "Frenzied" ? `Attacks every ${entity.frequency} spin${entity.frequency === 1 ? "" : "s"}.` : entity.affix === "Venomous" ? "Damaging rolls also add poison." : `Begins battle with ${2 + state.depth} extra block.`}${entity.passive ? " " + (ENEMY_TRAITS[entity.passive.key]?.description || "") : ""}`, "elite-badge", "artefact") : ""}</span>`;
       }
       function syncStatusFX() {
         state.party.forEach((h, i) => {
@@ -13044,6 +14128,9 @@ async function declinedRecruit(h) {
             alive(h) && h.hp / h.maxHp <= 0.25,
           );
           root?.classList.toggle("stunned", alive(h) && !!h.stun);
+          root?.classList.toggle("surprised",alive(h)&&!!h.surprised&&!!state.opening?.firstRoll);
+          root?.classList.toggle("has-initiative",alive(h)&&!!h.initiative&&!!state.opening?.firstRoll);
+          root?.classList.toggle("vulnerable",alive(h)&&!!h.vulnerable);
         });
         battleEnemies().forEach((e) => {
           const root = enemyArtEl(e)?.closest(".enemy-box");
@@ -13052,20 +14139,7 @@ async function declinedRecruit(h) {
           root?.classList.toggle("fragment-enemy", !!e.fragment);
         });
       }
-      function clearBattleStatuses() {
-        for (const entity of [...state.party, ...battleEnemies()]) {
-          entity.rage = 0;
-          entity.charge = 0;
-          entity.stimulant = null;
-          entity.poison = null;
-          entity.stun = 0;
-          entity.stunGrace = 0;
-        }
-        state.invulnerable = null;
-        state.party.forEach((h, i) => syncHero(i));
-        syncEnemy();
-        syncStatusFX();
-      }
+
       function applyStimulant(entity, amount) {
         entity.stimulant = {
           power: Math.min(6, (entity.stimulant?.power || 0) + Math.ceil(amount)),
@@ -13079,68 +14153,8 @@ async function declinedRecruit(h) {
         burst(el, "gold", 22);
         actionLabel(el, "POWERED UP!");
       }
-      function applyPoison(entity, amount, source = null, { damage = 1 } = {}) {
-        if (entity.hp <= 0 || !amount) return;
-        entity.poison = {
-          turns: Math.min(
-            8,
-            Math.max(
-              entity.poison?.turns || 0,
-              1 + Math.ceil(amount) + traitBonus(source, "poisonDuration"),
-            ),
-          ),
-          damage: Math.max(entity.poison?.damage || 1, damage),
-          sourceId: source?.id || null,
-          sourceName: source?.name || "Poison",
-          appliedAt: state.actionSerial,
-        };
-        syncStatusFX();
-        const el = state.party.includes(entity)
-          ? $("#portrait-" + state.party.indexOf(entity))
-          : enemyArtEl(entity);
-        const heroIndex = state.party.indexOf(entity);
-        if (heroIndex >= 0) partyCardFeedback(heroIndex, "poison");
-        burst(el, "poison", 18);
-        actionLabel(el, "POISON · " + entity.poison.turns + " turns");
-      }
-      async function tickPoison() {
-        for (const entity of [...state.party.filter(alive), ...livingEnemies()]) {
-          const poison = entity.poison;
-          if (!poison || poison.appliedAt >= state.actionSerial) continue;
-          poison.turns--;
-          const hero = state.party.indexOf(entity),
-            source =
-              state.party.find((h) => h.id === poison.sourceId) ||
-              state.graveyard.find((d) => d.id === poison.sourceId);
-          if (hero >= 0)
-            damageHero(hero, poison.damage, "Poison from " + poison.sourceName, {
-              piercing: true,
-            });
-          else {
-            const n = damageEnemy(
-              poison.damage,
-              "Poison from " + poison.sourceName,
-              entity,
-              { piercing: true },
-            );
-            if (source) {
-              source.stats.damageDealt += n;
-              if (entity.hp === 0) {
-                source.stats.kills++;
-                if (source.battleMemo) source.battleMemo.poisonKills++;
-              }
-              if (source.death) {
-                source.death.stats.damageDealt += n;
-                if (entity.hp === 0) source.death.stats.kills++;
-              }
-            }
-          }
-          if (!poison.turns || entity.hp <= 0) entity.poison = null;
-          await pause(100);
-        }
-        await processDeaths();
-        syncStatusFX();
-      }
+
+
       function impactFlash(el, index = 0) {
         if (!el) return;
         const r = el.getBoundingClientRect(),
@@ -13157,14 +14171,24 @@ async function declinedRecruit(h) {
         const base = calculate(symbols),
           seals = symbols[1]?.type === "class" ? 1 : 0;
         let flurryHits = [];
+        if (base.selfharm) base.bloodFury = Math.ceil(base.selfharm / 2) * 3;
         if (seals) {
+          await classAbilityFX(h);
           if (h.job === "fighter") base.rage = seals;
           if (h.job === "mage") {
-            const role = mageRole(h);
-            if (role === "heal") base.teamHeal = 3 + Math.ceil(h.level / 2);
-            else if (role === "block") base.block += 4 + Math.floor(h.level / 3);
-            else if (role === "poison") base.poison += 2 + Math.floor(h.level / 3);
-            else base.magic += 4 + Math.floor(h.level / 2);
+            const role = mageResonance(h, symbols),
+              effects = resonanceEffects(h, role);
+            for (const [key, n] of Object.entries(effects))
+              base[key] = (base[key] || 0) + n;
+            Object.defineProperty(base, "resonanceType", {
+              value: role,
+              enumerable: false,
+            });
+            h.lastResonance = role;
+          }
+          if (h.job === "berserker") {
+            base.fury = 4;
+            base.attack += 2;
           }
           if (h.job === "rogue") {
             const pool = [
@@ -13268,6 +14292,12 @@ async function declinedRecruit(h) {
           base.teamHeal = Math.max(1, base.teamHeal + traitBonus(h, "heal"));
         if (base.stun) base.stun += traitBonus(h, "stun");
         temperamentEffects(h, base);
+        if (h.initiative && state.opening?.firstRoll) {
+          for (const key of Object.keys(base))
+            if (!["blank", "class", "selfharm"].includes(key) && base[key] > 0)
+              base[key] = Math.ceil(base[key] * h.initiative.multiplier);
+          combatCallout(entityArt(h), "INITIATIVE · BONUS ROLL!", "gold");
+        }
         if (seals && h.battleMemo) h.battleMemo.seals++;
         const regular =
           (base.attack || 0) +
@@ -13290,6 +14320,12 @@ async function declinedRecruit(h) {
           !$("#spotlight").hidden
         )
           return;
+        if (!openingEligible(h)) {
+          toast(
+            h.name + " is surprised. Choose a ready companion for the first roll.",
+          );
+          return;
+        }
         busy = true;
         state.currentHero = i;
         sceneFast = false;
@@ -13323,6 +14359,15 @@ async function declinedRecruit(h) {
           lunge($("#portrait-" + i), false);
           const symbols = await runMachine("hero-" + i, h.reels);
           h.last = symbols;
+          const blood = calculate(symbols).selfharm;
+          if (blood) {
+            damageHero(i, Math.min(Math.max(0, h.hp - 1), blood), "Blood Price", {
+              piercing: true,
+              selfInflicted: true,
+            });
+            gainFury(h, 0, Math.ceil(blood / 2) * 3);
+            beam(entityArt(h), entityArt(h), "selfharm");
+          }
           const base = await planHeroRoll(h, symbols),
             multiplier = await rollCritical(h.name, symbols, false, {
               details: effectDetails(base),
@@ -13335,7 +14380,7 @@ async function declinedRecruit(h) {
                 (s) => ["attack", "magic"].includes(s.type) && s.tier >= 3,
               ) ||
               (h.job === "mage" &&
-                mageRole(h) === "magic" &&
+                base.resonanceType === "magic" &&
                 symbols.some((s) => s.type === "class")),
             targets = area ? foes.filter((e) => e.hp > 0) : [selected],
             parts = [];
@@ -13362,6 +14407,9 @@ async function declinedRecruit(h) {
             area,
             targets: targets.map((e) => e.id),
           };
+          if (sums.bloodFury > Math.ceil((base.selfharm || 0) / 2) * 3)
+            gainFury(h, 0, sums.bloodFury - Math.ceil((base.selfharm || 0) / 2) * 3);
+          if (sums.fury) gainFury(h, 0, sums.fury);
           if (sums.rage) {
             h.rage = Math.min(4, (h.rage || 0) + sums.rage);
             parts.push(`<span>${icon("rage")}RAGE · +${h.rage} damage</span>`);
@@ -13428,7 +14476,7 @@ async function declinedRecruit(h) {
           }
           if (sums.poison) {
             for (const e of (h.job === "mage" &&
-            mageRole(h) === "poison" &&
+            base.resonanceType === "poison" &&
             symbols[1]?.type === "class"
               ? foes
               : targets
@@ -13440,6 +14488,10 @@ async function declinedRecruit(h) {
               `<span>${icon("poison")}Poison · ${Math.min(8, 1 + sums.poison)} turns</span>`,
             );
           }
+          if (base.resonanceType === "heal" && symbols[1]?.type === "class")
+            state.party
+              .filter(alive)
+              .forEach((ally) => clearStuns(ally, 1, { all: true }));
           if (sums.teamHeal) {
             let total = 0;
             state.party.forEach((ally, k) => {
@@ -13492,6 +14544,7 @@ async function declinedRecruit(h) {
             !!(sums.attack || sums.magic),
             symbols[1]?.type === "class",
           );
+          finishOpeningRoll();
           await tickPoison();
           if (
             h.stimulant &&
@@ -13560,13 +14613,22 @@ async function declinedRecruit(h) {
               .map((h, i) => (alive(h) ? i : -1))
               .filter((i) => i >= 0);
             if (!living.length) break;
-            let target = pick(living),
+            let target =
+                living.find((i) => state.party[i].id === e.intent?.targetId) ??
+                pick(living),
               victim = state.party[target];
             sayEnemy("attack");
             setEnemyPhase(e, `Rolling · ${strike + 1}/${e.strikes}`);
             lunge(enemyArtEl(e), true);
             let symbols = await runMachine(enemyMachine(e), e.reels);
             e.last = symbols;
+            const blood = calculate(symbols).selfharm;
+            if (blood && e.job === "berserker") {
+              damageEnemy(Math.min(e.hp - 1, blood), "Blood Price", e, {
+                piercing: true,
+              });
+              gainFury(e, 0, Math.ceil(blood / 2) * 3);
+            }
             let raw = calculate(symbols),
               base = {
                 attack: enemyHitPower(raw, e),
@@ -13643,6 +14705,7 @@ async function declinedRecruit(h) {
               setEnemyPhase(e, "Recovering health");
               let n = Math.min(e.maxHp - e.hp, totals.heal);
               e.hp += n;
+              clearStuns(e, totals.heal);
               if (n) {
                 combatNumber(enemyArtEl(e), n, "heal");
                 beam(enemyArtEl(e), enemyArtEl(e), "heal");
@@ -13664,7 +14727,9 @@ async function declinedRecruit(h) {
             await processDeaths();
             if (!state.party.some(alive)) break;
           }
+          e.turnsTaken = (e.turnsTaken || 0) + 1;
           tickEnemyPassive(e);
+          planEnemyIntent(e);
           if (e.stimulant && --e.stimulant.turns <= 0) e.stimulant = null;
           setEnemyPhase(e, null);
         } finally {
@@ -13835,7 +14900,7 @@ async function declinedRecruit(h) {
           finishVictory();
           return;
         }
-        await treasureRoll(e.stronghold ? "stronghold" : e.boss ? "boss" : "battle");
+        await treasureRoll(e.pursuer ? "unwritten" : e.stronghold ? "stronghold" : e.boss ? "boss" : "battle");
         if (e.boss) await celebrateFloorClear();
         $("#field-note").textContent =
           "“The passage is clear. Choose your next tile.”";
@@ -13847,7 +14912,7 @@ async function declinedRecruit(h) {
         }
       }
       async function treasureRoll(source = "chest") {
-        let faces = lootFaces(),
+        let faces = lootFaces(source),
           battle = source !== "chest",
           elite = source === "stronghold";
         showSpotlight(
@@ -13872,7 +14937,7 @@ async function declinedRecruit(h) {
           )}${criticalSpace()}<div class="stage-result" id="treasure-result">What did the dungeon leave you?</div><div id="artefact-loot"></div>`,
           "treasure",
         );
-        let symbols = await runMachine("treasure", [faces, faces, faces]),
+        let symbols = await runMachine("treasure", [source === "unwritten" && state.depth>=4 ? chaserRewardFaces(faces) : faces, faces, faces]),
           baseGold = 2 + state.depth,
           counts = {},
           found = [];
@@ -13919,6 +14984,7 @@ async function declinedRecruit(h) {
             type,
             count: Math.ceil(counts[type] * multiplier),
           }));
+        const bagWarning=itemDrops.some(drop=>bagWillOverflow(drop.type));
         for (const drop of itemDrops)
           notes.push("+" + drop.count + " " + ITEM_DEFS[drop.type].name);
         if (counts.point) {
@@ -13934,6 +15000,7 @@ async function declinedRecruit(h) {
             state.equippedArtefact = a.id;
           notes.push("Artefact: " + a.name);
         }
+        if(bagWarning)notes.push("BAG FULL · make room before collecting a new item type");
         $("#treasure-result").innerHTML =
           (multiplier > 1
             ? `<b>JACKPOT · ${baseGold} × ${multiplier} = ${gold} gold</b><br>`
@@ -13942,7 +15009,7 @@ async function declinedRecruit(h) {
           itemDrops
             .map(
               (drop) =>
-                `<div class="item-find">${icon(ITEM_DEFS[drop.type].icon)}<div><b>${ITEM_DEFS[drop.type].name} ×${drop.count}</b><p>${ITEM_DEFS[drop.type].description}</p></div></div>`,
+                `<div class="item-find">${icon(ITEM_DEFS[drop.type].icon)}<div><b>${ITEM_DEFS[drop.type].name} ×${drop.count}</b><p>${ITEM_DEFS[drop.type].equipment?`<b class="equipment-scope">${equipmentScope(ITEM_DEFS[drop.type])}</b><br>`:""}${ITEM_DEFS[drop.type].description}</p></div></div>`,
             )
             .join("") +
           found
@@ -14419,11 +15486,11 @@ async function declinedRecruit(h) {
         )
           return false;
         if (item.equipment)
-          return state.party.some((hero) => alive(hero) && hero.job === item.job);
+          return state.party.some((hero) => alive(hero) && canEquipGear(hero, item));
         if (["potion", "bandage", "ration"].includes(item.family))
-          return h.hp < h.maxHp;
+          return h.hp < h.maxHp || !!h.stun;
         if (item.family === "salve")
-          return state.party.some((h) => alive(h) && h.hp < h.maxHp);
+          return state.party.some((h) => alive(h) && (h.hp < h.maxHp || h.stun));
         if (item.family === "aegis") return !state.invulnerable;
         if (type === "antidote") return !!h.poison;
         return true;
@@ -14432,7 +15499,7 @@ async function declinedRecruit(h) {
         return Object.entries(state.bag)
           .map(
             ([type, count]) =>
-              `<article class="bag-card">${icon(ITEM_DEFS[type].icon)}<div><b>${ITEM_DEFS[type].name} ×${count}</b><p>${ITEM_DEFS[type].description}</p><div>${overflow ? `<button data-stage-choice="swap:${type}">Toss this stack & take the find</button>${canUseItem(type) ? `<button data-stage-choice="use:${type}">Use one now</button>` : ""}` : `<button data-use-item="${type}" ${canUseItem(type) ? "" : "disabled"}>Use one</button><button data-toss-item="${type}">Discard stack</button>`}</div></div></article>`,
+              `<article class="bag-card">${icon(ITEM_DEFS[type].icon)}<div><b>${ITEM_DEFS[type].name} ×${count}</b><p>${ITEM_DEFS[type].equipment?`<b class="equipment-scope">${equipmentScope(ITEM_DEFS[type])}</b><br>`:""}${ITEM_DEFS[type].description}</p><div>${overflow ? `<button data-stage-choice="swap:${type}">Toss this stack & take the find</button>${canUseItem(type) ? `<button data-stage-choice="use:${type}">Use one now</button>` : ""}` : `<button data-use-item="${type}" ${canUseItem(type) ? "" : "disabled"}>Use one</button><button data-toss-item="${type}">Discard stack</button>`}</div></div></article>`,
           )
           .join("");
       }
@@ -14472,7 +15539,7 @@ async function declinedRecruit(h) {
             showSpotlight(
               "The satchel is full",
               `${item.name} ×${drop.count} · three different item types already packed.`,
-              `<div class="incoming-item">${icon(item.icon)}<b>${item.name}</b><p>${item.description}</p></div><div class="bag-grid">${bagCards(true)}</div>`,
+              `<div class="incoming-item">${icon(item.icon)}<b>${item.name}</b><p>${item.equipment?`<b class="equipment-scope">${equipmentScope(item)}</b>`:""}${item.description}</p></div><div class="bag-grid">${bagCards(true)}</div>`,
               "bag-overflow",
             );
             const choices = [
@@ -14750,14 +15817,22 @@ async function declinedRecruit(h) {
 // All manual edits, recruitment and autoplay share these validated operations.
 const tierName = (tier) => ["", "I", "II", "III", "IV"][tier];
 const maxFaceTier = (type) =>
-  ["attack", "magic", "heal", "block", "stun", "poison", "stimulant"].includes(
-    type,
-  )
+  [
+    "attack",
+    "magic",
+    "heal",
+    "block",
+    "stun",
+    "poison",
+    "stimulant",
+    "selfharm",
+  ].includes(type)
     ? 4
     : type === "class"
       ? 1
       : 3;
 const CLASS_PRICES = {
+  berserker: { attack: 1, heal: 1.25, selfharm: 1 },
   ranger: {
     attack: 1,
     poison: 1.25,
@@ -14812,6 +15887,7 @@ const EDITABLE_TYPES = Object.freeze([
   "stun",
   "poison",
   "stimulant",
+  "selfharm",
   "blank",
 ]);
 const FACE_LABELS = Object.freeze({
@@ -14822,10 +15898,34 @@ const FACE_LABELS = Object.freeze({
   stun: "Stun",
   poison: "Poison",
   stimulant: "Stimulant",
+  selfharm: "Blood Price",
   blank: "Empty",
 });
 const primaryFace = (h) =>
-  h.job === "mage" ? mageRole(h) : h.job === "healer" ? "heal" : "attack";
+  h.job === "mage" ? (h.specialism === "defence" ? "heal" : "magic") : "attack";
+function editableTypes(h) {
+  return h.job === "berserker"
+    ? ["attack", "heal", "selfharm", "blank"]
+    : EDITABLE_TYPES.filter((t) => t !== "selfharm");
+}
+function faceDescription(face, h) {
+  const tier = face.tier || 1;
+  if (face.type === "class") return classAbilityDescription(h);
+  const area = tier >= 3 ? " every enemy" : " the selected enemy";
+  return (
+    {
+      attack: `Deal ${ATTACK_POWER[tier]} blade damage to${area}.`,
+      magic: `Deal ${ATTACK_POWER[tier]} magic damage to${area}, with a chance to leave the target Vulnerable.`,
+      heal: `Restore ${POWER.heal * tier} HP to your healing target. Can clear stun; more healing helps and more team block reduces the chance.`,
+      block: `Add ${tier} shared team block. It absorbs damage for any party member and is spent as it protects them.`,
+      stun: `Apply ${tier} stun power. Stops one enemy turn; higher power consumes more block and can break through it.`,
+      poison: `Apply ${tier} poison power. Lasts up to 3 turns; repeated doses increase tick damage instead of adding a long duration.`,
+      stimulant: `Apply ${tier} stimulant power to your ally: a short damage and resistance boost.`,
+      selfharm: `Pay up to ${2 * tier} HP, staying above 0. Wounds feed Fury and this mark adds ${3 * tier} extra Fury.`,
+      blank: "No effect. Inscribe a useful mark here with personal points.",
+    }[face.type] || "A mark on this weighted reel."
+  );
+}
 function classFacePrice(h, type, base) {
   return base
     ? Math.ceil(base * (CLASS_PRICES[h?.job]?.[type] || 1))
@@ -14850,8 +15950,8 @@ function faceRefund(h, face) {
 function nextFaceType(h, reel, index) {
   // Kept for old callers; the live editor always selects an explicit destination.
   const type = h.reels[reel][index].type;
-  return EDITABLE_TYPES[
-    (EDITABLE_TYPES.indexOf(type) + 1) % EDITABLE_TYPES.length
+  return editableTypes(h)[
+    (editableTypes(h).indexOf(type) + 1) % editableTypes(h).length
   ];
 }
 function faceEditCost(h, reel, index, operation, destination = null) {
@@ -14864,7 +15964,7 @@ function faceEditCost(h, reel, index, operation, destination = null) {
   const type =
     destination ||
     (operation === "cycle" ? nextFaceType(h, reel, index) : null);
-  if (!EDITABLE_TYPES.includes(type) || type === face.type) return undefined;
+  if (!editableTypes(h).includes(type) || type === face.type) return undefined;
   return type === "blank"
     ? 1
     : classFacePrice(h, type, face.type === "blank" ? 3 : FACE_COST[face.tier]);
@@ -14919,38 +16019,28 @@ function editor(i) {
     data = `${i},${k},${j}`;
   openModal(
     `${h.name}’s reel workshop`,
-    `<div class="workshop-summary"><strong>${h.points} personal points</strong>${heroBuildMarkup(h)}<span>Class seal stays in the middle reel.</span></div>
-    ${
-      h.job === "mage"
-        ? `<label class="mage-role-choice">Mage role <select id="mage-role">${Object.entries(
-            MAGE_ROLES,
-          )
-            .map(
-              ([id, r]) =>
-                `<option value="${id}" ${mageRole(h) === id ? "selected" : ""}>${r.name}</option>`,
-            )
-            .join(
-              "",
-            )}</select><span>${classAbilityDescription(h)}</span></label>`
-        : `<p class="workshop-ability">${classAbilityDescription(h)}</p>`
-    }
-    <div class="workshop-tabs" role="tablist" aria-label="Choose reel">${h.reels.map((_, r) => `<button role="tab" aria-selected="${r === k}" data-editor-reel="${r}">Reel ${r + 1}${r === 1 ? " · class seal" : ""}</button>`).join("")}</div>
-    <div class="reel-workshop"><div class="workshop-faces" role="group" aria-label="Weighted faces on reel ${k + 1}">${h.reels[k].map((s, f) => `<button data-editor-face="${f}" aria-pressed="${f === j}">${symbolMarkup(s)}<span>${s.type === "class" ? classAbilityName(h) : FACE_LABELS[s.type]}${s.type !== "class" && s.type !== "blank" ? " " + tierName(s.tier) : ""}</span><small>${Math.round((100 * (s.weight || 1)) / h.reels[k].reduce((n, x) => n + (x.weight || 1), 0))}%</small></button>`).join("")}</div>
-    <section class="workshop-detail" aria-label="Selected face"><div class="workshop-preview">${symbolMarkup(face)}</div><h3>${locked ? classAbilityName(h) : FACE_LABELS[face.type] + (face.type !== "blank" ? " " + tierName(face.tier) : "")}</h3>
+    `<div class="workshop-summary"><strong>${h.points} personal points</strong>${heroBuildMarkup(h)}</div>
+    <p class="workshop-ability">Middle class mark: <b>${classAbilityName(h)}</b> · ${workshopAbilitySummary(h)}</p>
+    <div class="workshop-step-label"><b>1. Choose a reel</b><span>Each reel rolls one weighted mark.</span></div>
+    <div class="workshop-tabs" role="tablist" aria-label="Choose reel">${h.reels.map((_, r) => `<button role="tab" aria-selected="${r === k}" data-editor-reel="${r}">Reel ${r + 1}${r === 1 ? " · permanent class mark" : ""}</button>`).join("")}</div>
+    <div class="reel-workshop"><div class="workshop-mark-list"><b class="workshop-step-label">2. Choose a mark to edit</b><div class="workshop-faces" role="group" aria-label="Weighted faces on reel ${k + 1}">${h.reels[k].map((f, n) => `<button data-editor-face="${n}" aria-pressed="${n === j}" title="${escapeHTML(faceDescription(f, h))}">${symbolMarkup(f)}<span>${f.type === "class" ? classAbilityName(h) : FACE_LABELS[f.type]}${!["class", "blank"].includes(f.type) ? " " + tierName(f.tier) : ""}</span><small>${Math.round((100 * (f.weight || 1)) / h.reels[k].reduce((sum, x) => sum + (x.weight || 1), 0))}% chance</small></button>`).join("")}</div></div>
+    <section class="workshop-detail" aria-label="Selected face"><b class="workshop-step-label">3. Change this mark</b><div class="workshop-selected"><div class="workshop-preview">${symbolMarkup(face)}</div><h3>${locked ? classAbilityName(h) : FACE_LABELS[face.type] + (face.type !== "blank" ? " " + tierName(face.tier) : "")}</h3></div><p class="face-effect"><b>When it lands:</b> ${faceDescription(face, h)}</p>
     ${
       locked
-        ? `<p class="locked-seal">${icon("class")}Permanent class seal<br>This face cannot be changed, removed or copied.</p>`
-        : `<div class="workshop-actions"><button class="primary" data-upgrade="${data}" ${!upgrade || h.points < upgrade ? "disabled" : ""}>${face.type === "blank" ? "Inscribe " + FACE_LABELS[primaryFace(h)] : "Upgrade ↑"}<small>${upgrade ? "Spend " + upgrade + " points" : "Maximum tier"}</small></button><button data-weaken="${data}" ${!refund ? "disabled" : ""}>Downgrade ↓<small>${refund ? "Refund +" + refund + " points" : "Already lowest tier"}</small></button></div><label class="swap-choice">Change symbol to<select id="face-destination">${EDITABLE_TYPES.filter(
-            (type) => type !== face.type,
+        ? `<p class="locked-seal">${icon("class")}Permanent middle class mark<br>Cannot be upgraded, removed or copied.</p>`
+        : `<div class="workshop-actions"><button class="primary" data-upgrade="${data}" ${!upgrade || h.points < upgrade ? "disabled" : ""}>${face.type === "blank" ? "Inscribe a mark" : "Upgrade ↑"}<small>${upgrade ? `${face.type === "blank" ? FACE_LABELS[primaryFace(h)] + " I" : "Rank " + tierName(face.tier) + " → " + tierName(face.tier + 1)} · spend ${upgrade} pts` : "Already at maximum rank"}</small></button><button data-weaken="${data}" ${!refund ? "disabled" : ""}>Downgrade ↓<small>${refund ? `Rank ${tierName(face.tier)} → ${tierName(face.tier - 1)} · get ${refund} pts back` : "Already at lowest rank"}</small></button></div><label class="swap-choice"><b>Or replace this symbol</b><select id="face-destination">${editableTypes(
+            h,
           )
+            .filter((t) => t !== face.type)
             .map(
-              (type) => `<option value="${type}">${FACE_LABELS[type]}</option>`,
+              (t) =>
+                `<option value="${t}">${FACE_LABELS[t]}${t !== "blank" ? " " + tierName(face.tier) : ""}</option>`,
             )
             .join(
               "",
-            )}</select></label><button class="swap-face" id="face-swap">Swap symbol <small id="swap-price"></small></button>`
+            )}</select></label><p class="swap-effect" id="swap-effect"></p><button class="swap-face" id="face-swap">Replace symbol <small id="swap-price"></small></button>`
     }
-    </section></div><p class="workshop-note">Downgrades return half the tier’s price, rounded down (at least 1). Each click removes one tier. Swaps preserve face odds. Spend points freely between actions.</p><div class="modal-actions"><button class="primary" data-close>Back to the adventure</button></div>`,
+    </section></div><p class="workshop-note">Percentages are the chance of this mark landing on this reel. Editing keeps those odds. Downgrade returns half the paid rank cost (at least 1 point); upgrading it again costs the full price.</p><div class="modal-actions"><button class="primary" data-close>Done · back to the adventure</button></div>`,
     "editor",
   );
   document.querySelectorAll("[data-editor-reel]").forEach(
@@ -14994,22 +16084,17 @@ function editor(i) {
   if (select) {
     const update = () => {
       const cost = faceEditCost(h, k, j, "swap", select.value);
-      $("#swap-price").textContent = "Spend " + cost + " points";
+      $("#swap-price").textContent = "Spend " + cost + " points · same odds";
+      $("#swap-effect").textContent = faceDescription(
+        { type: select.value, tier: face.tier },
+        h,
+      );
       swap.disabled = h.points < cost;
     };
     select.onchange = update;
     update();
     swap.onclick = () => editFace(data, "swap", select.value);
   }
-  if ($("#mage-role"))
-    $("#mage-role").onchange = (e) => {
-      h.mageRole = e.target.value;
-      normaliseHeroBuild(h);
-      save();
-      renderParty();
-      editor(i);
-      $(`[data-editor-reel="${editorSelection.reel}"]`)?.focus();
-    };
 }
 function editFace(data, operation, destination = null) {
   if (busy || state.over) return;
@@ -15023,29 +16108,87 @@ function editFace(data, operation, destination = null) {
   save();
   editor(i);
 }
-// END GENERATED REEL UPGRADES
-      function help() {
-        openModal(
-          "A field guide for the brave",
-          `<div class="guide-grid">
-            <p><b>Explore.</b> Click a frontier tile to uncover it, or a known tile to follow a shortest route. Routes avoid active fights and traps. Redirect while walking or erasing. Known wells, shops and ruins are ignored when passing through. Walls and rivers block movement; bridges cross water.</p>
-            <p><b>Descend.</b> Select marked stairs to open their menu; passing through does not stop you. Each staircase has a guardian. Defeat it, then descend from anywhere or keep exploring. Stairs are reachable and at least eight steps from camp. Defeating the tenth guardian wins.</p>
-            <p><b>Old passages.</b> Explored rooms can hide an ambush after a minute away. Battles and menus pause that timer. Winning clears nearby ambush age. From floor three, The Unwritten can awaken and follow one tile per footstep. Watch its moving mark.</p>
-            <p><b>Act freely.</b> Any living hero can spin repeatedly. Click a hero card to spin, its portrait to edit, target buttons to heal and an enemy portrait to target damage. Double battles become more common, especially through floors one to four; each enemy has its own clock. Tier III/IV attacks and criticals hit all enemies.</p>
-            <p><b>Three of a kind.</b> Three matching type-and-tier symbols roll a critical: ×2–×4 for heroes and loot, ×1.25–×1.75 for enemies and fountains. A middle class seal completes two matching symbols and casts its ability. Blanks never crit. Click rolling reels or press Space to land them. Confirm event outcomes; “Strike now” skips a critical hold.</p>
-            <p><b>Block and stun.</b> Each side shares its own block pool. It absorbs damage, wears away and expires after battle. Unbroken page blocks the next enemy’s entire turn. Any block stops a stun, consuming up to six block per power. A stunned hero misses one action without advancing enemy clocks. Hover status badges for exact effects.</p>
-            <p><b>Reels and levels.</b> Victories give EXP and personal editing points. Levels add 6 maximum HP and 4 points. Click a portrait to upgrade or choose a new symbol. Downgrades refund points; the middle class seal is permanent. Offence/Defence adds a small role bonus. Mages choose healing, shields, poison or magic; Ranger’s Execute rewards patience and wounded targets. Temporary combat statuses clear after battle.</p>
-            <p><b>Traits.</b> Related experiences sometimes leave a lasting trait. At most one adventurer gains a trait from each experience. One trait per hero; new traits replace old ones automatically. Hover its portrait badge for effects and origin. Traits persist between battles.</p>
-            <p><b>The fallen.</b> A carried Revive Stone can restore a fallen hero once, at 75% health. Otherwise death is permanent. Survivors acknowledge a burial; Names remembered keeps their statistics. Final records include every survivor, retired companion and fallen adventurer.</p>
-            <p><b>Discoveries.</b> Leave wells active until needed: they roll 15% maximum HP plus half a healing bonus. Beacons and cave rooms reveal nearby discoveries without triggering them; beacon light cannot cross stone. Ruins risk trap damage for loot. Rare strongholds hold dangerous champions.</p>
-            <p><b>Supplies and company.</b> Carry three item types; matching items stack. Inspect to use/discard; a full bag offers use, swap or leave. Ink bombs roll damage and poison. Stronger supplies appear from floors 4, 7 and 10 and keep their acquired strength. Drag matching equipment onto heroes; equip one passive artefact. Invite up to three companions, or replace one. Refusals can lead to farewells, gifts or fights.</p>
-            <p><b>Camp.</b> After a guardian, bank 25/50/75/100% of carried gold or keep it for shops. Banked gold survives new runs. Upgrades in the starting menu unlocks Ranger and optional next-run modifiers. Purchased modifiers start disabled; choose which to enable.</p>
-            <p><b>Controls.</b> Tab/Enter and the bottom bar cover navigation. Options includes audio, pace, palette, lighting, shake and cosmetic Pun-nishing Mode. Effects selects icons, beams or both. Autofight chooses combat actions; Autoplay explores, upgrades and seeks supplies/experience when behind. Enable both for a hands-free attempt. Autoplay banks 25% after ordinary floors; final records stay open. Menus pause exploration. Save HTML downloads the offline game, not browser-local progress.</p>
-          </div><div class="modal-actions"><button class="primary" data-close>Into the margins ↗</button></div>`,
-          "help",
-        );
-      }
 
+function workshopAbilitySummary(h) {
+  return {
+    fighter: "Build damage and resistance this fight.",
+    rogue: "Roll three extra blade attacks.",
+    mage: "Echo the rolled magic, healing, shield or poison marks across the whole team.",
+    ranger: "Charge patience for a stronger finishing shot.",
+    berserker: "Gain 4 Fury and +2 blade damage. Every 4 Fury adds 1 damage.",
+  }[h.job];
+}
+// END GENERATED REEL UPGRADES
+      // BEGIN GENERATED FIELD GUIDE
+// Short topic pages keep the field guide legible without internal scrolling.
+const FIELD_GUIDE = Object.freeze([
+  {
+    id: "explore",
+    title: "Exploration",
+    body: "<p><b>Explore.</b> Click a frontier tile to uncover it, or a known tile to follow a shortest route. Routes avoid active fights and traps. Redirect while walking or erasing. Known wells, shops and ruins are ignored when passing through. Walls, rivers and deep-floor lava block movement; bridges cross water. Lava lights its own tile and its four direct neighbours when any one is discovered.</p>\n<p><b>Old passages.</b> Explored rooms can hide an ambush after a minute away. Battles and menus pause that timer. Winning clears nearby ambush age. From floor three, The Unwritten can awaken and follow one tile per footstep. Watch its moving mark.</p>",
+  },
+  {
+    id: "floors",
+    title: "Floors & discoveries",
+    body: "<p><b>Descend.</b> Select marked stairs to open their menu; passing through does not stop you. Each staircase has a guardian. Defeat it, then descend from anywhere or keep exploring. Stairs are reachable and at least eight steps from camp. Defeating the tenth guardian wins.</p>\n<p><b>Discoveries.</b> Leave wells active until needed: they roll 15% maximum HP plus half a healing bonus. Beacons and cave rooms reveal nearby discoveries without triggering them; beacon light cannot cross stone. Ruins risk trap damage for loot. Rare strongholds hold dangerous champions.</p>",
+  },
+  {
+    id: "combat",
+    title: "Combat & criticals",
+    body: "<p><b>Act freely.</b> Any living hero can spin repeatedly. Click a hero card to spin, its portrait to edit, target buttons to heal and an enemy portrait to target damage. Double battles become more common, especially through floors one to four; each enemy has its own clock. Tier III/IV attacks and criticals hit all enemies.</p>\n<p><b>Three of a kind.</b> Three matching type-and-tier symbols roll a critical: ×2–×4 for heroes and loot, ×1.25–×1.75 for enemies and fountains. A middle class seal completes two matching symbols and casts its ability. Blanks never crit. Click rolling reels or press Space to land them. Confirm event outcomes; “Strike now” skips a critical hold.</p>",
+  },
+  {
+    id: "statuses",
+    title: "Statuses & openings",
+    body: "<p><b>Block and stun.</b> Each side shares its own block pool. It absorbs damage, wears away and expires after battle. Unbroken page blocks the next enemy’s entire turn. Weak stuns are stopped by block; stronger ones consume more and can break through. Stun or magic may expose Vulnerable: the next damaging hit gains 25%. Healing can clear stun; stronger heals help and heavy block reduces the chance. A stunned hero misses one action without advancing enemy clocks. Hover status badges for exact effects.</p>\n<p><b>Openings and poison.</b> Initiative sometimes offers one hero a 25% bonus if they take the first roll. A fresh hidden encounter may surprise some heroes: a ready companion must open. If everyone is surprised, enemies go first. Intent names the enemy’s focus; reels still decide the result. Poison holds at most three turns; repeated doses increase tick damage.</p>",
+  },
+  {
+    id: "heroes",
+    title: "Reels & classes",
+    body: "<p><b>Reels and levels.</b> Victories give EXP and personal editing points. Levels add 6 maximum HP and 4 points. Click a portrait to upgrade or choose a new symbol. Downgrades refund points; the middle class seal is permanent. Aggressive/Defensive temperament is fixed, chosen only for your first hero. Mage Resonance follows the rolled marks and echoes magic, healing, shields or poison across the whole appropriate team; healing Resonance clears all allied stuns. Ranger Execute rewards patience. Berserkers turn wounds and Blood Price into Fury: every four Fury adds one damage. Their wheels allow only blades, healing, Blood Price and blanks. Temporary combat statuses clear after battle.</p>",
+  },
+  {
+    id: "companions",
+    title: "Traits & fallen companions",
+    body: "<p><b>Traits.</b> Related experiences sometimes leave a lasting trait. At most one adventurer gains a trait from each experience. One trait per hero; new traits replace old ones automatically. Hover its portrait badge for effects and origin. Traits persist between battles.</p>\n<p><b>The fallen.</b> A carried Revive Stone can restore a fallen hero once, at 75% health. Otherwise death is permanent. Survivors acknowledge a burial; Names remembered keeps their statistics. Final records include every survivor, retired companion and fallen adventurer.</p>",
+  },
+  {
+    id: "supplies",
+    title: "Supplies & equipment",
+    body: "<p><b>Supplies and company.</b> Carry three item types; matching items stack. Inspect to use/discard; a full bag offers use, swap or leave. Ink bombs roll damage and poison. Stronger supplies appear from floors 4, 7 and 10 and keep their acquired strength. Generic equipment fits every class; class-bound gear is clearly labelled. Drag compatible equipment onto heroes; equip one passive artefact. Invite up to three companions, or replace one. Refusals can lead to farewells, gifts or fights.</p>",
+  },
+  {
+    id: "camp",
+    title: "Camp & controls",
+    body: "<p><b>Camp.</b> After a guardian, bank 25/50/75/100% of carried gold or keep it for shops. Banked gold survives new runs. Upgrades in the starting menu unlocks Ranger and optional next-run modifiers. Purchased modifiers start disabled; choose which to enable.</p>\n<p><b>Controls.</b> Tab/Enter and the bottom bar cover navigation. Options includes audio, pace, palette, lighting, shake and cosmetic Pun-nishing Mode. Effects selects icons, beams or both. Autofight chooses combat actions; Autoplay explores, upgrades and seeks supplies/experience when behind. Enable both for a hands-free attempt. Autoplay banks 25% after ordinary floors; final records stay open. Menus pause exploration. Save HTML downloads the offline game, not browser-local progress.</p>",
+  },
+]);
+function help(topic = "explore") {
+  let page = Math.max(
+    0,
+    FIELD_GUIDE.findIndex((p) => p.id === topic),
+  );
+  openModal(
+    "A field guide for the brave",
+    `<section class="field-guide"><nav class="guide-navigation" aria-label="Field guide topics"><label for="guide-topic">Topic<select id="guide-topic">${FIELD_GUIDE.map((p, i) => `<option value="${i}" ${i === page ? "selected" : ""}>${p.title}</option>`).join("")}</select></label><button id="guide-previous" aria-label="Previous topic">← Previous</button><button id="guide-next" aria-label="Next topic">Next →</button></nav><div class="guide-grid" id="guide-content" aria-live="polite"></div><div class="guide-page-count" aria-live="polite"></div></section><div class="modal-actions"><button class="primary" data-close>Into the margins ↗</button></div>`,
+    "help",
+  );
+  const showPage = (next) => {
+    page = Math.max(0, Math.min(FIELD_GUIDE.length - 1, next));
+    $("#guide-topic").value = String(page);
+    $("#guide-content").innerHTML = FIELD_GUIDE[page].body;
+    $(".guide-page-count").textContent =
+      `${page + 1} / ${FIELD_GUIDE.length} · ${FIELD_GUIDE[page].title}`;
+    $("#guide-previous").disabled = page === 0;
+    $("#guide-next").disabled = page === FIELD_GUIDE.length - 1;
+    fitDialogs();
+  };
+  $("#guide-topic").onchange = (e) => showPage(Number(e.target.value));
+  $("#guide-previous").onclick = () => showPage(page - 1);
+  $("#guide-next").onclick = () => showPage(page + 1);
+  showPage(page);
+}
+// END GENERATED FIELD GUIDE
       // Small independent random stream: presentation never changes gameplay odds.
       let fxSeed = Date.now() >>> 0;
       function fxRandom() {
@@ -15476,18 +16619,19 @@ function editFace(data, operation, destination = null) {
           "artefacts",
         );
       }
-      function lootFaces() {
+      function lootFaces(source="chest") {
+        const types=availableLootTypes().map(t=>source==="unwritten"&&state.depth>=4 ? lootItemForDepth(t,state.depth+3) : t);
         return [
           { type: "coin", tier: 1, weight: 536 },
           { type: "coin", tier: 2, weight: 280 },
           { type: "coin", tier: 3, weight: 110 },
           { type: "point", tier: 1, weight: 35 },
-          ...availableLootTypes().map((type) => ({
+          ...types.map((type) => ({
             type,
             tier: 1,
-            weight: 21 / availableLootTypes().length,
+            weight: (source === "unwritten" ? 80 : 21) / types.length,
           })),
-          { type: "artefact", tier: 1, weight: 18 },
+          { type: "artefact", tier: 1, weight: WORLD_BALANCE.relicWeight },
         ];
       }
       let recruitOffer = null;
@@ -15496,16 +16640,12 @@ function editFace(data, operation, destination = null) {
         state.recruitFoundThisFloor = true;
         let job = pick([
             ...(state.party.some((h) => h.job === "mage")
-              ? ["rogue", "fighter", "mage"]
-              : ["mage", "mage", "rogue", "fighter"]),
+              ? ["rogue", "fighter", "mage", "berserker"]
+              : ["mage", "mage", "rogue", "fighter", "berserker"]),
             ...(ruleEnabled("ranger") ? ["ranger", "ranger"] : []),
           ]),
           name = uniqueRecruitName(job),
-          h = prepareRecruit(
-            makeHero(name, job, null, state.runRules, {
-              mageRole: pick(Object.keys(MAGE_ROLES)),
-            }),
-          ),
+          h = prepareRecruit(makeHero(name, job, null, state.runRules)),
           full = state.party.length >= 3,
           quote = {
             fighter: "I’ll take the first hit. You keep the light.",
@@ -15513,12 +16653,13 @@ function editFace(data, operation, destination = null) {
             rogue: "You look like you could use a quieter blade.",
             mage: "There is still a spark in these old pages.",
             ranger: "One good shot. Give me a moment.",
+            berserker: "Every scar is another reason to swing.",
           }[job];
         recruitOffer = h;
         showSpotlight(
           "A wandering adventurer",
           `${h.name} · ${job === "fighter" ? "Tank" : job[0].toUpperCase() + job.slice(1)}`,
-          `<div class="stage-art">${portraitArt(job, h)}</div><p class="encounter-quote">“${quote}”</p><div class="stage-result">${h.maxHp} HP · level ${h.level} · ${SPECIALISMS[h.specialism]?.name || "Offence"} · ${job === "fighter" ? "Damage & team protection" : job === "mage" ? MAGE_ROLES[mageRole(h)].name + " Mage" : job === "ranger" ? "Patient ranged execution" : "Damage & poison"}<br>${full ? "Three companions already share your torch. You may invite a replacement." : "Invite them to join your company?"}</div>`,
+          `<div class="stage-art">${portraitArt(job, h)}</div><p class="encounter-quote">“${quote}”</p><div class="stage-result">${h.maxHp} HP · level ${h.level} · ${SPECIALISMS[h.specialism]?.name || "Offence"} · ${job === "fighter" ? "Damage & team protection" : job === "mage" ? "Healing, shields and spellcraft" : job === "ranger" ? "Patient ranged execution" : job === "berserker" ? "Wounds feed Fury" : "Damage & poison"}<br>${full ? "Three companions already share your torch. You may invite a replacement." : "Invite them to join your company?"}</div>`,
           "recruit",
         );
         let yes = await eventChoice([
@@ -15636,7 +16777,7 @@ function editFace(data, operation, destination = null) {
           )
             .map(
               (key) =>
-                `<button data-buy="${key}" ${!c.shop[key] || state.gold < prices[key] || (key === "reveal" && state.exitFound) ? "disabled" : ""}>${icon(key === "heal" ? "well" : key === "reveal" ? "stairs" : key === "potion" ? "potion" : ITEM_DEFS[key]?.icon || "ward")}<span>${labels[key]}<small>${!c.shop[key] ? "Sold out" : key === "reveal" && state.exitFound ? "Stairs already marked" : prices[key] + " gold · one in stock"}</small></span></button>`,
+                `<button data-buy="${key}" ${!c.shop[key] || state.gold < prices[key] || (key === "reveal" && state.exitFound) ? "disabled" : ""}>${icon(key === "heal" ? "well" : key === "reveal" ? "stairs" : key === "potion" ? "potion" : ITEM_DEFS[key]?.icon || "ward")}<span>${labels[key]}<small>${!c.shop[key] ? "Sold out" : key === "reveal" && state.exitFound ? "Stairs already marked" : prices[key] + " gold · one in stock" + (ITEM_DEFS[key] && !state.bag[key] && Object.keys(state.bag).length>=3 ? " · BAG FULL" : "")}</small></span></button>`,
             )
             .join(
               "",
@@ -15660,6 +16801,12 @@ function editFace(data, operation, destination = null) {
           (key === "reveal" && state.exitFound)
         )
           return;
+        if(ITEM_DEFS[key] && !state.bag[key] && Object.keys(state.bag).length>=3) {
+          shopPurchasePending=true;
+          const accepted=await confirmShopOverflow(key,price);
+          shopPurchasePending=false;
+          if(!accepted)return;
+        }
         state.gold -= price;
         shopCell.shop[key]--;
         if (ITEM_DEFS[key]) {
@@ -16539,6 +17686,7 @@ const SOUND_SAMPLES = Object.freeze({
       // recording. Contours are frequency ratios; death stretches/drops the call.
       const CRY_PROFILES = {
         fighter: ["triangle", 150, [1, 1.4, 1.15, 0.8], 0.48, 0.1],
+        berserker: ["sawtooth", 115, [1, 1.6, .7, 1.2], .66, .12],
         healer: ["sine", 440, [1, 1.25, 1.5, 1.1], 0.58, 0],
         rogue: ["triangle", 280, [1, 1.7, 1.2, 0.7], 0.32, 0.08],
         mage: ["sine", 330, [1, 1.5, 2, 1.3], 0.65, 0],
@@ -17296,6 +18444,27 @@ const SOUND_SAMPLES = Object.freeze({
               usableHeight / Math.max(1, height),
               holder.clientWidth / Math.max(1, width),
             );
+          if (content.querySelector(".reel-workshop,.field-guide")) {
+            // Fit height while using the full sheet width. Shrinking a fixed
+            // source width made compact workshops and reading pages too small.
+            let low = 0.35,
+              high = 1,
+              best = 0.35;
+            for (let pass = 0; pass < 10; pass++) {
+              const candidate = (low + high) / 2;
+              content.style.width = holder.clientWidth / candidate + "px";
+              content.style.zoom = candidate.toFixed(4);
+              const r = content.getBoundingClientRect(),
+                bounds = holder.getBoundingClientRect();
+              if (r.height <= usableHeight && r.width <= bounds.width + 1) {
+                best = candidate;
+                low = candidate;
+              } else high = candidate;
+            }
+            content.style.width = holder.clientWidth / best + "px";
+            content.style.zoom = best.toFixed(4);
+            continue;
+          }
           content.style.zoom = Math.max(0.15, scale).toFixed(4);
           // Fractional zoom can reflow hand-lettered type differently from the
           // unscaled measurement. Validate the rendered bounds, not just offsets.
@@ -17511,6 +18680,7 @@ const SOUND_SAMPLES = Object.freeze({
             healer: ["Mira", "Elin", "Sera", "Nell"],
             rogue: ["Wren", "Rook", "Lys", "Pip"],
             mage: ["Ivo", "Aster", "Vey", "Rune"],
+            berserker: ["Bram", "Halla", "Krag", "Vara"],
             ranger: ["Rowan", "Fern", "Ash", "Briar"],
           },
           used = new Set(
@@ -17545,6 +18715,12 @@ const SOUND_SAMPLES = Object.freeze({
                   ? `Poison: ${h.poison.damage} damage for ${h.poison.turns} actions`
                   : "",
                 h.stun ? "Stunned: misses one action" : "",
+                h.vulnerable ? "Vulnerable: next hit +25%" : "",
+                h.initiative ? "Initiative: first roll +25%" : "",
+                h.surprised ? "Surprised: wait for a ready ally" : "",
+                h.job === "berserker"
+                  ? `Fury ${h.fury || 0}/20: +${furyBonus(h)} damage`
+                  : "",
                 h.rage ? `Rage +${h.rage}` : "",
                 h.stimulant ? `Stimulant: ${h.stimulant.turns} actions` : "",
               ]
@@ -17796,59 +18972,17 @@ const SOUND_SAMPLES = Object.freeze({
           { duration: 450, juice: true },
         );
       }
-      function stunHero(i, power) {
-        let h = state.party[i];
-        if (!alive(h)) return "no living target";
-        if (h.stunGrace) return h.name + " resists a repeated stun";
-        if (state.block > 0) {
-          let cost = Math.min(state.block, 6 * Math.max(1, power));
-          state.block -= cost;
-          h.stats ??= emptyStats();
-          h.stats.damageBlocked += cost;
-          renderBlock();
-          armourFX(cost, "STUN BLOCKED");
-          shieldedFX($("#portrait-" + i));
-          log(`Team armour blocks a stun on ${h.name}, consuming ${cost} armour.`);
-          return h.name + " protected from stun (−" + cost + " armour)";
-        }
-        h.stun = 1;
-        syncHero(i);
-        floatAt($("#portrait-" + i), "Stunned · miss one go", false, true);
-        log(
-          `${h.name} is stunned. Missing this go will not advance the enemy clock.`,
-        );
-        return h.name + " stunned";
-      }
-      function stunEnemy(power, e = state.enemy) {
-        if (enemyBlock() > 0) {
-          let cost = Math.min(enemyBlock(), 6 * Math.max(1, power));
-          setEnemyBlock(enemyBlock() - cost);
-          shieldedFX(enemyArtEl(e));
-          floatAt(enemyArtEl(e), "Stun blocked · −" + cost, false, true);
-          log(`${e.name} blocks stun, spending ${cost} armour.`);
-          return "stun blocked · −" + cost + " enemy armour";
-        }
-        const newlyStunned = !e.stun;
-        e.stun = 1;
-        if (
-          newlyStunned &&
-          state.currentHero != null &&
-          state.party[state.currentHero]?.battleMemo
-        )
-          state.party[state.currentHero].battleMemo.stuns++;
-        burst(enemyArtEl(e), "gold", 12);
-        log(`${e.name} is stunned and will miss one attack turn.`);
-        return "one enemy turn stunned";
-      }
+
+
 
       function scaleEffects(base, multiplier) {
         return Object.fromEntries(
-          Object.entries(base).map(([k, n]) => [k, Math.ceil(n * multiplier)]),
+          Object.entries(base).map(([k, n]) => [k, k === "selfharm" ? n : Math.ceil(n * multiplier)]),
         );
       }
       function effectDetails(base) {
         return Object.entries(base)
-          .filter(([k, n]) => k !== "blank" && n > 0)
+          .filter(([k, n]) => !["blank","selfharm","class"].includes(k) && n > 0)
           .map(([k, value]) => ({
             label:
               {
@@ -17856,13 +18990,14 @@ const SOUND_SAMPLES = Object.freeze({
                 magic: "Magic damage",
                 poison: "Poison potency",
                 stimulant: "Stimulant power",
+                bloodFury: "Extra Fury",
                 rage: "Rage",
                 teamHeal: "Healing per ally",
                 heal: "Healing power",
                 block: "Armour",
                 stun: "Stun power",
               }[k] || k,
-            icon: ICONS[k] || k,
+            icon: k === "bloodFury" ? "bloodprice" : ICONS[k] || k,
             value,
           }));
       }
@@ -17978,10 +19113,714 @@ const SOUND_SAMPLES = Object.freeze({
             .join("") || "<p>No names have been lost.</p>"
         }${floor ? `<section class="final-floor-record"><h3>Floor ${floor.depth} cleared</h3>${floorSummaryMarkup(floor)}</section>` : ""}</div></div>`;
       }
+      // BEGIN GENERATED BATTLE TACTICS
+// Battle-only state and decisions. Presentation never determines an outcome.
+const TACTICS = Object.freeze({
+  initiativeSolo: 0.18,
+  initiativePerAlly: 0.08,
+  initiativeMultiplier: 1.25,
+  surpriseChance: 0.18,
+  surprisePerHero: 0.48,
+  poisonTurns: 3,
+  poisonMaxDamage: 8,
+  vulnerabilityBonus: 0.25,
+});
+function entityArt(entity) {
+  const i = state.party.indexOf(entity);
+  return i >= 0 ? $("#portrait-" + i) : enemyArtEl(entity);
+}
+function gainFury(h, damage = 0, extra = 0) {
+  if (h?.job !== "berserker" || !state.enemy || !alive(h)) return;
+  const before = h.fury || 0;
+  h.fury = Math.min(
+    BERSERKER_FURY_CAP,
+    before + Math.ceil(damage * 1.5) + extra,
+  );
+  if (h.fury > before) {
+    burst(entityArt(h), "damage", 14);
+    actionLabel(entityArt(h), `FURY +${h.fury - before}`);
+    syncRangerAim(h);
+  }
+}
+const furyBonus = (h) =>
+  h?.job === "berserker" ? Math.floor((h.fury || 0) / 4) : 0;
+function furyMarkup(h) {
+  return `<span class="fury-meter" role="meter" aria-label="Berserker Fury" aria-valuemin="0" aria-valuemax="20" aria-valuenow="${h.fury || 0}" data-tooltip="Wounds feed Fury: 1.5 per HP lost. Every 4 Fury adds 1 damage, up to +5. Blood Price grants extra Fury. Clears after battle."><b>FURY ${h.fury || 0}/20</b><span><i style="width:${(h.fury || 0) * 5}%"></i></span><small>+${furyBonus(h)} damage</small></span>`;
+}
+function setupBattleOpening({ fresh = false } = {}) {
+  const living = state.party.filter(alive);
+  state.opening = { pending: true, firstRoll: true, resolved: false };
+  living.forEach((h) => {
+    h.surprised = false;
+    h.initiative = null;
+  });
+  if (fresh && Math.random() < TACTICS.surpriseChance) {
+    living.forEach(
+      (h) => (h.surprised = Math.random() < TACTICS.surprisePerHero),
+    );
+    if (!living.some((h) => h.surprised)) pick(living).surprised = true;
+    state.opening.surprise = true;
+  }
+  const ready = living.filter((h) => !h.surprised);
+  if (
+    ready.length &&
+    Math.random() <
+      TACTICS.initiativeSolo + (living.length - 1) * TACTICS.initiativePerAlly
+  ) {
+    pick(ready).initiative = { multiplier: TACTICS.initiativeMultiplier };
+  }
+  for (const e of livingEnemies()) planEnemyIntent(e);
+}
+function openingEligible(h) {
+  return !state.opening?.firstRoll || !h.surprised;
+}
+function finishOpeningRoll() {
+  if (!state.opening) return;
+  state.opening.firstRoll = false;
+  state.opening.pending = false;
+  state.party.forEach((h) => {
+    h.surprised = false;
+    h.initiative = null;
+  });
+}
+async function resolveBattleOpening() {
+  if (!state.opening || state.opening.resolved) return;
+  state.opening.resolved = true;
+  const living = state.party.filter(alive);
+  if (living.length && living.every((h) => h.surprised)) {
+    result(icon("stun") + "Caught off guard · enemies take the opening turn!");
+    combatCallout($("#encounter"), "ENEMIES GO FIRST", "danger");
+    for (const e of livingEnemies()) {
+      await enemyTurn(e);
+      await processDeaths();
+      if (checkDefeat()) break;
+      e.countdown = e.frequency;
+    }
+    finishOpeningRoll();
+  } else {
+    const quick = living.find((h) => h.initiative);
+    if (quick)
+      combatCallout(entityArt(quick), `${quick.name}: INITIATIVE +25%`, "gold");
+    living
+      .filter((h) => h.surprised)
+      .forEach((h) => actionLabel(entityArt(h), "SURPRISED · wait one roll"));
+  }
+  syncStatusFX();
+}
+function planEnemyIntent(e) {
+  const living = state.party.filter(alive);
+  if (!living.length || !e || e.hp <= 0) return;
+  const faces = e.reels.flat(),
+    has = (t) => faces.some((f) => f.type === t);
+  const weakest = [...living].sort((a, b) => a.hp - b.hp)[0];
+  let goal = "attack",
+    target = pick(living);
+  if (e.hp < e.maxHp * 0.45 && has("heal")) goal = "heal";
+  else if (weakest.hp <= e.damage * e.strikes * 1.5) {
+    goal = "finish";
+    target = weakest;
+  } else if (
+    has("stun") &&
+    state.block < 5 &&
+    !target.stun &&
+    e.turnsTaken % 3 === 1
+  )
+    goal = "stun";
+  else if (has("poison") && !target.poison && !has("attack") && !has("magic"))
+    goal = "poison";
+  else if (has("block") && !has("attack") && !has("magic")) goal = "block";
+  e.intent = { goal, targetId: target.id };
+}
+function enemyIntent(e) {
+  if (e.hp <= 0) return "Defeated";
+  if (e.stun) return "Stunned · will miss its turn";
+  if (!e.intent) return "Watching the party · roll decides";
+  const target =
+    state.party.find((h) => h.id === e.intent.targetId && alive(h)) ||
+    state.party.find(alive);
+  return (
+    {
+      heal: "Seeking a healing roll",
+      block: "Seeking shared protection",
+      attack: `Hunting ${target?.name || "the party"}`,
+      finish: `Trying to finish ${target?.name || "a wounded hero"}`,
+      stun: `Trying to stun ${target?.name || "a hero"}`,
+      poison: `Poison aimed at ${target?.name || "the party"}`,
+    }[e.intent.goal] || "Watching the party"
+  );
+}
+function vulnerableDamage(entity, amount) {
+  if (
+    !entity.vulnerable ||
+    amount <= 0 ||
+    entity.vulnerable.createdAction >= state.actionSerial
+  )
+    return amount;
+  const total = Math.ceil(amount * (1 + TACTICS.vulnerabilityBonus));
+  entity.vulnerable = null;
+  combatCallout(entityArt(entity), "VULNERABLE HIT!", "danger");
+  return total;
+}
+function maybeVulnerable(entity, power = 1, cause = "Stun") {
+  if (!entity || entity.hp <= 0 || entity.vulnerable) return false;
+  const chance =
+    cause === "Magic"
+      ? Math.min(0.45, 0.18 + power * 0.035)
+      : Math.min(0.65, 0.25 + power * 0.055);
+  if (Math.random() >= chance) return false;
+  entity.vulnerable = {
+    createdAction: state.actionSerial,
+    bonus: TACTICS.vulnerabilityBonus,
+  };
+  combatCallout(entityArt(entity), "VULNERABLE · +25% next hit", "danger");
+  syncStatusFX();
+  return true;
+}
+function clearStuns(entity, amount, { all = false } = {}) {
+  if (!entity?.stun) return false;
+  const guard = state.party.includes(entity) ? state.block : enemyBlock();
+  if (!all && Math.random() >= amount / (amount + guard + 4)) return false;
+  entity.stun = 0;
+  entity.stunGrace = 1;
+  combatCallout(entityArt(entity), "STUN CLEARED", "heal");
+  return true;
+}
+function clearBattleStatuses() {
+  for (const entity of [...state.party, ...battleEnemies()]) {
+    entity.rage = 0;
+    entity.charge = 0;
+    entity.fury = 0;
+    entity.stimulant = null;
+    entity.poison = null;
+    entity.stun = 0;
+    entity.stunGrace = 0;
+    entity.vulnerable = null;
+    entity.initiative = null;
+    entity.surprised = false;
+  }
+  state.opening = null;
+  state.invulnerable = null;
+  state.party.forEach((h, i) => syncHero(i));
+  syncEnemy();
+  syncStatusFX();
+}
+function applyPoison(entity, amount, source = null, { damage = 1 } = {}) {
+  if (entity.hp <= 0 || !amount) return;
+  const old = entity.poison,
+    added = Math.max(
+      1,
+      1 + Math.ceil(amount) + traitBonus(source, "poisonDuration"),
+    );
+  const duration = Math.min(TACTICS.poisonTurns, (old?.turns || 0) + added);
+  const overflow =
+    (old?.overflow || 0) +
+    Math.max(0, (old?.turns || 0) + added - TACTICS.poisonTurns);
+  entity.poison = {
+    turns: duration,
+    damage: Math.min(
+      TACTICS.poisonMaxDamage,
+      Math.max(old?.damage || 1, damage) + Math.floor(overflow / 3),
+    ),
+    overflow: overflow % 3,
+    ticks: old?.ticks || 0,
+    sourceId: source?.id || old?.sourceId || null,
+    sourceName: source?.name || old?.sourceName || "Poison",
+    appliedAt: old ? old.appliedAt : state.actionSerial,
+  };
+  const i = state.party.indexOf(entity);
+  if (i >= 0) partyCardFeedback(i, "poison");
+  burst(entityArt(entity), "poison", 22);
+  actionLabel(
+    entityArt(entity),
+    `POISON ${entity.poison.damage}/tick · ${duration} turns`,
+  );
+  syncStatusFX();
+}
+async function tickPoison() {
+  for (const entity of [...state.party.filter(alive), ...livingEnemies()]) {
+    const poison = entity.poison;
+    if (!poison || poison.appliedAt >= state.actionSerial) continue;
+    poison.turns--;
+    poison.ticks = (poison.ticks || 0) + 1;
+    const hero = state.party.indexOf(entity),
+      source =
+        state.party.find((h) => h.id === poison.sourceId) ||
+        state.graveyard.find((h) => h.id === poison.sourceId);
+    if (hero >= 0)
+      damageHero(hero, poison.damage, "Poison from " + poison.sourceName, {
+        piercing: true,
+      });
+    else {
+      const n = damageEnemy(
+        poison.damage,
+        "Poison from " + poison.sourceName,
+        entity,
+        { piercing: true },
+      );
+      if (source) {
+        source.stats.damageDealt += n;
+        if (entity.hp === 0) {
+          source.stats.kills++;
+          if (source.battleMemo) source.battleMemo.poisonKills++;
+        }
+        if (source.death) {
+          source.death.stats.damageDealt += n;
+          if (entity.hp === 0) source.death.stats.kills++;
+        }
+      }
+    }
+    if (!poison.turns || entity.hp <= 0) entity.poison = null;
+    await pause(100);
+  }
+  await processDeaths();
+  syncStatusFX();
+}
+function stunResolution(power, block) {
+  const spent = Math.min(block, 6 * Math.max(1, power));
+  if (!block) return { spent, applied: true };
+  const chance =
+    power < 2
+      ? 0
+      : Math.min(
+          0.9,
+          0.08 * (power - 1) +
+            (power >= 3 ? 0.45 * Math.max(0, 1 - block / (6 * power)) : 0),
+        );
+  return { spent, applied: chance > 0 && Math.random() < chance };
+}
+function stunHero(i, power) {
+  const h = state.party[i];
+  if (!alive(h)) return "no living target";
+  if (h.stunGrace) return h.name + " resists a repeated stun";
+  const hit = stunResolution(power, state.block);
+  if (hit.spent) {
+    state.block -= hit.spent;
+    h.stats ??= emptyStats();
+    h.stats.damageBlocked += hit.spent;
+    renderBlock();
+    armourFX(hit.spent, hit.applied ? "STUN BREAKS THROUGH" : "STUN BLOCKED");
+  }
+  if (!hit.applied) {
+    shieldedFX(entityArt(h));
+    return `${h.name} protected from stun (−${hit.spent} armour)`;
+  }
+  h.stun = 1;
+  maybeVulnerable(h, power, "Stun");
+  syncHero(i);
+  combatCallout(entityArt(h), "STUNNED · miss one roll", "danger");
+  log(`${h.name} is stunned. The missed roll leaves enemy clocks unchanged.`);
+  return h.name + " stunned";
+}
+function stunEnemy(power, e = state.enemy) {
+  const hit = stunResolution(power, enemyBlock());
+  setEnemyBlock(enemyBlock() - hit.spent);
+  if (!hit.applied) {
+    shieldedFX(enemyArtEl(e));
+    return `stun blocked · −${hit.spent} enemy armour`;
+  }
+  const newly = !e.stun;
+  e.stun = 1;
+  if (
+    newly &&
+    state.currentHero != null &&
+    state.party[state.currentHero]?.battleMemo
+  )
+    state.party[state.currentHero].battleMemo.stuns++;
+  maybeVulnerable(e, power, "Stun");
+  combatCallout(
+    enemyArtEl(e),
+    hit.spent ? "STUN BREAKS THROUGH!" : "STUNNED",
+    "gold",
+  );
+  log(`${e.name} is stunned and will miss one attack turn.`);
+  return "one enemy turn stunned";
+}
+
+function resonanceEffects(h, role) {
+  return {
+    magic: { magic: 4 + Math.floor(h.level / 2) },
+    heal: { teamHeal: 3 + Math.ceil(h.level / 2) },
+    block: { block: 4 + Math.floor(h.level / 3) },
+    poison: { poison: 2 + Math.floor(h.level / 3) },
+  }[role];
+}
+function enemyShieldEl(e = state.enemy) {
+  return $(
+    battleEnemies().indexOf(e) > 0
+      ? "#enemy-team-block-2"
+      : "#enemy-team-block",
+  );
+}
+function canEquipGear(h, gear) {
+  return !!h && !!gear && (!gear.job || gear.job === h.job);
+}
+function equipmentScope(item) {
+  return item?.equipment
+    ? item.job
+      ? className(item.job) + " ONLY"
+      : "ALL CLASSES"
+    : "";
+}
+async function confirmShopOverflow(type, price) {
+  const overlay = $("#overlay");
+  overlay.hidden = true;
+  showSpotlight(
+    "Your bag is full",
+    `${ITEM_DEFS[type].name} · ${price} gold`,
+    `<div class="incoming-item">${icon(ITEM_DEFS[type].icon)}<b>${ITEM_DEFS[type].name}</b><p>${ITEM_DEFS[type].description}</p></div><div class="stage-result">All three pockets hold different item types.<br>If you buy this, choose a stack to discard or use an item.<br><b>No gold has been spent.</b></div>`,
+    "shop-bag-warning",
+  );
+  const choice = await eventChoice([
+    {
+      id: "stage-confirm",
+      label: `Buy for ${price} gold · make room next`,
+      value: true,
+    },
+    { id: "shop-cancel", label: "Cancel · keep my gold", value: false },
+  ]);
+  closeSpotlight();
+  overlay.hidden = false;
+  return choice === "true";
+}
+
+async function resumeOpeningEncounter() {
+  if (!state.enemy || !state.opening || state.opening.resolved || state.over)
+    return;
+  busy = true;
+  render();
+  try {
+    await encounterEntrance();
+  } finally {
+    busy = false;
+    render();
+    save();
+  }
+}
+
+function normaliseTacticalStatuses(entity) {
+  entity.vulnerable ??= null;
+  entity.surprised ??= false;
+  entity.initiative ??= null;
+  entity.fury = Math.min(BERSERKER_FURY_CAP, Math.max(0, entity.fury || 0));
+  if (entity.poison) {
+    const excess = Math.max(0, entity.poison.turns - TACTICS.poisonTurns);
+    entity.poison.damage = Math.min(
+      TACTICS.poisonMaxDamage,
+      (entity.poison.damage || 1) + Math.floor(excess / 3),
+    );
+    entity.poison.turns = Math.min(TACTICS.poisonTurns, entity.poison.turns);
+    entity.poison.overflow = ((entity.poison.overflow || 0) + excess) % 3;
+  }
+}
+// END GENERATED BATTLE TACTICS
+      // BEGIN GENERATED WORLD EVENTS
+async function oldTravelEvent(c, kind) {
+  if (kind === "body") {
+    showSpotlight(
+      "A forgotten traveller",
+      "A quiet life, ended between the pages.",
+      `<div class="stage-art">${corpseArt("fighter")}</div><div class="stage-result">A worn satchel rests beside the body.</div>`,
+      "body",
+    );
+    await eventChoice([
+      { id: "stage-confirm", label: "Search the satchel", value: true },
+      { id: "body-leave", label: "Let them rest", value: false },
+    ]).then(async (choice) => {
+      closeSpotlight();
+      if (choice === "true") await treasureRoll("body");
+    });
+    c.corpses.push({
+      kind: "fighter",
+      name: "A forgotten traveller",
+      enemy: false,
+    });
+    return true;
+  }
+  showSpotlight(
+    "ROCKFALL!",
+    "The ceiling answers your footsteps.",
+    `<div class="rockfall-scene">${Array.from({ length: 8 }, (_, i) => `<span style="--rock:${i}">${icon("wall")}</span>`).join("")}</div>${drawMachine(
+      "rockfall",
+      [
+        { type: "safe", tier: 1 },
+        { type: "trap", tier: 1 },
+        { type: "safe", tier: 1 },
+      ],
+    )}${criticalSpace()}<div class="stage-result" id="rockfall-result">Keep your head down…</div>`,
+    "rockfall",
+  );
+  shakeBook(9);
+  burst($("#stage-card"), "dust", 85);
+  const faces = [
+      { type: "safe", tier: 1, weight: 7 },
+      { type: "trap", tier: 1, weight: 2 },
+      { type: "trap", tier: 2, weight: 1 },
+    ],
+    symbols = await runMachine("rockfall", [faces, faces, faces]);
+  const danger = symbols.reduce(
+      (n, f) => n + (f.type === "trap" ? f.tier : 0),
+      0,
+    ),
+    base = danger ? danger + Math.floor(state.depth / 4) : 0;
+  const mult = await rollCritical("Rockfall", symbols, false, {
+    context: "rockfall",
+    details: [{ label: "Falling stone", value: base, icon: "trap" }],
+  });
+  const target = state.party.findIndex(alive),
+    damage = base ? Math.ceil(base * mult) : 0;
+  $("#rockfall-result").textContent = damage
+    ? `${state.party[target].name} is caught beneath ${damage} damage worth of falling stone.`
+    : "The rocks miss the party. A dusty escape.";
+  await eventChoice([
+    { id: "stage-confirm", label: "Find solid ground", value: true },
+  ]);
+  closeSpotlight();
+  if (damage) damageHero(target, damage, "A sudden rockfall");
+  await processDeaths();
+  checkDefeat();
+  return true;
+}
+
+const WORLD_BALANCE = Object.freeze({
+  shopChance: 0.36,
+  marketChance: 0.66,
+  riverChance: 0.41,
+  doubleRiverChance: 0.015,
+  relicWeight: 22,
+});
+async function minorTravelEvent(c) {
+  if (
+    state.steps - (state.lastMinorEventStep ?? -20) < 12 ||
+    Math.random() >= 0.025
+  )
+    return false;
+  state.lastMinorEventStep = state.steps;
+  const roll = Math.random(),
+    kind =
+      roll < 0.3
+        ? "body"
+        : roll < 0.48
+          ? "press"
+          : roll < 0.64
+            ? "cartographer"
+            : roll < 0.78
+              ? "altar"
+              : "rockfall";
+  if (["body", "rockfall"].includes(kind)) return oldTravelEvent(c, kind);
+  await choiceTravelEvent(kind);
+  return true;
+}
+const TRAVEL_EVENTS = Object.freeze({
+  press: {
+    title: "An abandoned coin press",
+    subtitle: "A few coins gleam beneath a jammed iron lever.",
+    icon: "coin",
+    offer: "Turn the crank · risk a pinched hand",
+    reward: "gold",
+    cost: 0,
+  },
+  cartographer: {
+    title: "A stranded cartographer",
+    subtitle:
+      "A traveller offers a wrapped supply for help repairing their lantern.",
+    icon: "beacon",
+    offer: "Trade 8 gold for a supply",
+    reward: "item",
+    cost: 8,
+  },
+  altar: {
+    title: "A cracked offering bowl",
+    subtitle: "Something valuable lies beneath a needle-sharp rim.",
+    icon: "ruin",
+    offer: "Reach inside · risk a cut",
+    reward: "relic",
+    cost: 0,
+  },
+});
+async function choiceTravelEvent(kind) {
+  const event = TRAVEL_EVENTS[kind],
+    offered =
+      kind === "cartographer"
+        ? pick(availableLootTypes().filter((t) => !ITEM_DEFS[t].equipment))
+        : null;
+  showSpotlight(
+    event.title,
+    event.subtitle,
+    `<div class="stage-art">${icon(event.icon)}</div><div class="stage-result">${kind === "cartographer" ? ITEM_DEFS[offered].name + " · " + ITEM_DEFS[offered].brief + (bagWillOverflow(offered) ? " · BAG FULL: make room after buying." : "") : "A careful turn of fortune could bring gold or a useful find."}</div>`,
+    "travel-choice",
+  );
+  $("#stage-card").dataset.travelKind = kind;
+  const choices = [
+    { id: "travel-leave", label: "Leave it alone", value: false },
+  ];
+  if (state.gold >= event.cost)
+    choices.unshift({ id: "stage-confirm", label: event.offer, value: true });
+  const choice = await eventChoice(choices);
+  closeSpotlight();
+  if (choice !== "true") return false;
+  if (kind === "cartographer") {
+    state.gold -= event.cost;
+    const type = offered;
+    showSpotlight(
+      "A fair exchange",
+      "The traveller hands over the wrapped supply.",
+      `<div class="incoming-item">${icon(ITEM_DEFS[type].icon)}<b>${ITEM_DEFS[type].name}</b><p>${ITEM_DEFS[type].description}</p></div><div class="stage-result">${bagWillOverflow(type) ? "BAG FULL · choose what to leave before collecting this." : "A free pocket, or a matching stack, is ready."}</div>`,
+      "travel-reward",
+    );
+    await eventChoice([
+      { id: "stage-confirm", label: "Collect the supply", value: true },
+    ]);
+    closeSpotlight();
+    state.pendingItems.push({ type, count: 1 });
+    await processPendingItems();
+    render();
+    save();
+    return true;
+  }
+  const faces = [
+    { type: "coin", tier: 1, weight: 6 },
+    { type: "coin", tier: 2, weight: 2 },
+    { type: "trap", tier: 1, weight: 2 },
+  ];
+  showSpotlight(
+    event.title,
+    "One careful try…",
+    `${drawMachine("travel", [faces[0], faces[2], faces[0]], { title: "Reward or risk" })}${criticalSpace()}<div class="stage-result" id="travel-result">What will come loose?</div>`,
+    "travel-roll",
+  );
+  const symbols = await runMachine("travel", [faces, faces, faces]),
+    danger = symbols
+      .filter((f) => f.type === "trap")
+      .reduce((n, f) => n + f.tier, 0),
+    coins = symbols
+      .filter((f) => f.type === "coin")
+      .reduce((n, f) => n + f.tier, 0);
+  const baseGold = coins * (2 + state.depth),
+    baseDamage = danger ? Math.ceil(danger * (0.6 + state.depth * 0.15)) : 0;
+  const multiplier = await rollCritical(event.title, symbols, false, {
+    context: "travel",
+    details: [
+      { label: "Gold", icon: "coin", value: baseGold },
+      { label: "A caught hand", icon: "trap", value: baseDamage },
+    ],
+  });
+  const gold = Math.ceil(baseGold * multiplier),
+    damage = Math.ceil(baseDamage * multiplier);
+  let relic = null,
+    item = null;
+  if (!danger && kind === "altar" && Math.random() < 0.08)
+    relic = makeArtefact(state.depth);
+  else if (!danger && Math.random() < 0.24) item = pick(availableLootTypes());
+  $("#travel-result").innerHTML =
+    `<b>+${gold} gold</b>${damage ? ` · ${damage} damage` : " · unhurt"}${relic ? `<br>Artefact: ${relic.name}` : item ? `<br>${ITEM_DEFS[item].name}${bagWillOverflow(item) ? " · BAG FULL" : ""}` : ""}`;
+  if (gold) goldCelebration(gold);
+  await eventChoice([
+    { id: "stage-confirm", label: "Take the result and continue", value: true },
+  ]);
+  closeSpotlight();
+  state.gold += gold;
+  if (damage)
+    damageHero(state.party.findIndex(alive), damage, "A dangerous discovery");
+  if (relic) {
+    state.artefacts.push(relic);
+    if (!state.equippedArtefact && relic.key !== "revive")
+      state.equippedArtefact = relic.id;
+  }
+  if (item) {
+    state.pendingItems.push({ type: item, count: 1 });
+    await processPendingItems();
+  }
+  await processDeaths();
+  checkDefeat();
+  render();
+  save();
+  return true;
+}
+const bagWillOverflow = (type) =>
+  !state.bag[type] && Object.keys(state.bag).length >= 3;
+function addLavaPuddles(map, depth) {
+  if (depth < 5 || Math.random() >= 0.35) return;
+  const count = Math.random() < 0.12 ? 2 : 1;
+  for (let n = 0; n < count; n++) {
+    const candidates = map
+      .map((c, i) => ({ c, i }))
+      .filter(
+        ({ c, i }) =>
+          !c.wall &&
+          c.terrain === "floor" &&
+          !c.event &&
+          !c.structure &&
+          i % W > 1 &&
+          i % W < W - 2 &&
+          Math.floor(i / W) > 1 &&
+          Math.floor(i / W) < H - 2 &&
+          Math.abs((i % W) - 1) + Math.abs(Math.floor(i / W) - 7) > 3,
+      );
+    if (!candidates.length) break;
+    const before = mapDistances(map).size;
+    const safe = candidates.filter(({ c }) => {
+      c.wall = true;
+      const valid = mapDistances(map).size >= before - 1;
+      c.wall = false;
+      return valid;
+    });
+    if (!safe.length) break;
+    const { c } = pick(safe);
+    Object.assign(c, { wall: true, terrain: "lava", room: null });
+  }
+}
+let revealingLava = false;
+function revealLavaLight(i) {
+  if (revealingLava) return;
+  const sources = [i, ...neighbors(i)].filter(
+    (j) => state.map[j].terrain === "lava",
+  );
+  if (!sources.length) return;
+  revealingLava = true;
+  try {
+    const lit = new Set(sources.flatMap((j) => [j, ...neighbors(j)]));
+    let expanded = true;
+    while (expanded) {
+      expanded = false;
+      for (const j of [...lit])
+        for (const source of [j, ...neighbors(j)].filter(
+          (k) => state.map[k].terrain === "lava",
+        ))
+          for (const k of [source, ...neighbors(source)])
+            if (!lit.has(k)) {
+              lit.add(k);
+              expanded = true;
+            }
+    }
+    for (const j of lit)
+      if (!state.map[j].seen) {
+        markSeen(j);
+        state.map[j].lavaLitAt = Date.now();
+        burst($(`[data-tile="${j}"]`), "gold", 7);
+      }
+    log("Lava lights the neighbouring stones.");
+  } finally {
+    revealingLava = false;
+  }
+}
+
+function chaserRewardFaces(faces) {
+  const items = faces.filter((f) => ITEM_DEFS[f.type]);
+  const prizes = items.filter(
+    (f) =>
+      ITEM_DEFS[f.type].equipment ||
+      (ITEM_DEFS[f.type].quality || 1) >= 3 ||
+      ITEM_DEFS[f.type].family === "aegis",
+  );
+  return prizes.length ? prizes : items;
+}
+// END GENERATED WORLD EVENTS
       // BEGIN GENERATED COMBAT FEEDBACK
 function contributionType(symbol, owner) {
   if (symbol.type !== "class") return symbol.type;
-  if (owner?.job === "mage") return mageRole(owner);
+  if (owner?.job === "mage")
+    return owner.lastResonance || mageResonance(owner, owner.last);
+  if (owner?.job === "berserker") return "attack";
   if (owner?.job === "fighter") return "rage";
   if (owner?.job === "rogue") return "attack";
   if (owner?.job === "ranger")
@@ -18062,7 +19901,7 @@ function launchRolledSymbols(from, to, type, impact = {}) {
         dy = end.y - start.y,
         arc = Math.min(100, Math.max(28, Math.abs(dx) * 0.18)),
         duration =
-          reduced || skip ? 90 : Math.max(170, 420 / Math.sqrt(pace())),
+          reduced || skip ? 100 : Math.max(210, 520 / Math.sqrt(pace())),
         frames = [];
       for (let k = 0; k <= 12; k++) {
         const t = k / 12,
@@ -18212,6 +20051,114 @@ function combatNumber(el, value, type) {
   };
   spawn(value, false, 0);
   impactNumberParts(value, type).forEach((n, i) => spawn(n, true, i));
+}
+
+// Callouts name a real state change; they never capture input or move layout.
+function combatCallout(el, text, kind = "gold") {
+  if (!el) return;
+  const r = el.getBoundingClientRect(),
+    node = document.createElement("div");
+  node.className = "combat-callout " + kind;
+  node.textContent = text;
+  node.style.left =
+    Math.max(12, Math.min(innerWidth - 12, r.left + r.width / 2)) + "px";
+  node.style.top = Math.max(35, r.top + r.height * 0.2) + "px";
+  document.body.append(node);
+  node
+    .animate(
+      matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? [
+            { opacity: 1, transform: "translate(-50%,0)" },
+            { opacity: 0, transform: "translate(-50%,0)" },
+          ]
+        : [
+            { opacity: 0, transform: "translate(-50%,10px) scale(.75)" },
+            {
+              opacity: 1,
+              transform: "translate(-50%,0) scale(1.12)",
+              offset: 0.17,
+            },
+            {
+              opacity: 1,
+              transform: "translate(-50%,-8px) scale(1)",
+              offset: 0.7,
+            },
+            { opacity: 0, transform: "translate(-50%,-35px) scale(.98)" },
+          ],
+      { duration: skip ? 650 : 1100, easing: "ease-out" },
+    )
+    .finished.finally(() => node.remove());
+}
+async function classAbilityFX(h) {
+  const el = entityArt(h),
+    i = state.party.indexOf(h),
+    machine = $("#machine-hero-" + i);
+  const text =
+    classAbilityName(h) +
+    (h.job === "mage"
+      ? " · " + MAGE_POWERS[mageResonance(h, h.last)].name.toUpperCase()
+      : "");
+  state.lastClassAbility = { heroId: h.id, name: text, at: Date.now() };
+  GameSound.play("reward");
+  screenFX(h.job === "berserker" ? "damage" : "critical", 1.1);
+  combatCallout(el, text, "ability");
+  [el, machine].filter(Boolean).forEach((node) => {
+    burst(
+      node,
+      h.job === "mage" && mageResonance(h, h.last) === "heal" ? "heal" : "gold",
+      34,
+    );
+    animate(
+      node,
+      [
+        { filter: "brightness(1)", boxShadow: "0 0 0 0 var(--gold)" },
+        {
+          filter: "brightness(1.4)",
+          boxShadow: "0 0 0 5px var(--gold)",
+          offset: 0.35,
+        },
+        { filter: "brightness(1)", boxShadow: "0 0 0 15px transparent" },
+      ],
+      { duration: 550, juice: true },
+    );
+    shakeElement(node, 4);
+  });
+  await feedbackPause(skip ? 65 : Math.max(90, 220 / Math.sqrt(pace())));
+}
+function passiveFX(e, text, kind = "danger") {
+  combatCallout(enemyArtEl(e), text, kind);
+  screenFX(kind === "heal" ? "heal" : "critical", 0.7);
+  burst(enemyArtEl(e), kind === "heal" ? "heal" : "scary", 38);
+  shakeElement(enemyArtEl(e), 5);
+  GameSound.play("trait");
+}
+function criticalPayoff(details, multiplier) {
+  let marks = details.filter((d) =>
+    ["sword", "attack", "magic"].includes(d.icon),
+  );
+  if (!marks.length) marks = details.filter((d) => d.icon === "coin");
+  if (!marks.length)
+    marks = details
+      .filter((d) => ["heal", "blessing"].includes(d.icon))
+      .slice(0, 1);
+  if (!marks.length)
+    marks = [...details].sort((a, b) => b.value - a.value).slice(0, 1);
+  const original = marks.reduce((n, d) => n + d.value, 0),
+    total = marks.reduce((n, d) => n + Math.ceil(d.value * multiplier), 0);
+  const label = marks.some((d) => d.icon === "coin")
+    ? "GOLD"
+    : marks.some((d) => ["heal", "blessing"].includes(d.icon))
+      ? "HEALING"
+      : marks.some((d) => ["sword", "attack", "magic"].includes(d.icon))
+        ? "DAMAGE"
+        : "POWER";
+  // Each effect rounds independently. A combined equation could imply a
+  // different total for mixed blade/magic rolls (5 + 5 at ×2.5 is 13 + 13).
+  const math =
+    marks.length > 1
+      ? `×${multiplier} per effect`
+      : `${original} × ${multiplier}`;
+  return `<div class="critical-payoff" aria-label="Critical ${label.toLowerCase()}: ${total}"><small>${math} · CRITICAL ${label}</small><strong>${total}</strong></div>`;
 }
 // END GENERATED COMBAT FEEDBACK
       function popTitle(el) {
@@ -18879,6 +20826,7 @@ function combatNumber(el, value, type) {
         ["wall", "Wall"],
         ["river", "River"],
         ["bridge", "Bridge"],
+        ["lava", "Lava"],
         ["ruin", "Ruins"],
         ["stronghold", "Stronghold"],
       ]
@@ -19098,78 +21046,7 @@ function combatNumber(el, value, type) {
         await encounterEntrance();
         return true;
       }
-      async function minorTravelEvent(c) {
-        if (
-          state.steps - (state.lastMinorEventStep ?? -20) < 12 ||
-          Math.random() >= 0.025
-        )
-          return false;
-        state.lastMinorEventStep = state.steps;
-        if (Math.random() < 0.45) {
-          showSpotlight(
-            "A forgotten traveller",
-            "A quiet life, ended between the pages.",
-            `<div class="stage-art">${corpseArt("fighter")}</div><div class="stage-result">A worn satchel rests beside the body.</div>`,
-            "body",
-          );
-          await eventChoice([
-            { id: "stage-confirm", label: "Search the satchel", value: true },
-            { id: "body-leave", label: "Let them rest", value: false },
-          ]).then(async (choice) => {
-            closeSpotlight();
-            if (choice === "true") await treasureRoll("body");
-          });
-          c.corpses.push({
-            kind: "fighter",
-            name: "A forgotten traveller",
-            enemy: false,
-          });
-          return true;
-        }
-        showSpotlight(
-          "ROCKFALL!",
-          "The ceiling answers your footsteps.",
-          `<div class="rockfall-scene">${Array.from({ length: 8 }, (_, i) => `<span style="--rock:${i}">${icon("wall")}</span>`).join("")}</div>${drawMachine(
-            "rockfall",
-            [
-              { type: "safe", tier: 1 },
-              { type: "trap", tier: 1 },
-              { type: "safe", tier: 1 },
-            ],
-          )}${criticalSpace()}<div class="stage-result" id="rockfall-result">Keep your head down…</div>`,
-          "rockfall",
-        );
-        shakeBook(9);
-        burst($("#stage-card"), "dust", 85);
-        const faces = [
-            { type: "safe", tier: 1, weight: 7 },
-            { type: "trap", tier: 1, weight: 2 },
-            { type: "trap", tier: 2, weight: 1 },
-          ],
-          symbols = await runMachine("rockfall", [faces, faces, faces]);
-        const danger = symbols.reduce(
-            (n, f) => n + (f.type === "trap" ? f.tier : 0),
-            0,
-          ),
-          base = danger ? danger + Math.floor(state.depth / 4) : 0;
-        const mult = await rollCritical("Rockfall", symbols, false, {
-          context: "rockfall",
-          details: [{ label: "Falling stone", value: base, icon: "trap" }],
-        });
-        const target = state.party.findIndex(alive),
-          damage = base ? Math.ceil(base * mult) : 0;
-        $("#rockfall-result").textContent = damage
-          ? `${state.party[target].name} is caught beneath ${damage} damage worth of falling stone.`
-          : "The rocks miss the party. A dusty escape.";
-        await eventChoice([
-          { id: "stage-confirm", label: "Find solid ground", value: true },
-        ]);
-        closeSpotlight();
-        if (damage) damageHero(target, damage, "A sudden rockfall");
-        await processDeaths();
-        checkDefeat();
-        return true;
-      }
+
       function levelUpFX(h) {
         GameSound.play("trait");
         h.levelUpAt = Date.now();
@@ -19234,6 +21111,9 @@ function combatNumber(el, value, type) {
         }, 4200);
       }
       const EQUIPMENT_DEFS = {
+        whetstoneCharm:{name:"Whetstone Charm",icon:"sword",job:null,brief:"+1 damage",description:"All classes. Damaging rolls gain 1 blade damage.",attack:1},
+        mendingThread:{name:"Mending Thread",icon:"heal",job:null,brief:"+1 healing",description:"All classes. Healing rolls restore 1 extra HP.",heal:1},
+        leatherWraps:{name:"Leather Wraps",icon:"block",job:null,brief:"Resist 1 damage",description:"All classes. Resist 1 damage per incoming hit.",defence:1},
         trailBow: {
           name: "Notched Longbow",
           icon: "bow",
@@ -19326,13 +21206,13 @@ function combatNumber(el, value, type) {
         },
       };
       for (const [type, def] of Object.entries(EQUIPMENT_DEFS))
-        ITEM_DEFS[type] = { ...def, equipment: true };
+        ITEM_DEFS[type] = { ...def, equipment: true, brief: (def.job ? className(def.job)+" only · " : "All classes · ")+def.brief };
       function equipmentBonus(entity, key) {
         return EQUIPMENT_DEFS[entity?.equipment]?.[key] || 0;
       }
       function equipmentMarkup(h, i) {
         const e = EQUIPMENT_DEFS[h.equipment];
-        return `<button class="equipment-slot ${e ? "equipped" : ""}" data-gear-hero="${i}" title="${e ? e.description : "Drag matching class equipment here, or select it in your satchel."}" aria-label="${h.name}'s equipment: ${e ? e.name : "empty"}">${icon(e?.icon || "bag")}<span>${e ? e.name : "Equipment"}</span></button>`;
+        return `<button class="equipment-slot ${e ? "equipped" : ""}" data-gear-hero="${i}" title="${e ? (e.job?className(e.job)+" only · ":"All classes · ")+e.description : "Drag compatible equipment here, or select it in your satchel."}" aria-label="${h.name}'s equipment: ${e ? e.name : "empty"}">${icon(e?.icon || "bag")}<span>${e ? e.name : "Equipment"}</span></button>`;
       }
       async function equipCharacter(
         type,
@@ -19345,7 +21225,7 @@ function combatNumber(el, value, type) {
           !h ||
           !alive(h) ||
           !gear ||
-          h.job !== gear.job ||
+          !canEquipGear(h,gear) ||
           state.over ||
           (busy && !internal) ||
           (!free && !state.bag[type])
@@ -19384,7 +21264,7 @@ function combatNumber(el, value, type) {
         return new Promise((resolve) => {
           openModal(
             gear.name,
-            `<p data-equipment-type="${type}">${gear.description}</p><div class="equipment-choices">${state.party.map((h, i) => `<button data-gear-choice="${i}" ${alive(h) && h.job === gear.job ? "" : "disabled"}>${portraitArt(h.job, h)}<b>${h.name} · ${className(h.job)}</b><small>${h.equipment ? "Replace " + EQUIPMENT_DEFS[h.equipment].name : "Empty equipment slot"}</small></button>`).join("")}</div><div class="modal-actions"><button id="gear-cancel">Keep it in the bag</button></div>`,
+            `<p data-equipment-type="${type}"><b class="equipment-scope">${gear.job?className(gear.job)+" ONLY":"ALL CLASSES"}</b> ${gear.description}</p><div class="equipment-choices">${state.party.map((h, i) => `<button data-gear-choice="${i}" ${alive(h) && canEquipGear(h,gear) ? "" : "disabled"}>${portraitArt(h.job, h)}<b>${h.name} · ${className(h.job)}</b><small>${h.equipment ? "Replace " + EQUIPMENT_DEFS[h.equipment].name : "Empty equipment slot"}</small></button>`).join("")}</div><div class="modal-actions"><button id="gear-cancel">Keep it in the bag</button></div>`,
             "equipment",
           );
           let done = false;
@@ -19433,6 +21313,8 @@ function combatNumber(el, value, type) {
           stimulant: 0,
           rage: 0,
           crit: 0,
+          selfharm: 0,
+          fury: 0,
         };
         const chances = h.reels.map((reel) => {
           const total = reel.reduce((n, f) => n + (f.weight || 1), 0),
@@ -19447,20 +21329,35 @@ function combatNumber(el, value, type) {
             else if (t === "class") {
               if (h.job === "fighter") out.rage += 2 * p;
               if (h.job === "rogue") out.damage += 9 * p;
-              if (h.job === "mage") {
-                const role = mageRole(h);
-                if (role === "heal") out.teamHeal += (3 + Math.ceil(h.level / 2)) * p;
-                else if (role === "block")
-                  out.block += (4 + Math.floor(h.level / 3)) * p;
-                else if (role === "poison")
-                  out.poison += (2 + Math.floor(h.level / 3)) * p;
-                else out.damage += (4 + Math.floor(h.level / 2)) * p;
+              if (h.job === "berserker") {
+                out.damage += 2 * p;
+                out.fury += 4 * p;
               }
               if (h.job === "ranger") out.damage += executionBonus(h) * p;
             } else if (Object.hasOwn(out, t)) out[t] += POWER[t] * face.tier * p;
           }
           return probabilities;
         });
+        if (h.job === "mage") {
+          const middle = h.reels[1],
+            seal =
+              middle
+                .filter((f) => f.type === "class")
+                .reduce((n, f) => n + (f.weight || 1), 0) /
+              middle.reduce((n, f) => n + (f.weight || 1), 0);
+          const weights = h.reels.map((reel) =>
+            reel.reduce((n, f) => n + (f.weight || 1), 0),
+          );
+          for (const a of h.reels[0])
+            for (const b of h.reels[2]) {
+              const p =
+                  (((seal * (a.weight || 1)) / weights[0]) * (b.weight || 1)) /
+                  weights[2],
+                fx = resonanceEffects(h, mageResonance(h, [a, { type: "class" }, b]));
+              for (const [key, value] of Object.entries(fx))
+                out[key === "magic" ? "damage" : key] += value * p;
+            }
+        }
         for (const [key, p] of Object.entries(chances[0])) {
           if (/^(blank|miss|class):/.test(key)) continue;
           out.crit +=
@@ -19505,6 +21402,9 @@ function combatNumber(el, value, type) {
         out.damage = Math.max(0, out.damage);
         out.teamHeal += equipmentBonus(h, "teamHeal");
         out.block += equipmentBonus(h, "block");
+        if (h.initiative && state.opening?.firstRoll)
+          for (const key of ["damage", "heal", "teamHeal", "block", "stun", "poison"])
+            out[key] *= TACTICS.initiativeMultiplier;
         return out;
       }
       function autoHealth() {
@@ -19545,7 +21445,7 @@ function combatNumber(el, value, type) {
         );
       }
       function autoCombatScore(h) {
-        if (h.stun) return -1000;
+        if (h.stun || !openingEligible(h)) return -1000;
         const fx = expectedHeroEffects(h),
           health = autoHealth(),
           foes = livingEnemies();
@@ -19569,12 +21469,12 @@ function combatNumber(el, value, type) {
           Math.min(health.missing, fx.teamHeal * health.party.length);
         const block = Math.min(fx.block, Math.max(0, threat * 1.2 - state.block));
         return (
-          damage +
+          damage * (h.initiative && state.opening?.firstRoll ? 1.4 : 1) +
           healing * urgency +
           block * (ratio < 0.6 ? 2 : 1.1) +
           fx.stun * (foes.some((e) => e.countdown <= 1 && !e.stun) ? 3 : 0.6) +
           fx.poison *
-            (foes.some((e) => !e.poison && e.hp > fx.damage * 2 + 4) ? 1.6 : 0.05) +
+            (foes.some((e) => e.hp > fx.damage * 2 + 4 && (!e.poison || e.poison.damage<4)) ? 1.6 : 0.05) +
           fx.stimulant * (health.party.some(({ h }) => !h.stimulant) ? 2 : 0.1) +
           fx.rage * ((h.rage || 0) < 4 ? 2.2 : 0)
         );
@@ -19582,6 +21482,7 @@ function combatNumber(el, value, type) {
       function autoUpgradeValue(h) {
         const f = expectedHeroEffects(h),
           role = {
+            berserker: { damage: 1.35, heal: 0.6, selfharm: -0.12, fury: 0.3 },
             fighter: { damage: 1.2, block: 1, stun: 0.55, heal: 0.2, poison: 0.3 },
             healer: { damage: 0.3, heal: 1.3, teamHeal: 1.8, block: 0.9, stun: 0.5 },
             mage: {
@@ -19630,7 +21531,7 @@ function combatNumber(el, value, type) {
               if (face.type === "class") return;
               for (const destination of [
                 null,
-                ...EDITABLE_TYPES.filter((t) => t !== "blank" && t !== face.type),
+                ...editableTypes(h).filter((t) => t !== "blank" && t !== face.type),
               ]) {
                 const operation = destination ? "swap" : "upgrade",
                   cost = faceEditCost(h, r, j, operation, destination);
@@ -19659,7 +21560,7 @@ function combatNumber(el, value, type) {
       }
       function autoGearValue(type, h) {
         const g = EQUIPMENT_DEFS[type];
-        if (!g || !alive(h) || g.job !== h.job) return 0;
+        if (!g || !alive(h) || !canEquipGear(h,g)) return 0;
         return (
           (g.attack || 0) * 2 +
           (g.magic || 0) * 2 +
@@ -20117,7 +22018,12 @@ function combatNumber(el, value, type) {
                 button = $(`#stage-card [data-stage-choice="swap:${worst.type}"]`);
             }
             button ||= $("#item-leave");
-          } else if (kind === "revive") button = $("#revive-use");
+          } else if(kind === "travel-choice") {
+            const risky=$("#stage-card").dataset.travelKind!=="cartographer";
+            const health=autoHealth();
+            button=risky && health.weakest?.h.hp/health.weakest?.h.maxHp<.45 ? $("#travel-leave") : $("#stage-confirm") || $("#travel-leave");
+          } else if(["travel-roll","travel-reward","shop-bag-warning","recruit-gift"].includes(kind))button=$("#stage-confirm");
+          else if (kind === "revive") button = $("#revive-use");
           else if (kind === "death") button = $("#death-confirm");
           else if (kind === "burial") button = $("#burial-confirm");
           else if (
@@ -20495,31 +22401,17 @@ function combatNumber(el, value, type) {
         };
       }
 
-      let starterBuild={specialism:"offence",mageRole:"magic"};
+      let starterBuild={specialism:"offence"};
       function chooseStartingClass(initial = false) {
         if (initial) {
           state.awaitingStarter = true;
           save();
         }
         campInitial = initial;
-        const startingJobs = [
-          "fighter",
-          "rogue",
-          "mage",
-          ...(expeditionRules().includes("ranger") ? ["ranger"] : []),
-        ];
+        const startingJobs = heroJobs(expeditionRules());
         openModal(
           initial ? "Who opens the notebook?" : "Turn to a fresh page?",
-          `<div class="settings-tabs" role="tablist" aria-label="Starting menu"><button role="tab" aria-selected="true">Adventurer</button><button role="tab" aria-selected="false" id="camp-open">Upgrades · ${campProfile().gold} gold</button></div><p>${initial ? "Choose the first name in your story." : "Choose a new adventurer. This replaces the current expedition."}</p><div class="starter-build"><label>Temperament<select id="starter-specialism"><option value="offence" ${starterBuild.specialism === "offence" ? "selected" : ""}>Offence</option><option value="defence" ${starterBuild.specialism === "defence" ? "selected" : ""}>Defence</option></select></label><label>Mage role<select id="starter-role">${Object.entries(
-            MAGE_ROLES,
-          )
-            .map(
-              ([id, r]) =>
-                `<option value="${id}" ${starterBuild.mageRole === id ? "selected" : ""}>${r.name}</option>`,
-            )
-            .join(
-              "",
-            )}</select></label></div><div class="starter-grid ${startingJobs.length > 4 ? "five-classes" : ""}" style="--starter-count:${startingJobs.length}">${startingJobs
+          `<div class="settings-tabs" role="tablist" aria-label="Starting menu"><button role="tab" aria-selected="true">Adventurer</button><button role="tab" aria-selected="false" id="camp-open">Upgrades · ${campProfile().gold} gold</button></div><p>${initial ? "Choose the first name in your story." : "Choose a new adventurer. This replaces the current expedition."}</p><div class="starter-build"><label>Temperament<select id="starter-specialism"><option value="offence" ${starterBuild.specialism === "offence" ? "selected" : ""}>Aggressive</option><option value="defence" ${starterBuild.specialism === "defence" ? "selected" : ""}>Defensive</option></select></label></div><div class="starter-grid ${startingJobs.length > 4 ? "five-classes" : ""}" style="--starter-count:${startingJobs.length}">${startingJobs
             .map((job) => {
               const h = makeHero(
                 {
@@ -20528,6 +22420,7 @@ function combatNumber(el, value, type) {
                   rogue: "Wren",
                   mage: "Orin",
                   ranger: "Rowan",
+                  berserker: "Bram",
                 }[job],
                 job,
                 null,
@@ -20546,10 +22439,7 @@ function combatNumber(el, value, type) {
           starterBuild.specialism = e.target.value;
           chooseStartingClass(initial);
         };
-        $("#starter-role").onchange = (e) => {
-          starterBuild.mageRole = e.target.value;
-          chooseStartingClass(initial);
-        };
+
         wireSettingsTabs();
         if (initial) $("#modal .close").hidden = true;
       }
@@ -20611,6 +22501,7 @@ function combatNumber(el, value, type) {
             save();
           });
         }
+        if(!state.pendingDeaths.length && !state.pendingItems.length && state.enemy && state.opening && !state.opening.resolved)resumeOpeningEncounter();
         if (state.pendingDeaths.length) {
           busy = true;
           render();

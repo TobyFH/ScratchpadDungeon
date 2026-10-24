@@ -1,6 +1,8 @@
 function contributionType(symbol, owner) {
   if (symbol.type !== "class") return symbol.type;
-  if (owner?.job === "mage") return mageRole(owner);
+  if (owner?.job === "mage")
+    return owner.lastResonance || mageResonance(owner, owner.last);
+  if (owner?.job === "berserker") return "attack";
   if (owner?.job === "fighter") return "rage";
   if (owner?.job === "rogue") return "attack";
   if (owner?.job === "ranger")
@@ -81,7 +83,7 @@ function launchRolledSymbols(from, to, type, impact = {}) {
         dy = end.y - start.y,
         arc = Math.min(100, Math.max(28, Math.abs(dx) * 0.18)),
         duration =
-          reduced || skip ? 90 : Math.max(170, 420 / Math.sqrt(pace())),
+          reduced || skip ? 100 : Math.max(210, 520 / Math.sqrt(pace())),
         frames = [];
       for (let k = 0; k <= 12; k++) {
         const t = k / 12,
@@ -231,4 +233,112 @@ function combatNumber(el, value, type) {
   };
   spawn(value, false, 0);
   impactNumberParts(value, type).forEach((n, i) => spawn(n, true, i));
+}
+
+// Callouts name a real state change; they never capture input or move layout.
+function combatCallout(el, text, kind = "gold") {
+  if (!el) return;
+  const r = el.getBoundingClientRect(),
+    node = document.createElement("div");
+  node.className = "combat-callout " + kind;
+  node.textContent = text;
+  node.style.left =
+    Math.max(12, Math.min(innerWidth - 12, r.left + r.width / 2)) + "px";
+  node.style.top = Math.max(35, r.top + r.height * 0.2) + "px";
+  document.body.append(node);
+  node
+    .animate(
+      matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? [
+            { opacity: 1, transform: "translate(-50%,0)" },
+            { opacity: 0, transform: "translate(-50%,0)" },
+          ]
+        : [
+            { opacity: 0, transform: "translate(-50%,10px) scale(.75)" },
+            {
+              opacity: 1,
+              transform: "translate(-50%,0) scale(1.12)",
+              offset: 0.17,
+            },
+            {
+              opacity: 1,
+              transform: "translate(-50%,-8px) scale(1)",
+              offset: 0.7,
+            },
+            { opacity: 0, transform: "translate(-50%,-35px) scale(.98)" },
+          ],
+      { duration: skip ? 650 : 1100, easing: "ease-out" },
+    )
+    .finished.finally(() => node.remove());
+}
+async function classAbilityFX(h) {
+  const el = entityArt(h),
+    i = state.party.indexOf(h),
+    machine = $("#machine-hero-" + i);
+  const text =
+    classAbilityName(h) +
+    (h.job === "mage"
+      ? " · " + MAGE_POWERS[mageResonance(h, h.last)].name.toUpperCase()
+      : "");
+  state.lastClassAbility = { heroId: h.id, name: text, at: Date.now() };
+  GameSound.play("reward");
+  screenFX(h.job === "berserker" ? "damage" : "critical", 1.1);
+  combatCallout(el, text, "ability");
+  [el, machine].filter(Boolean).forEach((node) => {
+    burst(
+      node,
+      h.job === "mage" && mageResonance(h, h.last) === "heal" ? "heal" : "gold",
+      34,
+    );
+    animate(
+      node,
+      [
+        { filter: "brightness(1)", boxShadow: "0 0 0 0 var(--gold)" },
+        {
+          filter: "brightness(1.4)",
+          boxShadow: "0 0 0 5px var(--gold)",
+          offset: 0.35,
+        },
+        { filter: "brightness(1)", boxShadow: "0 0 0 15px transparent" },
+      ],
+      { duration: 550, juice: true },
+    );
+    shakeElement(node, 4);
+  });
+  await feedbackPause(skip ? 65 : Math.max(90, 220 / Math.sqrt(pace())));
+}
+function passiveFX(e, text, kind = "danger") {
+  combatCallout(enemyArtEl(e), text, kind);
+  screenFX(kind === "heal" ? "heal" : "critical", 0.7);
+  burst(enemyArtEl(e), kind === "heal" ? "heal" : "scary", 38);
+  shakeElement(enemyArtEl(e), 5);
+  GameSound.play("trait");
+}
+function criticalPayoff(details, multiplier) {
+  let marks = details.filter((d) =>
+    ["sword", "attack", "magic"].includes(d.icon),
+  );
+  if (!marks.length) marks = details.filter((d) => d.icon === "coin");
+  if (!marks.length)
+    marks = details
+      .filter((d) => ["heal", "blessing"].includes(d.icon))
+      .slice(0, 1);
+  if (!marks.length)
+    marks = [...details].sort((a, b) => b.value - a.value).slice(0, 1);
+  const original = marks.reduce((n, d) => n + d.value, 0),
+    total = marks.reduce((n, d) => n + Math.ceil(d.value * multiplier), 0);
+  const label = marks.some((d) => d.icon === "coin")
+    ? "GOLD"
+    : marks.some((d) => ["heal", "blessing"].includes(d.icon))
+      ? "HEALING"
+      : marks.some((d) => ["sword", "attack", "magic"].includes(d.icon))
+        ? "DAMAGE"
+        : "POWER";
+  // Each effect rounds independently. A combined equation could imply a
+  // different total for mixed blade/magic rolls (5 + 5 at ×2.5 is 13 + 13).
+  const math =
+    marks.length > 1
+      ? `×${multiplier} per effect`
+      : `${original} × ${multiplier}`;
+  return `<div class="critical-payoff" aria-label="Critical ${label.toLowerCase()}: ${total}"><small>${math} · CRITICAL ${label}</small><strong>${total}</strong></div>`;
 }

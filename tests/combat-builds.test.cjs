@@ -44,6 +44,10 @@ async function game(t, { width = 1920, height = 1080 } = {}) {
     newRun("fighter", { specialism: "offence" });
     setPace("skip");
     setPreference("skipCriticals", true);
+    setupBattleOpening = () => {
+      state.opening = null;
+    };
+    maybeVulnerable = () => false;
   });
   t.after(async () => {
     await page.close();
@@ -53,7 +57,7 @@ async function game(t, { width = 1920, height = 1080 } = {}) {
   return page;
 }
 
-test("four starting classes, selectable temperaments and Mage roles; old healers preserve their build and gain one locked middle seal", async (t) => {
+test("five unlocked starting classes, fixed temperaments and naturally built Mages; old healers preserve their build and gain one locked middle seal", async (t) => {
   const p = await game(t);
   const result = await p.evaluate(() => {
     const profile = emptyProfile();
@@ -89,10 +93,16 @@ test("four starting classes, selectable temperaments and Mage roles; old healers
       outer: h.reels[0][0].type,
     };
   });
-  assert.deepEqual(result.starters, ["fighter", "rogue", "mage", "ranger"]);
+  assert.deepEqual(result.starters, [
+    "fighter",
+    "rogue",
+    "mage",
+    "berserker",
+    "ranger",
+  ]);
   assert.equal(result.loaded, true);
   assert.equal(result.job, "mage");
-  assert.equal(result.role, "heal");
+  assert.equal(result.role, undefined);
   assert.equal(result.hp, 12);
   assert.equal(result.points, 27);
   assert.ok(["offence", "defence"].includes(result.specialism));
@@ -101,7 +111,7 @@ test("four starting classes, selectable temperaments and Mage roles; old healers
   assert.equal(result.outer, "blank");
   await p.evaluate(() => chooseStartingClass());
   await p.locator("#starter-specialism").selectOption("defence");
-  await p.locator("#starter-role").selectOption("poison");
+  assert.equal(await p.locator("#starter-role").count(), 0);
   await p.locator('[data-start-job="mage"]').click();
   assert.deepEqual(
     await p.evaluate(() => ({
@@ -109,7 +119,7 @@ test("four starting classes, selectable temperaments and Mage roles; old healers
       role: state.party[0].mageRole,
       specialism: state.party[0].specialism,
     })),
-    { job: "mage", role: "poison", specialism: "defence" },
+    { job: "mage", role: undefined, specialism: "defence" },
   );
 });
 
@@ -182,7 +192,10 @@ test("workshop exposes large explicit controls, keeps the selected face after ed
   });
   await p.locator("#portrait-0").click();
   await p.locator('[data-editor-face="1"]').click();
-  assert.match(await p.locator("[data-weaken]").textContent(), /Refund \+2/);
+  assert.match(
+    await p.locator("[data-weaken]").textContent(),
+    /get 2 pts back/,
+  );
   const before = await p.evaluate(() => state.party[0].points);
   await p.locator("[data-weaken]").click();
   assert.equal(await p.evaluate(() => state.party[0].points), before + 2);
@@ -200,7 +213,7 @@ test("workshop exposes large explicit controls, keeps the selected face after ed
   await p.locator('[data-editor-face="6"]').click();
   assert.match(
     await p.locator(".locked-seal").textContent(),
-    /cannot be changed/,
+    /Cannot be upgraded/,
   );
   assert.equal(await p.locator("#face-destination").count(), 0);
   await p.locator("#modal .primary[data-close]").click();
@@ -244,7 +257,7 @@ test("offence and defence add small relevant roll bonuses without changing wheel
   assert.equal(r.same, true);
 });
 
-test("Mage resonance applies all four roles to the correct whole side; support roles do not turn ordinary damage into area damage", async (t) => {
+test("Mage resonance echoes four rolled powers to the correct whole side; support marks do not spread ordinary damage", async (t) => {
   const p = await game(t);
   const r = await p.evaluate(async () => {
     const results = {};
@@ -257,7 +270,7 @@ test("Mage resonance applies all four roles to the correct whole side; support r
       const h = state.party[0];
       h.specialism = null;
       h.reels = [
-        [{ type: "blank", tier: 1, weight: 1 }],
+        [{ type: role, tier: 1, weight: 1 }],
         [{ type: "class", job: "mage", tier: 1, weight: 1 }],
         [{ type: "blank", tier: 1, weight: 1 }],
       ];
@@ -282,14 +295,14 @@ test("Mage resonance applies all four roles to the correct whole side; support r
     }
     return results;
   });
-  assert.ok(r.heal.health.every((n) => n === 4));
+  assert.deepEqual(r.heal.health, [6, 4]);
   assert.deepEqual(r.heal.damage, [0, 0]);
   assert.equal(r.heal.block, 0);
   assert.equal(r.heal.area, false);
-  assert.equal(r.block.block, 4);
+  assert.equal(r.block.block, 5);
   assert.deepEqual(r.block.health, [0, 0]);
   assert.ok(r.poison.poison.every((n) => n === 3));
-  assert.ok(r.magic.damage.every((n) => n === 4));
+  assert.ok(r.magic.damage.every((n) => n === 6));
 });
 
 test("Execute builds while other heroes act, scales with patience and missing enemy health, and consumes charge only on a damaging Ranger roll", async (t) => {
@@ -355,7 +368,7 @@ test("enemy block is one obvious shared consumable pool, including stun and pier
       second = damageEnemy(6, "Fixture", b),
       remainder = enemyBlock();
     gainEnemyBlock(3);
-    const stun = stunEnemy(2, a),
+    const stun = stunEnemy(1, a),
       afterStun = enemyBlock();
     gainEnemyBlock(7);
     const piercing = damageEnemy(2, "Poison", b, { piercing: true });
@@ -381,7 +394,7 @@ test("enemy block is one obvious shared consumable pool, including stun and pier
   assert.equal(r.piercing, 2);
   assert.equal(r.pool, 7);
   assert.deepEqual(r.copies, [7, 7]);
-  assert.match(r.label, /7.*ENEMY TEAM BLOCK/);
+  assert.match(r.label, /7.*TEAM BLOCK/);
 });
 
 test("Unbroken page blocks a whole multi-strike enemy turn without spending team block, then expires before the next enemy acts", async (t) => {
@@ -557,6 +570,14 @@ test("icon, beam and combined feedback modes are distinct, launch marks from ree
         frames: nodes[0]?.getAnimations()[0].effect.getKeyframes().length || 0,
       };
     }
+    window.skippedArrivals = 0;
+    new MutationObserver((records) =>
+      records.forEach((r) =>
+        r.addedNodes.forEach((n) => {
+          if (n.classList?.contains("symbol-arrival")) window.skippedArrivals++;
+        }),
+      ),
+    ).observe(document.body, { childList: true });
     setPreference("combatEffects", "icons");
     setPace("skip");
     beam(from, to, "attack");
@@ -570,11 +591,8 @@ test("icon, beam and combined feedback modes are distinct, launch marks from ree
   assert.equal(r.beams.beams, 1);
   assert.equal(r.both.icons, 2);
   assert.equal(r.both.beams, 1);
-  await p.waitForSelector(".symbol-arrival", {
-    state: "attached",
-    timeout: 2000,
-  });
-  assert.ok((await p.locator(".symbol-arrival").count()) >= 1);
+  await p.waitForFunction(() => window.skippedArrivals > 0);
+  assert.ok(await p.evaluate(() => window.skippedArrivals >= 1));
 });
 
 test("damage and healing have readable totals plus offset unsummed sub-values which add to the real applied amount", async (t) => {
@@ -857,7 +875,7 @@ test("instant-speed combat still has arriving icon pulses after the final UI red
   assert.ok(await p.evaluate(() => particles.length > 0));
 });
 
-test("new workshop navigation is keyboard operable and changing a Mage role updates its permanent seal icon", async (t) => {
+test("new workshop navigation is keyboard operable and the Mage seal has no selectable role", async (t) => {
   const p = await game(t);
   await p.evaluate(() => {
     newRun("mage", { mageRole: "heal" });
@@ -881,16 +899,12 @@ test("new workshop navigation is keyboard operable and changing a Mage role upda
     await p.locator('[data-editor-face="1"]').getAttribute("aria-pressed"),
     "true",
   );
-  await p.locator("#mage-role").selectOption("poison");
+  assert.equal(await p.locator("#mage-role").count(), 0);
   assert.equal(
     await p.evaluate(
       () => state.party[0].reels[1].find((f) => f.type === "class").mageRole,
     ),
-    "poison",
-  );
-  assert.equal(
-    await p.evaluate(() => state.party[0].last[1].mageRole),
-    "poison",
+    undefined,
   );
   await p.evaluate(() => {
     closeModal();

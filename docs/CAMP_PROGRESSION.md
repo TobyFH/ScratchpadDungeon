@@ -30,7 +30,7 @@ be refunded. Nothing requires an account or network connection.
 | Challenges  | Restless pages          |   60 | Pursuer awakens at 12 revealed tiles, from floor 3          |
 | Oddities    | Heavy pockets           |   90 | One extra treasure chest per floor                          |
 | Oddities    | Leave a light on        |   75 | One extra beacon per floor                                  |
-| Oddities    | Travelling market       |  100 | Shop spawn probability 60% per floor                        |
+| Oddities    | Travelling market       |  100 | Shop spawn probability 66% per floor                        |
 | Oddities    | Both ends sharpened     |   80 | Hero damaging rolls +1 damage; enemy base damage +1         |
 
 There are 13 unlocks; the Ranger invitation is the only class-specific purchase.
@@ -59,7 +59,7 @@ expeditions. Starting as a Ranger requires only the invitation.
 - `scratchpad-dungeon-camp-v1` stores profile version 1, bank balance, purchased
   IDs, enabled IDs and the deposit ledger. It is independent of the expedition
   and preference keys. New run never deletes it.
-- Expedition save version 15 retains the version-13 `runId`, `bankedFloors` and
+- Expedition save version 17 retains the version-13 `runId`, `bankedFloors` and
   snapshot of enabled `runRules`. Versions 1–14 still migrate; old expeditions start
   without new modifiers and retain their wounds, equipment and edited reels.
 - A deposit is keyed by `runId:floor`. The profile write commits the transaction
