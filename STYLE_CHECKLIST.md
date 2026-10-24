@@ -61,7 +61,18 @@
       are readable without covering controls.
 - [ ] Temperament is fixed and visible; no Mage role selector has reappeared.
       The workshop explains odds, effects, destination and point changes.
-- [ ] Shared shields sit below enemy portraits; intent, dual/elite/boss arrivals,
+- [ ] Solo shields sit below the portrait; paired enemies have one large shared row; intent, dual/elite/boss arrivals,
       initiative, surprise, passives, Fury and Vulnerable are distinct and legible.
 - [ ] Criticals settle on a large final number, new travel choices remain explicit,
       and full bags warn before a purchase takes gold.
+
+- [ ] Workshop lettering remains readable on compact sheets; native face selection
+      and Power/Replace/Weight pages expose every edit without moving the footer.
+- [ ] Guide, camp and bestiary navigation remain stationary across their pages;
+      utility tabs still work while a critical or confirmed event is pending.
+- [ ] Portrait condition badges contain only icons and have accessible tooltips.
+      One faction has one protection control; only meaningful HP overflow hits a hero.
+- [ ] Treasure artwork, reel width and confirm positions survive an inline critical
+      without resizing. Wells are centred; trap saves never show a zero-effect crit.
+- [ ] Creature remains match their species without an upright contour ghost;
+      portrait movement honours both its slider and reduced-motion preferences.

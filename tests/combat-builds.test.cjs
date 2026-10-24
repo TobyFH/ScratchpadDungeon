@@ -61,7 +61,7 @@ test("five unlocked starting classes, fixed temperaments and naturally built Mag
   const p = await game(t);
   const result = await p.evaluate(() => {
     const profile = emptyProfile();
-    profile.owned = ["ranger"];
+    profile.owned = ["ranger", "berserker"];
     localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
     chooseStartingClass();
     const starters = [...document.querySelectorAll("[data-start-job]")].map(
@@ -97,8 +97,8 @@ test("five unlocked starting classes, fixed temperaments and naturally built Mag
     "fighter",
     "rogue",
     "mage",
-    "berserker",
     "ranger",
+    "berserker",
   ]);
   assert.equal(result.loaded, true);
   assert.equal(result.job, "mage");
@@ -106,7 +106,7 @@ test("five unlocked starting classes, fixed temperaments and naturally built Mag
   assert.equal(result.hp, 12);
   assert.equal(result.points, 27);
   assert.ok(["offence", "defence"].includes(result.specialism));
-  assert.equal(result.weights, 7);
+  assert.equal(result.weights, 1);
   assert.deepEqual(result.seals, [0, 1, 0]);
   assert.equal(result.outer, "blank");
   await p.evaluate(() => chooseStartingClass());
@@ -176,7 +176,7 @@ test("downgrades refund one tier, repeated respecs cannot manufacture points, sw
   assert.ok(r.afterLoop < r.afterRefund);
   assert.equal(r.chosen, true);
   assert.equal(r.type, "poison");
-  assert.equal(r.weight, 9);
+  assert.equal(r.weight, 1);
   assert.deepEqual(r.sealActions, [false, false, false, false]);
   assert.equal(r.copy, false);
   assert.equal(r.sealUnchanged, true);
@@ -348,7 +348,7 @@ test("Execute builds while other heroes act, scales with patience and missing en
   assert.equal(r.damage, 2 + r.wounded);
   assert.equal(r.consumed, 0);
   assert.equal(r.record.bonus, r.wounded);
-  assert.equal(r.sealed, 2);
+  assert.equal(r.sealed, 3);
   assert.equal(r.cleared, 0);
 });
 
@@ -795,6 +795,8 @@ test("workshop fits desktop, Deck and a compact screen without internal scrollin
       notice.x + notice.width <= health.x,
       `${width}: point notice must not cover HP`,
     );
+    if (width <= 760)
+      await p.locator('[data-editor-operation="replace"]').click();
     assert.ok((await p.locator("#face-swap").boundingBox()).height >= 20);
     await p.evaluate(() => closeModal());
   }

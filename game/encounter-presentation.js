@@ -30,6 +30,8 @@ const PUN_ENEMIES = Object.freeze({
 });
 const PUN_SPECIES = Object.freeze({
   berserker: "scissors",
+  smudger: "pencil",
+  zombie: "spelleton",
   rat: "comma",
   ghost: "ghostit",
   slime: "glue",
@@ -55,8 +57,9 @@ const PUN_SPECIES = Object.freeze({
   mage: "pagemage",
 });
 function punIdentity(e) {
+  const depth = e.stairBossDepth || state.depth;
   if (e.boss)
-    return state.depth === 10
+    return depth === 10
       ? "fullstop"
       : [
           "penknight",
@@ -68,7 +71,7 @@ function punIdentity(e) {
           "pagemage",
           "stego",
           "punch3",
-        ][Math.max(0, state.depth - 1)];
+        ][Math.max(0, depth - 1)];
   return PUN_SPECIES[e.art] || "sketch";
 }
 function applyEnemyPresentation(e) {
@@ -92,7 +95,7 @@ function enemyCry(e, mood = "appear", delay = 0) {
     preferences().punMode ? "pun-" + punIdentity(e) : e.art,
     mood,
     delay,
-    e.boss ? state.depth : 0,
+    e.boss ? e.stairBossDepth || state.depth : 0,
   );
 }
 async function encounterEntrance() {
@@ -189,6 +192,13 @@ async function encounterEntrance() {
       burst(target, "dust", 14);
     }),
   );
+  for (const enemy of enemies) {
+    announceEnemyBadges(enemy);
+    if (enemy.passive?.key === "blackout" && !enemy.passive.arrivalUsed) {
+      enemy.passive.arrivalUsed = true;
+      pencilBlackout(enemy);
+    }
+  }
   result(
     icon("skull") +
       `${escapeHTML(enemies.map((e) => e.name).join(" and "))} ${enemies.length > 1 ? "block" : "blocks"} the way. Choose any living hero.`,

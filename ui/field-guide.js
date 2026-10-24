@@ -1,4 +1,4 @@
-// Short topic pages keep the field guide legible without internal scrolling.
+// Short topics share one fixed page frame; invisible pages reserve the longest text.
 const FIELD_GUIDE = Object.freeze([
   {
     id: "explore",
@@ -8,7 +8,7 @@ const FIELD_GUIDE = Object.freeze([
   {
     id: "floors",
     title: "Floors & discoveries",
-    body: "<p><b>Descend.</b> Select marked stairs to open their menu; passing through does not stop you. Each staircase has a guardian. Defeat it, then descend from anywhere or keep exploring. Stairs are reachable and at least eight steps from camp. Defeating the tenth guardian wins.</p>\n<p><b>Discoveries.</b> Leave wells active until needed: they roll 15% maximum HP plus half a healing bonus. Beacons and cave rooms reveal nearby discoveries without triggering them; beacon light cannot cross stone. Ruins risk trap damage for loot. Rare strongholds hold dangerous champions.</p>",
+    body: "<p><b>Descend.</b> Select marked stairs to open their menu; passing through does not stop you. Each staircase has a guardian. Defeat it, then descend from anywhere or keep exploring. Stairs are reachable and at least eight steps from camp. Defeating the tenth guardian wins.</p>\n<p><b>Discoveries.</b> Leave wells active until needed: they roll 15% maximum HP plus half a healing bonus. Beacons and cave rooms reveal nearby discoveries without triggering them; beacon light cannot cross stone. Ruins risk trap damage for loot. Rare strongholds hold dangerous champions. Paired tunnels offer optional travel between two distant entrances.</p>",
   },
   {
     id: "combat",
@@ -17,13 +17,23 @@ const FIELD_GUIDE = Object.freeze([
   },
   {
     id: "statuses",
-    title: "Statuses & openings",
-    body: "<p><b>Block and stun.</b> Each side shares its own block pool. It absorbs damage, wears away and expires after battle. Unbroken page blocks the next enemy’s entire turn. Weak stuns are stopped by block; stronger ones consume more and can break through. Stun or magic may expose Vulnerable: the next damaging hit gains 25%. Healing can clear stun; stronger heals help and heavy block reduces the chance. A stunned hero misses one action without advancing enemy clocks. Hover status badges for exact effects.</p>\n<p><b>Openings and poison.</b> Initiative sometimes offers one hero a 25% bonus if they take the first roll. A fresh hidden encounter may surprise some heroes: a ready companion must open. If everyone is surprised, enemies go first. Intent names the enemy’s focus; reels still decide the result. Poison holds at most three turns; repeated doses increase tick damage.</p>",
+    title: "Block, stun & Vulnerable",
+    body: "<p><b>Block and stun.</b> Each side shares its own block pool. It absorbs damage, wears away and expires after battle. Unbroken page blocks the next enemy’s entire turn. Weak stuns are stopped by block; stronger ones consume more and can break through. Stun or magic may expose Vulnerable: the next damaging hit gains 25%. Healing can clear stun; stronger heals help and heavy block reduces the chance. A stunned hero misses an attempt without advancing enemy clocks. Recovery chance rises with each roll; most stuns break within one to three checks. Hover status badges for exact effects.</p>",
+  },
+  {
+    id: "openings",
+    title: "Openings & poison",
+    body: "<p><b>Openings and poison.</b> Initiative sometimes offers one hero a 25% bonus if they take the first roll. A fresh hidden encounter may surprise some heroes: a ready companion must open. If everyone is surprised, enemies go first. Intent names the enemy’s focus; reels still decide the result. Poison holds at most three turns; repeated doses increase tick damage.</p>",
   },
   {
     id: "heroes",
-    title: "Reels & classes",
-    body: "<p><b>Reels and levels.</b> Victories give EXP and personal editing points. Levels add 6 maximum HP and 4 points. Click a portrait to upgrade or choose a new symbol. Downgrades refund points; the middle class seal is permanent. Aggressive/Defensive temperament is fixed, chosen only for your first hero. Mage Resonance follows the rolled marks and echoes magic, healing, shields or poison across the whole appropriate team; healing Resonance clears all allied stuns. Ranger Execute rewards patience. Berserkers turn wounds and Blood Price into Fury: every four Fury adds one damage. Their wheels allow only blades, healing, Blood Price and blanks. Temporary combat statuses clear after battle.</p>",
+    title: "Reel editing",
+    body: "<p><b>Reels and levels.</b> Victories give EXP and personal editing points. Levels add 6 maximum HP and 4 points. Click a portrait to edit a symbol. Starting faces are equally likely; spend points to weight one more heavily. The Critical odds page lists every possible matching combination. Downgrades refund points. Your middle class mark is permanent.</p>",
+  },
+  {
+    id: "classes",
+    title: "Classes & temperament",
+    body: "<p><b>Your build.</b> Aggressive or Defensive temperament is fixed, chosen only for your first hero. Mage Resonance echoes the rolled power across its appropriate team; healing Resonance also clears all allied stuns. Ranger Execute fills between attacks for a stronger finishing shot. Berserkers turn wounds and Blood Price into Fury: every four Fury adds one damage. Their wheels allow blades, healing, Blood Price and blanks. Temporary statuses clear after battle.</p>",
   },
   {
     id: "companions",
@@ -37,8 +47,13 @@ const FIELD_GUIDE = Object.freeze([
   },
   {
     id: "camp",
-    title: "Camp & controls",
-    body: "<p><b>Camp.</b> After a guardian, bank 25/50/75/100% of carried gold or keep it for shops. Banked gold survives new runs. Upgrades in the starting menu unlocks Ranger and optional next-run modifiers. Purchased modifiers start disabled; choose which to enable.</p>\n<p><b>Controls.</b> Tab/Enter and the bottom bar cover navigation. Options includes audio, pace, palette, lighting, shake and cosmetic Pun-nishing Mode. Effects selects icons, beams or both. Autofight chooses combat actions; Autoplay explores, upgrades and seeks supplies/experience when behind. Enable both for a hands-free attempt. Autoplay banks 25% after ordinary floors; final records stay open. Menus pause exploration. Save HTML downloads the offline game, not browser-local progress.</p>",
+    title: "Camp progression",
+    body: "<p><b>Camp.</b> After a guardian, bank 25/50/75/100% of carried gold or keep it for shops. Banked gold survives new runs. Upgrades in the starting menu unlocks Ranger, Berserker, tiered permanent training and optional next-run modifiers. Purchased modifiers start disabled; choose which to enable.</p>",
+  },
+  {
+    id: "controls",
+    title: "Controls & automation",
+    body: "<p><b>Controls.</b> Tab/Enter and the bottom bar cover navigation. Options includes audio, pace, palette, lighting, shake and cosmetic Pun-nishing Mode. Effects selects icons, beams or both. Autofight chooses combat actions; Autoplay explores, upgrades and seeks supplies/experience when behind. Enable both for a hands-free attempt. Autoplay banks 25% after ordinary floors; final records stay open. Menus pause exploration. Save HTML downloads the offline game, not browser-local progress.</p>",
   },
 ]);
 function help(topic = "explore") {
@@ -48,13 +63,18 @@ function help(topic = "explore") {
   );
   openModal(
     "A field guide for the brave",
-    `<section class="field-guide"><nav class="guide-navigation" aria-label="Field guide topics"><label for="guide-topic">Topic<select id="guide-topic">${FIELD_GUIDE.map((p, i) => `<option value="${i}" ${i === page ? "selected" : ""}>${p.title}</option>`).join("")}</select></label><button id="guide-previous" aria-label="Previous topic">← Previous</button><button id="guide-next" aria-label="Next topic">Next →</button></nav><div class="guide-grid" id="guide-content" aria-live="polite"></div><div class="guide-page-count" aria-live="polite"></div></section><div class="modal-actions"><button class="primary" data-close>Into the margins ↗</button></div>`,
+    `<section class="field-guide"><nav class="guide-navigation" aria-label="Field guide topics"><label for="guide-topic">Topic<select id="guide-topic">${FIELD_GUIDE.map((p, i) => `<option value="${i}" ${i === page ? "selected" : ""}>${p.title}</option>`).join("")}</select></label><button id="guide-previous" aria-label="Previous topic">← Previous</button><button id="guide-next" aria-label="Next topic">Next →</button></nav><div class="guide-grid" id="guide-content" aria-live="polite">${FIELD_GUIDE.map((topic, i) => `<div class="guide-topic-body" data-guide-page="${i}" aria-hidden="true" inert>${topic.body}</div>`).join("")}</div><div class="guide-page-count" aria-live="polite"></div></section><div class="modal-actions"><button class="primary" data-close>Into the margins ↗</button></div>`,
     "help",
   );
   const showPage = (next) => {
     page = Math.max(0, Math.min(FIELD_GUIDE.length - 1, next));
     $("#guide-topic").value = String(page);
-    $("#guide-content").innerHTML = FIELD_GUIDE[page].body;
+    document.querySelectorAll("[data-guide-page]").forEach((node) => {
+      const active = Number(node.dataset.guidePage) === page;
+      node.classList.toggle("current-topic", active);
+      node.setAttribute("aria-hidden", String(!active));
+      node.inert = !active;
+    });
     $(".guide-page-count").textContent =
       `${page + 1} / ${FIELD_GUIDE.length} · ${FIELD_GUIDE[page].title}`;
     $("#guide-previous").disabled = page === 0;

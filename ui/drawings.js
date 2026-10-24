@@ -171,7 +171,7 @@ function heroPortraitArt(kind, entity) {
       <path d="m35 99 9 17 12-7 8 13 14-15 11 13M24 124l15 2m-10 7 14 2m37-9 15 2m-14 8 13 1M58 109l-4 36m11-32 2 33M45 43l9 8m18-9-6 8"/>
       <path d="M96 143 101 67m-10 4 4-29 21 7-9 25Z" fill="var(--paper-shade)"/>
       <path d="m96 49 15 5m-81 72 6-7m-7 15 9-6m39 5 9 7M43 61l9 4m18-2 6-3" stroke-width=".8"/>
-      ${hurt?'<path d="m34 101 13 10m-13-4 13 10m29-62 8 5" stroke="var(--red)"/>':""}`;
+      ${hurt ? '<path d="m34 101 13 10m-13-4 13 10m29-62 8 5" stroke="var(--red)"/>' : ""}`;
   } else {
     drawing = `<path d="M12 146q5-38 23-54l-5-40Q20 7 57 4q40-4 37 46l-7 43q20 22 22 53Z" fill="var(--paper-shade)"/>
       <path d="M33 86Q8 39 40 12q26-20 47 9 10 20-4 62l-11 13 25 48H22l26-48Z" fill="${shade}"/>
@@ -200,7 +200,11 @@ function leverArt() {
   return `<svg class="pencil-art" viewBox="0 0 35 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 78 11-.5.5 13-12 .5Z M14 78l8-56 4 .5-7 57" fill="var(--paper-shade)"/><path d="m15 76 8-53m-15 60 8-.5m-8 5 8-.5M7 95l18-.5" stroke-width=".7"/><path d="M25 2q12 1 11 12-1 10-12 10-10-1-10-12Q15 2 25 2Z" fill="var(--paper)"/><path d="M25 5q9 1 8 9-1 8-9 7-7-1-7-8 0-7 8-8Zm-7 8 6-7m-6 12L30 6m-7 15 10-10" stroke-width=".65"/><path class="pencil-echo" d="m5 79 1 14 14-1M13 77l8-53"/></svg>`;
 }
 const paths = {
-  bloodprice: "M16 2C12 9 5 16 6 23c2 10 19 10 21-1 1-7-7-14-11-20ZM11 20l10 0m-5-5v10",
+  tunnel:
+    "M3 29V15C3-3 29-3 29 15v14H3ZM8 28V16C8 4 24 4 24 16v12M3 15h5m16 0h5M5 8l5 3m12 0 5-3M13 24l3-10 4 10",
+  eraser: "M3 20 17 3l12 10-14 17H9ZM10 12l13 11M4 22l7 6m7 1h12",
+  bloodprice:
+    "M16 2C12 9 5 16 6 23c2 10 19 10 21-1 1-7-7-14-11-20ZM11 20l10 0m-5-5v10",
   question: "M8 10q0-10 9-8 14 4 2 14l-4 4v3M15 28h1",
   lava: "M2 23q4-6 8-1t10-1 10 2M2 28h28M8 19q-5-6 1-12m7 12q5-6-1-12m9 12q-5-7 1-14",
   bow: "M10 3Q29 16 10 29L17 16ZM5 16h23m-5-4 5 4-5 4M10 3l7 13-7 13",
@@ -284,6 +288,10 @@ const paths = {
 };
 function icon(name) {
   if (name === "wall") return wallArt();
+  if (name === "lava")
+    return `<svg class="pencil-art pencil-icon lava-barrier" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" aria-hidden="true"><path d="M1 29V12l7-8 5 8 6-10 6 9 6-4v22Z" fill="var(--paper-shade)"/><path d="m2 25 8-3 5 4 7-5 9 4M8 4l2 15m9-17-2 17m8-8-3 8M4 28l5-1m6 2 8-2"/><path d="m12 23 4-9 3 8m5 5 3-7" stroke="var(--lava-ink)" stroke-width="2.5"/></svg>`;
+  if (name === "bridge")
+    return `<svg class="pencil-art pencil-icon bridge-art" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" aria-hidden="true"><path d="M1 5q5-3 10 0t10 0 10 0M1 29q5-3 10 0t10 0 10 0M1 9q6-2 11 0m10 0 9-1M1 25l10 1m11-1 9 1" stroke="var(--water-ink)" opacity=".45"/><path d="M3 11h26v11H3Z" fill="var(--paper)"/><path d="M3 11h26M3 22h26M6 11v11m5-11v11m5-11v11m5-11v11m5-11v11M3 8v18m26-18v18"/></svg>`;
   const line = pencilPath(paths[name] || paths.sword, 0.32);
   return `<svg class="pencil-art pencil-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="pencil-echo" d="${line}" transform="translate(.38 -.28)"/><path d="${line}"/></svg>`;
 }
@@ -310,6 +318,10 @@ function specialEnemyArt(kind, entity) {
   // Every species uses the same sparse contours and material hatching. Keep
   // silhouettes legible at map-token size, without a detailed scan outlier.
   const body = {
+    smudger:
+      "M15 136l13-94 12-8 3-27 30 3 4 28 16 10 15 88-28-6-21 14-19-12ZM29 44l31 10 32-7M39 67l14 7m14-1 14-6M42 91l31-1M31 104l49 13M34 117l39 9M46 15l23 1M19 75l-13 12 7 20m83-30 17 7-8 22",
+    zombie:
+      "M18 145l9-64 22-10 30 4 20 23 11 46-33-10-19 9-18-9ZM37 22l20-12 26 13 4 30-15 24-29-7-11-27ZM42 36l11 5m15-2 9-5M48 58l23-3-7 13-10-3M41 21l10 9m21-7-8 13M28 90l-17-6-8 13m89 4 18-9 8 10M35 105l17 9m19-10 15 19M25 124l13 3m40 4 13 1",
     gnawer:
       "M47 39l-9 17 5-2-13 20 6-2-15 25 7-2-12 27 13-4-3 10 20-3 13 5 17-5 17 3-3-9 14 3-13-26 6 2-14-26 5 2-14-21 3-10ZM47 39l2-15 22 1 3 15M50 27l-1 16q4 7 6-1l1-9m10-5 1 15q5 5 5-1M59 24l1-7M60 17q-8-4 1-15-1 7 4 9 2 5-5 6M41 64l12 5-9 1m20-2 12-6-4 8M42 80l6-3 5 7 8-5 9 3 4-6M44 81l2 9 4-10m17 2 2 8 3-12M27 92l-16 10-3 16 6-4m-6 4 2 5m82-31 15 11 3 14-6-3m6 3-1 6M43 126l-4 14-12 3 19 1m26-17 6 13 12 3-18 1M32 104l4-7m0 19 5-8m39 2 5 7M53 49l-3 6",
     moth: "M53 57Q18 13 8 46q-13 29 39 48-37 2-31 31 14 24 40-22M69 57q35-45 44-10 10 28-39 47 37 2 29 31-15 23-39-22M49 57q11-18 23 0l-3 58-10 15-9-16ZM51 64l18 2m-20 10 20 2m-19 10 18 1m-17 11 16 1M54 49 42 26m25 23 14-25M20 55l16 14-13 6Zm77 0-15 15 13 5ZM30 107l12-2-10 15m55-14-13-2 8 16M53 56l5 3m5 0 5-4",
@@ -345,7 +357,7 @@ function portraitArt(kind, entity = { hp: 1, maxHp: 1 }) {
   let art =
     entity.hp > 0 && !entity.dead
       ? specialEnemyArt(kind, entity) || basePortraitArt(kind, entity)
-      : corpseArt(kind);
+      : corpseArt(kind, entity);
   if (entity.hp <= 0 || entity.dead || entity.hp / entity.maxHp >= 0.7)
     return pencilIllustration(art);
   const severe = entity.hp / entity.maxHp < 0.35;
@@ -354,7 +366,17 @@ function portraitArt(kind, entity = { hp: 1, maxHp: 1 }) {
 }
 function basePortraitArt(kind, entity = { hp: 1, maxHp: 1 }) {
   if (entity.hp <= 0 || entity.dead) return corpseArt(kind);
-  if (["fighter", "hero", "healer", "rogue", "mage", "ranger", "berserker"].includes(kind))
+  if (
+    [
+      "fighter",
+      "hero",
+      "healer",
+      "rogue",
+      "mage",
+      "ranger",
+      "berserker",
+    ].includes(kind)
+  )
     return heroPortraitArt(kind, entity);
   if (["revenant", "demon", "lich", "abomination"].includes(kind))
     return horrorArt(kind, entity);
@@ -381,7 +403,8 @@ function basePortraitArt(kind, entity = { hp: 1, maxHp: 1 }) {
 }
 function floorArt(c, i) {
   if (c.terrain === "bridge") return icon("bridge");
-  if (c.wall) return icon(["river","lava"].includes(c.terrain) ? c.terrain : "wall");
+  if (c.wall)
+    return icon(["river", "lava"].includes(c.terrain) ? c.terrain : "wall");
   const variants = [
     paths.floor,
     "M5 24q7-2 12 0l10-2M9 23l-3-6m11 7 5 4",
@@ -412,23 +435,18 @@ function horrorArt(kind, h) {
   return `<svg class="horror-art" data-horror="${kind}" viewBox="0 0 120 150" fill="none" stroke="#58473c" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><defs>${hatched}</defs>${shape}</svg>`;
 }
 
-function corpseArt(kind) {
-  const animal = kind === "rat",
-    spectral = kind === "ghost",
-    blob = kind === "slime";
-  const remains =
-    kind === "mimic"
-      ? '<path d="m10 118 19-22 34 13 32-12 16 25-37 19-49-4z" fill="#ad9872"/><path d="m18 116 36 15 50-12M29 98l20 18 16-5 27-11M26 117l10 9 8-8 9 13 8-8 10 11 9-12 10 5M16 142h92M53 107l7 20"/><path d="m39 103 6 4m-5 0 5-4m28 0 7 3m-7 0 7-3"/>'
-      : animal
-        ? '<path d="M22 119q-25 15-16-8m16 8q-7-34 33-34l30 6 22 20-12 17H38z" fill="#c6b99b"/><path d="m83 93 5-18 10 21M77 105l8 7m0-7-8 7M38 118l-9 14m30-10 8 12M95 114l12 4"/>'
-        : spectral
-          ? '<path d="m12 125 14-22 22 8 15-27 17 26 26-7-12 22-23 9-31-4z" fill="#d9cfb4"/><path d="m43 112 8 6m0-6-8 6m19-6 8 6m0-6-8 6M11 137h90"/>'
-          : blob
-            ? '<path d="M12 128q-8-13 22-14 5-17 25-7 21-16 28 6 30 3 20 18-51 10-95-3z" fill="#c3b392"/><path d="m43 116 8 7m0-7-8 7m18-7 8 7m0-7-8 7"/>'
-            : `<path d="m9 135 16-7 22 4 20-8 25 6 19-5M42 116l17 6 28-13 13 7m-40 4 17 12 19-2M43 108l20-10 21 5-10 18-28 4z" fill="#cbbd9f"/><path d="m55 109 18 1m-15 8 12-12m-6-5 2 20M36 116l-12 14m38-8 17 13M9 143h102"/><ellipse cx="28" cy="110" rx="17" ry="16" fill="#e7dcc0"/><path d="m18 106 7 6m0-6-7 6m13-8 7 6m0-6-7 6M24 119h9"/>${kind === "fighter" || kind === "hero" ? '<path d="m12 102 7-11 19 2 9 13-9 7-25-2z M13 104l31 1M15 137l64-5m-63 1 1 8"/>' : kind === "skeleton" || kind === "skull" ? '<path d="m52 103 2 18m4-17 3 16m4-17 4 13m5-12 3 10M24 116h10m-7-2v7m4-7v7"/>' : '<path d="M10 110q-3-29 27-20l15 20-15 19H15z M15 113q5-28 22-14"/>'}`;
-  return pencilIllustration(
-    `<svg class="corpse-art" data-corpse="${kind}" viewBox="0 0 120 150" fill="none" stroke="#625343" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="62" cy="133" rx="52" ry="8" fill="#80715b20"/>${remains}<path d="m11 145 14-1m74-2 13 1m-44-7 8 1" opacity=".55"/></svg>`,
+function corpseArt(kind, entity = {}) {
+  const live = { hp: 1, maxHp: 1, formJob: entity.formJob };
+  // Normalise inside the fallen transform: an outer contour echo would leave
+  // an upright ghost of the original drawing beside the remains.
+  const sketch = pencilIllustration(
+    specialEnemyArt(kind, live) || basePortraitArt(kind, live),
   );
+  const body = sketch.slice(
+    sketch.indexOf(">") + 1,
+    sketch.lastIndexOf("</svg>"),
+  );
+  return `<svg class="pencil-art corpse-art" data-corpse="${kind}" data-remains-kind="${kind}" viewBox="0 0 120 150" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="61" cy="133" rx="53" ry="7" fill="var(--paper-shade)"/><g class="fallen-silhouette" transform="translate(115 77) rotate(88) scale(.40 .69)">${body}<path d="m40 39 12 10m0-10-12 10m25-10 12 10m0-10-12 10" stroke="var(--paper)" stroke-width="3"/></g><path d="M8 140l30-2m42 2 28-1m-65-7 7 2m15-4 8 2" opacity=".5"/></svg>`;
 }
 
 function trapArt(type) {

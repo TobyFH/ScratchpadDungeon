@@ -12,7 +12,8 @@ python3 -m http.server 8000
 
 Open `http://localhost:8000`. **Save HTML** downloads a complete offline copy of the game. Progress stays in this browser's local storage; the HTML download does not export a saved expedition. Older saves preserve edited faces and migrate to one middle-reel class seal. Surplus inventory types wait for explicit keep, use or discard decisions.
 
-The notebook opens with a choice of **Tank, Rogue, Mage or Berserker**, plus Ranger after its camp unlocks. A new expedition turns to fresh pages. Start with one hero and no items; keep at most three heroes. Every staircase has an elite guardian. Defeat it to descend when you choose. **Defeating the tenth guardian wins immediately**, with a celebration and a scrollable record of every survivor, fallen companion and retired adventurer.
+The notebook opens with a choice of **Tank, Rogue or Mage**, with locked Ranger and Berserker cards that open
+their camp unlocks. A new expedition turns to fresh pages. Start with one hero and no items; keep at most three heroes. Every staircase has an elite guardian. Defeat it to descend when you choose. **Defeating the tenth guardian wins immediately**, with a celebration and a scrollable record of every survivor, fallen companion and retired adventurer.
 
 ## Camp and banked gold
 
@@ -21,14 +22,19 @@ The remainder stays available for this expedition; banked gold survives deaths
 and new runs. Each ordinary floor permits one deposit. **Winning floor 10
 automatically banks everything carried, including the final reward**, with no
 percentage choices. Its coin shower scales with the actual amount transferred.
-**Upgrades** in the starting-class menu spends this pool on 13 unlocks across
-Adventurers, Provisions, Challenges and Oddities. Purchased modifiers are optional,
+**Upgrades** in the starting-class menu spends this pool on 25 purchases across
+Adventurers, Provisions, Challenges, Oddities and Training. Permanent training
+adds up to +50% base HP, +15% damaging roll power and +15% battle EXP in
+increasingly expensive tiers. Purchased modifiers are optional,
 start disabled, and apply to subsequent expeditions when enabled. Autoplay banks
 25% on ordinary floor-clear sheets; it leaves the final adventurer records open
 and never purchases camp unlocks.
 
-Ranger's invitation unlocks both starting Rangers and wandering Rangers. There
-are no separate Ranger upgrades; previously purchased enhancements are refunded
+Ranger's invitation (900 gold) and Berserker's oath (750) unlock their starting
+and wandering classes. Fresh runs use the owned class pool; existing heroes stay.
+Gold income is unchanged, but shops and camp purchases now require meaningful
+savings: a first-floor tonic costs 92 and a solo full heal 150.
+There are no separate Ranger upgrades; previously purchased enhancements are refunded
 to camp once. Ranger's **Execute** builds patience while other heroes act or it
 rolls support. Its next damaging roll consumes the bar for bonus damage that
 grows with the target's missing health. The meter shows the current target's
@@ -71,7 +77,9 @@ starting class still needs to be chosen.
 
 Click a reachable pencil-covered tile to erase it and walk into its discovery. Click a distant revealed tile to follow a shortest route across known ground. Routes avoid untouched fights and traps when possible. Click another valid destination while walking or erasing to redirect the party. Known wells, shops and ruins are ignored when merely passing through. Once its guardian is defeated, a staircase also permits uninterrupted passage; selecting it opens the descent menu again.
 
-Walls and connected underground rivers block movement. Wooden bridges cross rivers. Every floor randomises its layout and events. Stairs are reachable and at least eight steps from camp; generation can carve a route and bridge a river when necessary. Most floors have no river; a second river is very rare. Connected cave rooms reveal together without activating their contents.
+Walls, connected underground rivers and lower-floor lava block movement.
+Wooden bridges show faded water beneath their planks. Rare paired tunnels offer
+optional travel between distant entrances. Every floor randomises its layout and events. Stairs are reachable and at least eight steps from camp; generation can carve a route and bridge a river when necessary. Most floors have no river; a second river is very rare. Connected cave rooms reveal together without activating their contents.
 
 - **Fights:** any living hero can act repeatedly. Ordinary double encounters rise from 2% on floor 1 to 7%, 13% and 18% on floors 2–4, then gain only one percentage point per floor, reaching 24% on floor 10. Each foe has an independent attack clock. Rare elite variants retain their species and gain an Ironbound, Frenzied or Venomous modifier, with an animated aura. Five additional species appear in successive floor pairs: Candle Gnawer, Blind Bellkeeper, Thorn Widow, Gutter Oracle and Page Eater.
 - **Treasure:** roll gold, occasional supplies or equipment, personal points and rare artefacts. A rare chest is a mimic. Items pulse in the reward panel before claiming; coin showers scale with the gold awarded.
@@ -85,7 +93,8 @@ Walls and connected underground rivers block movement. Wooden bridges cross rive
 
 Old passages can hide an ambush after **one minute of exploration time** away from the party's immediate neighbourhood. Battles, popups, menus and hidden browser tabs pause that clock. There is **no visible fog overlay**. Entering an aged, resolved tile has a 12% encounter chance. Ambushes arrive in a smoke poof with a banner; victory clears adjacent ambush age without revealing or activating anything.
 
-From floor three, revealing enough walkable tiles can awaken **The Unwritten** far from the party. It advances one tile for every player step, including each step of a long route, aims to intercept, favours revealed paths and can disappear into an unexplored tile. It arrives with a small smoke/scratch burst and sound. Its mark is visible only on revealed ground. Contact starts a fight. Its health and strike strength have increased slightly.
+From floor three, revealing enough walkable tiles can awaken **The Unwritten** far from the party. It advances one tile for every player step, including each step of a long route, aims to intercept, favours revealed paths and can disappear into an unexplored tile. It arrives with a small smoke/scratch burst and sound. Its mark is visible only on revealed ground. Contact starts a fight. Its health and strike strength have increased slightly. A revealed, untriggered
+trap kills it and leaves a treasure tile, without direct gold or EXP.
 
 Five further creatures join the encounter pools: **Tallow moth** (floors 1–3),
 **Rust mite** (2–5), **Spore pilgrim** (3–6), **Mirror hound** (5–8) and
@@ -100,13 +109,19 @@ Enemy triple matches roll ×1.25 (50%), ×1.5 (25%) or ×1.75 (25%); hero and
 event criticals retain ×2 / ×2.5 / ×3 / ×4. Top-tier final-guardian wheels,
 frequent attacks and three strikes remain. Hover poison, rage, stimulant, stun,
 Execute, elite and passive badges for current effects. Round/team block fade and
-reset between fights.
+reset between fights. A final killing blow ends poison checks immediately.
+The floor-six Graphite Gaoler can pencil out individual hero reels until those
+heroes roll them clean. Rare later encounters can include a fallen companion
+returned as a zombie; their memorial remains.
 
-Heroes have six ordinary weighted faces on each outer reel and seven on the
+Heroes have six equally likely ordinary faces on each outer reel and seven on the
 middle, including its **single permanent class seal**. Empty faces have no effect
 and never crit. Click a portrait to open the reel workshop: choose a reel, a face,
 then upgrade, downgrade for a refund, or explicitly select a new symbol. Weights
-stay unchanged. Downgrades remove one tier and refund half its paid price (at
+begin at one per face. Buy extra weight for 4/8/12 personal points, up to four;
+the permanent class mark costs 6/12/18. The workshop lists exact current
+face chances and every possible critical combination. Compact screens use a face
+selector and fixed Power, Replace and Weight pages. Downgrades remove one tier and refund half its paid price (at
 least one point). Class seals cannot be removed or copied. Base tier prices are
 1 / 4 / 9 / 16 with class affinities; a Tank pays 8 to upgrade healing I → II,
 a Mage 4. Every normal power supports tier IV.
@@ -115,13 +130,13 @@ Each hero also has **Aggressive** (+1 relevant damage/poison/stun power) or
 **Defensive** (+1 relevant healing/block/stimulant power), separate from their
 class and earned trait. Choose it for your first hero; wanderers vary.
 
-| Class | Starting style | Middle-reel ability |
-| --- | --- | --- |
-| Tank | 44 HP; blades and team protection | Rage builds damage and some resistance |
-| Rogue | 26 HP; damage and poison | Flurry rolls three extra attacks |
-| Mage | 28 HP; build healing, shields, poison or spell damage | Resonance echoes the rolled marks across the appropriate team |
-| Berserker | 38 HP; blades, healing and Blood Price | Bloodrush and wounds fill Fury for bonus damage |
-| Ranger | 30 HP; unlock at camp | Execute rewards patience and finishing wounded enemies |
+| Class     | Starting style                                         | Middle-reel ability                                           |
+| --------- | ------------------------------------------------------ | ------------------------------------------------------------- |
+| Tank      | 44 HP; blades and team protection                      | Rage builds damage and some resistance                        |
+| Rogue     | 26 HP; damage and poison                               | Flurry rolls three extra attacks                              |
+| Mage      | 28 HP; build healing, shields, poison or spell damage  | Resonance echoes the rolled marks across the appropriate team |
+| Berserker | 38 HP; unlock at camp; blades, healing and Blood Price | Bloodrush and wounds fill Fury for bonus damage               |
+| Ranger    | 30 HP; unlock at camp                                  | Execute rewards patience and finishing wounded enemies        |
 
 Former Healers migrate to Mages with their existing stats and edited wheels.
 There is no Mage role selector: builds follow the marks on their reels. See
@@ -136,7 +151,9 @@ the living wounded hero with the **lowest raw HP**, not the lowest percentage.
 A partially wounded selection stays selected even if some healing is wasted.
 Party heals, wells and floor recovery retain their individual per-hero amounts.
 
-**Enemy team block** is now shared too, with a fixed visible shield/count. **Unbroken page** blocks the next enemy’s complete turn, including all strikes, while preserving normal block. **Party team block** is a shared consumable pool, depleted point for point by damage and cleared after combat. Intercepted enemy attacks strike the team shield; any HP overflow also fires at the wounded hero. A fully absorbed hit shows a shield on its recipient. Its blue-silver tint deepens from 0 to 20 block; protection itself is uncapped. Weak stuns are stopped by any positive armour; stronger stuns consume more and can penetrate it. A stunned hero misses one go without advancing or resetting enemy clocks. Enemy attack frequency determines how many player actions occur between attacks; difficult enemies can make multiple separately rolled strikes.
+**Enemy team block** is now shared too, with a fixed visible shield/count. **Unbroken page** blocks the next enemy’s complete turn, including all strikes, while preserving normal block. **Party team block** is a shared consumable pool, depleted point for point by damage and cleared after combat. Intercepted enemy attacks strike the team shield; any HP overflow also fires at the wounded hero. A fully absorbed hit shows a shield on its recipient. Its blue-silver tint deepens from 0 to 20 block; protection itself is uncapped. Weak stuns are stopped by any positive armour; stronger stuns consume more and can penetrate it. Stun prevents action until recovery; its chance to break rises on every combat
+roll or missed attempt, usually taking one to three checks. Missed hero attempts
+never advance or reset enemy clocks. Enemy attack frequency determines how many player actions occur between attacks; difficult enemies can make multiple separately rolled strikes.
 
 Enemy damage now grows faster with depth. Attack and magic faces advance on
 floors 5 and 9; species keep their usual mix of powers. The final guardian acts
@@ -185,8 +202,8 @@ Each hero also has one personal equipment slot. **Drag equipment from the bag on
 | --------------- | ------ | ---------------------------------------------------- |
 | Iron Signet     | Tank   | +2 damage on damaging rolls                          |
 | Bulwark Badge   | Tank   | +3 opening team block, resist 1 damage per hit       |
-| Glass Rosary    | Mage | +2 healing on healing rolls                          |
-| Mercy Bell      | Mage | Every roll heals each ally by 1 and adds 1 block     |
+| Glass Rosary    | Mage   | +2 healing on healing rolls                          |
+| Mercy Bell      | Mage   | Every roll heals each ally by 1 and adds 1 block     |
 | Silent Boots    | Rogue  | +1 damage; every fourth roll stuns                   |
 | Serpent Pin     | Rogue  | Damaging rolls poison                                |
 | Star Lens       | Mage   | +2 magic damage on damaging rolls                    |
@@ -198,7 +215,11 @@ Rare run artefacts use a separate collection and one shared passive slot beneath
 
 ## Notebook controls and presentation
 
-The notebook fits **1920×1080** and other desktop resolutions; tablets and phones stack its pages. The larger field log sits beside the three-pocket inventory. Only the log and final adventurer roster scroll internally. Side tabs open functional **Options** and **Field Guide** pages.
+The notebook fits **1920×1080** and other desktop resolutions; tablets and phones stack its pages. The larger field log sits beside the three-pocket inventory. Only the log and final adventurer roster scroll internally. Side tabs open **Options**, **Field Guide** and **Bestiary**, even over a live
+event. These pages suspend and restore that event. The bestiary starts unknown;
+meeting an enemy records its sketch, name, observed stats, lore and playable cry
+across runs. Its separate storage key is documented in
+[Expedition update](docs/EXPEDITION_UPDATE.md).
 
 Animation modes are **1×, 2×, 3×, 5× and Skip cinematics**. The toolbar remains usable while popups are open. Skip lands reels immediately while preserving shakes, particles, damage and healing feedback. Movement scales at half the animation speed increase, with Skip using the fastest walking speed and long routes receiving a modest additional boost. Animation speed, palette, Autofight and Autoplay persist across runs and reloads.
 
@@ -206,25 +227,25 @@ Paper tears, slowing reels, animated handles with fixed hitboxes, jaunty walking
 
 The bottom bar displays keyboard and mouse prompts. Tab / Shift+Tab and Enter reach every control.
 
-| Key             | Action                                   |
-| --------------- | ---------------------------------------- |
-| WASD / arrows   | Move                                     |
-| 1 / 2 / 3       | Spin a hero's reels                      |
-| Shift+1 / 2 / 3 | Select healing target                    |
-| [ / ]           | Cycle damage target                      |
-| E               | Edit selected hero's reels               |
-| P / B / V       | Use tonic / bomb / ward                  |
-| X / R           | Reached stairs / revisit current event   |
-| F / M           | Field guide / focus log                  |
-| T / C           | Cycle pace / palette                     |
-| N / G           | New run / download HTML                  |
-| Space           | Land rolling reels or skip critical hold |
+| Key             | Action                                       |
+| --------------- | -------------------------------------------- |
+| WASD / arrows   | Move                                         |
+| 1 / 2 / 3       | Spin a hero's reels                          |
+| Shift+1 / 2 / 3 | Select healing target                        |
+| [ / ]           | Cycle damage target                          |
+| E               | Edit selected hero's reels                   |
+| P / B / V       | Use tonic / bomb / ward                      |
+| X / R           | Reached stairs / revisit current event       |
+| O / F / Y / M   | Options / field guide / bestiary / focus log |
+| T / C           | Cycle pace / palette                         |
+| N / G           | New run / download HTML                      |
+| Space           | Land rolling reels or skip critical hold     |
 
 ## Sound, lighting and options
 
 The Options tab now has **Play / Audio / Display / Coming later** pages.
 Working controls include master, effects, music and ambience volume, mute,
-brightness, shake strength, torchlight, full screen effects, fullscreen, pace,
+brightness, shake strength, portrait motion strength, torchlight, full screen effects, fullscreen, pace,
 palette and automation.
 Settings persist across fresh runs and reloads. **Skip critical roll visuals**
 still rolls and applies the same multiplier, with normal damage and event results;
@@ -242,7 +263,8 @@ no external audio files or network service are needed. See
 can be disabled independently of gameplay particles. **Display → Full screen
 effects** separately controls coloured edge pulses for wounds, poison, healing,
 traps, gold and criticals. It keeps the centre clear and respects reduced motion;
-disabling it immediately stops any current edge effect. At zero shake, impact
+disabling it immediately stops any current edge effect. Portrait movement has a separate 0–150% slider for idle speech, attacks, flinches
+and deaths. At zero shake, impact
 numbers/particles remain but nothing is shaken.
 
 Resolution, language, desktop display mode and graphics quality are selectable,

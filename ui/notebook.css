@@ -3876,3 +3876,1178 @@ body[data-palette="dark"] {
     margin-bottom: 14px;
   }
 }
+
+/* Stable notebook pages: navigation and confirm rows never follow text height. */
+.modal[data-kind="help"] .modal-body,
+.modal[data-kind="camp"] .modal-body,
+.modal[data-kind="options"] .modal-body,
+.modal[data-kind="bestiary"] .modal-body,
+.modal[data-kind="editor"] .modal-body {
+  align-items: flex-start;
+}
+.field-guide .guide-grid {
+  display: grid;
+  columns: unset;
+}
+.guide-topic-body {
+  grid-area: 1 / 1;
+  visibility: hidden;
+  pointer-events: none;
+}
+.guide-topic-body.current-topic {
+  visibility: visible;
+  pointer-events: auto;
+}
+.guide-topic-body p {
+  font-size: 20px;
+  line-height: 1.4;
+  margin: 0 0 18px;
+}
+.guide-navigation {
+  min-height: 65px;
+}
+.camp-balance {
+  height: 60px;
+}
+.camp-grid {
+  height: 410px;
+  min-height: 410px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.camp-card {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+.camp-card h3 {
+  font-size: 23px;
+  margin: 0 0 5px;
+}
+.camp-card p {
+  font-size: 17px;
+  line-height: 1.2;
+  flex: 1;
+  margin: 3px 0;
+}
+.camp-card > button,
+.camp-card .camp-owned {
+  margin-top: auto;
+}
+.camp-card:has(.camp-class-art) {
+  position: relative;
+  padding-left: 100px;
+}
+.camp-card .camp-class-art {
+  position: absolute;
+  left: 10px;
+  top: 15px;
+  width: 80px;
+  height: 120px;
+}
+.camp-card .camp-class-art svg {
+  height: 100%;
+  width: 100%;
+}
+.modal[data-kind="options"] .settings-panel {
+  height: 350px;
+  min-height: 350px;
+}
+.setting-slider input {
+  width: 100%;
+  min-width: 0;
+}
+.settings-grid > * {
+  min-width: 0;
+}
+.starter-grid .locked-class {
+  filter: grayscale(1);
+  opacity: 0.65;
+  border-style: dashed;
+}
+.starter-grid .locked-class:hover {
+  opacity: 1;
+}
+.starter-grid .locked-class strong {
+  color: var(--gold);
+  font-size: 16px;
+}
+.workshop-nav {
+  display: flex;
+  gap: 10px;
+  margin: 8px 0;
+}
+.workshop-nav button {
+  flex: 1;
+}
+.workshop-nav button[aria-pressed="true"] {
+  background: var(--paper-shade);
+  outline: 1px solid var(--ink);
+}
+.workshop-page {
+  height: 505px;
+  min-height: 505px;
+}
+.workshop-page[hidden] {
+  display: none !important;
+}
+.reel-workshop {
+  min-height: 425px;
+}
+.workshop-faces {
+  grid-template-rows: repeat(7, 45px);
+}
+.weight-face {
+  margin-top: auto;
+  display: grid;
+  gap: 4px;
+}
+.weight-face button {
+  min-height: 42px;
+}
+.weight-face button small {
+  display: block;
+  font-size: 13px;
+}
+.weight-face > small {
+  font-size: 12px;
+  line-height: 1.1;
+}
+.workshop-critpage p {
+  font-size: 18px;
+}
+.crit-odds-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.crit-odds-row {
+  display: grid;
+  grid-template-columns: 70px 1fr auto;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--line);
+  min-height: 75px;
+}
+.crit-odds-row .tier-symbol {
+  display: flex;
+}
+.crit-odds-row svg {
+  width: 20px;
+  height: 30px;
+}
+.crit-odds-row b {
+  font-size: 17px;
+}
+.crit-odds-row strong {
+  color: var(--gold);
+  font-size: 23px;
+}
+.bestiary-page {
+  height: 560px;
+}
+.bestiary-record {
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr);
+  gap: 24px;
+  align-items: center;
+  height: 430px;
+}
+.bestiary-record > button {
+  height: 280px;
+  background: transparent;
+  border: 0;
+}
+.bestiary-record > button svg {
+  width: 100%;
+  height: 100%;
+}
+.bestiary-record h3 {
+  font-size: 32px;
+}
+.bestiary-record p {
+  font-size: 20px;
+  line-height: 1.3;
+}
+.bestiary-record.unknown {
+  color: var(--soft);
+  opacity: 0.6;
+}
+.bestiary-stats {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 5px 18px;
+  font-size: 18px;
+}
+.bestiary-stats dd {
+  margin: 0;
+}
+.bestiary-record small {
+  font-size: 15px;
+}
+/* Real reel windows share a fully centred coordinate system at every tier. */
+.symbol-track {
+  width: 100%;
+  align-items: stretch;
+}
+.slot-window {
+  min-width: 0;
+  padding: 0;
+}
+.slot-symbol {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0;
+  box-sizing: border-box;
+}
+.slot-symbol > * {
+  margin: auto;
+}
+.slot-window .tier-symbol {
+  align-items: center;
+  justify-items: center;
+}
+.slot-window .class-face,
+.slot-window .blank-face {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+.slot-window .class-face small,
+.slot-window .blank-face small {
+  display: none;
+}
+.blacked-out {
+  position: relative;
+}
+.blacked-out::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  z-index: 3;
+  background:
+    var(--pencil-shading),
+    repeating-linear-gradient(32deg, #37352f 0 2px, #555249 2px 3px);
+  box-shadow: inset 0 0 5px #0009;
+  pointer-events: none;
+}
+.blacked-out.blackout-erased::after {
+  animation: blackout-erase 0.18s ease-out both;
+}
+@keyframes blackout-erase {
+  to {
+    clip-path: inset(0 100% 0 0);
+    opacity: 0.2;
+  }
+}
+/* A faction has one large shield, even when it contains two creatures. */
+#encounter:has(.enemy-roster) {
+  grid-template-rows: 26px 48px minmax(0, 1fr);
+}
+#encounter > .enemy-team-block {
+  min-height: 44px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  font-size: 17px;
+  padding: 3px 8px;
+  margin: 1px 0 5px;
+  background: var(--block-silver);
+  color: var(--block-blue);
+  border: 1px solid var(--line);
+}
+#encounter > .enemy-team-block strong {
+  font-size: 30px;
+}
+#encounter > .enemy-team-block svg {
+  width: 27px;
+  height: 33px;
+}
+#encounter > .enemy-team-block small {
+  display: block;
+  font-size: 13px;
+}
+.party-label:has(#block) {
+  background: none;
+  border: 0;
+  height: 42px;
+  min-height: 42px;
+  margin: 0 0 8px;
+  padding: 0;
+  transform: none;
+}
+.party-label #block {
+  height: 40px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  padding: 2px 8px;
+}
+.party-label #block strong {
+  font-size: 30px;
+}
+.party-label #block svg {
+  width: 27px;
+  height: 33px;
+}
+.party-label #block span {
+  font-size: 16px;
+}
+.party-label #block small {
+  font-size: 12px;
+}
+.fit-notebook .paired-enemies .enemy-box {
+  grid-template-rows: 112px 84px;
+}
+.fit-notebook .paired-enemies .enemy-presence {
+  height: 112px;
+}
+.fit-notebook .paired-enemies .enemy-art {
+  height: 110px;
+}
+.fit-notebook .enemy-side:not(.paired-enemies) .machine-face {
+  height: 108px;
+}
+.enemy-presence .portrait-conditions {
+  bottom: 1px;
+}
+.portrait-conditions > b,
+.specialism-badge,
+.trait-badge {
+  width: 20px;
+  height: 20px;
+  padding: 1px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 0;
+}
+.portrait-conditions > b svg,
+.specialism-badge svg,
+.trait-badge svg {
+  width: 17px;
+  height: 17px;
+  flex: none;
+}
+.portrait-conditions small,
+.specialism-badge small,
+.trait-badge small {
+  display: none;
+}
+.portrait-conditions {
+  gap: 2px;
+  max-width: 100%;
+  flex-wrap: wrap;
+}
+.vulnerable-badge {
+  color: var(--red);
+  outline: 2px solid var(--red);
+  background: var(--paper-raised);
+}
+/* Side pages share the toolbar's always-available interaction layer. */
+.notebook-tabs {
+  position: fixed;
+  right: max(8px, calc((100vw - 1600px) / 2 - 44px));
+  top: 150px;
+  z-index: 3100;
+}
+.notebook-tabs button {
+  pointer-events: auto;
+}
+body.utility-open #overlay {
+  z-index: 3000;
+}
+body.utility-open .action-label,
+body.utility-open .combat-callout {
+  visibility: hidden;
+}
+.desk-top {
+  z-index: 3200;
+}
+.desk-top .pace-control {
+  width: auto !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  white-space: nowrap;
+  line-height: 1.2;
+}
+.desk-top .pace-control span {
+  width: auto !important;
+  max-width: none !important;
+  line-height: 1.2;
+}
+/* Fixed event slots reserve room before fortune has produced any result. */
+.stage-card.treasure .scene-layout {
+  display: grid;
+  grid-template-rows: 75px 105px 170px 60px 120px;
+  height: 530px;
+  gap: 0;
+  align-items: center;
+}
+.stage-card.treasure .trap-art {
+  height: 75px;
+  min-height: 75px;
+  margin: 0;
+}
+.stage-card.treasure .trap-art svg {
+  width: 65px;
+  height: 65px;
+}
+.stage-card.treasure #event-critical {
+  height: 170px;
+  min-height: 170px;
+  margin: 0;
+}
+.stage-card.treasure #treasure-result {
+  height: 60px;
+  min-height: 60px;
+  font-size: 18px;
+  line-height: 1.15;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  overflow-wrap: anywhere;
+}
+.stage-card.treasure #artefact-loot {
+  height: 120px;
+  min-height: 120px;
+}
+.stage-card.treasure .active-critical .inline-critical-body {
+  grid-template-columns: 135px minmax(0, 1fr);
+  height: 140px;
+  align-items: center;
+}
+.stage-card.treasure .critical-summary {
+  position: relative;
+  height: 140px;
+}
+.stage-card.treasure .critical-payoff {
+  min-height: 90px;
+  margin: 0;
+}
+.stage-card.treasure .critical-payoff strong {
+  font-size: 64px;
+}
+.stage-card.treasure .critical-payoff small {
+  font-size: 14px;
+}
+.stage-card.treasure .critical-math {
+  position: absolute;
+  inset: 30px 0 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  background: var(--paper);
+  z-index: 2;
+  align-content: start;
+}
+.stage-card.treasure .critical-math[hidden] {
+  display: none !important;
+}
+.stage-card.treasure .critical-math > div {
+  font-size: 12px;
+  min-width: 0;
+  padding: 1px;
+}
+.stage-card.treasure .critical-math svg {
+  width: 17px;
+  height: 20px;
+}
+.loot-carousel {
+  display: grid;
+  grid-template-rows: 86px 30px;
+  height: 116px;
+  gap: 3px;
+}
+.loot-find-page {
+  min-width: 0;
+}
+.loot-find-page .item-find,
+.loot-find-page .artefact-card {
+  height: 84px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px;
+}
+.loot-find-page svg {
+  width: 50px;
+  height: 60px;
+  flex: none;
+}
+.loot-find-page p {
+  font-size: 15px;
+  line-height: 1.1;
+  margin: 2px 0;
+}
+.loot-find-page b {
+  font-size: 18px;
+}
+.loot-carousel nav {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+}
+.loot-carousel nav button {
+  min-width: 45px;
+  padding: 1px 8px;
+}
+.stage-card.well .stage-art {
+  height: 170px;
+  min-height: 170px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.stage-card.well .stage-art svg {
+  width: 130px;
+  height: 150px;
+}
+.stage-card.well .trap-art svg {
+  width: 95px;
+  height: 105px;
+}
+.combat-callout.heal,
+.combat-callout.recovery {
+  color: var(--green);
+  border: 2px solid var(--green);
+  box-shadow: 0 0 20px #5b936a55;
+}
+.combat-callout.summon {
+  color: var(--poison);
+  border: 2px dashed var(--poison);
+  box-shadow: 0 0 18px #805aab55;
+}
+.combat-callout.blackout {
+  background: var(--ink);
+  color: var(--paper);
+  border: 2px solid var(--soft);
+}
+.combat-callout.vulnerable {
+  color: var(--red);
+  border: 2px solid var(--red);
+  font-size: 30px;
+  box-shadow: 0 0 20px #ab493955;
+}
+.combat-callout.fracture {
+  color: var(--soft);
+  border: 2px dashed var(--ink);
+}
+@media (max-width: 760px) {
+  .notebook-tabs {
+    top: auto;
+    bottom: 62px;
+    right: 8px;
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+  }
+  .notebook-tabs button {
+    writing-mode: horizontal-tb;
+    min-width: 0;
+    padding: 6px 10px;
+    font-size: 14px;
+  }
+  .guide-topic-body p {
+    font-size: 18px;
+    line-height: 1.35;
+    margin-bottom: 14px;
+  }
+  .guide-navigation {
+    min-height: 90px;
+  }
+  .camp-grid {
+    height: 390px;
+    min-height: 390px;
+    gap: 8px;
+  }
+  .camp-card {
+    padding: 7px;
+  }
+  .camp-card h3 {
+    font-size: 20px;
+  }
+  .camp-card p {
+    font-size: 17px;
+  }
+  .camp-card:has(.camp-class-art) {
+    padding-left: 7px;
+    padding-top: 70px;
+  }
+  .camp-card .camp-class-art {
+    top: 3px;
+    left: calc(50% - 22px);
+    width: 44px;
+    height: 65px;
+  }
+  .camp-balance {
+    height: 70px;
+  }
+  .modal[data-kind="options"] .settings-panel {
+    height: 390px;
+    min-height: 390px;
+  }
+  .workshop-page {
+    height: 480px;
+    min-height: 480px;
+  }
+  .reel-workshop {
+    min-height: 390px;
+  }
+  .workshop-faces {
+    grid-template-rows: repeat(7, 38px);
+  }
+  .weight-face > small {
+    font-size: 10px;
+  }
+  .weight-face button {
+    font-size: 13px;
+    min-height: 36px;
+  }
+  .crit-odds-grid {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  .crit-odds-row {
+    min-height: 48px;
+    grid-template-columns: 50px 1fr auto;
+  }
+  .crit-odds-row strong {
+    font-size: 19px;
+  }
+  .crit-odds-row b {
+    font-size: 15px;
+  }
+  .workshop-critpage p {
+    font-size: 16px;
+  }
+  .bestiary-page {
+    height: 550px;
+  }
+  .bestiary-record {
+    grid-template-columns: 90px minmax(0, 1fr);
+    height: 420px;
+    gap: 10px;
+    align-items: start;
+    padding-top: 18px;
+  }
+  .bestiary-record > button {
+    height: 160px;
+  }
+  .bestiary-record h3 {
+    font-size: 25px;
+    margin: 0 0 8px;
+  }
+  .bestiary-record p {
+    font-size: 18px;
+  }
+  .bestiary-stats {
+    font-size: 16px;
+    gap: 4px 8px;
+    grid-template-columns: 1fr;
+  }
+  .bestiary-stats dt {
+    font-weight: bold;
+  }
+  .bestiary-stats dd {
+    margin-top: -4px;
+  }
+  .bestiary-record small {
+    font-size: 13px;
+  }
+  .stage-card.treasure .scene-layout {
+    height: 465px;
+    grid-template-rows: 55px 90px 145px 60px 115px;
+  }
+  .stage-card.treasure .trap-art {
+    height: 55px;
+    min-height: 55px;
+  }
+  .stage-card.treasure .trap-art svg {
+    height: 50px;
+    width: 50px;
+  }
+  .stage-card.treasure #event-critical {
+    height: 145px;
+    min-height: 145px;
+  }
+  .stage-card.treasure .active-critical .inline-critical-body {
+    grid-template-columns: 90px minmax(0, 1fr);
+    height: 120px;
+  }
+  .stage-card.treasure .critical-payoff strong {
+    font-size: 52px;
+  }
+  .stage-card.treasure .critical-summary {
+    height: 120px;
+  }
+  .stage-card.treasure .critical-payoff small {
+    font-size: 12px;
+  }
+  .stage-card.treasure #treasure-result {
+    font-size: 17px;
+  }
+}
+/* Card copy is deliberately concise; prices and navigation keep fixed rows. */
+.camp-balance {
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  grid-template-rows: 28px 1fr;
+  align-items: start;
+  gap: 3px 7px;
+  height: 78px;
+}
+.camp-balance > svg {
+  width: 26px;
+  height: 26px;
+}
+.camp-balance > strong {
+  font-size: 25px;
+  line-height: 1;
+}
+.camp-balance > span {
+  grid-column: 1 / -1;
+  font-size: 17px;
+  line-height: 1.15;
+}
+.camp-card h3 {
+  min-height: 42px;
+  line-height: 1.1;
+}
+.camp-card > button {
+  min-height: 35px;
+  font-size: 17px;
+  padding: 5px;
+  white-space: nowrap;
+}
+.camp-card p {
+  min-height: 0;
+}
+.camp-grid[data-category="classes"] {
+  grid-template-rows: minmax(0, 1fr);
+  height: 410px;
+}
+.camp-grid[data-category="classes"] .camp-card {
+  padding-left: 100px;
+}
+.camp-grid[data-category="classes"] .camp-card .camp-class-art {
+  height: 180px;
+  top: 70px;
+}
+.bestiary-stats {
+  line-height: 1.15;
+}
+.portrait-conditions .passive-badge {
+  color: var(--gold);
+  background: var(--paper-raised);
+}
+.portrait-conditions .passive-secondWind {
+  color: var(--green);
+}
+.portrait-conditions .passive-summoner {
+  color: var(--poison);
+}
+.portrait-conditions .passive-blackout {
+  background: var(--ink);
+  color: var(--paper);
+}
+.tile.bridge-tile > svg:first-child:not(:last-child) {
+  opacity: 0.55;
+}
+.tile.bridge-tile > svg:last-child:not(:first-child) {
+  width: 65%;
+  height: 65%;
+  position: absolute;
+  left: 17.5%;
+  top: 17.5%;
+}
+@media (max-width: 760px) {
+  .camp-balance {
+    height: 80px;
+  }
+  .camp-card h3 {
+    font-size: 20px;
+    min-height: 46px;
+  }
+  .camp-card > button {
+    font-size: 16px;
+  }
+  .camp-grid[data-category="classes"] {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    height: 390px;
+  }
+  .camp-grid[data-category="classes"] .camp-card {
+    padding: 8px 8px 8px 86px;
+  }
+  .camp-grid[data-category="classes"] .camp-card .camp-class-art {
+    left: 8px;
+    top: 20px;
+    width: 68px;
+    height: 135px;
+  }
+  .bestiary-stats {
+    grid-template-columns: auto minmax(0, 1fr);
+    font-size: 16px;
+  }
+  .bestiary-stats dd {
+    margin-top: 0;
+  }
+  .bestiary-record p {
+    font-size: 17px;
+    line-height: 1.2;
+  }
+  .bestiary-record small {
+    font-size: 12px;
+  }
+}
+/* Retire legacy absolute offsets: the shared icon grid owns every rank now. */
+.tier-symbol > svg {
+  position: static;
+  inset: auto;
+  transform: none;
+}
+.field-guide .guide-grid {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto;
+  gap: 0;
+}
+.guide-topic-body {
+  min-width: 0;
+}
+#encounter:not(.paired-enemies):has(.enemy-roster) {
+  grid-template-rows: 26px minmax(0, 1fr);
+}
+.enemy-side:not(.paired-enemies) .enemy-presence {
+  height: 230px !important;
+}
+.enemy-side:not(.paired-enemies) .enemy-presence .enemy-art {
+  height: 180px !important;
+}
+.enemy-side:not(.paired-enemies) .enemy-presence .enemy-team-block {
+  height: 45px;
+  min-height: 45px;
+  font-size: 14px;
+  gap: 6px;
+  justify-content: center;
+}
+.enemy-side:not(.paired-enemies) .enemy-presence .enemy-team-block strong {
+  font-size: 26px;
+}
+.enemy-side:not(.paired-enemies) .enemy-presence .enemy-team-block svg {
+  height: 28px;
+  width: 23px;
+}
+.enemy-side:not(.paired-enemies) .enemy-presence .enemy-team-block span {
+  font-size: 12px;
+}
+.enemy-side:not(.paired-enemies) .enemy-presence .enemy-team-block small {
+  font-size: 11px;
+}
+@media (max-width: 760px) {
+  .swap-face {
+    min-height: 54px;
+  }
+  .weight-face button {
+    min-height: 42px;
+  }
+}
+/* A reel's width is independent of the intrinsic size of its current marks. */
+.stage-card .scene-layout > .machine-shell:not(.one-reel),
+.stage-card #trap-machine > .machine-shell {
+  width: min(390px, 100%);
+  box-sizing: border-box;
+}
+.stage-card.treasure .trap-art {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.stage-card.treasure #treasure-result small {
+  display: block;
+  font-size: 16px;
+  line-height: 1.2;
+}
+@media (max-width: 760px) {
+  .notebook-tabs {
+    bottom: calc(var(--keyboard-bar-height, 50px) + 8px);
+  }
+}
+/* Compact workshops keep the same controls, with legible lettering rather
+ * than shrinking the desktop's already small source type a second time. */
+@media (max-width: 760px) {
+  .modal:has(.reel-workshop) {
+    padding: 16px 14px 12px;
+  }
+  .modal:has(.reel-workshop) > .eyebrow {
+    flex-basis: 16px;
+    margin-bottom: 2px;
+  }
+  .modal:has(.reel-workshop) #modal-title {
+    flex-basis: 42px;
+    min-height: 42px;
+    height: 42px;
+    margin: 0;
+  }
+  .workshop-summary .hero-specialism {
+    min-width: 0;
+    font-size: 19px;
+  }
+  .workshop-summary .hero-specialism > small {
+    font-size: 16px;
+    flex-basis: auto;
+  }
+  .workshop-summary > strong {
+    font-size: 21px;
+  }
+  .modal-flow > .workshop-ability {
+    font-size: 18px;
+    line-height: 1.15;
+    min-height: 36px;
+    margin: 5px 0;
+  }
+  .workshop-nav {
+    margin: 5px 0;
+  }
+  .workshop-nav button {
+    font-size: 20px;
+    min-height: 38px;
+  }
+  .workshop-tabs button {
+    font-size: 18px;
+    min-height: 40px;
+  }
+  .workshop-step-label {
+    font-size: 17px;
+  }
+  .workshop-step-label span {
+    font-size: 16px;
+  }
+  .workshop-page {
+    height: 495px;
+    min-height: 495px;
+  }
+  .reel-workshop {
+    min-height: 410px;
+  }
+  .workshop-faces {
+    grid-template-rows: repeat(7, 49px);
+  }
+  .workshop-faces button {
+    font-size: 19px;
+  }
+  .workshop-faces small {
+    font-size: 16px;
+  }
+  .workshop-selected h3 {
+    font-size: 20px;
+  }
+  .face-effect {
+    font-size: 19px;
+    min-height: 74px;
+  }
+  .workshop-actions button {
+    font-size: 21px;
+    min-height: 62px;
+  }
+  .workshop-actions small,
+  .swap-face small {
+    font-size: 16px;
+  }
+  .swap-choice {
+    font-size: 18px;
+  }
+  .swap-choice select {
+    font-size: 19px;
+  }
+  .swap-effect {
+    font-size: 18px;
+    min-height: 58px;
+  }
+  .swap-face {
+    font-size: 21px;
+    min-height: 56px;
+  }
+  .weight-face button {
+    font-size: 21px;
+    min-height: 50px;
+  }
+  .weight-face button small,
+  .weight-face > small {
+    font-size: 16px;
+  }
+  .modal-flow > .workshop-note {
+    font-size: 16px;
+    line-height: 1.15;
+    min-height: 30px;
+  }
+  .workshop-critpage h3 {
+    font-size: 24px;
+  }
+  .workshop-critpage p {
+    font-size: 21px;
+  }
+  .crit-odds-row {
+    min-height: 54px;
+  }
+  .crit-odds-row b {
+    font-size: 21px;
+  }
+  .crit-odds-row strong {
+    font-size: 24px;
+  }
+}
+/* Narrow sheets select the face natively and divide editing into three fixed
+ * action pages. All powers and operations remain keyboard accessible. */
+.workshop-face-picker,
+.face-operation-tabs {
+  display: none;
+}
+.replace-panel {
+  display: contents;
+}
+@media (max-width: 760px) {
+  .workshop-editpage.workshop-page,
+  .workshop-critpage.workshop-page {
+    height: 425px;
+    min-height: 425px;
+  }
+  .reel-workshop {
+    display: block;
+    min-height: 0;
+  }
+  .workshop-mark-list .workshop-faces {
+    display: none;
+  }
+  .workshop-face-picker {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 19px;
+    height: 42px;
+    margin: 3px 0 5px;
+  }
+  .workshop-face-picker select {
+    flex: 1;
+    min-width: 0;
+    font-size: 20px;
+    height: 40px;
+  }
+  .workshop-detail {
+    height: 274px;
+    padding: 8px;
+    gap: 3px;
+  }
+  .workshop-selected {
+    min-height: 32px;
+  }
+  .workshop-detail > .workshop-step-label {
+    display: none;
+  }
+  .face-effect {
+    min-height: 56px;
+    height: 56px;
+    font-size: 19px;
+  }
+  .face-operation-tabs {
+    display: flex;
+    gap: 5px;
+    height: 38px;
+    flex-shrink: 0;
+  }
+  .face-operation-tabs button {
+    flex: 1;
+    font-size: 18px;
+    padding: 3px;
+  }
+  .face-operation-tabs [aria-pressed="true"] {
+    background: var(--paper-shade);
+    outline: 1px solid var(--ink);
+  }
+  .workshop-detail[data-operation="power"] .replace-panel,
+  .workshop-detail[data-operation="power"] .weight-face,
+  .workshop-detail[data-operation="replace"] .power-panel,
+  .workshop-detail[data-operation="replace"] .weight-face,
+  .workshop-detail[data-operation="weight"] .power-panel,
+  .workshop-detail[data-operation="weight"] .replace-panel {
+    display: none;
+  }
+  .replace-panel {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 44px 55px;
+    gap: 4px 8px;
+  }
+  .replace-panel .swap-choice {
+    font-size: 17px;
+  }
+  .replace-panel .swap-effect {
+    grid-column: 2;
+    grid-row: 1/3;
+    font-size: 18px;
+    min-height: 0;
+    margin: 0;
+  }
+  .replace-panel .swap-face {
+    grid-column: 1;
+    min-height: 50px;
+    font-size: 19px;
+  }
+  .swap-face small {
+    font-size: 16px;
+  }
+  .workshop-actions {
+    margin-top: 12px;
+  }
+  .workshop-actions button {
+    min-height: 76px;
+  }
+  .weight-face {
+    margin-top: 12px;
+  }
+  .weight-face button {
+    min-height: 60px;
+  }
+  .weight-face > small {
+    font-size: 18px;
+  }
+  .workshop-step-label span {
+    font-size: 15px;
+  }
+}
+/* Six edited outer faces can produce six distinct critical combinations. Keep
+ * that maximum list inside its reserved sheet, including compact layouts. */
+.workshop-critpage h3 {
+  margin: 0 0 6px;
+  line-height: 1.1;
+}
+@media (max-width: 760px) {
+  .workshop-critpage p {
+    font-size: 18px;
+    line-height: 1.2;
+    margin: 6px 0 10px;
+  }
+  .crit-odds-row {
+    min-height: 44px;
+  }
+  .crit-odds-row b {
+    font-size: 19px;
+  }
+}

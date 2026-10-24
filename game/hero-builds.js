@@ -35,11 +35,12 @@ const MAGE_POWERS = Object.freeze({
 });
 const RANGER_AIM_CAP = 6,
   BERSERKER_FURY_CAP = 20;
-const rangerAimGain = () => 1;
-const BASE_JOBS = Object.freeze(["fighter", "rogue", "mage", "berserker"]);
+const rangerAimGain = () => 2;
+const BASE_JOBS = Object.freeze(["fighter", "rogue", "mage"]);
 const heroJobs = (rules = state?.runRules || []) => [
   ...BASE_JOBS,
   ...(rules.includes("ranger") ? ["ranger"] : []),
+  ...(rules.includes("berserker") ? ["berserker"] : []),
 ];
 function mageResonance(h, symbols = null) {
   // A property of the marks actually rolled, falling back to weighted wheels.
@@ -91,6 +92,7 @@ function normaliseHeroBuild(h) {
   h.reels.forEach((reel, k) => {
     let seal = false;
     for (const face of reel) {
+      face.weight = Math.max(1, Math.min(4, Math.floor(face.weight || 1)));
       delete face.mageRole;
       if (
         h.job === "berserker" &&
@@ -111,7 +113,7 @@ function normaliseHeroBuild(h) {
       }
     }
     if (k === 1 && !seal)
-      reel.push({ type: "class", tier: 1, weight: 3, job: h.job });
+      reel.push({ type: "class", tier: 1, weight: 1, job: h.job });
   });
 }
 function classAbilityName(hero) {
@@ -171,67 +173,69 @@ function makeHero(
     : pick(["offence", "defence"]);
   const faces = {
     fighter: [
-      ["attack", 1, 9],
-      ["attack", 2, 5],
-      ["block", 1, 7],
-      ["block", 2, 3],
-      ["heal", 1, 1],
-      ["blank", 1, 5],
+      ["attack", 1],
+      ["attack", 2],
+      ["block", 1],
+      ["block", 2],
+      ["heal", 1],
+      ["blank", 1],
     ],
     rogue: [
-      ["attack", 1, 11],
-      ["attack", 2, 10],
-      ["attack", 3, 3],
-      ["poison", 1, 2],
-      ["block", 1, 1],
-      ["blank", 1, 4],
+      ["attack", 1],
+      ["attack", 2],
+      ["attack", 3],
+      ["poison", 1],
+      ["block", 1],
+      ["blank", 1],
     ],
     ranger: [
-      ["attack", 1, 12],
-      ["attack", 2, 5],
-      ["poison", 1, 3],
-      ["block", 1, 2],
-      ["stun", 1, 2],
-      ["blank", 1, 6],
+      ["attack", 1],
+      ["attack", 2],
+      ["poison", 1],
+      ["block", 1],
+      ["stun", 1],
+      ["blank", 1],
     ],
     berserker: [
-      ["attack", 1, 10],
-      ["attack", 2, 6],
-      ["heal", 1, 4],
-      ["selfharm", 1, 5],
-      ["selfharm", 2, 2],
-      ["blank", 1, 5],
+      ["attack", 1],
+      ["attack", 2],
+      ["heal", 1],
+      ["selfharm", 1],
+      ["selfharm", 2],
+      ["blank", 1],
     ],
     mage: legacyHealer
       ? [
-          ["heal", 1, 14],
-          ["heal", 2, 12],
-          ["block", 1, 2],
-          ["stun", 1, 1],
-          ["magic", 1, 1],
-          ["blank", 1, 4],
+          ["heal", 1],
+          ["heal", 2],
+          ["block", 1],
+          ["stun", 1],
+          ["magic", 1],
+          ["blank", 1],
         ]
       : specialism === "defence"
         ? [
-            ["heal", 1, 10],
-            ["heal", 2, 5],
-            ["block", 1, 5],
-            ["magic", 1, 6],
-            ["poison", 1, 2],
-            ["blank", 1, 5],
+            ["heal", 1],
+            ["heal", 2],
+            ["block", 1],
+            ["magic", 1],
+            ["poison", 1],
+            ["blank", 1],
           ]
         : [
-            ["magic", 1, 11],
-            ["magic", 2, 7],
-            ["poison", 1, 4],
-            ["heal", 1, 4],
-            ["block", 1, 2],
-            ["blank", 1, 5],
+            ["magic", 1],
+            ["magic", 2],
+            ["poison", 1],
+            ["heal", 1],
+            ["block", 1],
+            ["blank", 1],
           ],
   };
-  const maxHp =
-    { fighter: 44, rogue: 26, mage: 28, ranger: 30, berserker: 38 }[job] +
-    (rules.includes("hearty") ? 4 : 0);
+  const maxHp = Math.round(
+    ({ fighter: 44, rogue: 26, mage: 28, ranger: 30, berserker: 38 }[job] +
+      (rules.includes("hearty") ? 4 : 0)) *
+      (1 + 0.1 * campTier("vitality", rules)),
+  );
   const h = {
     id: Date.now() + Math.random(),
     name,
@@ -248,6 +252,8 @@ function makeHero(
     trait: null,
     traitProgress: {},
     stun: 0,
+    stunAge: 0,
+    blackout: [],
     stunGrace: 0,
     poison: null,
     stimulant: null,
@@ -265,8 +271,8 @@ function makeHero(
     },
     stats: emptyStats(),
     reels: [0, 1, 2].map((reel) => [
-      ...faces[job].map(([type, tier, weight]) => ({ type, tier, weight })),
-      ...(reel === 1 ? [{ type: "class", tier: 1, weight: 3, job }] : []),
+      ...faces[job].map(([type, tier]) => ({ type, tier, weight: 1 })),
+      ...(reel === 1 ? [{ type: "class", tier: 1, weight: 1, job }] : []),
     ]),
     last: [],
   };
@@ -277,7 +283,7 @@ function makeHero(
 }
 function specialismBadge(h) {
   const s = SPECIALISMS[h.specialism] || SPECIALISMS.offence;
-  return `<span class="specialism-badge ${h.specialism}" data-tooltip="${escapeHTML(s.name + ": " + s.description)}" aria-label="${s.name} temperament">${icon(h.specialism === "defence" ? "block" : "sword")}<small>${s.name}</small></span>`;
+  return `<span class="specialism-badge ${h.specialism}" data-tooltip="${escapeHTML(s.name + ": " + s.description)}" aria-label="${s.name} temperament">${icon(h.specialism === "defence" ? "block" : "sword")}</span>`;
 }
 function heroBuildMarkup(h) {
   const s = SPECIALISMS[h.specialism] || SPECIALISMS.offence;
@@ -292,8 +298,9 @@ function executionBonus(
   if (!enemy || !charge) return 0;
   const missing = 1 - Math.max(0, enemy.hp) / Math.max(1, enemy.maxHp);
   return Math.ceil(
-    (((2 + h.level / 2) * Math.min(RANGER_AIM_CAP, charge)) / RANGER_AIM_CAP) *
-      (0.25 + 2 * missing) *
+    (((3 + h.level * 0.75) * Math.min(RANGER_AIM_CAP, charge)) /
+      RANGER_AIM_CAP) *
+      (0.5 + 2.5 * missing) *
       (seal ? 1.35 : 1),
   );
 }
@@ -302,7 +309,7 @@ function advanceRangerPatience(actor, attacked, seal = false) {
     if (h.job !== "ranger" || (h === actor && attacked)) continue;
     h.charge = Math.min(
       RANGER_AIM_CAP,
-      (h.charge || 0) + (h === actor && seal ? 2 : 1),
+      (h.charge || 0) + (h === actor && seal ? 3 : rangerAimGain()),
     );
     syncRangerAim(h);
   }

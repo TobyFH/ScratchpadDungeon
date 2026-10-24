@@ -665,7 +665,7 @@ const output = path.join(root, "test-results/ui-review");
     });
     await shot("50-lava-light-cross");
     await page.evaluate(() => {
-      state.gold = 100;
+      state.gold = 1000;
       state.bag = { bomb: 1, ward: 1, antidote: 1 };
       render();
       window.reviewShop = shopEncounter({ shop: { potion: 1 } });
@@ -683,6 +683,201 @@ const output = path.join(root, "test-results/ui-review");
     await shot("52-offering-bowl-choice");
     await page.locator("#travel-leave").click();
     await page.evaluate(() => window.reviewTravel);
+    await page.evaluate(() => {
+      newRun("fighter", { specialism: "offence" });
+      setPace("skip");
+      setPalette("default");
+      setPreference("punMode", false);
+      const profile = emptyProfile();
+      profile.gold = 12000;
+      localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+      chooseStartingClass();
+    });
+    await shot("53-locked-class-invitations");
+    await page.setViewportSize({ width: 390, height: 844 });
+    await shot("53-locked-class-invitations-mobile");
+    await page.setViewportSize({ width: 1920, height: 1080 });
+    await page.evaluate(() => {
+      closeModal();
+      campPage("training");
+      purchaseUnlock("vitality1");
+    });
+    await shot("54-tiered-camp-training");
+    await page.setViewportSize({ width: 320, height: 844 });
+    await shot("54-tiered-camp-training-320");
+    await page.setViewportSize({ width: 1920, height: 1080 });
+    await page.evaluate(() => {
+      closeModal();
+      state.party[0].points = 99;
+      applyFaceEdit(state.party[0], 0, 0, "weight");
+      applyFaceEdit(state.party[0], 2, 0, "weight");
+      editorView = "edit";
+      editor(0);
+    });
+    await shot("55-paid-reel-weighting");
+    await page.locator('[data-workshop-view="crits"]').click();
+    await shot("55-live-critical-odds");
+    await page.setViewportSize({ width: 390, height: 844 });
+    await shot("55-live-critical-odds-mobile");
+    await page.locator('[data-workshop-view="edit"]').click();
+    await shot("55-paid-reel-weighting-mobile");
+    await page.locator('[data-editor-operation="replace"]').click();
+    await shot("55-replacement-controls-mobile");
+    await page.locator('[data-editor-operation="weight"]').click();
+    await shot("55-weight-controls-mobile");
+    await page.evaluate(() => {
+      window.reviewOriginalReels = state.party[0].reels;
+      const h = state.party[0];
+      h.reels = [0, 1, 2].map((k) =>
+        ["attack", "magic", "heal", "block", "stun", "poison"]
+          .map((type) => ({ type, tier: 1, weight: 1 }))
+          .concat(
+            k === 1 ? [{ type: "class", tier: 1, weight: 1, job: h.job }] : [],
+          ),
+      );
+      editorView = "crits";
+      editor(0);
+    });
+    await shot("55-maximum-critical-combinations-mobile");
+    await page.setViewportSize({ width: 1920, height: 1080 });
+    await shot("55-maximum-critical-combinations-desktop");
+    await page.evaluate(() => {
+      state.party[0].reels = window.reviewOriginalReels;
+    });
+    await page.evaluate(() => {
+      closeModal();
+      localStorage.removeItem(BESTIARY_KEY);
+      bestiaryPage(0);
+    });
+    await shot("56-bestiary-unknown");
+    await page.evaluate(() => {
+      closeModal();
+      state.depth = 6;
+      state.party.push(makeHero("Mira", "mage"));
+      beginEncounter(true, { stairBoss: true });
+      render();
+      window.gaolerArrival = encounterEntrance();
+    });
+    await page.waitForSelector("#stage-confirm");
+    await page.locator("#stage-confirm").click();
+    await page.evaluate(() => window.gaolerArrival);
+    await shot("57-graphite-gaoler-blackout");
+    await page.evaluate(() =>
+      bestiaryPage(BESTIARY_ENTRIES.findIndex((e) => e.id === "boss-6")),
+    );
+    await shot("56-bestiary-discovered");
+    await page.setViewportSize({ width: 390, height: 844 });
+    await shot("56-bestiary-discovered-mobile");
+    await page.setViewportSize({ width: 1920, height: 1080 });
+    await page.evaluate(() => {
+      closeModal();
+      newRun("mage");
+      setPace("skip");
+      state.depth = 6;
+      state.map = generateFloor(6);
+      state.map.forEach((c) => {
+        c.seen = true;
+      });
+      const a = state.position,
+        b = pos(7, 2);
+      Object.assign(state.map[a], {
+        event: "tunnel",
+        feature: "tunnel",
+        tunnelTo: b,
+        tunnelPair: 0,
+      });
+      Object.assign(state.map[b], {
+        wall: false,
+        terrain: "floor",
+        event: "tunnel",
+        feature: "tunnel",
+        tunnelTo: a,
+        tunnelPair: 0,
+      });
+      Object.assign(state.map[pos(4, 4)], {
+        wall: true,
+        terrain: "lava",
+        event: null,
+        feature: null,
+      });
+      Object.assign(state.map[pos(4, 5)], {
+        wall: false,
+        terrain: "bridge",
+        event: null,
+        feature: null,
+      });
+      render();
+      window.tunnelReview = tunnelEncounter(state.map[a]);
+    });
+    await page.waitForSelector("#tunnel-leave");
+    await shot("58-optional-tunnel-passage");
+    await page.locator("#tunnel-leave").click();
+    await page.evaluate(() => window.tunnelReview);
+    await shot("59-lava-barrier-and-water-bridge");
+    await page.evaluate(() => {
+      const gallery = document.createElement("section");
+      gallery.id = "remains-review";
+      gallery.style.cssText =
+        "position:fixed;inset:12px;z-index:9000;background:var(--paper);color:var(--ink);display:grid;grid-template-columns:repeat(6,1fr);gap:10px;padding:20px";
+      gallery.innerHTML = [
+        ...Object.keys(ENEMY_PROFILES),
+        "fighter",
+        "rogue",
+        "mage",
+        "ranger",
+        "berserker",
+      ]
+        .map(
+          (kind) =>
+            `<article class="pencil-card" style="padding:5px;text-align:center"><b>${SPECIES_LORE[kind]?.[0] || className(kind)}</b><div style="height:140px">${corpseArt(kind)}</div></article>`,
+        )
+        .join("");
+      gallery
+        .querySelectorAll("svg")
+        .forEach((svg) => (svg.style.cssText = "width:100%;height:100%"));
+      document.body.append(gallery);
+    });
+    await shot("60-species-specific-remains");
+    await page.evaluate(() => $("#remains-review").remove());
+    await page.evaluate(() => {
+      beginEncounter(false, { count: 2 });
+      state.enemies[0].passive = { key: "secondWind", used: false };
+      state.enemies[0].vulnerable = { createdAction: 0, bonus: 0.25 };
+      setEnemyBlock(20);
+      if (state.party.length < 2) state.party.push(makeHero("Mira", "mage"));
+      state.party[0].poison = { turns: 3, damage: 2 };
+      state.party[1].stun = 1;
+      render();
+    });
+    await shot("61-icon-only-statuses-and-shared-block");
+    await page.evaluate(() => setPalette("dark"));
+    await shot("61-shared-block-dark");
+    await page.evaluate(() => setPalette("default"));
+    await page.evaluate(() => {
+      showSpotlight(
+        "Critical!",
+        "Three of a kind.",
+        drawMachine("critical", [{ type: "multiplier", value: 3, tier: 1 }], {
+          one: true,
+        }),
+        "critical",
+      );
+      busy = true;
+      openUtilityPage("options");
+    });
+    await page.locator("#tab-display").click();
+    await shot("62-options-during-critical");
+    await page.setViewportSize({ width: 390, height: 844 });
+    await shot("62-options-during-critical-mobile");
+    await page.locator("#guide-tab").click();
+    await shot("63-fixed-guide-navigation-mobile");
+    await page.locator("#modal [data-close]").last().click();
+    await page.evaluate(() => {
+      busy = false;
+      closeSpotlight();
+      closeModal();
+    });
+    await page.setViewportSize({ width: 1920, height: 1080 });
     const download = page.waitForEvent("download");
     await page.locator("#download").click();
     await (

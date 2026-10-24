@@ -61,6 +61,18 @@ async function notebook(t) {
   return page;
 }
 
+async function settleNotebookLayout(page) {
+  await page.evaluate(async () => {
+    await document.fonts.ready;
+    requestFitUI();
+    // Fit uses requestAnimationFrame; two painted frames establish its geometry
+    // even when parallel Chromium processes delay rendering on a CI worker.
+    await new Promise((resolve) =>
+      requestAnimationFrame(() => requestAnimationFrame(resolve)),
+    );
+  });
+}
+
 async function assertMenuContrast(page, context) {
   const options = await page.locator("select option").evaluateAll((entries) => {
     const luminance = (color) => {
@@ -322,7 +334,20 @@ test("notebook palettes keep contrast, embedded typography, stable tabs and keyb
   );
   await page.screenshot({ path: path.join(output, "pencil-options.png") });
   await page.setViewportSize({ width: 320, height: 844 });
-  await page.waitForTimeout(150);
+  // Responsive fitting is scheduled with animation frames. Under a busy full
+  // browser run, elapsed wall time does not guarantee the resize has painted.
+  // Wait for the required geometry; a real overlap still times out and fails.
+  await page.waitForFunction(
+    () => {
+      const toolbar = document
+        .querySelector(".desk-top")
+        .getBoundingClientRect();
+      const modal = document.querySelector("#modal").getBoundingClientRect();
+      return modal.top >= toolbar.bottom && modal.bottom <= innerHeight;
+    },
+    null,
+    { timeout: 5000 },
+  );
   assert.equal(
     await page.evaluate(() => {
       const toolbar = document
@@ -336,7 +361,7 @@ test("notebook palettes keep contrast, embedded typography, stable tabs and keyb
   );
   await page.setViewportSize({ width: 1920, height: 1080 });
   await page.evaluate(() => help());
-  await page.waitForTimeout(150);
+  await settleNotebookLayout(page);
   assert.ok(
     await page.evaluate(() => {
       const flow = document.querySelector(".modal-flow");
@@ -372,7 +397,7 @@ test("paired encounters, party labels, satchel pockets and log fit desktop and c
     [320, 844],
   ]) {
     await page.setViewportSize({ width, height });
-    await page.waitForTimeout(150);
+    await settleNotebookLayout(page);
     const metrics = await page.evaluate(() => {
       const box = (el) => el.getBoundingClientRect();
       const inventory = box(document.querySelector(".inventory"));

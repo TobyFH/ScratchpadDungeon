@@ -108,9 +108,13 @@ const TRAVEL_EVENTS = Object.freeze({
     subtitle:
       "A traveller offers a wrapped supply for help repairing their lantern.",
     icon: "beacon",
-    offer: "Trade 8 gold for a supply",
+    get offer() {
+      return `Trade ${this.cost} gold for a supply`;
+    },
     reward: "item",
-    cost: 8,
+    get cost() {
+      return Math.round(shopPrices().potion * 0.8);
+    },
   },
   altar: {
     title: "A cracked offering bowl",
@@ -297,4 +301,88 @@ function chaserRewardFaces(faces) {
       ITEM_DEFS[f.type].family === "aegis",
   );
   return prizes.length ? prizes : items;
+}
+
+// Optional paired passages never replace a stair, discovery or obstructed tile.
+function addTunnels(map) {
+  if (Math.random() >= 0.14) return;
+  const pairs = Math.random() < 0.08 ? 2 : 1;
+  for (let pair = 0; pair < pairs; pair++) {
+    const free = [...mapDistances(map).keys()].filter(
+      (i) =>
+        i !== pos(1, 7) &&
+        !map[i].wall &&
+        !map[i].event &&
+        !map[i].structure &&
+        map[i].terrain !== "bridge",
+    );
+    if (free.length < 2) break;
+    const a = pick(free),
+      ends = free.filter(
+        (b) =>
+          Math.abs((a % W) - (b % W)) +
+            Math.abs(Math.floor(a / W) - Math.floor(b / W)) >=
+          3,
+      );
+    if (!ends.length) break;
+    const b = pick(ends);
+    for (const [from, to] of [
+      [a, b],
+      [b, a],
+    ])
+      Object.assign(map[from], {
+        event: "tunnel",
+        feature: "tunnel",
+        tunnelTo: to,
+        tunnelPair: pair,
+      });
+  }
+}
+async function tunnelEncounter(c) {
+  const destination = c.tunnelTo;
+  if (
+    !Number.isInteger(destination) ||
+    !state.map[destination] ||
+    state.map[destination].wall
+  ) {
+    toast("This tunnel has collapsed.");
+    return false;
+  }
+  showSpotlight(
+    "A narrow tunnel",
+    "A draught rises from a passage beneath the stone.",
+    `<div class="stage-art">${icon("tunnel")}</div><div class="stage-result">Follow the passage, or leave it open for later.<br>${state.map[destination].seen ? "The other entrance is marked on your map." : "The far entrance is still unexplored."}</div>`,
+    "tunnel",
+  );
+  const choice = await eventChoice([
+    { id: "tunnel-use", label: "Take the tunnel", value: true },
+    { id: "tunnel-leave", label: "Leave it open", value: false },
+  ]);
+  closeSpotlight();
+  if (choice !== "true") return false;
+  const source = state.position;
+  c.activated = true;
+  smokePoof($("#map-player"), true);
+  await feedbackPause(skip ? 100 : 260);
+  markSeen(destination);
+  state.position = destination;
+  const end = state.map[destination];
+  end.visited = true;
+  end.activated = true;
+  end.lastVisitedStep = state.steps;
+  end.fogged = false;
+  end.fogSince = state.exploreTime || 0;
+  renderMap();
+  smokePoof($("#map-player"), true);
+  positionPlayer(false);
+  log(
+    `The tunnel leads from column ${(source % W) + 1}, row ${Math.floor(source / W) + 1} to column ${(destination % W) + 1}, row ${Math.floor(destination / W) + 1}.`,
+  );
+  result(
+    icon("tunnel") +
+      " The other end of the tunnel. Both entrances remain open.",
+  );
+  refreshStaleMap();
+  save();
+  return true;
 }

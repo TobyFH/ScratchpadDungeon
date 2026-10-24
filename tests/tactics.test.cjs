@@ -44,7 +44,7 @@ async function game(t) {
 test("temperament is only selectable at the start, Mages have no role stat or selector, and old edited builds migrate intact", async (t) => {
   const p = await game(t);
   await p.evaluate(() => chooseStartingClass());
-  assert.equal(await p.locator("[data-start-job]").count(), 4);
+  assert.equal(await p.locator("[data-start-job]").count(), 3);
   assert.equal(await p.locator("#starter-role").count(), 0);
   await p.locator("#starter-specialism").selectOption("defence");
   await p.locator('[data-start-job="mage"]').click();
@@ -79,7 +79,7 @@ test("temperament is only selectable at the start, Mages have no role stat or se
   });
   assert.deepEqual(result, {
     loaded: true,
-    version: 17,
+    version: 18,
     hp: 11,
     points: 29,
     tier: 4,
@@ -524,14 +524,25 @@ test("workshop explains faces and actions, Fury and shared enemy shields fit, an
         }),
       );
     assert.ok(faces.every(Boolean), "rank IV fits " + width);
+    assert.equal(
+      await p.locator(".enemy-team-block").count(),
+      1,
+      "one shield for both enemies",
+    );
     const position = await p
-      .locator("#enemy .enemy-presence")
-      .evaluate((el) => {
-        const p = el.querySelector(".enemy-art").getBoundingClientRect(),
-          b = el.querySelector(".enemy-team-block").getBoundingClientRect();
-        return b.top >= p.bottom - 1;
-      });
-    assert.equal(position, true, "shield below portrait " + width);
+      .locator("#enemy-team-block")
+      .evaluate(
+        (el) =>
+          el.getBoundingClientRect().bottom <=
+          document.querySelector("#enemy .enemy-art").getBoundingClientRect()
+            .top +
+            1,
+      );
+    assert.equal(
+      position,
+      true,
+      "shared shield above the paired roster " + width,
+    );
     const captionFit = await p
       .locator("#enemy .machine-shell")
       .evaluate((el) => {
@@ -832,7 +843,7 @@ test("field guide topics remain readable without scrolling on desktop, Deck and 
   const p = await game(t);
   await p.evaluate(() => help());
   const count = await p.locator("#guide-topic option").count();
-  assert.equal(count, 8);
+  assert.equal(count, 11);
   for (const width of [1920, 1280, 390, 320]) {
     await p.setViewportSize({
       width,

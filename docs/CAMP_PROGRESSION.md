@@ -9,47 +9,78 @@ Gold left with a defeated party is lost on a new run;
 gold already at camp remains.
 
 Open **New run → Upgrades** (or the Upgrades tab in the first adventurer chooser).
-Purchases are permanent. The Ranger invitation unlocks Ranger starts and wandering
-companions for subsequent expeditions. Other purchases are initially disabled: enable or
-disable them to build your next expedition's rules. Changes do not rewrite a
-current run. Owned unlocks can be freely toggled between runs; purchases cannot
-be refunded. Nothing requires an account or network connection.
+Purchases are permanent. Ranger and Berserker invitations unlock starts and wandering
+companions for subsequent expeditions. Their locked starter cards remain visible;
+click one to open its camp purchase. Tank, Rogue and Mage are available initially.
+Existing heroes are retained when migrating a run.
+
+Permanent training applies automatically to future expeditions. Other modifiers
+start disabled and can be freely toggled for the next run. Purchases do not
+rewrite a current expedition's snapshotted rules and cannot be refunded. Nothing
+requires an account or network connection.
 
 ## Unlock catalogue
 
-| Page        | Unlock                  | Cost | Enabled effect                                              |
-| ----------- | ----------------------- | ---: | ----------------------------------------------------------- |
-| Adventurers | A ranger's invitation   |   80 | Unlock starting and wandering Rangers; permanent            |
-| Provisions  | A little spending money |   60 | Start with 20 gold                                          |
-| Provisions  | A hearty breakfast      |  100 | New adventurers gain 4 maximum HP                           |
-| Provisions  | Spread the word         |   95 | Recruit spawn probability ×1.25, capped at 95%              |
-| Provisions  | Follow the water        |   85 | One extra well per floor                                    |
-| Challenges  | Iron margins            |   65 | Enemy HP ×1.2 and base damage ×1.1, rounded up              |
-| Challenges  | Never alone             |   70 | Double-encounter chance +8 percentage points, capped at 33% |
-| Challenges  | Dry ink                 |   55 | One fewer well per floor                                    |
-| Challenges  | Restless pages          |   60 | Pursuer awakens at 12 revealed tiles, from floor 3          |
-| Oddities    | Heavy pockets           |   90 | One extra treasure chest per floor                          |
-| Oddities    | Leave a light on        |   75 | One extra beacon per floor                                  |
-| Oddities    | Travelling market       |  100 | Shop spawn probability 66% per floor                        |
-| Oddities    | Both ends sharpened     |   80 | Hero damaging rolls +1 damage; enemy base damage +1         |
+The catalogue in `game/progression.js` is authoritative; stable IDs survive price
+changes. Gold income is unchanged. Existing owned purchases remain owned without
+an additional charge.
 
-There are 13 unlocks; the Ranger invitation is the only class-specific purchase.
-Provisions and challenges can coexist: for example, an extra well and Dry ink cancel one another. All
-options have actual gameplay hooks, not preview-only controls.
+| Page        | Stable ID    | Unlock                  |  Cost | Effect when enabled                               |
+| ----------- | ------------ | ----------------------- | ----: | ------------------------------------------------- |
+| Adventurers | `ranger`     | A ranger's invitation   |   900 | Permanent Ranger starts/recruits                  |
+| Adventurers | `berserker`  | A berserker's oath      |   750 | Permanent Berserker starts/recruits               |
+| Provisions  | `provisions` | A little spending money |   900 | Start with 150 gold                               |
+| Provisions  | `hearty`     | A hearty breakfast      | 1,100 | +4 base maximum HP before training                |
+| Provisions  | `company`    | Spread the word         | 1,500 | Recruit probability ×1.25, capped at 95%          |
+| Provisions  | `springs`    | Follow the water        | 1,800 | One extra well per floor                          |
+| Challenges  | `iron`       | Iron margins            |   600 | Enemy HP ×1.2, damage ×1.1, rounded up            |
+| Challenges  | `crowded`    | Never alone             |   700 | Double chance +8 percentage points, cap 33%       |
+| Challenges  | `drought`    | Dry ink                 |   500 | One fewer well per floor                          |
+| Challenges  | `hunted`     | Restless pages          |   650 | Pursuer threshold 12 revealed tiles, from floor 3 |
+| Oddities    | `golden`     | Heavy pockets           | 1,900 | One extra chest per floor                         |
+| Oddities    | `lanterns`   | Leave a light on        | 1,200 | One extra beacon per floor                        |
+| Oddities    | `markets`    | Travelling market       | 2,200 | Shop chance rises from 36% to 66%                 |
+| Oddities    | `sharp`      | Both ends sharpened     |   800 | Damaging hero rolls +1; enemy base damage +1      |
 
-## Ranger
+The fifth page, **Training**, shows each family's next tier. Higher tiers require
+the preceding tier. Bonuses are the highest owned rank, **not the sum of ranks**.
+These purchases are permanent, automatically enabled, and snapshotted next run.
 
-Rangers start at 30 HP, with blade attacks, some poison, stun and block, plus
-ordinary upgradable EMPTY faces. Its middle **Execute** seal strengthens a
-patient finishing shot. Each party action without the Ranger attacking builds
-patience up to six; a nondamaging seal roll adds two. Its next damaging roll
-consumes that charge for a bonus based on the selected enemy's missing health.
-The meter and bow tooltip show charge and the current bonus. See
-[Combat builds](COMBAT_BUILDS.md) for the formula and migration.
+| Stable IDs                    | Tiers | Cost of each successive tier        | Total bonus at each tier              |
+| ----------------------------- | ----: | ----------------------------------- | ------------------------------------- |
+| `vitality1` … `vitality5`     |     5 | 750 / 1,500 / 3,000 / 5,500 / 9,000 | +10 / 20 / 30 / 40 / 50% base HP      |
+| `power1` … `power3`           |     3 | 900 / 2,000 / 4,500                 | +5 / 10 / 15% blade/magic roll damage |
+| `experience1` … `experience3` |     3 | 800 / 1,800 / 4,000                 | +5 / 10 / 15% battle EXP              |
 
-Notched Longbow (+2 damage) and Scout Cloak (1 resistance, 2 opening team block)
-are matching Ranger equipment. They only enter loot pools in Ranger-unlocked
-expeditions. Starting as a Ranger requires only the invitation.
+New hero HP is `round((classBaseHP + heartyBonus) * (1 + .1*vitalityRank))`.
+Level-up gains remain +6 HP. Strike training rounds the multiplied damaging roll;
+EXP training carries fractional bonus EXP forward per hero to avoid losing small
+awards to rounding. There are 25 stable purchase IDs across the five pages.
+Provisions and challenges can coexist; an extra well and Dry ink cancel out.
+
+## Shop spending
+
+`game/economy.js` owns supply, equipment, healing and map spending curves. All
+manual and automated purchases use `shopPrices()`. At floor one a base tonic
+costs **92**, equipment **188**, a solo full heal **150**, and stairs information
+**106**. Full heals cost more for larger living parties. Better supply variants
+cost more. The rare travelling cartographer charges 80% of that floor's basic
+tonic price, rounded to the nearest gold. See [Expedition update](EXPEDITION_UPDATE.md) for exact
+curves and the gold-income audit.
+
+## Ranger and Berserker
+
+Ranger starts at 30 HP. Execute builds two patience per party action without
+attacking, or three on its own nondamaging seal. Charge caps at six; the
+next damaging roll consumes it for a stronger finishing shot. The meter and bow
+tooltip show its current target's bonus. Notched Longbow and Scout Cloak enter
+loot pools only in Ranger-unlocked expeditions. There are no Ranger-specific
+camp stat upgrades.
+
+Berserker starts at 38 HP with blade, healing, Blood Price and empty faces.
+Wounds and Blood Price fill Fury for additional blade damage; Bloodrush is its
+permanent middle seal. See [Combat builds](COMBAT_BUILDS.md) and
+[Battle tactics](BATTLE_TACTICS.md) for the exact rules.
 
 ## Save design and recovery
 
@@ -59,8 +90,8 @@ expeditions. Starting as a Ranger requires only the invitation.
 - `scratchpad-dungeon-camp-v1` stores profile version 1, bank balance, purchased
   IDs, enabled IDs and the deposit ledger. It is independent of the expedition
   and preference keys. New run never deletes it.
-- Expedition save version 17 retains the version-13 `runId`, `bankedFloors` and
-  snapshot of enabled `runRules`. Versions 1–14 still migrate; old expeditions start
+- Expedition save version 18 retains the version-13 `runId`, `bankedFloors` and
+  snapshot of enabled `runRules`. Versions 1–17 still migrate; old expeditions start
   without new modifiers and retain their wounds, equipment and edited reels.
 - A deposit is keyed by `runId:floor`. The profile write commits the transaction
   before the expedition is updated. If the expedition write is interrupted,
@@ -92,7 +123,8 @@ expeditions. Starting as a Ranger requires only the invitation.
   camps. **Save HTML saves the game, not local-storage progress.**
 
 To back up progress manually, copy both the expedition and camp values from the
-browser's Application/Storage → Local Storage panel, retaining the key names.
+browser's Application/Storage → Local Storage panel, retaining the key names. The separate `scratchpad-dungeon-bestiary-v1` key stores
+discoveries and may also be backed up.
 Restore them to the same origin before reloading. Do not alter the deposit ledger
 or reuse old expedition snapshots without their matching camp profile. There is
 no gameplay-facing import UI in this change.
@@ -101,7 +133,7 @@ no gameplay-facing import UI in this change.
 
 `npm test` exercises percentage rounding, duplicate deposits, reload/new-run
 persistence, interrupted-write recovery, unavailable storage, invalid fractions,
-unearned transfers, prerequisites, purchase costs, rule snapshots, Ranger charge,
+unearned transfers, prerequisites, escalating training tiers, purchase costs, class locks, rule snapshots, Ranger charge,
 real map/stat modifier hooks and the final victory banking buttons. Camp and
 bank sheets are measured at 1920, 1280, 390 and 320 pixel widths. Visual review
 adds camp categories, a five-class chooser, Ranger combat and a real status

@@ -1,5 +1,8 @@
 > Current build, opening, status, terrain and reward rules are documented in
-> [Battle tactics](docs/BATTLE_TACTICS.md). Its embedded sources extend the core
+> [Battle tactics](docs/BATTLE_TACTICS.md) and the version-18
+> [Expedition update](docs/EXPEDITION_UPDATE.md). Equal-face reels/paid weighting,
+> training prices, stun recovery, tunnels, blackouts and bestiary rules there take
+> precedence over historical notes below. Embedded sources extend the core
 > runtime; historical implementation notes below should be read with those rules.
 
 # Gameplay systems and automation

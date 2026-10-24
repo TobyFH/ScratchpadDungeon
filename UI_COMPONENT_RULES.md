@@ -226,3 +226,32 @@ Use short topic pages with a native topic selector and previous/next buttons,
 not one shrinking wall of instructions. Keep topic changes within the existing
 sheet and preserve keyboard focus. The fitting routine uses the full available
 width before reducing text size. Check every topic at compact sizes.
+
+## Fixed notebook pages and faction controls
+
+- Field-guide topics share one grid cell. Inactive topics are inert and invisible
+  but reserve the longest page's space. Navigation always precedes the body.
+- Camp navigation and balance have fixed rows above a fixed card region; changing
+  a category must not move its controls. Training shows the next tier per family.
+- The compact workshop uses a native face selector and fixed Power, Replace and
+  Weight operation pages. Use the same validators and descriptions as desktop.
+  Never shrink the desktop face-list's small lettering into unreadable type.
+- Bestiary entry selection, previous/next, record frame, count and close control
+  reserve consistent regions for unknown and known creatures. Lore is purposeful
+  content for that creature; it is not decorative notebook filler.
+- Utility side tabs remain above confirmation layers and suspend/restore the
+  original modal DOM. Their labels never rotate. Do not resolve a pending event
+  just to open a guide or options page.
+- A faction has one block readout: party in its panel header; solo enemy below
+  the portrait; paired enemies one large row above their roster. Never draw two
+  shields implying two pools. Trait/condition/temperament portrait badges are
+  icons only; exact meaning belongs in their accessible hover tooltips.
+- Reel windows centre the entire tier grid. Direct SVG children must be static
+  grid items: retired absolute rank-I/II/III offsets must not reappear.
+- Treasure scenes reserve artwork, machine, inline-critical, result and reward
+  regions. The main machine has an explicit width independent of the marks.
+  Multiple finds use the fixed loot browser; criticals never resize existing art.
+- Corpse contours are normalised inside their fallen transform. Never insert a
+  second untransformed contour that resembles a live ghost behind the remains.
+- Portrait motion is independent of shake, respects reduced motion and its own
+  strength slider, and must leave actual button hitboxes stationary.

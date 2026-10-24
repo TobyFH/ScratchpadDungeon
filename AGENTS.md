@@ -34,9 +34,21 @@ gameplay RNG. Rebuild and commit their generated HTML alongside these sources.
 Temporary combat state, openings, statuses and focused enemy intent live in
 `game/battle-tactics.js`; travel choices and lava lighting live in
 `game/world-events.js`. Read `docs/BATTLE_TACTICS.md` for current rules and
-version-17 migration. Mage Resonance is derived from rolled marks, never an
+version-18 migration. Mage Resonance is derived from rolled marks, never an
 editable role. Temperament is fixed outside the starting choice. Berserker edits
 must use `editableTypes()` and the same validators as player/autoplay edits.
 
 Field-guide text and topic navigation live in `ui/field-guide.js`, embedded by
 the same builder. Keep topics short enough to read without internal scrolling.
+
+The current economy, equal-face reels, paid weighting and new exploration rules
+are documented in `docs/EXPEDITION_UPDATE.md`; read it before changing them.
+`game/economy.js` owns shop spending curves and permanent training lookup;
+`game/encounter-journal.js` owns bestiary IDs/receipts, lore and zombie selection;
+`ui/notebook-pages.js` owns utility suspension, portrait motion and fixed loot
+browsing. All are embedded by the builder. New hero faces start at weight one;
+only validated paid weighting changes odds. Class marks remain unique/permanent.
+Utility pages must suspend an existing confirmation without discarding its DOM
+callbacks. Keep journal encounter/death receipts idempotent across reloads.
+Camp training uses highest owned rank, not additive ranks, and future-run rules.
+Lava stays impassable; floor generation and save repair preserve the stair route.

@@ -246,6 +246,46 @@ function combatCallout(el, text, kind = "gold") {
     Math.max(12, Math.min(innerWidth - 12, r.left + r.width / 2)) + "px";
   node.style.top = Math.max(35, r.top + r.height * 0.2) + "px";
   document.body.append(node);
+  const half = node.getBoundingClientRect().width / 2;
+  node.style.left =
+    Math.max(half + 8, Math.min(innerWidth - half - 8, r.left + r.width / 2)) +
+    "px";
+  const motion = {
+    heal: [
+      { opacity: 0, transform: "translate(-50%,12px) scale(.8)" },
+      {
+        opacity: 1,
+        transform: "translate(-50%,-12px) scale(1.15)",
+        offset: 0.25,
+      },
+      { opacity: 1, transform: "translate(-50%,-17px)", offset: 0.8 },
+      { opacity: 0, transform: "translate(-50%,-35px)" },
+    ],
+    summon: [
+      { opacity: 0, transform: "translate(-50%,0) rotate(-9deg) scale(.5)" },
+      {
+        opacity: 1,
+        transform: "translate(-50%,0) rotate(4deg) scale(1.18)",
+        offset: 0.25,
+      },
+      {
+        opacity: 1,
+        transform: "translate(-50%,-8px) rotate(-2deg)",
+        offset: 0.8,
+      },
+      { opacity: 0, transform: "translate(-50%,-20px)" },
+    ],
+    fracture: [
+      { opacity: 0, transform: "translate(-50%,0) scaleX(1.6) scaleY(.5)" },
+      { opacity: 1, transform: "translate(-50%,0) rotate(5deg)", offset: 0.2 },
+      {
+        opacity: 1,
+        transform: "translate(-50%,-8px) rotate(-4deg)",
+        offset: 0.7,
+      },
+      { opacity: 0, transform: "translate(-50%,-28px) scale(1.25)" },
+    ],
+  };
   node
     .animate(
       matchMedia("(prefers-reduced-motion: reduce)").matches
@@ -253,7 +293,7 @@ function combatCallout(el, text, kind = "gold") {
             { opacity: 1, transform: "translate(-50%,0)" },
             { opacity: 0, transform: "translate(-50%,0)" },
           ]
-        : [
+        : motion[kind] || [
             { opacity: 0, transform: "translate(-50%,10px) scale(.75)" },
             {
               opacity: 1,

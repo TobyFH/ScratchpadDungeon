@@ -126,7 +126,9 @@ contrast respectively against the main paper in every palette.
   not embedded in the game. Injury overlays and corpse art keep the normal
   portrait contract.
 - Show severe injury clearly, while retaining the character's identity.
-  Corpses must remain unmistakably fallen; don't substitute a healthy portrait.
+  Corpses must remain unmistakably fallen and retain the actual species
+  silhouette; never fall back to a human corpse for a creature. Normalise contour
+  echoes before applying the fallen transform.
 - `pencilIllustration()` normalises older illustration fills to palette tokens
   and adds a controlled contour echo. New drawings should use `currentColor`,
   `var(--paper)` and `var(--paper-shade)` directly. Scope pattern IDs with

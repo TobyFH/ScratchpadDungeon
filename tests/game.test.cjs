@@ -47,6 +47,11 @@ async function game(t, { auto = false, width = 1440 } = {}) {
         state.opening = null;
       };
       maybeVulnerable = () => false;
+      tryBreakStun = (entity) => {
+        entity.stun = 0;
+        entity.stunGrace = 1;
+        return true;
+      };
     });
     Math.random = () => {
       seed = (seed * 16807) % 2147483647;
@@ -65,6 +70,11 @@ async function game(t, { auto = false, width = 1440 } = {}) {
       state.opening = null;
     };
     maybeVulnerable = () => false;
+    tryBreakStun = (entity) => {
+      entity.stun = 0;
+      entity.stunGrace = 1;
+      return true;
+    };
     newRun();
     setPreference("combatEffects", "beams");
   });
@@ -79,7 +89,7 @@ async function autoEvents(page) {
   await page.evaluate(() => {
     window.autoEventObserver = new MutationObserver(() => {
       let button = document.querySelector(
-        "#stage-confirm:not(:disabled),#recruit-accept:not(:disabled),#recruit-decline:not(:disabled),#well-use:not(:disabled),#ruin-examine:not(:disabled),#death-confirm:not(:disabled),#burial-confirm:not(:disabled),#revive-use:not(:disabled),#item-leave:not(:disabled)",
+        "#stage-confirm:not(:disabled),#recruit-accept:not(:disabled),#recruit-decline:not(:disabled),#well-use:not(:disabled),#tunnel-leave:not(:disabled),#ruin-examine:not(:disabled),#death-confirm:not(:disabled),#burial-confirm:not(:disabled),#revive-use:not(:disabled),#item-leave:not(:disabled)",
       );
       if (button && !document.querySelector("#spotlight").hidden)
         button.click();
@@ -143,6 +153,13 @@ function blankFloor() {
   }));
   state.position = pos(1, 7);
   state.map[state.position].seen = true;
+  // Saved fixture floors obey the same mandatory-stair invariant as generation.
+  Object.assign(state.map[pos(9, 1)], {
+    wall: false,
+    terrain: "floor",
+    event: "stairs",
+    feature: "stairs",
+  });
   render();
 }
 async function startEval(page, source) {
@@ -512,7 +529,7 @@ test("floor-one enemies attack every three actions and scale gradually to faster
   assert.ok(scaling.speed && scaling.strikes && scaling.health);
 });
 
-test("weighted class reels keep tank heals rare, healer attacks rare, and rogue heals absent", async (t) => {
+test("equal faces retain thematic class powers without hidden author weights", async (t) => {
   let p = await game(t);
   let odds = await p.evaluate(() =>
     Object.fromEntries(
@@ -533,11 +550,11 @@ test("weighted class reels keep tank heals rare, healer attacks rare, and rogue 
       }),
     ),
   );
-  assert.ok(odds.fighter.heal < 0.04);
-  assert.ok(odds.healer.heal > 0.7);
+  assert.equal(odds.fighter.heal, 1 / 6);
+  assert.equal(odds.healer.heal, 2 / 6);
   assert.ok(odds.healer.attack < 0.08);
   assert.equal(odds.rogue.heal, 0);
-  assert.ok(odds.rogue.attack > 0.7);
+  assert.equal(odds.rogue.attack, 3 / 6);
 });
 
 test("shared block absorbs multi-strikes, animates protection, and clears after victory and before the next fight", async (t) => {
@@ -683,7 +700,7 @@ test("shops retain their modest 36% floor chance and early solo adventurers have
   });
   assert.ok(rates.shops > 0.31 && rates.shops < 0.41, JSON.stringify(rates));
   assert.ok(
-    rates.recruits > 0.37 && rates.recruits < 0.48,
+    rates.recruits > 0.37 && rates.recruits < 0.51,
     JSON.stringify(rates),
   );
 });
@@ -692,7 +709,7 @@ test("shop purchases deduct gold, enforce stock and funds, heal the team, and re
   let p = await game(t);
   await fast(p);
   await p.evaluate(() => {
-    state.gold = 300;
+    state.gold = 1000;
     state.party.push(makeHero("Mira", "healer"));
     state.party[0].hp = 1;
     state.party[1].hp = 1;
@@ -705,7 +722,7 @@ test("shop purchases deduct gold, enforce stock and funds, heal the team, and re
   await p.waitForSelector('[data-buy="potion"]');
   let cost = await p.evaluate(() => shopPrices().potion);
   await p.locator('[data-buy="potion"]').click();
-  assert.equal(await p.evaluate(() => state.gold), 300 - cost);
+  assert.equal(await p.evaluate(() => state.gold), 1000 - cost);
   assert.equal(await p.evaluate(() => state.potions), 1);
   assert.equal(await p.locator('[data-buy="potion"]').isDisabled(), true);
   await p.locator('[data-buy="heal"]').click();
@@ -1085,7 +1102,7 @@ test("save restores speed and artefacts and migrates the earlier Sunseed-era not
     localStorage.setItem("scratchpad-dungeon-v2", JSON.stringify(old));
   });
   await p.reload();
-  assert.equal(await p.evaluate(() => state.version), 17);
+  assert.equal(await p.evaluate(() => state.version), 18);
   assert.equal(await p.evaluate(() => state.speed), "skip");
   assert.equal(await p.evaluate(() => state.relic), undefined);
   assert.doesNotMatch(await p.locator("body").textContent(), /Sunseed/);
@@ -1542,14 +1559,15 @@ test("fountain triple heals crit within the same popup at instant speed and show
   await p.evaluate(() => (Math.random = window.previousRandom));
 });
 
-test("triple trap results also receive a critical without losing their confirmation screen", async (t) => {
+test("three safe trap faces keep confirmation without a pointless critical", async (t) => {
   let p = await game(t);
   await fast(p);
   await startEval(
     p,
     "(async()=>{let old=Math.random;Math.random=()=>0;try{await trapRoll()}finally{Math.random=old}})()",
   );
-  await p.waitForSelector("#critical-result strong");
+  await p.waitForSelector("#stage-confirm");
+  assert.equal(await p.locator("#critical-result").count(), 0);
   assert.equal(await p.locator("#stage-title").textContent(), "A hidden trap");
   await p.waitForSelector("#stage-confirm");
   assert.equal(await p.locator("#stage-title").textContent(), "A hidden trap");
@@ -3214,7 +3232,7 @@ test("older saved fights migrate to the gentler curve without losing wounds or e
       face: state.party[0].reels[0][0].tier,
     })),
     {
-      version: 17,
+      version: 18,
       hp: 19,
       max: 38,
       damage: 6,
@@ -4062,7 +4080,7 @@ test("shop purchases can resolve a full bag by using the new tonic, then return 
   await p.locator("#item-use-found").click();
   await p.waitForSelector('#modal [data-buy="potion"]:disabled');
   assert.equal(await p.evaluate(() => state.party[0].hp), 17);
-  assert.equal(await p.evaluate(() => state.gold), 84);
+  assert.equal(await p.evaluate(() => state.gold), 8);
   assert.equal(await p.evaluate(() => state.potions), 0);
   assert.equal(await p.evaluate(() => Object.keys(state.bag).length), 3);
   assert.equal(await p.evaluate(() => modalKind), "shop");
@@ -4159,7 +4177,7 @@ test("first opening offers four base classes, opens the cover, and fresh runs tu
   await p.evaluate(() => localStorage.clear());
   await p.reload();
   await p.waitForSelector('[data-start-job="mage"]');
-  assert.equal(await p.locator(".starter-grid button").count(), 4);
+  assert.equal(await p.locator(".starter-grid button").count(), 5);
   assert.equal(
     await p.locator("#modal-title").textContent(),
     "Who opens the notebook?",
@@ -4669,7 +4687,7 @@ test("version-eight saves preserve edited faces while moving the class seal to t
   assert.ok(
     await p.evaluate(() =>
       state.party[0].reels.every((r) =>
-        r.some((f) => f.type === "poison" && f.tier === 3 && f.weight === 17),
+        r.some((f) => f.type === "poison" && f.tier === 3 && f.weight === 1),
       ),
     ),
   );
@@ -4805,7 +4823,7 @@ test("reloading before the starting class choice keeps the choice pending", asyn
   await p.reload();
   await p.waitForSelector('[data-start-job="rogue"]');
   await p.reload();
-  assert.equal(await p.locator(".starter-grid button").count(), 4);
+  assert.equal(await p.locator(".starter-grid button").count(), 5);
   await p.locator('[data-start-job="rogue"]').click();
   await p.reload();
   assert.equal(await p.evaluate(() => state.party[0].job), "rogue");
@@ -4964,7 +4982,7 @@ test("version-nine fights adopt the stronger enemy curve without changing hero w
         .map((f) => f.tier),
     })),
     {
-      version: 17,
+      version: 18,
       autoplay: false,
       heroHp: 17,
       face: 4,
@@ -5159,7 +5177,7 @@ test("autoplay settings persist through fresh runs and reloads without bypassing
   assert.equal(await p.evaluate(() => state.autoplay), true);
   await p.waitForTimeout(500);
   assert.equal(await p.evaluate(() => state.steps), 0);
-  assert.equal(await p.locator("[data-start-job]").count(), 4);
+  assert.equal(await p.locator("[data-start-job]").count(), 3);
   await p.locator("#autoplay").uncheck();
   await p.reload();
   assert.equal(await p.evaluate(() => state.autoplay), false);
@@ -5676,13 +5694,13 @@ test("autoplay shops for needed healing and a map, claims better full-bag suppli
   await p.evaluate(() => {
     busy = true;
     state.party[0].hp = 7;
-    state.gold = 75;
+    state.gold = 1000;
     setAutoplay(true);
     window.shopping = shopEncounter({ shop: { heal: 1, reveal: 1 } });
   });
   await p.evaluate(() => shopping);
   assert.equal(await p.evaluate(() => state.party[0].hp), 44);
-  assert.equal(await p.evaluate(() => state.gold), 27);
+  assert.equal(await p.evaluate(() => state.gold), 744);
   assert.equal(await p.evaluate(() => state.exitFound), true);
   await p.evaluate(async () => {
     state.bag = { potion: 1, ward: 1, antidote: 1 };
@@ -6348,11 +6366,11 @@ test("banking rejects invalid/unearned transfers and storage failures without ta
   });
 });
 
-test("camp purchases are persistent and Ranger is the only class unlock without specific upgrades", async (t) => {
+test("camp purchases persist and class invitations remain separate from tiered training", async (t) => {
   const p = await game(t);
   await p.evaluate(() => {
     const profile = emptyProfile();
-    profile.gold = 1000;
+    profile.gold = 5000;
     localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
     chooseStartingClass(true);
   });
@@ -6388,10 +6406,10 @@ test("camp purchases are persistent and Ranger is the only class unlock without 
       ranger: ruleEnabled("ranger"),
       pool: campProfile().gold,
     })),
-    { gold: 20, ranger: true, pool: 860 },
+    { gold: 150, ranger: true, pool: 3200 },
   );
   await p.reload();
-  assert.equal(await p.evaluate(() => campProfile().gold), 860);
+  assert.equal(await p.evaluate(() => campProfile().gold), 3200);
 });
 
 test("Ranger has exactly one middle seal, saves Execute patience for a later hit and clears it after battle", async (t) => {
@@ -6437,7 +6455,7 @@ test("Ranger has exactly one middle seal, saves Execute patience for a later hit
     };
   });
   assert.deepEqual(r, {
-    charge: 2,
+    charge: 3,
     damage: 3,
     consumed: 0,
     after: 0,
@@ -6779,7 +6797,7 @@ test("the camp can be navigated with keyboard tabs and cannot dismiss an initial
   await p.keyboard.press("End");
   assert.equal(
     await p.evaluate(() => document.activeElement.dataset.campTab),
-    "oddities",
+    "training",
   );
   await p.locator("#camp-return").focus();
   await p.keyboard.press("Enter");
@@ -7028,9 +7046,9 @@ test("Ranger Execute meter shows patience, release and battle cleanup without ad
   });
   assert.equal(
     await p.locator(".aim-meter").getAttribute("aria-valuenow"),
-    "2",
+    "3",
   );
-  assert.match(await p.locator(".aim-meter").textContent(), /EXECUTE 2\/6/);
+  assert.match(await p.locator(".aim-meter").textContent(), /EXECUTE 3\/6/);
   assert.ok(
     await p
       .locator(".aim-track i")

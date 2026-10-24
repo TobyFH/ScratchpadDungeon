@@ -156,8 +156,19 @@ function maybeVulnerable(entity, power = 1, cause = "Stun") {
     createdAction: state.actionSerial,
     bonus: TACTICS.vulnerabilityBonus,
   };
-  combatCallout(entityArt(entity), "VULNERABLE · +25% next hit", "danger");
+  combatCallout(entityArt(entity), "VULNERABLE · +25% next hit", "vulnerable");
   syncStatusFX();
+  const badge = entityArt(entity)?.querySelector(".vulnerable-badge");
+  if (badge)
+    animate(
+      badge,
+      [
+        { transform: "scale(3)", opacity: 0 },
+        { transform: "scale(1)", opacity: 1 },
+      ],
+      { duration: 550, juice: true },
+    );
+  burst(entityArt(entity), "damage", 24);
   return true;
 }
 function clearStuns(entity, amount, { all = false } = {}) {
@@ -165,6 +176,7 @@ function clearStuns(entity, amount, { all = false } = {}) {
   const guard = state.party.includes(entity) ? state.block : enemyBlock();
   if (!all && Math.random() >= amount / (amount + guard + 4)) return false;
   entity.stun = 0;
+  entity.stunAge = 0;
   entity.stunGrace = 1;
   combatCallout(entityArt(entity), "STUN CLEARED", "heal");
   return true;
@@ -181,6 +193,8 @@ function clearBattleStatuses() {
     entity.vulnerable = null;
     entity.initiative = null;
     entity.surprised = false;
+    entity.stunAge = 0;
+    entity.blackout = [];
   }
   state.opening = null;
   state.invulnerable = null;
@@ -221,7 +235,9 @@ function applyPoison(entity, amount, source = null, { damage = 1 } = {}) {
   syncStatusFX();
 }
 async function tickPoison() {
+  if (!state.party.some(alive) || !livingEnemies().length) return;
   for (const entity of [...state.party.filter(alive), ...livingEnemies()]) {
+    if (!state.party.some(alive) || !livingEnemies().length) break;
     const poison = entity.poison;
     if (!poison || poison.appliedAt >= state.actionSerial) continue;
     poison.turns--;
@@ -289,9 +305,11 @@ function stunHero(i, power) {
     return `${h.name} protected from stun (−${hit.spent} armour)`;
   }
   h.stun = 1;
+  h.stunAge = 0;
+  h.stunAppliedRoll = state.stunRollSerial || 0;
   maybeVulnerable(h, power, "Stun");
   syncHero(i);
-  combatCallout(entityArt(h), "STUNNED · miss one roll", "danger");
+  combatCallout(entityArt(h), "STUNNED · shake free to act", "danger");
   log(`${h.name} is stunned. The missed roll leaves enemy clocks unchanged.`);
   return h.name + " stunned";
 }
@@ -304,6 +322,8 @@ function stunEnemy(power, e = state.enemy) {
   }
   const newly = !e.stun;
   e.stun = 1;
+  e.stunAge = 0;
+  e.stunAppliedRoll = state.stunRollSerial || 0;
   if (
     newly &&
     state.currentHero != null &&
@@ -316,8 +336,8 @@ function stunEnemy(power, e = state.enemy) {
     hit.spent ? "STUN BREAKS THROUGH!" : "STUNNED",
     "gold",
   );
-  log(`${e.name} is stunned and will miss one attack turn.`);
-  return "one enemy turn stunned";
+  log(`${e.name} is stunned until it shakes free.`);
+  return "stunned until recovery";
 }
 
 function resonanceEffects(h, role) {
@@ -329,11 +349,7 @@ function resonanceEffects(h, role) {
   }[role];
 }
 function enemyShieldEl(e = state.enemy) {
-  return $(
-    battleEnemies().indexOf(e) > 0
-      ? "#enemy-team-block-2"
-      : "#enemy-team-block",
-  );
+  return $("#enemy-team-block");
 }
 function canEquipGear(h, gear) {
   return !!h && !!gear && (!gear.job || gear.job === h.job);
@@ -382,6 +398,10 @@ async function resumeOpeningEncounter() {
 }
 
 function normaliseTacticalStatuses(entity) {
+  entity.blackout = Array.isArray(entity.blackout)
+    ? [...new Set(entity.blackout.filter((k) => [0, 1, 2].includes(k)))]
+    : [];
+  entity.stunAge = Math.min(3, Math.max(0, entity.stunAge || 0));
   entity.vulnerable ??= null;
   entity.surprised ??= false;
   entity.initiative ??= null;
@@ -395,4 +415,81 @@ function normaliseTacticalStatuses(entity) {
     entity.poison.turns = Math.min(TACTICS.poisonTurns, entity.poison.turns);
     entity.poison.overflow = ((entity.poison.overflow || 0) + excess) % 3;
   }
+}
+
+// Recovery is checked after real combat rolls, and on a stunned creature's
+// missed attempt. A missed hero attempt still leaves enemy clocks untouched.
+function tryBreakStun(entity) {
+  if (!entity?.stun || entity.hp <= 0) return false;
+  entity.stunAge = (entity.stunAge || 0) + 1;
+  const chance = [0.25, 0.55, 0.9, 1][Math.min(3, entity.stunAge - 1)];
+  if (Math.random() >= chance) return false;
+  entity.stun = 0;
+  entity.stunGrace = 1;
+  entity.stunAge = 0;
+  combatCallout(entityArt(entity), "STUN BROKEN", "recovery");
+  syncStatusFX();
+  return true;
+}
+function recoverStunsAfterRoll() {
+  for (const entity of [...state.party.filter(alive), ...livingEnemies()])
+    if (
+      entity.stun &&
+      (entity.stunAppliedRoll ?? -1) < (state.stunRollSerial || 0)
+    )
+      tryBreakStun(entity);
+}
+function pencilBlackout(e) {
+  if (e.hp <= 0 || !state.party.some(alive)) return;
+  const candidates = state.party
+    .filter(alive)
+    .flatMap((h) =>
+      [0, 1, 2].filter((k) => !h.blackout?.includes(k)).map((k) => ({ h, k })),
+    );
+  const count = Math.min(
+    candidates.length,
+    state.party.filter(alive).length + 1,
+  );
+  for (let n = 0; n < count; n++) {
+    const { h, k } = candidates.splice(rand(candidates.length), 1)[0];
+    h.blackout ??= [];
+    h.blackout.push(k);
+  }
+  passiveFX(e, "PENCIL BLACKOUT!", "blackout");
+  renderParty();
+  document
+    .querySelectorAll(".blacked-out")
+    .forEach((el) => burst(el, "dust", 12));
+  log(
+    e.name +
+      " blacks out party reels. Roll each affected machine to erase its covering.",
+  );
+}
+function clearRolledBlackout(h, i) {
+  if (!h.blackout?.length) return;
+  h.blackout = [];
+  document.querySelectorAll(`#machine-hero-${i} .blacked-out`).forEach((el) => {
+    el.classList.add("blackout-erased");
+    burst(el, "dust", 16);
+    setTimeout(
+      () => el.classList.remove("blacked-out", "blackout-erased"),
+      180,
+    );
+  });
+  GameSound.play("erase");
+}
+function announceEnemyBadges(e) {
+  const art = enemyArtEl(e);
+  if (!art) return;
+  art.querySelectorAll(".portrait-conditions > *").forEach((el, i) => {
+    animate(
+      el,
+      [
+        { transform: "scale(2.7)", opacity: 0 },
+        { transform: "scale(.9)", opacity: 1, offset: 0.72 },
+        { transform: "scale(1)", opacity: 1 },
+      ],
+      { duration: 480 + i * 70, juice: true },
+    );
+  });
 }

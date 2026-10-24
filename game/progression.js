@@ -6,7 +6,7 @@ const CAMP_UNLOCKS = {
   ranger: {
     name: "A ranger's invitation",
     category: "classes",
-    cost: 80,
+    cost: 900,
     permanent: true,
     description:
       "Unlock Ranger as a starting class and wandering companion. Execute builds patience between attacks and punishes wounded enemies.",
@@ -14,70 +14,71 @@ const CAMP_UNLOCKS = {
   provisions: {
     name: "A little spending money",
     category: "boons",
-    cost: 60,
-    description: "Begin each expedition with 20 gold.",
+    cost: 900,
+    description:
+      "Begin each expedition with 150 gold: enough for an early supply or a solo full heal.",
   },
   hearty: {
     name: "A hearty breakfast",
     category: "boons",
-    cost: 100,
+    cost: 1100,
     description: "New adventurers have 4 extra maximum HP.",
   },
   company: {
     name: "Spread the word",
     category: "boons",
-    cost: 95,
+    cost: 1500,
     description: "Wandering companions are 25% more likely to appear.",
   },
   springs: {
     name: "Follow the water",
     category: "boons",
-    cost: 85,
+    cost: 1800,
     description: "One additional healing well on each floor.",
   },
   iron: {
     name: "Iron margins",
     category: "challenges",
-    cost: 65,
+    cost: 600,
     description:
       "Enemies have 20% more HP and 10% more base damage (rounded up).",
   },
   crowded: {
     name: "Never alone",
     category: "challenges",
-    cost: 70,
+    cost: 700,
     description:
       "Double encounters are 8 percentage points more likely, capped at 33%.",
   },
   drought: {
     name: "Dry ink",
     category: "challenges",
-    cost: 55,
+    cost: 500,
     description: "One fewer healing well on each floor.",
   },
   hunted: {
     name: "Restless pages",
     category: "challenges",
-    cost: 60,
+    cost: 650,
     description:
       "The Unwritten begins hunting after 12 revealed tiles instead of 18, from floor 3.",
   },
   golden: {
     name: "Heavy pockets",
     category: "oddities",
-    cost: 90,
+    cost: 1900,
     description: "One extra treasure chest per floor.",
   },
   lanterns: {
     name: "Leave a light on",
     category: "oddities",
-    cost: 75,
+    cost: 1200,
     description: "One extra beacon per floor.",
   },
   markets: {
     name: "Travelling market",
     category: "oddities",
-    cost: 100,
+    cost: 2200,
     get description() {
       // Read current spawn chances so camp copy cannot drift after balancing.
       return `Shop chance rises from ${Math.round(WORLD_BALANCE.shopChance * 100)}% to ${Math.round(WORLD_BALANCE.marketChance * 100)}% per floor.`;
@@ -86,11 +87,50 @@ const CAMP_UNLOCKS = {
   sharp: {
     name: "Both ends sharpened",
     category: "oddities",
-    cost: 80,
+    cost: 800,
     description:
       "Heroes gain 1 damage on damaging rolls; enemies gain 1 base damage.",
   },
 };
+// Permanent training is bought one tier at a time. Existing purchases keep their IDs.
+CAMP_UNLOCKS.berserker = {
+  name: "A berserker’s oath",
+  category: "classes",
+  cost: 750,
+  permanent: true,
+  description:
+    "Unlock Berserker starts and wandering companions. Wounds feed Fury; Blood Price trades health for power.",
+};
+for (const [family, name, costs, step, description] of [
+  [
+    "vitality",
+    "Stouter hearts",
+    [750, 1500, 3000, 5500, 9000],
+    10,
+    "party base health",
+  ],
+  [
+    "power",
+    "Practised strikes",
+    [900, 2000, 4500],
+    5,
+    "blade and magic roll damage",
+  ],
+  ["experience", "Lessons remembered", [800, 1800, 4000], 5, "battle EXP"],
+])
+  costs.forEach((cost, i) => {
+    const id = family + (i + 1);
+    CAMP_UNLOCKS[id] = {
+      name,
+      category: "training",
+      cost,
+      permanent: true,
+      family,
+      rank: i + 1,
+      requires: i ? family + i : null,
+      description: `+${step * (i + 1)}% ${description}.`,
+    };
+  });
 function emptyProfile() {
   return { version: 1, gold: 0, owned: [], enabled: [], deposits: {} };
 }
@@ -353,6 +393,12 @@ function toggleUnlock(id) {
   }
 }
 let campInitial = false;
+function nextTrainingCard(family, p) {
+  const entries = Object.entries(CAMP_UNLOCKS)
+    .filter(([, d]) => d.family === family)
+    .sort((a, b) => a[1].rank - b[1].rank);
+  return (entries.find(([id]) => !p.owned.includes(id)) || entries.at(-1))[0];
+}
 function campPage(category = "classes") {
   const p = campProfile(),
     tabs = {
@@ -360,23 +406,40 @@ function campPage(category = "classes") {
       boons: "Provisions",
       challenges: "Challenges",
       oddities: "Oddities",
+      training: "Training",
     };
   if (!Object.hasOwn(tabs, category)) category = "classes";
   openModal(
     "Camp upgrades",
-    `<div class="camp-balance">${icon("coin")}<strong>${p.gold} gold banked</strong><span>Unlock once. Choose your rules for the next expedition.</span></div>${p.error ? `<p role="alert">${escapeHTML(p.error)}</p>` : ""}<div class="settings-tabs" role="tablist" aria-label="Camp upgrades">${Object.entries(
+    `<div class="camp-balance">${icon("coin")}<strong>${p.gold} gold banked</strong><span>Permanent training and classes apply next run. Other modifiers are optional.</span></div>${p.error ? `<p role="alert">${escapeHTML(p.error)}</p>` : ""}<div class="settings-tabs" role="tablist" aria-label="Camp upgrades">${Object.entries(
       tabs,
     )
       .map(
         ([id, label]) =>
           `<button role="tab" aria-selected="${id === category}" data-camp-tab="${id}">${label}</button>`,
       )
-      .join("")}</div><div class="camp-grid">${Object.entries(CAMP_UNLOCKS)
-      .filter(([, d]) => d.category === category)
+      .join(
+        "",
+      )}</div><div class="camp-grid" data-category="${category}">${Object.entries(
+      CAMP_UNLOCKS,
+    )
+      .filter(
+        ([id, d]) =>
+          d.category === category &&
+          (!d.family || id === nextTrainingCard(d.family, p)),
+      )
       .map(([id, d]) => {
         const owned = p.owned.includes(id),
           locked = d.requires && !p.owned.includes(d.requires);
-        return `<article class="pencil-card camp-card">${id === "ranger" ? `<div class="camp-class-art">${portraitArt("ranger")}</div>` : ""}<h3>${d.name}</h3><p>${d.description}</p>${owned ? (d.permanent ? '<strong class="camp-owned">Unlocked · always available</strong>' : `<button data-camp-toggle="${id}" aria-pressed="${p.enabled.includes(id)}">${p.enabled.includes(id) ? "Enabled next run ✓" : "Enable next run"}</button>`) : `<button data-camp-buy="${id}" ${p.gold < d.cost || locked || p.error ? "disabled" : ""}>${locked ? "Requires Ranger invitation" : "Unlock · " + d.cost + " gold"}</button>`}</article>`;
+        return `<article class="pencil-card camp-card">${["ranger", "berserker"].includes(id) ? `<div class="camp-class-art">${portraitArt(id)}</div>` : ""}<h3>${d.name}${
+          d.family
+            ? ` · ${campTier(d.family, p.owned)} / ${Math.max(
+                ...Object.values(CAMP_UNLOCKS)
+                  .filter((x) => x.family === d.family)
+                  .map((x) => x.rank),
+              )}`
+            : ""
+        }</h3><p>${d.description}</p>${owned ? (d.permanent ? '<strong class="camp-owned">Unlocked · always available</strong>' : `<button data-camp-toggle="${id}" aria-pressed="${p.enabled.includes(id)}">${p.enabled.includes(id) ? "Enabled next run ✓" : "Enable next run"}</button>`) : `<button data-camp-buy="${id}" ${p.gold < d.cost || locked || p.error ? "disabled" : ""}>${locked ? "Requires " + CAMP_UNLOCKS[d.requires].name : "Unlock · " + d.cost + " gold"}</button>`}</article>`;
       })
       .join(
         "",

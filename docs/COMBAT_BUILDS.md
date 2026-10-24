@@ -3,13 +3,16 @@
 The runtime is still one self-contained HTML. `tools/build-ui.cjs` embeds these
 source modules; edit the sources and regenerate rather than editing marked HTML:
 
-| Source | Responsibility |
-| --- | --- |
-| `game/hero-builds.js` | Temperaments, natural Resonance, Fury, Execute, shared enemy block helpers |
-| `game/reel-upgrades.js` | Prices, refunds, edit validation and the reel workshop |
-| `game/encounter-presentation.js` | Cosmetic pun identities, paired arrivals and declined-recruit outcomes |
-| `ui/combat-feedback.js` | Rolled-symbol flights, beam selection and split numeric feedback |
-| `ui/drawings.js` | All ordinary and pun pencil illustrations |
+| Source                           | Responsibility                                                             |
+| -------------------------------- | -------------------------------------------------------------------------- |
+| `game/hero-builds.js`            | Temperaments, natural Resonance, Fury, Execute, shared enemy block helpers |
+| `game/reel-upgrades.js`          | Prices, refunds, edit validation and the reel workshop                     |
+| `game/economy.js`                | Shared shop prices and permanent training lookup                           |
+| `game/encounter-journal.js`      | Persistent creature records and returned adventurers                       |
+| `ui/notebook-pages.js`           | Suspended utility pages, portrait motion and fixed loot browsing           |
+| `game/encounter-presentation.js` | Cosmetic pun identities, paired arrivals and declined-recruit outcomes     |
+| `ui/combat-feedback.js`          | Rolled-symbol flights, beam selection and split numeric feedback           |
+| `ui/drawings.js`                 | All ordinary and pun pencil illustrations                                  |
 
 ## Builds
 
@@ -20,7 +23,8 @@ and stun power when present. Defensive adds one to healing (targeted or party),
 team block and stimulant power when present. Blanks never gain an effect. These
 bonuses apply before critical multipliers and are included in Autofight estimates.
 
-Classes are Tank, Rogue, Mage, Berserker and the camp-unlocked Ranger. Mage
+Tank, Rogue and Mage are initially available; Ranger and Berserker require
+permanent camp unlocks. Mage
 replaces the old Healer. Mages have no chosen speciality or role stat. Resonance
 follows the actual healing, shield, poison or spell marks rolled, with the
 weighted wheel as a fallback. Healing Resonance also clears every ally's stun.
@@ -28,11 +32,11 @@ See [Battle tactics](BATTLE_TACTICS.md) for the formulas, fixed Aggressive/Defen
 temperaments, Berserker Fury, openings and status interactions.
 
 Ranger **Execute** stores patience, from zero to six. Each party action on which
-that Ranger does not attack adds one; its own nondamaging seal roll adds two.
+that Ranger does not attack adds two; its own nondamaging seal roll adds three.
 A missed stunned action counts as waiting but still leaves enemy clocks intact.
 The next damaging Ranger roll consumes charge. Against the selected enemy:
 
-`ceil((2 + level/2) * charge/6 * (0.25 + 2 * missingHealthFraction) * sealBoost)`
+`ceil((3 + .75*level) * charge/6 * (.5 + 2.5*missingHealthFraction) * sealBoost)`
 
 `sealBoost` is 1.35 when its seal also lands, otherwise 1. The bonus is added
 before critical multiplication. The existing caption meter shows patience and
@@ -58,7 +62,15 @@ rounded down, with a minimum of one point. `face.investments[tier]` records paid
 upgrade costs. Initial/legacy faces without a receipt use their class's tier
 price. Swapping pays for the destination and resets the applicable receipt.
 A complete upgrade/downgrade cycle always loses points, so repeated edits cannot
-farm points. Weights never change. Exactly one class seal is mandatory on the
+farm points. All fresh faces start at weight one, including the class mark.
+Weight purchases add one draw weight for 4/8/12 points (class mark 6/12/18), up
+to weight four; symbol/power edits preserve that purchased weight. Weighting has
+no downgrade refund. The Critical odds page enumerates exact type-and-rank
+combinations, including the middle class wildcard. See
+[Expedition update](EXPEDITION_UPDATE.md#reels-equal-faces-and-paid-weighting)
+for the formula. On compact screens, a native face selector and fixed Power,
+Replace and Weight pages keep text and controls legible without internal scrolling.
+Exactly one class seal is mandatory on the
 middle reel: it cannot be upgraded, downgraded, swapped away or copied by any
 manual or automated edit. Autoplay evaluates explicit legal swaps and upgrades
 through the same validator and prices.
@@ -70,7 +82,8 @@ and damage to either enemy consumes it. Legacy `e.block` accessors alias this
 value (without duplicating it in saves) for compatibility; gameplay writers must use `setEnemyBlock` /
 `gainEnemyBlock`, never write individual fields. Piercing poison bypasses it;
 stun consumes up to six block per power; greater power can pierce protection.
-Protection readouts below the enemy portraits show the same shared count.
+Solo protection sits below its portrait. Paired fights have one larger protection
+row above both portraits; it represents the same shared count.
 Intercepted attacks hit that shield, with a separate flight/beam for HP overflow.
 
 The **Unbroken page** consumable blocks every damage hit during the next actual
@@ -114,11 +127,13 @@ Normal and pun species have distinct synthesised cries. Cries take priority over
 a background/older voice when the shared twenty-voice pool is full, so large FX
 bursts cannot silently drop an entrance or death. Mute/SFX volume still apply.
 
-Version 17 migrates earlier saves without losing points, wounds, edited faces,
-equipment or history: Healers become Mages retaining their healing faces; the old
-Mage speciality field is removed, existing middle seals are retained, stray seals become blanks at the same weight, and a missing middle
-seal is restored. Existing enemy block is consolidated once. New preferences
-are validated, saved and retained across runs.
+Version 18 preserves points, wounds, edited symbols/ranks, equipment and history.
+Legacy Healers still become Mages retaining their healing faces; old Mage role
+fields disappear. Exactly one middle seal is retained/restored, stray seals become
+blanks, and shared enemy block is consolidated. Pre-18 authored hero weights reset
+to one, so existing heroes also receive equal initial face odds. Paid version-18
+weights survive reloads. Lava is made impassable and the staircase route is
+repaired if necessary. New preferences are validated and persist across runs.
 
 Run `npm test` and `npm run review:ui`. `tests/combat-builds.test.cjs` exercises
 actual browser interactions, refunds/invariants, migration, Resonance effects, Execute,

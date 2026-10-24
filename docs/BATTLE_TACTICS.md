@@ -13,7 +13,8 @@ Aggressive (`offence`) and Defensive (`defence`) are permanent temperaments.
 Only the starting screen offers a choice; recruits receive one randomly.
 Aggressive adds one to meaningful damage, poison and stun effects. Defensive adds
 one to healing, block and stimulants. Blank results never gain an effect.
-Temperament is visible above hero reels, on the portrait and in the workshop.
+Temperament appears once as an icon on the portrait, with hover details; the
+workshop spells out its name and bonuses.
 It is separate from the single earned character trait.
 
 A Mage has no role selection or saved speciality. Resonance examines the ordinary
@@ -36,7 +37,7 @@ criticals can increase the positive effects. HP damage absorbed by block does
 not feed Fury. Blood Price criticals multiply its extra Fury, never its HP cost.
 The reserved caption beneath its machine contains the Fury bar.
 
-Tank, Rogue, Mage and Berserker are base classes; Ranger remains the camp unlock.
+Tank, Rogue and Mage are base classes; Ranger and Berserker require camp unlocks.
 Each hero has exactly one permanent middle-reel class mark. Its odds cannot be
 copied by editing. Manual play and autoplay use the same prices, refunds,
 restrictions and weighted effects. The workshop explains every face, its chance,
@@ -63,8 +64,8 @@ encourages a finishing attack, and relevant wheels can seek stun/poison/block.
 Damaging rolls follow that target while it lives. The caption is a forecast,
 not a guarantee of the random reel result. Rendering does not reroll intent.
 
-Both enemy portraits display the same shared protection pool directly below
-them in paired fights. There is one authoritative `state.enemyBlock`, with
+Solo enemy protection sits below its portrait. Paired fights display one larger
+shared protection row above the enemy roster. There is one authoritative `state.enemyBlock`, with
 compatibility accessors, never two independently maintained pools.
 
 ## Status interactions
@@ -72,8 +73,11 @@ compatibility accessors, never two independently maintained pools.
 Stun consumes up to six block per power. With no block it applies normally;
 rank-I power remains stopped by any positive block. Greater power has a growing
 penetration chance, especially when the available block is small. The precise
-formula is centralised in `stunResolution`. A stunned hero still misses one
-attempt without advancing enemy clocks; an enemy misses one attack turn.
+formula is centralised in `stunResolution`. A stunned hero misses each attempted action without advancing or resetting enemy
+clocks. A stunned enemy misses its scheduled turn. Recovery checks on missed
+attempts and after actual combat rolls rise through 25%, 55%, 90%, then 100%
+(mean 2.12 checks). The applying roll cannot immediately remove its own stun.
+Healing can still cleanse it early.
 
 A successful stun can leave **Vulnerable** with chance `min(.65,.25+.055*power)`.
 A magic hit can do so with chance `min(.45,.18+.035*power)`. Vulnerable increases
@@ -90,7 +94,9 @@ Poison has at most three remaining turns. Reapplications fill those turns and
 bank excess duration potency; each three surplus points adds one tick damage,
 up to eight. Strong venom items retain their acquired base tick damage. Damage
 and duration are shown together. Poison, stun, vulnerability, Fury, Rage,
-stimulants, patience, surprise and initiative all clear at battle end.
+stimulants, patience, surprise, initiative and pencil blackouts all clear at battle end. Poison cannot
+tick once either faction has no living members, including after a fatal critical
+or Execute.
 
 ## Difficulty, rewards and discoveries
 
@@ -105,8 +111,7 @@ Unbroken page. Consumable quality is evaluated three floors deeper; its other
 reels also have a larger item share. This remains an actual visible loot roll.
 
 `WORLD_BALANCE` raises normal shop chance to 36% (66% with Markets), river-bearing
-floor chance to 41%, rare double rivers to 1.5%, and artefact weight from 18 to
-22. Lava can appear from floor five, on 35% of floors, with a small chance of a
+floor chance to 41%, rare double rivers to 1.5%, and artefact weight from 18 to 22. Lava can appear from floor five, on 35% of floors, with a small chance of a
 second puddle. Lava blocks movement; placement preserves connected walkable
 areas and the distant stair route. Discovering any tile in its orthogonal cross
 reveals that whole cross, including the lava, without activating its events.
@@ -124,6 +129,33 @@ restriction in bag, find, shop and equipment views. A full-bag shop purchase
 asks for confirmation before gold or stock changes; cancellation preserves both.
 Matching item types still stack without needing another pocket.
 
+## New encounter and travel rules
+
+The floor-six guardian is **The Graphite Gaoler**. Its arrival covers up to
+`living heroes + 1` randomly chosen available reels; every third actual turn can
+cover more. Covered windows roll EMPTY, cannot contribute an effect or critical,
+then erase when their own hero rolls. A rare ordinary Gaoler can appear on floors
+6–10 with the same passive. Its blackout and every other combat status clear at
+battle end. Enemy badges pulse after the appearance sketch reaches its page;
+Vulnerable, healing, summoning, fracture and blackout have distinct callouts.
+
+Paired tunnels appear on 14% of generated floors; 8% of those attempt two pairs.
+Pairs are reciprocal, connected and at least three Manhattan tiles apart, and
+replace no existing discovery or barrier. Use/leave is explicit. Travel reveals
+and visits the far entrance without recursively triggering it. Known entrances
+can be passed through normally.
+
+An earlier-floor fallen companion has a 4.5% chance to return on a later ordinary
+encounter, at most once per memorial. This is a hostile zombie, not resurrection;
+the original grave and statistics remain. The Unwritten dies when stepping onto
+a **revealed, live trap**; it is removed and that tile becomes treasure. There is
+no immediate gold, EXP or victory award; later visiting the chest rolls loot.
+
+Healthy Autoplay now prefers a visible, estimated low-risk battle to known
+stairs even when no longer underlevelled. Risk uses current party HP, actual
+weighted damage expectations and the ordinary floor curve, without consulting
+unrevealed contents.
+
 ## Presentation and verification
 
 Flying icons are larger and their normal flight is 520ms at 1x, easing along a
@@ -134,10 +166,12 @@ becomes the focus. The advance button remains enabled. Class marks, initiative,
 passive activations, boss/elite tags and the second foe's entrance have distinct
 bounded callouts. Reduced motion and existing FX/audio preferences apply.
 
-Version 17 removes saved Mage speciality without changing edited faces, HP,
+Version 18 retains the version-17 migrations that remove saved Mage speciality without changing edited faces, HP,
 points or equipment. It bounds migrated poison and transient statuses, preserves
 opening restrictions, and updates existing pursuer strength once while retaining
-its remaining HP fraction. Opening confirmations can resume after reload.
+its remaining HP fraction. Opening confirmations can resume after reload. Version 18 additionally equalises
+old authored hero face weights, retains paid new weights, normalises blackout and
+stun-age fields, and repairs the lava-safe stair route.
 
 Run `npm run build:ui`, `npm test` and `npm run review:ui`. The tactics browser
 suite covers both sides of the interactions and actual choices; older numeric
