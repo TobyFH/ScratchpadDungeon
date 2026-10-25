@@ -1,6 +1,13 @@
 // Biome data is stored on the first map cell, so ordinary JSON save/HTML exports
 // retain it. Presentation never rolls a theme or consumes world RNG.
 const BIOMES = Object.freeze({
+  crystal: {
+    name: "Crystal caves",
+    tint: "#7395b6",
+    minDepth: 3,
+    names: ["The singing geodes", "The fractured gallery", "The quartz hollow"],
+    note: "Crystal seams hum against the turning reels.",
+  },
   cave: {
     name: "Caverns",
     tint: "#8e8474",
@@ -106,32 +113,40 @@ function assignFloorBiome(map, depth, { force = null } = {}) {
           spread.push(j);
     }
   } else if (kind === "ice") {
-    const goal = map.findIndex((c) => c.event === "stairs");
     for (const i of candidates) {
       if (map[i].event || Math.random() >= 0.17) continue;
       map[i].terrain = "ice";
       // Walking connectivity alone is insufficient: the forced slide must also
       // admit a real route. Reject only the newly proposed slippery tile.
-      if (!movementRoute(map, pos(1, 7), goal, { omniscient: true }))
-        map[i].terrain = "floor";
+      if (!allTilesCanReachStairs(map)) map[i].terrain = "floor";
     }
-  } else if (kind === "lava") {
+  } else if (kind === "lava" || kind === "crystal") {
     // Rooms are connected, non-blocking reveal groups. Do not turn one of
     // their floor cells into a hazard after room generation has validated it.
     const free = candidates.filter((i) => !map[i].event && !map[i].room);
-    for (const i of free)
-      if (Math.random() < 0.07) {
-        const before = mapDistances(map).size;
-        map[i].wall = true;
-        map[i].terrain = "lava";
-        if (mapDistances(map).size < before - 1) {
-          map[i].wall = false;
-          map[i].terrain = "floor";
-        }
+    const placeBarrier = (i) => {
+      const before = mapDistances(map).size;
+      map[i].wall = true;
+      map[i].terrain = kind === "crystal" ? "crystal" : "lava";
+      if (mapDistances(map).size < before - 1) {
+        map[i].wall = false; map[i].terrain = "floor"; return false;
       }
+      return true;
+    };
+    for (const i of free) if (Math.random() < 0.07) placeBarrier(i);
+    if (kind === "crystal" && !map.some(c => c.terrain === "crystal"))
+      free.some(placeBarrier);
   }
 }
 function normaliseBiome(map = state.map) {
+  state.crystalRolls = Math.max(0, Math.floor(Number(state.crystalRolls) || 0));
+  // Repair old one-way ice layouts without rerolling discoveries or walls.
+  if (map.some((c) => c.terrain === "ice") && !allTilesCanReachStairs(map)) {
+    for (const c of map.filter((c) => c.terrain === "ice").reverse()) {
+      c.terrain = "floor";
+      if (allTilesCanReachStairs(map)) break;
+    }
+  }
   if (!BIOMES[map[0].biome]) map[0].biome = "cave";
   if (typeof map[0].floorName !== "string" || !map[0].floorName.trim())
     map[0].floorName = BIOMES[floorBiome(map)].names[(state.depth - 1) % 3];
@@ -148,6 +163,7 @@ function updateBiomePresentation() {
       overgrown: ["overgrown", "Overgrowth"],
       fungal: ["mushroom", "Mushrooms"],
       ice: ["ice", "Ice"],
+      crystal: ["crystal", "Crystal · aura"],
     }[theme];
   if (key) {
     key.hidden = !terrain;
@@ -166,7 +182,7 @@ function glideCells(map, from, entry, { knownOnly = false } = {}) {
       y = Math.floor(n / W) + dy;
     if (x < 0 || x >= W || y < 0 || y >= H) break;
     const next = pos(x, y);
-    if (knownOnly && !map[next].seen) return null;
+    if (knownOnly && !map[next].seen) return [...cells, next];
     if (map[next].wall) break;
     cells.push(next);
     n = next;
@@ -210,6 +226,16 @@ function movementRoute(
         !portal && !ignoreIce && (c.seen || omniscient) && c.terrain === "ice"
           ? glideCells(map, n, j, { knownOnly: !omniscient })
           : [j];
+      // Selecting the ice itself is an exploratory action, not a promise
+      // that its covered landing is already a known route.
+      if (
+        !omniscient &&
+        directIce &&
+        j === goal &&
+        c.terrain === "ice" &&
+        cells?.some((i) => !map[i].seen)
+      )
+        cells = [j];
       if (!cells) {
         if (directIce && n === start && j === goal) cells = [j];
         else continue;
@@ -302,4 +328,82 @@ function biomeCoverArt(c) {
       : c.terrain === "overgrown"
         ? icon("overgrown")
         : "";
+}
+
+// Reverse reachability catches one-way traps from EVERY approach, including
+// stopping on ice after an encounter. Reciprocal tunnels remain valid edges.
+function allTilesCanReachStairs(map) {
+  const goal = map.findIndex((c) => c.event === "stairs");
+  if (goal < 0) return false;
+  const reverse = Array.from({ length: map.length }, () => []);
+  map.forEach((c, from) => {
+    if (c.wall) return;
+    for (const entry of floorNeighbors(map, from)) {
+      if (map[entry].wall) continue;
+      const portal = !neighbors(from).includes(entry);
+      const end =
+        !portal && map[entry].terrain === "ice"
+          ? glideCells(map, from, entry).at(-1)
+          : entry;
+      reverse[end].push(from);
+    }
+  });
+  const reached = new Set([goal]),
+    queue = [goal];
+  for (const i of queue)
+    for (const j of reverse[i])
+      if (!reached.has(j)) {
+        reached.add(j);
+        queue.push(j);
+      }
+  return map.every((c, i) => c.wall || reached.has(i));
+}
+function crystalSources(origin = state.position, knownOnly = false) {
+  return state.map
+    .map((c, i) =>
+      c.terrain === "crystal" &&
+      (!knownOnly || c.seen) &&
+      tileDistance(i, origin) <= 2 &&
+      lineOfSight(origin, i)
+        ? i
+        : -1,
+    )
+    .filter((i) => i >= 0);
+}
+function advanceCrystalAura() {
+  if (!state.enemy || !livingEnemies().length || !crystalSources().length)
+    return;
+  state.crystalRolls = (state.crystalRolls || 0) + 1;
+  if (state.crystalRolls % 3) return;
+  const choices = state.party
+    .filter(alive)
+    .flatMap((h) =>
+      [0, 1, 2]
+        .filter((k) => !h.crystalLocks?.includes(k))
+        .map((k) => ({ h, k })),
+    );
+  for (let n = 0; n < 2 && choices.length; n++) {
+    const { h, k } = choices.splice(rand(choices.length), 1)[0];
+    h.crystalLocks ??= [];
+    h.crystalLocks.push(k);
+    const el = $(`#machine-hero-${state.party.indexOf(h)} [data-reel="${k}"]`);
+    el?.classList.add("gem-locked");
+    burst(el, "block", 18);
+    combatCallout(entityArt(h), "CRYSTAL SEAL!", "block");
+  }
+  log(
+    "Nearby crystals seal two reels. Roll an affected hero to crack the gems.",
+  );
+  GameSound.play("lockBig");
+}
+function crackRolledCrystals(h, i) {
+  if (!h.crystalLocks?.length) return;
+  h.crystalLocks = [];
+  document.querySelectorAll(`#machine-hero-${i} .gem-locked`).forEach((el) => {
+    el.classList.add("gem-cracking");
+    burst(el, "block", 24);
+    shakeElement(el, 3, "settle");
+    setTimeout(() => el.classList.remove("gem-locked", "gem-cracking"), 220);
+  });
+  GameSound.play("lock");
 }

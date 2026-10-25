@@ -1306,8 +1306,14 @@ const output = path.join(root, "test-results/ui-review");
     await shot("89-punchline-guide-390");
     await page.setViewportSize({ width: 1920, height: 1080 });
     }
+    for(const width of [1920,1280,390]) {
+      await page.setViewportSize({width,height:width<500?844:1080});
+      await page.evaluate(()=>{closeSpotlight();chooseStartingClass();});
+      await shot("96-aligned-starters-"+width);
+      await page.evaluate(()=>closeModal());
+    }
     // Version-21 fixtures: natural generated biomes, not a visual-only repaint.
-    for (const theme of ["cave", "overgrown", "fungal", "ice", "lava"]) {
+    for (const theme of ["cave", "overgrown", "fungal", "ice", "lava", "crystal"]) {
       await page.setViewportSize({ width: 1920, height: 1080 });
       await page.evaluate((theme) => {
         closeModal(); newRun("fighter"); setPace("skip"); state.depth = 8;
@@ -1355,6 +1361,15 @@ const output = path.join(root, "test-results/ui-review");
     await shot("92-powder-fuse-and-charged-party-1280");
     await page.setViewportSize({ width: 390, height: 844 });
     await shot("92-powder-fuse-and-charged-party-390", true);
+    await page.evaluate(()=>{
+      Object.assign(state.map[neighbors(state.position)[0]],{wall:true,terrain:"crystal",event:null,seen:true});
+      state.crystalRolls=2;advanceCrystalAura();render();particles=[];
+    });
+    await shot("97-crystal-seals-390",true);
+    await page.setViewportSize({width:1280,height:800});
+    await shot("97-crystal-seals-1280");
+    await page.setViewportSize({width:390,height:844});
+
     await page.evaluate(() => {editor(0); editorSelection.reel=1;editorSelection.face=0;editor(0);});
     await shot("93-ordinary-mark-workshop-390");
     await page.evaluate(() => {editorSelection.face=state.party[0].reels[1].findIndex(f=>f.type==="class");editor(0);});

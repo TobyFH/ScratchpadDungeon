@@ -329,3 +329,10 @@ icons use the same centred rank grid as every other mark.
   are inserted during countdown. Shared shake and reduced-motion controls apply.
 
 See [Biome update](docs/BIOMES_UPDATE.md) for source ownership and mechanics.
+
+Crystal deposits reuse the impassable tile frame and a restrained blue aura.
+Sealed reels use `.gem-locked`; cracking uses `.gem-cracking`, with particles
+through the shared FX and shake controls. Keep gems separate from pencil
+blackout data so one effect cannot erase another hero's seals. Starting cards
+share availability rows for locked and unlocked classes; on narrow screens use
+portrait-left cards with matching text rows, not empty grid cells.

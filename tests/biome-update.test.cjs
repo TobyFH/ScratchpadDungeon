@@ -333,7 +333,7 @@ test("named biome generation preserves directed ice/tunnel routes to distant sta
   });
   assert.equal(r.bad, 0);
   assert.ok(r.deep > r.early);
-  assert.equal(r.kinds.length, 5);
+  assert.equal(r.kinds.length, 6);
 });
 
 test("long ice routes take the forced landing into account and stop before ice when a turn is impossible", async (t) => {

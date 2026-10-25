@@ -198,6 +198,7 @@ test("Berserker starts with more healing and Bloodrush heals its caster while a 
     e.hp = e.maxHp = 1000;
     e.countdown = 99;
     e.passive = null;
+    setEnemyBlock(0); // Isolate caster recovery from random Ironbound shields.
     h.hp = 8;
     h.reels = [
       [{ type: "blank", tier: 1 }],

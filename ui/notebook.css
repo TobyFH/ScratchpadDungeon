@@ -5639,3 +5639,34 @@ body[data-motion="off"] .punchline-ready .machine-face { animation: none; }
 @media(prefers-reduced-motion:reduce){.map-player.sliding > svg{animation:none;transform:none;}}
 /* Measurement must not gain/lose a temporary scrollbar between face types. */
 #modal[data-kind="editor"] .modal-body { overflow:hidden;scrollbar-gutter:auto; }
+/* Shared starter rows: availability never shifts HP or the class description. */
+.starter-grid > button { justify-items:center;align-content:start;text-align:center; }
+.starter-grid > button > :is(b,strong,small,span) { width:100%;margin:0;align-self:center; }
+.starter-grid > button > svg { justify-self:center;align-self:center; }
+.starter-grid .starter-availability {color:var(--green);font-weight:400;}
+.tile.crystal-tile {background:color-mix(in srgb,var(--paper) 82%,#92b8db);border:2px solid var(--ink);box-shadow:inset 0 0 9px #7395b655;}
+.crystal-tile .biome-cover {color:#557fa0;opacity:1;}
+.gem-locked::after {content:'◇';position:absolute;inset:0;display:grid;place-items:center;background:color-mix(in srgb,var(--paper) 70%,#92b8db);color:#446e93;font:70px var(--display);text-shadow:1px 1px var(--ink);border:2px solid #557fa0;z-index:3;}
+.gem-cracking::after {animation:gem-crack .22s ease-out forwards;}
+@keyframes gem-crack {to{opacity:0;transform:scale(1.5) rotate(15deg);clip-path:polygon(0 0,42% 0,35% 40%,65% 65%,55% 100%,0 100%);}}
+@media(prefers-reduced-motion:reduce){.gem-cracking::after{animation:none;opacity:0;}}
+.starter-grid > button > svg {position:static;transform:none;display:block;}
+.portrait-conditions .crystal-badge {color:#557fa0;background:var(--paper-raised);}
+.crystal-tile > svg {opacity:0;}
+.starter-grid.five-classes {grid-auto-rows:250px;}
+.starter-grid > button > span {align-self:start;}
+@media(max-width:760px){
+ .starter-grid.five-classes {grid-template-columns:1fr;grid-auto-rows:124px;}
+ .starter-grid > button, .starter-grid > .locked-class {grid-template-columns:60px minmax(0,1fr);grid-template-rows:22px 20px 20px minmax(0,1fr);gap:2px 6px;text-align:left;}
+ .starter-grid > button > svg {grid-column:1;grid-row:1/5;width:56px;height:72px;}
+ .starter-grid > button > b {grid-column:2;grid-row:1;font-size:20px;}
+ .starter-grid > button > strong {grid-column:2;grid-row:2;font-size:15px;}
+ .starter-grid > button > small {grid-column:2;grid-row:3;font-size:15px;}
+ .starter-grid > button > span {grid-column:2;grid-row:4;font-size:15px;line-height:1.05;}
+}
+.tile.crystal-influence:not(.fog) {box-shadow:inset 0 0 7px #7395b655;}
+/* Keep gem silhouettes inside even the compact reel windows. */
+.gem-locked::after {font-size:30px;line-height:1;}
+/* Deposit art sits above masonry; the dark tile frame still marks blocking. */
+.crystal-tile .biome-cover {z-index:2;background:color-mix(in srgb,var(--paper) 82%,#92b8db);}
+.tile.crystal-tile > svg {visibility:hidden;}

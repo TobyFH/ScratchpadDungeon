@@ -127,3 +127,35 @@ Keep new biome terrain in this directed movement graph. Never repair a valid
 tunnel crossing into a mandatory bridge. Never put a decorative tint or border
 inside the coordinate board, where it would displace the player token. Follow
 the notebook style documents for new art and components.
+
+## Ice escape and crystal cave follow-up
+
+Known ice can now be selected at the end of any revealed route even when its
+landing is covered. The planner stops its knowledge at the first covered tile;
+physical sliding then reveals each entered tile, including consecutive covered
+ice. A known route never uses further hidden cells as shortcuts. If the requested
+tile is passed during a forced slide, its landing becomes the movement goal.
+
+Ice proposals must pass **reverse reachability from stairs for every walkable
+cell**, including cells where encounters could interrupt movement. This replaces
+the weaker spawn-only check. Loading a legacy one-way ice layout melts only as
+many old ice tiles as needed to restore escape routes; discoveries, walls and
+other terrain remain intact. Reciprocal tunnels count as graph edges.
+
+Crystal caves start on floor three. Crystal deposits use the common impassable
+frame, cannot replace room cells/discoveries, and cannot disconnect the map.
+Their blue aura reaches within two tiles, with walls occluding it. Seen deposits
+subtly tint affected revealed ground. In a nearby fight, every third party roll
+(including a free Punchline) seals two distinct random, currently unsealed reels.
+Sealed reels produce Empty once. Rolling that hero cracks all their gems after
+the result locks; other heroes retain their seals. Badges, tooltips, encounter
+tags, a chime and blue shard particles communicate the effect. Stunned attempts
+do not advance the counter. Fight cleanup clears seals and the counter; ongoing
+fight saves retain them. Crystal effects use the same gifted-reel input path as
+ordinary rolls, including class seals, critical calculations and automation.
+
+Starter cards reserve the same portrait/name/availability/stats/description rows
+for locked and available classes. Phones use horizontal cards to keep meaningful
+information together. `tests/ice-crystal.test.cjs` covers exploratory slides,
+all-approach connectivity, legacy repair, real sealed rolls, cleanup/save rules,
+wall occlusion and starter-card geometry.

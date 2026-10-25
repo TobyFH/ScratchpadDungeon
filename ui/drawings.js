@@ -207,6 +207,7 @@ function leverArt() {
   return `<svg class="pencil-art" viewBox="0 0 35 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 78 11-.5.5 13-12 .5Z M14 78l8-56 4 .5-7 57" fill="var(--paper-shade)"/><path d="m15 76 8-53m-15 60 8-.5m-8 5 8-.5M7 95l18-.5" stroke-width=".7"/><path d="M25 2q12 1 11 12-1 10-12 10-10-1-10-12Q15 2 25 2Z" fill="var(--paper)"/><path d="M25 5q9 1 8 9-1 8-9 7-7-1-7-8 0-7 8-8Zm-7 8 6-7m-6 12L30 6m-7 15 10-10" stroke-width=".65"/><path class="pencil-echo" d="m5 79 1 14 14-1M13 77l8-53"/></svg>`;
 }
 const paths = {
+  crystal: "M4 28 2 13l9-9 5 6 6-8 8 13-4 14ZM2 13l9 5 5-8m-5-6v14l4 10m7-26-1 18 9-5m-9 5 5 9M4 28l7-10",
   ice: "M3 26 8 7l9-5 12 19-9 9ZM8 7l5 15 4-20m-4 20 16-1M6 27l7-5 7 8M6 10l3 1m12 4 4-1",
   mushroom: "M3 15Q3 2 16 3q13-1 14 12l-4 3H7ZM12 18l-1 10q5 4 10 0l-1-10M8 11l3-3m9 0 4 4M5 17h23M6 29h3m16-2h3",
   overgrown: "M5 29Q8 13 24 3M10 21Q0 17 4 10q10 0 10 8M16 13q-2-12 7-11 6 6-3 12M9 24q12-9 20-5-2 10-16 8M3 29h26",

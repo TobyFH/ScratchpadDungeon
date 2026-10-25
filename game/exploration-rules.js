@@ -137,12 +137,12 @@ async function tunnelTransit(source, destination) {
   layer.remove();
 }
 const STARTER_SUMMARIES = Object.freeze({
-  fighter: "Blades, shields and stun. Rage toughens your next blows.",
+  fighter: "Blades, shields and stun. Shield Bash strikes with your team’s block.",
   rogue: "Quick blades, poison and tricks. Flurry throws three attacks.",
   mage: "Shape magic, healing, wards and poison. Resonance echoes your marks.",
   ranger: "Build patience, then Execute a wounded enemy.",
   berserker: "Wounds build Fury. Bloodrush and lifesteal keep you fighting.",
-  jester: "Different marks win Jackpots. Wildcard bends the rules.",
+  jester: "Trick builds anticipation. Punchline boosts a free roll.",
 });
 const DESCENT_LINES = Object.freeze([
   "Cool air climbs the steps. Somewhere below, another torch is burning.",

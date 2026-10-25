@@ -11432,6 +11432,37 @@ body[data-motion="off"] .punchline-ready .machine-face { animation: none; }
 @media(prefers-reduced-motion:reduce){.map-player.sliding > svg{animation:none;transform:none;}}
 /* Measurement must not gain/lose a temporary scrollbar between face types. */
 #modal[data-kind="editor"] .modal-body { overflow:hidden;scrollbar-gutter:auto; }
+/* Shared starter rows: availability never shifts HP or the class description. */
+.starter-grid > button { justify-items:center;align-content:start;text-align:center; }
+.starter-grid > button > :is(b,strong,small,span) { width:100%;margin:0;align-self:center; }
+.starter-grid > button > svg { justify-self:center;align-self:center; }
+.starter-grid .starter-availability {color:var(--green);font-weight:400;}
+.tile.crystal-tile {background:color-mix(in srgb,var(--paper) 82%,#92b8db);border:2px solid var(--ink);box-shadow:inset 0 0 9px #7395b655;}
+.crystal-tile .biome-cover {color:#557fa0;opacity:1;}
+.gem-locked::after {content:'◇';position:absolute;inset:0;display:grid;place-items:center;background:color-mix(in srgb,var(--paper) 70%,#92b8db);color:#446e93;font:70px var(--display);text-shadow:1px 1px var(--ink);border:2px solid #557fa0;z-index:3;}
+.gem-cracking::after {animation:gem-crack .22s ease-out forwards;}
+@keyframes gem-crack {to{opacity:0;transform:scale(1.5) rotate(15deg);clip-path:polygon(0 0,42% 0,35% 40%,65% 65%,55% 100%,0 100%);}}
+@media(prefers-reduced-motion:reduce){.gem-cracking::after{animation:none;opacity:0;}}
+.starter-grid > button > svg {position:static;transform:none;display:block;}
+.portrait-conditions .crystal-badge {color:#557fa0;background:var(--paper-raised);}
+.crystal-tile > svg {opacity:0;}
+.starter-grid.five-classes {grid-auto-rows:250px;}
+.starter-grid > button > span {align-self:start;}
+@media(max-width:760px){
+ .starter-grid.five-classes {grid-template-columns:1fr;grid-auto-rows:124px;}
+ .starter-grid > button, .starter-grid > .locked-class {grid-template-columns:60px minmax(0,1fr);grid-template-rows:22px 20px 20px minmax(0,1fr);gap:2px 6px;text-align:left;}
+ .starter-grid > button > svg {grid-column:1;grid-row:1/5;width:56px;height:72px;}
+ .starter-grid > button > b {grid-column:2;grid-row:1;font-size:20px;}
+ .starter-grid > button > strong {grid-column:2;grid-row:2;font-size:15px;}
+ .starter-grid > button > small {grid-column:2;grid-row:3;font-size:15px;}
+ .starter-grid > button > span {grid-column:2;grid-row:4;font-size:15px;line-height:1.05;}
+}
+.tile.crystal-influence:not(.fog) {box-shadow:inset 0 0 7px #7395b655;}
+/* Keep gem silhouettes inside even the compact reel windows. */
+.gem-locked::after {font-size:30px;line-height:1;}
+/* Deposit art sits above masonry; the dark tile frame still marks blocking. */
+.crystal-tile .biome-cover {z-index:2;background:color-mix(in srgb,var(--paper) 82%,#92b8db);}
+.tile.crystal-tile > svg {visibility:hidden;}
 /* END GENERATED NOTEBOOK CSS */
     </style>
   </head>
@@ -11826,6 +11857,7 @@ function leverArt() {
   return `<svg class="pencil-art" viewBox="0 0 35 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 78 11-.5.5 13-12 .5Z M14 78l8-56 4 .5-7 57" fill="var(--paper-shade)"/><path d="m15 76 8-53m-15 60 8-.5m-8 5 8-.5M7 95l18-.5" stroke-width=".7"/><path d="M25 2q12 1 11 12-1 10-12 10-10-1-10-12Q15 2 25 2Z" fill="var(--paper)"/><path d="M25 5q9 1 8 9-1 8-9 7-7-1-7-8 0-7 8-8Zm-7 8 6-7m-6 12L30 6m-7 15 10-10" stroke-width=".65"/><path class="pencil-echo" d="m5 79 1 14 14-1M13 77l8-53"/></svg>`;
 }
 const paths = {
+  crystal: "M4 28 2 13l9-9 5 6 6-8 8 13-4 14ZM2 13l9 5 5-8m-5-6v14l4 10m7-26-1 18 9-5m-9 5 5 9M4 28l7-10",
   ice: "M3 26 8 7l9-5 12 19-9 9ZM8 7l5 15 4-20m-4 20 16-1M6 27l7-5 7 8M6 10l3 1m12 4 4-1",
   mushroom: "M3 15Q3 2 16 3q13-1 14 12l-4 3H7ZM12 18l-1 10q5 4 10 0l-1-10M8 11l3-3m9 0 4 4M5 17h23M6 29h3m16-2h3",
   overgrown: "M5 29Q8 13 24 3M10 21Q0 17 4 10q10 0 10 8M16 13q-2-12 7-11 6 6-3 12M9 24q12-9 20-5-2 10-16 8M3 29h26",
@@ -14284,7 +14316,7 @@ function wardActive(e = actingEnemy) {
             : enemy
               ? "Enemy reels"
               : "Fast-forward this slot machine";
-        return `<div class="machine-shell ${one ? "one-reel" : ""}" id="machine-${id}" data-machine="${id}">${title ? `<div class="machine-title">${title}</div>` : ""}<button class="machine-face" data-roll-area="${id}" aria-label="${label}" ${disabled ? "disabled" : ""}>${last.map((s, k) => `<span class="slot-window ${owner?.blackout?.includes(k) ? "blacked-out" : ""} ${owner?.reelGifts?.some((g) => g.reel === k && g.uses > 0) ? "gifted-reel" : ""}" data-reel="${k}" ${active ? `data-tooltip="${escapeHTML(state.party[hero].blackout?.includes(k) ? "Pencil blackout: this reel does nothing on this roll, then clears." : faceDescription(s, state.party[hero]))}"` : ""}><span class="symbol-track single"><span class="slot-symbol">${symbolMarkup(s)}</span></span></span>`).join("")}</button><button class="lever" ${active ? `data-spin="${hero}"` : `data-fast-machine="${id}"`} ${disabled ? "disabled" : ""} aria-label="${active ? "Pull " + state.party[hero].name + "’s slot handle" : "Fast-forward " + (enemy ? "enemy" : "event") + " reels"}">${leverArt()}</button><div class="machine-footnote">${active ? (["ranger", "berserker", "jester"].includes(state.party[hero].job) ? rangerAimMarkup(state.party[hero]) : state.enemy ? (state.party[hero].stun ? "Pull to shake off stun" : "Pull handle to spin") : "Waiting for an encounter") : enemy ? "" : "Click during the roll to land it"}</div></div>`;
+        return `<div class="machine-shell ${one ? "one-reel" : ""}" id="machine-${id}" data-machine="${id}">${title ? `<div class="machine-title">${title}</div>` : ""}<button class="machine-face" data-roll-area="${id}" aria-label="${label}" ${disabled ? "disabled" : ""}>${last.map((s, k) => `<span class="slot-window ${owner?.blackout?.includes(k) ? "blacked-out" : owner?.crystalLocks?.includes(k) ? "gem-locked" : ""} ${owner?.reelGifts?.some((g) => g.reel === k && g.uses > 0) ? "gifted-reel" : ""}" data-reel="${k}" ${active ? `data-tooltip="${escapeHTML(state.party[hero].blackout?.includes(k) ? "Pencil blackout: this reel does nothing on this roll, then clears." : state.party[hero].crystalLocks?.includes(k) ? "Crystal seal: this reel is empty for one roll. Rolling this hero cracks its blocking gems." : faceDescription(s, state.party[hero]))}"` : ""}><span class="symbol-track single"><span class="slot-symbol">${symbolMarkup(s)}</span></span></span>`).join("")}</button><button class="lever" ${active ? `data-spin="${hero}"` : `data-fast-machine="${id}"`} ${disabled ? "disabled" : ""} aria-label="${active ? "Pull " + state.party[hero].name + "’s slot handle" : "Fast-forward " + (enemy ? "enemy" : "event") + " reels"}">${leverArt()}</button><div class="machine-footnote">${active ? (["ranger", "berserker", "jester"].includes(state.party[hero].job) ? rangerAimMarkup(state.party[hero]) : state.enemy ? (state.party[hero].stun ? "Pull to shake off stun" : "Pull handle to spin") : "Waiting for an encounter") : enemy ? "" : "Click during the roll to land it"}</div></div>`;
       }
       function render() {
         statusTooltip.hidden = true;
@@ -14455,6 +14487,7 @@ function wardActive(e = actingEnemy) {
         if (c.terrain === "bridge" && !c.event) return "River bridge - traversable";
         if (c.terrain === "lava")
           return "Lava puddle - impassable - lights adjacent tiles";
+        if (c.terrain === "crystal") return "Crystal deposit - impassable - nearby fights: seals two reels every three rolls";
         if (c.wall)
           return c.terrain === "river"
             ? "Underground river - impassable"
@@ -14496,7 +14529,7 @@ function wardActive(e = actingEnemy) {
               bridge = c.seen && c.terrain === "bridge",
               active = c.seen && !!c.event,
               battle = active && ["enemy", "guardian", "stronghold"].includes(c.event),
-              cover = c.seen ? biomeCoverArt(c) : "",
+              cover = c.seen ? (c.terrain === "crystal" ? icon("crystal") : biomeCoverArt(c)) : "",
               water = c.wall && c.terrain === "river",
               corpse = c.seen && c.corpses?.length ? c.corpses.at(-1) : null,
               art = !c.seen
@@ -14512,7 +14545,7 @@ function wardActive(e = actingEnemy) {
                     : bridge
                       ? ""
                       : floorArt(c, i);
-            return `<button class="tile ${c.seen ? "" : "fog"} ${c.wall && c.seen ? "wall" : ""} ${water && c.seen ? "water-block " + c.terrain : ""} ${c.visited ? "visited" : ""} ${feature && !c.event ? "spent" : ""} ${active ? "active-event" : ""} ${battle ? "active-battle" : ""} ${active && c.event === "well" ? "active-well" : ""} ${active && c.event === "stairs" ? "active-stairs" : ""} ${corpse ? "has-corpse" : ""} ${!c.seen && c.hint ? "has-hint" : ""}  ${c.room && c.seen ? "cave-room" : ""} ${Date.now() - (c.roomRevealedAt || 0) < 1200 ? "room-reveal" : ""} ${c.seen && c.terrain === "bridge" ? "bridge-tile" : ""} ${c.seen && c.terrain === "lava" ? "lava-tile" : ""} ${c.seen && ["ice","mushroom","overgrown"].includes(c.terrain) ? "terrain-"+c.terrain : ""} ${i === state.position ? "player-cell" : ""} ${travel?.goal === i ? "travel-goal" : ""}" data-tile="${i}" data-event="${c.seen ? c.event || feature || "empty" : "unknown"}" data-state="${!c.seen ? "unknown" : active ? "active" : feature ? "used" : "empty"}" aria-label="${escapeHTML(tileName(c))}, column ${(i % W) + 1}, row ${Math.floor(i / W) + 1}" ${locked || (c.seen && c.wall) ? "disabled" : ""}>${cover ? `<span class="biome-cover ${c.terrain}" aria-hidden="true">${cover}</span>` : ""}${bridge ? `<span class="map-terrain bridge-layer" aria-hidden="true">${icon("bridge")}</span>` : ""}${art}${c.seen && c.wall ? '<span class="terrain-stop" aria-hidden="true">×</span>' : ""}${active ? `<span class="tile-status" aria-hidden="true">${c.event === "stairs" ? "↓" : c.event === "tunnel" ? "↔" + ((c.tunnelPair || 0) + 1) : "!"}</span>` : c.seen && feature ? '<span class="tile-status used" aria-hidden="true">✓</span>' : ""}${!c.seen && c.hint ? `<span class="tile-whisper" title="${escapeHTML(c.hint.text)}" aria-hidden="true">${icon(c.hint.kind)}</span>` : ""}${corpse && c.event ? '<span class="corpse-mark" aria-hidden="true">†</span>' : ""}</button>`;
+            return `<button class="tile ${c.seen ? "" : "fog"} ${c.wall && c.seen ? "wall" : ""} ${water && c.seen ? "water-block " + c.terrain : ""} ${c.visited ? "visited" : ""} ${feature && !c.event ? "spent" : ""} ${active ? "active-event" : ""} ${battle ? "active-battle" : ""} ${active && c.event === "well" ? "active-well" : ""} ${active && c.event === "stairs" ? "active-stairs" : ""} ${corpse ? "has-corpse" : ""} ${!c.seen && c.hint ? "has-hint" : ""}  ${c.room && c.seen ? "cave-room" : ""} ${Date.now() - (c.roomRevealedAt || 0) < 1200 ? "room-reveal" : ""} ${c.seen && c.terrain === "bridge" ? "bridge-tile" : ""} ${c.seen && c.terrain === "lava" ? "lava-tile" : ""} ${c.seen && c.terrain === "crystal" ? "crystal-tile" : ""} ${c.seen && !c.wall && crystalSources(i,true).length ? "crystal-influence" : ""} ${c.seen && ["ice","mushroom","overgrown"].includes(c.terrain) ? "terrain-"+c.terrain : ""} ${i === state.position ? "player-cell" : ""} ${travel?.goal === i ? "travel-goal" : ""}" data-tile="${i}" data-event="${c.seen ? c.event || feature || "empty" : "unknown"}" data-state="${!c.seen ? "unknown" : active ? "active" : feature ? "used" : "empty"}" aria-label="${escapeHTML(tileName(c))}, column ${(i % W) + 1}, row ${Math.floor(i / W) + 1}" ${locked || (c.seen && c.wall) ? "disabled" : ""}>${cover ? `<span class="biome-cover ${c.terrain}" aria-hidden="true">${cover}</span>` : ""}${bridge ? `<span class="map-terrain bridge-layer" aria-hidden="true">${icon("bridge")}</span>` : ""}${art}${c.seen && c.wall ? '<span class="terrain-stop" aria-hidden="true">×</span>' : ""}${active ? `<span class="tile-status" aria-hidden="true">${c.event === "stairs" ? "↓" : c.event === "tunnel" ? "↔" + ((c.tunnelPair || 0) + 1) : "!"}</span>` : c.seen && feature ? '<span class="tile-status used" aria-hidden="true">✓</span>' : ""}${!c.seen && c.hint ? `<span class="tile-whisper" title="${escapeHTML(c.hint.text)}" aria-hidden="true">${icon(c.hint.kind)}</span>` : ""}${corpse && c.event ? '<span class="corpse-mark" aria-hidden="true">†</span>' : ""}</button>`;
           })
           .join("");
         let leader = state.party.find(alive) || state.party[0];
@@ -14803,7 +14836,7 @@ function wardActive(e = actingEnemy) {
             if (c.terrain === "ice") {
               const slide = glideCells(state.map, from, i);
               travel.forced = slide.slice(1);
-              if (travel.requestedGoal === i) travel.goal = slide.at(-1);
+              if (slide.includes(travel.requestedGoal)) travel.goal = slide.at(-1);
               $("#map-player").classList.add("sliding");
               GameSound.play("iceSlide");
             } else $("#map-player").classList.remove("sliding");
@@ -16303,6 +16336,7 @@ function encounterTags(enemies) {
   }
   if (enemies.some(e => e.caughtUnaware)) tags.push('<span class="encounter-tag">FOES CAUGHT UNAWARE · +1 SPIN</span>');
   if (enemies.some(isExploder)) tags.push('<span class="encounter-tag">BURNING FUSE · SELF-DESTRUCT</span>');
+  if (crystalSources().length) tags.push('<span class="encounter-tag" data-tooltip="Nearby crystals seal two party reels every three party rolls. Roll the affected hero to crack them.">CRYSTAL AURA · REEL SEALS</span>');
   const quick = state.party.find((h) => h.initiative);
   if (quick)
     tags.push(
@@ -16972,7 +17006,7 @@ function encounterTags(enemies) {
         if (entity.hp <= 0 || entity.dead) return "";
         const poison = entity.poison,
           buff = entity.stimulant;
-        return `<span class="portrait-conditions">${entity.reelGifts?.length ? statusBadge("Gilded reel", entity.reelGifts.map((g) => `Reel ${g.reel + 1}: +1 mark tier for ${g.uses} more rolls.`).join(" ") + " Cleared after battle.", "gift-badge", "point") : ""}${poison?.turns ? statusBadge("Poison", `${poison.damage || 1} damage each turn for ${poison.turns} more turns. Further doses stack damage once three turns are loaded. Cleared after battle.`, "poison-badge", "poison", poison.turns) : ""}${entity.rage ? statusBadge("Rage", `+${entity.rage} damage and ${Math.floor(entity.rage / 3)} damage resistance until battle ends.`, "rage-badge", "rage", "+" + entity.rage) : ""}${buff ? statusBadge("Stimulant", `+${1 + Math.floor(buff.power / 3)} damage and ${1 + Math.floor(buff.power / 5)} damage resistance; ${buff.turns} turns remaining.`, "buff-badge", "flame", buff.turns) : ""}${entity.stun ? statusBadge("Stunned", "Recovery chance rises after each roll: 25%, 55%, 90%, then guaranteed. Missed hero attempts leave enemy clocks unchanged.", "stun-badge", "stun", "1") : ""}${entity.charge ? statusBadge("Execute", `${entity.charge}/${RANGER_AIM_CAP} patience. Bonus grows with the target’s missing health; consumed on the next damaging roll. Cleared after battle.`, "aim-badge", "bow", entity.charge) : ""}${entity.initiative && state.opening?.firstRoll ? statusBadge("Initiative", "Use this hero for the first roll: +25% to its effects. Lost if another hero acts first.", "initiative-badge", "beacon", "+25%") : ""}${entity.surprised && state.opening?.firstRoll ? statusBadge("Surprised", "Cannot make the first party roll. If everyone is surprised, enemies go first.", "surprised-badge", "question", "!") : ""}${entity.vulnerable ? statusBadge("Vulnerable", "The next damaging hit after this action deals 25% more HP damage.", "vulnerable-badge", "stun", "+25%") : ""}${entity.elite ? statusBadge(entity.boss ? "Boss" : "Elite", `${entity.affix || "Empowered"}. ${entity.affix === "Frenzied" ? `Attacks every ${entity.frequency} spin${entity.frequency === 1 ? "" : "s"}.` : entity.affix === "Venomous" ? "Damaging rolls also add poison." : `Begins battle with ${2 + state.depth} extra block.`}${entity.passive ? " " + (ENEMY_TRAITS[entity.passive.key]?.description || "") : ""}`, "elite-badge", "artefact") : ""}${isExploder(entity) ? statusBadge("Burning fuse", `${entity.fuseLeft ?? 2} enemy turns until ${exploderDamage(entity)} damage per hero. Team block and Unbroken page can protect you.`, "fuse-badge", "explosion") : ""}${entity.passive && !isExploder(entity) ? statusBadge(ENEMY_TRAITS[entity.passive.key]?.name || "Passive", ENEMY_TRAITS[entity.passive.key]?.description || "", "passive-badge passive-" + entity.passive.key, { carapace: "block", secondWind: "heal", summoner: "recruit", split: "flurry", blackout: "eraser" }[entity.passive.key] || "artefact") : ""}</span>`;
+        return `<span class="portrait-conditions">${entity.crystalLocks?.length ? statusBadge("Crystal seals", `${entity.crystalLocks.length} reels sealed by nearby crystals. Sealed reels are empty for one roll; rolling this hero cracks all their gems.`, "crystal-badge", "crystal") : ""}${entity.reelGifts?.length ? statusBadge("Gilded reel", entity.reelGifts.map((g) => `Reel ${g.reel + 1}: +1 mark tier for ${g.uses} more rolls.`).join(" ") + " Cleared after battle.", "gift-badge", "point") : ""}${poison?.turns ? statusBadge("Poison", `${poison.damage || 1} damage each turn for ${poison.turns} more turns. Further doses stack damage once three turns are loaded. Cleared after battle.`, "poison-badge", "poison", poison.turns) : ""}${entity.rage ? statusBadge("Rage", `+${entity.rage} damage and ${Math.floor(entity.rage / 3)} damage resistance until battle ends.`, "rage-badge", "rage", "+" + entity.rage) : ""}${buff ? statusBadge("Stimulant", `+${1 + Math.floor(buff.power / 3)} damage and ${1 + Math.floor(buff.power / 5)} damage resistance; ${buff.turns} turns remaining.`, "buff-badge", "flame", buff.turns) : ""}${entity.stun ? statusBadge("Stunned", "Recovery chance rises after each roll: 25%, 55%, 90%, then guaranteed. Missed hero attempts leave enemy clocks unchanged.", "stun-badge", "stun", "1") : ""}${entity.charge ? statusBadge("Execute", `${entity.charge}/${RANGER_AIM_CAP} patience. Bonus grows with the target’s missing health; consumed on the next damaging roll. Cleared after battle.`, "aim-badge", "bow", entity.charge) : ""}${entity.initiative && state.opening?.firstRoll ? statusBadge("Initiative", "Use this hero for the first roll: +25% to its effects. Lost if another hero acts first.", "initiative-badge", "beacon", "+25%") : ""}${entity.surprised && state.opening?.firstRoll ? statusBadge("Surprised", "Cannot make the first party roll. If everyone is surprised, enemies go first.", "surprised-badge", "question", "!") : ""}${entity.vulnerable ? statusBadge("Vulnerable", "The next damaging hit after this action deals 25% more HP damage.", "vulnerable-badge", "stun", "+25%") : ""}${entity.elite ? statusBadge(entity.boss ? "Boss" : "Elite", `${entity.affix || "Empowered"}. ${entity.affix === "Frenzied" ? `Attacks every ${entity.frequency} spin${entity.frequency === 1 ? "" : "s"}.` : entity.affix === "Venomous" ? "Damaging rolls also add poison." : `Begins battle with ${2 + state.depth} extra block.`}${entity.passive ? " " + (ENEMY_TRAITS[entity.passive.key]?.description || "") : ""}`, "elite-badge", "artefact") : ""}${isExploder(entity) ? statusBadge("Burning fuse", `${entity.fuseLeft ?? 2} enemy turns until ${exploderDamage(entity)} damage per hero. Team block and Unbroken page can protect you.`, "fuse-badge", "explosion") : ""}${entity.passive && !isExploder(entity) ? statusBadge(ENEMY_TRAITS[entity.passive.key]?.name || "Passive", ENEMY_TRAITS[entity.passive.key]?.description || "", "passive-badge passive-" + entity.passive.key, { carapace: "block", secondWind: "heal", summoner: "recruit", split: "flurry", blackout: "eraser" }[entity.passive.key] || "artefact") : ""}</span>`;
       }
       function syncStatusFX() {
         state.party.forEach((h, i) => {
@@ -17220,6 +17254,7 @@ function encounterTags(enemies) {
           if (state !== rollRun) return;
           spendReelGifts(h);
           clearRolledBlackout(h, i);
+          crackRolledCrystals(h, i);
           h.last = symbols;
           const blood = calculate(symbols).selfharm;
           if (blood) {
@@ -17417,6 +17452,7 @@ function encounterTags(enemies) {
           );
           advanceRangerPatience(h, !!(sums.attack || sums.magic), symbols[1]?.type === "class");
           finishOpeningRoll();
+          advanceCrystalAura();
           rallyAfterRoll(h);
           await tickPoison();
           // A fallen caster cannot take the bonus roll; the paid action still
@@ -19107,6 +19143,7 @@ const FIELD_GUIDE = Object.freeze([
     id: "ice", title: "Ice & dangerous fuses",
     body: '<ul class="guide-takeaways"><li><b>Ice.</b> Entering ice carries you forward. Consecutive ice tiles continue the slide; a wall stops it.</li><li><b>Plan ahead.</b> Known ice is included in routes. You cannot choose to turn halfway through a slide.</li><li><b>No safe route.</b> If sliding makes your destination unreachable, a long move stops before the blocking ice.</li><li><b>Powder imp.</b> Watch its burning fuse. After two enemy turns it explodes, damaging the party and destroying itself.</li><li><b>Answer the fuse.</b> Kill or stun it before detonation, build team block, or use an Unbroken page. Its warning shows blast power.</li></ul>',
   },
+  {id:"crystal",title:"Crystal caves",body:'<ul class="guide-takeaways"><li><b>Deposits.</b> Crystal clusters block walking. Their blue aura reaches fights within two tiles, with stone blocking its reach.</li><li><b>Resonance.</b> Every three party rolls, two random reels become sealed with gems.</li><li><b>Crack them.</b> Roll an affected hero. Their sealed reels are empty for that roll, then the gems shatter. Other heroes keep their own seals.</li><li><b>After battle.</b> Every seal clears when the fight ends. The deposit stays on the map.</li></ul>'},
   {
     id: "combat",
     title: "Combat & criticals",
@@ -21483,7 +21520,7 @@ const SOUND_SAMPLES = Object.freeze({
             );
           if (
             content.querySelector(
-              ".reel-workshop,.field-guide,.camp-grid,.settings-panel,.bestiary-page,#machine-treasure",
+              ".reel-workshop,.field-guide,.camp-grid,.settings-panel,.bestiary-page,.starter-grid,#machine-treasure",
             )
           ) {
             // Fit height while using the full sheet width. Shrinking a fixed
@@ -22378,9 +22415,11 @@ function clearBattleStatuses() {
     entity.surprised = false;
     entity.stunAge = 0;
     entity.blackout = [];
+    entity.crystalLocks = [];
     entity.reelGifts = [];
   }
   state.opening = null;
+  state.crystalRolls = 0;
   state.invulnerable = null;
   state.party.forEach((h, i) => syncHero(i));
   syncEnemy();
@@ -22587,6 +22626,7 @@ async function resumeOpeningEncounter() {
 }
 
 function normaliseTacticalStatuses(entity) {
+  entity.crystalLocks = [...new Set((Array.isArray(entity.crystalLocks) ? entity.crystalLocks : []).filter(k=>[0,1,2].includes(k)))];
   normaliseStimulant(entity);
   entity.blackout = Array.isArray(entity.blackout)
     ? [...new Set(entity.blackout.filter((k) => [0, 1, 2].includes(k)))]
@@ -22811,6 +22851,13 @@ function tickStimulant(entity) {
 // Biome data is stored on the first map cell, so ordinary JSON save/HTML exports
 // retain it. Presentation never rolls a theme or consumes world RNG.
 const BIOMES = Object.freeze({
+  crystal: {
+    name: "Crystal caves",
+    tint: "#7395b6",
+    minDepth: 3,
+    names: ["The singing geodes", "The fractured gallery", "The quartz hollow"],
+    note: "Crystal seams hum against the turning reels.",
+  },
   cave: {
     name: "Caverns",
     tint: "#8e8474",
@@ -22916,32 +22963,40 @@ function assignFloorBiome(map, depth, { force = null } = {}) {
           spread.push(j);
     }
   } else if (kind === "ice") {
-    const goal = map.findIndex((c) => c.event === "stairs");
     for (const i of candidates) {
       if (map[i].event || Math.random() >= 0.17) continue;
       map[i].terrain = "ice";
       // Walking connectivity alone is insufficient: the forced slide must also
       // admit a real route. Reject only the newly proposed slippery tile.
-      if (!movementRoute(map, pos(1, 7), goal, { omniscient: true }))
-        map[i].terrain = "floor";
+      if (!allTilesCanReachStairs(map)) map[i].terrain = "floor";
     }
-  } else if (kind === "lava") {
+  } else if (kind === "lava" || kind === "crystal") {
     // Rooms are connected, non-blocking reveal groups. Do not turn one of
     // their floor cells into a hazard after room generation has validated it.
     const free = candidates.filter((i) => !map[i].event && !map[i].room);
-    for (const i of free)
-      if (Math.random() < 0.07) {
-        const before = mapDistances(map).size;
-        map[i].wall = true;
-        map[i].terrain = "lava";
-        if (mapDistances(map).size < before - 1) {
-          map[i].wall = false;
-          map[i].terrain = "floor";
-        }
+    const placeBarrier = (i) => {
+      const before = mapDistances(map).size;
+      map[i].wall = true;
+      map[i].terrain = kind === "crystal" ? "crystal" : "lava";
+      if (mapDistances(map).size < before - 1) {
+        map[i].wall = false; map[i].terrain = "floor"; return false;
       }
+      return true;
+    };
+    for (const i of free) if (Math.random() < 0.07) placeBarrier(i);
+    if (kind === "crystal" && !map.some(c => c.terrain === "crystal"))
+      free.some(placeBarrier);
   }
 }
 function normaliseBiome(map = state.map) {
+  state.crystalRolls = Math.max(0, Math.floor(Number(state.crystalRolls) || 0));
+  // Repair old one-way ice layouts without rerolling discoveries or walls.
+  if (map.some((c) => c.terrain === "ice") && !allTilesCanReachStairs(map)) {
+    for (const c of map.filter((c) => c.terrain === "ice").reverse()) {
+      c.terrain = "floor";
+      if (allTilesCanReachStairs(map)) break;
+    }
+  }
   if (!BIOMES[map[0].biome]) map[0].biome = "cave";
   if (typeof map[0].floorName !== "string" || !map[0].floorName.trim())
     map[0].floorName = BIOMES[floorBiome(map)].names[(state.depth - 1) % 3];
@@ -22958,6 +23013,7 @@ function updateBiomePresentation() {
       overgrown: ["overgrown", "Overgrowth"],
       fungal: ["mushroom", "Mushrooms"],
       ice: ["ice", "Ice"],
+      crystal: ["crystal", "Crystal · aura"],
     }[theme];
   if (key) {
     key.hidden = !terrain;
@@ -22976,7 +23032,7 @@ function glideCells(map, from, entry, { knownOnly = false } = {}) {
       y = Math.floor(n / W) + dy;
     if (x < 0 || x >= W || y < 0 || y >= H) break;
     const next = pos(x, y);
-    if (knownOnly && !map[next].seen) return null;
+    if (knownOnly && !map[next].seen) return [...cells, next];
     if (map[next].wall) break;
     cells.push(next);
     n = next;
@@ -23020,6 +23076,16 @@ function movementRoute(
         !portal && !ignoreIce && (c.seen || omniscient) && c.terrain === "ice"
           ? glideCells(map, n, j, { knownOnly: !omniscient })
           : [j];
+      // Selecting the ice itself is an exploratory action, not a promise
+      // that its covered landing is already a known route.
+      if (
+        !omniscient &&
+        directIce &&
+        j === goal &&
+        c.terrain === "ice" &&
+        cells?.some((i) => !map[i].seen)
+      )
+        cells = [j];
       if (!cells) {
         if (directIce && n === start && j === goal) cells = [j];
         else continue;
@@ -23112,6 +23178,84 @@ function biomeCoverArt(c) {
       : c.terrain === "overgrown"
         ? icon("overgrown")
         : "";
+}
+
+// Reverse reachability catches one-way traps from EVERY approach, including
+// stopping on ice after an encounter. Reciprocal tunnels remain valid edges.
+function allTilesCanReachStairs(map) {
+  const goal = map.findIndex((c) => c.event === "stairs");
+  if (goal < 0) return false;
+  const reverse = Array.from({ length: map.length }, () => []);
+  map.forEach((c, from) => {
+    if (c.wall) return;
+    for (const entry of floorNeighbors(map, from)) {
+      if (map[entry].wall) continue;
+      const portal = !neighbors(from).includes(entry);
+      const end =
+        !portal && map[entry].terrain === "ice"
+          ? glideCells(map, from, entry).at(-1)
+          : entry;
+      reverse[end].push(from);
+    }
+  });
+  const reached = new Set([goal]),
+    queue = [goal];
+  for (const i of queue)
+    for (const j of reverse[i])
+      if (!reached.has(j)) {
+        reached.add(j);
+        queue.push(j);
+      }
+  return map.every((c, i) => c.wall || reached.has(i));
+}
+function crystalSources(origin = state.position, knownOnly = false) {
+  return state.map
+    .map((c, i) =>
+      c.terrain === "crystal" &&
+      (!knownOnly || c.seen) &&
+      tileDistance(i, origin) <= 2 &&
+      lineOfSight(origin, i)
+        ? i
+        : -1,
+    )
+    .filter((i) => i >= 0);
+}
+function advanceCrystalAura() {
+  if (!state.enemy || !livingEnemies().length || !crystalSources().length)
+    return;
+  state.crystalRolls = (state.crystalRolls || 0) + 1;
+  if (state.crystalRolls % 3) return;
+  const choices = state.party
+    .filter(alive)
+    .flatMap((h) =>
+      [0, 1, 2]
+        .filter((k) => !h.crystalLocks?.includes(k))
+        .map((k) => ({ h, k })),
+    );
+  for (let n = 0; n < 2 && choices.length; n++) {
+    const { h, k } = choices.splice(rand(choices.length), 1)[0];
+    h.crystalLocks ??= [];
+    h.crystalLocks.push(k);
+    const el = $(`#machine-hero-${state.party.indexOf(h)} [data-reel="${k}"]`);
+    el?.classList.add("gem-locked");
+    burst(el, "block", 18);
+    combatCallout(entityArt(h), "CRYSTAL SEAL!", "block");
+  }
+  log(
+    "Nearby crystals seal two reels. Roll an affected hero to crack the gems.",
+  );
+  GameSound.play("lockBig");
+}
+function crackRolledCrystals(h, i) {
+  if (!h.crystalLocks?.length) return;
+  h.crystalLocks = [];
+  document.querySelectorAll(`#machine-hero-${i} .gem-locked`).forEach((el) => {
+    el.classList.add("gem-cracking");
+    burst(el, "block", 24);
+    shakeElement(el, 3, "settle");
+    setTimeout(() => el.classList.remove("gem-locked", "gem-cracking"), 220);
+  });
+  GameSound.play("lock");
 }
 // END GENERATED BIOMES
       // BEGIN GENERATED WORLD EVENTS
@@ -24269,7 +24413,7 @@ async function punchlineFX(h) {
 }
 function giftedReels(entity) {
   return entity.reels.map((reel, k) => {
-    if (entity.blackout?.includes(k))
+    if ((entity.blackout?.includes(k) || entity.crystalLocks?.includes(k)))
       return [{ type: "blank", tier: 1, blackout: true }];
     if (!entity.reelGifts?.some((g) => g.reel === k && g.uses > 0)) return reel;
     return reel.map((f) =>
@@ -24541,12 +24685,12 @@ async function tunnelTransit(source, destination) {
   layer.remove();
 }
 const STARTER_SUMMARIES = Object.freeze({
-  fighter: "Blades, shields and stun. Rage toughens your next blows.",
+  fighter: "Blades, shields and stun. Shield Bash strikes with your team’s block.",
   rogue: "Quick blades, poison and tricks. Flurry throws three attacks.",
   mage: "Shape magic, healing, wards and poison. Resonance echoes your marks.",
   ranger: "Build patience, then Execute a wounded enemy.",
   berserker: "Wounds build Fury. Bloodrush and lifesteal keep you fighting.",
-  jester: "Different marks win Jackpots. Wildcard bends the rules.",
+  jester: "Trick builds anticipation. Punchline boosts a free roll.",
 });
 const DESCENT_LINES = Object.freeze([
   "Cool air climbs the steps. Somewhere below, another torch is burning.",
@@ -27746,7 +27890,7 @@ function revealCriticalPayoff(region, details, multiplier) {
                 expeditionRules(),
                 starterBuild,
               );
-              return `<button ${available.includes(job) ? `data-start-job="${job}"` : `data-unlock-class="${job}" class="locked-class" aria-label="Unlock ${className(job)} for ${CAMP_UNLOCKS[job].cost} banked gold"`}>${portraitArt(job, h)}<b>${className(job)}${available.includes(job) ? "" : " · Locked"}</b>${available.includes(job) ? "" : `<strong>Click to unlock · ${CAMP_UNLOCKS[job].cost} gold</strong>`}<small>${h.maxHp} HP · ${classAbilityName(job)}</small><span>${STARTER_SUMMARIES[job]}</span></button>`;
+              return `<button ${available.includes(job) ? `data-start-job="${job}"` : `data-unlock-class="${job}" class="locked-class" aria-label="Unlock ${className(job)} for ${CAMP_UNLOCKS[job].cost} banked gold"`}>${portraitArt(job, h)}<b>${className(job)}${available.includes(job) ? "" : " · Locked"}</b>${available.includes(job) ? `<strong class="starter-availability">Ready to explore</strong>` : `<strong>Click to unlock · ${CAMP_UNLOCKS[job].cost} gold</strong>`}<small>${h.maxHp} HP · ${classAbilityName(job)}</small><span>${STARTER_SUMMARIES[job]}</span></button>`;
             })
             .join(
               "",

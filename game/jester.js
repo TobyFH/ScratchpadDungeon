@@ -34,7 +34,7 @@ async function punchlineFX(h) {
 }
 function giftedReels(entity) {
   return entity.reels.map((reel, k) => {
-    if (entity.blackout?.includes(k))
+    if ((entity.blackout?.includes(k) || entity.crystalLocks?.includes(k)))
       return [{ type: "blank", tier: 1, blackout: true }];
     if (!entity.reelGifts?.some((g) => g.reel === k && g.uses > 0)) return reel;
     return reel.map((f) =>

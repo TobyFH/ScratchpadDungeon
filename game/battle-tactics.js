@@ -206,9 +206,11 @@ function clearBattleStatuses() {
     entity.surprised = false;
     entity.stunAge = 0;
     entity.blackout = [];
+    entity.crystalLocks = [];
     entity.reelGifts = [];
   }
   state.opening = null;
+  state.crystalRolls = 0;
   state.invulnerable = null;
   state.party.forEach((h, i) => syncHero(i));
   syncEnemy();
@@ -415,6 +417,7 @@ async function resumeOpeningEncounter() {
 }
 
 function normaliseTacticalStatuses(entity) {
+  entity.crystalLocks = [...new Set((Array.isArray(entity.crystalLocks) ? entity.crystalLocks : []).filter(k=>[0,1,2].includes(k)))];
   normaliseStimulant(entity);
   entity.blackout = Array.isArray(entity.blackout)
     ? [...new Set(entity.blackout.filter((k) => [0, 1, 2].includes(k)))]

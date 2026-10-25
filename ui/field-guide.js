@@ -18,6 +18,7 @@ const FIELD_GUIDE = Object.freeze([
     id: "ice", title: "Ice & dangerous fuses",
     body: '<ul class="guide-takeaways"><li><b>Ice.</b> Entering ice carries you forward. Consecutive ice tiles continue the slide; a wall stops it.</li><li><b>Plan ahead.</b> Known ice is included in routes. You cannot choose to turn halfway through a slide.</li><li><b>No safe route.</b> If sliding makes your destination unreachable, a long move stops before the blocking ice.</li><li><b>Powder imp.</b> Watch its burning fuse. After two enemy turns it explodes, damaging the party and destroying itself.</li><li><b>Answer the fuse.</b> Kill or stun it before detonation, build team block, or use an Unbroken page. Its warning shows blast power.</li></ul>',
   },
+  {id:"crystal",title:"Crystal caves",body:'<ul class="guide-takeaways"><li><b>Deposits.</b> Crystal clusters block walking. Their blue aura reaches fights within two tiles, with stone blocking its reach.</li><li><b>Resonance.</b> Every three party rolls, two random reels become sealed with gems.</li><li><b>Crack them.</b> Roll an affected hero. Their sealed reels are empty for that roll, then the gems shatter. Other heroes keep their own seals.</li><li><b>After battle.</b> Every seal clears when the fight ends. The deposit stays on the map.</li></ul>'},
   {
     id: "combat",
     title: "Combat & criticals",

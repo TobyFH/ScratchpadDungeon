@@ -252,6 +252,7 @@ function encounterTags(enemies) {
   }
   if (enemies.some(e => e.caughtUnaware)) tags.push('<span class="encounter-tag">FOES CAUGHT UNAWARE · +1 SPIN</span>');
   if (enemies.some(isExploder)) tags.push('<span class="encounter-tag">BURNING FUSE · SELF-DESTRUCT</span>');
+  if (crystalSources().length) tags.push('<span class="encounter-tag" data-tooltip="Nearby crystals seal two party reels every three party rolls. Roll the affected hero to crack them.">CRYSTAL AURA · REEL SEALS</span>');
   const quick = state.party.find((h) => h.initiative);
   if (quick)
     tags.push(
