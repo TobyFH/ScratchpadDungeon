@@ -4,19 +4,19 @@ const PROFILE_KEY = "scratchpad-dungeon-camp-v1";
 const CAMP_LESSONS = Object.freeze({
   vitality: {
     name: "Stouter hearts",
-    step: 10,
+    step: 25,
     unit: "% base health",
     costs: [750, 1500, 3000, 5500, 9000],
   },
   power: {
     name: "Practised strikes",
-    step: 5,
-    unit: "% blade and magic damage",
+    step: 30,
+    unit: "% physical and spell damage",
     costs: [900, 2000, 4500, 7500, 12000],
   },
   experience: {
     name: "Lessons remembered",
-    step: 5,
+    step: 10,
     unit: "% earned EXP",
     costs: [800, 1800, 4000, 6800, 10500],
   },
@@ -28,19 +28,19 @@ const CAMP_LESSONS = Object.freeze({
   },
   recovery: {
     name: "Mending hands",
-    step: 1,
+    step: 2,
     unit: " HP to each healing effect",
     costs: [650, 1400, 2800, 4800, 7600],
   },
   warding: {
     name: "Shields by the fire",
-    step: 1,
+    step: 2,
     unit: " opening team block",
     costs: [600, 1300, 2600, 4500, 7200],
   },
   fellowship: {
     name: "A welcome at the fire",
-    step: 5,
+    step: 10,
     unit: "% companion likelihood",
     costs: [650, 1400, 2800, 4700, 7400],
   },
@@ -114,7 +114,7 @@ const CAMP_UNLOCKS = {
     category: "challenges",
     cost: 1100,
     description:
-      "New heroes have 15% less base HP, but blade and magic rolls gain 10% damage.",
+      "New heroes have 15% less base HP, but physical and spell rolls gain 10% damage.",
   },
   richFoes: {
     name: "Gilded foes",

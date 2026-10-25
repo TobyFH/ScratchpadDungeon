@@ -147,7 +147,7 @@ Former Healers migrate to Mages with their existing stats and edited wheels.
 There is no Mage role selector: builds follow the marks on their reels. See
 [Combat builds](docs/COMBAT_BUILDS.md) for exact rules, migration and source files.
 
-Blade and magic tiers deal 2 / 4 / 7 / 11 damage per face. Healing tiers offer 2 / 4 / 6 / 8 HP. Block and stun tiers contribute 1 / 2 / 3 / 4 power. **Three identical type-and-tier symbols crit** for ordinary classes; a middle class seal can complete two matching meaningful symbols while also casting its ability. A pair alone never crits. Jesters follow these same critical rules. Trick marks instead build six anticipation for a free +1-rank Punchline roll. Hero and other event critical multipliers are ×2, ×2.5, ×3 or ×4; wells use ×1.25–×1.75, with the original value pulsing into the amplified total.
+Physical and spell tiers deal 1 / 2 / 3 / 4 base damage per face. Healing and block tiers offer 2 / 4 / 6 / 8 HP or protection. Stun tiers contribute 1 / 2 / 3 / 4 power. **Three identical type-and-tier symbols crit** for ordinary classes; a middle class seal can complete two matching meaningful symbols while also casting its ability. A pair alone never crits. Jesters follow these same critical rules. Trick marks instead build six anticipation for a free +1-rank Punchline roll. Hero critical pools differ by class (shown in the workshop); other event criticals use ×2, ×2.5, ×3 or ×4; wells use ×1.25–×1.75, with the original value pulsing into the amplified total.
 
 Normal combat rolls stay on the right page. Criticals get a multiplier popup that lingers automatically; **Strike now** skips its result hold. Treasure, fountain and other event criticals stay inside their original panel and still require confirmation. Criticals show the original value while spinning, then pulse the same readout to
 the final number; no calculation box appears. Critical damage lands as the
@@ -163,15 +163,15 @@ roll or missed attempt, usually taking one to three checks. Missed hero attempts
 never advance or reset enemy clocks. Enemy attack frequency determines how many player actions occur between attacks; difficult enemies can make multiple separately rolled strikes.
 
 Enemy damage now grows faster with depth. Attack and magic faces advance on
-floors 5 and 9; species keep their usual mix of powers. The final guardian acts
-after every player action with **three independently rolled strikes**, tier-IV
+floors 4 and 8; species keep their usual mix of powers. The final guardian acts
+every two player actions (one when Frenzied) with **three independently rolled strikes**, tier-IV
 attack/magic faces and tier-III support faces, with no dud entries. New
 encounters use this curve; migrations preserve hero wounds and edited reels.
 
-| Base damage    | Floor 1 | Floor 5 | Floor 10 |
+| Attack strength | Floor 1 | Floor 5 | Floor 10 |
 | -------------- | ------- | ------- | -------- |
-| Ordinary enemy | 2       | 7       | 9        |
-| Stair guardian | 3       | 9       | 12       |
+| Ordinary enemy | 3       | 7       | 12       |
+| Stair guardian | 4       | 8       | 14       |
 
 Berserkers begin with Healing I and II on every reel. Bloodrush heals the caster
 and fills Fury; capacity starts at 24 and grows by three per level. Each four
@@ -191,7 +191,7 @@ The satchel holds **three item types**, with matching items stacked. Inspect to 
 Consumables: Healing Tonic, Ink Bomb, Paper Ward, Antidote, Field Bandage, Mending Salve, Ember Draught, Sharpening Oil, Frost Vial, Cinder Flask, Venom Ink, Surveyor's Chalk and Trail Ration. Ink Bombs roll damage and poison on a slot machine; matching results crit.
 
 Consumable power is fixed by its item ID: an old Cinder Flask always deals 10
-magic damage, regardless of the floor where it is used. Tonic, bandage, salve,
+spell damage, regardless of the floor where it is used. Tonic, bandage, salve,
 ward, cinder flask, ink bomb and venom vial also have **Fortified** (floor 4+),
 **Potent** (7+) and **Masterwork** (10) variants. Deeper loot and new shop stock
 use the appropriate variant. Matching IDs stack; stronger variants are separate
@@ -220,8 +220,8 @@ Each hero also has one personal equipment slot. **Drag equipment from the bag on
 | Mercy Bell      | Mage   | Every roll heals each ally by 1 and adds 1 block     |
 | Silent Boots    | Rogue  | +1 damage; every fourth roll stuns                   |
 | Serpent Pin     | Rogue  | Damaging rolls poison                                |
-| Star Lens       | Mage   | +2 magic damage on damaging rolls                    |
-| Storm Quill     | Mage   | +1 magic damage; every third roll grants ally stimulant |
+| Star Lens       | Mage   | +2 spell damage on damaging rolls                    |
+| Storm Quill     | Mage   | +1 spell damage; every third roll grants ally stimulant |
 | Notched Longbow | Ranger | +2 damage on damaging rolls                          |
 | Scout Cloak     | Ranger | Resist 1 damage; +2 opening team block               |
 
@@ -385,3 +385,12 @@ See [Biomes and class identity](docs/BIOMES_UPDATE.md) for version-21 named cave
 overgrown, mushroom, lava and ice floors, directed sliding routes, nine themed
 creatures including the self-destructing Powder imp, class-focused automatic
 builds, charge-aware Autofight and the latest small balance adjustments.
+
+### Readable powers and campaign balance
+
+Physical and spell marks now deal 1–4 base damage by rank, with class-specific
+critical pools, distinct upgrade affinities and explicit ten-floor enemy budgets.
+Camp lessons provide a stronger progression advantage. See
+[the balance pass](docs/BALANCE_PASS.md) for exact values, class build guidance,
+save compatibility and the limitations of the seeded browser combat audit.
+Run `npm run audit:balance` to reproduce a controlled comparison of camp ranks.

@@ -22,7 +22,7 @@ const FIELD_GUIDE = Object.freeze([
   {
     id: "combat",
     title: "Combat & criticals",
-    body: '<ul class="guide-takeaways"><li><b>Act freely.</b> Use any living hero repeatedly. Click their card or handle to roll; their portrait opens reel editing.</li><li><b>Choose targets.</b> Click an enemy portrait to aim damage. Use the healing target control for healing. Self stimulant boosts its caster; Ally stimulant boosts the most-used companion.</li><li><b>Critical.</b> Three matching kinds AND ranks roll a multiplier. The middle class mark completes two matching outer marks. Blanks do nothing.</li><li><b>Big hits.</b> Criticals and tier III–IV attacks hit all enemies. Each foe has its own attack countdown.</li><li><b>Keep moving.</b> Click rolling reels or press Space to land them. Event results still need confirmation. Hero criticals grant 1 EXP.</li></ul>',
+    body: '<ul class="guide-takeaways"><li><b>Hero powers.</b> Physical/spell ranks I–IV deal 1/2/3/4 damage. Healing/block give 2/4/6/8. Bonuses and criticals add to these.</li><li><b>Targets.</b> Click an enemy to aim damage. Choose an ally for healing. Stimulants boost self or an ally.</li><li><b>Critical.</b> Match three kinds AND ranks. The middle class mark completes matching outer marks. Blanks do nothing.</li><li><b>Big hits.</b> Criticals and tier III–IV attacks hit all foes. Each enemy has its own countdown.</li><li><b>Roll freely.</b> Click any hero card or handle; portraits edit reels. Click rolling reels to land them. Events need confirmation; hero crits grant 1 EXP.</li></ul>',
   },
   {
     id: "statuses",
@@ -47,12 +47,12 @@ const FIELD_GUIDE = Object.freeze([
   {
     id: "classes",
     title: "Classes & temperament",
-    body: '<ul class="guide-takeaways"><li><b>Temperament.</b> Aggressive and Defensive choose different starting marks. They do not change a mark’s stated power. Rebuild either way.</li><li><b>Tank & Rogue.</b> Tanks favour blades, block and stun. Rogues favour blades, poison and quick stuns; Flurry throws three extra attacks.</li><li><b>Mage.</b> Use magic, healing, poison, shields or buffs. Resonance echoes rolled marks across the appropriate team.</li><li><b>Ranger.</b> Wait between attacks to fill Execute. Spend that patience on a stronger finishing shot.</li><li><b>Berserker.</b> Wounds and Blood Price build Fury. Capacity grows each level. Bloodrush heals; lifesteal spends a little Fury.</li></ul>',
+    body: '<ul class="guide-takeaways"><li><b>Temperament.</b> Aggressive and Defensive choose different starting marks. They do not change a mark’s stated power. Rebuild either way.</li><li><b>Tank & Rogue.</b> Tank crits ×1.5–×2.25; cheap shields fuel Shield Bash. Rogue crits ×2–×5; build physical combos or poison, with little recovery.</li><li><b>Mage.</b> Crits ×1.75–×3. Spell damage works alone; healing, shields or poison Resonance support a party. No chosen speciality.</li><li><b>Ranger.</b> Crits ×2–×4. Let allies act to charge Execute, then strike a wounded enemy.</li><li><b>Berserker.</b> Crits ×1.75–×4. Wounds charge Fury; balance Blood Price with healing and lifesteal.</li></ul>',
   },
   {
     id: "jester",
     title: "Jester & Punchline",
-    body: '<ul class="guide-takeaways"><li><b>Unlock.</b> Buy the Jester’s invitation at camp. It can inscribe any ordinary kind except Self stimulant and the Berserker’s Blood Price.</li><li><b>Trick.</b> These marks fill anticipation by their rank. At 6, earn one free Punchline before enemy clocks advance.</li><li><b>Punchline.</b> Roll your own machine with ordinary non-empty marks one rank stronger, up to IV. These bonus rolls do not refill anticipation.</li><li><b>Criticals.</b> Normal matching triples roll the usual multiplier. Different kinds have no special critical; matching triples do not self-stun.</li><li><b>Wildcard.</b> The permanent class mark can ink enemy reels, gild allied reels, reverse a foe’s roll or scatter damage and healing.</li></ul>',
+    body: '<ul class="guide-takeaways"><li><b>Unlock.</b> Buy the Jester’s invitation at camp. It can inscribe any ordinary kind except Self stimulant and the Berserker’s Blood Price.</li><li><b>Trick.</b> These marks fill anticipation by their rank. At 6, earn one free Punchline before enemy clocks advance.</li><li><b>Punchline.</b> Roll your own machine with ordinary non-empty marks one rank stronger, up to IV. These bonus rolls do not refill anticipation.</li><li><b>Criticals.</b> Matching triples roll ×1.5–×4. Different kinds have no special critical; matching triples do not self-stun.</li><li><b>Wildcard.</b> The permanent class mark can ink enemy reels, gild allied reels, reverse a foe’s roll or scatter damage and healing.</li></ul>',
   },
   {
     id: "companions",
@@ -67,7 +67,7 @@ const FIELD_GUIDE = Object.freeze([
   {
     id: "camp",
     title: "By the campfire",
-    body: '<ul class="guide-takeaways"><li><b>Bank gold.</b> After floors 1–9, bank 25%, 50%, 75% or all carried gold. Victory banks everything. Banked gold survives failed runs.</li><li><b>Adventurers.</b> Unlock Ranger, Berserker and Jester starts and wandering companions.</li><li><b>Campfire Lessons.</b> Eight improvements have five tiers each. Buy tiers permanently; use − and + to choose an active rank, including zero.</li><li><b>Other rules.</b> Challenges add danger, sometimes with rewards. Oddities change discoveries and routes. Purchases start disabled.</li><li><b>Next run.</b> Lesson ranks and toggles are chosen before an expedition. Purchases never rewrite a run already in progress.</li></ul>',
+    body: '<ul class="guide-takeaways"><li><b>Bank gold.</b> After floors 1–9, bank 25%, 50%, 75% or all carried gold. Victory banks everything. Banked gold survives failed runs.</li><li><b>Adventurers.</b> Unlock Ranger, Berserker and Jester starts and wandering companions.</li><li><b>Campfire Lessons.</b> Eight improvements have five tiers each. Buy tiers permanently; use − and + to choose an active rank, including zero.</li><li><b>Other rules.</b> Challenges add danger, sometimes with rewards. Oddities change discoveries and routes. Purchases start disabled.</li><li><b>Grow stronger.</b> Bank gold for lessons. Fresh runs are dangerous; a trained party is stronger. Select lessons before the next run.</li></ul>',
   },
   {
     id: "controls",

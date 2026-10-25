@@ -12274,23 +12274,532 @@ function stairwayArt() {
           block: "block",
           stun: "stun",
           blank: "blank",
-        },
-        POWER = {
-          selfharm: 2,
-          attack: 2,
-          magic: 2,
-          poison: 1,
-          stimulant: 1,
-          rally: 1,
-          trick: 1,
-          heal: 2,
-          block: 1,
-          stun: 1,
-          class: 0,
-          blank: 0,
-        },
-        ATTACK_POWER = [0, 2, 4, 7, 11],
-        FACE_COST = { 1: 1, 2: 4, 3: 9, 4: 16 };
+        };
+      // BEGIN GENERATED BALANCE
+// Shared numeric tuning. Keep RNG, match rules, reel counts and art outside this module.
+// All multipliers are visible in the workshop/guide; a mark has the same base power for every class.
+const POWER = Object.freeze({
+  selfharm: 2,
+  attack: 1,
+  magic: 1,
+  poison: 1,
+  stimulant: 1,
+  rally: 1,
+  trick: 1,
+  heal: 2,
+  block: 2,
+  stun: 1,
+  class: 0,
+  blank: 0,
+});
+const ATTACK_POWER = Object.freeze([0, 1, 2, 3, 4]);
+const FACE_COST = Object.freeze({ 1: 1, 2: 3, 3: 6, 4: 10 });
+const CLASS_BALANCE = Object.freeze({
+  fighter: {
+    hp: 50,
+    critical: [1.5, 1.75, 2, 2.25],
+    path: "Shields fuel Shield Bash. Stun controls; lower damage crits.",
+  },
+  rogue: {
+    hp: 26,
+    critical: [2, 3, 4, 5],
+    path: "Physical combos or poison. Strong crits; fragile, little healing.",
+  },
+  mage: {
+    hp: 28,
+    critical: [1.75, 2, 2.5, 3],
+    path: "Solo spell combos; healing, shields or poison for a party.",
+  },
+  ranger: {
+    hp: 30,
+    critical: [2, 2.5, 3, 4],
+    path: "Wait for Execute, then finish wounded foes. Keep support marks.",
+  },
+  berserker: {
+    hp: 38,
+    critical: [1.75, 2.5, 3, 4],
+    path: "Blood Price builds Fury. Balance damage with healing and lifesteal.",
+  },
+  jester: {
+    hp: 30,
+    critical: [1.5, 2, 3, 4],
+    path: "Trick builds Punchline. Mix damage with useful support.",
+  },
+});
+const CRITICAL_BALANCE = Object.freeze({
+  enemy: [1.25, 1.25, 1.5, 1.5],
+  well: [1.25, 1.25, 1.5, 1.75],
+  loot: [2, 2.5, 3, 4],
+});
+function criticalPool(hero, { enemy = false, context = null } = {}) {
+  if (context === "well") return CRITICAL_BALANCE.well;
+  if (enemy) return CRITICAL_BALANCE.enemy;
+  return hero
+    ? CLASS_BALANCE[hero.job]?.critical || CLASS_BALANCE.mage.critical
+    : CRITICAL_BALANCE.loot;
+}
+const meanCritical = (h) =>
+  criticalPool(h).reduce((a, b) => a + b, 0) / criticalPool(h).length;
+const criticalRange = (h) =>
+  `×${Math.min(...criticalPool(h))}–×${Math.max(...criticalPool(h))}`;
+const FLURRY_FACES = Object.freeze([
+  { type: "attack", tier: 1, weight: 8 },
+  { type: "attack", tier: 2, weight: 3 },
+  { type: "attack", tier: 3, weight: 1 },
+]);
+const flurryMeanDamage = () =>
+  (3 * FLURRY_FACES.reduce((n, f) => n + ATTACK_POWER[f.tier] * f.weight, 0)) /
+  FLURRY_FACES.reduce((n, f) => n + f.weight, 0);
+// Explicit rows avoid abrupt formula/clocks/tier jumps stacking accidentally.
+// hp/damage are the ordinary reference; bosses have independent budgets.
+const FLOOR_BALANCE = Object.freeze([
+  {
+    hp: 13,
+    damage: 3,
+    bossHp: 28,
+    bossDamage: 4,
+    frequency: 3,
+    bossFrequency: 2,
+    strikes: 1,
+    promotion: 0,
+  },
+  {
+    hp: 17,
+    damage: 4,
+    bossHp: 36,
+    bossDamage: 5,
+    frequency: 3,
+    bossFrequency: 2,
+    strikes: 1,
+    promotion: 0,
+  },
+  {
+    hp: 22,
+    damage: 5,
+    bossHp: 47,
+    bossDamage: 6,
+    frequency: 2,
+    bossFrequency: 2,
+    strikes: 1,
+    promotion: 0,
+  },
+  {
+    hp: 28,
+    damage: 6,
+    bossHp: 60,
+    bossDamage: 7,
+    frequency: 2,
+    bossFrequency: 2,
+    strikes: 1,
+    promotion: 1,
+  },
+  {
+    hp: 35,
+    damage: 7,
+    bossHp: 76,
+    bossDamage: 8,
+    frequency: 2,
+    bossFrequency: 2,
+    strikes: 1,
+    promotion: 1,
+  },
+  {
+    hp: 43,
+    damage: 8,
+    bossHp: 94,
+    bossDamage: 9,
+    frequency: 2,
+    bossFrequency: 2,
+    strikes: 2,
+    promotion: 1,
+  },
+  {
+    hp: 52,
+    damage: 9,
+    bossHp: 116,
+    bossDamage: 10,
+    frequency: 2,
+    bossFrequency: 2,
+    strikes: 2,
+    promotion: 1,
+  },
+  {
+    hp: 63,
+    damage: 10,
+    bossHp: 140,
+    bossDamage: 11,
+    frequency: 2,
+    bossFrequency: 2,
+    strikes: 2,
+    promotion: 2,
+  },
+  {
+    hp: 75,
+    damage: 11,
+    bossHp: 168,
+    bossDamage: 12,
+    frequency: 2,
+    bossFrequency: 2,
+    strikes: 2,
+    promotion: 2,
+  },
+  {
+    hp: 88,
+    damage: 12,
+    bossHp: 205,
+    bossDamage: 14,
+    frequency: 2,
+    bossFrequency: 2,
+    strikes: 3,
+    promotion: 2,
+  },
+]);
+const floorBalance = (depth) =>
+  FLOOR_BALANCE[Math.max(0, Math.min(9, Math.floor(depth) - 1))];
+function enemyBalance(
+  depth,
+  {
+    boss = false,
+    elite = false,
+    pair = false,
+    mimic = false,
+    stronghold = false,
+    species = null,
+  } = {},
+) {
+  const row = floorBalance(depth),
+    identity = ENEMY_PROFILES[species] || {};
+  const stats = {
+    maxHp: Math.ceil(
+      (boss ? row.bossHp : row.hp * (identity.hp || 1)) *
+        (boss
+          ? 1
+          : (elite ? 1.25 : 1) *
+            (stronghold ? 1.4 : 1) *
+            (mimic ? 1.15 : 1) *
+            (pair ? 0.76 : 1)),
+    ),
+    damage: Math.ceil(
+      (boss ? row.bossDamage : row.damage) *
+        (identity.damage || 1) *
+        (boss
+          ? 1
+          : (elite ? 1.1 : 1) * (stronghold ? 1.15 : 1) * (pair ? 0.78 : 1)),
+    ),
+    frequency: boss
+      ? row.bossFrequency
+      : stronghold
+        ? 2
+        : Math.max(1, row.frequency + (identity.cadence || 0)),
+    strikes: boss ? row.strikes : stronghold && depth >= 7 ? 2 : 1,
+  };
+  if (species === "pursuer") {
+    stats.maxHp = Math.ceil(stats.maxHp * (depth >= 4 ? 1.35 : 1.15));
+    stats.damage = Math.ceil(stats.damage * (depth >= 4 ? 1.2 : 1.1));
+    if (depth >= 8) stats.strikes = Math.max(2, stats.strikes);
+  }
+  stats.maxHp = Math.ceil(
+    stats.maxHp *
+      (ruleEnabled("iron") ? 1.2 : 1) *
+      (ruleEnabled("richFoes") ? 1.15 : 1),
+  );
+  stats.damage =
+    Math.ceil(stats.damage * (ruleEnabled("iron") ? 1.1 : 1)) +
+    (ruleEnabled("sharp") ? 1 : 0);
+  if (ruleEnabled("restless"))
+    stats.frequency = Math.max(1, stats.frequency - 1);
+  return stats;
+}
+
+// Species identity is data, shared by encounters, summons and previews.
+const ENEMY_PROFILES = {
+  rat: {
+    damage: 0.85,
+    cadence: -1,
+    hp: 0.8,
+    faces: [
+      ["attack", 1],
+      ["attack", 1],
+      ["attack", 2],
+      ["poison", 1],
+      ["stun", 1],
+      ["miss", 1],
+    ],
+    trait: "secondWind",
+  },
+  gnawer: {
+    damage: 0.9,
+    hp: 0.9,
+    faces: [
+      ["attack", 1],
+      ["attack", 1],
+      ["attack", 2],
+      ["heal", 1],
+      ["stimulant", 1],
+      ["miss", 1],
+    ],
+    trait: "secondWind",
+  },
+  ghost: {
+    damage: 0.9,
+    hp: 0.8,
+    faces: [
+      ["magic", 1],
+      ["magic", 1],
+      ["magic", 2],
+      ["stun", 1],
+      ["stun", 1],
+      ["miss", 1],
+    ],
+    trait: "summoner",
+  },
+  slime: {
+    damage: 0.75,
+    cadence: 1,
+    hp: 1.4,
+    faces: [
+      ["attack", 1],
+      ["heal", 1],
+      ["heal", 2],
+      ["block", 1],
+      ["block", 1],
+      ["miss", 1],
+    ],
+    trait: "split",
+  },
+  skull: {
+    hp: 1.05,
+    faces: [
+      ["attack", 1],
+      ["attack", 2],
+      ["attack", 2],
+      ["block", 1],
+      ["block", 1],
+      ["stun", 1],
+    ],
+    trait: "carapace",
+  },
+  bellkeeper: {
+    damage: 1.05,
+    cadence: 1,
+    hp: 1.35,
+    faces: [
+      ["attack", 1],
+      ["attack", 2],
+      ["stun", 1],
+      ["stun", 1],
+      ["block", 2],
+      ["block", 1],
+    ],
+    trait: "carapace",
+  },
+  widow: {
+    damage: 0.8,
+    hp: 0.85,
+    faces: [
+      ["attack", 1],
+      ["poison", 1],
+      ["poison", 1],
+      ["poison", 2],
+      ["stun", 1],
+      ["miss", 1],
+    ],
+    trait: "summoner",
+  },
+  oracle: {
+    damage: 1.1,
+    hp: 0.95,
+    faces: [
+      ["magic", 1],
+      ["magic", 2],
+      ["magic", 2],
+      ["heal", 2],
+      ["stimulant", 1],
+      ["stun", 1],
+    ],
+    trait: "secondWind",
+  },
+  revenant: {
+    damage: 1.05,
+    hp: 1.25,
+    faces: [
+      ["attack", 2],
+      ["attack", 2],
+      ["attack", 1],
+      ["block", 2],
+      ["block", 1],
+      ["stun", 1],
+    ],
+    trait: "secondWind",
+  },
+  demon: {
+    damage: 1.2,
+    hp: 1.05,
+    faces: [
+      ["attack", 2],
+      ["attack", 2],
+      ["magic", 2],
+      ["stimulant", 1],
+      ["stimulant", 1],
+      ["stun", 1],
+    ],
+    trait: "secondWind",
+  },
+  lich: {
+    damage: 0.95,
+    hp: 0.95,
+    faces: [
+      ["magic", 1],
+      ["magic", 2],
+      ["magic", 2],
+      ["poison", 1],
+      ["heal", 1],
+      ["stun", 1],
+    ],
+    trait: "summoner",
+  },
+  abomination: {
+    damage: 0.9,
+    hp: 1.5,
+    faces: [
+      ["attack", 2],
+      ["attack", 2],
+      ["block", 2],
+      ["block", 1],
+      ["heal", 1],
+      ["poison", 1],
+    ],
+    trait: "split",
+  },
+  pageeater: {
+    damage: 1.15,
+    cadence: 1,
+    hp: 1.6,
+    faces: [
+      ["attack", 2],
+      ["attack", 2],
+      ["attack", 2],
+      ["block", 2],
+      ["stun", 2],
+      ["heal", 1],
+    ],
+    trait: "carapace",
+  },
+  moth: {
+    name: "Tallow moth",
+    minDepth: 1,
+    maxDepth: 3,
+    hp: 0.72,
+    damage: 0.9,
+    faces: [
+      ["attack", 1],
+      ["attack", 1],
+      ["stun", 1],
+      ["miss", 1],
+      ["miss", 1],
+    ],
+  },
+  rustmite: {
+    name: "Rust mite",
+    minDepth: 2,
+    maxDepth: 5,
+    hp: 1.28,
+    damage: 0.9,
+    faces: [
+      ["attack", 1],
+      ["attack", 2],
+      ["block", 1],
+      ["block", 1],
+      ["stun", 1],
+      ["miss", 1],
+    ],
+    trait: "carapace",
+  },
+  sporepilgrim: {
+    name: "Spore pilgrim",
+    minDepth: 3,
+    maxDepth: 6,
+    hp: 1.1,
+    damage: 0.9,
+    faces: [
+      ["poison", 1],
+      ["poison", 2],
+      ["magic", 1],
+      ["heal", 1],
+      ["block", 1],
+      ["miss", 1],
+    ],
+    trait: "secondWind",
+  },
+  mirrorhound: {
+    name: "Mirror hound",
+    minDepth: 5,
+    maxDepth: 8,
+    hp: 0.9,
+    damage: 1.1,
+    faces: [
+      ["attack", 2],
+      ["attack", 2],
+      ["attack", 1],
+      ["stun", 1],
+      ["stimulant", 1],
+      ["miss", 1],
+    ],
+    trait: "split",
+  },
+  ashcolossus: {
+    name: "Ash colossus",
+    minDepth: 8,
+    maxDepth: 10,
+    hp: 1.7,
+    damage: 1.15,
+    faces: [
+      ["attack", 2],
+      ["attack", 2],
+      ["block", 2],
+      ["block", 2],
+      ["stun", 2],
+      ["miss", 1],
+    ],
+    trait: "carapace",
+  },
+  pursuer: {
+    hp: 1.28,
+    damage: 1.12,
+    faces: [
+      ["attack", 1],
+      ["attack", 2],
+      ["attack", 2],
+      ["poison", 1],
+      ["stun", 1],
+      ["stimulant", 1],
+    ],
+    trait: "secondWind",
+  },
+  mimic: {
+    damage: 1.05,
+    hp: 1.3,
+    faces: [
+      ["attack", 1],
+      ["attack", 2],
+      ["attack", 2],
+      ["block", 1],
+      ["stun", 1],
+      ["miss", 1],
+    ],
+    trait: "carapace",
+  },
+};
+
+function encounterXP(depth, enemy, count = 1) {
+  return Math.round(
+    (8 + depth * 2) *
+      0.85 *
+      count *
+      (enemy.stronghold ? 2 : enemy.boss ? 1.35 : enemy.elite ? 1.2 : 1),
+  );
+}
+// END GENERATED BALANCE
       let state,
         busy = false,
         skip = false,
@@ -12323,19 +12832,19 @@ const PROFILE_KEY = "scratchpad-dungeon-camp-v1";
 const CAMP_LESSONS = Object.freeze({
   vitality: {
     name: "Stouter hearts",
-    step: 10,
+    step: 25,
     unit: "% base health",
     costs: [750, 1500, 3000, 5500, 9000],
   },
   power: {
     name: "Practised strikes",
-    step: 5,
-    unit: "% blade and magic damage",
+    step: 30,
+    unit: "% physical and spell damage",
     costs: [900, 2000, 4500, 7500, 12000],
   },
   experience: {
     name: "Lessons remembered",
-    step: 5,
+    step: 10,
     unit: "% earned EXP",
     costs: [800, 1800, 4000, 6800, 10500],
   },
@@ -12347,19 +12856,19 @@ const CAMP_LESSONS = Object.freeze({
   },
   recovery: {
     name: "Mending hands",
-    step: 1,
+    step: 2,
     unit: " HP to each healing effect",
     costs: [650, 1400, 2800, 4800, 7600],
   },
   warding: {
     name: "Shields by the fire",
-    step: 1,
+    step: 2,
     unit: " opening team block",
     costs: [600, 1300, 2600, 4500, 7200],
   },
   fellowship: {
     name: "A welcome at the fire",
-    step: 5,
+    step: 10,
     unit: "% companion likelihood",
     costs: [650, 1400, 2800, 4700, 7400],
   },
@@ -12433,7 +12942,7 @@ const CAMP_UNLOCKS = {
     category: "challenges",
     cost: 1100,
     description:
-      "New heroes have 15% less base HP, but blade and magic rolls gain 10% damage.",
+      "New heroes have 15% less base HP, but physical and spell rolls gain 10% damage.",
   },
   richFoes: {
     name: "Gilded foes",
@@ -13070,10 +13579,8 @@ const MAGE_POWERS = Object.freeze({
   },
 });
 const HERO_TUNING = Object.freeze({
-  tankHP: 50,
   rangerExecute: 1.12,
-  rogueDamage: 0.94,
-  healing: 1.1,
+  healing: 1,
 });
 const tankSealBlock = (h) =>
   2 + Math.floor(Math.max(0, (h?.level || 1) - 1) / 3);
@@ -13084,14 +13591,10 @@ const fountainBaseRate = (depth = state.depth) =>
 const fountainRollRate = (depth = state.depth) =>
   0.5 + Math.min(9, Math.max(0, depth - 1)) * 0.012;
 function heroDamagePower(h, n) {
-  return n <= 0
-    ? 0
-    : h?.job === "rogue"
-      ? Math.max(1, Math.round(n * HERO_TUNING.rogueDamage))
-      : n;
+  return n;
 }
 function heroHealingPower(n) {
-  return n > 0 ? Math.max(1, Math.round(n * HERO_TUNING.healing)) : 0;
+  return n;
 }
 const RANGER_AIM_CAP = 6;
 // Fury scales with level and is spent only when real lifesteal restores HP.
@@ -13274,7 +13777,7 @@ function classAbilityDescription(hero) {
       healer: "Resonance echoes your rolled marks across the appropriate team.",
       ranger:
         "Execute: wait between attacks to fill patience. The next damaging roll gains a bonus against wounded enemies; the seal strengthens that shot.",
-      berserker: `Bloodrush: restore ${bloodrushHealing(hero && typeof hero === "object" ? hero : { level: 1 })} HP to yourself, gain 4 Fury and +2 blade damage. Charged Fury adds damage and lifesteal; restoring HP spends some Fury.`,
+      berserker: `Bloodrush: restore ${bloodrushHealing(hero && typeof hero === "object" ? hero : { level: 1 })} HP to yourself, gain 4 Fury and +2 physical damage. Charged Fury adds damage and lifesteal; restoring HP spends some Fury.`,
     }[job] || "Your permanent signature mark, alongside the other two results."
   );
 }
@@ -13330,7 +13833,7 @@ function startingFaces(job, temperament) {
       ? [
           ["heal", 1],
           ["heal", 2],
-          ["magic", 1],
+          ["magic", 2],
           ["block", 1],
           ["rally", 1],
           ["blank", 1],
@@ -13412,15 +13915,7 @@ function makeHero(
     : randomTemperament();
   const faces = startingFaces(job, specialism);
   const maxHp = Math.round(
-    ({
-      fighter: HERO_TUNING.tankHP,
-      rogue: 26,
-      mage: 28,
-      ranger: 30,
-      berserker: 38,
-      jester: 30,
-    }[job] +
-      (rules.includes("hearty") ? 4 : 0)) *
+    ((CLASS_BALANCE[job]?.hp || 30) + (rules.includes("hearty") ? 4 : 0)) *
       (1 + lessonBonus("vitality", rules) / 100) *
       (rules.includes("glass") ? 0.85 : 1),
   );
@@ -14619,7 +15114,7 @@ function wardActive(e = actingEnemy) {
           paired = enemies.length > 1;
         $("#encounter").classList.toggle("paired-enemies", paired);
         $("#encounter").innerHTML = enemies.length
-          ? `<h3 class="enemy-label">${paired ? "Enemies · click a target" : "Enemy"}</h3>${paired ? enemyBlockMarkup() : ""}<div class="enemy-roster">${enemies.map((e, k) => `<div class="enemy-box ${e.elite ? "elite-enemy" : ""} ${e === state.enemy ? "selected-enemy" : ""} ${e.hp <= 0 ? "enemy-corpse" : ""}" id="${k ? "enemy-2" : "enemy"}" data-enemy-id="${e.id}"><div class="enemy-presence"><button class="enemy-art" id="${k ? "enemy-art-2" : "enemy-art"}" data-enemy-target="${e.id}" aria-label="Damage target: ${e.name}" aria-pressed="${e === state.enemy}" ${busy || e.hp <= 0 ? "disabled" : ""}>${portraitArt(e.art, e)}${statusMarkup(e)}</button>${!paired ? enemyBlockMarkup() : ""}</div><div class="enemy-info"><h4>${e.name}${e.elite ? (e.boss ? " · BOSS" : " · ELITE") : ""}</h4><span class="enemy-health-label">HP ${e.hp} / ${e.maxHp} · <span class="injury ${injury(e)}">${injury(e)}</span></span>${healthMarkup(e, "enemy-hp")}<span class="enemy-clock">${e.hp <= 0 ? "Slain" : e.stun ? "Stunned · recovering" : "Attacks in " + e.countdown + (e.countdown === 1 ? " spin" : " spins")}</span><p class="enemy-stats">${e.strikes} strike${e.strikes > 1 ? "s" : ""} · base ${e.damage} damage<br>Every ${e.frequency} spins${e.affix ? " · " + e.affix : ""}</p></div>${drawMachine(k ? "enemy-2" : "enemy", e.last, { enemy: true, title: enemyMachineCaption(e), disabled: true })}</div>`).join("")}</div>`
+          ? `<h3 class="enemy-label">${paired ? "Enemies · click a target" : "Enemy"}</h3>${paired ? enemyBlockMarkup() : ""}<div class="enemy-roster">${enemies.map((e, k) => `<div class="enemy-box ${e.elite ? "elite-enemy" : ""} ${e === state.enemy ? "selected-enemy" : ""} ${e.hp <= 0 ? "enemy-corpse" : ""}" id="${k ? "enemy-2" : "enemy"}" data-enemy-id="${e.id}"><div class="enemy-presence"><button class="enemy-art" id="${k ? "enemy-art-2" : "enemy-art"}" data-enemy-target="${e.id}" aria-label="Damage target: ${e.name}" aria-pressed="${e === state.enemy}" ${busy || e.hp <= 0 ? "disabled" : ""}>${portraitArt(e.art, e)}${statusMarkup(e)}</button>${!paired ? enemyBlockMarkup() : ""}</div><div class="enemy-info"><h4>${e.name}${e.elite ? (e.boss ? " · BOSS" : " · ELITE") : ""}</h4><span class="enemy-health-label">HP ${e.hp} / ${e.maxHp} · <span class="injury ${injury(e)}">${injury(e)}</span></span>${healthMarkup(e, "enemy-hp")}<span class="enemy-clock">${e.hp <= 0 ? "Slain" : e.stun ? "Stunned · recovering" : "Attacks in " + e.countdown + (e.countdown === 1 ? " spin" : " spins")}</span><p class="enemy-stats">${e.strikes} strike${e.strikes > 1 ? "s" : ""} · strength ${e.damage}<br>Every ${e.frequency} spins${e.affix ? " · " + e.affix : ""}</p></div>${drawMachine(k ? "enemy-2" : "enemy", e.last, { enemy: true, title: enemyMachineCaption(e), disabled: true })}</div>`).join("")}</div>`
           : `<h3 class="enemy-label">The margins</h3><div class="peace">${portraitArt("fighter", state.party.find(alive) || state.party[0])}<p>${state.over ? (state.won ? "Ten floors, one very stubborn party. You wrote the ending." : "Every expedition leaves a story. A fresh page is waiting.") : "A moment between monsters.<br>Gather your nerve. The next floor is waiting."}</p></div>`;
       }
 
@@ -15022,268 +15517,6 @@ function wardActive(e = actingEnemy) {
         }
         return false;
       }
-      // Species identity is data, shared by encounters, summons and previews.
-      const ENEMY_PROFILES = {
-        rat: {
-          hp: 0.8,
-          faces: [
-            ["attack", 1],
-            ["attack", 1],
-            ["attack", 2],
-            ["poison", 1],
-            ["stun", 1],
-            ["miss", 1],
-          ],
-          trait: "secondWind",
-        },
-        gnawer: {
-          hp: 0.9,
-          faces: [
-            ["attack", 1],
-            ["attack", 1],
-            ["attack", 2],
-            ["heal", 1],
-            ["stimulant", 1],
-            ["miss", 1],
-          ],
-          trait: "secondWind",
-        },
-        ghost: {
-          hp: 0.8,
-          faces: [
-            ["magic", 1],
-            ["magic", 1],
-            ["magic", 2],
-            ["stun", 1],
-            ["stun", 1],
-            ["miss", 1],
-          ],
-          trait: "summoner",
-        },
-        slime: {
-          hp: 1.4,
-          faces: [
-            ["attack", 1],
-            ["heal", 1],
-            ["heal", 2],
-            ["block", 1],
-            ["block", 1],
-            ["miss", 1],
-          ],
-          trait: "split",
-        },
-        skull: {
-          hp: 1.05,
-          faces: [
-            ["attack", 1],
-            ["attack", 2],
-            ["attack", 2],
-            ["block", 1],
-            ["block", 1],
-            ["stun", 1],
-          ],
-          trait: "carapace",
-        },
-        bellkeeper: {
-          hp: 1.35,
-          faces: [
-            ["attack", 1],
-            ["attack", 2],
-            ["stun", 1],
-            ["stun", 1],
-            ["block", 2],
-            ["block", 1],
-          ],
-          trait: "carapace",
-        },
-        widow: {
-          hp: 0.85,
-          faces: [
-            ["attack", 1],
-            ["poison", 1],
-            ["poison", 1],
-            ["poison", 2],
-            ["stun", 1],
-            ["miss", 1],
-          ],
-          trait: "summoner",
-        },
-        oracle: {
-          hp: 0.95,
-          faces: [
-            ["magic", 1],
-            ["magic", 2],
-            ["magic", 2],
-            ["heal", 2],
-            ["stimulant", 1],
-            ["stun", 1],
-          ],
-          trait: "secondWind",
-        },
-        revenant: {
-          hp: 1.25,
-          faces: [
-            ["attack", 2],
-            ["attack", 2],
-            ["attack", 1],
-            ["block", 2],
-            ["block", 1],
-            ["stun", 1],
-          ],
-          trait: "secondWind",
-        },
-        demon: {
-          hp: 1.05,
-          faces: [
-            ["attack", 2],
-            ["attack", 2],
-            ["magic", 2],
-            ["stimulant", 1],
-            ["stimulant", 1],
-            ["stun", 1],
-          ],
-          trait: "secondWind",
-        },
-        lich: {
-          hp: 0.95,
-          faces: [
-            ["magic", 1],
-            ["magic", 2],
-            ["magic", 2],
-            ["poison", 1],
-            ["heal", 1],
-            ["stun", 1],
-          ],
-          trait: "summoner",
-        },
-        abomination: {
-          hp: 1.5,
-          faces: [
-            ["attack", 2],
-            ["attack", 2],
-            ["block", 2],
-            ["block", 1],
-            ["heal", 1],
-            ["poison", 1],
-          ],
-          trait: "split",
-        },
-        pageeater: {
-          hp: 1.6,
-          faces: [
-            ["attack", 2],
-            ["attack", 2],
-            ["attack", 2],
-            ["block", 2],
-            ["stun", 2],
-            ["heal", 1],
-          ],
-          trait: "carapace",
-        },
-        moth: {
-          name: "Tallow moth",
-          minDepth: 1,
-          maxDepth: 3,
-          hp: 0.72,
-          damage: 0.9,
-          faces: [
-            ["attack", 1],
-            ["attack", 1],
-            ["stun", 1],
-            ["miss", 1],
-            ["miss", 1],
-          ],
-        },
-        rustmite: {
-          name: "Rust mite",
-          minDepth: 2,
-          maxDepth: 5,
-          hp: 1.28,
-          damage: 0.9,
-          faces: [
-            ["attack", 1],
-            ["attack", 2],
-            ["block", 1],
-            ["block", 1],
-            ["stun", 1],
-            ["miss", 1],
-          ],
-          trait: "carapace",
-        },
-        sporepilgrim: {
-          name: "Spore pilgrim",
-          minDepth: 3,
-          maxDepth: 6,
-          hp: 1.1,
-          damage: 0.9,
-          faces: [
-            ["poison", 1],
-            ["poison", 2],
-            ["magic", 1],
-            ["heal", 1],
-            ["block", 1],
-            ["miss", 1],
-          ],
-          trait: "secondWind",
-        },
-        mirrorhound: {
-          name: "Mirror hound",
-          minDepth: 5,
-          maxDepth: 8,
-          hp: 0.9,
-          damage: 1.1,
-          faces: [
-            ["attack", 2],
-            ["attack", 2],
-            ["attack", 1],
-            ["stun", 1],
-            ["stimulant", 1],
-            ["miss", 1],
-          ],
-          trait: "split",
-        },
-        ashcolossus: {
-          name: "Ash colossus",
-          minDepth: 8,
-          maxDepth: 10,
-          hp: 1.7,
-          damage: 1.15,
-          faces: [
-            ["attack", 2],
-            ["attack", 2],
-            ["block", 2],
-            ["block", 2],
-            ["stun", 2],
-            ["miss", 1],
-          ],
-          trait: "carapace",
-        },
-        pursuer: {
-          hp: 1.28,
-          damage: 1.12,
-          faces: [
-            ["attack", 1],
-            ["attack", 2],
-            ["attack", 2],
-            ["poison", 1],
-            ["stun", 1],
-            ["stimulant", 1],
-          ],
-          trait: "secondWind",
-        },
-        mimic: {
-          hp: 1.3,
-          faces: [
-            ["attack", 1],
-            ["attack", 2],
-            ["attack", 2],
-            ["block", 1],
-            ["stun", 1],
-            ["miss", 1],
-          ],
-          trait: "carapace",
-        },
-      };
       // BEGIN GENERATED BIOME ENEMIES
 // Biome species are explicit depth bands. Ordinary encounter pools exclude them;
 // the matching floor adds only its eligible species to the random draw.
@@ -15735,7 +15968,7 @@ function bestiaryPage(index = bestiaryPageIndex) {
   applyEnemyPresentation(specimen);
   openModal(
     "The dungeon bestiary",
-    `<section class="bestiary-page"><nav class="guide-navigation" aria-label="Bestiary entries"><label>Entry<select id="bestiary-select">${BESTIARY_ENTRIES.map((e, i) => `<option value="${i}" ${i === bestiaryPageIndex ? "selected" : ""}>${String(i + 1).padStart(2, "0")} · ${book[e.id] ? applyEnemyPresentation({ art: e.art, name: e.name, boss: !!e.depth, stairBossDepth: e.depth }).name : "Unknown"}</option>`).join("")}</select></label><button id="bestiary-previous" ${bestiaryPageIndex ? "" : "disabled"}>← Previous</button><button id="bestiary-next" ${bestiaryPageIndex < BESTIARY_ENTRIES.length - 1 ? "" : "disabled"}>Next →</button></nav><article class="bestiary-record ${known ? "known" : "unknown"}"><button id="bestiary-cry" ${known ? "" : "disabled"} aria-label="${known ? "Hear " + escapeHTML(specimen.name) : "Unknown creature"}">${known ? portraitArt(entry.art, specimen) : icon("question")}</button><div><h3>${known ? specimen.name : "An unwritten creature"}</h3><p>${known ? entry.lore : "Meet this creature in the dungeon to fill this page."}</p>${known ? `<dl class="bestiary-stats"><dt>Floor</dt><dd>Floor ${record.depth}</dd><dt>Health</dt><dd>${record.hp} HP</dd><dt>Base hit</dt><dd>${record.damage}</dd><dt>Attacks</dt><dd>${record.strikes} strike${record.strikes === 1 ? "" : "s"} every ${record.frequency} spins</dd><dt>Passive</dt><dd>${ENEMY_TRAITS[record.passive]?.name || "None observed"}</dd><dt>Met / slain</dt><dd>${record.seen} / ${record.defeated}</dd></dl><small>Stats vary by floor and elite status. Click the sketch to hear its cry.</small>` : ""}</div></article><div class="guide-page-count">${bestiaryPageIndex + 1} / ${BESTIARY_ENTRIES.length} · ${Object.keys(book).filter((id) => BESTIARY_ENTRIES.some((e) => e.id === id)).length} discovered</div></section><div class="modal-actions"><button data-close class="primary">Close the bestiary</button></div>`,
+    `<section class="bestiary-page"><nav class="guide-navigation" aria-label="Bestiary entries"><label>Entry<select id="bestiary-select">${BESTIARY_ENTRIES.map((e, i) => `<option value="${i}" ${i === bestiaryPageIndex ? "selected" : ""}>${String(i + 1).padStart(2, "0")} · ${book[e.id] ? applyEnemyPresentation({ art: e.art, name: e.name, boss: !!e.depth, stairBossDepth: e.depth }).name : "Unknown"}</option>`).join("")}</select></label><button id="bestiary-previous" ${bestiaryPageIndex ? "" : "disabled"}>← Previous</button><button id="bestiary-next" ${bestiaryPageIndex < BESTIARY_ENTRIES.length - 1 ? "" : "disabled"}>Next →</button></nav><article class="bestiary-record ${known ? "known" : "unknown"}"><button id="bestiary-cry" ${known ? "" : "disabled"} aria-label="${known ? "Hear " + escapeHTML(specimen.name) : "Unknown creature"}">${known ? portraitArt(entry.art, specimen) : icon("question")}</button><div><h3>${known ? specimen.name : "An unwritten creature"}</h3><p>${known ? entry.lore : "Meet this creature in the dungeon to fill this page."}</p>${known ? `<dl class="bestiary-stats"><dt>Floor</dt><dd>Floor ${record.depth}</dd><dt>Health</dt><dd>${record.hp} HP</dd><dt>Strength</dt><dd>${record.damage}</dd><dt>Attacks</dt><dd>${record.strikes} strike${record.strikes === 1 ? "" : "s"} every ${record.frequency} spins</dd><dt>Passive</dt><dd>${ENEMY_TRAITS[record.passive]?.name || "None observed"}</dd><dt>Met / slain</dt><dd>${record.seen} / ${record.defeated}</dd></dl><small>Stats vary by floor and elite status. Click the sketch to hear its cry.</small>` : ""}</div></article><div class="guide-page-count">${bestiaryPageIndex + 1} / ${BESTIARY_ENTRIES.length} · ${Object.keys(book).filter((id) => BESTIARY_ENTRIES.some((e) => e.id === id)).length} discovered</div></section><div class="modal-actions"><button data-close class="primary">Close the bestiary</button></div>`,
     "bestiary",
   );
   $("#bestiary-select").onchange = (e) => bestiaryPage(e.target.value);
@@ -15799,7 +16032,7 @@ function bestiaryPage(index = bestiaryPageIndex) {
       function enemyReels(species, depth = 1, { boss = false } = {}) {
         const base = (ENEMY_PROFILES[species] || ENEMY_PROFILES.skull).faces;
         const finalGuardian = boss && depth === 10,
-          promotion = finalGuardian ? 3 : Math.floor((depth - 1) / 4);
+          promotion = finalGuardian ? 3 : floorBalance(depth).promotion;
         return [0, 1, 2].map(() =>
           base
             .filter(([type]) => !finalGuardian || !["miss", "blank"].includes(type))
@@ -15818,82 +16051,6 @@ function bestiaryPage(index = bestiaryPageIndex) {
       function enemyReelPreview(reels) {
         // Ready-state windows should show faces this enemy can actually roll.
         return reels.map((faces, i) => ({ ...faces[(i * 2) % faces.length] }));
-      }
-      function enemyBalance(
-        depth,
-        {
-          boss = false,
-          elite = false,
-          pair = false,
-          mimic = false,
-          stronghold = false,
-          species = null,
-        } = {},
-      ) {
-        const growth = Math.max(0, depth - 3),
-          pressure = depth >= 3 && depth <= 6 ? 1 + (depth - 2) * 0.02 : 1,
-          midDamage = depth >= 4 && depth <= 7 ? 1 : 0;
-        const stats = {
-          maxHp: boss
-            ? Math.ceil((30 + depth * 9 + growth * growth * 3.2) * pressure)
-            : Math.ceil(
-                (16 + depth * 5 + growth * growth * 0.45) *
-                  (elite ? 1.38 : 1) *
-                  (stronghold ? 1.5 : 1) *
-                  (mimic ? 1.2 : 1) *
-                  (pair ? 0.78 : 1) *
-                  (ENEMY_PROFILES[species]?.hp || 1) *
-                  pressure,
-              ),
-          damage: boss
-            ? 3 + Math.floor((depth - 1) * 0.8) + midDamage
-            : Math.max(
-                1,
-                Math.floor(
-                  (2 +
-                    Math.floor((depth - 1) * 0.6) +
-                    midDamage +
-                    (elite ? 1 : 0) +
-                    (stronghold ? 1 : 0)) *
-                    (pair ? 0.8 : 1),
-                ),
-              ),
-          frequency: stronghold
-            ? 2
-            : boss
-              ? depth >= 7
-                ? 1
-                : 2
-              : depth < 3
-                ? 3
-                : depth < 9
-                  ? 2
-                  : 1,
-          strikes:
-            boss && depth === 10
-              ? 3
-              : (boss && depth >= 6) || (stronghold && depth >= 7)
-                ? 2
-                : 1,
-        };
-        stats.damage += Math.round(Math.min(3, Math.max(0, depth - 1)) * 0.6);
-        if (species === "pursuer") {
-          const middle = depth >= 4 && depth <= 7;
-          stats.maxHp = Math.ceil(stats.maxHp * (middle ? 1.45 : 1.16));
-          stats.damage = Math.ceil(stats.damage * (middle ? 1.3 : 1.15));
-          if (depth >= 8) stats.strikes = Math.max(2, stats.strikes);
-        }
-        stats.maxHp = Math.ceil(
-          stats.maxHp * (ruleEnabled("iron") ? 1.2 : 1) * (ruleEnabled("richFoes") ? 1.15 : 1),
-        );
-        stats.damage =
-          Math.ceil(
-            stats.damage *
-              (ENEMY_PROFILES[species]?.damage || 1) *
-              (ruleEnabled("iron") ? 1.1 : 1),
-          ) + (ruleEnabled("sharp") ? 1 : 0);
-        if (ruleEnabled("restless")) stats.frequency = Math.max(1, stats.frequency - 1);
-        return stats;
       }
       function doubleBattleChance(depth) {
         return Math.min(
@@ -16467,16 +16624,8 @@ function encounterTags(enemies) {
         )
           return 1;
         const inline = !!options.context && !$("#spotlight").hidden,
-          pool = (
-            options.context === "well"
-              ? [1.25, 1.25, 1.5, 1.75]
-              : enemy
-                ? [1.25, 1.25, 1.5, 1.75]
-                : [2, 2.5, 3, 4]
-          ).map((value) => ({
-            type: "multiplier",
-            value,
-            tier: 1,
+          pool = criticalPool(options.actor, { enemy, context: options.context }).map((value) => ({
+            type: "multiplier", value, tier: 1,
           })),
           rolled = { ...pick(pool) },
           details = (options.details || effectDetails(calculate(symbols))).map((d) => ({
@@ -17074,11 +17223,7 @@ function encounterTags(enemies) {
             base.attack += 2;
           }
           if (h.job === "rogue") {
-            const pool = [
-              { type: "attack", tier: 1, weight: 8 },
-              { type: "attack", tier: 2, weight: 3 },
-              { type: "attack", tier: 3, weight: 1 },
-            ];
+            const pool = FLURRY_FACES;
             actionLabel($("#portrait-" + state.party.indexOf(h)), "FLURRY · three blades!");
             const flurry = await runMachine("hero-" + state.party.indexOf(h), [
               pool,
@@ -17379,7 +17524,7 @@ function encounterTags(enemies) {
             }
             state.lastPlayerRoll.actualDamage = (state.lastPlayerRoll.bash?.actual || 0) + dealt;
             parts.push(
-              `<span class="damage combat-total">${icon(sums.magic ? "magic" : "sword")} <strong>−${dealt}</strong> HP${area && foes.length > 1 ? " across ALL enemies" : ""}${multiplier > 1 ? " · " + (base.attack && base.magic ? sums.attack + " blade + " + sums.magic + " magic" : (base.attack || 0) + (base.magic || 0) + " × " + multiplier + " = " + damage) : ""}</span>`,
+              `<span class="damage combat-total">${icon(sums.magic ? "magic" : "sword")} <strong>−${dealt}</strong> HP${area && foes.length > 1 ? " across ALL enemies" : ""}${multiplier > 1 ? " · " + (base.attack && base.magic ? sums.attack + " physical + " + sums.magic + " spell" : (base.attack || 0) + (base.magic || 0) + " × " + multiplier + " = " + damage) : ""}</span>`,
             );
             const stolen = await settleFuryLeech(h, [...leechTargets.values()], damageFlights);
             state.lastPlayerRoll.actualLifesteal = stolen;
@@ -17398,7 +17543,7 @@ function encounterTags(enemies) {
               beam($("#portrait-" + i), enemyArtEl(e), "poison");
             }
             parts.push(
-              `<span>${icon("poison")}Poison · ${Math.min(8, 1 + sums.poison)} turns</span>`,
+              `<span>${icon("poison")}Poison · up to 3 turns · ${sums.poison} power</span>`,
             );
           }
           if (base.resonanceType === "heal" && symbols[1]?.type === "class")
@@ -17513,7 +17658,7 @@ function encounterTags(enemies) {
         if (!power) return 0;
         return Math.max(
           1,
-          Math.round(e.damage * Math.min(1.25, 0.65 + power / 40)) + attackBonus(e),
+          Math.round(e.damage * Math.min(1, 0.65 + power / 40)) + attackBonus(e),
         );
       }
       async function enemyTurn(e) {
@@ -17562,7 +17707,7 @@ function encounterTags(enemies) {
                 blank: 0,
               },
               multiplier = await rollCritical(e.name, symbols, true, {
-                details: effectDetails(base),
+                details: effectDetails(base).map((d) => d.icon === "sword" ? {...d, label:"Hit damage"} : d),
               }),
               totals = scaleEffects(base, multiplier),
               notes = [];
@@ -17764,15 +17909,7 @@ function encounterTags(enemies) {
         state.party.filter(alive).forEach((h) => {
           h.stats ??= emptyStats();
           h.stats.battles++;
-          addXP(
-            h,
-            Math.round(
-              (8 + state.depth * 2) *
-                0.85 *
-                (state.encounterReward?.count || 1) *
-                (e.stronghold ? 2 : e.boss ? 1.35 : e.elite ? 1.2 : 1),
-            ),
-          );
+          addXP(h, encounterXP(state.depth, e, state.encounterReward?.count || 1));
           h.points++;
         });
         const leveled = state.party.filter(
@@ -18194,7 +18331,7 @@ function encounterTags(enemies) {
           brief: "Scorch all enemies",
           combat: true,
           description:
-            "Deal 8 plus half the floor depth in magic damage to every enemy.",
+            "Deal 8 plus half the floor depth in spell damage to every enemy.",
         },
         venom: {
           name: "Venom vial",
@@ -18246,7 +18383,7 @@ function encounterTags(enemies) {
           return `Restore ${item.heal} HP to every living hero.`;
         if (item.heal) return `Restore ${item.heal} HP to the selected living hero.`;
         if (item.block) return `Add ${item.block} shared team block for this battle.`;
-        if (item.damage) return `Deal ${item.damage} magic damage to every enemy.`;
+        if (item.damage) return `Deal ${item.damage} spell damage to every enemy.`;
         if (item.family === "venom")
           return `Poison one enemy for ${item.poisonTurns} ticks of ${item.poisonDamage} armour-piercing damage.`;
         if (item.family === "bomb")
@@ -18748,7 +18885,7 @@ const maxFaceTier = (type) =>
       ? 1
       : 3;
 const CLASS_PRICES = {
-  berserker: { attack: 1, heal: 1.25, selfharm: 1 },
+  berserker: { attack: 0.9, heal: 1, selfharm: 1 },
   ranger: {
     attack: 1,
     poison: 1.25,
@@ -18760,9 +18897,9 @@ const CLASS_PRICES = {
     rally: 1.25,
   },
   fighter: {
-    attack: 1,
-    block: 1,
-    stun: 1,
+    attack: 1.35,
+    block: 0.65,
+    stun: 0.85,
     heal: 2,
     magic: 1.75,
     poison: 1.5,
@@ -18780,7 +18917,7 @@ const CLASS_PRICES = {
     rally: 1.25,
   },
   mage: {
-    magic: 1,
+    magic: 0.85,
     poison: 1,
     stimulant: 1,
     rally: 1,
@@ -18790,8 +18927,8 @@ const CLASS_PRICES = {
     stun: 1,
   },
   rogue: {
-    attack: 1,
-    poison: 1,
+    attack: 0.8,
+    poison: 0.85,
     stun: 1.25,
     heal: 2,
     block: 1.5,
@@ -18814,7 +18951,7 @@ const EDITABLE_TYPES = Object.freeze([
   "blank",
 ]);
 const FACE_LABELS = Object.freeze({
-  attack: "Blade damage",
+  attack: "Physical damage",
   magic: "Spell damage",
   heal: "Healing",
   block: "Team block",
@@ -18827,7 +18964,13 @@ const FACE_LABELS = Object.freeze({
   blank: "Empty",
 });
 const primaryFace = (h) =>
-  h.job === "mage" ? (h.specialism === "defence" ? "heal" : "magic") : "attack";
+  h.job === "mage"
+    ? h.specialism === "defence"
+      ? "heal"
+      : "magic"
+    : h.job === "fighter" && h.specialism === "defence"
+      ? "block"
+      : "attack";
 function editableTypes(h) {
   return h.job === "jester"
     ? EDITABLE_TYPES.filter((t) => !["stimulant", "selfharm"].includes(t))
@@ -18839,13 +18982,20 @@ function editableTypes(h) {
 function faceDescription(face, h) {
   const tier = face.tier || 1;
   if (face.type === "class") return classAbilityDescription(h);
+  if (h && battleEnemies().includes(h)) {
+    if (["attack", "magic"].includes(face.type))
+      return `Contributes ${ATTACK_POWER[tier]} ${face.type === "attack" ? "physical" : "spell"} power to one combined enemy hit. Strength ${h.damage}; stronger marks raise that hit before criticals and buffs.`;
+    if (face.type === "heal")
+      return `Restore ${tier} enemy HP before criticals.`;
+  }
+
   const area = tier >= 3 ? " every enemy" : " the selected enemy";
   return (
     {
-      attack: `Deal ${ATTACK_POWER[tier]} blade damage to${area}.`,
-      magic: `Deal ${ATTACK_POWER[tier]} magic damage to${area}, with a chance to leave the target Vulnerable.`,
+      attack: `Deal ${ATTACK_POWER[tier]} physical damage to${area}.`,
+      magic: `Deal ${ATTACK_POWER[tier]} spell damage to${area}, with a chance to leave the target Vulnerable.`,
       heal: `Restore ${POWER.heal * tier} HP to your healing target. Can clear stun; more healing helps and more team block reduces the chance.`,
-      block: `Add ${tier} shared team block. It absorbs damage for any party member and is spent as it protects them.`,
+      block: `Add ${POWER.block * tier} shared team block. It absorbs damage for any party member and is spent as it protects them.`,
       stun: `Apply ${tier} stun power. Prevents action until recovery. Recovery checks grow stronger each roll; higher power breaks through more block.`,
       poison: `Apply ${tier} poison power. Lasts up to 3 turns; repeated doses increase tick damage instead of adding a long duration.`,
       stimulant: `Give yourself ${tier} stimulant power. Lasts up to 3 of your actions; extra duration becomes potency.`,
@@ -18915,7 +19065,7 @@ function heroCriticalOdds(h) {
 function criticalOddsMarkup(h) {
   const rows = heroCriticalOdds(h),
     total = rows.reduce((n, r) => n + r.chance, 0);
-  return `<section class="workshop-critpage workshop-page" ${editorView === "crits" ? "" : "hidden inert"}><h3>Three of a kind · ${(total * 100).toFixed(2)}% per roll</h3><p>The middle class mark also completes two matching outer marks. Empty faces never crit. These odds include your edits and purchased weighting.</p><div class="crit-odds-grid">${rows.map((row) => `<div class="crit-odds-row">${symbolMarkup(row)}<b>${FACE_LABELS[row.type]} ${tierName(row.tier)}</b><strong>${(row.chance * 100).toFixed(2)}%</strong></div>`).join("") || "<p>No matching combinations yet. Put the same type and rank on both outer reels to start a combo.</p>"}</div></section>`;
+  return `<section class="workshop-critpage workshop-page" ${editorView === "crits" ? "" : "hidden inert"}><h3>Three of a kind · ${(total * 100).toFixed(2)}% per roll</h3><p>${className(h.job)} criticals: <b>${criticalRange(h)}</b>. The middle class mark also completes two matching outer marks. Empty faces never crit. These odds include your edits and purchased weighting.</p><div class="crit-odds-grid">${rows.map((row) => `<div class="crit-odds-row">${symbolMarkup(row)}<b>${FACE_LABELS[row.type]} ${tierName(row.tier)}</b><strong>${(row.chance * 100).toFixed(2)}%</strong></div>`).join("") || "<p>No matching combinations yet. Put the same type and rank on both outer reels to start a combo.</p>"}</div></section>`;
 }
 function faceEditCost(h, reel, index, operation, destination = null) {
   const face = h?.reels[reel]?.[index];
@@ -19018,7 +19168,7 @@ function editor(i) {
               "",
             )}</select></label><p class="swap-effect" id="swap-effect"></p><button class="swap-face" id="face-swap">Replace symbol <small id="swap-price"></small></button></div>`
     }
-    <div class="weight-face"><button id="face-weight" ${!faceWeightCost(face) || h.points < faceWeightCost(face) ? "disabled" : ""}>Weight this face +1 <small>${faceWeightCost(face) ? "Spend " + faceWeightCost(face) + " pts" : "Maximum weight"}</small></button><small>Weight ${face.weight || 1}/${FACE_WEIGHT_MAX} · ${faceWeightCost(face) ? `After buying: ${((((face.weight || 1) + 1) / (h.reels[k].reduce((n, f) => n + (f.weight || 1), 0) + 1)) * 100).toFixed(1)}% chance` : "Maximum weighting reached."}</small></div></section></div></div>${criticalOddsMarkup(h)}</div><p class="workshop-note">Upgrade: more power. Weight: higher odds. Downgrade: half the rank cost back.</p><div class="modal-actions"><button class="primary" data-close>Done · back to the adventure</button></div>`,
+    <div class="weight-face"><button id="face-weight" ${!faceWeightCost(face) || h.points < faceWeightCost(face) ? "disabled" : ""}>Weight this face +1 <small>${faceWeightCost(face) ? "Spend " + faceWeightCost(face) + " pts" : "Maximum weight"}</small></button><small>Weight ${face.weight || 1}/${FACE_WEIGHT_MAX} · ${faceWeightCost(face) ? `After buying: ${((((face.weight || 1) + 1) / (h.reels[k].reduce((n, f) => n + (f.weight || 1), 0) + 1)) * 100).toFixed(1)}% chance` : "Maximum weighting reached."}</small></div></section></div></div>${criticalOddsMarkup(h)}</div><p class="workshop-note">${className(h.job)} crit ${criticalRange(h)}. ${CLASS_BALANCE[h.job]?.path || ""}</p><div class="modal-actions"><button class="primary" data-close>Done · back to the adventure</button></div>`,
     "editor",
   );
   document.querySelectorAll("[data-workshop-view]").forEach(
@@ -19118,7 +19268,7 @@ function workshopAbilitySummary(h) {
     jester:
       "Wildcard plays a random trick. Trick marks fill anticipation for a +1-rank Punchline roll.",
     berserker:
-      "Heal yourself, gain 4 Fury and +2 blade damage. Charged Fury adds damage and lifesteal.",
+      "Heal yourself, gain 4 Fury and +2 physical damage. Charged Fury adds damage and lifesteal.",
   }[h.job];
 }
 // END GENERATED REEL UPGRADES
@@ -19147,7 +19297,7 @@ const FIELD_GUIDE = Object.freeze([
   {
     id: "combat",
     title: "Combat & criticals",
-    body: '<ul class="guide-takeaways"><li><b>Act freely.</b> Use any living hero repeatedly. Click their card or handle to roll; their portrait opens reel editing.</li><li><b>Choose targets.</b> Click an enemy portrait to aim damage. Use the healing target control for healing. Self stimulant boosts its caster; Ally stimulant boosts the most-used companion.</li><li><b>Critical.</b> Three matching kinds AND ranks roll a multiplier. The middle class mark completes two matching outer marks. Blanks do nothing.</li><li><b>Big hits.</b> Criticals and tier III–IV attacks hit all enemies. Each foe has its own attack countdown.</li><li><b>Keep moving.</b> Click rolling reels or press Space to land them. Event results still need confirmation. Hero criticals grant 1 EXP.</li></ul>',
+    body: '<ul class="guide-takeaways"><li><b>Hero powers.</b> Physical/spell ranks I–IV deal 1/2/3/4 damage. Healing/block give 2/4/6/8. Bonuses and criticals add to these.</li><li><b>Targets.</b> Click an enemy to aim damage. Choose an ally for healing. Stimulants boost self or an ally.</li><li><b>Critical.</b> Match three kinds AND ranks. The middle class mark completes matching outer marks. Blanks do nothing.</li><li><b>Big hits.</b> Criticals and tier III–IV attacks hit all foes. Each enemy has its own countdown.</li><li><b>Roll freely.</b> Click any hero card or handle; portraits edit reels. Click rolling reels to land them. Events need confirmation; hero crits grant 1 EXP.</li></ul>',
   },
   {
     id: "statuses",
@@ -19172,12 +19322,12 @@ const FIELD_GUIDE = Object.freeze([
   {
     id: "classes",
     title: "Classes & temperament",
-    body: '<ul class="guide-takeaways"><li><b>Temperament.</b> Aggressive and Defensive choose different starting marks. They do not change a mark’s stated power. Rebuild either way.</li><li><b>Tank & Rogue.</b> Tanks favour blades, block and stun. Rogues favour blades, poison and quick stuns; Flurry throws three extra attacks.</li><li><b>Mage.</b> Use magic, healing, poison, shields or buffs. Resonance echoes rolled marks across the appropriate team.</li><li><b>Ranger.</b> Wait between attacks to fill Execute. Spend that patience on a stronger finishing shot.</li><li><b>Berserker.</b> Wounds and Blood Price build Fury. Capacity grows each level. Bloodrush heals; lifesteal spends a little Fury.</li></ul>',
+    body: '<ul class="guide-takeaways"><li><b>Temperament.</b> Aggressive and Defensive choose different starting marks. They do not change a mark’s stated power. Rebuild either way.</li><li><b>Tank & Rogue.</b> Tank crits ×1.5–×2.25; cheap shields fuel Shield Bash. Rogue crits ×2–×5; build physical combos or poison, with little recovery.</li><li><b>Mage.</b> Crits ×1.75–×3. Spell damage works alone; healing, shields or poison Resonance support a party. No chosen speciality.</li><li><b>Ranger.</b> Crits ×2–×4. Let allies act to charge Execute, then strike a wounded enemy.</li><li><b>Berserker.</b> Crits ×1.75–×4. Wounds charge Fury; balance Blood Price with healing and lifesteal.</li></ul>',
   },
   {
     id: "jester",
     title: "Jester & Punchline",
-    body: '<ul class="guide-takeaways"><li><b>Unlock.</b> Buy the Jester’s invitation at camp. It can inscribe any ordinary kind except Self stimulant and the Berserker’s Blood Price.</li><li><b>Trick.</b> These marks fill anticipation by their rank. At 6, earn one free Punchline before enemy clocks advance.</li><li><b>Punchline.</b> Roll your own machine with ordinary non-empty marks one rank stronger, up to IV. These bonus rolls do not refill anticipation.</li><li><b>Criticals.</b> Normal matching triples roll the usual multiplier. Different kinds have no special critical; matching triples do not self-stun.</li><li><b>Wildcard.</b> The permanent class mark can ink enemy reels, gild allied reels, reverse a foe’s roll or scatter damage and healing.</li></ul>',
+    body: '<ul class="guide-takeaways"><li><b>Unlock.</b> Buy the Jester’s invitation at camp. It can inscribe any ordinary kind except Self stimulant and the Berserker’s Blood Price.</li><li><b>Trick.</b> These marks fill anticipation by their rank. At 6, earn one free Punchline before enemy clocks advance.</li><li><b>Punchline.</b> Roll your own machine with ordinary non-empty marks one rank stronger, up to IV. These bonus rolls do not refill anticipation.</li><li><b>Criticals.</b> Matching triples roll ×1.5–×4. Different kinds have no special critical; matching triples do not self-stun.</li><li><b>Wildcard.</b> The permanent class mark can ink enemy reels, gild allied reels, reverse a foe’s roll or scatter damage and healing.</li></ul>',
   },
   {
     id: "companions",
@@ -19192,7 +19342,7 @@ const FIELD_GUIDE = Object.freeze([
   {
     id: "camp",
     title: "By the campfire",
-    body: '<ul class="guide-takeaways"><li><b>Bank gold.</b> After floors 1–9, bank 25%, 50%, 75% or all carried gold. Victory banks everything. Banked gold survives failed runs.</li><li><b>Adventurers.</b> Unlock Ranger, Berserker and Jester starts and wandering companions.</li><li><b>Campfire Lessons.</b> Eight improvements have five tiers each. Buy tiers permanently; use − and + to choose an active rank, including zero.</li><li><b>Other rules.</b> Challenges add danger, sometimes with rewards. Oddities change discoveries and routes. Purchases start disabled.</li><li><b>Next run.</b> Lesson ranks and toggles are chosen before an expedition. Purchases never rewrite a run already in progress.</li></ul>',
+    body: '<ul class="guide-takeaways"><li><b>Bank gold.</b> After floors 1–9, bank 25%, 50%, 75% or all carried gold. Victory banks everything. Banked gold survives failed runs.</li><li><b>Adventurers.</b> Unlock Ranger, Berserker and Jester starts and wandering companions.</li><li><b>Campfire Lessons.</b> Eight improvements have five tiers each. Buy tiers permanently; use − and + to choose an active rank, including zero.</li><li><b>Other rules.</b> Challenges add danger, sometimes with rewards. Oddities change discoveries and routes. Purchases start disabled.</li><li><b>Grow stronger.</b> Bank gold for lessons. Fresh runs are dangerous; a trained party is stronger. Select lessons before the next run.</li></ul>',
   },
   {
     id: "controls",
@@ -22065,8 +22215,8 @@ const SOUND_SAMPLES = Object.freeze({
           .map(([k, value]) => ({
             label:
               {
-                attack: "Damage power",
-                magic: "Magic damage",
+                attack: "Physical damage",
+                magic: "Spell damage",
                 poison: "Poison potency",
                 stimulant: "Self stimulant power",
                 rally: "Ally stimulant power",
@@ -24130,7 +24280,7 @@ function autoBuildUtility(h) {
     });
   }
   const limits = {
-    damage: Math.max(7, 3 + state.depth * 2.1),
+    damage: Math.max(4, 2 + state.depth * 0.65),
     block: 4 + state.depth * 0.6,
     heal: 5 + state.depth * 0.65,
     teamHeal: 4 + state.depth * 0.6,
@@ -24187,8 +24337,8 @@ function autoBuildUtility(h) {
   }
   const offence = fx.damage + fx.poison * 1.2,
     minDamage = solo
-      ? Math.max(3, 2 + state.depth * 0.75)
-      : Math.max(2, 1 + state.depth * 0.4);
+      ? Math.max(1.8, 1.2 + state.depth * 0.22)
+      : Math.max(1.2, 0.8 + state.depth * 0.12);
   utility -= Math.max(0, minDamage - offence) * (solo ? 12 : 7);
   // Avoid support-only survivors and favour some self-recovery when alone.
   if (solo) utility += Math.min(2, fx.heal + fx.selfHeal) * 1.1;
@@ -24213,7 +24363,16 @@ function autoBuildUtility(h) {
     const over = Math.max(0, faceShare(h.reels.flat(), types) - cap);
     utility -= over * 60 + over * over * 80;
   }
-  return utility + fx.crit * 2;
+  // Poison and stun are valuable tools, but their ticks/recovery saturate.
+  // Avoid a cheap utility mark crowding every physical or spell combo off a build.
+  for (const [types, cap] of [
+    [["poison"], h.autoArchetype === "venom" ? 0.5 : 0.25],
+    [["stun"], h.autoArchetype === "bulwark" ? 0.3 : 0.22],
+  ])
+    utility -= Math.max(0, faceShare(h.reels.flat(), types) - cap) * 70;
+  if (h.job === "mage" && otherDamage >= 2)
+    utility -= Math.max(0, faceShare(h.reels.flat(), ["magic"]) - 0.35) * 65;
+  return utility + fx.crit * (meanCritical(h) - 1) * 2;
 }
 function faceShare(reel, types) {
   const weight = reel.reduce((n, f) => n + (f.weight || 1), 0);
@@ -24685,7 +24844,7 @@ async function tunnelTransit(source, destination) {
   layer.remove();
 }
 const STARTER_SUMMARIES = Object.freeze({
-  fighter: "Blades, shields and stun. Shield Bash strikes with your team’s block.",
+  fighter: "Physical hits, shields and stun. Shield Bash strikes with your team’s block.",
   rogue: "Quick blades, poison and tricks. Flurry throws three attacks.",
   mage: "Shape magic, healing, wards and poison. Resonance echoes your marks.",
   ranger: "Build patience, then Execute a wounded enemy.",
@@ -26501,7 +26660,7 @@ function revealCriticalPayoff(region, details, multiplier) {
         }, 4200);
       }
       const EQUIPMENT_DEFS = {
-        whetstoneCharm:{name:"Whetstone Charm",icon:"sword",job:null,brief:"+1 damage",description:"All classes. Damaging rolls gain 1 blade damage.",attack:1},
+        whetstoneCharm:{name:"Whetstone Charm",icon:"sword",job:null,brief:"+1 damage",description:"All classes. Damaging rolls gain 1 physical damage.",attack:1},
         mendingThread:{name:"Mending Thread",icon:"heal",job:null,brief:"+1 healing",description:"All classes. Healing rolls restore 1 extra HP.",heal:1},
         leatherWraps:{name:"Leather Wraps",icon:"block",job:null,brief:"Resist 1 damage",description:"All classes. Resist 1 damage per incoming hit.",defence:1},
         trailBow: {
@@ -26526,7 +26685,7 @@ function revealCriticalPayoff(region, details, multiplier) {
           name: "Iron Signet",
           icon: "rage",
           job: "fighter",
-          brief: "+2 blade damage",
+          brief: "+2 physical damage",
           description: "Tank equipment. Every damaging roll gains 2 damage.",
           attack: 2,
         },
@@ -26580,8 +26739,8 @@ function revealCriticalPayoff(region, details, multiplier) {
           name: "Star Lens",
           icon: "magic",
           job: "mage",
-          brief: "+2 magic damage",
-          description: "Mage equipment. Add 2 magic damage to every damaging roll.",
+          brief: "+2 spell damage",
+          description: "Mage equipment. Add 2 spell damage to every damaging roll.",
           magic: 2,
         },
         stormQuill: {
@@ -26590,7 +26749,7 @@ function revealCriticalPayoff(region, details, multiplier) {
           job: "mage",
           brief: "Power every third roll",
           description:
-            "Mage equipment. Every third roll grants ally stimulant; +1 magic damage.",
+            "Mage equipment. Every third roll grants ally stimulant; +1 spell damage.",
           magic: 1,
           stimEvery: 3,
         },
@@ -26729,7 +26888,7 @@ function revealCriticalPayoff(region, details, multiplier) {
                 out.block += p;
                 out.rally += p / 6;
               }
-              if (h.job === "rogue") out.damage += 9 * p;
+              if (h.job === "rogue") out.damage += flurryMeanDamage() * p;
               if (h.job === "berserker") {
                 out.damage += 2 * p;
                 out.fury += 4 * p;
@@ -26768,7 +26927,7 @@ function revealCriticalPayoff(region, details, multiplier) {
         // expectation, never value it as a doubled critical or a damage source.
         if (h.job === "jester") out.trick *= 1;
         for (const key of ["damage", "heal", "selfHeal", "teamHeal", "block", "stun", "poison"])
-          out[key] *= 1 + out.crit * 1.7;
+          out[key] *= 1 + out.crit * (meanCritical(h) - 1);
         if (out.damage)
           out.damage +=
             attackBonus(h) +
@@ -26822,6 +26981,16 @@ function revealCriticalPayoff(region, details, multiplier) {
             out[key] *= TACTICS.initiativeMultiplier;
         out.damage = heroDamagePower(h, out.damage);
         for (const key of ["heal", "teamHeal", "selfHeal"]) out[key] *= HERO_TUNING.healing;
+        // Score the active lessons too: AI must recognise the healing and
+        // physical/spell power the player actually bought for this expedition.
+        out.damage *= 1 + lessonBonus("power") / 100 + (ruleEnabled("glass") ? 0.1 : 0);
+        const recovery = lessonBonus("recovery");
+        if (out.heal > 0) {
+          const chance = 1 - h.reels.reduce((p, reel) => p * (1 - faceShare(reel, ["heal"])), 1);
+          out.heal += recovery * chance;
+        }
+        if (out.teamHeal > 0) out.teamHeal += recovery / 7;
+        if (out.selfHeal > 0) out.selfHeal += recovery / 7;
         out.selfHeal += out.damage * furyLeechRate(h);
         return out;
       }
@@ -26892,7 +27061,8 @@ function revealCriticalPayoff(region, details, multiplier) {
           Math.min(h.maxHp - h.hp, fx.selfHeal || 0) *
             (h.hp / h.maxHp < 0.4 ? 4 : 1.2) -
           fx.selfharm * (h.hp / h.maxHp < 0.4 ? 2 : 0.35) +
-          block * (ratio < 0.6 ? 2 : 1.1) +
+          block * (ratio < 0.6 ? 2 : 1.1) *
+            (foes.some((e) => e.countdown <= 1 && !e.stun) ? 1 : ratio < 0.6 ? 0.75 : 0.45) +
           fx.stun * (foes.some((e) => e.countdown <= 1 && !e.stun) ? 3 : 0.6) +
           fx.poison *
             (foes.some(
@@ -27563,7 +27733,7 @@ function revealCriticalPayoff(region, details, multiplier) {
         const ready = living.filter(({ h }) => !h.stun),
           offence = living
             .filter(({ h }) => autoOffenceScore(h) > 0)
-            .sort((a, b) => chargedActorScore(b.h) - chargedActorScore(a.h)),
+            .sort((a, b) => autoOffenceScore(b.h) - autoOffenceScore(a.h)),
           attackers = offence.filter(({ h }) => !h.stun),
           progress = state.autoCombat || { supportSpins: 0, staleSpins: 0 },
           emergency = autoHealth().weakest.h.hp / autoHealth().weakest.h.maxHp < 0.2;

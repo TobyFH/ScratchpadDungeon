@@ -1,5 +1,11 @@
 # Battle tactics and exploration
 
+> Current numeric tuning is documented in [Balance pass](BALANCE_PASS.md).
+> Its linear mark powers, class critical pools, prices, enemy budgets and camp
+> lesson amounts supersede earlier numeric examples below. The mechanics and
+> save/transaction rules in this document still apply.
+
+
 The distributable remains the offline `index.html`. The builder embeds sources;
 never edit a generated region directly. Hero identity lives in
 `game/hero-builds.js`, the workshop in `game/reel-upgrades.js`, temporary combat

@@ -1,5 +1,11 @@
 # Expedition economy, reels and notebook pages
 
+> Current numeric tuning is documented in [Balance pass](BALANCE_PASS.md).
+> Its linear mark powers, class critical pools, prices, enemy budgets and camp
+> lesson amounts supersede earlier numeric examples below. The mechanics and
+> save/transaction rules in this document still apply.
+
+
 Current rules are extended by [Campfire update](CAMPFIRE_UPDATE.md), including
 active lesson ranks, new starting faces and command-based ambush age. The earlier
 starting-face table below records the version-18 baseline.

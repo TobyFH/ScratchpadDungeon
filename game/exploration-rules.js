@@ -137,7 +137,7 @@ async function tunnelTransit(source, destination) {
   layer.remove();
 }
 const STARTER_SUMMARIES = Object.freeze({
-  fighter: "Blades, shields and stun. Shield Bash strikes with your team’s block.",
+  fighter: "Physical hits, shields and stun. Shield Bash strikes with your team’s block.",
   rogue: "Quick blades, poison and tricks. Flurry throws three attacks.",
   mage: "Shape magic, healing, wards and poison. Resonance echoes your marks.",
   ranger: "Build patience, then Execute a wounded enemy.",

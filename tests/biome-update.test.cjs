@@ -88,12 +88,12 @@ test("small balance adjustments share canonical formulas while raw mark tiers re
   });
   assert.equal(r.hp, 50);
   assert.ok(r.exec > r.old);
-  assert.equal(r.rogue, 94);
-  assert.equal(r.heal, 22);
+  assert.equal(r.rogue, 100);
+  assert.equal(r.heal, 20);
   assert.equal(r.shop, 0.4);
   assert.ok(r.well10 > r.well1);
   assert.ok(r.roll10 > r.roll1);
-  assert.equal(r.raw.attack, 11);
+  assert.equal(r.raw.attack, 4);
   assert.equal(r.raw.heal, 8);
 });
 
@@ -674,7 +674,7 @@ test("tile captions use hyphens and activated, and biome identity survives a run
   assert.equal(r.version, 21);
 });
 
-test("actual Rogue damage and healing rolls use the modest class/healing adjustments exactly once", async (t) => {
+test("actual Rogue damage and healing rolls use readable shared base tiers without hidden multipliers", async (t) => {
   const p = await game(t);
   const r = await p.evaluate(async () => {
     newRun("rogue");
@@ -700,13 +700,13 @@ test("actual Rogue damage and healing rolls use the modest class/healing adjustm
       hits: state.lastPlayerRoll.hits.map((h) => h.power),
     };
   });
-  assert.equal(r.damage, 17);
-  assert.equal(r.enemy, 983);
-  assert.equal(r.heal, 9);
-  assert.equal(r.hp, 14);
+  assert.equal(r.damage, 7);
+  assert.equal(r.enemy, 993);
+  assert.equal(r.heal, 8);
+  assert.equal(r.hp, 13);
   assert.equal(
     r.hits.reduce((a, b) => a + b, 0),
-    17,
+    7,
   );
 });
 

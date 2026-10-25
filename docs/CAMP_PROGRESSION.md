@@ -1,5 +1,11 @@
 # Camp, banking and expedition rules
 
+> Current numeric tuning is documented in [Balance pass](BALANCE_PASS.md).
+> Its linear mark powers, class critical pools, prices, enemy budgets and camp
+> lesson amounts supersede earlier numeric examples below. The mechanics and
+> save/transaction rules in this document still apply.
+
+
 Banking is offered on guardians' floor-clear sheets for floors 1–9. Choose 25%, 50%, 75%
 or 100% of **currently carried gold**, rounded down. Continue without banking
 if you prefer to keep it for shops. Each ordinary floor permits one deposit. The final

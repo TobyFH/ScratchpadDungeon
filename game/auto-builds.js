@@ -137,7 +137,7 @@ function autoBuildUtility(h) {
     });
   }
   const limits = {
-    damage: Math.max(7, 3 + state.depth * 2.1),
+    damage: Math.max(4, 2 + state.depth * 0.65),
     block: 4 + state.depth * 0.6,
     heal: 5 + state.depth * 0.65,
     teamHeal: 4 + state.depth * 0.6,
@@ -194,8 +194,8 @@ function autoBuildUtility(h) {
   }
   const offence = fx.damage + fx.poison * 1.2,
     minDamage = solo
-      ? Math.max(3, 2 + state.depth * 0.75)
-      : Math.max(2, 1 + state.depth * 0.4);
+      ? Math.max(1.8, 1.2 + state.depth * 0.22)
+      : Math.max(1.2, 0.8 + state.depth * 0.12);
   utility -= Math.max(0, minDamage - offence) * (solo ? 12 : 7);
   // Avoid support-only survivors and favour some self-recovery when alone.
   if (solo) utility += Math.min(2, fx.heal + fx.selfHeal) * 1.1;
@@ -220,7 +220,16 @@ function autoBuildUtility(h) {
     const over = Math.max(0, faceShare(h.reels.flat(), types) - cap);
     utility -= over * 60 + over * over * 80;
   }
-  return utility + fx.crit * 2;
+  // Poison and stun are valuable tools, but their ticks/recovery saturate.
+  // Avoid a cheap utility mark crowding every physical or spell combo off a build.
+  for (const [types, cap] of [
+    [["poison"], h.autoArchetype === "venom" ? 0.5 : 0.25],
+    [["stun"], h.autoArchetype === "bulwark" ? 0.3 : 0.22],
+  ])
+    utility -= Math.max(0, faceShare(h.reels.flat(), types) - cap) * 70;
+  if (h.job === "mage" && otherDamage >= 2)
+    utility -= Math.max(0, faceShare(h.reels.flat(), ["magic"]) - 0.35) * 65;
+  return utility + fx.crit * (meanCritical(h) - 1) * 2;
 }
 function faceShare(reel, types) {
   const weight = reel.reduce((n, f) => n + (f.weight || 1), 0);

@@ -1,0 +1,789 @@
+{
+  "schema": 1,
+  "description": "Controlled combat gauntlet; not human campaign win rates.",
+  "scenario": "Four encounters per floor (three ordinary, one guardian); recruits on floors 3 and 5; one well/floor before guardian; no items, equipment, artefacts, gold shops, travel, loot points or rare personal saves. AI edits and actor selection, not perfect human play.",
+  "seedPolicy": "Same numeric seeds and starter/temperament for each lesson rank; full configuration applies rank five to every family. The middle configuration alternates ranks 2 and 3 across the eight families: exactly 20 of 40 lesson ranks, not half the gold cost. Different actions consume different RNG draws.",
+  "configurations": {
+    "fresh": {},
+    "half": {
+      "vitality": 2,
+      "power": 3,
+      "experience": 2,
+      "purse": 3,
+      "recovery": 2,
+      "warding": 3,
+      "fellowship": 2,
+      "fortune": 3
+    },
+    "full": {
+      "vitality": 5,
+      "power": 5,
+      "experience": 5,
+      "purse": 5,
+      "recovery": 5,
+      "warding": 5,
+      "fellowship": 5,
+      "fortune": 5
+    }
+  },
+  "summary": [
+    {
+      "rank": 0,
+      "runs": 24,
+      "wins": 1,
+      "meanFloor": 6.291666666666667,
+      "stalls": 1,
+      "byStarter": {
+        "fighter": "0/8",
+        "rogue": "0/8",
+        "mage": "1/8"
+      }
+    },
+    {
+      "rank": 2.5,
+      "runs": 24,
+      "wins": 6,
+      "meanFloor": 9,
+      "stalls": 1,
+      "byStarter": {
+        "fighter": "3/8",
+        "rogue": "2/8",
+        "mage": "1/8"
+      }
+    },
+    {
+      "rank": 5,
+      "runs": 24,
+      "wins": 14,
+      "meanFloor": 9.625,
+      "stalls": 2,
+      "byStarter": {
+        "fighter": "2/8",
+        "rogue": "6/8",
+        "mage": "6/8"
+      }
+    }
+  ],
+  "cases": [
+    {
+      "rank": 0,
+      "seed": 1,
+      "job": "fighter",
+      "won": false,
+      "depth": 7,
+      "rolls": 290,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 0,
+      "seed": 2,
+      "job": "rogue",
+      "won": false,
+      "depth": 7,
+      "rolls": 175,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 0,
+      "seed": 3,
+      "job": "mage",
+      "won": false,
+      "depth": 5,
+      "rolls": 210,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 0,
+      "seed": 4,
+      "job": "fighter",
+      "won": false,
+      "depth": 4,
+      "rolls": 228,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 0,
+      "seed": 5,
+      "job": "rogue",
+      "won": false,
+      "depth": 7,
+      "rolls": 242,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 0,
+      "seed": 6,
+      "job": "mage",
+      "won": false,
+      "depth": 6,
+      "rolls": 326,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 0,
+      "seed": 7,
+      "job": "fighter",
+      "won": false,
+      "depth": 2,
+      "rolls": 55,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 0,
+      "seed": 8,
+      "job": "rogue",
+      "won": false,
+      "depth": 8,
+      "rolls": 205,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 0,
+      "seed": 9,
+      "job": "mage",
+      "won": false,
+      "depth": 4,
+      "rolls": 196,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 0,
+      "seed": 10,
+      "job": "fighter",
+      "won": false,
+      "depth": 9,
+      "rolls": 450,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 0,
+      "seed": 11,
+      "job": "rogue",
+      "won": false,
+      "depth": 7,
+      "rolls": 218,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 0,
+      "seed": 12,
+      "job": "mage",
+      "won": false,
+      "depth": 6,
+      "rolls": 292,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 0,
+      "seed": 13,
+      "job": "fighter",
+      "won": false,
+      "depth": 7,
+      "rolls": 467,
+      "stalled": true,
+      "survivors": 3
+    },
+    {
+      "rank": 0,
+      "seed": 14,
+      "job": "rogue",
+      "won": false,
+      "depth": 4,
+      "rolls": 139,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 0,
+      "seed": 15,
+      "job": "mage",
+      "won": true,
+      "depth": 10,
+      "rolls": 516,
+      "stalled": false,
+      "survivors": 3
+    },
+    {
+      "rank": 0,
+      "seed": 16,
+      "job": "fighter",
+      "won": false,
+      "depth": 7,
+      "rolls": 371,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 0,
+      "seed": 17,
+      "job": "rogue",
+      "won": false,
+      "depth": 7,
+      "rolls": 257,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 0,
+      "seed": 18,
+      "job": "mage",
+      "won": false,
+      "depth": 5,
+      "rolls": 308,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 0,
+      "seed": 19,
+      "job": "fighter",
+      "won": false,
+      "depth": 7,
+      "rolls": 332,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 0,
+      "seed": 20,
+      "job": "rogue",
+      "won": false,
+      "depth": 8,
+      "rolls": 308,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 0,
+      "seed": 21,
+      "job": "mage",
+      "won": false,
+      "depth": 5,
+      "rolls": 295,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 0,
+      "seed": 22,
+      "job": "fighter",
+      "won": false,
+      "depth": 5,
+      "rolls": 267,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 0,
+      "seed": 23,
+      "job": "rogue",
+      "won": false,
+      "depth": 7,
+      "rolls": 254,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 0,
+      "seed": 24,
+      "job": "mage",
+      "won": false,
+      "depth": 7,
+      "rolls": 302,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 2.5,
+      "seed": 1,
+      "job": "fighter",
+      "won": false,
+      "depth": 8,
+      "rolls": 479,
+      "stalled": true,
+      "survivors": 1
+    },
+    {
+      "rank": 2.5,
+      "seed": 2,
+      "job": "rogue",
+      "won": false,
+      "depth": 9,
+      "rolls": 155,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 2.5,
+      "seed": 3,
+      "job": "mage",
+      "won": false,
+      "depth": 10,
+      "rolls": 294,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 2.5,
+      "seed": 4,
+      "job": "fighter",
+      "won": true,
+      "depth": 10,
+      "rolls": 379,
+      "stalled": false,
+      "survivors": 3
+    },
+    {
+      "rank": 2.5,
+      "seed": 5,
+      "job": "rogue",
+      "won": true,
+      "depth": 10,
+      "rolls": 210,
+      "stalled": false,
+      "survivors": 3
+    },
+    {
+      "rank": 2.5,
+      "seed": 6,
+      "job": "mage",
+      "won": false,
+      "depth": 8,
+      "rolls": 399,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 2.5,
+      "seed": 7,
+      "job": "fighter",
+      "won": false,
+      "depth": 9,
+      "rolls": 665,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 2.5,
+      "seed": 8,
+      "job": "rogue",
+      "won": false,
+      "depth": 8,
+      "rolls": 138,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 2.5,
+      "seed": 9,
+      "job": "mage",
+      "won": false,
+      "depth": 8,
+      "rolls": 319,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 2.5,
+      "seed": 10,
+      "job": "fighter",
+      "won": false,
+      "depth": 8,
+      "rolls": 240,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 2.5,
+      "seed": 11,
+      "job": "rogue",
+      "won": false,
+      "depth": 6,
+      "rolls": 159,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 2.5,
+      "seed": 12,
+      "job": "mage",
+      "won": false,
+      "depth": 9,
+      "rolls": 398,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 2.5,
+      "seed": 13,
+      "job": "fighter",
+      "won": false,
+      "depth": 10,
+      "rolls": 444,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 2.5,
+      "seed": 14,
+      "job": "rogue",
+      "won": false,
+      "depth": 7,
+      "rolls": 190,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 2.5,
+      "seed": 15,
+      "job": "mage",
+      "won": false,
+      "depth": 9,
+      "rolls": 354,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 2.5,
+      "seed": 16,
+      "job": "fighter",
+      "won": true,
+      "depth": 10,
+      "rolls": 354,
+      "stalled": false,
+      "survivors": 3
+    },
+    {
+      "rank": 2.5,
+      "seed": 17,
+      "job": "rogue",
+      "won": true,
+      "depth": 10,
+      "rolls": 289,
+      "stalled": false,
+      "survivors": 3
+    },
+    {
+      "rank": 2.5,
+      "seed": 18,
+      "job": "mage",
+      "won": false,
+      "depth": 10,
+      "rolls": 421,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 2.5,
+      "seed": 19,
+      "job": "fighter",
+      "won": false,
+      "depth": 10,
+      "rolls": 381,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 2.5,
+      "seed": 20,
+      "job": "rogue",
+      "won": false,
+      "depth": 9,
+      "rolls": 135,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 2.5,
+      "seed": 21,
+      "job": "mage",
+      "won": true,
+      "depth": 10,
+      "rolls": 459,
+      "stalled": false,
+      "survivors": 3
+    },
+    {
+      "rank": 2.5,
+      "seed": 22,
+      "job": "fighter",
+      "won": true,
+      "depth": 10,
+      "rolls": 505,
+      "stalled": false,
+      "survivors": 2
+    },
+    {
+      "rank": 2.5,
+      "seed": 23,
+      "job": "rogue",
+      "won": false,
+      "depth": 9,
+      "rolls": 229,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 2.5,
+      "seed": 24,
+      "job": "mage",
+      "won": false,
+      "depth": 9,
+      "rolls": 333,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 5,
+      "seed": 1,
+      "job": "fighter",
+      "won": true,
+      "depth": 10,
+      "rolls": 396,
+      "stalled": false,
+      "survivors": 3
+    },
+    {
+      "rank": 5,
+      "seed": 2,
+      "job": "rogue",
+      "won": false,
+      "depth": 10,
+      "rolls": 148,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 5,
+      "seed": 3,
+      "job": "mage",
+      "won": false,
+      "depth": 10,
+      "rolls": 563,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 5,
+      "seed": 4,
+      "job": "fighter",
+      "won": true,
+      "depth": 10,
+      "rolls": 398,
+      "stalled": false,
+      "survivors": 3
+    },
+    {
+      "rank": 5,
+      "seed": 5,
+      "job": "rogue",
+      "won": true,
+      "depth": 10,
+      "rolls": 432,
+      "stalled": false,
+      "survivors": 3
+    },
+    {
+      "rank": 5,
+      "seed": 6,
+      "job": "mage",
+      "won": true,
+      "depth": 10,
+      "rolls": 400,
+      "stalled": false,
+      "survivors": 3
+    },
+    {
+      "rank": 5,
+      "seed": 7,
+      "job": "fighter",
+      "won": false,
+      "depth": 8,
+      "rolls": 243,
+      "stalled": true,
+      "survivors": 3
+    },
+    {
+      "rank": 5,
+      "seed": 8,
+      "job": "rogue",
+      "won": true,
+      "depth": 10,
+      "rolls": 157,
+      "stalled": false,
+      "survivors": 3
+    },
+    {
+      "rank": 5,
+      "seed": 9,
+      "job": "mage",
+      "won": false,
+      "depth": 9,
+      "rolls": 348,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 5,
+      "seed": 10,
+      "job": "fighter",
+      "won": false,
+      "depth": 8,
+      "rolls": 379,
+      "stalled": true,
+      "survivors": 3
+    },
+    {
+      "rank": 5,
+      "seed": 11,
+      "job": "rogue",
+      "won": true,
+      "depth": 10,
+      "rolls": 355,
+      "stalled": false,
+      "survivors": 3
+    },
+    {
+      "rank": 5,
+      "seed": 12,
+      "job": "mage",
+      "won": true,
+      "depth": 10,
+      "rolls": 446,
+      "stalled": false,
+      "survivors": 3
+    },
+    {
+      "rank": 5,
+      "seed": 13,
+      "job": "fighter",
+      "won": false,
+      "depth": 10,
+      "rolls": 438,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 5,
+      "seed": 14,
+      "job": "rogue",
+      "won": true,
+      "depth": 10,
+      "rolls": 386,
+      "stalled": false,
+      "survivors": 3
+    },
+    {
+      "rank": 5,
+      "seed": 15,
+      "job": "mage",
+      "won": true,
+      "depth": 10,
+      "rolls": 402,
+      "stalled": false,
+      "survivors": 3
+    },
+    {
+      "rank": 5,
+      "seed": 16,
+      "job": "fighter",
+      "won": false,
+      "depth": 9,
+      "rolls": 397,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 5,
+      "seed": 17,
+      "job": "rogue",
+      "won": false,
+      "depth": 10,
+      "rolls": 401,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 5,
+      "seed": 18,
+      "job": "mage",
+      "won": true,
+      "depth": 10,
+      "rolls": 338,
+      "stalled": false,
+      "survivors": 2
+    },
+    {
+      "rank": 5,
+      "seed": 19,
+      "job": "fighter",
+      "won": false,
+      "depth": 7,
+      "rolls": 325,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 5,
+      "seed": 20,
+      "job": "rogue",
+      "won": true,
+      "depth": 10,
+      "rolls": 120,
+      "stalled": false,
+      "survivors": 3
+    },
+    {
+      "rank": 5,
+      "seed": 21,
+      "job": "mage",
+      "won": true,
+      "depth": 10,
+      "rolls": 322,
+      "stalled": false,
+      "survivors": 3
+    },
+    {
+      "rank": 5,
+      "seed": 22,
+      "job": "fighter",
+      "won": false,
+      "depth": 10,
+      "rolls": 339,
+      "stalled": false,
+      "survivors": 0
+    },
+    {
+      "rank": 5,
+      "seed": 23,
+      "job": "rogue",
+      "won": true,
+      "depth": 10,
+      "rolls": 441,
+      "stalled": false,
+      "survivors": 3
+    },
+    {
+      "rank": 5,
+      "seed": 24,
+      "job": "mage",
+      "won": true,
+      "depth": 10,
+      "rolls": 294,
+      "stalled": false,
+      "survivors": 3
+    }
+  ]
+}

@@ -197,8 +197,8 @@ test("Berserker Fury comes from HP wounds and Blood Price, scales damage, has a 
   assert.equal(result.charged.bonus, 4);
   assert.equal(
     result.charged.damage,
-    9,
-    "rank-II blade + Bloodrush + pre-roll Fury, without a temperament damage modifier",
+    7,
+    "rank-II physical + Bloodrush + pre-roll Fury, without a temperament damage modifier",
   );
   assert.match(result.bar, /FURY 18\/24/);
   assert.equal(result.cleared, 0);
@@ -339,8 +339,8 @@ test("initiative boosts only the first party roll and is forfeited when a differ
     await spin(0);
     return { bonus, ordinary: state.lastPlayerRoll.totals.attack, expired };
   });
-  assert.equal(r.bonus, 8);
-  assert.equal(r.ordinary, 6);
+  assert.equal(r.bonus, 4);
+  assert.equal(r.ordinary, 3);
   assert.equal(r.expired, true);
 });
 

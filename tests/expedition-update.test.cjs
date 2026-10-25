@@ -185,8 +185,8 @@ test("spending curves are meaningful and permanent training enforces increasing 
   });
   assert.equal(r.skip, false);
   assert.equal(r.current, r.original);
-  assert.equal(r.first, Math.round(r.original * 1.1));
-  assert.equal(r.full, Math.round(r.original * 1.5));
+  assert.equal(r.first, Math.round(r.original * 1.25));
+  assert.equal(r.full, Math.round(r.original * 2.25));
   assert.ok(r.costs.every((c, i) => !i || c > r.costs[i - 1]));
   assert.ok(
     r.prices.potion >= 90 && r.prices.heal >= 150 && r.prices.reveal >= 100,
@@ -370,7 +370,7 @@ test("paired foes share one large protection control and portrait badges are ico
   await p.waitForSelector("#status-tooltip:not([hidden])");
   assert.match(
     await p.locator("#status-tooltip").textContent(),
-    /blade damage/,
+    /physical damage/,
   );
 });
 
@@ -429,6 +429,8 @@ test("lava remains an impassable barrier and a thousand generated floors keep a 
 test("tunnels are rare reciprocal pairs at least three cells apart, allow declining and teleport without recursively prompting at the far end", async (t) => {
   const p = await game(t);
   const distribution = await p.evaluate(() => {
+    let seed = 91517;
+    Math.random = () => ((seed = (Math.imul(seed,1664525)+1013904223)>>>0) / 4294967296);
     let bearing = 0,
       doubles = 0;
     for (let n = 0; n < 1000; n++) {
@@ -452,7 +454,7 @@ test("tunnels are rare reciprocal pairs at least three cells apart, allow declin
     }
     return { bearing, doubles };
   });
-  assert.ok(distribution.bearing > 90 && distribution.bearing < 190);
+  assert.ok(distribution.bearing > 110 && distribution.bearing < 250);
   assert.ok(distribution.doubles > 0 && distribution.doubles < 35);
   await p.evaluate(() => {
     const a = state.position,

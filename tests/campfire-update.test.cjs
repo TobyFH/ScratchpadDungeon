@@ -110,7 +110,7 @@ test("owned ranks and active ranks are separate, bounded, persisted and snapshot
   assert.equal(r.owned, 5);
   assert.equal(r.tooHigh, false);
   assert.deepEqual(r.current, []);
-  assert.equal(r.hp, Math.round(50 * 1.2));
+  assert.equal(r.hp, Math.round(50 * 1.5));
   assert.deepEqual(r.rules, ["vitality2"]);
   assert.equal(r.active, 0);
   assert.equal(r.unchanged, r.hp);
@@ -247,9 +247,9 @@ test("class and temperament choose different legal starting palettes while rank 
     assert.equal(hero.different, true, hero.job);
     assert.equal(hero.legal, true, hero.job);
     assert.deepEqual(hero.base, hero.other, hero.job);
-    assert.equal(hero.base.attack, 4);
+    assert.equal(hero.base.attack, 2);
     assert.equal(hero.base.heal, 4);
-    assert.equal(hero.base.block, 2);
+    assert.equal(hero.base.block, 4);
   }
   assert.equal(r[0].hp, 50);
   assert.equal(
@@ -589,7 +589,7 @@ test("a matching Jester triple has a normal critical without self-stun or a free
   assert.equal(r.stun, 0);
   assert.equal(r.spins, 1);
   assert.equal(r.xp, 1);
-  assert.ok([2, 2.5, 3, 4].includes(r.multiplier));
+  assert.ok([1.5, 2, 3, 4].includes(r.multiplier));
   assert.equal(r.count, 19);
 });
 
@@ -753,7 +753,7 @@ test("autoplay keeps different build preferences, develops support marks and can
     return { out, edits, damage: autoDamageScore(h), points: h.points };
   });
   assert.equal(new Set(r.out.map((x) => x.marks)).size, 3);
-  assert.ok(r.out.every((x) => x.damage >= 3));
+  assert.ok(r.out.every((x) => x.damage >= 2));
   assert.ok(r.out[1].block > r.out[0].block);
   assert.ok(
     r.out.some((x) => x.stun > 1 || x.buffs > 1),
@@ -1104,6 +1104,6 @@ test("decimal and Jackpot multiplier lettering fits its reel, and fountain offer
       amount: healHero(0, 15),
     };
   });
-  assert.equal(offered.label, "18 HP");
-  assert.equal(offered.amount, 18);
+  assert.equal(offered.label, "21 HP");
+  assert.equal(offered.amount, 21);
 });

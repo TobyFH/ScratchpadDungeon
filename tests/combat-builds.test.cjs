@@ -176,8 +176,8 @@ test("downgrades refund one tier, repeated respecs cannot manufacture points, sw
       seals: h.reels.map((r) => r.filter((f) => f.type === "class").length),
     };
   });
-  assert.equal(r.spent, 29);
-  assert.deepEqual(r.refunds, [8, 4, 2]);
+  assert.equal(r.spent, 28);
+  assert.deepEqual(r.refunds, [7, 4, 2]);
   assert.ok(r.afterLoop < r.afterRefund);
   assert.equal(r.chosen, true);
   assert.equal(r.type, "stun");
@@ -301,10 +301,10 @@ test("Mage resonance echoes four rolled powers to the correct whole side; suppor
   assert.deepEqual(r.heal.damage, [0, 0]);
   assert.equal(r.heal.block, 0);
   assert.equal(r.heal.area, false);
-  assert.equal(r.block.block, 5);
+  assert.equal(r.block.block, 6);
   assert.deepEqual(r.block.health, [0, 0]);
   assert.ok(r.poison.poison.every((n) => n === 3));
-  assert.ok(r.magic.damage.every((n) => n === 6));
+  assert.ok(r.magic.damage.every((n) => n === 5));
 });
 
 test("Execute builds while other heroes act, scales with patience and missing enemy health, and consumes charge only on a damaging Ranger roll", async (t) => {
@@ -347,7 +347,7 @@ test("Execute builds while other heroes act, scales with patience and missing en
   });
   assert.equal(r.full, 6);
   assert.ok(r.wounded > r.fresh);
-  assert.equal(r.damage, 2 + r.wounded);
+  assert.equal(r.damage, 1 + r.wounded);
   assert.equal(r.consumed, 0);
   assert.equal(r.record.bonus, r.wounded);
   assert.equal(r.sealed, 3);

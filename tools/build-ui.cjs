@@ -72,6 +72,7 @@ embed(
   ),
 );
 for (const [label, file] of [
+  ["BALANCE", "game/balance.js"],
   ["BIOME ENEMIES", "game/biome-enemies.js"],
   ["ENCOUNTER JOURNAL", "game/encounter-journal.js"],
   ["ECONOMY", "game/economy.js"],

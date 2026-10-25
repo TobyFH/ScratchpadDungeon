@@ -1,5 +1,11 @@
 # Campfire lessons, luck and the Jester
 
+> Current numeric tuning is documented in [Balance pass](BALANCE_PASS.md).
+> Its linear mark powers, class critical pools, prices, enemy budgets and camp
+> lesson amounts supersede earlier numeric examples below. The mechanics and
+> save/transaction rules in this document still apply.
+
+
 The standalone `index.html` is built from the existing presentation and game
 modules. Run `npm run build:ui` after editing a source module; never edit a
 marked generated region. No runtime asset server or external library is needed.

@@ -35,10 +35,8 @@ const MAGE_POWERS = Object.freeze({
   },
 });
 const HERO_TUNING = Object.freeze({
-  tankHP: 50,
   rangerExecute: 1.12,
-  rogueDamage: 0.94,
-  healing: 1.1,
+  healing: 1,
 });
 const tankSealBlock = (h) =>
   2 + Math.floor(Math.max(0, (h?.level || 1) - 1) / 3);
@@ -49,14 +47,10 @@ const fountainBaseRate = (depth = state.depth) =>
 const fountainRollRate = (depth = state.depth) =>
   0.5 + Math.min(9, Math.max(0, depth - 1)) * 0.012;
 function heroDamagePower(h, n) {
-  return n <= 0
-    ? 0
-    : h?.job === "rogue"
-      ? Math.max(1, Math.round(n * HERO_TUNING.rogueDamage))
-      : n;
+  return n;
 }
 function heroHealingPower(n) {
-  return n > 0 ? Math.max(1, Math.round(n * HERO_TUNING.healing)) : 0;
+  return n;
 }
 const RANGER_AIM_CAP = 6;
 // Fury scales with level and is spent only when real lifesteal restores HP.
@@ -239,7 +233,7 @@ function classAbilityDescription(hero) {
       healer: "Resonance echoes your rolled marks across the appropriate team.",
       ranger:
         "Execute: wait between attacks to fill patience. The next damaging roll gains a bonus against wounded enemies; the seal strengthens that shot.",
-      berserker: `Bloodrush: restore ${bloodrushHealing(hero && typeof hero === "object" ? hero : { level: 1 })} HP to yourself, gain 4 Fury and +2 blade damage. Charged Fury adds damage and lifesteal; restoring HP spends some Fury.`,
+      berserker: `Bloodrush: restore ${bloodrushHealing(hero && typeof hero === "object" ? hero : { level: 1 })} HP to yourself, gain 4 Fury and +2 physical damage. Charged Fury adds damage and lifesteal; restoring HP spends some Fury.`,
     }[job] || "Your permanent signature mark, alongside the other two results."
   );
 }
@@ -295,7 +289,7 @@ function startingFaces(job, temperament) {
       ? [
           ["heal", 1],
           ["heal", 2],
-          ["magic", 1],
+          ["magic", 2],
           ["block", 1],
           ["rally", 1],
           ["blank", 1],
@@ -377,15 +371,7 @@ function makeHero(
     : randomTemperament();
   const faces = startingFaces(job, specialism);
   const maxHp = Math.round(
-    ({
-      fighter: HERO_TUNING.tankHP,
-      rogue: 26,
-      mage: 28,
-      ranger: 30,
-      berserker: 38,
-      jester: 30,
-    }[job] +
-      (rules.includes("hearty") ? 4 : 0)) *
+    ((CLASS_BALANCE[job]?.hp || 30) + (rules.includes("hearty") ? 4 : 0)) *
       (1 + lessonBonus("vitality", rules) / 100) *
       (rules.includes("glass") ? 0.85 : 1),
   );

@@ -1,5 +1,11 @@
 # Hero builds and readable combat
 
+> Current numeric tuning is documented in [Balance pass](BALANCE_PASS.md).
+> Its linear mark powers, class critical pools, prices, enemy budgets and camp
+> lesson amounts supersede earlier numeric examples below. The mechanics and
+> save/transaction rules in this document still apply.
+
+
 The runtime is still one self-contained HTML. `tools/build-ui.cjs` embeds these
 source modules; edit the sources and regenerate rather than editing marked HTML:
 

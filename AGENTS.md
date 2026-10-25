@@ -78,3 +78,10 @@ Read `docs/PUNCHLINE_UPDATE.md` for current version-20 rules. Self/ally stimulan
 Read `docs/BIOMES_UPDATE.md` for current version-21 rules. `game/biomes.js` owns named themes, directed ice movement and bounded mushroom reveals; `game/biome-enemies.js` owns themed species and the self-destruct lifecycle. Generation must preserve a real slide/tunnel stair route. Keep all class tuning in shared hero helpers; Blood Price and Trick are class-exclusive. Fury capacity scales by level and actual lifesteal spends charge. Autoplay repairs class identity through paid validators. Gold critical lock callbacks update one reserved payoff without a later delay.
 
 Ice generation must preserve escape to stairs from every traversable tile, not just spawn. Known ice may lead onto covered landings; do not restore a seen-only landing restriction. Crystal aura/seal rules live in `game/biomes.js`; `giftedReels` applies temporary gems and `clearBattleStatuses` clears them. Read the follow-up in `docs/BIOMES_UPDATE.md` and run `tests/ice-crystal.test.cjs` after movement, terrain or starter-card changes.
+
+Read `docs/BALANCE_PASS.md` before balance changes. `game/balance.js` owns shared
+linear damage tiers, class critical pools, floor budgets and base species data.
+Keep UI descriptions, real rolls and AI expectations in agreement; never change
+art for a numeric pass. `npm run audit:balance` uses real browser combat in a
+controlled gauntlet, not a claim about player campaign win rates. Preserve
+previously paid reel-refund receipts and owned camp IDs when retuning prices.

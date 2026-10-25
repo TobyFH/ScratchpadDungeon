@@ -1,5 +1,11 @@
 # Biomes, class identity and combat feedback
 
+> Current numeric tuning is documented in [Balance pass](BALANCE_PASS.md).
+> Its linear mark powers, class critical pools, prices, enemy budgets and camp
+> lesson amounts supersede earlier numeric examples below. The mechanics and
+> save/transaction rules in this document still apply.
+
+
 This is expedition save version **21**. The distributable remains the standalone
 `index.html`; run `npm run build:ui` after editing embedded source modules.
 Settings, camp ownership, banked gold, wounds and legal purchased marks survive.
