@@ -184,6 +184,9 @@ function inspiredRoll(h, base) {
     "poison",
     "stun",
     "stimulant",
+    "rally",
+    "trick",
+    "bash",
   ].filter((k) => base[k] > 0);
   if (keys.length && characterMoment("inspired", h)) {
     const key = keys.reduce((a, b) => (base[a] >= base[b] ? a : b));

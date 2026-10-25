@@ -3,7 +3,7 @@ function contributionType(symbol, owner) {
   if (owner?.job === "mage")
     return owner.lastResonance || mageResonance(owner, owner.last);
   if (owner?.job === "berserker") return "attack";
-  if (owner?.job === "fighter") return "rage";
+  if (owner?.job === "fighter") return "block";
   if (owner?.job === "rogue") return "attack";
   if (owner?.job === "ranger")
     return state.lastExecution?.heroId === owner.id &&

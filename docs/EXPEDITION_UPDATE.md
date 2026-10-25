@@ -226,5 +226,7 @@ needed for these changes.
 
 Version 19 supersedes the earlier starting-face table and time-based ambush rules:
 see [Campfire update](CAMPFIRE_UPDATE.md). Temperament changes initial face palettes,
-Tank starts at 48 HP, and the Jester has distinct-kind Jackpot rules. Lesson ranks
+Tank starts at 48 HP, and the Jester now uses anticipation/Punchline with ordinary critical rules (version 20). Lesson ranks
 are owned separately from their selected active rank. Existing edited reels remain.
+
+Current version-20 stimulant, Shield Bash, Jester, AI and tunnel-graph rules are documented in [Punchline update](PUNCHLINE_UPDATE.md); these supersede earlier descriptions of those systems.

@@ -77,7 +77,7 @@ test("hero faces begin equally likely; migration removes authored weights but pr
   });
   assert.equal(r.loaded, true);
   assert.ok(r.fresh.flat().every((w) => w === 1));
-  assert.equal(r.migrated.version, 19);
+  assert.equal(r.migrated.version, 20);
   assert.equal(r.migrated.tier, 4);
   assert.equal(r.migrated.points, 50);
   assert.ok(r.migrated.weights.every((w) => w === 1));

@@ -136,18 +136,18 @@ and any earned trait.
 
 | Class     | Starting style                                         | Middle-reel ability                                           |
 | --------- | ------------------------------------------------------ | ------------------------------------------------------------- |
-| Tank      | 48 HP; blades and team protection                      | Rage builds damage and some resistance                        |
+| Tank      | 48 HP; blades and team protection                      | Shield Bash grants block and strikes with the shield count                        |
 | Rogue     | 26 HP; damage and poison                               | Flurry rolls three extra attacks                              |
 | Mage      | 28 HP; build healing, shields, poison or spell damage  | Resonance echoes the rolled marks across the appropriate team |
 | Berserker | 38 HP; unlock at camp; blades, healing and Blood Price | Bloodrush heals; charged Fury adds damage and lifesteal       |
-| Jester    | 30 HP; unlock at camp | Different kinds win a Jackpot and one free encore |
+| Jester    | 30 HP; unlock at camp | Trick fills anticipation for a +1-rank Punchline roll |
 | Ranger    | 30 HP; unlock at camp                                  | Execute rewards patience and finishing wounded enemies        |
 
 Former Healers migrate to Mages with their existing stats and edited wheels.
 There is no Mage role selector: builds follow the marks on their reels. See
 [Combat builds](docs/COMBAT_BUILDS.md) for exact rules, migration and source files.
 
-Blade and magic tiers deal 2 / 4 / 7 / 11 damage per face. Healing tiers offer 2 / 4 / 6 / 8 HP. Block and stun tiers contribute 1 / 2 / 3 / 4 power. **Three identical type-and-tier symbols crit** for ordinary classes; a middle class seal can complete two matching meaningful symbols while also casting its ability. A pair alone never crits. Jesters instead Jackpot on three different non-empty kinds: ×4/×5/×6/×8 plus one free encore; matching triples self-stun. Hero and other event critical multipliers are ×2, ×2.5, ×3 or ×4; wells use ×1.25–×1.75, with the original value pulsing into the amplified total.
+Blade and magic tiers deal 2 / 4 / 7 / 11 damage per face. Healing tiers offer 2 / 4 / 6 / 8 HP. Block and stun tiers contribute 1 / 2 / 3 / 4 power. **Three identical type-and-tier symbols crit** for ordinary classes; a middle class seal can complete two matching meaningful symbols while also casting its ability. A pair alone never crits. Jesters follow these same critical rules. Trick marks instead build six anticipation for a free +1-rank Punchline roll. Hero and other event critical multipliers are ×2, ×2.5, ×3 or ×4; wells use ×1.25–×1.75, with the original value pulsing into the amplified total.
 
 Normal combat rolls stay on the right page. Criticals get a multiplier popup that lingers automatically; **Strike now** skips its result hold. Treasure, fountain and other event criticals stay inside their original panel and still require confirmation. Criticals show the original value while spinning, then pulse the same readout to
 the final number; no calculation box appears. Critical damage lands as the
@@ -178,7 +178,7 @@ and fills Fury; each four Fury adds 4% lifesteal, up to 20%. Real unblocked dama
 lands before healing marks return from the enemy and restore HP.
 
 **Poison** has purple POISON callouts and does not trigger Vulnerable. Healing
-also leaves Vulnerable for the next actual hit. Poison holds at most three remaining turns. Repeated doses increase its armour-piercing tick damage rather than building a long duration, with visible ticks and kill credit. **Stimulants** increase damage and protection and show a fiery glow. Rage, Execute, Fury, poison, stun, Vulnerable and opening buffs end with combat. Level-ups add 6 maximum HP and 4 personal editing points, with portrait and machine effects. EXP comes only from successful battles; surviving heroes also gain one editing point per victory.
+also leaves Vulnerable for the next actual hit. Poison holds at most three remaining turns. Repeated doses increase its armour-piercing tick damage rather than building a long duration, with visible ticks and kill credit. **Self stimulant** boosts its caster; **Ally stimulant** boosts the companion used most this fight, or self when alone. Both last at most three recipient actions; extra duration becomes potency. Both increase damage and protection and show a glow. Rage, Execute, Fury, poison, stun, Vulnerable and opening buffs end with combat. Level-ups add 6 maximum HP and 4 personal editing points, with portrait and machine effects. EXP comes from successful battles plus one base EXP for each hero critical; surviving heroes also gain one editing point per victory.
 
 The **Autofight** checkbox (Autoresolve in Options) chooses heroes, targets and occasional useful emergency supplies. It preserves the selected animation speed and all combat feedback. Enemy entrances confirm automatically; other choices wait for the player unless Autoplay is also enabled. Untick it to take over between actions.
 
@@ -219,7 +219,7 @@ Each hero also has one personal equipment slot. **Drag equipment from the bag on
 | Silent Boots    | Rogue  | +1 damage; every fourth roll stuns                   |
 | Serpent Pin     | Rogue  | Damaging rolls poison                                |
 | Star Lens       | Mage   | +2 magic damage on damaging rolls                    |
-| Storm Quill     | Mage   | +1 magic damage; every third roll grants a stimulant |
+| Storm Quill     | Mage   | +1 magic damage; every third roll grants ally stimulant |
 | Notched Longbow | Ranger | +2 damage on damaging rolls                          |
 | Scout Cloak     | Ranger | Resist 1 damage; +2 opening team block               |
 
@@ -376,3 +376,5 @@ with selectable active ranks, eight optional challenges, the unlockable Jester,
 rare personal moments and archetype-guided Autoplay. Temperament now changes
 starting marks rather than their numeric power. Ambushes age by move commands,
 not waiting time. Options can reset progression while preserving settings.
+
+See [Punchline and support update](docs/PUNCHLINE_UPDATE.md) for version-20 buff stacking, Tank Shield Bash, Jester, class-aware AI and tunnel-only crossings.

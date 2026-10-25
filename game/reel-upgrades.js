@@ -9,6 +9,8 @@ const maxFaceTier = (type) =>
     "stun",
     "poison",
     "stimulant",
+    "rally",
+    "trick",
     "selfharm",
   ].includes(type)
     ? 4
@@ -25,6 +27,7 @@ const CLASS_PRICES = {
     heal: 2,
     magic: 2,
     stimulant: 1.25,
+    rally: 1.25,
   },
   fighter: {
     attack: 1,
@@ -34,6 +37,7 @@ const CLASS_PRICES = {
     magic: 1.75,
     poison: 1.5,
     stimulant: 1.25,
+    rally: 1.25,
   },
   healer: {
     heal: 1,
@@ -43,11 +47,13 @@ const CLASS_PRICES = {
     attack: 2,
     poison: 1.75,
     stimulant: 1.25,
+    rally: 1.25,
   },
   mage: {
     magic: 1,
     poison: 1,
     stimulant: 1,
+    rally: 1,
     heal: 1,
     attack: 2,
     block: 1,
@@ -61,6 +67,7 @@ const CLASS_PRICES = {
     block: 1.5,
     magic: 1.75,
     stimulant: 1.25,
+    rally: 1.25,
   },
 };
 const EDITABLE_TYPES = Object.freeze([
@@ -71,6 +78,8 @@ const EDITABLE_TYPES = Object.freeze([
   "stun",
   "poison",
   "stimulant",
+  "rally",
+  "trick",
   "selfharm",
   "blank",
 ]);
@@ -81,7 +90,9 @@ const FACE_LABELS = Object.freeze({
   block: "Team block",
   stun: "Stun",
   poison: "Poison",
-  stimulant: "Stimulant",
+  stimulant: "Self stimulant",
+  rally: "Ally stimulant",
+  trick: "Trick",
   selfharm: "Blood Price",
   blank: "Empty",
 });
@@ -89,7 +100,7 @@ const primaryFace = (h) =>
   h.job === "mage" ? (h.specialism === "defence" ? "heal" : "magic") : "attack";
 function editableTypes(h) {
   return h.job === "jester"
-    ? EDITABLE_TYPES
+    ? EDITABLE_TYPES.filter((t) => t !== "stimulant")
     : [
         ...(CLASS_FACE_TYPES[h.job] ||
           EDITABLE_TYPES.filter((t) => t !== "selfharm")),
@@ -107,7 +118,9 @@ function faceDescription(face, h) {
       block: `Add ${tier} shared team block. It absorbs damage for any party member and is spent as it protects them.`,
       stun: `Apply ${tier} stun power. Prevents action until recovery. Recovery checks grow stronger each roll; higher power breaks through more block.`,
       poison: `Apply ${tier} poison power. Lasts up to 3 turns; repeated doses increase tick damage instead of adding a long duration.`,
-      stimulant: `Apply ${tier} stimulant power to your ally: a short damage and resistance boost.`,
+      stimulant: `Give yourself ${tier} stimulant power. Lasts up to 3 of your actions; extra duration becomes potency.`,
+      rally: `Give ${tier} stimulant power to the ally who has rolled most this fight. If alone, give it to yourself. Lasts up to 3 of their actions; extra duration becomes potency.`,
+      trick: `Build ${tier} anticipation. At 6, the Jester makes one free Punchline roll with ordinary marks +1 rank (maximum IV). Punchlines do not charge the meter.`,
       selfharm: `Pay up to ${2 * tier} HP, staying above 0. Wounds feed Fury and this mark adds ${3 * tier} extra Fury.`,
       blank: "No effect. Inscribe a useful mark here with personal points.",
     }[face.type] || "A mark on this weighted reel."
@@ -159,8 +172,6 @@ function reelProbabilities(reel) {
   return result;
 }
 function heroCriticalOdds(h) {
-  if (h.job === "jester")
-    return [{ type: "class", tier: 1, chance: jesterOdds(h).jackpot }];
   const [a, b, c] = h.reels.map(reelProbabilities),
     rows = [];
   for (const [key, p] of Object.entries(a)) {
@@ -172,10 +183,6 @@ function heroCriticalOdds(h) {
   return rows.sort((a, b) => b.chance - a.chance);
 }
 function criticalOddsMarkup(h) {
-  if (h.job === "jester") {
-    const odds = jesterOdds(h);
-    return `<section class="workshop-critpage workshop-page" ${editorView === "crits" ? "" : "hidden inert"}><h3>Jackpot · ${(100 * odds.jackpot).toFixed(2)}% per roll</h3><ul class="guide-takeaways"><li><b>Three different kinds:</b> double the usual critical multiplier and one free encore. Ranks do not need to match.</li><li><b>No blanks:</b> empty marks cannot complete a Jackpot.</li><li><b>Matching triples:</b> ${(100 * odds.backfire).toFixed(2)}% chance of self-stun instead.</li><li><b>One encore:</b> free rolls can Jackpot but do not chain more free rolls.</li></ul></section>`;
-  }
   const rows = heroCriticalOdds(h),
     total = rows.reduce((n, r) => n + r.chance, 0);
   return `<section class="workshop-critpage workshop-page" ${editorView === "crits" ? "" : "hidden inert"}><h3>Three of a kind · ${(total * 100).toFixed(2)}% per roll</h3><p>The middle class mark also completes two matching outer marks. Empty faces never crit. These odds include your edits and purchased weighting.</p><div class="crit-odds-grid">${rows.map((row) => `<div class="crit-odds-row">${symbolMarkup(row)}<b>${FACE_LABELS[row.type]} ${tierName(row.tier)}</b><strong>${(row.chance * 100).toFixed(2)}%</strong></div>`).join("") || "<p>No matching combinations yet. Put the same type and rank on both outer reels to start a combo.</p>"}</div></section>`;
@@ -373,12 +380,12 @@ function editFace(data, operation, destination = null) {
 
 function workshopAbilitySummary(h) {
   return {
-    fighter: "Build damage and resistance this fight.",
+    fighter: "Gain 2 block, then bash with your team shield count; twice as strong against enemy block.",
     rogue: "Roll three extra blade attacks.",
     mage: "Echo the rolled magic, healing, shield or poison marks across the whole team.",
     ranger: "Charge patience for a stronger finishing shot.",
     jester:
-      "Wildcard plays a random trick. Different kinds win a Jackpot; matching triples backfire.",
+      "Wildcard plays a random trick. Trick marks fill anticipation for a +1-rank Punchline roll.",
     berserker:
       "Heal yourself, gain 4 Fury and +2 blade damage. Charged Fury adds damage and lifesteal.",
   }[h.job];

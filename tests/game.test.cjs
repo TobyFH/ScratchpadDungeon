@@ -89,7 +89,7 @@ async function game(t, { auto = false, width = 1440 } = {}) {
 async function autoEvents(page) {
   await page.evaluate(() => {
     window.autoEventObserver = new MutationObserver(() => {
-      let button = document.querySelector(
+      let button = (window.campaignPortals ? document.querySelector("#tunnel-use:not(:disabled)") : null) || document.querySelector(
         "#stage-confirm:not(:disabled),#recruit-accept:not(:disabled),#recruit-decline:not(:disabled),#well-use:not(:disabled),#tunnel-leave:not(:disabled),#ruin-examine:not(:disabled),#death-confirm:not(:disabled),#burial-confirm:not(:disabled),#revive-use:not(:disabled),#item-leave:not(:disabled)",
       );
       if (button && !document.querySelector("#spotlight").hidden)
@@ -933,7 +933,7 @@ test("generated maps remain connected, with no mid-dungeon quest guardian", asyn
           s = new Set([pos(1, 7)]),
           q = [pos(1, 7)];
         for (let n of q)
-          for (let j of neighbors(n))
+          for (let j of [...neighbors(n), ...(m[n].event === "tunnel" && m[m[n].tunnelTo]?.event === "tunnel" && m[m[n].tunnelTo].tunnelTo === n ? [m[n].tunnelTo] : [])])
             if (!m[j].wall && !s.has(j)) {
               s.add(j);
               q.push(j);
@@ -1016,6 +1016,7 @@ test("full ten-floor expedition can progress through fog, loot confirmations, ba
   await fast(p);
   await p.evaluate(() => {
     state.party[0].hp = state.party[0].maxHp = 10000;
+    window.campaignPortals = true;
   });
   await faces(p, [
     ["attack", 3],
@@ -1113,7 +1114,7 @@ test("save restores speed and artefacts and migrates the earlier Sunseed-era not
     localStorage.setItem("scratchpad-dungeon-v2", JSON.stringify(old));
   });
   await p.reload();
-  assert.equal(await p.evaluate(() => state.version), 19);
+  assert.equal(await p.evaluate(() => state.version), 20);
   assert.equal(await p.evaluate(() => state.speed), "skip");
   assert.equal(await p.evaluate(() => state.relic), undefined);
   assert.doesNotMatch(await p.locator("body").textContent(), /Sunseed/);
@@ -1699,7 +1700,7 @@ test("all 1000 generated floors have a path to the stairs; the safety carve repa
         seen = new Set([pos(1, 7)]),
         q = [pos(1, 7)];
       for (let i of q)
-        for (let j of neighbors(i))
+        for (let j of [...neighbors(i), ...(m[i].event === "tunnel" && m[m[i].tunnelTo]?.event === "tunnel" && m[m[i].tunnelTo].tunnelTo === i ? [m[i].tunnelTo] : [])])
           if (!m[j].wall && !seen.has(j)) {
             seen.add(j);
             q.push(j);
@@ -3268,7 +3269,7 @@ test("older saved fights migrate to the gentler curve without losing wounds or e
       face: state.party[0].reels[0][0].tier,
     })),
     {
-      version: 19,
+      version: 20,
       hp: 19,
       max: 38,
       damage: 6,
@@ -3409,7 +3410,7 @@ test("hidden ambushes have smoke and a banner; winning clears adjacent fog witho
     await p.evaluate(() => state.enemy.name),
   );
   assert.match(
-    await p.locator(".ambush-banner").textContent(),
+    await p.locator(".encounter-alert > span").textContent(),
     /SURPRISE|AMBUSH/,
   );
   assert.equal(
@@ -3598,12 +3599,13 @@ test("each class starts with a single class seal on its middle reel; a seal comp
     await finish(p);
     assert.equal(await p.evaluate(() => state.lastPlayerRoll.multiplier), 2);
     if (job === "fighter") {
-      assert.equal(await p.evaluate(() => state.party[0].rage), 2);
+      assert.equal(await p.evaluate(() => state.party[0].rage), 0);
+      assert.equal(await p.evaluate(() => state.block), 4);
       assert.equal(
         await p.evaluate(() => state.lastPlayerRoll.actualDamage),
-        8,
+        12,
       );
-      assert.equal(await p.locator("#hero-0.raging").count(), 1);
+      assert.equal(await p.locator("#hero-0.raging").count(), 0);
     }
     if (job === "healer") {
       assert.equal(await p.evaluate(() => state.block), 0);
@@ -3704,7 +3706,7 @@ test("poison ticks for one armour-piercing damage per action, expires, and can w
   assert.equal(await p.evaluate(() => state.party[0].xp), 9);
 });
 
-test("stimulants target allies, boost damage and defence with visible fire, persist in saves and clear after combat", async (t) => {
+test("ally stimulant targets an ally, boosts damage and defence with visible fire, persist in saves and clear after combat", async (t) => {
   const p = await game(t, { auto: true });
   await fast(p);
   await encounter(p);
@@ -3715,13 +3717,13 @@ test("stimulants target allies, boost damage and defence with visible fire, pers
   });
   await faces(p, [
     ["magic", 1],
-    ["stimulant", 2],
+    ["rally", 2],
     ["blank", 1],
   ]);
   await p.locator('[data-spin="0"]').click();
   await finish(p);
   assert.equal(await p.locator("#hero-1.powered-up .buff-badge").count(), 1);
-  assert.equal(await p.evaluate(() => state.party[1].stimulant.turns), 5);
+  assert.equal(await p.evaluate(() => state.party[1].stimulant.turns), 2);
   await faces(
     p,
     [
@@ -4490,7 +4492,7 @@ test("class-bound and generic equipment pieces work, can be dragged onto heroes,
         block: roll.block,
         poison: roll.poison,
         stun: roll.stun,
-        stim: roll.stimulant,
+        stim: roll.rally,
         guard: equipmentBonus(h, "guard"),
         defence: defenceBonus(h),
       });
@@ -5025,7 +5027,7 @@ test("version-nine fights adopt the stronger enemy curve without changing hero w
         .map((f) => f.tier),
     })),
     {
-      version: 19,
+      version: 20,
       autoplay: false,
       heroHp: 17,
       face: 4,

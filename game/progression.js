@@ -74,7 +74,7 @@ const CAMP_UNLOCKS = {
     cost: 1400,
     permanent: true,
     description:
-      "Unlock Jester starts and companions. Different marks win Jackpots. Matching triples stun you.",
+      "Unlock Jester starts and companions. Trick marks build anticipation for a stronger Punchline roll.",
   },
   iron: {
     name: "Iron margins",

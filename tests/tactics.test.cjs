@@ -84,7 +84,7 @@ test("temperament is only selectable at the start, Mages have no role stat or se
   });
   assert.deepEqual(result, {
     loaded: true,
-    version: 19,
+    version: 20,
     hp: 11,
     points: 29,
     tier: 4,
@@ -856,7 +856,7 @@ test("field guide topics remain readable without scrolling on desktop, Deck and 
   const p = await game(t);
   await p.evaluate(() => help());
   const count = await p.locator("#guide-topic option").count();
-  assert.equal(count, 12);
+  assert.equal(count, 13);
   for (const width of [1920, 1280, 390, 320]) {
     await p.setViewportSize({
       width,

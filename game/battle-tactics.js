@@ -186,6 +186,7 @@ function clearBattleStatuses() {
   for (const entity of [...state.party, ...battleEnemies()]) {
     entity.rage = 0;
     entity.charge = 0;
+    entity.anticipation = 0;
     entity.fury = 0;
     entity.stimulant = null;
     entity.poison = null;
@@ -405,6 +406,7 @@ async function resumeOpeningEncounter() {
 }
 
 function normaliseTacticalStatuses(entity) {
+  normaliseStimulant(entity);
   entity.blackout = Array.isArray(entity.blackout)
     ? [...new Set(entity.blackout.filter((k) => [0, 1, 2].includes(k)))]
     : [];
@@ -548,4 +550,51 @@ async function settleFuryLeech(h, recipients, flights) {
   record.actual = actual;
   record.healedAt = Date.now();
   return actual;
+}
+
+// Buffs age on the recipient's actions, never on another ally's turn. Stacking
+// fills three actions; applications beyond that duration increase potency.
+const STIMULANT_TURNS = 3;
+function normaliseStimulant(entity) {
+  const buff = entity.stimulant;
+  if (!buff) return;
+  if (!Number.isFinite(buff.power) || !Number.isFinite(buff.turns) || buff.turns <= 0) {
+    entity.stimulant = null;
+    return;
+  }
+  entity.stimulant = {
+    ...buff,
+    power: Math.max(1, Math.ceil(buff.power)) + Math.max(0, Math.ceil(buff.turns) - STIMULANT_TURNS),
+    turns: Math.min(STIMULANT_TURNS, Math.ceil(buff.turns)),
+    appliedAt: Number.isFinite(buff.appliedAt) ? buff.appliedAt : (state.actionSerial || 0) - 1,
+  };
+}
+function applyStimulant(entity, amount) {
+  if (!alive(entity) || !Number.isFinite(amount) || amount <= 0) return;
+  normaliseStimulant(entity);
+  const added = Math.ceil(amount),
+    old = entity.stimulant,
+    duration = (old?.turns || 0) + added;
+  entity.stimulant = {
+    power: Math.max(old?.power || 0, added) + Math.max(0, duration - STIMULANT_TURNS),
+    turns: Math.min(STIMULANT_TURNS, duration),
+    appliedAt: state.actionSerial,
+  };
+  syncStatusFX();
+  const el = entityArt(entity);
+  burst(el, "gold", 22);
+  actionLabel(el, `POWER ${entity.stimulant.power} · ${entity.stimulant.turns} TURNS`);
+}
+function supportStimulantTarget(caster) {
+  const allies = state.party.filter((h) => alive(h) && h !== caster);
+  return allies.sort((a, b) => battleRollCount(b) - battleRollCount(a) ||
+    expectedHeroEffects(b).damage - expectedHeroEffects(a).damage)[0] || caster;
+}
+function battleRollCount(h) {
+  if (!h.battleMemo?.stats) return 0;
+  return Math.max(0, (h.stats?.spins || 0) - (h.battleMemo.stats.spins || 0));
+}
+function tickStimulant(entity) {
+  if (entity.stimulant && entity.stimulant.appliedAt < state.actionSerial && --entity.stimulant.turns <= 0)
+    entity.stimulant = null;
 }

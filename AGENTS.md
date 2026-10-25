@@ -34,7 +34,7 @@ gameplay RNG. Rebuild and commit their generated HTML alongside these sources.
 Temporary combat state, openings, statuses and focused enemy intent live in
 `game/battle-tactics.js`; travel choices and lava lighting live in
 `game/world-events.js`. Read `docs/BATTLE_TACTICS.md` for current rules and
-version-19 migration. Mage Resonance is derived from rolled marks, never an
+version-20 migration. Mage Resonance is derived from rolled marks, never an
 editable role. Temperament is fixed outside the starting choice. Berserker edits
 must use `editableTypes()` and the same validators as player/autoplay edits.
 
@@ -67,8 +67,10 @@ reel presets, luck or exploration. Campfire Lessons separates owned and active
 ranks; eight families have five ranks each, and eight Challenges are untiered.
 `game/character-events.js` owns the saved personal luck stream/receipts;
 `game/auto-builds.js` owns AI editing preferences and paid solo repairs;
-`game/jester.js` owns distinct-kind Jackpots, post-effect backfires and one free
-encore per action; `game/exploration-rules.js` owns command-aged ambushes and
+`game/jester.js` owns ordinary Jester critical dispatch, anticipation, one boosted
+Punchline per action and six Wildcards; `game/exploration-rules.js` owns command-aged ambushes and
 reserved fountain rows. All are embedded sources. Ambush age must never resume
 using wall-clock time. Bridges have no discoveries. Future UI should preserve
 bulleted guide pages, equal unlock cards and stationary paginated camp controls.
+
+Read `docs/PUNCHLINE_UPDATE.md` for current version-20 rules. Self/ally stimulants are distinct validated face types with a shared three-action overflow model. Floor connectivity must count reciprocal tunnel edges; never force physical bridge repairs across valid portal routes. Punchline uses temporary tier-adjusted copies, never edits purchased reels, never doubles critical multipliers and never chains itself.

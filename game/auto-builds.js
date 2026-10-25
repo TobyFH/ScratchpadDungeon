@@ -88,16 +88,16 @@ function autoBuildFor(h) {
       h.specialism === "defence"
         ? ["bulwark", "balanced", "assault"]
         : ["assault", "balanced", "bulwark"],
-    rogue: ["assault", "venom", "enchanter"],
+    rogue: ["assault", "venom", "balanced"],
     mage:
       h.specialism === "defence"
         ? ["mender", "enchanter", "balanced"]
         : ["venom", "assault", "enchanter"],
     ranger: ["assault", "balanced", "enchanter"],
-    berserker: ["assault", "balanced", "enchanter"],
+    berserker: ["assault", "balanced"],
     jester: ["trickster", "balanced", "enchanter"],
   }[h.job] || ["balanced"];
-  if (!AUTO_ARCHETYPES[h.autoArchetype]) {
+  if (!choices.includes(h.autoArchetype)) {
     let hash = 0;
     for (const c of String(h.id))
       hash = (Math.imul(hash, 31) + c.charCodeAt(0)) >>> 0;
@@ -112,9 +112,16 @@ function autoBuildUtility(h) {
   const weights = {
     ...build.weights,
     selfHeal: 1.25,
+    rally: h.autoArchetype === "enchanter" ? 1.6 : 0.75,
+    trick: h.job === "jester" ? 1.1 : 0,
     selfharm: -0.3,
     fury: 0.2,
   };
+  weights.stimulant = Math.min(0.65, weights.stimulant || 0);
+  const otherDamage = state.party.filter((a) => a.id !== h.id && alive(a) && directDamageShare(a) >= 0.3).length;
+  if (h.job === "mage" && otherDamage >= 2) {
+    Object.assign(weights, { heal: 2.8, teamHeal: 2.8, block: 2.4, stun: 1.8, damage: 0.8, poison: 0.6, rally: 1 });
+  }
   const limits = {
     damage: Math.max(7, 3 + state.depth * 2.1),
     block: 4 + state.depth * 0.6,
@@ -122,7 +129,9 @@ function autoBuildUtility(h) {
     teamHeal: 4 + state.depth * 0.6,
     poison: 3 + state.depth * 0.35,
     stun: 3 + state.depth * 0.3,
-    stimulant: 3 + state.depth * 0.3,
+    stimulant: 1.5,
+    rally: 2,
+    trick: 1.5,
     selfHeal: 5 + state.depth * 0.5,
   };
   let utility = 0;
@@ -135,26 +144,30 @@ function autoBuildUtility(h) {
   }
   const coverage =
     {
-      assault: { stimulant: [1.2, 3], stun: [0.5, 1.5] },
-      bulwark: { block: [3, 2.5], stun: [1.5, 4], stimulant: [1, 2.5] },
+      assault: { stun: [0.5, 1] },
+      bulwark: { block: [3, 2.5], stun: [1.5, 4] },
       balanced: {
         block: [2, 2],
         stun: [1, 3],
-        stimulant: [1, 2.5],
         heal: [2, 1],
       },
-      venom: { poison: [3, 2], stun: [1.2, 3], stimulant: [0.8, 2] },
+      venom: { poison: [3, 2], stun: [1.2, 3] },
       mender: {
         heal: [3, 2],
         block: [2.5, 2],
         stun: [0.6, 2],
-        stimulant: [1, 2],
+        rally: [0.7, 1],
       },
-      enchanter: { stimulant: [3, 4], stun: [1.5, 3], block: [1, 1] },
-      trickster: { stun: [1.5, 2], stimulant: [1.5, 2], poison: [1.5, 2] },
+      enchanter: { rally: [1, 1], stun: [1.5, 3], block: [1.5, 2] },
+      trickster: { stun: [1.5, 2], trick: [0.7, 1], poison: [1.5, 2] },
     }[h.autoArchetype] || {};
   for (const [key, [target, weight]] of Object.entries(coverage))
     utility += Math.min(target, fx[key] || 0) * weight;
+  if (h.job === "mage" && otherDamage >= 2) {
+    utility += Math.min(2.5, fx.block) * 4 + Math.min(3, fx.heal + fx.teamHeal) * 3 + Math.min(1, fx.stun) * 3;
+    const recovery = fx.heal + fx.teamHeal * state.party.filter(alive).length;
+    utility -= Math.max(0, recovery - (6 + state.depth)) * 1.6;
+  }
   const offence = fx.damage + fx.poison * 1.2,
     minDamage = solo
       ? Math.max(3, 2 + state.depth * 0.75)
@@ -162,7 +175,52 @@ function autoBuildUtility(h) {
   utility -= Math.max(0, minDamage - offence) * (solo ? 12 : 7);
   // Avoid support-only survivors and favour some self-recovery when alone.
   if (solo) utility += Math.min(2, fx.heal + fx.selfHeal) * 1.1;
-  return utility + fx.crit * (h.job === "jester" ? 2 : 3);
+  // Chance to actually hit matters independently of mean damage: one huge
+  // attack among many buffs is not a reliable damage dealer.
+  const minShare = solo ? 0.4 : ["rogue", "ranger", "berserker"].includes(h.job) ? 0.38 : h.job === "mage" && otherDamage >= 2 ? 0.2 : 0.3;
+  utility -= Math.max(0, minShare - directDamageShare(h)) * 75;
+  for (const reel of h.reels) {
+    const p = faceShare(reel, ["attack", "magic", "poison"]);
+    utility -= Math.max(0, (solo ? 0.2 : 0.12) - p) * 16;
+  }
+  for (const [types, cap] of [[["stimulant", "rally"], buffFaceLimit(h)], [["trick"], 0.22]]) {
+    const over = Math.max(0, faceShare(h.reels.flat(), types) - cap);
+    utility -= over * 60 + over * over * 80;
+  }
+  return utility + fx.crit * 2;
+}
+function faceShare(reel, types) {
+  const weight = reel.reduce((n, f) => n + (f.weight || 1), 0);
+  return weight ? reel.reduce((n, f) => n + (types.includes(f.type) ? (f.weight || 1) : 0), 0) / weight : 0;
+}
+function directDamageShare(h) {
+  return h.reels.reduce((n, reel) => n + faceShare(reel, ["attack", "magic", "poison"]), 0) / 3;
+}
+function buffFaceLimit(h) {
+  return ["mage", "jester"].includes(h.job) && h.autoArchetype === "enchanter" ? 0.22 : 0.17;
+}
+// Repair last release's over-stimulated AI builds using real refunds/prices.
+// New candidates then pass through the same density penalties above.
+function repairOverbuffBuild(h) {
+  let edits = 0;
+  for (let attempts = 0; attempts < 24; attempts++) {
+    if (faceShare(h.reels.flat(), ["stimulant", "rally"]) <= buffFaceLimit(h)) break;
+    const row = h.reels.flatMap((reel, r) => reel.map((face, j) => ({ face, r, j })))
+      .find(({ face }) => ["stimulant", "rally"].includes(face.type));
+    if (!row) break;
+    const { r, j } = row, reel = h.reels[r];
+    const damageAllies = state.party.filter((a) => a !== h && alive(a) && directDamageShare(a) >= 0.3).length,
+      fx = expectedHeroEffects(h),
+      type = h.job === "mage" && damageAllies >= 2 ? (fx.heal + fx.teamHeal < fx.block + 2 ? "heal" : "block") : h.job === "mage" ? "magic" : "attack";
+    let cost = faceEditCost(h, r, j, "swap", type);
+    while (cost > h.points && reel[j].tier > 1 && applyFaceEdit(h, r, j, "weaken")) {
+      edits++;
+      cost = faceEditCost(h, r, j, "swap", type);
+    }
+    if (cost && cost <= h.points && applyFaceEdit(h, r, j, "swap", type)) edits++;
+    else break;
+  }
+  return edits;
 }
 const soloOffence = (h) => {
   const f = expectedHeroEffects(h);

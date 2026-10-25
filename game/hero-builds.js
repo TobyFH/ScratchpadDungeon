@@ -119,19 +119,25 @@ function normaliseHeroBuild(h) {
       Math.floor(Number(h.id) || h.name?.length || 0) % 2
         ? "offence"
         : "defence";
+  h.anticipation = Math.min(JESTER_ANTICIPATION_CAP - 1, Math.max(0, Math.floor(h.anticipation || 0)));
+  normaliseStimulant(h);
+  normaliseTraitRecord(h);
   h.charge = Math.min(RANGER_AIM_CAP, Math.max(0, h.charge || 0));
   h.fury = Math.min(BERSERKER_FURY_CAP, Math.max(0, h.fury || 0));
   if (!h.reels) return;
-  for (const face of h.last || [])
+  for (const face of h.last || []) {
+    if (face.type === "stimulant" && ["mage", "ranger", "jester"].includes(h.job)) face.type = "rally";
     if (face.type === "class") {
       face.job = h.job;
       delete face.mageRole;
     }
+  }
   h.reels.forEach((reel, k) => {
     let seal = false;
     for (const face of reel) {
       face.weight = Math.max(1, Math.min(4, Math.floor(face.weight || 1)));
       delete face.mageRole;
+      if (face.type === "stimulant" && ["mage", "ranger", "jester"].includes(h.job)) face.type = "rally";
       if (
         h.job === "berserker" &&
         !["attack", "heal", "selfharm", "stimulant", "blank", "class"].includes(
@@ -160,7 +166,7 @@ function classAbilityName(hero) {
   const job = typeof hero === "string" ? hero : hero?.job;
   return (
     {
-      fighter: "RAGE",
+      fighter: "SHIELD BASH",
       rogue: "FLURRY",
       mage: "RESONANCE",
       healer: "RESONANCE",
@@ -177,7 +183,7 @@ function classAbilityDescription(hero) {
       jester:
         "Wildcard: tricks ink enemy reels, gild allied reels, reverse a foe’s roll, or scatter damage and healing. They usually favour your party.",
       fighter:
-        "Rage: build damage and a little resistance until this fight ends.",
+        "Shield Bash: gain 2 team block, then strike the selected enemy for your current team block. The bash deals double damage to enemy shields.",
       rogue: "Flurry: roll three extra attacks; each blade lands separately.",
       mage: "Resonance echoes the strongest healing, shield, poison or magic marks in this roll across the appropriate whole team. Healing also clears every ally’s stun.",
       healer: "Resonance echoes your rolled marks across the appropriate team.",
@@ -194,8 +200,8 @@ function temperamentEffects(h, base) {
 const CLASS_FACE_TYPES = Object.freeze({
   fighter: ["attack", "block", "heal", "stun", "stimulant", "blank"],
   rogue: ["attack", "poison", "stun", "stimulant", "heal", "blank"],
-  mage: ["magic", "heal", "block", "poison", "stun", "stimulant", "blank"],
-  ranger: ["attack", "stun", "heal", "stimulant", "poison", "blank"],
+  mage: ["magic", "heal", "block", "poison", "stun", "rally", "blank"],
+  ranger: ["attack", "stun", "heal", "rally", "poison", "blank"],
   berserker: ["attack", "heal", "selfharm", "stimulant", "blank"],
 });
 function startingFaces(job, temperament) {
@@ -241,7 +247,7 @@ function startingFaces(job, temperament) {
           ["heal", 2],
           ["magic", 1],
           ["block", 1],
-          ["stimulant", 1],
+          ["rally", 1],
           ["blank", 1],
         ]
       : [
@@ -249,7 +255,7 @@ function startingFaces(job, temperament) {
           ["magic", 2],
           ["poison", 1],
           ["heal", 1],
-          ["stimulant", 1],
+          ["rally", 1],
           ["blank", 1],
         ],
     ranger: defensive
@@ -258,7 +264,7 @@ function startingFaces(job, temperament) {
           ["stun", 1],
           ["stun", 2],
           ["heal", 1],
-          ["stimulant", 1],
+          ["rally", 1],
           ["blank", 1],
         ]
       : [
@@ -266,7 +272,7 @@ function startingFaces(job, temperament) {
           ["attack", 2],
           ["stun", 1],
           ["heal", 1],
-          ["stimulant", 1],
+          ["rally", 1],
           ["blank", 1],
         ],
     berserker: defensive
@@ -291,8 +297,8 @@ function startingFaces(job, temperament) {
           ["attack", 1],
           ["heal", 1],
           ["block", 1],
-          ["stimulant", 1],
-          ["stun", 1],
+          ["rally", 1],
+          ["trick", 1],
           ["blank", 1],
         ]
       : [
@@ -300,11 +306,13 @@ function startingFaces(job, temperament) {
           ["magic", 1],
           ["poison", 1],
           ["heal", 1],
-          ["stun", 1],
+          ["trick", 1],
           ["blank", 1],
         ],
   }[job];
 }
+// Recruits draw this independently of class and the starter selection.
+const randomTemperament = () => Math.random() < 0.5 ? "offence" : "defence";
 function makeHero(
   name,
   job,
@@ -316,7 +324,7 @@ function makeHero(
   if (legacyHealer) job = "mage";
   const specialism = Object.hasOwn(SPECIALISMS, build.specialism)
     ? build.specialism
-    : pick(["offence", "defence"]);
+    : randomTemperament();
   const faces = startingFaces(job, specialism);
   const maxHp = Math.round(
     ({
@@ -341,6 +349,7 @@ function makeHero(
     hp: maxHp,
     maxHp,
     charge: 0,
+    anticipation: 0,
     fury: 0,
     points: 3,
     equipment: null,

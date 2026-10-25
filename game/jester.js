@@ -1,25 +1,36 @@
-// Jester rules use symbol kinds, not ranks: three different meaningful kinds
-// Jackpot; a normal matching triple backfires. One paid action has one encore.
-function jesterJackpot(symbols) {
-  return (
-    symbols.length === 3 &&
-    symbols.every((s) => !["blank", "miss"].includes(s.type)) &&
-    new Set(symbols.map((s) => s.type)).size === 3
-  );
+// Jesters use ordinary triple criticals. Trick marks charge one bonus Punchline;
+// its temporary tier increase never edits purchased faces or chains free rolls.
+const JESTER_ANTICIPATION_CAP = 6;
+function jesterAnticipation(h, power) {
+  if (h.job !== "jester" || power <= 0) return false;
+  const total = (h.anticipation || 0) + power;
+  h.anticipation = Math.min(JESTER_ANTICIPATION_CAP - 1, total);
+  const ready = total >= JESTER_ANTICIPATION_CAP;
+  if (ready) h.anticipation = Math.min(JESTER_ANTICIPATION_CAP - 1, total - JESTER_ANTICIPATION_CAP);
+  syncRangerAim(h);
+  actionLabel(entityArt(h), ready ? "PUNCHLINE READY!" : `ANTICIPATION +${power}`);
+  burst(entityArt(h), "paper", ready ? 38 : 12);
+  return ready;
 }
-function jesterOdds(h) {
-  let jackpot = 0,
-    backfire = 0;
-  const totals = h.reels.map((r) => r.reduce((n, f) => n + (f.weight || 1), 0));
-  for (const a of h.reels[0])
-    for (const b of h.reels[1])
-      for (const c of h.reels[2]) {
-        const faces = [a, b, c],
-          p = faces.reduce((n, f, k) => (n * (f.weight || 1)) / totals[k], 1);
-        if (jesterJackpot(faces)) jackpot += p;
-        else if (matchCount(faces) === 3) backfire += p;
-      }
-  return { jackpot, backfire };
+function anticipationMarkup(h) {
+  return `<span class="aim-meter anticipation-meter" role="meter" aria-label="Jester anticipation" aria-valuemin="0" aria-valuemax="${JESTER_ANTICIPATION_CAP}" aria-valuenow="${h.anticipation || 0}" data-tooltip="Trick marks build anticipation. At 6, gain one free Punchline roll with every non-empty ordinary mark one rank stronger (maximum IV). Punchlines cannot charge another Punchline. Clears after battle."><b>TRICK ${h.anticipation || 0}/${JESTER_ANTICIPATION_CAP}</b><span class="aim-track"><i style="width:${100 * (h.anticipation || 0) / JESTER_ANTICIPATION_CAP}%"></i></span><small>next: Punchline</small></span>`;
+}
+function punchlineReels(h) {
+  return giftedReels(h).map((reel) => reel.map((face) =>
+    ["blank", "class"].includes(face.type) ? { ...face } :
+      { ...face, tier: Math.min(maxFaceTier(face.type), face.tier + 1), punchline: true },
+  ));
+}
+async function punchlineFX(h) {
+  const machine = $("#machine-hero-" + state.party.indexOf(h));
+  machine?.classList.add("punchline-ready");
+  machine?.style.setProperty("--punchline-motion", String(preferences().shake));
+  combatCallout(entityArt(h), "PUNCHLINE! · +1 REEL RANK", "gold");
+  GameSound.play("jesterTrick");
+  screenFX("critical", 0.65);
+  burst(machine, "confetti", 48);
+  shakeElement(machine, 3, "rumble");
+  await feedbackPause(skip ? 180 : 420);
 }
 function giftedReels(entity) {
   return entity.reels.map((reel, k) => {
@@ -45,15 +56,6 @@ function spendReelGifts(entity) {
   entity.reelGifts = (entity.reelGifts || [])
     .map((g) => ({ ...g, uses: g.uses - 1 }))
     .filter((g) => g.uses > 0);
-}
-function jesterBackfire(h) {
-  h.stun = 1;
-  h.stunAge = 0;
-  h.stunAppliedRoll = state.stunRollSerial || 0;
-  combatCallout(entityArt(h), "THE JOKE'S ON ME · STUNNED", "danger");
-  burst(entityArt(h), "scary", 22);
-  GameSound.play("jesterFail");
-  log(h.name + " rolls matching marks and stuns themself.");
 }
 async function jesterWildcard(h) {
   const enemies = livingEnemies(),
@@ -158,16 +160,6 @@ async function jesterWildcard(h) {
   await feedbackPause(skip ? 140 : 300);
 }
 async function heroCriticalMultiplier(h, symbols, base) {
-  if (h.job === "jester") {
-    if (jesterJackpot(symbols))
-      return rollCritical(h.name, symbols, false, {
-        actor: h,
-        forceCrit: true,
-        jackpot: true,
-        details: effectDetails(base),
-      });
-    return 1;
-  }
   return rollCritical(h.name, symbols, false, {
     actor: h,
     details: effectDetails(base),

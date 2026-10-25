@@ -484,7 +484,7 @@ test("tunnel teleport draws a directed route between the two real map positions 
   assert.equal(r.remaining, 0);
 });
 
-test("Jester Jackpot odds use distinct kinds, matching triples backfire, and the permanent seal is still unique", async (t) => {
+test("Jester ordinary critical odds ignore distinct kinds and the permanent seal is still unique", async (t) => {
   const p = await game(t);
   const r = await p.evaluate(() => {
     const h = makeHero("Quill", "jester");
@@ -500,29 +500,29 @@ test("Jester Jackpot odds use distinct kinds, matching triples backfire, and the
       ];
     h.reels = distinct.map((f) => [{ ...f, weight: 1 }]);
     return {
-      distinct: jesterJackpot(distinct),
-      ranks: jesterJackpot(same),
-      blank: jesterJackpot([
+      distinct: matchCount(distinct) === 3,
+      ranks: matchCount(same) === 3,
+      blank: matchCount([
         distinct[0],
         distinct[1],
         { type: "blank", tier: 1 },
-      ]),
-      odds: jesterOdds(h),
+      ]) === 3,
+      odds: heroCriticalOdds(h),
       types: editableTypes(h).length,
       seal: makeHero("Q", "jester").reels.map(
         (r) => r.filter((f) => f.type === "class").length,
       ),
     };
   });
-  assert.equal(r.distinct, true);
+  assert.equal(r.distinct, false);
   assert.equal(r.ranks, false);
   assert.equal(r.blank, false);
-  assert.deepEqual(r.odds, { jackpot: 1, backfire: 0 });
-  assert.equal(r.types, 9);
+  assert.deepEqual(r.odds, []);
+  assert.equal(r.types, 10);
   assert.deepEqual(r.seal, [0, 1, 0]);
 });
 
-test("a real Jester Jackpot grants doubled multipliers, tiny personal EXP and exactly one free encore before the enemy clock advances", async (t) => {
+test("a real Jester mixed roll grants no special multiplier, critical EXP or free encore", async (t) => {
   const p = await game(t);
   const r = await p.evaluate(async () => {
     newRun("jester");
@@ -556,16 +556,16 @@ test("a real Jester Jackpot grants doubled multipliers, tiny personal EXP and ex
       damage: state.party[0].stats.damageDealt,
     };
   });
-  assert.equal(r.calls, 2);
-  assert.equal(r.spins, 2);
+  assert.equal(r.calls, 1);
+  assert.equal(r.spins, 1);
   assert.equal(r.count, 19);
-  assert.equal(r.xp, 2);
-  assert.equal(r.multiplier, 4);
+  assert.equal(r.xp || 0, 0);
+  assert.equal(r.multiplier, 1);
   assert.equal(r.stun, 0);
   assert.ok(r.damage > 0);
 });
 
-test("a matching Jester triple self-stuns without earning normal critical EXP or a free encore", async (t) => {
+test("a matching Jester triple has a normal critical without self-stun or a free encore", async (t) => {
   const p = await game(t);
   const r = await p.evaluate(async () => {
     newRun("jester");
@@ -586,7 +586,11 @@ test("a matching Jester triple self-stuns without earning normal critical EXP or
       count: state.enemy.countdown,
     };
   });
-  assert.deepEqual(r, { stun: 1, spins: 1, xp: 0, multiplier: 1, count: 19 });
+  assert.equal(r.stun, 0);
+  assert.equal(r.spins, 1);
+  assert.equal(r.xp, 1);
+  assert.ok([2, 2.5, 3, 4].includes(r.multiplier));
+  assert.equal(r.count, 19);
 });
 
 test("all six Wildcards work, gifts are temporary and enemy blackouts actually replace a reel with blank", async (t) => {
@@ -873,7 +877,7 @@ test("camp choices, cards and description/control rows fit at desktop and compac
   }
 });
 
-test("critical themes retain the main critical cue, coin pours are restrained and each item find gets its own sequential pulse and sound", async (t) => {
+test("non-gold critical themes remain, coin pours are quiet and item finds keep their sequential pulse and sound", async (t) => {
   const p = await game(t);
   const r = await p.evaluate(() => {
     const calls = [],
@@ -887,18 +891,16 @@ test("critical themes retain the main critical cue, coin pours are restrained an
     GameSound.play = real;
     return {
       calls,
-      cooldown: SOUND_CUES.coinsRush.cooldown,
-      gain: SOUND_CUES.coinsRush.gain,
+      rush: !!SOUND_CUES.coinsRush,
+      goldTheme: !!SOUND_CUES.criticalGold,
     };
   });
   assert.deepEqual(r.calls, [
     "criticalHeal",
-    "criticalGold",
     "criticalPoison",
-    "coinsRush",
   ]);
-  assert.ok(r.cooldown >= 500);
-  assert.ok(r.gain < 0.06);
+  assert.equal(r.rush, false);
+  assert.equal(r.goldTheme, false);
   await p.evaluate(() => {
     showSpotlight(
       "Finds",
@@ -1003,7 +1005,7 @@ test("inviting a fourth companion and then declining the replacement follows the
   assert.equal(await p.evaluate(() => state.party.length), 3);
 });
 
-test("healing triples backfire after their healing, and last-stand survival prevents an actual death record", async (t) => {
+test("Jester healing triples restore HP without self-stun and last-stand survival prevents an actual death record", async (t) => {
   const p = await game(t);
   const result = await p.evaluate(async () => {
     newRun("jester");
@@ -1036,7 +1038,7 @@ test("healing triples backfire after their healing, and last-stand survival prev
     };
   });
   assert.ok(result.backfire.hp > 1);
-  assert.equal(result.backfire.stun, 1);
+  assert.equal(result.backfire.stun, 0);
   assert.equal(result.hp, 1);
   assert.equal(result.dead, false);
   assert.equal(result.pending, 0);

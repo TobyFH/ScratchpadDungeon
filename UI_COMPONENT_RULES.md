@@ -302,3 +302,11 @@ width before reducing text size. Check every topic at compact sizes.
 - Reward finds pulse/chime sequentially in the fixed browser. Automatic confirm
   waits for presentation; manual navigation stays immediate. Use bounded shake
   profiles from `ui/reward-audio.js`, always through the shared shake control.
+
+Opening Surprise/Ambush titles use `.encounter-alert` inside the roster's
+reserved lower band. Keep its centring wrapper static; animate the child span
+so keyframes cannot erase layout transforms. Optional tags never insert a new
+row after portraits appear. Jester anticipation reuses the fixed reel-footnote
+meter. Punchline highlights the existing on-page machine and temporary face
+copies; no extra popup or changing card height. Self/ally stimulant and Trick
+icons use the same centred rank grid as every other mark.

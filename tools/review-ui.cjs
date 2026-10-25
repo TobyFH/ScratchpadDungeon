@@ -1168,35 +1168,33 @@ const output = path.join(root, "test-results/ui-review");
       beginEncounter(false, { count: 2 });
       state.opening = null;
       render();
-      window.reviewJackpotHold = criticalHold;
-      criticalHold = () => new Promise((r) => (window.releaseJackpot = r));
-      window.reviewJackpot = rollCritical(
+      window.reviewOrdinaryCriticalHold = criticalHold;
+      criticalHold = () => new Promise((r) => (window.releaseOrdinaryCritical = r));
+      window.reviewOrdinaryCritical = rollCritical(
         "Quill",
         [
           { type: "attack", tier: 1 },
-          { type: "heal", tier: 1 },
-          { type: "block", tier: 1 },
+          { type: "attack", tier: 1 },
+          { type: "attack", tier: 1 },
         ],
         false,
         {
           actor: state.party[0],
-          forceCrit: true,
-          jackpot: true,
           details: [{ icon: "sword", label: "Damage", value: 8 }],
         },
       );
     });
     await page.waitForSelector("#machine-critical.rolling");
-    await shot("80-jackpot-original-number", false, "allow");
+    await shot("80-jester-normal-critical-original-number", false, "allow");
     await page.locator("#stage-skip").click();
     await page.waitForSelector(".critical-locked");
-    await shot("80-jackpot-payoff", false, "allow");
+    await shot("80-jester-normal-critical-payoff", false, "allow");
     await page.setViewportSize({ width: 390, height: 844 });
-    await shot("80-jackpot-payoff-390", false, "allow");
+    await shot("80-jester-normal-critical-payoff-390", false, "allow");
     await page.evaluate(async () => {
-      window.releaseJackpot();
-      await window.reviewJackpot;
-      criticalHold = window.reviewJackpotHold;
+      window.releaseOrdinaryCritical();
+      await window.reviewOrdinaryCritical;
+      criticalHold = window.reviewOrdinaryCriticalHold;
       setPace("skip");
     });
     await page.setViewportSize({ width: 1920, height: 1080 });
@@ -1240,6 +1238,72 @@ const output = path.join(root, "test-results/ui-review");
     });
     await shot("84-directed-tunnel-travel", false, "allow");
     await page.evaluate(() => window.reviewTunnel);
+    await page.setViewportSize({ width: 1920, height: 1080 });
+    await page.evaluate(() => {
+      closeModal(); newRun("jester"); setPace("1"); setPreference("shake", .7);
+      state.party.push(makeHero("Orin", "mage", null, [], { specialism: "defence" }));
+      state.party.push(makeHero("Wren", "rogue", null, [], { specialism: "offence" }));
+      beginEncounter(false, { count: 2 }); finishOpeningRoll();
+      state.enemies.forEach(e => { e.hp = e.maxHp = 10000; e.countdown = 20; });
+      state.party[0].anticipation = 5;
+      state.block = 10; setEnemyBlock(6);
+      applyStimulant(state.party[2], 3); render(); particles = [];
+    });
+    await shot("85-anticipation-and-support-1920");
+    await page.setViewportSize({ width: 390, height: 844 });
+    await shot("85-anticipation-and-support-390", true);
+    await page.evaluate(() => { editor(0); editorSelection.reel=0; editorSelection.face=4; editor(0); });
+    await shot("85-trick-workshop-390");
+    await page.setViewportSize({ width: 1920, height: 1080 });
+    await page.evaluate(() => {
+      closeModal();
+      window.savedPunchlineMachine = runMachine;
+      let first = true;
+      runMachine = async (id, reels, options) => {
+        if (!id.startsWith("hero-")) return savedPunchlineMachine(id,reels,options);
+        if (first) { first=false; return [{type:"trick",tier:1},{type:"blank",tier:1},{type:"blank",tier:1}]; }
+        await new Promise(resolve => window.releasePunchlinePreview=resolve);
+        return savedPunchlineMachine(id,reels,{results:[{type:"attack",tier:3},{type:"heal",tier:2},{type:"block",tier:2}]});
+      };
+      window.reviewPunchline = spin(0);
+    });
+    await page.waitForFunction(() => !!window.releasePunchlinePreview);
+    await shot("86-punchline-toybox-1920", false, "allow");
+    await page.setViewportSize({ width: 390, height: 844 });
+    await shot("86-punchline-toybox-390", true, "allow");
+    await page.evaluate(() => { setPace("skip"); releasePunchlinePreview(); });
+    await page.evaluate(() => window.reviewPunchline);
+    await page.evaluate(() => { runMachine=savedPunchlineMachine; });
+    await page.setViewportSize({ width: 1920, height: 1080 });
+    await page.evaluate(() => {
+      newRun("fighter"); setPace("skip"); beginEncounter(false, {count:2});
+      state.enemy.ambush=true;
+      state.opening.surprise=true;
+      render(); window.reviewSurprise=encounterEntrance();
+    });
+    await page.waitForSelector("#stage-confirm");
+    await shot("87-centred-surprise-1920");
+    await page.setViewportSize({ width: 390, height: 844 });
+    await shot("87-centred-surprise-390");
+    await page.locator("#stage-confirm").click();
+    await page.evaluate(() => window.reviewSurprise);
+    await page.setViewportSize({ width: 1920, height: 1080 });
+    await page.evaluate(() => {
+      newRun("fighter"); setPace("skip");
+      for(let n=0;n<1000;n++) {
+        const map=generateFloor(4,1,0,["echoes"]), goal=map.findIndex(c=>c.event==="stairs");
+        if(!mapDistances(map,pos(1,7),false).has(goal)) {state.map=map;break;}
+      }
+      state.map.forEach(c=>c.seen=true); render(); particles=[];
+    });
+    await shot("88-tunnel-only-crossing-1920");
+    await page.evaluate(() => help("buffs"));
+    await shot("89-support-guide-1920");
+    await page.setViewportSize({ width: 390, height: 844 });
+    await shot("89-support-guide-390");
+    await page.evaluate(() => help("jester"));
+    await shot("89-punchline-guide-390");
+    await page.setViewportSize({ width: 1920, height: 1080 });
     await page.evaluate(() => optionsPage("play"));
     const download = page.waitForEvent("download");
     await page.locator("#option-download").click();

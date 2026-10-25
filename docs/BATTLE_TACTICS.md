@@ -216,3 +216,5 @@ after the warning and before the enemies' opening actions. These are presentatio
 holds, not extra combat actions or changes to countdowns/RNG. Keep both drivers
 on the shared `automaticConfirmReady()` gate; do not restore immediate `.click()`
 calls in one driver. Different sequential confirmations receive their own hold.
+
+Current version-20 stimulant, Shield Bash, Jester, AI and tunnel-graph rules are documented in [Punchline update](PUNCHLINE_UPDATE.md); these supersede earlier descriptions of those systems.

@@ -13,7 +13,7 @@ const FIELD_GUIDE = Object.freeze([
   {
     id: "combat",
     title: "Combat & criticals",
-    body: '<ul class="guide-takeaways"><li><b>Act freely.</b> Use any living hero repeatedly. Click their card or handle to roll; their portrait opens reel editing.</li><li><b>Choose targets.</b> Click an enemy portrait to aim damage. Use the healing target control for healing and buffs.</li><li><b>Critical.</b> Three matching kinds AND ranks roll a multiplier. The middle class mark completes two matching outer marks. Blanks do nothing.</li><li><b>Big hits.</b> Criticals and tier III–IV attacks hit all enemies. Each foe has its own attack countdown.</li><li><b>Keep moving.</b> Click rolling reels or press Space to land them. Event results still need confirmation. Hero criticals grant 1 EXP.</li></ul>',
+    body: '<ul class="guide-takeaways"><li><b>Act freely.</b> Use any living hero repeatedly. Click their card or handle to roll; their portrait opens reel editing.</li><li><b>Choose targets.</b> Click an enemy portrait to aim damage. Use the healing target control for healing. Self stimulant boosts its caster; Ally stimulant boosts the most-used companion.</li><li><b>Critical.</b> Three matching kinds AND ranks roll a multiplier. The middle class mark completes two matching outer marks. Blanks do nothing.</li><li><b>Big hits.</b> Criticals and tier III–IV attacks hit all enemies. Each foe has its own attack countdown.</li><li><b>Keep moving.</b> Click rolling reels or press Space to land them. Event results still need confirmation. Hero criticals grant 1 EXP.</li></ul>',
   },
   {
     id: "statuses",
@@ -21,9 +21,14 @@ const FIELD_GUIDE = Object.freeze([
     body: '<ul class="guide-takeaways"><li><b>Team block.</b> Each side has one shared pool. It absorbs damage, is consumed as it protects and expires after battle.</li><li><b>Stun.</b> Miss an attempt without advancing enemy clocks. Recovery becomes likelier each roll; most stuns end after 1–3 checks.</li><li><b>Break through.</b> Stronger stuns strip more block and can penetrate shields. Healing can clear stun; Mage healing Resonance clears all allies.</li><li><b>Vulnerable.</b> The next direct hit deals 25% extra damage. Healing and poison ticks do not consume it.</li><li><b>Details.</b> Hover any condition icon for its actual effect and remaining strength or duration.</li></ul>',
   },
   {
+    id: "buffs",
+    title: "Stimulants & shield bash",
+    body: '<ul class="guide-takeaways"><li><b>Self stimulant.</b> Tanks, Rogues and Berserkers can boost themselves with this mark.</li><li><b>Ally stimulant.</b> Mages, Rangers and Jesters boost the ally who has rolled most this fight. Alone, they boost themselves.</li><li><b>Three actions.</b> Each power adds one action of duration, up to three of the recipient’s own actions. Extra duration increases potency.</li><li><b>Potency.</b> Gain +1 damage plus one per three power, and +1 resistance plus one per five power. Hover the status for exact values.</li><li><b>Tank class mark.</b> Shield Bash adds two team block, then hits with your current shield count. Each point of bash power removes two enemy block.</li></ul>',
+  },
+  {
     id: "openings",
     title: "Openings & poison",
-    body: '<ul class="guide-takeaways"><li><b>Initiative.</b> A marked hero gains 25% stronger effects if chosen for the first roll.</li><li><b>Surprise.</b> Surprised heroes cannot open. If everyone is surprised, the enemies attack first.</li><li><b>Enemy intent.</b> The short line names a goal and target. Reels still decide what actually happens.</li><li><b>Poison.</b> Ticks bypass block. Doses load up to three turns; repeated doses then increase tick damage.</li><li><b>Temporary effects.</b> Poison, stun, Rage, Fury, Execute and buffs all clear after combat.</li></ul>',
+    body: '<ul class="guide-takeaways"><li><b>Initiative.</b> A marked hero gains 25% stronger effects if chosen for the first roll.</li><li><b>Surprise.</b> Surprised heroes cannot open. If everyone is surprised, the enemies attack first.</li><li><b>Enemy intent.</b> The short line names a goal and target. Reels still decide what actually happens.</li><li><b>Poison.</b> Ticks bypass block. Doses load up to three turns; repeated doses then increase tick damage.</li><li><b>Temporary effects.</b> Poison, stun, Fury, Execute, anticipation and buffs all clear after combat.</li></ul>',
   },
   {
     id: "heroes",
@@ -33,12 +38,12 @@ const FIELD_GUIDE = Object.freeze([
   {
     id: "classes",
     title: "Classes & temperament",
-    body: '<ul class="guide-takeaways"><li><b>Temperament.</b> Aggressive and Defensive choose different starting marks. They do not change a mark’s stated power. Rebuild either way.</li><li><b>Tank & Rogue.</b> Tanks favour blades, block and stun. Rogues favour blades, poison and tricks; Flurry throws three extra attacks.</li><li><b>Mage.</b> Use magic, healing, poison, shields or buffs. Resonance echoes rolled marks across the appropriate team.</li><li><b>Ranger.</b> Wait between attacks to fill Execute. Spend that patience on a stronger finishing shot.</li><li><b>Berserker.</b> Wounds and Blood Price build Fury. Bloodrush heals; charged attacks return a little stolen health.</li></ul>',
+    body: '<ul class="guide-takeaways"><li><b>Temperament.</b> Aggressive and Defensive choose different starting marks. They do not change a mark’s stated power. Rebuild either way.</li><li><b>Tank & Rogue.</b> Tanks favour blades, block and stun. Rogues favour blades, poison and quick stuns; Flurry throws three extra attacks.</li><li><b>Mage.</b> Use magic, healing, poison, shields or buffs. Resonance echoes rolled marks across the appropriate team.</li><li><b>Ranger.</b> Wait between attacks to fill Execute. Spend that patience on a stronger finishing shot.</li><li><b>Berserker.</b> Wounds and Blood Price build Fury. Bloodrush heals; charged attacks return a little stolen health.</li></ul>',
   },
   {
     id: "jester",
-    title: "Jester & Jackpots",
-    body: '<ul class="guide-takeaways"><li><b>Unlock.</b> Buy the Jester’s invitation at camp. Jesters can inscribe every ordinary mark type.</li><li><b>Jackpot.</b> Roll three different non-empty KINDS. Ranks do not matter. Gain double a usual critical multiplier.</li><li><b>Encore.</b> A Jackpot adds one free roll before enemy clocks advance. An encore can Jackpot, but cannot chain another encore.</li><li><b>Backfire.</b> A normal matching triple stuns the Jester instead. Matching outer marks plus the middle class mark also backfire.</li><li><b>Wildcard.</b> Six tricks can black out an enemy reel, strengthen an allied reel, reverse enemy rolls, throw pies, scatter healing or deal a sharp card.</li></ul>',
+    title: "Jester & Punchline",
+    body: '<ul class="guide-takeaways"><li><b>Unlock.</b> Buy the Jester’s invitation at camp. It can inscribe every ordinary kind except self-only stimulant.</li><li><b>Trick.</b> These marks fill anticipation by their rank. At 6, earn one free Punchline before enemy clocks advance.</li><li><b>Punchline.</b> Roll your own machine with ordinary non-empty marks one rank stronger, up to IV. These bonus rolls do not refill anticipation.</li><li><b>Criticals.</b> Normal matching triples roll the usual multiplier. Different kinds have no special critical; matching triples do not self-stun.</li><li><b>Wildcard.</b> The permanent class mark can ink enemy reels, gild allied reels, reverse a foe’s roll or scatter damage and healing.</li></ul>',
   },
   {
     id: "companions",

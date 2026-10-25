@@ -1,25 +1,11 @@
 // Original temporary Web Audio cues, mixed through the existing SFX bus/pool.
 const REWARD_CUES = Object.freeze({
-  coinsRush: {
-    frequencies: [930, 1420, 1130, 1780, 1240, 1520],
-    duration: 0.48,
-    gain: 0.035,
-    type: "triangle",
-    cooldown: 600,
-  },
   itemFind: {
     frequencies: [660, 880, 1320],
     duration: 0.28,
     gain: 0.065,
     type: "sine",
     cooldown: 160,
-  },
-  criticalGold: {
-    frequencies: [980, 1470, 1960],
-    duration: 0.36,
-    gain: 0.055,
-    type: "triangle",
-    cooldown: 220,
   },
   criticalHeal: {
     frequencies: [440, 660, 880],
@@ -91,13 +77,6 @@ const REWARD_CUES = Object.freeze({
     type: "triangle",
     cooldown: 180,
   },
-  jesterFail: {
-    frequencies: [440, 370, 294, 220],
-    duration: 0.45,
-    gain: 0.07,
-    type: "triangle",
-    cooldown: 220,
-  },
   tunnel: {
     frequencies: [180, 270, 405, 540],
     duration: 0.5,
@@ -108,16 +87,12 @@ const REWARD_CUES = Object.freeze({
 });
 function playCriticalTheme(options, details) {
   const mark = details.find((d) => d.value > 0)?.icon;
-  const cue = options.jackpot
-    ? "jesterTrick"
-    : options.context === "treasure"
-      ? "criticalGold"
-      : options.context === "well"
+  if (options.context === "treasure" || mark === "coin") return;
+  const cue = options.context === "well"
         ? "criticalHeal"
         : ["trap", "rockfall", "ruin"].includes(options.context)
           ? "criticalTrap"
           : {
-              coin: "criticalGold",
               heal: "criticalHeal",
               blessing: "criticalHeal",
               magic: "criticalMagic",
@@ -127,6 +102,8 @@ function playCriticalTheme(options, details) {
               trap: "criticalTrap",
               stun: "criticalStun",
               flame: "criticalBuff",
+              rally: "criticalBuff",
+              trick: "jesterTrick",
               rage: "criticalBuff",
               bloodprice: "criticalBlood",
             }[mark] || "criticalBlade";

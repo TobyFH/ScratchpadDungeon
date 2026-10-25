@@ -146,3 +146,5 @@ shared block, immunity, paired arrivals, pun presentation, voice saturation,
 projectiles, numeric feedback and compact workshop layout. Older mechanical
 fixtures use neutral temperament to isolate their base-value assertions; the
 new build tests exercise both real temperaments directly.
+
+Current version-20 stimulant, Shield Bash, Jester, AI and tunnel-graph rules are documented in [Punchline update](PUNCHLINE_UPDATE.md); these supersede earlier descriptions of those systems.

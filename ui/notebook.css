@@ -5585,3 +5585,18 @@ body.ambient-disabled #lava-lighting { opacity: 0; }
   line-height: 1;
   font-size: clamp(18px,min(72cqh,calc(170cqw / var(--multiplier-length,3)),82px),82px);
 }
+
+/* Opening alerts live in a reserved overlay. Only their child scales: no
+   transform can undo centring or shift the enemy roster as fitText runs. */
+.entrance-roster { padding-bottom: 38px; }
+.encounter-alert { position: absolute; inset: auto 0 0; display: flex; justify-content: center; pointer-events: none; }
+.encounter-alert > span { display: inline-block; max-width: 95%; padding: 2px 16px; color: var(--red); background: var(--paper-raised); border: 2px solid var(--red); font: 700 29px var(--display); line-height: 1.05; text-align: center; animation: encounter-alert-pop .5s cubic-bezier(.2,.8,.3,1.1) both; }
+@keyframes encounter-alert-pop { from { opacity: 0; transform: scale(.65) rotate(-4deg); } 65% { opacity: 1; transform: scale(1.12) rotate(2deg); } to { opacity: 1; transform: scale(1) rotate(-1deg); } }
+.anticipation-meter { color: var(--gold); }
+.anticipation-meter .aim-track i { background: var(--gold); }
+.punchline-ready { outline: 2px solid var(--gold); outline-offset: 2px; box-shadow: 0 0 18px color-mix(in srgb, var(--gold) 35%, transparent); }
+.punchline-ready .machine-face { animation: punchline-rattle .24s ease-in-out infinite; }
+@keyframes punchline-rattle { 0%,100% { transform: translateX(0) rotate(0); } 25% { transform: translateX(calc(-2px * var(--punchline-motion,1))) rotate(calc(-.7deg * var(--punchline-motion,1))); } 75% { transform: translateX(calc(2px * var(--punchline-motion,1))) rotate(calc(.7deg * var(--punchline-motion,1))); } }
+@media (max-width: 760px) { .encounter-alert > span { font-size: 24px; } }
+@media (prefers-reduced-motion: reduce) { .punchline-ready .machine-face, .encounter-alert > span { animation: none; } }
+body[data-motion="off"] .punchline-ready .machine-face { animation: none; }

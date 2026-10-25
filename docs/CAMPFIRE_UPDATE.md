@@ -11,7 +11,7 @@ marked generated region. No runtime asset server or external library is needed.
 | `game/auto-builds.js` | Persistent automated build preferences, diminishing returns, support coverage, minimum offensive capability and paid solo respec |
 | `game/character-events.js` | Ten rare personal moments, saved luck stream, cooldowns, receipts and optional trait associations |
 | `game/exploration-rules.js` | Move-command ambush age, legacy bridge repair, lava proximity glow, directed tunnel feedback and reserved well results |
-| `game/jester.js` | Distinct-kind Jackpots, matching-triple backfires, temporary reel gifts/blackouts, six Wildcards and critical dispatch |
+| `game/jester.js` | Anticipation/Punchline, temporary reel gifts/blackouts, six Wildcards and critical dispatch |
 | `ui/reward-audio.js` | Replaceable synthesised reward/critical cues and varied shake profiles |
 
 The camp catalogue and transactions remain in `game/progression.js`. Hero
@@ -104,14 +104,10 @@ The Jester's invitation costs 1,400 banked gold. It unlocks starts and wandering
 companions, with a 30-HP base. Its icon, cry and corpse retain the shared pencil
 illustration contracts.
 
-A **Jackpot** requires three different non-empty **kinds**, regardless of rank.
-The class mark counts as its own kind. The multiplier is twice a normal hero
-critical: ×4/×5/×6/×8. One chosen action can grant **one free encore** before the
-enemy countdown advances. The encore can Jackpot but cannot chain another
-encore. Matching type-and-rank triples, including a class wildcard completing
-matching outer marks, backfire into a self-stun after healing/effects resolve.
-Blanks neither Jackpot nor backfire. The workshop enumerates exact Jackpot and
-backfire odds from the real weighted wheels.
+Current Jester rules are in [Punchline update](PUNCHLINE_UPDATE.md). It now uses
+ordinary matching criticals, without backfire or doubled multipliers. Trick
+marks build six anticipation for one temporary +1-tier Punchline roll. This
+supersedes the original version-19 distinct-kind Jackpot/encore rules.
 
 Wildcard chooses one of six equally likely tricks:
 
@@ -185,8 +181,7 @@ Combat and is hidden outside battle. Block starts slightly blue at zero and
 strengthens to blue-silver through twenty, without capping the stored count;
 both factions use the same colour curve.
 
-Criticals keep the existing cue plus a quiet themed accent. Large coin pours use
-a low-gain rushing-coin cue with a 600-ms cooldown. Sequential item finds pulse
+Criticals keep the existing cue plus a quiet themed accent. The later update removes the extra coin-rush and gold-critical cues. Sequential item finds pulse
 and chime in the fixed reward browser; automatic confirmation waits for that
 sequence. Manual navigation/confirmation remains immediate. Shake profiles
 separate rumble, recoil/impact, vertical jolt, reel settling and celebration;
@@ -207,9 +202,9 @@ still backs up the game file, not browser-local progression.
 `tests/campfire-update.test.cjs` exercises selected/owned rank persistence,
 legacy migration and banking receipts, progress-reset confirmation, new palettes,
 command-aged ambushes and real redirection, bridge generation/connectivity, lava
-occlusion/glow, tunnel travel, real Jackpot/encore/backfire outcomes, all six
+occlusion/glow, tunnel travel, real normal-critical/Punchline outcomes, all six
 Wildcards, rare-event receipts/traits, solo respec, compact card boundaries,
-bulleted guide topics, fountain geometry sequential themed audio feedback, decimal/Jackpot multiplier fit and complete
+bulleted guide topics, fountain geometry sequential themed audio feedback, decimal/critical multiplier fit and complete
 healing-offer totals.
 Existing tests isolate the rare luck stream unless testing it deliberately.
 Run the entire suite and browser capture tool; inspect both large and compact

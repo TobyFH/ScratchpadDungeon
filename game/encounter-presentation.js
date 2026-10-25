@@ -117,17 +117,11 @@ async function encounterEntrance() {
           : first.elite
             ? "ELITE · " + first.affix
             : "An enemy steps out of the margins.",
-    `${encounterTags(enemies)}<div class="entrance-roster ${enemies.length > 1 ? "paired-intro" : ""}" id="entrance-art">${enemies.map((e, i) => `<div class="entrance-member ${i ? "awaiting-second" : ""}" data-entrance-enemy="${e.id}"><div class="entrance-portrait">${portraitArt(e.art, e)}</div><b>${escapeHTML(e.name)}</b><small>${e.strikes} strike${e.strikes > 1 ? "s" : ""} · every ${e.frequency} spins</small></div>`).join("")}<div class="scare-lines"></div></div><p class="encounter-quote">“${enemyLine(first, "entrance")}”</p>`,
+    `${encounterTags(enemies)}<div class="entrance-roster ${enemies.length > 1 ? "paired-intro" : ""}" id="entrance-art">${enemies.map((e, i) => `<div class="entrance-member ${i ? "awaiting-second" : ""}" data-entrance-enemy="${e.id}"><div class="entrance-portrait">${portraitArt(e.art, e)}</div><b>${escapeHTML(e.name)}</b><small>${e.strikes} strike${e.strikes > 1 ? "s" : ""} · every ${e.frequency} spins</small></div>`).join("")}<div class="scare-lines"></div>${state.opening?.surprise || first.ambush ? `<div class="encounter-alert"><span>${first.ambush ? "AMBUSH!" : "SURPRISE!"}</span></div>` : ""}</div><p class="encounter-quote">“${enemyLine(first, "entrance")}”</p>`,
     "enemy-intro",
   );
   burst($("#entrance-art"), "scary", 36);
-  if (first.ambush) {
-    smokePoof($("#entrance-art"), true);
-    const banner = document.createElement("div");
-    banner.className = "ambush-banner";
-    banner.textContent = visualPick(["SURPRISE!", "AMBUSH!"]);
-    $("#entrance-art").append(banner);
-  }
+  if (first.ambush) smokePoof($("#entrance-art"), true);
   shakeBook(4);
   if (enemies.length > 1) {
     await pause(260);
@@ -245,8 +239,6 @@ function encounterTags(enemies) {
     );
   if (enemies.length > 1)
     tags.push('<span class="encounter-tag dual">DUAL BATTLE</span>');
-  if (state.opening?.surprise)
-    tags.push('<span class="encounter-tag">SURPRISE ATTACK</span>');
   for (const e of enemies) {
     if (e.elite)
       tags.push(

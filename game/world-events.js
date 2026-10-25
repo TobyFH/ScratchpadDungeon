@@ -308,44 +308,71 @@ function chaserRewardFaces(faces) {
   return prizes.length ? prizes : items;
 }
 
-// Optional paired passages never replace a stair, discovery or obstructed tile.
-function addTunnels(map, rules = state?.runRules || []) {
-  if (Math.random() >= (rules.includes("echoes") ? 0.5 : 0.14)) return;
-  const pairs = Math.random() < 0.08 ? 2 : 1;
+// A tunnel is an explicit bidirectional graph edge, never an event on a bridge.
+// Invalid/asymmetric save pointers cannot satisfy connectivity or route repair.
+function tunnelDestination(map, from) {
+  const c = map[from], to = c?.tunnelTo;
+  return c?.event === "tunnel" && !c.wall && Number.isInteger(to) && to !== from &&
+    map[to]?.event === "tunnel" && !map[to].wall && map[to].tunnelTo === from
+    ? to : null;
+}
+function floorNeighbors(map, from, tunnels = true) {
+  const next = neighbors(from), to = tunnels ? tunnelDestination(map, from) : null;
+  if (to !== null && !next.includes(to)) next.push(to);
+  return next;
+}
+function tunnelPairCount(rules) {
+  return Math.random() < (rules.includes("echoes") ? 0.5 : 0.14)
+    ? Math.random() < 0.08 ? 2 : 1 : 0;
+}
+function addTunnels(map, rules = state?.runRules || [], { pairs = tunnelPairCount(rules) } = {}) {
   for (let pair = 0; pair < pairs; pair++) {
-    const free = [...mapDistances(map).keys()].filter(
-      (i) =>
-        i !== pos(1, 7) &&
-        !map[i].wall &&
-        !map[i].event &&
-        !map[i].structure &&
-        map[i].terrain !== "bridge",
-    );
-    if (free.length < 2) break;
-    const a = pick(free),
-      ends = free.filter(
-        (b) =>
-          Math.abs((a % W) - (b % W)) +
-            Math.abs(Math.floor(a / W) - Math.floor(b / W)) >=
-          3,
-      );
-    if (!ends.length) break;
-    const b = pick(ends);
-    for (const [from, to] of [
-      [a, b],
-      [b, a],
-    ])
-      Object.assign(map[from], {
-        event: "tunnel",
-        feature: "tunnel",
-        tunnelTo: to,
-        tunnelPair: pair,
-      });
+    const reachable = mapDistances(map),
+      free = map.map((c, i) => i).filter((i) => i !== pos(1, 7) && !map[i].wall &&
+        !map[i].event && !map[i].structure && map[i].terrain !== "bridge"),
+      entrances = free.filter((i) => reachable.has(i));
+    if (!entrances.length) break;
+    // Prefer linking a detached bank/stone chamber, retaining a real barrier.
+    const detached = free.filter((i) => !reachable.has(i)),
+      possible = entrances.filter((i) => (detached.length ? detached : free).some((j) => tileDistance(i, j) >= 3));
+    if (!possible.length) break;
+    const a = pick(possible),
+      b = pick((detached.length ? detached : free).filter((i) => tileDistance(a, i) >= 3));
+    for (const [from, to] of [[a, b], [b, a]])
+      Object.assign(map[from], { event: "tunnel", feature: "tunnel", tunnelTo: to, tunnelPair: pair });
   }
 }
+function ensureStairDistance(map) {
+  const stair = map.findIndex((c) => c.event === "stairs");
+  let distances = mapDistances(map);
+  if (distances.get(stair) >= 8) return;
+  let choices = [...distances.keys()].filter((i) => distances.get(i) >= 8 &&
+    !map[i].event && !map[i].structure && map[i].terrain === "floor");
+  if (!choices.length) {
+    // A pair of shortcuts can exceptionally make the entire graph too small.
+    // Retire those shortcuts and repair a conventional distant route instead.
+    for (const c of map) if (c.event === "tunnel") {
+      c.event = c.feature = null;
+      delete c.tunnelTo;
+      delete c.tunnelPair;
+    }
+    const far = pos(W - 2, 1);
+    if (stair === far) { ensureStairsPath(map); return; }
+    Object.assign(map[far], { wall: false, terrain: "floor" });
+    ensureStairsPath(map, far);
+    choices = [far];
+  }
+  const target = map[pick(choices)], old = map[stair],
+    displaced = { event: target.event, feature: target.feature };
+  Object.assign(target, { event: "stairs", feature: "stairs", bossDefeated: false });
+  old.event = displaced.event;
+  old.feature = displaced.feature;
+  delete old.bossDefeated;
+}
 async function tunnelEncounter(c) {
-  const destination = c.tunnelTo;
+  const destination = tunnelDestination(state.map, state.map.indexOf(c));
   if (
+    destination === null ||
     !Number.isInteger(destination) ||
     !state.map[destination] ||
     state.map[destination].wall

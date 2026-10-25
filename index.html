@@ -11378,6 +11378,21 @@ body.ambient-disabled #lava-lighting { opacity: 0; }
   line-height: 1;
   font-size: clamp(18px,min(72cqh,calc(170cqw / var(--multiplier-length,3)),82px),82px);
 }
+
+/* Opening alerts live in a reserved overlay. Only their child scales: no
+   transform can undo centring or shift the enemy roster as fitText runs. */
+.entrance-roster { padding-bottom: 38px; }
+.encounter-alert { position: absolute; inset: auto 0 0; display: flex; justify-content: center; pointer-events: none; }
+.encounter-alert > span { display: inline-block; max-width: 95%; padding: 2px 16px; color: var(--red); background: var(--paper-raised); border: 2px solid var(--red); font: 700 29px var(--display); line-height: 1.05; text-align: center; animation: encounter-alert-pop .5s cubic-bezier(.2,.8,.3,1.1) both; }
+@keyframes encounter-alert-pop { from { opacity: 0; transform: scale(.65) rotate(-4deg); } 65% { opacity: 1; transform: scale(1.12) rotate(2deg); } to { opacity: 1; transform: scale(1) rotate(-1deg); } }
+.anticipation-meter { color: var(--gold); }
+.anticipation-meter .aim-track i { background: var(--gold); }
+.punchline-ready { outline: 2px solid var(--gold); outline-offset: 2px; box-shadow: 0 0 18px color-mix(in srgb, var(--gold) 35%, transparent); }
+.punchline-ready .machine-face { animation: punchline-rattle .24s ease-in-out infinite; }
+@keyframes punchline-rattle { 0%,100% { transform: translateX(0) rotate(0); } 25% { transform: translateX(calc(-2px * var(--punchline-motion,1))) rotate(calc(-.7deg * var(--punchline-motion,1))); } 75% { transform: translateX(calc(2px * var(--punchline-motion,1))) rotate(calc(.7deg * var(--punchline-motion,1))); } }
+@media (max-width: 760px) { .encounter-alert > span { font-size: 24px; } }
+@media (prefers-reduced-motion: reduce) { .punchline-ready .machine-face, .encounter-alert > span { animation: none; } }
+body[data-motion="off"] .punchline-ready .machine-face { animation: none; }
 /* END GENERATED NOTEBOOK CSS */
     </style>
   </head>
@@ -11778,6 +11793,8 @@ function leverArt() {
   return `<svg class="pencil-art" viewBox="0 0 35 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 78 11-.5.5 13-12 .5Z M14 78l8-56 4 .5-7 57" fill="var(--paper-shade)"/><path d="m15 76 8-53m-15 60 8-.5m-8 5 8-.5M7 95l18-.5" stroke-width=".7"/><path d="M25 2q12 1 11 12-1 10-12 10-10-1-10-12Q15 2 25 2Z" fill="var(--paper)"/><path d="M25 5q9 1 8 9-1 8-9 7-7-1-7-8 0-7 8-8Zm-7 8 6-7m-6 12L30 6m-7 15 10-10" stroke-width=".65"/><path class="pencil-echo" d="m5 79 1 14 14-1M13 77l8-53"/></svg>`;
 }
 const paths = {
+  trick: "M4 13 9 3l8 6 8-5 4 11-8 3-6-5-6 5ZM8 21q8 12 17-1M11 22v3m10-4v3M4 5h1m23 20h1",
+  rally: "M6 25V13l5-9 5 9v12ZM9 15h5M20 12h9m-4-4 4 4-4 4M18 20h9m-4-4 4 4-4 4",
   jester:
     "M4 14Q1 1 10 7l6 6 5-7q10-7 7 8l-2 10H7ZM4 14l12 5 12-5M4 12a2 2 0 1 0 0 .1M21 5a2 2 0 1 0 0 .1M9 24v4h16v-4",
   tunnel:
@@ -12134,7 +12151,7 @@ function stairwayArt() {
             owner.job === "mage"
               ? "magic"
               : {
-                  fighter: "rage",
+                  fighter: "block",
                   rogue: "flurry",
                   ranger: "bow",
                   berserker: "bloodprice",
@@ -12154,6 +12171,8 @@ function stairwayArt() {
           "magic",
           "poison",
           "stimulant",
+          "rally",
+          "trick",
           "heal",
           "block",
           "stun",
@@ -12167,6 +12186,8 @@ function stairwayArt() {
           magic: "magic",
           poison: "poison",
           stimulant: "flame",
+          rally: "rally",
+          trick: "trick",
           class: "class",
           rage: "flame",
           teamHeal: "blessing",
@@ -12181,6 +12202,8 @@ function stairwayArt() {
           magic: 2,
           poison: 1,
           stimulant: 1,
+          rally: 1,
+          trick: 1,
           heal: 2,
           block: 1,
           stun: 1,
@@ -12291,7 +12314,7 @@ const CAMP_UNLOCKS = {
     cost: 1400,
     permanent: true,
     description:
-      "Unlock Jester starts and companions. Different marks win Jackpots. Matching triples stun you.",
+      "Unlock Jester starts and companions. Trick marks build anticipation for a stronger Punchline roll.",
   },
   iron: {
     name: "Iron margins",
@@ -13052,19 +13075,25 @@ function normaliseHeroBuild(h) {
       Math.floor(Number(h.id) || h.name?.length || 0) % 2
         ? "offence"
         : "defence";
+  h.anticipation = Math.min(JESTER_ANTICIPATION_CAP - 1, Math.max(0, Math.floor(h.anticipation || 0)));
+  normaliseStimulant(h);
+  normaliseTraitRecord(h);
   h.charge = Math.min(RANGER_AIM_CAP, Math.max(0, h.charge || 0));
   h.fury = Math.min(BERSERKER_FURY_CAP, Math.max(0, h.fury || 0));
   if (!h.reels) return;
-  for (const face of h.last || [])
+  for (const face of h.last || []) {
+    if (face.type === "stimulant" && ["mage", "ranger", "jester"].includes(h.job)) face.type = "rally";
     if (face.type === "class") {
       face.job = h.job;
       delete face.mageRole;
     }
+  }
   h.reels.forEach((reel, k) => {
     let seal = false;
     for (const face of reel) {
       face.weight = Math.max(1, Math.min(4, Math.floor(face.weight || 1)));
       delete face.mageRole;
+      if (face.type === "stimulant" && ["mage", "ranger", "jester"].includes(h.job)) face.type = "rally";
       if (
         h.job === "berserker" &&
         !["attack", "heal", "selfharm", "stimulant", "blank", "class"].includes(
@@ -13093,7 +13122,7 @@ function classAbilityName(hero) {
   const job = typeof hero === "string" ? hero : hero?.job;
   return (
     {
-      fighter: "RAGE",
+      fighter: "SHIELD BASH",
       rogue: "FLURRY",
       mage: "RESONANCE",
       healer: "RESONANCE",
@@ -13110,7 +13139,7 @@ function classAbilityDescription(hero) {
       jester:
         "Wildcard: tricks ink enemy reels, gild allied reels, reverse a foe’s roll, or scatter damage and healing. They usually favour your party.",
       fighter:
-        "Rage: build damage and a little resistance until this fight ends.",
+        "Shield Bash: gain 2 team block, then strike the selected enemy for your current team block. The bash deals double damage to enemy shields.",
       rogue: "Flurry: roll three extra attacks; each blade lands separately.",
       mage: "Resonance echoes the strongest healing, shield, poison or magic marks in this roll across the appropriate whole team. Healing also clears every ally’s stun.",
       healer: "Resonance echoes your rolled marks across the appropriate team.",
@@ -13127,8 +13156,8 @@ function temperamentEffects(h, base) {
 const CLASS_FACE_TYPES = Object.freeze({
   fighter: ["attack", "block", "heal", "stun", "stimulant", "blank"],
   rogue: ["attack", "poison", "stun", "stimulant", "heal", "blank"],
-  mage: ["magic", "heal", "block", "poison", "stun", "stimulant", "blank"],
-  ranger: ["attack", "stun", "heal", "stimulant", "poison", "blank"],
+  mage: ["magic", "heal", "block", "poison", "stun", "rally", "blank"],
+  ranger: ["attack", "stun", "heal", "rally", "poison", "blank"],
   berserker: ["attack", "heal", "selfharm", "stimulant", "blank"],
 });
 function startingFaces(job, temperament) {
@@ -13174,7 +13203,7 @@ function startingFaces(job, temperament) {
           ["heal", 2],
           ["magic", 1],
           ["block", 1],
-          ["stimulant", 1],
+          ["rally", 1],
           ["blank", 1],
         ]
       : [
@@ -13182,7 +13211,7 @@ function startingFaces(job, temperament) {
           ["magic", 2],
           ["poison", 1],
           ["heal", 1],
-          ["stimulant", 1],
+          ["rally", 1],
           ["blank", 1],
         ],
     ranger: defensive
@@ -13191,7 +13220,7 @@ function startingFaces(job, temperament) {
           ["stun", 1],
           ["stun", 2],
           ["heal", 1],
-          ["stimulant", 1],
+          ["rally", 1],
           ["blank", 1],
         ]
       : [
@@ -13199,7 +13228,7 @@ function startingFaces(job, temperament) {
           ["attack", 2],
           ["stun", 1],
           ["heal", 1],
-          ["stimulant", 1],
+          ["rally", 1],
           ["blank", 1],
         ],
     berserker: defensive
@@ -13224,8 +13253,8 @@ function startingFaces(job, temperament) {
           ["attack", 1],
           ["heal", 1],
           ["block", 1],
-          ["stimulant", 1],
-          ["stun", 1],
+          ["rally", 1],
+          ["trick", 1],
           ["blank", 1],
         ]
       : [
@@ -13233,11 +13262,13 @@ function startingFaces(job, temperament) {
           ["magic", 1],
           ["poison", 1],
           ["heal", 1],
-          ["stun", 1],
+          ["trick", 1],
           ["blank", 1],
         ],
   }[job];
 }
+// Recruits draw this independently of class and the starter selection.
+const randomTemperament = () => Math.random() < 0.5 ? "offence" : "defence";
 function makeHero(
   name,
   job,
@@ -13249,7 +13280,7 @@ function makeHero(
   if (legacyHealer) job = "mage";
   const specialism = Object.hasOwn(SPECIALISMS, build.specialism)
     ? build.specialism
-    : pick(["offence", "defence"]);
+    : randomTemperament();
   const faces = startingFaces(job, specialism);
   const maxHp = Math.round(
     ({
@@ -13274,6 +13305,7 @@ function makeHero(
     hp: maxHp,
     maxHp,
     charge: 0,
+    anticipation: 0,
     fury: 0,
     points: 3,
     equipment: null,
@@ -13455,7 +13487,8 @@ function wardActive(e = actingEnemy) {
           for (let x = 1; x < W - 1; x++)
             if (pos(x, y) !== start && Math.random() < 0.11)
               Object.assign(map[pos(x, y)], { wall: true, terrain: "stone" });
-        // Most floors are dry. Very occasionally two separate streams cross a floor.
+        const tunnelPairs = tunnelPairCount(rules);
+        // Most floors are dry. A paired tunnel may be the only river crossing.
         const riverRoll = Math.random(),
           riverCount =
             riverRoll < WORLD_BALANCE.doubleRiverChance
@@ -13486,12 +13519,19 @@ function wardActive(e = actingEnemy) {
               wet(step, offset);
             }
           }
+          if (tunnelPairs && Math.random() < 0.35) continue;
           const bridge = pick(river),
             crossing = horizontal ? bridge % W : Math.floor(bridge / W);
           for (const i of river.filter(
             (i) => (horizontal ? i % W : Math.floor(i / W)) === crossing,
           ))
             Object.assign(map[i], { wall: false, terrain: "bridge" });
+        }
+        // Rare stone screens may also be crossed by paired tunnels.
+        if (tunnelPairs && !riverCount && Math.random() < 0.18) {
+          const x = 3 + rand(5);
+          for (let y = 1; y < H - 1; y++)
+            Object.assign(map[pos(x, y)], { wall: true, terrain: "stone" });
         }
         Object.assign(map[start], {
           wall: false,
@@ -13507,6 +13547,8 @@ function wardActive(e = actingEnemy) {
             event,
             feature: event,
           });
+        addTunnels(map, rules, { pairs: tunnelPairs });
+        let distances = mapDistances(map);
         let candidates = map
           .map((c, i) => i)
           .filter(
@@ -13515,9 +13557,14 @@ function wardActive(e = actingEnemy) {
               map[i].terrain !== "bridge" &&
               !map[i].event &&
               i !== start &&
-              Math.abs((i % W) - 1) + Math.abs(Math.floor(i / W) - 7) >= 8,
+              distances.get(i) >= 8,
           );
         if (!candidates.length) {
+          for (const c of map) if (c.event === "tunnel") {
+            c.event = c.feature = null;
+            delete c.tunnelTo;
+            delete c.tunnelPair;
+          }
           Object.assign(map[pos(9, 1)], { wall: false, terrain: "floor" });
           candidates = [pos(9, 1)];
         }
@@ -13611,7 +13658,7 @@ function wardActive(e = actingEnemy) {
               terrain: c.terrain === "bridge" ? "river" : "stone",
             });
         });
-        addTunnels(map, rules);
+        ensureStairDistance(map);
         addCaveRooms(map);
         return map;
       }
@@ -13664,7 +13711,7 @@ function wardActive(e = actingEnemy) {
         travel = null;
         document.querySelectorAll(".speech-bubble").forEach((e) => e.remove());
         state = {
-          version: 19,
+          version: 20,
           runId: newExpeditionId(),
           bankedFloors: {},
           runRules: rules,
@@ -13765,7 +13812,7 @@ function wardActive(e = actingEnemy) {
           );
           if (
             !s ||
-            ![1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19].includes(
+            ![1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].includes(
               s.version,
             ) ||
             s.map?.length !== W * H ||
@@ -13804,7 +13851,7 @@ function wardActive(e = actingEnemy) {
             equaliseReels = s.version < 18,
             commandAmbushMigration = s.version < 19;
           state = s;
-          state.version = 19;
+          state.version = 20;
           state.moveCommands ??= 0;
           state.characterEvents ??= [];
           state.encounterSerial ??= 0;
@@ -14105,13 +14152,14 @@ function wardActive(e = actingEnemy) {
       }
       function rangerAimMarkup(h) {
         if (h.job === "berserker") return furyMarkup(h);
+        if (h.job === "jester") return anticipationMarkup(h);
         const charge = h.charge || 0,
           bonus = executionBonus(h),
           text = `Execute: ${charge}/${RANGER_AIM_CAP} patience. Each party action without this Ranger attacking adds two (three for its seal). The next damaging roll consumes it; wounded enemies take more. Current target bonus: +${bonus}. Clears after battle.`;
         return `<span class="aim-meter ${charge ? "charged" : ""}" role="meter" aria-label="Execute patience" aria-valuemin="0" aria-valuemax="${RANGER_AIM_CAP}" aria-valuenow="${charge}" data-tooltip="${escapeHTML(text)}"><b>EXECUTE ${charge}/${RANGER_AIM_CAP}</b><span class="aim-track"><i style="width:${(charge / RANGER_AIM_CAP) * 100}%"></i></span><small>hit +${bonus}</small></span>`;
       }
       function syncRangerAim(h) {
-        if (!["ranger","berserker"].includes(h.job)) return;
+        if (!["ranger","berserker","jester"].includes(h.job)) return;
         const root = $("#hero-" + state.party.indexOf(h)),
           caption = root?.querySelector(".machine-footnote");
         if (caption) caption.innerHTML = rangerAimMarkup(h);
@@ -14134,7 +14182,7 @@ function wardActive(e = actingEnemy) {
             : enemy
               ? "Enemy reels"
               : "Fast-forward this slot machine";
-        return `<div class="machine-shell ${one ? "one-reel" : ""}" id="machine-${id}" data-machine="${id}">${title ? `<div class="machine-title">${title}</div>` : ""}<button class="machine-face" data-roll-area="${id}" aria-label="${label}" ${disabled ? "disabled" : ""}>${last.map((s, k) => `<span class="slot-window ${owner?.blackout?.includes(k) ? "blacked-out" : ""} ${owner?.reelGifts?.some((g) => g.reel === k && g.uses > 0) ? "gifted-reel" : ""}" data-reel="${k}" ${active ? `data-tooltip="${escapeHTML(state.party[hero].blackout?.includes(k) ? "Pencil blackout: this reel does nothing on this roll, then clears." : faceDescription(s, state.party[hero]))}"` : ""}><span class="symbol-track single"><span class="slot-symbol">${symbolMarkup(s)}</span></span></span>`).join("")}</button><button class="lever" ${active ? `data-spin="${hero}"` : `data-fast-machine="${id}"`} ${disabled ? "disabled" : ""} aria-label="${active ? "Pull " + state.party[hero].name + "’s slot handle" : "Fast-forward " + (enemy ? "enemy" : "event") + " reels"}">${leverArt()}</button><div class="machine-footnote">${active ? (["ranger", "berserker"].includes(state.party[hero].job) ? rangerAimMarkup(state.party[hero]) : state.enemy ? (state.party[hero].stun ? "Pull to shake off stun" : "Pull handle to spin") : "Waiting for an encounter") : enemy ? "" : "Click during the roll to land it"}</div></div>`;
+        return `<div class="machine-shell ${one ? "one-reel" : ""}" id="machine-${id}" data-machine="${id}">${title ? `<div class="machine-title">${title}</div>` : ""}<button class="machine-face" data-roll-area="${id}" aria-label="${label}" ${disabled ? "disabled" : ""}>${last.map((s, k) => `<span class="slot-window ${owner?.blackout?.includes(k) ? "blacked-out" : ""} ${owner?.reelGifts?.some((g) => g.reel === k && g.uses > 0) ? "gifted-reel" : ""}" data-reel="${k}" ${active ? `data-tooltip="${escapeHTML(state.party[hero].blackout?.includes(k) ? "Pencil blackout: this reel does nothing on this roll, then clears." : faceDescription(s, state.party[hero]))}"` : ""}><span class="symbol-track single"><span class="slot-symbol">${symbolMarkup(s)}</span></span></span>`).join("")}</button><button class="lever" ${active ? `data-spin="${hero}"` : `data-fast-machine="${id}"`} ${disabled ? "disabled" : ""} aria-label="${active ? "Pull " + state.party[hero].name + "’s slot handle" : "Fast-forward " + (enemy ? "enemy" : "event") + " reels"}">${leverArt()}</button><div class="machine-footnote">${active ? (["ranger", "berserker", "jester"].includes(state.party[hero].job) ? rangerAimMarkup(state.party[hero]) : state.enemy ? (state.party[hero].stun ? "Pull to shake off stun" : "Pull handle to spin") : "Waiting for an encounter") : enemy ? "" : "Click during the roll to land it"}</div></div>`;
       }
       function render() {
         statusTooltip.hidden = true;
@@ -14506,7 +14554,8 @@ function wardActive(e = actingEnemy) {
             }
             return path;
           }
-          for (let j of neighbors(n)) {
+          for (let j of floorNeighbors(state.map, n)) {
+            if (!neighbors(n).includes(j) && !omniscient && (!state.map[n].seen || !state.map[j].seen)) continue;
             let c = state.map[j];
             if (
               !(omniscient
@@ -14654,8 +14703,15 @@ function wardActive(e = actingEnemy) {
               break;
             let path = shortestPath(travel.goal);
             if (!path?.length) break;
-            let i = path[0],
-              c = state.map[i],
+            let i = path[0];
+            if (!neighbors(state.position).includes(i)) {
+              if (tunnelDestination(state.map, state.position) !== i) break;
+              travel.tunnelGoal = i;
+              if (!(await tunnelEncounter(state.map[state.position]))) break;
+              if (travel) delete travel.tunnelGoal;
+              continue;
+            }
+            let c = state.map[i],
               fresh = !c.seen,
               revision = travel.revision;
             if (fresh) {
@@ -15806,17 +15862,11 @@ async function encounterEntrance() {
           : first.elite
             ? "ELITE · " + first.affix
             : "An enemy steps out of the margins.",
-    `${encounterTags(enemies)}<div class="entrance-roster ${enemies.length > 1 ? "paired-intro" : ""}" id="entrance-art">${enemies.map((e, i) => `<div class="entrance-member ${i ? "awaiting-second" : ""}" data-entrance-enemy="${e.id}"><div class="entrance-portrait">${portraitArt(e.art, e)}</div><b>${escapeHTML(e.name)}</b><small>${e.strikes} strike${e.strikes > 1 ? "s" : ""} · every ${e.frequency} spins</small></div>`).join("")}<div class="scare-lines"></div></div><p class="encounter-quote">“${enemyLine(first, "entrance")}”</p>`,
+    `${encounterTags(enemies)}<div class="entrance-roster ${enemies.length > 1 ? "paired-intro" : ""}" id="entrance-art">${enemies.map((e, i) => `<div class="entrance-member ${i ? "awaiting-second" : ""}" data-entrance-enemy="${e.id}"><div class="entrance-portrait">${portraitArt(e.art, e)}</div><b>${escapeHTML(e.name)}</b><small>${e.strikes} strike${e.strikes > 1 ? "s" : ""} · every ${e.frequency} spins</small></div>`).join("")}<div class="scare-lines"></div>${state.opening?.surprise || first.ambush ? `<div class="encounter-alert"><span>${first.ambush ? "AMBUSH!" : "SURPRISE!"}</span></div>` : ""}</div><p class="encounter-quote">“${enemyLine(first, "entrance")}”</p>`,
     "enemy-intro",
   );
   burst($("#entrance-art"), "scary", 36);
-  if (first.ambush) {
-    smokePoof($("#entrance-art"), true);
-    const banner = document.createElement("div");
-    banner.className = "ambush-banner";
-    banner.textContent = visualPick(["SURPRISE!", "AMBUSH!"]);
-    $("#entrance-art").append(banner);
-  }
+  if (first.ambush) smokePoof($("#entrance-art"), true);
   shakeBook(4);
   if (enemies.length > 1) {
     await pause(260);
@@ -15934,8 +15984,6 @@ function encounterTags(enemies) {
     );
   if (enemies.length > 1)
     tags.push('<span class="encounter-tag dual">DUAL BATTLE</span>');
-  if (state.opening?.surprise)
-    tags.push('<span class="encounter-tag">SURPRISE ATTACK</span>');
   for (const e of enemies) {
     if (e.elite)
       tags.push(
@@ -16084,7 +16132,7 @@ function encounterTags(enemies) {
                 : [2, 2.5, 3, 4]
           ).map((value) => ({
             type: "multiplier",
-            value: options.jackpot ? value * 2 : value,
+            value,
             tier: 1,
           })),
           rolled = { ...pick(pool) },
@@ -16110,7 +16158,7 @@ function encounterTags(enemies) {
           context: options.context || "combat",
         };
         log(
-          `${owner}: ${options.jackpot ? "Jackpot!" : "triple match!"} ×${rolled.value} critical.`,
+          `${owner}: triple match! ×${rolled.value} critical.`,
         );
         if (!enemy && options.actor && alive(options.actor)) {
           addXP(options.actor, 1);
@@ -16136,10 +16184,8 @@ function encounterTags(enemies) {
           $("#stage-card").classList.add("celebrating-critical");
         } else {
           showSpotlight(
-            options.jackpot ? "Jackpot!" : enemy ? "Enemy critical!" : "Critical!",
-            options.jackpot
-              ? "Three different marks! Double the multiplier, then one free encore."
-              : "Three matching marks. The multiplier strengthens this roll.",
+            enemy ? "Enemy critical!" : "Critical!",
+            "Three matching marks. The multiplier strengthens this roll.",
             body,
             "critical",
           );
@@ -16424,7 +16470,7 @@ function encounterTags(enemies) {
         n,
         source,
         e = state.enemy,
-        { piercing = false, attacker = null, impact = {} } = {},
+        { piercing = false, attacker = null, impact = {}, shieldFactor = 1 } = {},
       ) {
         if (!e || e.hp <= 0) return 0;
         const poisonHit = impact.type === "poison" || /^Poison from /.test(source);
@@ -16434,8 +16480,9 @@ function encounterTags(enemies) {
           passiveFX(e, `ARMOURED · ${resisted} RESISTED`, "block");
         }
         n -= resisted;
-        const blocked = piercing ? 0 : Math.min(enemyBlock(), n),
-          actual = Math.min(e.hp, poisonHit ? n - blocked : vulnerableDamage(e, n - blocked));
+        const blocked = piercing ? 0 : Math.min(enemyBlock(), n * shieldFactor),
+          remaining = Math.max(0, n - Math.ceil(blocked / shieldFactor)),
+          actual = Math.min(e.hp, poisonHit ? remaining : vulnerableDamage(e, remaining));
         setEnemyBlock(enemyBlock() - blocked);
         if (attacker) {
           const from = $("#portrait-" + state.party.indexOf(attacker));
@@ -16642,21 +16689,6 @@ function encounterTags(enemies) {
         });
       }
 
-      function applyStimulant(entity, amount) {
-        entity.stimulant = {
-          power: Math.min(6, (entity.stimulant?.power || 0) + Math.ceil(amount)),
-          turns: 3 + Math.min(3, Math.ceil(amount)),
-          appliedAt: state.actionSerial,
-        };
-        syncStatusFX();
-        const el = state.party.includes(entity)
-          ? $("#portrait-" + state.party.indexOf(entity))
-          : enemyArtEl(entity);
-        burst(el, "gold", 22);
-        actionLabel(el, "POWERED UP!");
-      }
-
-
       function impactFlash(el, index = 0) {
         if (!el) return;
         const r = el.getBoundingClientRect(),
@@ -16677,7 +16709,10 @@ function encounterTags(enemies) {
         if (seals) {
           await classAbilityFX(h);
           if (h.job === "jester") await jesterWildcard(h);
-          if (h.job === "fighter") base.rage = seals;
+          if (h.job === "fighter") {
+            base.block += 2;
+            base.bash = 1;
+          }
           if (h.job === "mage") {
             const role = mageResonance(h, symbols),
               effects = resonanceEffects(h, role);
@@ -16780,11 +16815,12 @@ function encounterTags(enemies) {
           equipmentBonus(h, "stimEvery") &&
           h.stats.spins % equipmentBonus(h, "stimEvery") === 0
         )
-          base.stimulant += 2;
+          base.rally += 2;
         if (base.block) base.block += passive("block") + traitBonus(h, "block");
         if (base.heal) base.heal = Math.max(1, base.heal + traitBonus(h, "heal"));
         if (base.teamHeal) base.teamHeal = Math.max(1, base.teamHeal + traitBonus(h, "heal"));
         if (base.stun) base.stun += traitBonus(h, "stun");
+        if (base.bash) base.bash = Math.max(0, state.block) + base.block;
         temperamentEffects(h, base);
         if (h.initiative && state.opening?.firstRoll) {
           for (const key of Object.keys(base))
@@ -16801,7 +16837,15 @@ function encounterTags(enemies) {
         });
         return inspiredRoll(h, campRollBonus(base));
       }
-      async function spin(i, { encore = false } = {}) {
+      function grantRolledBlock(h, amount) {
+        state.block += amount;
+        renderBlock();
+        floatAt($("#block"), "+" + amount + " team armour", false, true);
+        burst($("#block"), "shield", 18);
+        beam(entityArt(h), $("#block > svg") || $("#block"), "block");
+        return `<span>${icon("block")}+${amount} team armour</span>`;
+      }
+      async function spin(i, { punchline = false } = {}) {
         const h = state.party[i];
         if (
           busy ||
@@ -16817,7 +16861,7 @@ function encounterTags(enemies) {
           return;
         }
         const rollRun = state;
-        let encorePending = false;
+        let punchlinePending = false;
         busy = true;
         state.currentHero = i;
         sceneFast = false;
@@ -16848,7 +16892,9 @@ function encounterTags(enemies) {
           sayHero(i, "attack");
           actionLabel($("#portrait-" + i), h.name + " rolls!");
           lunge($("#portrait-" + i), false);
-          const symbols = await runMachine("hero-" + i, giftedReels(h));
+          if (punchline) await punchlineFX(h);
+          const symbols = await runMachine("hero-" + i, punchline ? punchlineReels(h) : giftedReels(h));
+          $("#machine-hero-" + i)?.classList.remove("punchline-ready");
           if (state !== rollRun) return;
           spendReelGifts(h);
           clearRolledBlackout(h, i);
@@ -16862,8 +16908,9 @@ function encounterTags(enemies) {
             gainFury(h, 0, Math.ceil(blood / 2) * 3);
             beam(entityArt(h), entityArt(h), "selfharm");
           }
-          const base = await planHeroRoll(h, symbols),
-            multiplier = await heroCriticalMultiplier(h, symbols, base),
+          const base = await planHeroRoll(h, symbols);
+          if (punchline) base.trick = 0;
+          const multiplier = await heroCriticalMultiplier(h, symbols, base),
             sums = scaleEffects(base, multiplier),
             criticalImpact = multiplier > 1 || base.flurryMultiplier > 1,
             area =
@@ -16872,7 +16919,7 @@ function encounterTags(enemies) {
               (h.job === "mage" &&
                 base.resonanceType === "magic" &&
                 symbols.some((s) => s.type === "class")),
-            targets = area ? foes.filter((e) => e.hp > 0) : [selected],
+            targets = area ? foes.filter((e) => e.hp > 0) : selected.hp > 0 ? [selected] : [],
             parts = [];
           if (["mage", "rogue"].includes(h.job) && symbols.some((s) => s.type === "class"))
             parts.push(
@@ -16880,11 +16927,11 @@ function encounterTags(enemies) {
             );
           if (base.executionBonus)
             parts.push(`<span>${icon("bow")}EXECUTE · +${base.executionBonus} damage</span>`);
-          encorePending = h.job === "jester" && jesterJackpot(symbols) && !encore;
-          if (encorePending) combatCallout(entityArt(h), "JACKPOT · FREE ENCORE!", "gold");
+          punchlinePending = !punchline && jesterAnticipation(h, sums.trick);
           if (criticalImpact) h.stats.criticals = (h.stats.criticals || 0) + 1;
           state.lastPlayerRoll = {
             actor: i,
+            punchline,
             heroId: h.id,
             symbols,
             multiplier,
@@ -16903,11 +16950,24 @@ function encounterTags(enemies) {
             burst($("#portrait-" + i), "gold", 24);
             beam($("#portrait-" + i), $("#portrait-" + i), "rage");
           }
-          if (sums.stimulant) {
-            const ally = state.party[alive(state.party[state.target]) ? state.target : i];
-            applyStimulant(ally, sums.stimulant);
-            beam($("#portrait-" + i), $("#portrait-" + state.party.indexOf(ally)), "stimulant");
-            parts.push(`<span>${icon("flame")}${ally.name} powered up</span>`);
+          for (const [kind, ally] of [["stimulant", h], ["rally", supportStimulantTarget(h)]]) {
+            if (!sums[kind]) continue;
+            applyStimulant(ally, sums[kind]);
+            beam(entityArt(h), entityArt(ally), kind);
+            parts.push(`<span>${icon(kind === "rally" ? "rally" : "flame")}${ally.name} powered up</span>`);
+          }
+          if (sums.bash && sums.block)
+            parts.push(grantRolledBlock(h, sums.block));
+          if (sums.bash) {
+            const dealt = damageEnemy(sums.bash, h.name + "’s Shield Bash", selected, {
+              attacker: h, shieldFactor: 2, impact: { type: "block", critical: criticalImpact },
+            });
+            h.stats.damageDealt += dealt;
+            if (!selected.hp) h.stats.kills++;
+            state.lastPlayerRoll.bash = { power: sums.bash, actual: dealt };
+            state.lastPlayerRoll.actualDamage = dealt;
+            parts.push(`<span class="damage combat-total">${icon("block")}SHIELD BASH · <strong>−${dealt}</strong> HP</span>`);
+            await feedbackPause(skip ? 120 : 240);
           }
           const damage = (sums.attack || 0) + (sums.magic || 0);
           if (damage) {
@@ -16960,7 +17020,7 @@ function encounterTags(enemies) {
               if (hit < segments.length - 1)
                 await feedbackPause(skip ? 95 : Math.max(100, 190 / pace()));
             }
-            state.lastPlayerRoll.actualDamage = dealt;
+            state.lastPlayerRoll.actualDamage = (state.lastPlayerRoll.bash?.actual || 0) + dealt;
             parts.push(
               `<span class="damage combat-total">${icon(sums.magic ? "magic" : "sword")} <strong>−${dealt}</strong> HP${area && foes.length > 1 ? " across ALL enemies" : ""}${multiplier > 1 ? " · " + (base.attack && base.magic ? sums.attack + " blade + " + sums.magic + " magic" : (base.attack || 0) + (base.magic || 0) + " × " + multiplier + " = " + damage) : ""}</span>`,
             );
@@ -17024,14 +17084,8 @@ function encounterTags(enemies) {
             );
             await pause(300);
           }
-          if (sums.block) {
-            state.block += sums.block;
-            renderBlock();
-            floatAt($("#block"), "+" + sums.block + " team armour", false, true);
-            burst($("#block"), "shield", 18);
-            beam($("#portrait-" + i), $("#block > svg") || $("#block"), "block");
-            parts.push(`<span>${icon("block")}+${sums.block} team armour</span>`);
-          }
+          if (!sums.bash && sums.block)
+            parts.push(grantRolledBlock(h, sums.block));
           if (sums.stun)
             for (const e of (multiplier > 1 ? foes : [selected]).filter((e) => e.hp > 0))
               parts.push(`<span>${icon("stun")}${stunEnemy(sums.stun, e)}</span>`);
@@ -17039,18 +17093,14 @@ function encounterTags(enemies) {
             `<span>${h.name}${multiplier > 1 ? " · ×" + multiplier + " critical" : ""}:</span>` +
               (parts.join("") || "<span>Empty reels · no effect</span>"),
           );
-          if (h.job === "jester" && !jesterJackpot(symbols) && matchCount(symbols) === 3)
-            jesterBackfire(h);
           advanceRangerPatience(h, !!(sums.attack || sums.magic), symbols[1]?.type === "class");
           finishOpeningRoll();
           rallyAfterRoll(h);
           await tickPoison();
-          if (
-            h.stimulant &&
-            h.stimulant.appliedAt < state.actionSerial &&
-            --h.stimulant.turns <= 0
-          )
-            h.stimulant = null;
+          // A fallen caster cannot take the bonus roll; the paid action still
+          // advances enemy clocks exactly once.
+          punchlinePending = punchlinePending && alive(h);
+          tickStimulant(h);
           if (checkDefeat()) return;
           syncHero(i);
           syncEnemy();
@@ -17062,7 +17112,7 @@ function encounterTags(enemies) {
           }
           if (state.enemy.hp <= 0) state.enemy = livingEnemies()[0];
           await pause(260);
-          for (const e of encorePending ? [] : foes.filter((e) => e.hp > 0)) {
+          for (const e of punchlinePending ? [] : foes.filter((e) => e.hp > 0)) {
             e.countdown--;
             syncEnemy(e);
             if (e.countdown <= 0) {
@@ -17090,8 +17140,10 @@ function encounterTags(enemies) {
             shakeElement($("#machine-hero-" + Math.max(0, state.party.indexOf(h))), 2);
           save();
         }
-        if (encorePending && state === rollRun && state.enemy && !state.over && alive(h))
-          await spin(state.party.indexOf(h), { encore: true });
+        if (punchlinePending && state === rollRun && state.enemy && !state.over && alive(h)) {
+          h.stats.punchlines = (h.stats.punchlines || 0) + 1;
+          await spin(state.party.indexOf(h), { punchline: true });
+        }
       }
 
       function enemyHitPower(raw, e) {
@@ -17233,7 +17285,7 @@ function encounterTags(enemies) {
           e.turnsTaken = (e.turnsTaken || 0) + 1;
           tickEnemyPassive(e);
           planEnemyIntent(e);
-          if (e.stimulant && --e.stimulant.turns <= 0) e.stimulant = null;
+          tickStimulant(e);
           setEnemyPhase(e, null);
         } finally {
           if (state.invulnerable?.enemyId === e.id) state.invulnerable = null;
@@ -17843,7 +17895,7 @@ function encounterTags(enemies) {
         if (item.rage)
           return `Give the selected hero ${item.rage} rage until this battle ends.`;
         if (item.stimulant)
-          return `Stimulate one hero with power ${item.stimulant} for ${3 + Math.min(3, item.stimulant)} actions.`;
+          return `Stimulate one hero with power ${item.stimulant} for up to 3 actions. Extra duration increases potency.`;
         return item.description;
       }
       function supplyBrief(item) {
@@ -18324,6 +18376,8 @@ const maxFaceTier = (type) =>
     "stun",
     "poison",
     "stimulant",
+    "rally",
+    "trick",
     "selfharm",
   ].includes(type)
     ? 4
@@ -18340,6 +18394,7 @@ const CLASS_PRICES = {
     heal: 2,
     magic: 2,
     stimulant: 1.25,
+    rally: 1.25,
   },
   fighter: {
     attack: 1,
@@ -18349,6 +18404,7 @@ const CLASS_PRICES = {
     magic: 1.75,
     poison: 1.5,
     stimulant: 1.25,
+    rally: 1.25,
   },
   healer: {
     heal: 1,
@@ -18358,11 +18414,13 @@ const CLASS_PRICES = {
     attack: 2,
     poison: 1.75,
     stimulant: 1.25,
+    rally: 1.25,
   },
   mage: {
     magic: 1,
     poison: 1,
     stimulant: 1,
+    rally: 1,
     heal: 1,
     attack: 2,
     block: 1,
@@ -18376,6 +18434,7 @@ const CLASS_PRICES = {
     block: 1.5,
     magic: 1.75,
     stimulant: 1.25,
+    rally: 1.25,
   },
 };
 const EDITABLE_TYPES = Object.freeze([
@@ -18386,6 +18445,8 @@ const EDITABLE_TYPES = Object.freeze([
   "stun",
   "poison",
   "stimulant",
+  "rally",
+  "trick",
   "selfharm",
   "blank",
 ]);
@@ -18396,7 +18457,9 @@ const FACE_LABELS = Object.freeze({
   block: "Team block",
   stun: "Stun",
   poison: "Poison",
-  stimulant: "Stimulant",
+  stimulant: "Self stimulant",
+  rally: "Ally stimulant",
+  trick: "Trick",
   selfharm: "Blood Price",
   blank: "Empty",
 });
@@ -18404,7 +18467,7 @@ const primaryFace = (h) =>
   h.job === "mage" ? (h.specialism === "defence" ? "heal" : "magic") : "attack";
 function editableTypes(h) {
   return h.job === "jester"
-    ? EDITABLE_TYPES
+    ? EDITABLE_TYPES.filter((t) => t !== "stimulant")
     : [
         ...(CLASS_FACE_TYPES[h.job] ||
           EDITABLE_TYPES.filter((t) => t !== "selfharm")),
@@ -18422,7 +18485,9 @@ function faceDescription(face, h) {
       block: `Add ${tier} shared team block. It absorbs damage for any party member and is spent as it protects them.`,
       stun: `Apply ${tier} stun power. Prevents action until recovery. Recovery checks grow stronger each roll; higher power breaks through more block.`,
       poison: `Apply ${tier} poison power. Lasts up to 3 turns; repeated doses increase tick damage instead of adding a long duration.`,
-      stimulant: `Apply ${tier} stimulant power to your ally: a short damage and resistance boost.`,
+      stimulant: `Give yourself ${tier} stimulant power. Lasts up to 3 of your actions; extra duration becomes potency.`,
+      rally: `Give ${tier} stimulant power to the ally who has rolled most this fight. If alone, give it to yourself. Lasts up to 3 of their actions; extra duration becomes potency.`,
+      trick: `Build ${tier} anticipation. At 6, the Jester makes one free Punchline roll with ordinary marks +1 rank (maximum IV). Punchlines do not charge the meter.`,
       selfharm: `Pay up to ${2 * tier} HP, staying above 0. Wounds feed Fury and this mark adds ${3 * tier} extra Fury.`,
       blank: "No effect. Inscribe a useful mark here with personal points.",
     }[face.type] || "A mark on this weighted reel."
@@ -18474,8 +18539,6 @@ function reelProbabilities(reel) {
   return result;
 }
 function heroCriticalOdds(h) {
-  if (h.job === "jester")
-    return [{ type: "class", tier: 1, chance: jesterOdds(h).jackpot }];
   const [a, b, c] = h.reels.map(reelProbabilities),
     rows = [];
   for (const [key, p] of Object.entries(a)) {
@@ -18487,10 +18550,6 @@ function heroCriticalOdds(h) {
   return rows.sort((a, b) => b.chance - a.chance);
 }
 function criticalOddsMarkup(h) {
-  if (h.job === "jester") {
-    const odds = jesterOdds(h);
-    return `<section class="workshop-critpage workshop-page" ${editorView === "crits" ? "" : "hidden inert"}><h3>Jackpot · ${(100 * odds.jackpot).toFixed(2)}% per roll</h3><ul class="guide-takeaways"><li><b>Three different kinds:</b> double the usual critical multiplier and one free encore. Ranks do not need to match.</li><li><b>No blanks:</b> empty marks cannot complete a Jackpot.</li><li><b>Matching triples:</b> ${(100 * odds.backfire).toFixed(2)}% chance of self-stun instead.</li><li><b>One encore:</b> free rolls can Jackpot but do not chain more free rolls.</li></ul></section>`;
-  }
   const rows = heroCriticalOdds(h),
     total = rows.reduce((n, r) => n + r.chance, 0);
   return `<section class="workshop-critpage workshop-page" ${editorView === "crits" ? "" : "hidden inert"}><h3>Three of a kind · ${(total * 100).toFixed(2)}% per roll</h3><p>The middle class mark also completes two matching outer marks. Empty faces never crit. These odds include your edits and purchased weighting.</p><div class="crit-odds-grid">${rows.map((row) => `<div class="crit-odds-row">${symbolMarkup(row)}<b>${FACE_LABELS[row.type]} ${tierName(row.tier)}</b><strong>${(row.chance * 100).toFixed(2)}%</strong></div>`).join("") || "<p>No matching combinations yet. Put the same type and rank on both outer reels to start a combo.</p>"}</div></section>`;
@@ -18688,12 +18747,12 @@ function editFace(data, operation, destination = null) {
 
 function workshopAbilitySummary(h) {
   return {
-    fighter: "Build damage and resistance this fight.",
+    fighter: "Gain 2 block, then bash with your team shield count; twice as strong against enemy block.",
     rogue: "Roll three extra blade attacks.",
     mage: "Echo the rolled magic, healing, shield or poison marks across the whole team.",
     ranger: "Charge patience for a stronger finishing shot.",
     jester:
-      "Wildcard plays a random trick. Different kinds win a Jackpot; matching triples backfire.",
+      "Wildcard plays a random trick. Trick marks fill anticipation for a +1-rank Punchline roll.",
     berserker:
       "Heal yourself, gain 4 Fury and +2 blade damage. Charged Fury adds damage and lifesteal.",
   }[h.job];
@@ -18715,7 +18774,7 @@ const FIELD_GUIDE = Object.freeze([
   {
     id: "combat",
     title: "Combat & criticals",
-    body: '<ul class="guide-takeaways"><li><b>Act freely.</b> Use any living hero repeatedly. Click their card or handle to roll; their portrait opens reel editing.</li><li><b>Choose targets.</b> Click an enemy portrait to aim damage. Use the healing target control for healing and buffs.</li><li><b>Critical.</b> Three matching kinds AND ranks roll a multiplier. The middle class mark completes two matching outer marks. Blanks do nothing.</li><li><b>Big hits.</b> Criticals and tier III–IV attacks hit all enemies. Each foe has its own attack countdown.</li><li><b>Keep moving.</b> Click rolling reels or press Space to land them. Event results still need confirmation. Hero criticals grant 1 EXP.</li></ul>',
+    body: '<ul class="guide-takeaways"><li><b>Act freely.</b> Use any living hero repeatedly. Click their card or handle to roll; their portrait opens reel editing.</li><li><b>Choose targets.</b> Click an enemy portrait to aim damage. Use the healing target control for healing. Self stimulant boosts its caster; Ally stimulant boosts the most-used companion.</li><li><b>Critical.</b> Three matching kinds AND ranks roll a multiplier. The middle class mark completes two matching outer marks. Blanks do nothing.</li><li><b>Big hits.</b> Criticals and tier III–IV attacks hit all enemies. Each foe has its own attack countdown.</li><li><b>Keep moving.</b> Click rolling reels or press Space to land them. Event results still need confirmation. Hero criticals grant 1 EXP.</li></ul>',
   },
   {
     id: "statuses",
@@ -18723,9 +18782,14 @@ const FIELD_GUIDE = Object.freeze([
     body: '<ul class="guide-takeaways"><li><b>Team block.</b> Each side has one shared pool. It absorbs damage, is consumed as it protects and expires after battle.</li><li><b>Stun.</b> Miss an attempt without advancing enemy clocks. Recovery becomes likelier each roll; most stuns end after 1–3 checks.</li><li><b>Break through.</b> Stronger stuns strip more block and can penetrate shields. Healing can clear stun; Mage healing Resonance clears all allies.</li><li><b>Vulnerable.</b> The next direct hit deals 25% extra damage. Healing and poison ticks do not consume it.</li><li><b>Details.</b> Hover any condition icon for its actual effect and remaining strength or duration.</li></ul>',
   },
   {
+    id: "buffs",
+    title: "Stimulants & shield bash",
+    body: '<ul class="guide-takeaways"><li><b>Self stimulant.</b> Tanks, Rogues and Berserkers can boost themselves with this mark.</li><li><b>Ally stimulant.</b> Mages, Rangers and Jesters boost the ally who has rolled most this fight. Alone, they boost themselves.</li><li><b>Three actions.</b> Each power adds one action of duration, up to three of the recipient’s own actions. Extra duration increases potency.</li><li><b>Potency.</b> Gain +1 damage plus one per three power, and +1 resistance plus one per five power. Hover the status for exact values.</li><li><b>Tank class mark.</b> Shield Bash adds two team block, then hits with your current shield count. Each point of bash power removes two enemy block.</li></ul>',
+  },
+  {
     id: "openings",
     title: "Openings & poison",
-    body: '<ul class="guide-takeaways"><li><b>Initiative.</b> A marked hero gains 25% stronger effects if chosen for the first roll.</li><li><b>Surprise.</b> Surprised heroes cannot open. If everyone is surprised, the enemies attack first.</li><li><b>Enemy intent.</b> The short line names a goal and target. Reels still decide what actually happens.</li><li><b>Poison.</b> Ticks bypass block. Doses load up to three turns; repeated doses then increase tick damage.</li><li><b>Temporary effects.</b> Poison, stun, Rage, Fury, Execute and buffs all clear after combat.</li></ul>',
+    body: '<ul class="guide-takeaways"><li><b>Initiative.</b> A marked hero gains 25% stronger effects if chosen for the first roll.</li><li><b>Surprise.</b> Surprised heroes cannot open. If everyone is surprised, the enemies attack first.</li><li><b>Enemy intent.</b> The short line names a goal and target. Reels still decide what actually happens.</li><li><b>Poison.</b> Ticks bypass block. Doses load up to three turns; repeated doses then increase tick damage.</li><li><b>Temporary effects.</b> Poison, stun, Fury, Execute, anticipation and buffs all clear after combat.</li></ul>',
   },
   {
     id: "heroes",
@@ -18735,12 +18799,12 @@ const FIELD_GUIDE = Object.freeze([
   {
     id: "classes",
     title: "Classes & temperament",
-    body: '<ul class="guide-takeaways"><li><b>Temperament.</b> Aggressive and Defensive choose different starting marks. They do not change a mark’s stated power. Rebuild either way.</li><li><b>Tank & Rogue.</b> Tanks favour blades, block and stun. Rogues favour blades, poison and tricks; Flurry throws three extra attacks.</li><li><b>Mage.</b> Use magic, healing, poison, shields or buffs. Resonance echoes rolled marks across the appropriate team.</li><li><b>Ranger.</b> Wait between attacks to fill Execute. Spend that patience on a stronger finishing shot.</li><li><b>Berserker.</b> Wounds and Blood Price build Fury. Bloodrush heals; charged attacks return a little stolen health.</li></ul>',
+    body: '<ul class="guide-takeaways"><li><b>Temperament.</b> Aggressive and Defensive choose different starting marks. They do not change a mark’s stated power. Rebuild either way.</li><li><b>Tank & Rogue.</b> Tanks favour blades, block and stun. Rogues favour blades, poison and quick stuns; Flurry throws three extra attacks.</li><li><b>Mage.</b> Use magic, healing, poison, shields or buffs. Resonance echoes rolled marks across the appropriate team.</li><li><b>Ranger.</b> Wait between attacks to fill Execute. Spend that patience on a stronger finishing shot.</li><li><b>Berserker.</b> Wounds and Blood Price build Fury. Bloodrush heals; charged attacks return a little stolen health.</li></ul>',
   },
   {
     id: "jester",
-    title: "Jester & Jackpots",
-    body: '<ul class="guide-takeaways"><li><b>Unlock.</b> Buy the Jester’s invitation at camp. Jesters can inscribe every ordinary mark type.</li><li><b>Jackpot.</b> Roll three different non-empty KINDS. Ranks do not matter. Gain double a usual critical multiplier.</li><li><b>Encore.</b> A Jackpot adds one free roll before enemy clocks advance. An encore can Jackpot, but cannot chain another encore.</li><li><b>Backfire.</b> A normal matching triple stuns the Jester instead. Matching outer marks plus the middle class mark also backfire.</li><li><b>Wildcard.</b> Six tricks can black out an enemy reel, strengthen an allied reel, reverse enemy rolls, throw pies, scatter healing or deal a sharp card.</li></ul>',
+    title: "Jester & Punchline",
+    body: '<ul class="guide-takeaways"><li><b>Unlock.</b> Buy the Jester’s invitation at camp. It can inscribe every ordinary kind except self-only stimulant.</li><li><b>Trick.</b> These marks fill anticipation by their rank. At 6, earn one free Punchline before enemy clocks advance.</li><li><b>Punchline.</b> Roll your own machine with ordinary non-empty marks one rank stronger, up to IV. These bonus rolls do not refill anticipation.</li><li><b>Criticals.</b> Normal matching triples roll the usual multiplier. Different kinds have no special critical; matching triples do not self-stun.</li><li><b>Wildcard.</b> The permanent class mark can ink enemy reels, gild allied reels, reverse a foe’s roll or scatter damage and healing.</li></ul>',
   },
   {
     id: "companions",
@@ -20818,10 +20882,25 @@ const SOUND_SAMPLES = Object.freeze({
           ? HERO_TRAITS[h.trait.id].effects[key] || 0
           : 0;
       }
+      function normaliseTraitRecord(h) {
+        if (!h?.trait) return;
+        const description = HERO_TRAITS[h.trait.id]?.description,
+          reason = typeof h.trait.reason === "string" ? h.trait.reason.trim() : "";
+        if (!reason || reason === description) {
+          delete h.trait.reason;
+          h.trait.reasonUnknown = true;
+        }
+      }
+      function traitEarnedText(h) {
+        normaliseTraitRecord(h);
+        return h.trait?.reason
+          ? "Earned: " + h.trait.reason
+          : "Earned earlier; the original moment was not recorded.";
+      }
       function traitMarkup(h) {
         const t = HERO_TRAITS[h.trait?.id];
         if (!t) return "";
-        const text = t.name + " · " + t.description + " Earned: " + h.trait.reason;
+        const text = t.name + " · " + t.description + " " + traitEarnedText(h);
         return `<span class="trait-badge trait-${t.kind}" tabindex="0" role="img" data-tooltip="${escapeHTML(text)}" aria-label="${escapeHTML(text)}" title="${escapeHTML(text)}">${icon(t.icon)}</span>`;
       }
       function grantTrait(h, id, reason) {
@@ -21345,6 +21424,7 @@ const SOUND_SAMPLES = Object.freeze({
                 h.job === "berserker"
                   ? `Fury ${h.fury || 0}/20: +${furyBonus(h)} damage`
                   : "",
+                h.job === "jester" ? `Anticipation ${h.anticipation || 0}/${JESTER_ANTICIPATION_CAP}: next Punchline +1 rank` : "",
                 h.rage ? `Rage +${h.rage}` : "",
                 h.stimulant ? `Stimulant: ${h.stimulant.turns} actions` : "",
               ]
@@ -21614,7 +21694,10 @@ const SOUND_SAMPLES = Object.freeze({
                 attack: "Damage power",
                 magic: "Magic damage",
                 poison: "Poison potency",
-                stimulant: "Stimulant power",
+                stimulant: "Self stimulant power",
+                rally: "Ally stimulant power",
+                trick: "Anticipation",
+                bash: "Shield bash damage",
                 bloodFury: "Extra Fury",
                 rage: "Rage",
                 selfHeal: "Bloodrush healing",
@@ -21628,7 +21711,7 @@ const SOUND_SAMPLES = Object.freeze({
                 ? "heal"
                 : k === "bloodFury"
                   ? "bloodprice"
-                  : ICONS[k] || k,
+                  : k === "bash" ? "block" : ICONS[k] || k,
             value,
           }));
       }
@@ -21938,6 +22021,7 @@ function clearBattleStatuses() {
   for (const entity of [...state.party, ...battleEnemies()]) {
     entity.rage = 0;
     entity.charge = 0;
+    entity.anticipation = 0;
     entity.fury = 0;
     entity.stimulant = null;
     entity.poison = null;
@@ -22157,6 +22241,7 @@ async function resumeOpeningEncounter() {
 }
 
 function normaliseTacticalStatuses(entity) {
+  normaliseStimulant(entity);
   entity.blackout = Array.isArray(entity.blackout)
     ? [...new Set(entity.blackout.filter((k) => [0, 1, 2].includes(k)))]
     : [];
@@ -22300,6 +22385,53 @@ async function settleFuryLeech(h, recipients, flights) {
   record.actual = actual;
   record.healedAt = Date.now();
   return actual;
+}
+
+// Buffs age on the recipient's actions, never on another ally's turn. Stacking
+// fills three actions; applications beyond that duration increase potency.
+const STIMULANT_TURNS = 3;
+function normaliseStimulant(entity) {
+  const buff = entity.stimulant;
+  if (!buff) return;
+  if (!Number.isFinite(buff.power) || !Number.isFinite(buff.turns) || buff.turns <= 0) {
+    entity.stimulant = null;
+    return;
+  }
+  entity.stimulant = {
+    ...buff,
+    power: Math.max(1, Math.ceil(buff.power)) + Math.max(0, Math.ceil(buff.turns) - STIMULANT_TURNS),
+    turns: Math.min(STIMULANT_TURNS, Math.ceil(buff.turns)),
+    appliedAt: Number.isFinite(buff.appliedAt) ? buff.appliedAt : (state.actionSerial || 0) - 1,
+  };
+}
+function applyStimulant(entity, amount) {
+  if (!alive(entity) || !Number.isFinite(amount) || amount <= 0) return;
+  normaliseStimulant(entity);
+  const added = Math.ceil(amount),
+    old = entity.stimulant,
+    duration = (old?.turns || 0) + added;
+  entity.stimulant = {
+    power: Math.max(old?.power || 0, added) + Math.max(0, duration - STIMULANT_TURNS),
+    turns: Math.min(STIMULANT_TURNS, duration),
+    appliedAt: state.actionSerial,
+  };
+  syncStatusFX();
+  const el = entityArt(entity);
+  burst(el, "gold", 22);
+  actionLabel(el, `POWER ${entity.stimulant.power} · ${entity.stimulant.turns} TURNS`);
+}
+function supportStimulantTarget(caster) {
+  const allies = state.party.filter((h) => alive(h) && h !== caster);
+  return allies.sort((a, b) => battleRollCount(b) - battleRollCount(a) ||
+    expectedHeroEffects(b).damage - expectedHeroEffects(a).damage)[0] || caster;
+}
+function battleRollCount(h) {
+  if (!h.battleMemo?.stats) return 0;
+  return Math.max(0, (h.stats?.spins || 0) - (h.battleMemo.stats.spins || 0));
+}
+function tickStimulant(entity) {
+  if (entity.stimulant && entity.stimulant.appliedAt < state.actionSerial && --entity.stimulant.turns <= 0)
+    entity.stimulant = null;
 }
 // END GENERATED BATTLE TACTICS
       // BEGIN GENERATED WORLD EVENTS
@@ -22613,44 +22745,71 @@ function chaserRewardFaces(faces) {
   return prizes.length ? prizes : items;
 }
 
-// Optional paired passages never replace a stair, discovery or obstructed tile.
-function addTunnels(map, rules = state?.runRules || []) {
-  if (Math.random() >= (rules.includes("echoes") ? 0.5 : 0.14)) return;
-  const pairs = Math.random() < 0.08 ? 2 : 1;
+// A tunnel is an explicit bidirectional graph edge, never an event on a bridge.
+// Invalid/asymmetric save pointers cannot satisfy connectivity or route repair.
+function tunnelDestination(map, from) {
+  const c = map[from], to = c?.tunnelTo;
+  return c?.event === "tunnel" && !c.wall && Number.isInteger(to) && to !== from &&
+    map[to]?.event === "tunnel" && !map[to].wall && map[to].tunnelTo === from
+    ? to : null;
+}
+function floorNeighbors(map, from, tunnels = true) {
+  const next = neighbors(from), to = tunnels ? tunnelDestination(map, from) : null;
+  if (to !== null && !next.includes(to)) next.push(to);
+  return next;
+}
+function tunnelPairCount(rules) {
+  return Math.random() < (rules.includes("echoes") ? 0.5 : 0.14)
+    ? Math.random() < 0.08 ? 2 : 1 : 0;
+}
+function addTunnels(map, rules = state?.runRules || [], { pairs = tunnelPairCount(rules) } = {}) {
   for (let pair = 0; pair < pairs; pair++) {
-    const free = [...mapDistances(map).keys()].filter(
-      (i) =>
-        i !== pos(1, 7) &&
-        !map[i].wall &&
-        !map[i].event &&
-        !map[i].structure &&
-        map[i].terrain !== "bridge",
-    );
-    if (free.length < 2) break;
-    const a = pick(free),
-      ends = free.filter(
-        (b) =>
-          Math.abs((a % W) - (b % W)) +
-            Math.abs(Math.floor(a / W) - Math.floor(b / W)) >=
-          3,
-      );
-    if (!ends.length) break;
-    const b = pick(ends);
-    for (const [from, to] of [
-      [a, b],
-      [b, a],
-    ])
-      Object.assign(map[from], {
-        event: "tunnel",
-        feature: "tunnel",
-        tunnelTo: to,
-        tunnelPair: pair,
-      });
+    const reachable = mapDistances(map),
+      free = map.map((c, i) => i).filter((i) => i !== pos(1, 7) && !map[i].wall &&
+        !map[i].event && !map[i].structure && map[i].terrain !== "bridge"),
+      entrances = free.filter((i) => reachable.has(i));
+    if (!entrances.length) break;
+    // Prefer linking a detached bank/stone chamber, retaining a real barrier.
+    const detached = free.filter((i) => !reachable.has(i)),
+      possible = entrances.filter((i) => (detached.length ? detached : free).some((j) => tileDistance(i, j) >= 3));
+    if (!possible.length) break;
+    const a = pick(possible),
+      b = pick((detached.length ? detached : free).filter((i) => tileDistance(a, i) >= 3));
+    for (const [from, to] of [[a, b], [b, a]])
+      Object.assign(map[from], { event: "tunnel", feature: "tunnel", tunnelTo: to, tunnelPair: pair });
   }
 }
+function ensureStairDistance(map) {
+  const stair = map.findIndex((c) => c.event === "stairs");
+  let distances = mapDistances(map);
+  if (distances.get(stair) >= 8) return;
+  let choices = [...distances.keys()].filter((i) => distances.get(i) >= 8 &&
+    !map[i].event && !map[i].structure && map[i].terrain === "floor");
+  if (!choices.length) {
+    // A pair of shortcuts can exceptionally make the entire graph too small.
+    // Retire those shortcuts and repair a conventional distant route instead.
+    for (const c of map) if (c.event === "tunnel") {
+      c.event = c.feature = null;
+      delete c.tunnelTo;
+      delete c.tunnelPair;
+    }
+    const far = pos(W - 2, 1);
+    if (stair === far) { ensureStairsPath(map); return; }
+    Object.assign(map[far], { wall: false, terrain: "floor" });
+    ensureStairsPath(map, far);
+    choices = [far];
+  }
+  const target = map[pick(choices)], old = map[stair],
+    displaced = { event: target.event, feature: target.feature };
+  Object.assign(target, { event: "stairs", feature: "stairs", bossDefeated: false });
+  old.event = displaced.event;
+  old.feature = displaced.feature;
+  delete old.bossDefeated;
+}
 async function tunnelEncounter(c) {
-  const destination = c.tunnelTo;
+  const destination = tunnelDestination(state.map, state.map.indexOf(c));
   if (
+    destination === null ||
     !Number.isInteger(destination) ||
     !state.map[destination] ||
     state.map[destination].wall
@@ -22951,6 +23110,9 @@ function inspiredRoll(h, base) {
     "poison",
     "stun",
     "stimulant",
+    "rally",
+    "trick",
+    "bash",
   ].filter((k) => base[k] > 0);
   if (keys.length && characterMoment("inspired", h)) {
     const key = keys.reduce((a, b) => (base[a] >= base[b] ? a : b));
@@ -23095,16 +23257,16 @@ function autoBuildFor(h) {
       h.specialism === "defence"
         ? ["bulwark", "balanced", "assault"]
         : ["assault", "balanced", "bulwark"],
-    rogue: ["assault", "venom", "enchanter"],
+    rogue: ["assault", "venom", "balanced"],
     mage:
       h.specialism === "defence"
         ? ["mender", "enchanter", "balanced"]
         : ["venom", "assault", "enchanter"],
     ranger: ["assault", "balanced", "enchanter"],
-    berserker: ["assault", "balanced", "enchanter"],
+    berserker: ["assault", "balanced"],
     jester: ["trickster", "balanced", "enchanter"],
   }[h.job] || ["balanced"];
-  if (!AUTO_ARCHETYPES[h.autoArchetype]) {
+  if (!choices.includes(h.autoArchetype)) {
     let hash = 0;
     for (const c of String(h.id))
       hash = (Math.imul(hash, 31) + c.charCodeAt(0)) >>> 0;
@@ -23119,9 +23281,16 @@ function autoBuildUtility(h) {
   const weights = {
     ...build.weights,
     selfHeal: 1.25,
+    rally: h.autoArchetype === "enchanter" ? 1.6 : 0.75,
+    trick: h.job === "jester" ? 1.1 : 0,
     selfharm: -0.3,
     fury: 0.2,
   };
+  weights.stimulant = Math.min(0.65, weights.stimulant || 0);
+  const otherDamage = state.party.filter((a) => a.id !== h.id && alive(a) && directDamageShare(a) >= 0.3).length;
+  if (h.job === "mage" && otherDamage >= 2) {
+    Object.assign(weights, { heal: 2.8, teamHeal: 2.8, block: 2.4, stun: 1.8, damage: 0.8, poison: 0.6, rally: 1 });
+  }
   const limits = {
     damage: Math.max(7, 3 + state.depth * 2.1),
     block: 4 + state.depth * 0.6,
@@ -23129,7 +23298,9 @@ function autoBuildUtility(h) {
     teamHeal: 4 + state.depth * 0.6,
     poison: 3 + state.depth * 0.35,
     stun: 3 + state.depth * 0.3,
-    stimulant: 3 + state.depth * 0.3,
+    stimulant: 1.5,
+    rally: 2,
+    trick: 1.5,
     selfHeal: 5 + state.depth * 0.5,
   };
   let utility = 0;
@@ -23142,26 +23313,30 @@ function autoBuildUtility(h) {
   }
   const coverage =
     {
-      assault: { stimulant: [1.2, 3], stun: [0.5, 1.5] },
-      bulwark: { block: [3, 2.5], stun: [1.5, 4], stimulant: [1, 2.5] },
+      assault: { stun: [0.5, 1] },
+      bulwark: { block: [3, 2.5], stun: [1.5, 4] },
       balanced: {
         block: [2, 2],
         stun: [1, 3],
-        stimulant: [1, 2.5],
         heal: [2, 1],
       },
-      venom: { poison: [3, 2], stun: [1.2, 3], stimulant: [0.8, 2] },
+      venom: { poison: [3, 2], stun: [1.2, 3] },
       mender: {
         heal: [3, 2],
         block: [2.5, 2],
         stun: [0.6, 2],
-        stimulant: [1, 2],
+        rally: [0.7, 1],
       },
-      enchanter: { stimulant: [3, 4], stun: [1.5, 3], block: [1, 1] },
-      trickster: { stun: [1.5, 2], stimulant: [1.5, 2], poison: [1.5, 2] },
+      enchanter: { rally: [1, 1], stun: [1.5, 3], block: [1.5, 2] },
+      trickster: { stun: [1.5, 2], trick: [0.7, 1], poison: [1.5, 2] },
     }[h.autoArchetype] || {};
   for (const [key, [target, weight]] of Object.entries(coverage))
     utility += Math.min(target, fx[key] || 0) * weight;
+  if (h.job === "mage" && otherDamage >= 2) {
+    utility += Math.min(2.5, fx.block) * 4 + Math.min(3, fx.heal + fx.teamHeal) * 3 + Math.min(1, fx.stun) * 3;
+    const recovery = fx.heal + fx.teamHeal * state.party.filter(alive).length;
+    utility -= Math.max(0, recovery - (6 + state.depth)) * 1.6;
+  }
   const offence = fx.damage + fx.poison * 1.2,
     minDamage = solo
       ? Math.max(3, 2 + state.depth * 0.75)
@@ -23169,7 +23344,52 @@ function autoBuildUtility(h) {
   utility -= Math.max(0, minDamage - offence) * (solo ? 12 : 7);
   // Avoid support-only survivors and favour some self-recovery when alone.
   if (solo) utility += Math.min(2, fx.heal + fx.selfHeal) * 1.1;
-  return utility + fx.crit * (h.job === "jester" ? 2 : 3);
+  // Chance to actually hit matters independently of mean damage: one huge
+  // attack among many buffs is not a reliable damage dealer.
+  const minShare = solo ? 0.4 : ["rogue", "ranger", "berserker"].includes(h.job) ? 0.38 : h.job === "mage" && otherDamage >= 2 ? 0.2 : 0.3;
+  utility -= Math.max(0, minShare - directDamageShare(h)) * 75;
+  for (const reel of h.reels) {
+    const p = faceShare(reel, ["attack", "magic", "poison"]);
+    utility -= Math.max(0, (solo ? 0.2 : 0.12) - p) * 16;
+  }
+  for (const [types, cap] of [[["stimulant", "rally"], buffFaceLimit(h)], [["trick"], 0.22]]) {
+    const over = Math.max(0, faceShare(h.reels.flat(), types) - cap);
+    utility -= over * 60 + over * over * 80;
+  }
+  return utility + fx.crit * 2;
+}
+function faceShare(reel, types) {
+  const weight = reel.reduce((n, f) => n + (f.weight || 1), 0);
+  return weight ? reel.reduce((n, f) => n + (types.includes(f.type) ? (f.weight || 1) : 0), 0) / weight : 0;
+}
+function directDamageShare(h) {
+  return h.reels.reduce((n, reel) => n + faceShare(reel, ["attack", "magic", "poison"]), 0) / 3;
+}
+function buffFaceLimit(h) {
+  return ["mage", "jester"].includes(h.job) && h.autoArchetype === "enchanter" ? 0.22 : 0.17;
+}
+// Repair last release's over-stimulated AI builds using real refunds/prices.
+// New candidates then pass through the same density penalties above.
+function repairOverbuffBuild(h) {
+  let edits = 0;
+  for (let attempts = 0; attempts < 24; attempts++) {
+    if (faceShare(h.reels.flat(), ["stimulant", "rally"]) <= buffFaceLimit(h)) break;
+    const row = h.reels.flatMap((reel, r) => reel.map((face, j) => ({ face, r, j })))
+      .find(({ face }) => ["stimulant", "rally"].includes(face.type));
+    if (!row) break;
+    const { r, j } = row, reel = h.reels[r];
+    const damageAllies = state.party.filter((a) => a !== h && alive(a) && directDamageShare(a) >= 0.3).length,
+      fx = expectedHeroEffects(h),
+      type = h.job === "mage" && damageAllies >= 2 ? (fx.heal + fx.teamHeal < fx.block + 2 ? "heal" : "block") : h.job === "mage" ? "magic" : "attack";
+    let cost = faceEditCost(h, r, j, "swap", type);
+    while (cost > h.points && reel[j].tier > 1 && applyFaceEdit(h, r, j, "weaken")) {
+      edits++;
+      cost = faceEditCost(h, r, j, "swap", type);
+    }
+    if (cost && cost <= h.points && applyFaceEdit(h, r, j, "swap", type)) edits++;
+    else break;
+  }
+  return edits;
 }
 const soloOffence = (h) => {
   const f = expectedHeroEffects(h);
@@ -23208,28 +23428,39 @@ function repairSoloBuild(h) {
 }
 // END GENERATED AUTO BUILDS
       // BEGIN GENERATED JESTER
-// Jester rules use symbol kinds, not ranks: three different meaningful kinds
-// Jackpot; a normal matching triple backfires. One paid action has one encore.
-function jesterJackpot(symbols) {
-  return (
-    symbols.length === 3 &&
-    symbols.every((s) => !["blank", "miss"].includes(s.type)) &&
-    new Set(symbols.map((s) => s.type)).size === 3
-  );
+// Jesters use ordinary triple criticals. Trick marks charge one bonus Punchline;
+// its temporary tier increase never edits purchased faces or chains free rolls.
+const JESTER_ANTICIPATION_CAP = 6;
+function jesterAnticipation(h, power) {
+  if (h.job !== "jester" || power <= 0) return false;
+  const total = (h.anticipation || 0) + power;
+  h.anticipation = Math.min(JESTER_ANTICIPATION_CAP - 1, total);
+  const ready = total >= JESTER_ANTICIPATION_CAP;
+  if (ready) h.anticipation = Math.min(JESTER_ANTICIPATION_CAP - 1, total - JESTER_ANTICIPATION_CAP);
+  syncRangerAim(h);
+  actionLabel(entityArt(h), ready ? "PUNCHLINE READY!" : `ANTICIPATION +${power}`);
+  burst(entityArt(h), "paper", ready ? 38 : 12);
+  return ready;
 }
-function jesterOdds(h) {
-  let jackpot = 0,
-    backfire = 0;
-  const totals = h.reels.map((r) => r.reduce((n, f) => n + (f.weight || 1), 0));
-  for (const a of h.reels[0])
-    for (const b of h.reels[1])
-      for (const c of h.reels[2]) {
-        const faces = [a, b, c],
-          p = faces.reduce((n, f, k) => (n * (f.weight || 1)) / totals[k], 1);
-        if (jesterJackpot(faces)) jackpot += p;
-        else if (matchCount(faces) === 3) backfire += p;
-      }
-  return { jackpot, backfire };
+function anticipationMarkup(h) {
+  return `<span class="aim-meter anticipation-meter" role="meter" aria-label="Jester anticipation" aria-valuemin="0" aria-valuemax="${JESTER_ANTICIPATION_CAP}" aria-valuenow="${h.anticipation || 0}" data-tooltip="Trick marks build anticipation. At 6, gain one free Punchline roll with every non-empty ordinary mark one rank stronger (maximum IV). Punchlines cannot charge another Punchline. Clears after battle."><b>TRICK ${h.anticipation || 0}/${JESTER_ANTICIPATION_CAP}</b><span class="aim-track"><i style="width:${100 * (h.anticipation || 0) / JESTER_ANTICIPATION_CAP}%"></i></span><small>next: Punchline</small></span>`;
+}
+function punchlineReels(h) {
+  return giftedReels(h).map((reel) => reel.map((face) =>
+    ["blank", "class"].includes(face.type) ? { ...face } :
+      { ...face, tier: Math.min(maxFaceTier(face.type), face.tier + 1), punchline: true },
+  ));
+}
+async function punchlineFX(h) {
+  const machine = $("#machine-hero-" + state.party.indexOf(h));
+  machine?.classList.add("punchline-ready");
+  machine?.style.setProperty("--punchline-motion", String(preferences().shake));
+  combatCallout(entityArt(h), "PUNCHLINE! · +1 REEL RANK", "gold");
+  GameSound.play("jesterTrick");
+  screenFX("critical", 0.65);
+  burst(machine, "confetti", 48);
+  shakeElement(machine, 3, "rumble");
+  await feedbackPause(skip ? 180 : 420);
 }
 function giftedReels(entity) {
   return entity.reels.map((reel, k) => {
@@ -23255,15 +23486,6 @@ function spendReelGifts(entity) {
   entity.reelGifts = (entity.reelGifts || [])
     .map((g) => ({ ...g, uses: g.uses - 1 }))
     .filter((g) => g.uses > 0);
-}
-function jesterBackfire(h) {
-  h.stun = 1;
-  h.stunAge = 0;
-  h.stunAppliedRoll = state.stunRollSerial || 0;
-  combatCallout(entityArt(h), "THE JOKE'S ON ME · STUNNED", "danger");
-  burst(entityArt(h), "scary", 22);
-  GameSound.play("jesterFail");
-  log(h.name + " rolls matching marks and stuns themself.");
 }
 async function jesterWildcard(h) {
   const enemies = livingEnemies(),
@@ -23368,16 +23590,6 @@ async function jesterWildcard(h) {
   await feedbackPause(skip ? 140 : 300);
 }
 async function heroCriticalMultiplier(h, symbols, base) {
-  if (h.job === "jester") {
-    if (jesterJackpot(symbols))
-      return rollCritical(h.name, symbols, false, {
-        actor: h,
-        forceCrit: true,
-        jackpot: true,
-        details: effectDetails(base),
-      });
-    return 1;
-  }
   return rollCritical(h.name, symbols, false, {
     actor: h,
     details: effectDetails(base),
@@ -23559,26 +23771,12 @@ function wellResultsMarkup(before = null, after = null, multiplier = 1) {
       // BEGIN GENERATED REWARD AUDIO
 // Original temporary Web Audio cues, mixed through the existing SFX bus/pool.
 const REWARD_CUES = Object.freeze({
-  coinsRush: {
-    frequencies: [930, 1420, 1130, 1780, 1240, 1520],
-    duration: 0.48,
-    gain: 0.035,
-    type: "triangle",
-    cooldown: 600,
-  },
   itemFind: {
     frequencies: [660, 880, 1320],
     duration: 0.28,
     gain: 0.065,
     type: "sine",
     cooldown: 160,
-  },
-  criticalGold: {
-    frequencies: [980, 1470, 1960],
-    duration: 0.36,
-    gain: 0.055,
-    type: "triangle",
-    cooldown: 220,
   },
   criticalHeal: {
     frequencies: [440, 660, 880],
@@ -23650,13 +23848,6 @@ const REWARD_CUES = Object.freeze({
     type: "triangle",
     cooldown: 180,
   },
-  jesterFail: {
-    frequencies: [440, 370, 294, 220],
-    duration: 0.45,
-    gain: 0.07,
-    type: "triangle",
-    cooldown: 220,
-  },
   tunnel: {
     frequencies: [180, 270, 405, 540],
     duration: 0.5,
@@ -23667,16 +23858,12 @@ const REWARD_CUES = Object.freeze({
 });
 function playCriticalTheme(options, details) {
   const mark = details.find((d) => d.value > 0)?.icon;
-  const cue = options.jackpot
-    ? "jesterTrick"
-    : options.context === "treasure"
-      ? "criticalGold"
-      : options.context === "well"
+  if (options.context === "treasure" || mark === "coin") return;
+  const cue = options.context === "well"
         ? "criticalHeal"
         : ["trap", "rockfall", "ruin"].includes(options.context)
           ? "criticalTrap"
           : {
-              coin: "criticalGold",
               heal: "criticalHeal",
               blessing: "criticalHeal",
               magic: "criticalMagic",
@@ -23686,6 +23873,8 @@ function playCriticalTheme(options, details) {
               trap: "criticalTrap",
               stun: "criticalStun",
               flame: "criticalBuff",
+              rally: "criticalBuff",
+              trick: "jesterTrick",
               rage: "criticalBuff",
               bloodprice: "criticalBlood",
             }[mark] || "criticalBlade";
@@ -23958,7 +24147,7 @@ function contributionType(symbol, owner) {
   if (owner?.job === "mage")
     return owner.lastResonance || mageResonance(owner, owner.last);
   if (owner?.job === "berserker") return "attack";
-  if (owner?.job === "fighter") return "rage";
+  if (owner?.job === "fighter") return "block";
   if (owner?.job === "rogue") return "attack";
   if (owner?.job === "ranger")
     return state.lastExecution?.heroId === owner.id &&
@@ -24482,11 +24671,11 @@ function revealCriticalPayoff(region, details, multiplier) {
             (partySize===1 ? Math.max(0,4-depth)*.015 : 0),
         );
       }
-      function mapDistances(map, start = pos(1, 7)) {
+      function mapDistances(map, start = pos(1, 7), tunnels = true) {
         const distances = new Map([[start, 0]]),
           queue = [start];
         for (const i of queue)
-          for (const j of neighbors(i))
+          for (const j of floorNeighbors(map, i, tunnels))
             if (!map[j].wall && !distances.has(j)) {
               distances.set(j, distances.get(i) + 1);
               queue.push(j);
@@ -24505,7 +24694,7 @@ function revealCriticalPayoff(region, details, multiplier) {
           queue.sort((a, b) => costs.get(a) - costs.get(b));
           let i = queue.shift();
           if (i === stairs) break;
-          for (const j of neighbors(i)) {
+          for (const j of floorNeighbors(map, i)) {
             if (j % W === 0 || j % W === W - 1 || j < W || j >= W * (H - 1)) continue;
             const next =
               costs.get(i) + (map[j].wall ? (map[j].structure ? 10000 : 30) : 1);
@@ -24650,7 +24839,6 @@ function revealCriticalPayoff(region, details, multiplier) {
               max: 1600 + fxRandom() * 1200,
               kind: "coin",
             });
-          if (gold >= 60 || massive) GameSound.play("coinsRush");
           coinRain.remaining -= count;
           particles = particles.slice(-900);
           if (!fxFrame) fxFrame = requestAnimationFrame(drawParticles);
@@ -25188,7 +25376,7 @@ function revealCriticalPayoff(region, details, multiplier) {
           state.map.filter((c) => c.seen && !c.wall).length >=
             (ruleEnabled("hunted") ? 12 : 18)
         ) {
-          const reach = mapDistances(state.map, state.position);
+          const reach = mapDistances(state.map, state.position, false);
           let far = [...reach.keys()].filter(
             (i) => reach.get(i) >= 6 && !state.map[i].event,
           );
@@ -25434,7 +25622,7 @@ function revealCriticalPayoff(region, details, multiplier) {
           job: "mage",
           brief: "Power every third roll",
           description:
-            "Mage equipment. Every third roll grants a stimulant; +1 magic damage.",
+            "Mage equipment. Every third roll grants ally stimulant; +1 magic damage.",
           magic: 1,
           stimEvery: 3,
         },
@@ -25545,6 +25733,8 @@ function revealCriticalPayoff(region, details, multiplier) {
           stun: 0,
           poison: 0,
           stimulant: 0,
+          rally: 0,
+          trick: 0,
           rage: 0,
           crit: 0,
           selfharm: 0,
@@ -25561,12 +25751,15 @@ function revealCriticalPayoff(region, details, multiplier) {
             probabilities[key] = (probabilities[key] || 0) + p;
             if (["attack", "magic"].includes(t)) out.damage += ATTACK_POWER[face.tier] * p;
             else if (t === "class") {
-              if (h.job === "fighter") out.rage += 2 * p;
+              if (h.job === "fighter") {
+                out.block += 2 * p;
+                out.damage += (2 + Math.min(12, state.enemy ? state.block : 2)) * p;
+              }
               if (h.job === "jester") {
                 out.damage += 3 * p;
                 out.heal += 2 * p;
                 out.block += p;
-                out.stimulant += p;
+                out.rally += p / 6;
               }
               if (h.job === "rogue") out.damage += 9 * p;
               if (h.job === "berserker") {
@@ -25603,7 +25796,9 @@ function revealCriticalPayoff(region, details, multiplier) {
             ((chances[1][key] || 0) + (chances[1]["class:1"] || 0)) *
             (chances[2][key] || 0);
         }
-        if (h.job === "jester") out.crit = jesterOdds(h).jackpot;
+        // One Trick contributes toward a six-point bonus roll; use a bounded
+        // expectation, never value it as a doubled critical or a damage source.
+        if (h.job === "jester") out.trick *= 0.5;
         for (const key of ["damage", "heal", "selfHeal", "teamHeal", "block", "stun", "poison"])
           out[key] *= 1 + out.crit * 1.7;
         if (out.damage)
@@ -25628,6 +25823,8 @@ function revealCriticalPayoff(region, details, multiplier) {
           poison: out.poison,
           stun: out.stun,
           stimulant: out.stimulant,
+          rally: out.rally,
+          trick: out.trick,
         });
         Object.assign(out, {
           damage: temperament.attack,
@@ -25638,6 +25835,8 @@ function revealCriticalPayoff(region, details, multiplier) {
           poison: temperament.poison,
           stun: temperament.stun,
           stimulant: temperament.stimulant,
+          rally: temperament.rally,
+          trick: temperament.trick,
         });
         out.damage = Math.max(0, out.damage);
         out.teamHeal += equipmentBonus(h, "teamHeal");
@@ -25731,7 +25930,9 @@ function revealCriticalPayoff(region, details, multiplier) {
             )
               ? 1.6
               : 0.05) +
-          fx.stimulant * (health.party.some(({ h }) => !h.stimulant) ? 2 : 0.1) +
+          fx.stimulant * (!h.stimulant && fx.damage + fx.poison > 2 ? 0.7 : 0.04) +
+          fx.rally * (!supportStimulantTarget(h).stimulant ? 0.9 : 0.05) +
+          fx.trick * (0.4 + (h.anticipation || 0) / 6) +
           fx.rage * ((h.rage || 0) < 4 ? 2.2 : 0)
         );
       }
@@ -25740,7 +25941,7 @@ function revealCriticalPayoff(region, details, multiplier) {
       }
       function autoUpgradeHero(h) {
         autoBuildFor(h);
-        let changed = repairSoloBuild(h);
+        let changed = repairSoloBuild(h) + repairOverbuffBuild(h);
         while (changed < 40 && h.points > 0) {
           const before = autoUpgradeValue(h);
           let best = null;
@@ -26122,13 +26323,17 @@ function revealCriticalPayoff(region, details, multiplier) {
           readiness = autoReadiness();
         state.map.forEach((cell, i) => {
           if (cell.seen && cell.wall) return;
-          if (i === state.position && !["stairs", "well"].includes(cell.event))
+          if (i === state.position && !["stairs", "well", "tunnel"].includes(cell.event))
             return;
           let priority = 0;
           if (cell.seen) {
             if (cell.event === "stairs") priority = readiness.prepare ? -250 : 180;
             else if (cell.event === "well" && needsWell) priority = 650;
-            else if (cell.event === "tunnel") return;
+            else if (cell.event === "tunnel") {
+              const to = tunnelDestination(state.map, i);
+              if (to === null || state.map[to].seen) return;
+              priority = 220;
+            }
             else if (cell.event === "treasure") priority = 330;
             else if (
               cell.event === "recruit" &&
@@ -26255,7 +26460,7 @@ function revealCriticalPayoff(region, details, multiplier) {
           } else if (kind === "tunnel") {
             const cell = state.map[state.position];
             button = $(
-              !state.map[cell.tunnelTo]?.seen ? "#tunnel-use" : "#tunnel-leave",
+              travel?.tunnelGoal === cell.tunnelTo || !state.map[cell.tunnelTo]?.seen ? "#tunnel-use" : "#tunnel-leave",
             );
           } else if (kind === "travel-choice") {
             const risky = $("#stage-card").dataset.travelKind !== "cartographer";

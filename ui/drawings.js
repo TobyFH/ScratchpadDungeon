@@ -207,6 +207,8 @@ function leverArt() {
   return `<svg class="pencil-art" viewBox="0 0 35 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 78 11-.5.5 13-12 .5Z M14 78l8-56 4 .5-7 57" fill="var(--paper-shade)"/><path d="m15 76 8-53m-15 60 8-.5m-8 5 8-.5M7 95l18-.5" stroke-width=".7"/><path d="M25 2q12 1 11 12-1 10-12 10-10-1-10-12Q15 2 25 2Z" fill="var(--paper)"/><path d="M25 5q9 1 8 9-1 8-9 7-7-1-7-8 0-7 8-8Zm-7 8 6-7m-6 12L30 6m-7 15 10-10" stroke-width=".65"/><path class="pencil-echo" d="m5 79 1 14 14-1M13 77l8-53"/></svg>`;
 }
 const paths = {
+  trick: "M4 13 9 3l8 6 8-5 4 11-8 3-6-5-6 5ZM8 21q8 12 17-1M11 22v3m10-4v3M4 5h1m23 20h1",
+  rally: "M6 25V13l5-9 5 9v12ZM9 15h5M20 12h9m-4-4 4 4-4 4M18 20h9m-4-4 4 4-4 4",
   jester:
     "M4 14Q1 1 10 7l6 6 5-7q10-7 7 8l-2 10H7ZM4 14l12 5 12-5M4 12a2 2 0 1 0 0 .1M21 5a2 2 0 1 0 0 .1M9 24v4h16v-4",
   tunnel:
