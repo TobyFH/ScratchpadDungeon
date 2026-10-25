@@ -41,6 +41,8 @@ async function game(t, { auto = false, width = 1440 } = {}) {
     let seed = 107;
     window.addEventListener("DOMContentLoaded", () => {
       temperamentEffects = (h, base) => base;
+      heroDamagePower = (h, n) => n;
+      heroHealingPower = n => n;
       characterLuck = () => 0.999999;
       // These regressions isolate established base rules. Tactics has dedicated
       // real-rule tests for opening bonuses and random vulnerability.
@@ -65,6 +67,8 @@ async function game(t, { auto = false, width = 1440 } = {}) {
     // These mechanical regressions isolate base values from temperament, which
     // has dedicated real-build tests in combat-builds.test.cjs.
     temperamentEffects = (h, base) => base;
+    heroDamagePower = (h,n) => n;
+    heroHealingPower = n => n;
     // These regressions isolate established base rules. Tactics has dedicated
     // real-rule tests for opening bonuses and random vulnerability.
     setupBattleOpening = () => {
@@ -697,7 +701,7 @@ test("rare adventurers preview class, art and dialogue; decline, accept, and the
   assert.equal(await p.evaluate(() => state.party.length), 3);
 });
 
-test("shops retain their modest 36% floor chance and early solo adventurers have a slightly increased chance", async (t) => {
+test("shops retain their modest 40% floor chance and early solo adventurers have a slightly increased chance", async (t) => {
   let p = await game(t);
   let rates = await p.evaluate(() => {
     let shops = 0,
@@ -709,7 +713,7 @@ test("shops retain their modest 36% floor chance and early solo adventurers have
     }
     return { shops: shops / 1000, recruits: recruits / 1000 };
   });
-  assert.ok(rates.shops > 0.31 && rates.shops < 0.41, JSON.stringify(rates));
+  assert.ok(rates.shops > 0.35 && rates.shops < 0.45, JSON.stringify(rates));
   assert.ok(
     rates.recruits > 0.37 && rates.recruits < 0.51,
     JSON.stringify(rates),
@@ -739,7 +743,7 @@ test("shop purchases deduct gold, enforce stock and funds, heal the team, and re
   await p.locator('[data-buy="heal"]').click();
   assert.deepEqual(
     await p.evaluate(() => state.party.map((h) => h.hp)),
-    [48, 28],
+    [50, 28],
   );
   await p.locator('[data-buy="reveal"]').click();
   assert.equal(await p.evaluate(() => state.exitFound), true);
@@ -1002,7 +1006,7 @@ test("victory levels grant HP and personal editing points; weighted editing pres
   await p.locator('[data-spin="0"]').click();
   await finish(p);
   assert.equal(await p.evaluate(() => state.party[0].level), 2);
-  assert.equal(await p.evaluate(() => state.party[0].maxHp), 54);
+  assert.equal(await p.evaluate(() => state.party[0].maxHp), 56);
   assert.equal((await p.evaluate(() => state.party[0].points)) >= 8, true);
   await p.locator('.edit-button[data-edit="0"]').click();
   let points = await p.evaluate(() => state.party[0].points);
@@ -1114,7 +1118,7 @@ test("save restores speed and artefacts and migrates the earlier Sunseed-era not
     localStorage.setItem("scratchpad-dungeon-v2", JSON.stringify(old));
   });
   await p.reload();
-  assert.equal(await p.evaluate(() => state.version), 20);
+  assert.equal(await p.evaluate(() => state.version), 21);
   assert.equal(await p.evaluate(() => state.speed), "skip");
   assert.equal(await p.evaluate(() => state.relic), undefined);
   assert.doesNotMatch(await p.locator("body").textContent(), /Sunseed/);
@@ -1442,14 +1446,14 @@ test("enemy multi-strikes pause for death and burial, then retarget a surviving 
   );
   await p.waitForSelector("#death-confirm");
   assert.equal(await p.evaluate(() => busy), true);
-  assert.equal(await p.evaluate(() => state.party[0].hp), 48);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 50);
   assert.equal(await p.evaluate(() => state.party[1].dead), true);
   await p.locator("#death-confirm").click();
   await p.waitForSelector("#burial-confirm");
   await p.locator("#burial-confirm").click();
   await p.evaluate(() => window.testAction);
   assert.equal(await p.evaluate(() => state.party.length), 1);
-  assert.equal(await p.evaluate(() => state.party[0].hp), 42);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 44);
   assert.equal(
     await p.evaluate(() => state.lastEnemyRoll.heroId),
     await p.evaluate(() => state.party[0].id),
@@ -1599,7 +1603,7 @@ test("three safe trap faces keep confirmation without a pointless critical", asy
   assert.equal(await p.locator("#stage-title").textContent(), "A hidden trap");
   await p.locator("#stage-confirm").click();
   await p.evaluate(() => window.testAction);
-  assert.equal(await p.evaluate(() => state.party[0].hp), 48);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 50);
 });
 
 test("a lethal critical is visibly dealt before the victory popup opens", async (t) => {
@@ -1892,7 +1896,7 @@ test("fully blocked damage puts a persistent shield overlay over the specific he
     await p.locator('.shielded-overlay[data-target="enemy-art"] svg').count(),
     1,
   );
-  assert.equal(await p.evaluate(() => state.party[0].hp), 48);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 50);
   assert.equal(await p.evaluate(() => state.enemy.hp), 1000);
   await p.screenshot({ path: path.join(root, "test-results/shielded.png") });
   await p.evaluate(() => {
@@ -1901,7 +1905,7 @@ test("fully blocked damage puts a persistent shield overlay over the specific he
     damageHero(0, 5, "A claw");
   });
   assert.equal(await p.locator(".shielded-overlay").count(), 0);
-  assert.equal(await p.evaluate(() => state.party[0].hp), 44);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 46);
 });
 
 test("rivers and stone are blocked, bridges are traversable, and marked stairs stay highlighted", async (t) => {
@@ -2433,14 +2437,14 @@ test("each enemy has its own countdown and a stunned hero advances neither enemy
   ]);
   await p.locator('[data-spin="0"]').click();
   await finish(p);
-  assert.equal(await p.evaluate(() => state.party[0].hp), 42);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 44);
   assert.deepEqual(
     await p.evaluate(() => state.enemies.map((e) => e.countdown)),
     [3, 1],
   );
   await p.locator('[data-spin="0"]').click();
   await finish(p);
-  assert.equal(await p.evaluate(() => state.party[0].hp), 36);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 38);
   assert.deepEqual(
     await p.evaluate(() => state.enemies.map((e) => e.countdown)),
     [2, 4],
@@ -2553,7 +2557,7 @@ test("ruins can be ignored, revisited, then roll a real balance of loot and dama
   });
   await p.locator("#ruin-examine").click();
   await p.waitForSelector("#stage-confirm");
-  assert.equal(await p.evaluate(() => state.party[0].hp), 48);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 50);
   assert.deepEqual(
     await p.evaluate(() => ({
       gold: state.lastRuinRoll.gold,
@@ -2564,7 +2568,7 @@ test("ruins can be ignored, revisited, then roll a real balance of loot and dama
   await p.locator("#stage-confirm").click();
   await finish(p);
   assert.equal(await p.evaluate(() => state.gold), 12);
-  assert.equal(await p.evaluate(() => state.party[0].hp), 46);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 48);
   assert.equal(await p.evaluate(() => state.map[79].event), null);
   await p.evaluate(() => (Math.random = window.oldRandom));
 });
@@ -2830,7 +2834,7 @@ test("early full enemy criticals remain survivable while damage grows faster on 
   });
   await p.locator('[data-spin="0"]').click();
   await finish(p);
-  assert.equal(await p.evaluate(() => state.party[0].hp), 44);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 46);
   assert.equal(await p.evaluate(() => state.lastEnemyRoll.damage), 4);
 });
 
@@ -3040,7 +3044,7 @@ test("Revive Stone is held without an equipment slot, revives at 75%, consumes o
   });
   await p.reload();
   await p.waitForSelector("#revive-use");
-  assert.match(await p.locator("#stage-card").textContent(), /36 \/ 48 HP/);
+  assert.match(await p.locator("#stage-card").textContent(), /38 \/ 50 HP/);
   await p.locator("#revive-use").click();
   await finish(p);
   assert.deepEqual(
@@ -3055,7 +3059,7 @@ test("Revive Stone is held without an equipment slot, revives at 75%, consumes o
       corpse: state.map[state.position].corpses.length,
     })),
     {
-      hp: 36,
+      hp: 38,
       dead: false,
       death: false,
       graveyard: 0,
@@ -3066,7 +3070,7 @@ test("Revive Stone is held without an equipment slot, revives at 75%, consumes o
     },
   );
   await p.reload();
-  assert.equal(await p.evaluate(() => state.party[0].hp), 36);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 38);
   await startEval(
     p,
     "(async()=>{damageHero(0,999,'A second fall');await processDeaths();checkDefeat();render()})()",
@@ -3269,7 +3273,7 @@ test("older saved fights migrate to the gentler curve without losing wounds or e
       face: state.party[0].reels[0][0].tier,
     })),
     {
-      version: 20,
+      version: 21,
       hp: 19,
       max: 38,
       damage: 6,
@@ -3685,7 +3689,7 @@ test("poison ticks for one armour-piercing damage per action, expires, and can w
       block: state.block,
       turns: state.enemy.poison.turns,
     })),
-    { hp: 47, enemy: 999, block: 50, turns: 2 },
+    { hp: 49, enemy: 999, block: 50, turns: 2 },
   );
   assert.equal(await p.locator("#portrait-0 .poison-badge").count(), 1);
   for (let n = 0; n < 2; n++) {
@@ -3760,6 +3764,12 @@ test("ally stimulant targets an ally, boosts damage and defence with visible fir
 test("critical result button remains enabled and skips the hold; event criticals still require the event confirmation", async (t) => {
   const p = await game(t);
   await fast(p);
+  await p.evaluate(() => {
+    // Test manual release, not the short reward timer racing Playwright's
+    // animation-stability wait. Keep the real resolver and release path.
+    const hold = criticalHold;
+    criticalHold = () => hold(10000);
+  });
   await encounter(p);
   await faces(p, [
     ["attack", 1],
@@ -4160,7 +4170,7 @@ test("mixed blade and magic criticals show correct rounded components and tier I
   const p = await game(t);
   await fast(p);
   await p.evaluate(() => {
-    state.party = [makeHero("Ivo", "mage")];
+    state.party = [makeHero("Ivo", "mage", null, [], { specialism: "offence" })];
     state.party[0].points = 20;
     state.party[0].reels[0][0].tier = 3;
     render();
@@ -5002,6 +5012,7 @@ test("version-nine fights adopt the stronger enemy curve without changing hero w
     beginEncounter(true);
     state.version = 9;
     state.party[0].hp = 17;
+    state.party[0].maxHp = 48;
     state.party[0].reels[0][0].tier = 4;
     state.enemy.hp = 123;
     state.enemy.damage = state.enemy.strikes = 1;
@@ -5027,9 +5038,9 @@ test("version-nine fights adopt the stronger enemy curve without changing hero w
         .map((f) => f.tier),
     })),
     {
-      version: 20,
+      version: 21,
       autoplay: false,
-      heroHp: 17,
+      heroHp: 19,
       face: 4,
       enemyHp: 123,
       damage: 12,
@@ -5750,7 +5761,7 @@ test("autoplay shops for needed healing and a map, claims better full-bag suppli
     window.shopping = shopEncounter({ shop: { heal: 1, reveal: 1 } });
   });
   await p.evaluate(() => shopping);
-  assert.equal(await p.evaluate(() => state.party[0].hp), 48);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 50);
   assert.equal(await p.evaluate(() => state.gold), 744);
   assert.equal(await p.evaluate(() => state.exitFound), true);
   await p.evaluate(async () => {
@@ -6510,7 +6521,7 @@ test("Ranger has exactly one middle seal, saves Execute patience for a later hit
   });
   assert.deepEqual(r, {
     charge: 3,
-    damage: 3,
+    damage: 4,
     consumed: 0,
     after: 0,
     attack: 0,
@@ -6727,7 +6738,7 @@ test("camp modifiers change real generation, recruits, gear, starting health and
     };
   });
   assert.equal(r.ranger, 34);
-  assert.equal(r.fighter, 52);
+  assert.equal(r.fighter, 54);
   assert.equal(r.hard.maxHp, Math.ceil(r.normal.maxHp * 1.2));
   assert.equal(r.hard.damage, Math.ceil(r.normal.damage * 1.1) + 1);
   assert.deepEqual(r.events, [3, 4, 2, 1]);
@@ -7624,7 +7635,7 @@ test("healing items recover another hero when the selected hero is full, but kee
   });
   await p.evaluate(() => useItem("potion"));
   assert.equal(await p.evaluate(() => state.target), 0);
-  assert.equal(await p.evaluate(() => state.party[0].hp), 48);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 50);
   await p.evaluate(() => {
     state.party.forEach((h) => (h.hp = h.maxHp));
   });

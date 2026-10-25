@@ -214,8 +214,8 @@ test("workshop exposes large explicit controls, keeps the selected face after ed
   await p.locator('[data-editor-reel="1"]').click();
   await p.locator('[data-editor-face="6"]').click();
   assert.match(
-    await p.locator(".locked-seal").textContent(),
-    /Cannot be upgraded/,
+    await p.locator('[data-class-seal="true"]').textContent(),
+    /Permanent mark.*Cannot remove/,
   );
   assert.equal(await p.locator("#face-destination").count(), 0);
   await p.locator("#modal .primary[data-close]").click();

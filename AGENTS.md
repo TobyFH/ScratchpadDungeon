@@ -74,3 +74,5 @@ using wall-clock time. Bridges have no discoveries. Future UI should preserve
 bulleted guide pages, equal unlock cards and stationary paginated camp controls.
 
 Read `docs/PUNCHLINE_UPDATE.md` for current version-20 rules. Self/ally stimulants are distinct validated face types with a shared three-action overflow model. Floor connectivity must count reciprocal tunnel edges; never force physical bridge repairs across valid portal routes. Punchline uses temporary tier-adjusted copies, never edits purchased reels, never doubles critical multipliers and never chains itself.
+
+Read `docs/BIOMES_UPDATE.md` for current version-21 rules. `game/biomes.js` owns named themes, directed ice movement and bounded mushroom reveals; `game/biome-enemies.js` owns themed species and the self-destruct lifecycle. Generation must preserve a real slide/tunnel stair route. Keep all class tuning in shared hero helpers; Blood Price and Trick are class-exclusive. Fury capacity scales by level and actual lifesteal spends charge. Autoplay repairs class identity through paid validators. Gold critical lock callbacks update one reserved payoff without a later delay.

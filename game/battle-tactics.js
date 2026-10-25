@@ -16,10 +16,7 @@ function entityArt(entity) {
 function gainFury(h, damage = 0, extra = 0) {
   if (h?.job !== "berserker" || !state.enemy || !alive(h)) return;
   const before = h.fury || 0;
-  h.fury = Math.min(
-    BERSERKER_FURY_CAP,
-    before + Math.ceil(damage * 1.5) + extra,
-  );
+  h.fury = Math.min(furyCapacity(h), before + Math.ceil(damage * 1.5) + extra);
   if (h.fury > before) {
     burst(entityArt(h), "damage", 14);
     actionLabel(entityArt(h), `FURY +${h.fury - before}`);
@@ -29,7 +26,9 @@ function gainFury(h, damage = 0, extra = 0) {
 const furyBonus = (h) =>
   h?.job === "berserker" ? Math.floor((h.fury || 0) / 4) : 0;
 function furyMarkup(h) {
-  return `<span class="fury-meter" role="meter" aria-label="Berserker Fury" aria-valuemin="0" aria-valuemax="20" aria-valuenow="${h.fury || 0}" data-tooltip="Wounds feed Fury: 1.5 per HP lost. Every 4 Fury adds 1 damage and 4% lifesteal, up to +5 damage / 20%. Bloodrush also heals you. Blood Price grants extra Fury. Clears after battle."><b>FURY ${h.fury || 0}/20</b><span><i style="width:${(h.fury || 0) * 5}%"></i></span><small>+${furyBonus(h)} damage</small></span>`;
+  const cap = furyCapacity(h),
+    rate = Math.round(furyLeechRate(h) * 100);
+  return `<span class="fury-meter" role="meter" aria-label="Berserker Fury" aria-valuemin="0" aria-valuemax="${cap}" aria-valuenow="${h.fury || 0}" data-tooltip="Wounds add 1.5 Fury per HP lost. Every 4 Fury adds 1 damage and 4.5% lifesteal. Capacity grows by 3 per level. Actual lifesteal spends 1 Fury per 2 HP restored. Blood Price adds extra Fury. Clears after battle."><b>FURY ${h.fury || 0}/${cap}</b><span><i style="width:${(100 * (h.fury || 0)) / cap}%"></i></span><small>+${furyBonus(h)} dmg · ${rate}% drain</small></span>`;
 }
 function setupBattleOpening({ fresh = false } = {}) {
   const living = state.party.filter(alive);
@@ -38,7 +37,9 @@ function setupBattleOpening({ fresh = false } = {}) {
     h.surprised = false;
     h.initiative = null;
   });
-  if (fresh && Math.random() < TACTICS.surpriseChance) {
+  const overgrown = state.map[state.position]?.terrain === "overgrown";
+  const surpriseChance = TACTICS.surpriseChance + (overgrown ? 0.14 : 0);
+  if (fresh && Math.random() < surpriseChance) {
     living.forEach(
       (h) => (h.surprised = Math.random() < TACTICS.surprisePerHero),
     );
@@ -53,7 +54,13 @@ function setupBattleOpening({ fresh = false } = {}) {
   ) {
     pick(ready).initiative = { multiplier: TACTICS.initiativeMultiplier };
   }
-  for (const e of livingEnemies()) planEnemyIntent(e);
+  for (const e of livingEnemies()) {
+    if (overgrown && fresh && !state.opening.surprise && Math.random() < 0.24) {
+      e.countdown += 1;
+      e.caughtUnaware = true;
+    }
+    planEnemyIntent(e);
+  }
 }
 function openingEligible(h) {
   return !state.opening?.firstRoll || !h.surprised;
@@ -119,6 +126,8 @@ function planEnemyIntent(e) {
 function enemyIntent(e) {
   if (e.hp <= 0) return "Defeated";
   if (e.stun) return "Stunned · will miss its turn";
+  if (isExploder(e))
+    return `Fuse ${e.fuseLeft ?? 2} · ${exploderDamage(e)} blast per hero`;
   if (!e.intent) return "Watching the party · roll decides";
   const target =
     state.party.find((h) => h.id === e.intent.targetId && alive(h)) ||
@@ -414,7 +423,7 @@ function normaliseTacticalStatuses(entity) {
   entity.vulnerable ??= null;
   entity.surprised ??= false;
   entity.initiative ??= null;
-  entity.fury = Math.min(BERSERKER_FURY_CAP, Math.max(0, entity.fury || 0));
+  entity.fury = Math.min(furyCapacity(entity), Math.max(0, entity.fury || 0));
   if (entity.poison) {
     const excess = Math.max(0, entity.poison.turns - TACTICS.poisonTurns);
     entity.poison.damage = Math.min(
@@ -548,6 +557,11 @@ async function settleFuryLeech(h, recipients, flights) {
   const actual = healHero(state.party.indexOf(h), offered);
   h.stats.healingDone += actual;
   record.actual = actual;
+  record.furySpent = actual
+    ? Math.min(h.fury || 0, Math.max(1, Math.ceil(actual / 2)))
+    : 0;
+  h.fury = Math.max(0, (h.fury || 0) - record.furySpent);
+  syncRangerAim(h);
   record.healedAt = Date.now();
   return actual;
 }
@@ -558,15 +572,23 @@ const STIMULANT_TURNS = 3;
 function normaliseStimulant(entity) {
   const buff = entity.stimulant;
   if (!buff) return;
-  if (!Number.isFinite(buff.power) || !Number.isFinite(buff.turns) || buff.turns <= 0) {
+  if (
+    !Number.isFinite(buff.power) ||
+    !Number.isFinite(buff.turns) ||
+    buff.turns <= 0
+  ) {
     entity.stimulant = null;
     return;
   }
   entity.stimulant = {
     ...buff,
-    power: Math.max(1, Math.ceil(buff.power)) + Math.max(0, Math.ceil(buff.turns) - STIMULANT_TURNS),
+    power:
+      Math.max(1, Math.ceil(buff.power)) +
+      Math.max(0, Math.ceil(buff.turns) - STIMULANT_TURNS),
     turns: Math.min(STIMULANT_TURNS, Math.ceil(buff.turns)),
-    appliedAt: Number.isFinite(buff.appliedAt) ? buff.appliedAt : (state.actionSerial || 0) - 1,
+    appliedAt: Number.isFinite(buff.appliedAt)
+      ? buff.appliedAt
+      : (state.actionSerial || 0) - 1,
   };
 }
 function applyStimulant(entity, amount) {
@@ -576,25 +598,39 @@ function applyStimulant(entity, amount) {
     old = entity.stimulant,
     duration = (old?.turns || 0) + added;
   entity.stimulant = {
-    power: Math.max(old?.power || 0, added) + Math.max(0, duration - STIMULANT_TURNS),
+    power:
+      Math.max(old?.power || 0, added) +
+      Math.max(0, duration - STIMULANT_TURNS),
     turns: Math.min(STIMULANT_TURNS, duration),
     appliedAt: state.actionSerial,
   };
   syncStatusFX();
   const el = entityArt(entity);
   burst(el, "gold", 22);
-  actionLabel(el, `POWER ${entity.stimulant.power} · ${entity.stimulant.turns} TURNS`);
+  actionLabel(
+    el,
+    `POWER ${entity.stimulant.power} · ${entity.stimulant.turns} TURNS`,
+  );
 }
 function supportStimulantTarget(caster) {
   const allies = state.party.filter((h) => alive(h) && h !== caster);
-  return allies.sort((a, b) => battleRollCount(b) - battleRollCount(a) ||
-    expectedHeroEffects(b).damage - expectedHeroEffects(a).damage)[0] || caster;
+  return (
+    allies.sort(
+      (a, b) =>
+        battleRollCount(b) - battleRollCount(a) ||
+        expectedHeroEffects(b).damage - expectedHeroEffects(a).damage,
+    )[0] || caster
+  );
 }
 function battleRollCount(h) {
   if (!h.battleMemo?.stats) return 0;
   return Math.max(0, (h.stats?.spins || 0) - (h.battleMemo.stats.spins || 0));
 }
 function tickStimulant(entity) {
-  if (entity.stimulant && entity.stimulant.appliedAt < state.actionSerial && --entity.stimulant.turns <= 0)
+  if (
+    entity.stimulant &&
+    entity.stimulant.appliedAt < state.actionSerial &&
+    --entity.stimulant.turns <= 0
+  )
     entity.stimulant = null;
 }

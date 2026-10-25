@@ -26,7 +26,7 @@ for its every-third-roll effect. Consumables still target normally.
 - Old durations above three convert their excess into power once on load.
 - All buffs clear when combat ends. Exact remaining power/duration is hoverable.
 
-Tank's permanent class mark is **Shield Bash**. It adds two team block, then
+Tank's permanent class mark is **Shield Bash**. It adds `2 + floor((level - 1) / 3)` team block, then
 bashes the selected enemy for the existing shield count plus this roll's new
 block. Ordinary critical multiplication applies once to each base effect.
 Against enemy block, each point of bash power strips two block. Power remaining
@@ -108,3 +108,6 @@ hundreds of connected maps including tunnel-only crossings; actual long-move
 teleport prompts and save reload; and stable compact surprise placement.
 Run `npm test` and `npm run review:ui`. Inspect the new Punchline, guide,
 workshop, tunnel-crossing and surprise captures at large and compact sizes.
+
+Current version-21 biomes, class repair preferences and small balance changes
+are documented in [Biome update](BIOMES_UPDATE.md).

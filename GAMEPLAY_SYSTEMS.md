@@ -330,3 +330,14 @@ focus share a viewport tooltip. Room descriptions derive from the current
 revealed cell, nearby revealed water and floor environment, with no RNG or
 hidden-event disclosure. Inspection controls keep their opacity while travel
 disables interaction; round/team block are subdued and reset between fights.
+
+## Version 21: biomes and class tuning
+
+See [BIOMES_UPDATE.md](docs/BIOMES_UPDATE.md) for current formulas and migration.
+`game/biomes.js` centralises named floor themes, directed slide/tunnel movement,
+terrain generation and capped mushroom reveals. `game/biome-enemies.js` provides
+depth-banded local species and the Powder imp fuse/detonation lifecycle.
+`hero-builds.js` shares class/heal tuning, level-scaled Fury and Tank block across
+actual rolls and estimates. Blood Price/Trick edits remain class-exclusive.
+Autoplay uses paid class-identity repairs and charge-aware actor scoring; gold
+criticals update the reserved final value and math at the same lock moment.

@@ -297,8 +297,8 @@ width before reducing text size. Check every topic at compact sizes.
 - Lava has the universal impassable graphite frame. Its proximity layer follows
   ambient lighting, not the event-vignette toggle. Walls occlude its reveal/glow.
 - Tunnel routes and reel-gift marks are meaningful temporary feedback, with no
-  input capture or persistent edits. Jester Jackpots use the existing critical
-  sheet; their eyebrow says different marks, never three of a kind.
+  input capture or persistent edits. Jester uses ordinary matching criticals;
+  Trick builds anticipation for an on-page Punchline, never a special Jackpot.
 - Reward finds pulse/chime sequentially in the fixed browser. Automatic confirm
   waits for presentation; manual navigation stays immediate. Use bounded shake
   profiles from `ui/reward-audio.js`, always through the shared shake control.
@@ -310,3 +310,22 @@ row after portraits appear. Jester anticipation reuses the fixed reel-footnote
 meter. Punchline highlights the existing on-page machine and temporary face
 copies; no extra popup or changing card height. Self/ally stimulant and Trick
 icons use the same centred rank grid as every other mark.
+
+## Biome and class-mark components
+
+- Map edge tints belong on `.map-wrap`, never on the coordinate board. Ice,
+  mushrooms and overgrowth use meaningful `.biome-cover` icons; the current
+  terrain gets one conditional legend entry. Impassable lava keeps the blocker
+  frame. Decorative colours must not hide active discoveries.
+- Class seals are icon-only in reels, with the same centred symbol grid. Their
+  highlight must remain inside the rolling window. Full names/descriptions live
+  in the tooltip and workshop, not tiny labels beneath the symbol.
+- Permanent-seal workshop rows retain the ordinary power-control geometry.
+  Disable the two power controls and omit replacement without enlarging the art.
+- Gold criticals update the reserved number and equation together when locked.
+  Do not add a later calculation row. Loot descriptions fit the fixed find card;
+  verify the longest equipment names at 320px as well as desktop.
+- Powder imp fuse uses an icon, tooltip, intent and timed glow; no new card rows
+  are inserted during countdown. Shared shake and reduced-motion controls apply.
+
+See [Biome update](docs/BIOMES_UPDATE.md) for source ownership and mechanics.

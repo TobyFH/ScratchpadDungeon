@@ -126,6 +126,7 @@ ENEMY_PROFILES.smudger = {
     ["miss", 1],
   ],
 };
+for(const [id,def]of Object.entries(BIOME_ENEMIES)) SPECIES_LORE[id]=[def.name,def.lore];
 const BESTIARY_ENTRIES = Object.entries(SPECIES_LORE).map(
   ([art, [name, lore]]) => ({ id: art, art, name, lore }),
 );

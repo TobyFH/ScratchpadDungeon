@@ -87,10 +87,10 @@ optional travel between distant entrances. Every floor randomises its layout and
 - **Fights:** any living hero can act repeatedly. Ordinary double encounters rise from 2% on floor 1 to 7%, 13% and 18% on floors 2–4, then gain only one percentage point per floor, reaching 24% on floor 10. Each foe has an independent attack clock. Rare elite variants retain their species and gain an Ironbound, Frenzied or Venomous modifier, with an animated aura. Five additional species appear in successive floor pairs: Candle Gnawer, Blind Bellkeeper, Thorn Widow, Gutter Oracle and Page Eater.
 - **Treasure:** roll gold, occasional supplies or equipment, personal points and rare artefacts. A rare chest is a mimic. Items pulse in the reward panel before claiming; coin showers scale with the gold awarded.
 - **Traps:** a warning and illustrated spikes, arrows or boulder precede a danger check. Early damage is restrained. Confirm the outcome before it resolves.
-- **Wells:** use one now or leave it active for later. Each hero receives 15% maximum HP plus half a healing roll. Fountain criticals multiply the complete offered amount by 1.25–1.75. Portrait effects show actual healing.
+- **Wells:** use one now or leave it active for later. Each hero starts with 15% maximum HP plus half a healing roll, with both amounts growing gently by floor. Fountain criticals multiply the complete offered amount by 1.25–1.75. Portrait effects show actual healing.
 - **Beacons:** reveal adjacent cells in staggered waves. Sometimes another one to five cells in the next ring are lit. Stone blocks sight, including closed diagonal corners; rivers do not. Revealed events remain untriggered.
 - **Wanderers:** preview a companion's class, level, health and introduction before accepting. Discovery odds rise after missed floors, with a small solo and early-floor bonus. Newcomers match the rounded average party level and arrive with some level-earned points spent on upgrades. With a full party, accepting opens a replacement choice. Companions who leave alive remain in the final records.
-- **Shops:** a 36% chance per floor. Buy limited supplies, a full-party heal or a map marking the stairs. Buying a map never opens a descent prompt.
+- **Shops:** a 40% chance per floor. Buy limited supplies, a full-party heal or a map marking the stairs. Buying a map never opens a descent prompt.
 - **Ruins and strongholds:** optional mechanisms balance trap damage against loot. Rare walled strongholds hold a dangerous champion with rich spoils and a guaranteed stronger artefact.
 - **Travel discoveries:** rare rockfalls roll a danger check; a forgotten traveller may have a satchel worth searching. Such discoveries can occasionally hold something valuable. Quiet movement itself never shakes the book.
 
@@ -136,7 +136,7 @@ and any earned trait.
 
 | Class     | Starting style                                         | Middle-reel ability                                           |
 | --------- | ------------------------------------------------------ | ------------------------------------------------------------- |
-| Tank      | 48 HP; blades and team protection                      | Shield Bash grants block and strikes with the shield count                        |
+| Tank      | 50 HP; blades and team protection                      | Shield Bash grants block and strikes with the shield count                        |
 | Rogue     | 26 HP; damage and poison                               | Flurry rolls three extra attacks                              |
 | Mage      | 28 HP; build healing, shields, poison or spell damage  | Resonance echoes the rolled marks across the appropriate team |
 | Berserker | 38 HP; unlock at camp; blades, healing and Blood Price | Bloodrush heals; charged Fury adds damage and lifesteal       |
@@ -174,7 +174,9 @@ encounters use this curve; migrations preserve hero wounds and edited reels.
 | Stair guardian | 3       | 9       | 12       |
 
 Berserkers begin with Healing I and II on every reel. Bloodrush heals the caster
-and fills Fury; each four Fury adds 4% lifesteal, up to 20%. Real unblocked damage
+and fills Fury; capacity starts at 24 and grows by three per level. Each four
+Fury adds damage and 4.5% lifesteal, with a level-scaled cap. Actual healing spends
+some Fury. Real unblocked damage
 lands before healing marks return from the enemy and restore HP.
 
 **Poison** has purple POISON callouts and does not trigger Vulnerable. Healing
@@ -378,3 +380,8 @@ starting marks rather than their numeric power. Ambushes age by move commands,
 not waiting time. Options can reset progression while preserving settings.
 
 See [Punchline and support update](docs/PUNCHLINE_UPDATE.md) for version-20 buff stacking, Tank Shield Bash, Jester, class-aware AI and tunnel-only crossings.
+
+See [Biomes and class identity](docs/BIOMES_UPDATE.md) for version-21 named cave,
+overgrown, mushroom, lava and ice floors, directed sliding routes, nine themed
+creatures including the self-destructing Powder imp, class-focused automatic
+builds, charge-aware Autofight and the latest small balance adjustments.

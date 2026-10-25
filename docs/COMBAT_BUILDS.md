@@ -148,3 +148,7 @@ fixtures use neutral temperament to isolate their base-value assertions; the
 new build tests exercise both real temperaments directly.
 
 Current version-20 stimulant, Shield Bash, Jester, AI and tunnel-graph rules are documented in [Punchline update](PUNCHLINE_UPDATE.md); these supersede earlier descriptions of those systems.
+
+For current version-21 class modifiers, level-scaled Tank block/Fury, exclusive
+Blood Price/Trick ownership and class-aware automation, see
+[Biome update](BIOMES_UPDATE.md). It supersedes earlier numeric tuning.

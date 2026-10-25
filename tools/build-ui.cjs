@@ -72,11 +72,13 @@ embed(
   ),
 );
 for (const [label, file] of [
+  ["BIOME ENEMIES", "game/biome-enemies.js"],
   ["ENCOUNTER JOURNAL", "game/encounter-journal.js"],
   ["ECONOMY", "game/economy.js"],
   ["HERO BUILDS", "game/hero-builds.js"],
   ["BATTLE TACTICS", "game/battle-tactics.js"],
   ["WORLD EVENTS", "game/world-events.js"],
+  ["BIOMES", "game/biomes.js"],
   ["REEL UPGRADES", "game/reel-upgrades.js"],
   ["ENCOUNTER PRESENTATION", "game/encounter-presentation.js"],
   ["COMBAT FEEDBACK", "ui/combat-feedback.js"],

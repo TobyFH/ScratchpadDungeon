@@ -137,6 +137,7 @@ function lootFindCarousel(entries) {
   const show = () => {
     const find = target.querySelector(".loot-find-page");
     find.innerHTML = entries[page];
+    requestAnimationFrame(() => fitLootFind(find));
     $("#loot-count").textContent = `Find ${page + 1} / ${entries.length}`;
     $("#loot-previous").disabled = page === 0;
     $("#loot-next").disabled = page === entries.length - 1;
@@ -236,4 +237,13 @@ function resetSaveProgress() {
   save();
   toast("A clean notebook. Your options have been kept.");
   return true;
+}
+
+function fitLootFind(find) {
+  const card = find.querySelector(".item-find,.artefact-card");
+  if(!card)return;
+  const text=card.querySelector("div"), para=text?.querySelector("p"), title=text?.querySelector("b");
+  if(!text||!para||!title)return;
+  title.style.fontSize="16px";para.style.fontSize="14px";
+  for(let size=14;size>=12&&(text.scrollHeight>text.clientHeight+1||text.scrollWidth>text.clientWidth+1);size-=.5){para.style.fontSize=size+"px";title.style.fontSize=(size+2)+"px";}
 }

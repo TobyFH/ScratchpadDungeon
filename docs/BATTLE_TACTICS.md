@@ -29,8 +29,8 @@ Berserker starts at 38 HP. Its allowed ordinary marks are blades, healing,
 **Blood Price**, stimulants and blanks. All edit paths, recruitment upgrades and save
 normalisation enforce this list. Blood Price pays up to two HP per rank, leaving
 at least one HP, and grants three extra Fury per rank. Actual HP wounds add
-`ceil(damage * 1.5)` Fury, including Blood Price. Fury caps at twenty and each four
-adds one blade damage; it remains until battle ends. **Bloodrush** adds four Fury
+`ceil(damage * 1.5)` Fury, including Blood Price. Fury capacity is `24 + 3 * (level - 1)` and each four
+adds one blade damage; remaining Fury clears when battle ends. **Bloodrush** adds four Fury
 and two blade damage alongside the other rolled marks. Opening bonuses and
 criticals can increase the positive effects. HP damage absorbed by block does
 not feed Fury. Blood Price criticals multiply its extra Fury, never its HP cost.
@@ -41,10 +41,11 @@ independently of the selected healing recipient. Criticals scale that positive
 heal normally. Existing edited/saved reels are preserved; fresh recruits/starts
 use the new preset.
 
-Every four Fury also grants 4% lifesteal, capped at 20%. A damaging roll offers
+Every four Fury also grants 4.5% lifesteal, capped at
+`24% + min(8%, (level - 1) * .5%)`. A damaging roll offers
 `ceil(actualEnemyHPDamage * rate)` healing, clamped by missing HP and adjusted by
-normal healing-received traits. Fully blocked damage grants none. Fury is not
-spent. Outgoing damage icon/beam promises must finish before healing marks travel
+normal healing-received traits. Fully blocked damage grants none. Actual restored HP spends
+`ceil(restored / 2)` Fury; no healing means no expenditure. Outgoing damage icon/beam promises must finish before healing marks travel
 from the damaged enemy portraits back to the Berserker; HP recovery occurs when
 those return marks arrive. Multiple victims contribute to one rounded offer.
 This works in Icons, Beams and Both, respects utility-page suspension and never
@@ -218,3 +219,6 @@ on the shared `automaticConfirmReady()` gate; do not restore immediate `.click()
 calls in one driver. Different sequential confirmations receive their own hold.
 
 Current version-20 stimulant, Shield Bash, Jester, AI and tunnel-graph rules are documented in [Punchline update](PUNCHLINE_UPDATE.md); these supersede earlier descriptions of those systems.
+
+Version-21 biome, class-tuning and directed ice movement rules live in
+[Biome update](BIOMES_UPDATE.md), superseding older fixed-cap/balance text.

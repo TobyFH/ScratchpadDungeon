@@ -8,7 +8,15 @@ const FIELD_GUIDE = Object.freeze([
   {
     id: "floors",
     title: "Floors & discoveries",
-    body: '<ul class="guide-takeaways"><li><b>Win.</b> Defeat each staircase guardian. Beating the tenth guardian completes the dungeon.</li><li><b>Descend.</b> Select stairs to open their menu. After victory, descend from anywhere or keep exploring.</li><li><b>Wells.</b> Save an unused fountain for later. It offers 15% maximum HP plus half its healing roll; triples can crit.</li><li><b>Light.</b> Beacons, cave rooms and lava reveal nearby tiles without activating events. Stone blocks beacon and lava light.</li><li><b>Other finds.</b> Ruins trade risk for loot. Strongholds shelter powerful enemies. Paired tunnels stay open after use.</li></ul>',
+    body: '<ul class="guide-takeaways"><li><b>Win.</b> Defeat each staircase guardian. Beating the tenth guardian completes the dungeon.</li><li><b>Descend.</b> Select stairs to open their menu. After victory, descend from anywhere or keep exploring.</li><li><b>Wells.</b> Save an unused fountain for later. It starts at 15% maximum HP plus half its roll. Both grow gently with depth; triples can crit.</li><li><b>Light.</b> Beacons, cave rooms and lava reveal nearby tiles without activating events. Stone blocks beacon and lava light.</li><li><b>Other finds.</b> Ruins trade risk for loot. Strongholds shelter powerful enemies. Paired tunnels stay open after use.</li></ul>',
+  },
+  {
+    id: "biomes", title: "Caves & living floors",
+    body: '<ul class="guide-takeaways"><li><b>Floor themes.</b> Each floor has a name and a softly tinted map edge. Most are stone caves; themed floors grow more common deeper down.</li><li><b>Overgrowth.</b> Roots hide approaches. Fresh fights are more likely to surprise the party, or catch foes unaware for one extra spin.</li><li><b>Mushrooms.</b> Step on a cap to light nearby connected caps, revealing up to eight more without triggering their discoveries.</li><li><b>Fire & frost.</b> Lava blocks walking and lights neighbouring stone. Ice forces a slide; see the next guide topic.</li><li><b>Local creatures.</b> Overgrown, fungal, frozen and lava caves have their own creatures. Deeper floors bring stronger local species.</li></ul>',
+  },
+  {
+    id: "ice", title: "Ice & dangerous fuses",
+    body: '<ul class="guide-takeaways"><li><b>Ice.</b> Entering ice carries you forward. Consecutive ice tiles continue the slide; a wall stops it.</li><li><b>Plan ahead.</b> Known ice is included in routes. You cannot choose to turn halfway through a slide.</li><li><b>No safe route.</b> If sliding makes your destination unreachable, a long move stops before the blocking ice.</li><li><b>Powder imp.</b> Watch its burning fuse. After two enemy turns it explodes, damaging the party and destroying itself.</li><li><b>Answer the fuse.</b> Kill or stun it before detonation, build team block, or use an Unbroken page. Its warning shows blast power.</li></ul>',
   },
   {
     id: "combat",
@@ -23,7 +31,7 @@ const FIELD_GUIDE = Object.freeze([
   {
     id: "buffs",
     title: "Stimulants & shield bash",
-    body: '<ul class="guide-takeaways"><li><b>Self stimulant.</b> Tanks, Rogues and Berserkers can boost themselves with this mark.</li><li><b>Ally stimulant.</b> Mages, Rangers and Jesters boost the ally who has rolled most this fight. Alone, they boost themselves.</li><li><b>Three actions.</b> Each power adds one action of duration, up to three of the recipient’s own actions. Extra duration increases potency.</li><li><b>Potency.</b> Gain +1 damage plus one per three power, and +1 resistance plus one per five power. Hover the status for exact values.</li><li><b>Tank class mark.</b> Shield Bash adds two team block, then hits with your current shield count. Each point of bash power removes two enemy block.</li></ul>',
+    body: '<ul class="guide-takeaways"><li><b>Self stimulant.</b> Tanks, Rogues and Berserkers can boost themselves with this mark.</li><li><b>Ally stimulant.</b> Mages, Rangers and Jesters boost the ally who has rolled most this fight. Alone, they boost themselves.</li><li><b>Three actions.</b> Each power adds one action of duration, up to three of the recipient’s own actions. Extra duration increases potency.</li><li><b>Potency.</b> Gain +1 damage plus one per three power, and +1 resistance plus one per five power. Hover the status for exact values.</li><li><b>Tank class mark.</b> Shield Bash adds two team block, plus one every three levels, then hits with your current shield count. Each point of bash power removes two enemy block.</li></ul>',
   },
   {
     id: "openings",
@@ -38,12 +46,12 @@ const FIELD_GUIDE = Object.freeze([
   {
     id: "classes",
     title: "Classes & temperament",
-    body: '<ul class="guide-takeaways"><li><b>Temperament.</b> Aggressive and Defensive choose different starting marks. They do not change a mark’s stated power. Rebuild either way.</li><li><b>Tank & Rogue.</b> Tanks favour blades, block and stun. Rogues favour blades, poison and quick stuns; Flurry throws three extra attacks.</li><li><b>Mage.</b> Use magic, healing, poison, shields or buffs. Resonance echoes rolled marks across the appropriate team.</li><li><b>Ranger.</b> Wait between attacks to fill Execute. Spend that patience on a stronger finishing shot.</li><li><b>Berserker.</b> Wounds and Blood Price build Fury. Bloodrush heals; charged attacks return a little stolen health.</li></ul>',
+    body: '<ul class="guide-takeaways"><li><b>Temperament.</b> Aggressive and Defensive choose different starting marks. They do not change a mark’s stated power. Rebuild either way.</li><li><b>Tank & Rogue.</b> Tanks favour blades, block and stun. Rogues favour blades, poison and quick stuns; Flurry throws three extra attacks.</li><li><b>Mage.</b> Use magic, healing, poison, shields or buffs. Resonance echoes rolled marks across the appropriate team.</li><li><b>Ranger.</b> Wait between attacks to fill Execute. Spend that patience on a stronger finishing shot.</li><li><b>Berserker.</b> Wounds and Blood Price build Fury. Capacity grows each level. Bloodrush heals; lifesteal spends a little Fury.</li></ul>',
   },
   {
     id: "jester",
     title: "Jester & Punchline",
-    body: '<ul class="guide-takeaways"><li><b>Unlock.</b> Buy the Jester’s invitation at camp. It can inscribe every ordinary kind except self-only stimulant.</li><li><b>Trick.</b> These marks fill anticipation by their rank. At 6, earn one free Punchline before enemy clocks advance.</li><li><b>Punchline.</b> Roll your own machine with ordinary non-empty marks one rank stronger, up to IV. These bonus rolls do not refill anticipation.</li><li><b>Criticals.</b> Normal matching triples roll the usual multiplier. Different kinds have no special critical; matching triples do not self-stun.</li><li><b>Wildcard.</b> The permanent class mark can ink enemy reels, gild allied reels, reverse a foe’s roll or scatter damage and healing.</li></ul>',
+    body: '<ul class="guide-takeaways"><li><b>Unlock.</b> Buy the Jester’s invitation at camp. It can inscribe any ordinary kind except Self stimulant and the Berserker’s Blood Price.</li><li><b>Trick.</b> These marks fill anticipation by their rank. At 6, earn one free Punchline before enemy clocks advance.</li><li><b>Punchline.</b> Roll your own machine with ordinary non-empty marks one rank stronger, up to IV. These bonus rolls do not refill anticipation.</li><li><b>Criticals.</b> Normal matching triples roll the usual multiplier. Different kinds have no special critical; matching triples do not self-stun.</li><li><b>Wildcard.</b> The permanent class mark can ink enemy reels, gild allied reels, reverse a foe’s roll or scatter damage and healing.</li></ul>',
   },
   {
     id: "companions",

@@ -84,7 +84,7 @@ test("temperament is only selectable at the start, Mages have no role stat or se
   });
   assert.deepEqual(result, {
     loaded: true,
-    version: 20,
+    version: 21,
     hp: 11,
     points: 29,
     tier: 4,
@@ -193,14 +193,14 @@ test("Berserker Fury comes from HP wounds and Blood Price, scales damage, has a 
     38,
     "Bloodrush and Fury lifesteal offset the Blood Price wound",
   );
-  assert.equal(result.charged.fury, 19);
+  assert.equal(result.charged.fury, 18);
   assert.equal(result.charged.bonus, 4);
   assert.equal(
     result.charged.damage,
     9,
     "rank-II blade + Bloodrush + pre-roll Fury, without a temperament damage modifier",
   );
-  assert.match(result.bar, /FURY 19\/20/);
+  assert.match(result.bar, /FURY 18\/24/);
   assert.equal(result.cleared, 0);
 });
 
@@ -238,7 +238,7 @@ test("early damage rises per floor, the middle-floor Unwritten is stronger, and 
     ),
   );
   assert.ok(r.items.length > 5);
-  assert.match(r.marketDescription, /66%.*36%/);
+  assert.match(r.marketDescription, /66%.*40%/);
   assert.ok(r.items.every((i) => !i.scalable || i.quality >= 3));
   assert.ok(
     r.weights.shopChance > 0.3 &&
@@ -847,7 +847,7 @@ test("Blood Price criticals multiply extra Fury without increasing their self-da
   });
   assert.equal(r.hp, 32);
   assert.equal(r.cost, 6);
-  assert.equal(r.fury, 20);
+  assert.equal(r.fury, 24);
   assert.ok(r.bonus >= 18);
   assert.ok(r.details.some((d) => d.label === "Extra Fury" && d.value >= 18));
 });
@@ -856,7 +856,7 @@ test("field guide topics remain readable without scrolling on desktop, Deck and 
   const p = await game(t);
   await p.evaluate(() => help());
   const count = await p.locator("#guide-topic option").count();
-  assert.equal(count, 13);
+  assert.equal(count, 15);
   for (const width of [1920, 1280, 390, 320]) {
     await p.setViewportSize({
       width,

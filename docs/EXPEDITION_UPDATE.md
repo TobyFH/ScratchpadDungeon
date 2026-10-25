@@ -151,7 +151,7 @@ without disconnecting the walkable floor; final stair repair and version-18 load
 repair preserve a route. Stairs remain at least eight moves from spawn in new
 floors. Bridges show pale blue water beneath traversable wood.
 
-A floor has a 14% chance to attempt paired tunnels. Of those, 8% attempt two
+A floor has an 18% chance to attempt paired tunnels. Of those, 8% attempt two
 pairs; all others one. Ends are reciprocal, connected, at least three Manhattan
 cells apart, and never overwrite an event, bridge or structure. Entering an end
 prompts use/ignore. Teleport reveals/visits the far end without recursively
@@ -226,7 +226,7 @@ needed for these changes.
 
 Version 19 supersedes the earlier starting-face table and time-based ambush rules:
 see [Campfire update](CAMPFIRE_UPDATE.md). Temperament changes initial face palettes,
-Tank starts at 48 HP, and the Jester now uses anticipation/Punchline with ordinary critical rules (version 20). Lesson ranks
+Tank starts at 50 HP, and the Jester uses anticipation/Punchline with ordinary critical rules. See [Biome update](BIOMES_UPDATE.md) for current version-21 balance and movement. Lesson ranks
 are owned separately from their selected active rank. Existing edited reels remain.
 
 Current version-20 stimulant, Shield Bash, Jester, AI and tunnel-graph rules are documented in [Punchline update](PUNCHLINE_UPDATE.md); these supersede earlier descriptions of those systems.

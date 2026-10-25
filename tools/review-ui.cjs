@@ -60,6 +60,7 @@ const output = path.join(root, "test-results/ui-review");
       shots.push(name);
     }
     await page.waitForTimeout(1300);
+    if (process.env.UI_REVIEW_SCOPE !== "biomes") {
     await shot("01-starting-class");
     await page.locator('[data-start-job="rogue"]').click();
     await page.evaluate(() => {
@@ -1303,6 +1304,78 @@ const output = path.join(root, "test-results/ui-review");
     await shot("89-support-guide-390");
     await page.evaluate(() => help("jester"));
     await shot("89-punchline-guide-390");
+    await page.setViewportSize({ width: 1920, height: 1080 });
+    }
+    // Version-21 fixtures: natural generated biomes, not a visual-only repaint.
+    for (const theme of ["cave", "overgrown", "fungal", "ice", "lava"]) {
+      await page.setViewportSize({ width: 1920, height: 1080 });
+      await page.evaluate((theme) => {
+        closeModal(); newRun("fighter"); setPace("skip"); state.depth = 8;
+        let map;
+        for (let n = 0; n < 1500; n++) {
+          map = generateFloor(8, 1, 0, []);
+          if (floorBiome(map) === theme) break;
+        }
+        if (floorBiome(map) !== theme) throw Error("Missing review biome " + theme);
+        state.map = map; state.map.forEach(c => c.seen = true);
+        state.pursuerSpawned = true; render(); particles = [];
+      }, theme);
+      await shot("90-biome-" + theme + "-1920");
+      await page.setViewportSize({ width: 1280, height: 800 });
+      await shot("90-biome-" + theme + "-1280");
+    }
+    await page.setViewportSize({ width: 1920, height: 1080 });
+    await page.evaluate(() => {
+      const gallery = document.createElement("section");
+      gallery.id = "biome-art-review";
+      gallery.style.cssText = "position:fixed;inset:20px;z-index:5000;background:var(--paper);color:var(--ink);padding:20px;display:grid;grid-template-columns:repeat(5,1fr);gap:12px";
+      for (const [kind, d] of Object.entries(BIOME_ENEMIES)) {
+        const cell = document.createElement("article");
+        cell.className = "pencil-card";
+        cell.style.cssText = "padding:8px;text-align:center;display:grid;align-content:start;gap:3px";
+        cell.innerHTML = `<h2>${d.name}</h2><p>${d.biome} · Floors ${d.minDepth}–${d.maxDepth}</p>${portraitArt(kind, {hp:100,maxHp:100})}${corpseArt(kind)}`;
+        cell.querySelectorAll("svg").forEach(svg => {svg.style.height="125px";svg.style.width="100%";});
+        gallery.append(cell);
+      }
+      document.body.append(gallery);
+    });
+    await shot("91-biome-creatures-and-corpses");
+    await page.evaluate(() => {
+      $("#biome-art-review").remove(); newRun("berserker"); setPace("skip");
+      state.party.push(makeHero("Rowan", "ranger"), makeHero("Quill", "jester"));
+      state.party[0].level = 8; state.party[0].fury = 38; state.party[0].hp = 18;
+      state.party[1].charge = 6; state.party[2].anticipation = 5;
+      beginEncounter(false, {count:1}); finishOpeningRoll();
+      Object.assign(state.enemy, {art:"powderimp",name:"Powder imp",passive:{key:"detonate"},fuseLeft:1,frequency:2,countdown:1,damage:5,hp:28,maxHp:28});
+      state.party[0].fury=38;state.party[1].charge=6;state.party[2].anticipation=5;
+      state.block=8; render(); particles=[];
+    });
+    await shot("92-powder-fuse-and-charged-party-1920");
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await shot("92-powder-fuse-and-charged-party-1280");
+    await page.setViewportSize({ width: 390, height: 844 });
+    await shot("92-powder-fuse-and-charged-party-390", true);
+    await page.evaluate(() => {editor(0); editorSelection.reel=1;editorSelection.face=0;editor(0);});
+    await shot("93-ordinary-mark-workshop-390");
+    await page.evaluate(() => {editorSelection.face=state.party[0].reels[1].findIndex(f=>f.type==="class");editor(0);});
+    await shot("93-permanent-mark-workshop-390");
+    await page.setViewportSize({ width: 1920, height: 1080 });
+    await page.evaluate(() => {
+      closeModal();
+      const [type,d] = Object.entries(ITEM_DEFS).filter(([,d])=>d.equipment).sort((a,b)=>b[1].description.length-a[1].description.length)[0];
+      showSpotlight("Spoils of battle", "The last foe falls. Something gleams in the dust.", `<div class="trap-art">${icon("skull")}</div>${drawMachine("treasure",[{type:"coin",tier:1},{type:"coin",tier:1},{type:"coin",tier:1}],{title:"Fortune favours the curious"})}${criticalSpace()}<div id="treasure-result" class="stage-result">180 gold · 60 ×3 · CRITICAL GOLD</div><div id="artefact-loot"></div>`, "treasure");
+      lootFindCarousel([`<div class="item-find">${icon(d.icon)}<div><b>${d.name} ×12</b><p><b class="equipment-scope">${equipmentScope(d)}</b><br>${d.description}</p></div></div>`]);
+      window.reviewLootChoice=eventChoice([{id:"stage-confirm",label:"Collect spoils",value:true}]);
+    });
+    await shot("94-gold-payoff-and-long-item-1920");
+    await page.setViewportSize({ width: 320, height: 844 });
+    await shot("94-gold-payoff-and-long-item-320");
+    await page.locator("#stage-confirm").click();
+    await page.evaluate(()=>window.reviewLootChoice);
+    await page.evaluate(() => {closeSpotlight();help("biomes");});
+    await shot("95-biome-guide-320");
+    await page.evaluate(() => help("ice"));
+    await shot("95-ice-guide-320");
     await page.setViewportSize({ width: 1920, height: 1080 });
     await page.evaluate(() => optionsPage("play"));
     const download = page.waitForEvent("download");

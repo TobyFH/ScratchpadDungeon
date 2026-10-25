@@ -1,5 +1,8 @@
 // Original temporary Web Audio cues, mixed through the existing SFX bus/pool.
 const REWARD_CUES = Object.freeze({
+  iceSlide: { frequencies: [320,260,210], duration:.18,gain:.025,type:"sine",cooldown:180 },
+  fuse: { frequencies: [900,1150,1300],duration:.3,gain:.06,noise:true,cooldown:250 },
+  explosion: { frequencies: [100,55,32],duration:.65,gain:.17,noise:true,cooldown:300 },
   itemFind: {
     frequencies: [660, 880, 1320],
     duration: 0.28,
@@ -111,6 +114,12 @@ function playCriticalTheme(options, details) {
 }
 const shakeMotions = new WeakMap();
 function shakeFrames(amount, style) {
+  if (style === "explosion" || style === "critical") {
+    const decay = style === "explosion" ? [0,1,-.85,.7,-.52,.35,-.22,.1,0] : [0,-.9,.65,-.4,.2,0];
+    return decay.map((n,i)=>({transform:`translate(${n*amount*(i%2?.6:1)}px,${n*amount*(i%2?-1:.45)}px) rotate(${n*amount*.08}deg)`}));
+  }
+  if (style === "fuse") return [0,-.3,.4,-.6,.8,-1,0].map(n=>({transform:`translateX(${n*amount}px) scale(${1+Math.abs(n)*.025})`}));
+  if (style === "healing") return [0,-.4,.2,0].map(n=>({transform:`translateY(${n*amount}px)`}));
   const horizontal = style === "rumble",
     recoil = style === "recoil",
     vertical = style === "jolt",

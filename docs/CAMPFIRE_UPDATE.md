@@ -82,7 +82,8 @@ rises from 44 to 48. Rank powers and critical rules otherwise remain shared.
 Fresh presets use six equal-weight ordinary marks and one permanent middle seal;
 existing edited faces/weights are retained. Class-specific edit palettes prevent
 new marks outside that class's supported powers. Berserker now also permits
-stimulants; Jester permits every ordinary type, including Blood Price.
+stimulants; Jester permits ordinary types except Self stimulant and Blood Price,
+and uniquely has Trick. Blood Price is exclusive to Berserker.
 
 Autoplay gives each hero a saved preference: Assault, Bulwark, Balanced, Venom,
 Mender, Enchanter or Trickster. It is an AI editing preference, **not a selectable

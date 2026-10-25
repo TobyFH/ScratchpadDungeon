@@ -34,14 +34,37 @@ const MAGE_POWERS = Object.freeze({
     description: "Resonance poisons every enemy.",
   },
 });
-const RANGER_AIM_CAP = 6,
-  BERSERKER_FURY_CAP = 20;
-// Sustain applies to the caster. Fury remains a battle-long bar, never spent.
+const HERO_TUNING = Object.freeze({
+  tankHP: 50,
+  rangerExecute: 1.12,
+  rogueDamage: 0.94,
+  healing: 1.1,
+});
+const tankSealBlock = (h) =>
+  2 + Math.floor(Math.max(0, (h?.level || 1) - 1) / 3);
+const furyCapacity = (h) =>
+  24 + Math.max(0, Math.floor((h?.level || 1) - 1)) * 3;
+const fountainBaseRate = (depth = state.depth) =>
+  0.15 + Math.min(9, Math.max(0, depth - 1)) * 0.0025;
+const fountainRollRate = (depth = state.depth) =>
+  0.5 + Math.min(9, Math.max(0, depth - 1)) * 0.012;
+function heroDamagePower(h, n) {
+  return n <= 0
+    ? 0
+    : h?.job === "rogue"
+      ? Math.max(1, Math.round(n * HERO_TUNING.rogueDamage))
+      : n;
+}
+function heroHealingPower(n) {
+  return n > 0 ? Math.max(1, Math.round(n * HERO_TUNING.healing)) : 0;
+}
+const RANGER_AIM_CAP = 6;
+// Fury scales with level and is spent only when real lifesteal restores HP.
 const BERSERKER_SUSTAIN = Object.freeze({
   bloodrushHeal: 4,
   healLevelInterval: 3,
-  leechPerPower: 0.04,
-  maxLeech: 0.2,
+  leechPerPower: 0.045,
+  maxLeech: 0.24,
 });
 const bloodrushHealing = (h) =>
   BERSERKER_SUSTAIN.bloodrushHeal +
@@ -51,7 +74,8 @@ const bloodrushHealing = (h) =>
 const furyLeechRate = (h) =>
   h?.job === "berserker"
     ? Math.min(
-        BERSERKER_SUSTAIN.maxLeech,
+        BERSERKER_SUSTAIN.maxLeech +
+          Math.min(0.08, Math.max(0, (h.level || 1) - 1) * 0.005),
         furyBonus(h) * BERSERKER_SUSTAIN.leechPerPower,
       )
     : 0;
@@ -119,14 +143,29 @@ function normaliseHeroBuild(h) {
       Math.floor(Number(h.id) || h.name?.length || 0) % 2
         ? "offence"
         : "defence";
-  h.anticipation = Math.min(JESTER_ANTICIPATION_CAP - 1, Math.max(0, Math.floor(h.anticipation || 0)));
+  h.anticipation = Math.min(
+    JESTER_ANTICIPATION_CAP - 1,
+    Math.max(0, Math.floor(h.anticipation || 0)),
+  );
   normaliseStimulant(h);
   normaliseTraitRecord(h);
   h.charge = Math.min(RANGER_AIM_CAP, Math.max(0, h.charge || 0));
-  h.fury = Math.min(BERSERKER_FURY_CAP, Math.max(0, h.fury || 0));
+  h.fury = Math.min(furyCapacity(h), Math.max(0, h.fury || 0));
   if (!h.reels) return;
   for (const face of h.last || []) {
-    if (face.type === "stimulant" && ["mage", "ranger", "jester"].includes(h.job)) face.type = "rally";
+    if (face.type === "selfharm" && h.job !== "berserker") {
+      face.type = h.job === "jester" ? "trick" : "blank";
+      if (face.type === "blank") face.tier = 1;
+    }
+    if (face.type === "trick" && h.job !== "jester") {
+      face.type = "blank";
+      face.tier = 1;
+    }
+    if (
+      face.type === "stimulant" &&
+      ["mage", "ranger", "jester"].includes(h.job)
+    )
+      face.type = "rally";
     if (face.type === "class") {
       face.job = h.job;
       delete face.mageRole;
@@ -137,7 +176,19 @@ function normaliseHeroBuild(h) {
     for (const face of reel) {
       face.weight = Math.max(1, Math.min(4, Math.floor(face.weight || 1)));
       delete face.mageRole;
-      if (face.type === "stimulant" && ["mage", "ranger", "jester"].includes(h.job)) face.type = "rally";
+      if (face.type === "selfharm" && h.job !== "berserker") {
+        face.type = h.job === "jester" ? "trick" : "blank";
+        if (face.type === "blank") face.tier = 1;
+      }
+      if (face.type === "trick" && h.job !== "jester") {
+        face.type = "blank";
+        face.tier = 1;
+      }
+      if (
+        face.type === "stimulant" &&
+        ["mage", "ranger", "jester"].includes(h.job)
+      )
+        face.type = "rally";
       if (
         h.job === "berserker" &&
         !["attack", "heal", "selfharm", "stimulant", "blank", "class"].includes(
@@ -182,14 +233,13 @@ function classAbilityDescription(hero) {
     {
       jester:
         "Wildcard: tricks ink enemy reels, gild allied reels, reverse a foe’s roll, or scatter damage and healing. They usually favour your party.",
-      fighter:
-        "Shield Bash: gain 2 team block, then strike the selected enemy for your current team block. The bash deals double damage to enemy shields.",
+      fighter: `Shield Bash: gain ${tankSealBlock(typeof hero === "object" ? hero : null)} team block, then strike for your shield count. Block gained increases every three levels. The bash deals double damage to enemy shields.`,
       rogue: "Flurry: roll three extra attacks; each blade lands separately.",
       mage: "Resonance echoes the strongest healing, shield, poison or magic marks in this roll across the appropriate whole team. Healing also clears every ally’s stun.",
       healer: "Resonance echoes your rolled marks across the appropriate team.",
       ranger:
         "Execute: wait between attacks to fill patience. The next damaging roll gains a bonus against wounded enemies; the seal strengthens that shot.",
-      berserker: `Bloodrush: restore ${bloodrushHealing(hero && typeof hero === "object" ? hero : { level: 1 })} HP to yourself, gain 4 Fury and +2 blade damage. Charged Fury adds damage and up to 20% lifesteal.`,
+      berserker: `Bloodrush: restore ${bloodrushHealing(hero && typeof hero === "object" ? hero : { level: 1 })} HP to yourself, gain 4 Fury and +2 blade damage. Charged Fury adds damage and lifesteal; restoring HP spends some Fury.`,
     }[job] || "Your permanent signature mark, alongside the other two results."
   );
 }
@@ -312,7 +362,7 @@ function startingFaces(job, temperament) {
   }[job];
 }
 // Recruits draw this independently of class and the starter selection.
-const randomTemperament = () => Math.random() < 0.5 ? "offence" : "defence";
+const randomTemperament = () => (Math.random() < 0.5 ? "offence" : "defence");
 function makeHero(
   name,
   job,
@@ -328,7 +378,7 @@ function makeHero(
   const faces = startingFaces(job, specialism);
   const maxHp = Math.round(
     ({
-      fighter: 48,
+      fighter: HERO_TUNING.tankHP,
       rogue: 26,
       mage: 28,
       ranger: 30,
@@ -416,7 +466,8 @@ function executionBonus(
     (((3 + h.level * 0.75) * Math.min(RANGER_AIM_CAP, charge)) /
       RANGER_AIM_CAP) *
       (0.5 + 2.5 * missing) *
-      (seal ? 1.35 : 1),
+      (seal ? 1.35 : 1) *
+      HERO_TUNING.rangerExecute,
   );
 }
 function advanceRangerPatience(actor, attacked, seal = false) {

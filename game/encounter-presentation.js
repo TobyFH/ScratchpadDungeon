@@ -31,6 +31,7 @@ const PUN_ENEMIES = Object.freeze({
 const PUN_SPECIES = Object.freeze({
   berserker: "scissors",
   smudger: "pencil",
+  powderimp: "punch2", rootling: "goat", thornhulk: "stego", capstalker: "postit", myconarch: "pagemage", cinderhopper: "exclamation", basaltwyrm: "trex", frostmite: "protractor", rimewarden: "police",
   zombie: "spelleton",
   rat: "comma",
   ghost: "ghostit",
@@ -249,6 +250,8 @@ function encounterTags(enemies) {
         `<span class="encounter-tag passive" data-tooltip="${escapeHTML(ENEMY_TRAITS[e.passive.key]?.description || "")}">${ENEMY_TRAITS[e.passive.key]?.name || ""}</span>`,
       );
   }
+  if (enemies.some(e => e.caughtUnaware)) tags.push('<span class="encounter-tag">FOES CAUGHT UNAWARE · +1 SPIN</span>');
+  if (enemies.some(isExploder)) tags.push('<span class="encounter-tag">BURNING FUSE · SELF-DESTRUCT</span>');
   const quick = state.party.find((h) => h.initiative);
   if (quick)
     tags.push(

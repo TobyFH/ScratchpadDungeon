@@ -5600,3 +5600,42 @@ body.ambient-disabled #lava-lighting { opacity: 0; }
 @media (max-width: 760px) { .encounter-alert > span { font-size: 24px; } }
 @media (prefers-reduced-motion: reduce) { .punchline-ready .machine-face, .encounter-alert > span { animation: none; } }
 body[data-motion="off"] .punchline-ready .machine-face { animation: none; }
+/* Biomes colour the map's perimeter and meaningful terrain, keeping graphite
+   icons, legible paper and the coordinate board's dimensions unchanged. */
+.map-wrap { box-shadow: inset 0 0 0 3px color-mix(in srgb,var(--biome-tint,#8e8474) 60%,transparent),0 0 17px color-mix(in srgb,var(--biome-tint,#8e8474) 22%,transparent); }
+.biome-cover { position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;opacity:.6; }
+.biome-cover > svg { width:85%;height:85%; }
+.tile.terrain-ice { background-color:color-mix(in srgb,var(--water-wash) 70%,var(--paper)); }
+.biome-cover.ice { color:var(--water-ink); }
+.biome-cover.mushroom { color:var(--gold); }
+.biome-cover.overgrown { color:var(--green); }
+.tile:is(.terrain-ice,.terrain-mushroom,.terrain-overgrown) > svg { width:45%;height:45%;position:relative;opacity:.6; }
+.tile.active-event .biome-cover { opacity:.28; }
+.map-player.sliding > svg { transform:rotate(-8deg) translateX(3px); }
+.slot-symbol .class-face { width:100%;height:100%;display:grid;place-items:center;background:color-mix(in srgb,var(--gold) 13%,transparent);box-shadow:inset 0 0 0 1px var(--gold); }
+.slot-symbol .class-face > svg { width:75%;height:85%;max-height:100%; }
+.class-face small { display:none; }
+.rolling .slot-symbol:has(.class-face) { filter:drop-shadow(0 0 5px var(--gold)); }
+.slot-window.locked:has(.class-face) { box-shadow:inset 0 0 0 2px var(--gold); }
+.workshop-preview .class-face { display:grid;place-items:center;width:100%;height:100%; }
+.workshop-preview .class-face > svg { width:32px;height:36px;margin:0; }
+.fuse-burning .enemy-art { animation:fuse-pulse 1s ease-in-out infinite; }
+.fuse-badge { color:var(--red); }
+@keyframes fuse-pulse { 50% { filter:drop-shadow(0 0 10px var(--red)); } }
+.stage-card.treasure .scene-layout { grid-template-rows:75px 105px 150px 60px 140px; }
+.stage-card.treasure #event-critical {height:150px;min-height:150px;}
+.stage-card.treasure #artefact-loot {height:140px;min-height:140px;}
+.loot-carousel {grid-template-rows:110px 26px;height:138px;}
+.loot-find-page .item-find,.loot-find-page .artefact-card {height:110px;min-width:0;box-sizing:border-box;}
+.loot-find-page .item-find > div,.loot-find-page .artefact-card > div {height:100%;min-width:0;flex:1;display:flex;flex-direction:column;justify-content:center;overflow-wrap:anywhere;}
+.loot-find-page p {font-size:14px;line-height:1.12;margin:2px 0;}
+.loot-find-page b {font-size:16px;line-height:1.08;}
+.loot-find-page .equipment-scope {font-size:12px;}
+@media(max-width:760px){.loot-find-page svg {width:40px;height:52px;} .loot-find-page .item-find,.loot-find-page .artefact-card {gap:8px;} }
+@media(prefers-reduced-motion:reduce){.fuse-burning .enemy-art{animation:none;}}
+.map-player.sliding .walk-boots { display:none; }
+.map-player.sliding > svg { animation:ice-glide .25s ease-in-out infinite alternate; }
+@keyframes ice-glide { from{transform:rotate(-7deg) translateY(-1px);}to{transform:rotate(-5deg) translateY(1px);} }
+@media(prefers-reduced-motion:reduce){.map-player.sliding > svg{animation:none;transform:none;}}
+/* Measurement must not gain/lose a temporary scrollbar between face types. */
+#modal[data-kind="editor"] .modal-body { overflow:hidden;scrollbar-gutter:auto; }

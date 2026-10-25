@@ -67,7 +67,7 @@ async function oldTravelEvent(c, kind) {
 }
 
 const WORLD_BALANCE = Object.freeze({
-  shopChance: 0.36,
+  shopChance: 0.40,
   marketChance: 0.66,
   riverChance: 0.41,
   doubleRiverChance: 0.015,
@@ -322,7 +322,7 @@ function floorNeighbors(map, from, tunnels = true) {
   return next;
 }
 function tunnelPairCount(rules) {
-  return Math.random() < (rules.includes("echoes") ? 0.5 : 0.14)
+  return Math.random() < (rules.includes("echoes") ? 0.5 : 0.18)
     ? Math.random() < 0.08 ? 2 : 1 : 0;
 }
 function addTunnels(map, rules = state?.runRules || [], { pairs = tunnelPairCount(rules) } = {}) {

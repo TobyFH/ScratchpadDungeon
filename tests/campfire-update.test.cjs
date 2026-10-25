@@ -110,11 +110,11 @@ test("owned ranks and active ranks are separate, bounded, persisted and snapshot
   assert.equal(r.owned, 5);
   assert.equal(r.tooHigh, false);
   assert.deepEqual(r.current, []);
-  assert.equal(r.hp, Math.round(48 * 1.2));
+  assert.equal(r.hp, Math.round(50 * 1.2));
   assert.deepEqual(r.rules, ["vitality2"]);
   assert.equal(r.active, 0);
   assert.equal(r.unchanged, r.hp);
-  assert.equal(r.base, 48);
+  assert.equal(r.base, 50);
 });
 
 test("legacy provisions migrate without losing banked gold, deposit receipts, existing training or disabled choices", async (t) => {
@@ -251,7 +251,7 @@ test("class and temperament choose different legal starting palettes while rank 
     assert.equal(hero.base.heal, 4);
     assert.equal(hero.base.block, 2);
   }
-  assert.equal(r[0].hp, 48);
+  assert.equal(r[0].hp, 50);
   assert.equal(
     await p.evaluate(() =>
       classAbilityDescription({ job: "berserker" }).includes("NaN"),
@@ -518,7 +518,7 @@ test("Jester ordinary critical odds ignore distinct kinds and the permanent seal
   assert.equal(r.ranks, false);
   assert.equal(r.blank, false);
   assert.deepEqual(r.odds, []);
-  assert.equal(r.types, 10);
+  assert.equal(r.types, 9);
   assert.deepEqual(r.seal, [0, 1, 0]);
 });
 

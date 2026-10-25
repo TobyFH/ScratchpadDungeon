@@ -213,12 +213,13 @@ test("Berserker starts with more healing and Bloodrush heals its caster while a 
       self: state.lastPlayerRoll.selfHealing,
       bar: h.fury,
       leech: state.lastPlayerRoll.actualLifesteal,
+      furySpent: state.lastLifesteal.furySpent,
     };
   });
   assert.deepEqual(r.heals, [2, 2, 2]);
   assert.equal(r.ally, 2);
   assert.equal(r.self, 4);
-  assert.equal(r.bar, 4);
+  assert.equal(r.bar, 4 - r.furySpent);
   assert.ok(r.hp >= 12);
   assert.ok(r.leech > 0);
 });
@@ -267,7 +268,7 @@ test("Fury lifesteal waits for outgoing damage symbols, returns healing from the
     drain: state.lastLifesteal,
     hits: state.lastPlayerRoll.actualDamage,
   }));
-  assert.equal(r.drain.actual, Math.ceil(r.hits * 0.2));
+  assert.equal(r.drain.actual, Math.ceil(r.hits * 0.225));
   assert.equal(r.h, 10 + r.drain.actual);
   assert.ok(
     r.drain.healedAt > r.drain.returnStartedAt &&
@@ -543,12 +544,12 @@ test("workshop explanatory text and Done stay below all edits, including long cl
             .flatMap((e) => [
               e,
               ...e.querySelectorAll(
-                "button, select, .face-effect, .locked-seal",
+                "button, select, .face-effect, [data-class-seal]",
               ),
             ])
             .filter((e) => e.getClientRects().length)
             .map((e) => e.getBoundingClientRect().bottom);
-        const seal = document.querySelector(".locked-seal"),
+        const seal = document.querySelector("[data-class-seal]"),
           detail = document.querySelector(".workshop-detail");
         return {
           headerClear,
@@ -669,7 +670,7 @@ test("Fury returns the same modest healing in beam-only and combined feedback mo
           state.lastLifesteal.healedAt >= state.lastLifesteal.returnStartedAt,
       };
     }, mode);
-    assert.equal(r.actual, Math.ceil(r.damage * 0.2));
+    assert.equal(r.actual, Math.ceil(r.damage * 0.225));
     assert.equal(r.health, 10 + r.actual);
     assert.equal(r.returned, true);
   }
