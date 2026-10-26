@@ -1,3 +1,92 @@
+// One permanent ? per Jester reel. Its rank distribution follows editable marks.
+const MYSTERY_TYPES = Object.freeze([
+  "attack",
+  "magic",
+  "heal",
+  "block",
+  "stun",
+  "poison",
+  "stimulant",
+  "rally",
+  "selfharm",
+  "trick",
+]);
+function normaliseMysteryReels(h) {
+  for (const reel of h.reels || []) {
+    let found = false;
+    for (const face of reel)
+      if (face.type === "mystery") {
+        if (h.job === "jester" && !found) {
+          face.tier = 1;
+          face.weight = 1;
+          found = true;
+          delete face.investments;
+        } else {
+          face.type = "blank";
+          face.tier = 1;
+        }
+      }
+    if (h.job === "jester" && !found)
+      reel.push({ type: "mystery", tier: 1, weight: 1 });
+  }
+}
+function mysteryTierFaces(reel) {
+  const ordinary = reel.filter((f) => !["class", "mystery"].includes(f.type));
+  return ordinary.length
+    ? ordinary.map((f) => ({
+        tier: Math.max(1, Math.min(4, f.tier || 1)),
+        weight: 1,
+      }))
+    : [{ tier: 1, weight: 1 }];
+}
+function resolveMysteryFace(face, reel, random = Math.random) {
+  if (face.type !== "mystery") return { ...face };
+  const tier = weightedPick(mysteryTierFaces(reel), random).tier;
+  const type =
+    MYSTERY_TYPES[
+      Math.min(
+        MYSTERY_TYPES.length - 1,
+        Math.floor(random() * MYSTERY_TYPES.length),
+      )
+    ];
+  return { type, tier, weight: 1, fromMystery: true };
+}
+function resolveMysterySymbols(h, symbols, reels = h.reels) {
+  if ((h.job || h.art) !== "jester") return symbols;
+  const resolved = symbols.map((f, k) => resolveMysteryFace(f, reels[k]));
+  if (resolved.some((f) => f.fromMystery)) {
+    state.lastMysteryRoll = {
+      heroId: h.id,
+      results: resolved.map((f) => ({ ...f })),
+    };
+    GameSound.play("jesterReveal");
+    combatCallout(entityArt(h), "MYSTERY REVEALED!", "gold");
+  }
+  return resolved;
+}
+function expandedReelProbabilities(reel) {
+  const result = {},
+    total = reel.length;
+  if (!total) return result;
+  const add = (type, tier, p) => {
+    const key = type + ":" + tier;
+    result[key] = (result[key] || 0) + p;
+  };
+  for (const f of reel) {
+    if (f.type !== "mystery") {
+      add(f.type, f.tier, 1 / total);
+      continue;
+    }
+    const ranks = mysteryTierFaces(reel);
+    for (const rank of ranks)
+      for (const type of MYSTERY_TYPES)
+        add(type, rank.tier, 1 / total / ranks.length / MYSTERY_TYPES.length);
+  }
+  return result;
+}
+function mysteryDescription() {
+  return "Permanent ?. Becomes a random ordinary power, ignoring class restrictions. Its rank follows the other ordinary ranks on this reel (Empty counts as I). Cannot be upgraded, replaced or copied. The revealed power can complete a critical.";
+}
 // Trick charges a single mark burst within the paid action. It never rerolls
 // the machine, grants a second turn, rolls crits or charges another burst.
 const JESTER_ANTICIPATION_CAP = 6;
@@ -12,6 +101,23 @@ function jesterAnticipation(h, power) {
       total - JESTER_ANTICIPATION_CAP,
     );
   syncRangerAim(h);
+  if (ready) {
+    const meter = $(
+      "#machine-hero-" + state.party.indexOf(h) + " .anticipation-meter",
+    );
+    animate(
+      meter,
+      [
+        { transform: "scale(1)" },
+        { transform: "scale(1.15)" },
+        { transform: "scale(1)" },
+      ],
+      { duration: 450, juice: true },
+    );
+    GameSound.play("jesterReady");
+    burst(meter, "confetti", 34);
+    showHeroNotice(h, "PUNCHLINE!", "Six random reel marks", "gold");
+  }
   actionLabel(
     entityArt(h),
     ready ? "PUNCHLINE READY!" : `ANTICIPATION +${power}`,
@@ -27,19 +133,23 @@ async function punchlineFX(h) {
   machine?.classList.add("punchline-ready");
   machine?.style.setProperty("--punchline-motion", String(preferences().shake));
   combatCallout(entityArt(h), "PUNCHLINE! · SIX-MARK BURST", "gold");
-  GameSound.play("jesterTrick");
+  GameSound.play("jesterReady");
   screenFX("critical", 0.65);
-  burst(machine, "confetti", 48);
+  burst(machine, "jester", 60);
   shakeElement(machine, 3, "rumble");
   await feedbackPause(skip ? 180 : 420);
 }
 function giftedReels(entity) {
   return entity.reels.map((reel, k) => {
-    if (entity.blackout?.includes(k) || entity.crystalLocks?.includes(k))
+    if (
+      entity.blackout?.includes(k) ||
+      entity.crystalLocks?.includes(k) ||
+      entity.shadowLocks?.includes(k)
+    )
       return [{ type: "blank", tier: 1, blackout: true }];
     if (!entity.reelGifts?.some((g) => g.reel === k && g.uses > 0)) return reel;
     return reel.map((f) =>
-      f.type === "class"
+      ["class", "mystery"].includes(f.type)
         ? f
         : {
             ...f,
@@ -178,9 +288,10 @@ async function jesterMarkBurst(h) {
     $("#machine-hero-" + i)?.classList.remove("punchline-ready");
     return;
   }
-  const reels = giftedReels(h).map((reel) =>
-    reel.filter((f) => f.type !== "class"),
-  );
+  const effectiveReels = giftedReels(h),
+    reels = effectiveReels.map((reel) =>
+      reel.filter((f) => f.type !== "class"),
+    );
   const shots = Array.from(
     { length: COMBAT_LIMITS.punchlineShots },
     (_, k) => ({
@@ -191,10 +302,19 @@ async function jesterMarkBurst(h) {
   );
   const report = { heroId: h.id, shots: [], damage: 0, healing: 0, block: 0 };
   state.lastPunchline = report;
+  const logGroup = beginCombatLogGroup(h, "Punchline");
   try {
-    for (const face of shots) {
+    for (const [shotIndex, drawn] of shots.entries()) {
+      const face = resolveMysteryFace(drawn, effectiveReels[shotIndex % 3]);
       if (state !== run) return;
       if (!alive(h) || !livingEnemies().length || state.over) break;
+      if (face.type === "selfharm")
+        damageHero(
+          i,
+          Math.min(Math.max(0, h.hp - 1), POWER.selfharm * face.tier),
+          "Mystery Blood Price",
+          { piercing: true, selfInflicted: true, bloodPriceTier: face.tier },
+        );
       const base = await planHeroRoll(h, [face], { singleMark: true });
       const foe = pick(livingEnemies()),
         wounded = state.party
@@ -254,6 +374,11 @@ async function jesterMarkBurst(h) {
         record.targetIds = [foe.id];
         stunEnemy(base.stun, foe);
         beam(entityArt(h), enemyArtEl(foe), "stun", impact);
+      } else if (base.stimulant) {
+        record.power = base.stimulant;
+        record.targetIds = [h.id];
+        applyStimulant(h, base.stimulant);
+        beam(entityArt(h), entityArt(h), "stimulant", impact);
       } else if (base.rally) {
         const ally = supportStimulantTarget(h);
         record.power = base.rally;
@@ -262,6 +387,7 @@ async function jesterMarkBurst(h) {
         beam(entityArt(h), entityArt(ally), "rally", impact);
       } else {
         // Trick and empty marks still fly, but cannot create an infinite burst.
+        GameSound.play("jesterReveal");
         beam(entityArt(h), entityArt(h), face.type, impact);
         combatCallout(
           entityArt(h),
@@ -269,6 +395,8 @@ async function jesterMarkBurst(h) {
           "gold",
         );
       }
+      GameSound.play("jesterMark");
+      burst(entityArt(h), "jester", 8);
       await feedbackPause(skip ? 45 : Math.max(70, 150 / Math.sqrt(pace())));
     }
     if (state !== run) return;
@@ -281,10 +409,8 @@ async function jesterMarkBurst(h) {
     result(
       `<span>PUNCHLINE · ${report.shots.length} marks</span><span class="damage">−${report.damage} HP</span><span class="healing">+${report.healing} HP</span><span>+${report.block} block</span>`,
     );
-    log(
-      `${h.name} fires ${report.shots.length} marks: ${report.damage} damage, ${report.healing} healing, ${report.block} team block.`,
-    );
   } finally {
+    finishCombatLogGroup(logGroup, report);
     $("#machine-hero-" + i)?.classList.remove("punchline-ready");
   }
 }

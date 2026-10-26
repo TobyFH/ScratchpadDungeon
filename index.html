@@ -11418,6 +11418,131 @@ body[data-motion="off"] .punchline-ready .machine-face { animation: none; }
 .tile.crystal-tile > svg {visibility:hidden;}
 /* Steady reuses the shield glyph and functional focus ink. */
 .stun-ward-badge { color: var(--focus); }
+
+/* Clear, fixed-space controls. A denied reel shows its reason over the machine. */
+#hover-name { font-size: 23px; line-height: 1.2; }
+#field-note { font-size: 22px; line-height: 1.25; }
+#exit-found { width:44px; min-width:44px; height:38px; padding:4px; flex:0 0 44px; }
+#exit-found svg { width:28px;height:28px; }
+#exit-found.unreached { opacity:.5; }
+.hero-controls .machine-shell { position:relative; }
+.reel-unavailable,.hero-notice { position:absolute;inset:3px 28px 22px 3px;z-index:7;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;pointer-events:none;text-align:center;padding:4px;background:color-mix(in srgb,var(--paper) 91%,transparent);border:1px dashed var(--ink); }
+.reel-unavailable svg { width:32px;height:32px; }
+.reel-unavailable strong {font-size:16px;line-height:1.12;}
+.reel-unavailable.stun { color:var(--gold); }
+.reel-unavailable.surprise { color:var(--red); }
+.reel-unavailable.shadow { color:#77628d;background:color-mix(in srgb,var(--paper) 85%,#77628d); }
+.hero:has(.reel-unavailable) .machine-face {filter:blur(1px);opacity:.32;}
+.portrait:has(.stun-badge) .stun-badge {position:absolute;inset:20% 18%;width:auto;height:auto;z-index:5;background:var(--paper);border:2px dashed var(--gold);}
+.portrait .stun-badge svg { width:100%;height:100%; }
+.hero.has-initiative .machine-shell { outline:2px dashed var(--gold);outline-offset:2px;box-shadow:0 0 10px color-mix(in srgb,var(--gold) 35%,transparent); }
+.hero.has-initiative .machine-footnote {color:var(--gold);font-weight:bold;}
+.hero-notice {border-style:solid;color:var(--gold);background:var(--paper);}
+.hero-notice strong {font-family:var(--display);font-size:24px;line-height:1.05;}
+.hero-notice small {font-size:15px;line-height:1.15;}
+.hero-notice.danger {color:var(--red);}.hero-notice.heal,.hero-notice.recovery {color:var(--green);}
+.machine-shell.showing-notice .machine-face {filter:blur(2px);}
+.stun-breaking .machine-face {opacity:.25;}
+.slot-window.shadow-locked::after {content:"";position:absolute;inset:0;z-index:4;background:radial-gradient(ellipse,#645571df,#8e8199a8);border:1px dashed #574461;}
+.shadow-badge {color:#77628d;}
+.item-category {display:block;font-size:14px;line-height:1.15;color:var(--soft);font-weight:normal;}
+.item-category.instant {color:var(--green);}.item-category.equipment {color:var(--focus);}
+.equipment-scope {margin-inline-end:.35em;}
+.equipped-detail {display:flex;gap:16px;align-items:center;min-height:100px;}
+.equipped-detail>svg {width:65px;height:75px;flex-shrink:0;}
+.equipment-alternatives {display:grid;gap:8px;min-height:180px;align-content:start;}
+.equipment-alternatives>button {display:flex;align-items:center;gap:12px;text-align:left;min-height:70px;}
+.equipment-alternatives svg {width:38px;height:42px;flex-shrink:0;}
+.equipment-alternatives small {display:block;font-size:17px;}
+.bag-card>div {display:flex;flex-direction:column;min-width:0;align-self:stretch;}
+.bag-card>div>div {margin-top:auto;display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.bag-card>div>div>button {min-height:38px;height:100%;}
+.workshop-nav {grid-template-columns:1fr 1fr 1fr;}
+.workshop-faces {height:338px;grid-template-rows:repeat(var(--face-rows,7),minmax(0,1fr));}
+.workshop-faces .tier-symbol,.workshop-preview .tier-symbol {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));width:48px;height:40px;gap:0;place-items:center;min-width:0;min-height:0;}
+.workshop-preview {width:52px;min-width:52px;}
+.workshop-faces .tier-symbol svg,.workshop-preview .tier-symbol svg {position:static;width:20px!important;height:20px!important;min-width:0;max-width:100%;max-height:100%;transform:none;margin:0;}
+.workshop-faces .tier-1,.workshop-preview .tier-1 {grid-template-columns:1fr;grid-template-rows:1fr;}
+.workshop-faces .tier-2,.workshop-preview .tier-2 {grid-template-columns:repeat(2,1fr);grid-template-rows:1fr;}
+.mystery-face {display:grid;place-items:center;width:32px;height:36px;color:var(--gold);border:1px dashed currentColor;}
+.mystery-face svg {width:26px;height:30px;}
+.workshop-prices-page {box-sizing:border-box;}
+.workshop-prices-page p {font-size:17px;line-height:1.2;margin:5px 0;}
+.class-price-table {width:100%;border-collapse:collapse;font-size:17px;line-height:1.15;}
+.class-price-table th,.class-price-table td {padding:5px 6px;border-bottom:1px dashed var(--line);text-align:center;}
+.class-price-table th:first-child {text-align:left;}
+.class-price-table th {font-weight:normal;}
+.stage-card.treasure .scene-layout {height:540px;min-height:540px;grid-template-rows:50px 105px 135px 45px 205px;}
+.stage-card.treasure .trap-art {height:50px;min-height:50px;}
+.stage-card.treasure .trap-art svg {width:48px;height:48px;}
+.stage-card.treasure #event-critical {height:135px;min-height:135px;}
+.stage-card.treasure #treasure-result {height:45px;min-height:45px;}
+.stage-card:is(.treasure,.well) .scene-layout > .machine-shell .machine-title {grid-row:1;}
+.stage-card:is(.treasure,.well) .scene-layout > .machine-shell .machine-face {grid-row:2;}
+.stage-card:is(.treasure,.well) .scene-layout > .machine-shell .machine-footnote {grid-row:3;}
+.stage-card.treasure #artefact-loot {display:block;height:205px;min-height:205px;width:100%;}
+.loot-find-grid {height:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:6px;}
+.loot-find-tile {min-width:0;min-height:0;}
+.loot-find-tile .item-find,.loot-find-tile .artefact-card {display:flex;align-items:center;gap:8px;box-sizing:border-box;height:100%;min-height:0;margin:0;padding:7px;border:1px dashed var(--line);}
+.loot-find-tile svg {width:35px;height:42px;flex-shrink:0;}
+.loot-find-tile b {font-size:19px;line-height:1.05;display:block;overflow-wrap:anywhere;}
+.loot-find-tile p {font-size:17px;line-height:1.12;margin:3px 0;}
+.loot-find-tile .equipment-scope {font-size:16px;display:inline;}
+.tile.terrain-ice {background:color-mix(in srgb,var(--paper) 72%,#a9d6e8);}
+.terrain-ice .biome-cover {color:#719bb0;background:repeating-linear-gradient(136deg,transparent 0 8px,#d3e5ec66 9px 11px);}
+.tile.terrain-mudslide {background:color-mix(in srgb,var(--paper) 72%,#92764c);}
+.tile.terrain-mudwall {background:color-mix(in srgb,var(--paper) 65%,#7e6b4c);}
+.tile.terrain-stalactite .biome-cover {color:var(--ink);opacity:.65;}
+.stalactite-count {position:absolute;right:3px;bottom:2px;z-index:4;min-width:18px;background:var(--paper);color:var(--red);border:1px solid currentColor;font-size:18px;line-height:1;text-align:center;}
+.stalactite-drop .biome-cover {animation:falling-stone .4s ease-in;}
+@keyframes falling-stone {0%{transform:translateY(-20px);}70%{transform:translateY(9px);}100%{transform:translateY(0);}}
+.crystal-radius {position:absolute;inset:2px;border:2px dotted #749fca;pointer-events:none;z-index:1;box-shadow:inset 0 0 8px #789ec738;}
+.shadow-pencil {position:absolute;inset:0;z-index:5;background:repeating-linear-gradient(34deg,#433c4bf2 0 1px,#655b6eeb 1px 3px,#4a4053ed 3px 4px);box-shadow:inset 0 0 10px #2a2032;pointer-events:none;}
+.tile.shadow-covered {outline:1px dashed #88778b;outline-offset:-3px;}
+.personal-moment svg {max-height:140px;}
+@media(max-width:760px){
+  .workshop-nav button {font-size:17px;padding:4px;}
+  .workshop-faces {height:338px;}
+  .workshop-prices-page p {font-size:19px;}
+  .class-price-table {font-size:19px;}
+  .class-price-table th,.class-price-table td {padding:6px 3px;}
+  .loot-find-tile b {font-size:20px;}.loot-find-tile p {font-size:18px;}.loot-find-tile svg {width:29px;height:35px;}
+  #hover-name {font-size:22px;}#field-note{font-size:21px;}
+}
+@media(prefers-reduced-motion:reduce){.stalactite-drop .biome-cover{animation:none;}}
+.workshop-faces .tier-symbol {height:32px;width:42px;}
+.workshop-faces .tier-symbol svg {height:16px!important;width:16px!important;}
+.workshop-faces>button {padding-block:2px;min-height:0;}
+.portrait .stun-badge {visibility:hidden;}
+.stun-portrait-overlay {position:absolute;inset:18% 15%;z-index:6;display:grid;place-items:center;background:color-mix(in srgb,var(--paper) 88%,transparent);border:2px dashed var(--gold);color:var(--gold);}
+.stun-portrait-overlay>svg {width:80%;height:80%;}
+.passive-veil {color:#77628d;}
+:root {--veil-ink:#6f537c;}body[data-palette="dark"] {--veil-ink:#ccb0db;}
+.reel-unavailable.shadow,.shadow-badge,.passive-veil {color:var(--veil-ink);}
+
+/* On narrow paper keep reading space, rather than shrinking the entire find. */
+@media(max-width:760px){
+  .stage-card.treasure {padding:12px 16px;}
+  .stage-card.treasure > .eyebrow {flex-basis:16px;height:16px;}
+  .stage-card.treasure > .stage-title {flex-basis:48px;height:48px;}
+  .stage-card.treasure > .stage-subtitle {flex-basis:28px;height:28px;}
+  .stage-card.treasure > .stage-actions {flex-basis:55px;height:55px;min-height:55px;}
+  .stage-card.treasure .critical-summary,.stage-card.treasure .critical-summary .critical-payoff {min-height:0;height:100%;}
+}
+
+/* Full artefact rules remain on hover/focus; the find itself stays compact. */
+.stage-card.treasure #artefact-loot {overflow:visible;}
+.loot-find-tile .artefact-card b {font-size:18px;}
+.loot-find-tile .artefact-card p {font-size:16px;line-height:1.08;}
+.loot-find-tile .artefact-card button {font-size:15px;line-height:1.1;padding:2px 5px;min-height:22px;}
+.loot-find-tile .artefact-card .revive-ready {font-size:14px;line-height:1.1;}
+
+/* Two readable supply lines fit a fixed pocket without changing its frame. */
+@media(max-width:760px){
+  .notes-and-bag .inventory-items button {grid-template-rows:25px 20px;padding-top:2px;padding-bottom:2px;}
+  .notes-and-bag .inventory-items button>span {font-size:13px;line-height:.95;}
+  .notes-and-bag .inventory-items button small {font-size:11px;line-height:.9;}
+}
 /* END GENERATED NOTEBOOK CSS */
     </style>
   </head>
@@ -11600,6 +11725,7 @@ body[data-motion="off"] .punchline-ready .machine-face { animation: none; }
         "<!doctype html>\n" + document.documentElement.outerHTML;
       const $ = (s) => document.querySelector(s),
         SAVE_KEY = "scratchpad-dungeon-v8",
+        SAVE_VERSION = 22,
         W = 11,
         H = 9;
       // BEGIN GENERATED NOTEBOOK ART
@@ -11813,12 +11939,17 @@ function leverArt() {
 }
 const paths = {
   crystal: "M4 28 2 13l9-9 5 6 6-8 8 13-4 14ZM2 13l9 5 5-8m-5-6v14l4 10m7-26-1 18 9-5m-9 5 5 9M4 28l7-10",
-  ice: "M3 26 8 7l9-5 12 19-9 9ZM8 7l5 15 4-20m-4 20 16-1M6 27l7-5 7 8M6 10l3 1m12 4 4-1",
+  ice: "M2 5q13-4 28 0v24q-15-3-28 0ZM4 8l24 17M4 18l12 9M16 5l12 10M6 11l3 1m8 6 5 2M12 3v8m-4-4h8M25 19v10m-4-5h8",
+  mudslide:"M2 8q8-8 15-2l13 9v14H2ZM4 19q9-8 23 3M5 25q10-7 23 2M8 9l12 5m-5-8 7 9-11-1",
+  mudwall:"M1 1h30v30H1ZM3 25l6-13 7 4 5-10 8 19ZM6 24l7-4 7 5M9 12l2 6m10-11 1 12",
+  stalactite:"M2 3h28M6 3l5 17 5-17m5 0 4 12 4-12M9 23l2 5 2-5m10-5 2 7 2-7M4 30h25",
+  shadow:"M4 25q-7-12 4-14 0-12 10-7 11-5 10 7 8 9-3 15ZM7 17q7-7 17 0m-14 4 4-2m4 0 5 2",
+  surprise:"M13 2h6l-1 17h-4ZM14 24h4v5h-4M3 5l4 6m22-6-4 6",
   mushroom: "M3 15Q3 2 16 3q13-1 14 12l-4 3H7ZM12 18l-1 10q5 4 10 0l-1-10M8 11l3-3m9 0 4 4M5 17h23M6 29h3m16-2h3",
   overgrown: "M5 29Q8 13 24 3M10 21Q0 17 4 10q10 0 10 8M16 13q-2-12 7-11 6 6-3 12M9 24q12-9 20-5-2 10-16 8M3 29h26",
   explosion: "M13 10 15 1l4 8 10-5-5 11 8 3-10 5 3 9-11-6-10 5 3-11-7-5 11-1ZM12 16l5-4 5 6-6 6Z",
 
-  trick: "M4 13 9 3l8 6 8-5 4 11-8 3-6-5-6 5ZM8 21q8 12 17-1M11 22v3m10-4v3M4 5h1m23 20h1",
+  trick: "M5 20q1-14 9-12l2 11q0-14 9-16l-2 17ZM5 21h19v5H5ZM3 17a2 2 0 1 0 4 0 2 2 0 1 0-4 0M23 3a2 2 0 1 0 4 0 2 2 0 1 0-4 0M12 7a2 2 0 1 0 4 0 2 2 0 1 0-4 0",
   rally: "M6 25V13l5-9 5 9v12ZM9 15h5M20 12h9m-4-4 4 4-4 4M18 20h9m-4-4 4 4-4 4",
   jester:
     "M4 14Q1 1 10 7l6 6 5-7q10-7 7 8l-2 10H7ZM4 14l12 5 12-5M4 12a2 2 0 1 0 0 .1M21 5a2 2 0 1 0 0 .1M9 24v4h16v-4",
@@ -11942,6 +12073,8 @@ function specialEnemyArt(kind, entity) {
   // Every species uses the same sparse contours and material hatching. Keep
   // silhouettes legible at map-token size, without a detailed scan outlier.
   const body = {
+    veilweaver:"M20 135l5-58 15-19-6-27L60 8l28 25-7 28 16 23 6 51-24-11-21 15-17-14ZM42 40l15 7m9-1 12-9M51 65l19-3M29 87l24 18 32-19M14 71q17-20 9-30m81 35q-20-17-9-41M24 113l20-7m42 2 15 8M43 91l2 18m29-18-3 18",
+    shalecrab:"M24 57l21-29 33-3 24 32-8 45-29 20-37-16ZM35 57l27-15 27 18-4 32-23 13-24-14ZM40 65l12 6m16-1 12-8M33 85l27-8 31 9M26 64 8 53 3 77l13 9m80-20 17-13 4 24-12 11M30 99l-17 22 7 14m68-34 17 21-6 13M43 116l-3 26m36-23 5 24",
     powderimp: "M25 63Q17 29 52 24l8-17 6 17q39 2 30 42l-9 58-28 14-28-13ZM50 24l4-11h15l4 12M61 11q-8-8 5-10m3 0 4 5M37 56l17 7m15-1 14-9M41 83q16 12 36-2M45 85l4 10m20-9-3 10M32 73l-19 11-5-4m82-9 18 11 6-6M39 126l-10 16h18m30-17 9 16h15M40 102l8 3m24 4 10-4",
     rootling: "M44 141 32 104l7-29-9-20 12-7 1-30 17 15 16-24 3 37 18 10-12 29 6 25-19 29-13-11ZM45 58l11 5m10 0 12-7M48 80l24 1M38 89l-25 13-8-8m80-2 23 9 8-8M49 96l7 21m14-24-8 28M41 133l-14 12m49-15 14 15",
     thornhulk: "M27 137l-7-58 16-14-15-20 17 5-2-30 20 17L70 6l9 30 20-13-9 28 18 2-14 28 6 55-29-10-14 15-14-14ZM41 61l15 7m14 0 14-9M46 87l31 1-14 13ZM38 105l16 13m23-14-14 27M29 79 7 91l3 26m85-34 19 11-3 20M35 136l-15 10m64-12 16 11",
@@ -12038,7 +12171,7 @@ function basePortraitArt(kind, entity = { hp: 1, maxHp: 1 }) {
 function floorArt(c, i) {
   if (c.terrain === "bridge") return icon("bridge");
   if (c.wall)
-    return icon(["river", "lava"].includes(c.terrain) ? c.terrain : "wall");
+    return icon(["river", "lava", "mudwall", "crystal"].includes(c.terrain) ? c.terrain : "wall");
   const variants = [
     paths.floor,
     "M5 24q7-2 12 0l10-2M9 23l-3-6m11 7 5 4",
@@ -12145,7 +12278,27 @@ function punEnemyArt(id) {
     eraser:
       "M25 37l53-17 21 26-2 65-58 17-20-31ZM25 38l19 24 54-16M44 62l-5 65M22 86l19 25 55-17M29 99l13 18m10-6 14-4m8-3 15-4",
   };
-  const body = shapes[id] || shapes.sketch;
+  const extras = {
+    paperjammer:"M24 20h72v24H24ZM18 48h84v65H18ZM30 59h60M33 73l13 5m25-6 13-6M34 88l44 8M37 112l-2 20m45-20 5 20",
+    popquiz:"M30 28h60l10 76-20 16-52-12ZM39 40q26-10 34 9 3 12-17 19v15M55 92h4M54 28l-2-16 13-7",
+    sporepoint:"M37 50q-15-43 23-43 39 2 24 44ZM45 52v62l15 21 15-21V52M52 60v48m15-48v48",
+    quillking:"M26 44l-8-26 26 10L60 5l16 24 28-12-7 29ZM36 48l15 65 14 20 15-21 8-64M49 65l20 5m-16 13 18-6",
+    hotpress:"M20 49h80v63H20ZM35 46V29h52v17M32 65h55M35 81l14 7m22-7 14 7M27 118l-5 16m69-16 9 16M51 25l-6-15m26 14 7-17",
+    bindwyrm:"M16 110l12-68 54-20 18 73-16 34-68-19ZM31 49l40-14 13 65-45 13ZM20 59l12 3m-16 14 13 3m-17 14 14 3M50 61l10 7m10-8 8 4",
+    icebreaker:"M28 35l51-14 20 26-4 64-53 17-22-31ZM28 35l18 27 51-15M44 64l-2 63M32 80l9 5m12-5 30-11M65 37l-4-16m-8 8h18",
+    coldcomma:"M38 49q15-25 38-9 26 29-26 76l-13-8q25-20 21-29-27 7-20-30ZM29 26l4-17m-14 8h27M84 103l4-20m-13 11h25",
+    blankslate:"M25 23h71l-3 98-19-10-16 14-16-13-17 9ZM38 52l15 6m15-1 15-8M44 82q15-18 32-2M15 91 6 77m92 12 14-13",
+    rockpaperscissors:"M22 63l24-25 28 1 24 27-12 38-47 7ZM36 62l20 9 25-14M21 69 5 50l3 41 17 9m71-30 18-23-2 43-17 12M34 109l-16 25m62-27 17 27",
+    deadletter:"M20 43h83v70H20ZM20 43l42 36 41-36M22 110l28-32m24 0 26 32M38 59l12 7m22-1 13-7M45 94l31 1",
+    clipper:"M36 109Q9 74 35 35q32-40 52-4 11 19-7 56L59 123q-12 12-22-4L24 88M43 96l27-51q9-19-5-19-15 3-22 23L29 84",
+    marginmarksman:"M28 19h60v90H28ZM37 30h8m-8 13h12m-12 13h8m-8 13h12M97 25q-31 42 0 87L85 69ZM86 69H48l10-9m-10 9 10 9",
+    foolscap:"M25 74 30 28l21 22 14-35 17 31 18-18-6 48ZM25 77h69v27H25M38 89l13 3m15-1 13-4M34 105l-5 26m57-25 8 25",
+  };
+  let body = extras[id] || shapes[id] || shapes.sketch;
+  if (/^boss[1-9]$/.test(id)) {
+    const n=Number(id.slice(4)), base=["pencil","punch2","ruler","police","glue","penknight","crook","tankerchief","inkuisitor"][n-1];
+    body=shapes[base]+`M${20+n} 125h${n*5}m-${n*3} 4h${n*2}`;
+  }
   const holes =
     id === "punch2" ? [42, 78] : id === "punch3" ? [30, 60, 90] : [];
   const punchMarks = holes
@@ -12193,6 +12346,7 @@ function stairwayArt() {
                 }[owner.job] || "class";
           return `<span class="class-face" title="${classAbilityDescription(owner)}">${icon(mark)}</span>`;
         }
+        if (s.type === "mystery") return `<span class="mystery-face" title="Permanent mystery mark">${icon("question")}</span>`;
         if (s.type === "blank")
           return `<span class="blank-face" aria-label="Empty reel face" title="Empty face · replace it with personal points">${icon("blank")}<small>EMPTY</small></span>`;
         if (s.type === "multiplier")
@@ -12211,6 +12365,7 @@ function stairwayArt() {
           "block",
           "stun",
           "class",
+          "mystery",
           "selfharm",
           "blank",
         ],
@@ -12234,6 +12389,7 @@ function stairwayArt() {
 // Shared numeric tuning. Keep RNG, match rules, reel counts and art outside this module.
 // All multipliers are visible in the workshop/guide; a mark has the same base power for every class.
 const POWER = Object.freeze({
+  mystery: 0,
   selfharm: 2,
   attack: 1,
   magic: 1,
@@ -13717,9 +13873,9 @@ const tankSealBlock = (h) =>
 const furyCapacity = (h) =>
   24 + Math.max(0, Math.floor((h?.level || 1) - 1)) * 3;
 const fountainBaseRate = (depth = state.depth) =>
-  0.15 + Math.min(9, Math.max(0, depth - 1)) * 0.0025;
+  0.15 + Math.min(9, Math.max(0, depth - 1)) * 0.005;
 const fountainRollRate = (depth = state.depth) =>
-  0.5 + Math.min(9, Math.max(0, depth - 1)) * 0.012;
+  0.5 + Math.min(9, Math.max(0, depth - 1)) * 0.018;
 function heroDamagePower(h, n) {
   return n;
 }
@@ -13822,7 +13978,11 @@ function normaliseHeroBuild(h) {
   if (!h.reels) return;
   retireReelWeights(h);
   for (const face of h.last || []) {
-    if (face.type === "selfharm" && h.job !== "berserker") {
+    if (
+      face.type === "selfharm" &&
+      h.job !== "berserker" &&
+      !face.fromMystery
+    ) {
       face.type = h.job === "jester" ? "trick" : "blank";
       if (face.type === "blank") face.tier = 1;
     }
@@ -13832,6 +13992,7 @@ function normaliseHeroBuild(h) {
     }
     if (
       face.type === "stimulant" &&
+      !face.fromMystery &&
       ["mage", "ranger", "jester"].includes(h.job)
     )
       face.type = "rally";
@@ -13845,7 +14006,11 @@ function normaliseHeroBuild(h) {
     for (const face of reel) {
       face.weight = Math.max(1, Math.min(4, Math.floor(face.weight || 1)));
       delete face.mageRole;
-      if (face.type === "selfharm" && h.job !== "berserker") {
+      if (
+        face.type === "selfharm" &&
+        h.job !== "berserker" &&
+        !face.fromMystery
+      ) {
         face.type = h.job === "jester" ? "trick" : "blank";
         if (face.type === "blank") face.tier = 1;
       }
@@ -13881,6 +14046,7 @@ function normaliseHeroBuild(h) {
     if (k === 1 && !seal)
       reel.push({ type: "class", tier: 1, weight: 1, job: h.job });
   });
+  normaliseMysteryReels(h);
 }
 function classAbilityName(hero) {
   const job = typeof hero === "string" ? hero : hero?.job;
@@ -14094,6 +14260,7 @@ function makeHero(
     ]),
     last: [],
   };
+  normaliseMysteryReels(h);
   h.last = [h.reels[0][0], h.reels[1][1], { type: "blank", tier: 1 }].map(
     (f) => ({ ...f }),
   );
@@ -14408,7 +14575,6 @@ function wardActive(e = actingEnemy) {
           events.push("shop");
         if (Math.random() < 0.32) events.push("ruin");
         for (const e of events) if (free.length) place(free.splice(rand(free.length), 1)[0], e);
-        addLavaPuddles(map, depth);
         ensureStairsPath(map);
         const connected = mapDistances(map);
         map.forEach((c, i) => {
@@ -14421,6 +14587,7 @@ function wardActive(e = actingEnemy) {
         ensureStairDistance(map);
         addCaveRooms(map);
         assignFloorBiome(map, depth);
+        decorateLivingFloor(map, depth);
         return map;
       }
 
@@ -14472,7 +14639,7 @@ function wardActive(e = actingEnemy) {
         travel = null;
         document.querySelectorAll(".speech-bubble").forEach((e) => e.remove());
         state = {
-          version: 21,
+          version: SAVE_VERSION,
           runId: newExpeditionId(),
           bankedFloors: {},
           runRules: rules,
@@ -14573,9 +14740,7 @@ function wardActive(e = actingEnemy) {
           );
           if (
             !s ||
-            ![1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21].includes(
-              s.version,
-            ) ||
+            (!Number.isInteger(s.version) || s.version < 1 || s.version > SAVE_VERSION) ||
             s.map?.length !== W * H ||
             !Array.isArray(s.party) ||
             !s.party.length ||
@@ -14613,8 +14778,9 @@ function wardActive(e = actingEnemy) {
             commandAmbushMigration = s.version < 19;
           const oldHeroTuning = s.version < 21;
           state = s;
-          state.version = 21;
+          state.version = SAVE_VERSION;
           normaliseBiome();
+          normaliseLivingFloor();
           state.moveCommands ??= 0;
           state.characterEvents ??= [];
           state.encounterSerial ??= 0;
@@ -14840,6 +15006,7 @@ function wardActive(e = actingEnemy) {
         }
       }
       function log(msg) {
+        if (groupedCombatLog && groupedCombatLog.run === state) {groupedCombatLog.entries.push(msg);return;}
         state.logs.unshift(msg);
         state.logs = state.logs.slice(0, 60);
         renderLog();
@@ -14947,7 +15114,7 @@ function wardActive(e = actingEnemy) {
             : enemy
               ? "Enemy reels"
               : "Fast-forward this slot machine";
-        return `<div class="machine-shell ${one ? "one-reel" : ""}" id="machine-${id}" data-machine="${id}">${title ? `<div class="machine-title">${title}</div>` : ""}<button class="machine-face" data-roll-area="${id}" aria-label="${label}" ${disabled ? "disabled" : ""}>${last.map((s, k) => `<span class="slot-window ${owner?.blackout?.includes(k) ? "blacked-out" : owner?.crystalLocks?.includes(k) ? "gem-locked" : ""} ${owner?.reelGifts?.some((g) => g.reel === k && g.uses > 0) ? "gifted-reel" : ""}" data-reel="${k}" ${active ? `data-tooltip="${escapeHTML(state.party[hero].blackout?.includes(k) ? "Pencil blackout: this reel does nothing on this roll, then clears." : state.party[hero].crystalLocks?.includes(k) ? "Crystal seal: this reel is empty for one roll. Rolling this hero cracks its blocking gems." : faceDescription(s, state.party[hero]))}"` : ""}><span class="symbol-track single"><span class="slot-symbol">${symbolMarkup(s)}</span></span></span>`).join("")}</button><button class="lever" ${active ? `data-spin="${hero}"` : `data-fast-machine="${id}"`} ${disabled ? "disabled" : ""} aria-label="${active ? "Pull " + state.party[hero].name + "’s slot handle" : "Fast-forward " + (enemy ? "enemy" : "event") + " reels"}">${leverArt()}</button><div class="machine-footnote">${active ? (["ranger", "berserker", "jester"].includes(state.party[hero].job) ? rangerAimMarkup(state.party[hero]) : state.enemy ? (state.party[hero].stun ? "Pull to shake off stun" : "Pull handle to spin") : "Waiting for an encounter") : enemy ? "" : "Click during the roll to land it"}</div></div>`;
+        return `<div class="machine-shell ${one ? "one-reel" : ""}" id="machine-${id}" data-machine="${id}">${title ? `<div class="machine-title">${title}</div>` : ""}<button class="machine-face" data-roll-area="${id}" aria-label="${label}" ${disabled ? "disabled" : ""}>${last.map((s, k) => `<span class="slot-window ${owner?.blackout?.includes(k) ? "blacked-out" : owner?.crystalLocks?.includes(k) ? "gem-locked" : ""} ${owner?.shadowLocks?.includes(k) ? "shadow-locked" : ""} ${owner?.reelGifts?.some((g) => g.reel === k && g.uses > 0) ? "gifted-reel" : ""}" data-reel="${k}" ${active ? `data-tooltip="${escapeHTML(state.party[hero].blackout?.includes(k) ? "Pencil blackout: this reel does nothing on this roll, then clears." : state.party[hero].crystalLocks?.includes(k) ? "Crystal seal: this reel is empty for one roll. Rolling this hero cracks its blocking gems." : faceDescription(s, state.party[hero]))}"` : ""}><span class="symbol-track single"><span class="slot-symbol">${symbolMarkup(s)}</span></span></span>`).join("")}</button><button class="lever" ${active ? `data-spin="${hero}"` : `data-fast-machine="${id}"`} ${disabled ? "disabled" : ""} aria-label="${active ? "Pull " + state.party[hero].name + "’s slot handle" : "Fast-forward " + (enemy ? "enemy" : "event") + " reels"}">${leverArt()}</button>${active ? reelLockMarkup(owner) : ""}<div class="machine-footnote">${active ? (owner.initiative && state.opening?.firstRoll ? "INITIATIVE · act first for +25%" : ["ranger", "berserker", "jester"].includes(state.party[hero].job) ? rangerAimMarkup(state.party[hero]) : state.enemy ? (state.party[hero].stun ? "Stunned · waiting for recovery" : "Pull handle to spin") : "Waiting for an encounter") : enemy ? "" : "Click during the roll to land it"}</div></div>`;
       }
       function render() {
         statusTooltip.hidden = true;
@@ -14987,19 +15154,22 @@ function wardActive(e = actingEnemy) {
             ? "All ten floors conquered. The last page is yours."
             : "The expedition ends here. A fresh page awaits."
           : state.enemy
-            ? "An enemy blocks the way. Pull any living hero’s handle."
+            ? "Choose a ready hero. Locked reels show why they cannot act."
             : busy
               ? "Pencil dust, little footsteps…"
-              : "Scratch a neighbouring tile. Click uncovered rooms to retrace a shortest path.<br>The only way to finish is to keep descending.";
-        $("#exit-found").hidden = !state.exitFound;
+              : "Click an unknown neighbour to reveal it, or a known tile to walk there.";
+        $("#exit-found").hidden = false;
         $("#exit-found").disabled = busy || !!state.enemy || state.over || !state.exitReached;
         $("#exit-found").innerHTML =
           icon("stairs") +
           (!state.exitReached
-            ? "Stairs marked · reach them first"
+            ? ""
             : state.depth === 10
-              ? "Final stairway reached"
-              : "Stairs reached · descend when you choose");
+              ? ""
+              : "");
+        $("#exit-found").classList.toggle("unreached", !state.exitReached);
+        $("#exit-found").setAttribute("aria-label", state.exitReached ? "Open staircase menu" : "Stairs marked; reach them first");
+        $("#exit-found").title = state.exitReached ? "Stairs · choose when to descend" : "Reach the marked stairs";
         renderMap();
         renderParty();
         renderEncounter();
@@ -15018,11 +15188,14 @@ function wardActive(e = actingEnemy) {
         fitNotebook();
         updateKeyboardBar();
         requestFitUI();
+        scheduleStunRecovery();
       }
       function roomDescription() {
         const c = state.map[state.position];
         if (state.enemy)
           return "Boots scrape the stone. The torchlight catches drawn weapons.";
+        if (c.terrain === "mudslide") return "Wet stone gives way to a one-way slide. The mud will close behind you.";
+        if (c.terrain === "stalactite") return "Loose stone hangs above. Watch the countdown before your next footstep.";
         if (c.corpses?.length)
           return "The party lowers its voices beside the fallen.";
         if (["ice", "mushroom", "overgrown"].includes(c.terrain))
@@ -15115,6 +15288,10 @@ function wardActive(e = actingEnemy) {
           return c.hint
             ? "Unknown - " + c.hint.text
             : "Unknown - pencil-covered tile";
+        if (c.shadowCovered) return "Re-covered passage - ambush risk";
+        if (c.terrain === "mudslide") return "Mudslide - one-way slide; collapses behind you";
+        if (c.terrain === "mudwall") return "Collapsed mudslide - impassable";
+        if (c.terrain === "stalactite") return `Unstable ceiling - falling stone in ${c.stalactite?.remaining || 4} steps`;
         if (c.terrain === "bridge" && !c.event) return "River bridge - traversable";
         if (c.terrain === "lava")
           return "Lava puddle - impassable - lights adjacent tiles";
@@ -15154,6 +15331,7 @@ function wardActive(e = actingEnemy) {
       }
       function renderMap() {
         const locked = (busy && !travel) || !!state.enemy || state.over;
+        const crystalInfluence = crystalInfluencedTiles();
         $("#map").innerHTML = state.map
           .map((c, i) => {
             const feature = c.feature === "bridge" ? null : c.feature,
@@ -15176,9 +15354,11 @@ function wardActive(e = actingEnemy) {
                     : bridge
                       ? ""
                       : floorArt(c, i);
-            return `<button class="tile ${c.seen ? "" : "fog"} ${c.wall && c.seen ? "wall" : ""} ${water && c.seen ? "water-block " + c.terrain : ""} ${c.visited ? "visited" : ""} ${feature && !c.event ? "spent" : ""} ${active ? "active-event" : ""} ${battle ? "active-battle" : ""} ${active && c.event === "well" ? "active-well" : ""} ${active && c.event === "stairs" ? "active-stairs" : ""} ${corpse ? "has-corpse" : ""} ${!c.seen && c.hint ? "has-hint" : ""}  ${c.room && c.seen ? "cave-room" : ""} ${Date.now() - (c.roomRevealedAt || 0) < 1200 ? "room-reveal" : ""} ${c.seen && c.terrain === "bridge" ? "bridge-tile" : ""} ${c.seen && c.terrain === "lava" ? "lava-tile" : ""} ${c.seen && c.terrain === "crystal" ? "crystal-tile" : ""} ${c.seen && !c.wall && crystalSources(i,true).length ? "crystal-influence" : ""} ${c.seen && ["ice","mushroom","overgrown"].includes(c.terrain) ? "terrain-"+c.terrain : ""} ${i === state.position ? "player-cell" : ""} ${travel?.goal === i ? "travel-goal" : ""}" data-tile="${i}" data-event="${c.seen ? c.event || feature || "empty" : "unknown"}" data-state="${!c.seen ? "unknown" : active ? "active" : feature ? "used" : "empty"}" aria-label="${escapeHTML(tileName(c))}, column ${(i % W) + 1}, row ${Math.floor(i / W) + 1}" ${locked || (c.seen && c.wall) ? "disabled" : ""}>${cover ? `<span class="biome-cover ${c.terrain}" aria-hidden="true">${cover}</span>` : ""}${bridge ? `<span class="map-terrain bridge-layer" aria-hidden="true">${icon("bridge")}</span>` : ""}${art}${c.seen && c.wall ? '<span class="terrain-stop" aria-hidden="true">×</span>' : ""}${active ? `<span class="tile-status" aria-hidden="true">${c.event === "stairs" ? "↓" : c.event === "tunnel" ? "↔" + ((c.tunnelPair || 0) + 1) : "!"}</span>` : c.seen && feature ? '<span class="tile-status used" aria-hidden="true">✓</span>' : ""}${!c.seen && c.hint ? `<span class="tile-whisper" title="${escapeHTML(c.hint.text)}" aria-hidden="true">${icon(c.hint.kind)}</span>` : ""}${corpse && c.event ? '<span class="corpse-mark" aria-hidden="true">†</span>' : ""}</button>`;
+            return `<button class="tile ${c.seen ? "" : "fog"} ${c.wall && c.seen ? "wall" : ""} ${water && c.seen ? "water-block " + c.terrain : ""} ${c.visited ? "visited" : ""} ${feature && !c.event ? "spent" : ""} ${active ? "active-event" : ""} ${battle ? "active-battle" : ""} ${active && c.event === "well" ? "active-well" : ""} ${active && c.event === "stairs" ? "active-stairs" : ""} ${corpse ? "has-corpse" : ""} ${!c.seen && c.hint ? "has-hint" : ""}  ${c.room && c.seen ? "cave-room" : ""} ${Date.now() - (c.roomRevealedAt || 0) < 1200 ? "room-reveal" : ""} ${c.seen && c.terrain === "bridge" ? "bridge-tile" : ""} ${c.seen && c.terrain === "lava" ? "lava-tile" : ""} ${c.seen && c.terrain === "crystal" ? "crystal-tile" : ""} ${c.seen && !c.wall && crystalInfluence.has(i) ? "crystal-influence" : ""} ${c.shadowCovered ? "shadow-covered" : ""} ${c.seen && ["ice","mushroom","overgrown","mudslide","mudwall","stalactite"].includes(c.terrain) ? "terrain-"+c.terrain : ""} ${i === state.position ? "player-cell" : ""} ${travel?.goal === i ? "travel-goal" : ""}" data-tile="${i}" data-event="${c.seen ? c.event || feature || "empty" : "unknown"}" data-state="${!c.seen ? "unknown" : active ? "active" : feature ? "used" : "empty"}" aria-label="${escapeHTML(tileName(c))}, column ${(i % W) + 1}, row ${Math.floor(i / W) + 1}" ${locked || (c.seen && c.wall) ? "disabled" : ""}>${terrainTileAdornment(c,i,crystalInfluence)}${cover ? `<span class="biome-cover ${c.terrain}" aria-hidden="true">${cover}</span>` : ""}${bridge ? `<span class="map-terrain bridge-layer" aria-hidden="true">${icon("bridge")}</span>` : ""}${art}${c.seen && c.wall ? '<span class="terrain-stop" aria-hidden="true">×</span>' : ""}${active ? `<span class="tile-status" aria-hidden="true">${c.event === "stairs" ? "↓" : c.event === "tunnel" ? "↔" + ((c.tunnelPair || 0) + 1) : "!"}</span>` : c.seen && feature ? '<span class="tile-status used" aria-hidden="true">✓</span>' : ""}${!c.seen && c.hint ? `<span class="tile-whisper" title="${escapeHTML(c.hint.text)}" aria-hidden="true">${icon(c.hint.kind)}</span>` : ""}${corpse && c.event ? '<span class="corpse-mark" aria-hidden="true">†</span>' : ""}</button>`;
           })
           .join("");
+        const hovered = $("#map .tile:hover");
+        $("#hover-name").textContent = tileName(state.map[Number(hovered?.dataset.tile ?? state.position)]);
         let leader = state.party.find(alive) || state.party[0];
         $("#map-player").innerHTML =
           portraitArt(leader?.job || "fighter", leader) +
@@ -15205,7 +15385,7 @@ function wardActive(e = actingEnemy) {
           state.party
             .map((h, i) => {
               let status = injury(h);
-              return `<article data-hero-roll="${i}" data-surprised="${!openingEligible(h)}" tabindex="${state.enemy && alive(h) && !state.over ? "0" : "-1"}" role="group" aria-label="${escapeHTML(h.name)} · click card or press Enter to spin; portrait opens upgrades" data-gear-target="${i}" class="hero ${status} ${state.target === i ? "selected" : ""}" id="hero-${i}"><div class="hero-dossier"><button class="portrait" id="portrait-${i}" data-hero-stats="${i}" data-edit="${i}" aria-label="Upgrade ${h.name} · ${h.points} points" aria-pressed="${state.target === i}" ${busy || !alive(h) ? "disabled" : ""}>${portraitArt(h.job, h)}${statusMarkup(h)}${traitMarkup(h)}${specialismBadge(h)}</button>${pointsNeedAttention(h) ? `<button class="points-prompt" data-edit="${i}" aria-label="Spend ${h.points} personal points" title="Spend ${h.points} personal points" ${busy ? "disabled" : ""}>✎ ${h.points} pts</button>` : ""}<div class="hero-name">${h.name}<small>${className(h.job)} · Lv.${h.level}</small></div>${equipmentMarkup(h, i)}</div><div class="hero-controls"><div class="hero-title-line"><span class="hp-info">HP ${h.hp} / ${h.maxHp}</span><span class="injury ${status}">${h.stun ? "stunned" : status}</span></div>${healthMarkup(h)}${drawMachine("hero-" + i, h.last, { hero: i, disabled: busy || !state.enemy || !h.hp || state.over })}<div class="bars"><div class="healthbar exp" title="Experience"><i style="width:${(h.xp / (h.level * 12)) * 100}%"></i></div></div><div class="edit-line"><span>${h.xp}/${h.level * 12} EXP</span><button class="edit-button" data-edit="${i}" ${busy || state.over ? "disabled" : ""} aria-label="Edit ${h.name}'s reels">✎ ${h.points} points</button></div></div></article>`;
+              return `<article data-hero-roll="${i}" data-surprised="${!openingEligible(h)}" tabindex="${state.enemy && alive(h) && !state.over ? "0" : "-1"}" role="group" aria-label="${escapeHTML(h.name)} · click card or press Enter to spin; portrait opens upgrades" data-gear-target="${i}" class="hero ${status} ${h.initiative && state.opening?.firstRoll ? "has-initiative" : ""} ${state.target === i ? "selected" : ""}" id="hero-${i}"><div class="hero-dossier"><button class="portrait" id="portrait-${i}" data-hero-stats="${i}" data-edit="${i}" aria-label="Upgrade ${h.name} · ${h.points} points" aria-pressed="${state.target === i}" ${busy || !alive(h) ? "disabled" : ""}>${portraitArt(h.job, h)}${statusMarkup(h)}${traitMarkup(h)}${specialismBadge(h)}</button>${pointsNeedAttention(h) ? `<button class="points-prompt" data-edit="${i}" aria-label="Spend ${h.points} personal points" title="Spend ${h.points} personal points" ${busy ? "disabled" : ""}>✎ ${h.points} pts</button>` : ""}<div class="hero-name">${h.name}<small>${className(h.job)} · Lv.${h.level}</small></div>${equipmentMarkup(h, i)}</div><div class="hero-controls"><div class="hero-title-line"><span class="hp-info">HP ${h.hp} / ${h.maxHp}</span><span class="injury ${status}">${h.stun ? "stunned" : status}</span></div>${healthMarkup(h)}${drawMachine("hero-" + i, h.last, { hero: i, disabled: busy || !state.enemy || !h.hp || state.over || heroCannotRoll(h) })}<div class="bars"><div class="healthbar exp" title="Experience"><i style="width:${(h.xp / (h.level * 12)) * 100}%"></i></div></div><div class="edit-line"><span>${h.xp}/${h.level * 12} EXP</span><button class="edit-button" data-edit="${i}" ${busy || state.over ? "disabled" : ""} aria-label="Edit ${h.name}'s reels">✎ ${h.points} points</button></div></div></article>`;
             })
             .join("") +
           Array.from(
@@ -15213,6 +15393,7 @@ function wardActive(e = actingEnemy) {
             () =>
               `<div class="empty-slot">${icon("recruit")}<span>A name yet to be written.</span><small>Discover companions while exploring.</small></div>`,
           ).join("");
+        restoreHeroNotices();
       }
       function enemyActionText(e) {
         if (e.hp <= 0) return "Defeated";
@@ -15271,7 +15452,7 @@ function wardActive(e = actingEnemy) {
           slots
             .map(
               ([type, count]) =>
-                `<button id="${ids[type] || "item-" + type}" data-use-item="${type}" draggable="${!!ITEM_DEFS[type].equipment}" data-drag-item="${type}" title="${escapeHTML(ITEM_DEFS[type].description)}" ${busy || !canUseItem(type) ? "disabled" : ""}>${icon(ITEM_DEFS[type].icon)}<span>${ITEM_DEFS[type].shortName || ITEM_DEFS[type].name} ×${count}</span><small>${ITEM_DEFS[type].brief}</small></button>`,
+                `<button id="${ids[type] || "item-" + type}" data-use-item="${type}" draggable="${!!ITEM_DEFS[type].equipment}" data-drag-item="${type}" title="${escapeHTML(itemCategory(type).label + ". " + ITEM_DEFS[type].description)}" ${busy || !canUseItem(type) ? "disabled" : ""}>${icon(ITEM_DEFS[type].icon)}<span>${ITEM_DEFS[type].shortName || ITEM_DEFS[type].name} ×${count}</span><small>${ITEM_DEFS[type].equipment ? "Equip · " : "Use · "}${ITEM_DEFS[type].brief}</small></button>`,
             )
             .join("") +
           Array.from(
@@ -15360,7 +15541,7 @@ function wardActive(e = actingEnemy) {
         if (travel) {
           const plan = movementPlan(goal), path = plan?.path;
           if (!plan) {
-            toast("That destination has no uncovered route.");
+            toast("No known route reaches that tile yet.");
             return;
           }
           if (goal !== travel.goal && goal !== state.position) registerMoveCommand();
@@ -15401,7 +15582,7 @@ function wardActive(e = actingEnemy) {
         const plan = movementPlan(goal);
         let route = plan?.path;
         if (!plan) {
-          toast("Scratch beside an uncovered path. Unknown rooms cannot be shortcuts.");
+          toast("Choose a revealed tile, or an unknown tile beside a revealed passage.");
           return;
         }
         if (!route.length) { if (plan.stopped) toast("The ice carries you past that destination. Stopping before it."); return; }
@@ -15439,6 +15620,8 @@ function wardActive(e = actingEnemy) {
             let c = state.map[i],
               fresh = !c.seen,
               revision = travel.revision;
+            const shadowEntry = !!c.shadowCovered;
+            if (shadowEntry) await uncoverShadow(i);
             if (fresh) {
               await revealTile(i);
               renderMap();
@@ -15463,13 +15646,14 @@ function wardActive(e = actingEnemy) {
             c.fogged = false;
             c.lastNearCommand = state.moveCommands || 0;
             const from = state.position;
+            consumeMudslide(from);
             state.position = i;
-            if (c.terrain === "ice") {
+            if (["ice","mudslide"].includes(c.terrain)) {
               const slide = glideCells(state.map, from, i);
               travel.forced = slide.slice(1);
               if (slide.includes(travel.requestedGoal)) travel.goal = slide.at(-1);
               $("#map-player").classList.add("sliding");
-              GameSound.play("iceSlide");
+              GameSound.play(c.terrain === "mudslide" ? "mudSlide" : "iceSlide");
             } else $("#map-player").classList.remove("sliding");
             $("#field-note").textContent = roomDescription();
             state.steps++;
@@ -15484,6 +15668,7 @@ function wardActive(e = actingEnemy) {
             $("#map-player").classList.remove("walking");
             refreshStaleMap();
             biomeStep(i);
+            if (await livingDungeonStep()) {travel=null;break;}
             if (await advancePursuer()) {
               travel = null;
               break;
@@ -15492,7 +15677,7 @@ function wardActive(e = actingEnemy) {
               travel = null;
               break;
             }
-            if (staleEntry && resolved && Math.random() < 0.12) {
+            if ((staleEntry || shadowEntry) && resolved && Math.random() < (shadowEntry ? 0.25 : 0.12)) {
               travel = null;
               beginEncounter(false, { wandering: true });
               renderMap();
@@ -15657,6 +15842,40 @@ function wardActive(e = actingEnemy) {
 // Biome species are explicit depth bands. Ordinary encounter pools exclude them;
 // the matching floor adds only its eligible species to the random draw.
 const BIOME_ENEMIES = Object.freeze({
+  veilweaver: {
+    name: "Veil weaver",
+    biome: "shadow",
+    minDepth: 4,
+    maxDepth: 10,
+    hp: 1.08,
+    damage: 0.95,
+    trait: "veil",
+    faces: [
+      ["magic", 1],
+      ["magic", 2],
+      ["stun", 1],
+      ["block", 1],
+      ["miss", 1],
+    ],
+    lore: "Its cloak keeps the darkness others leave behind. Switch adventurers to shake its veil; fogged reels clear when rolled.",
+  },
+  shalecrab: {
+    name: "Shale-back scuttler",
+    biome: "unstable",
+    minDepth: 2,
+    maxDepth: 10,
+    hp: 1.2,
+    damage: 0.95,
+    trait: "carapace",
+    faces: [
+      ["attack", 1],
+      ["block", 1],
+      ["attack", 2],
+      ["stun", 1],
+      ["miss", 1],
+    ],
+    lore: "A creature of loose stone, always listening for the next crack overhead. Its shell is tougher than the ceiling.",
+  },
   powderimp: {
     name: "Powder imp",
     biome: "cave",
@@ -15886,6 +16105,10 @@ async function exploderTurn(e) {
 // expose names, stats or silhouettes. A record stores real observed encounter stats.
 const BESTIARY_KEY = "scratchpad-dungeon-bestiary-v1";
 const SPECIES_LORE = {
+  jester: [
+    "Hostile jester",
+    "A joke takes a sharp turn. Its mystery marks can become almost any power.",
+  ],
   rat: [
     "Ink rat",
     "Cellar scavengers lick spilled ink from discarded pages. Their teeth carry more than a stain.",
@@ -16010,7 +16233,8 @@ ENEMY_PROFILES.smudger = {
     ["miss", 1],
   ],
 };
-for(const [id,def]of Object.entries(BIOME_ENEMIES)) SPECIES_LORE[id]=[def.name,def.lore];
+for (const [id, def] of Object.entries(BIOME_ENEMIES))
+  SPECIES_LORE[id] = [def.name, def.lore];
 const BESTIARY_ENTRIES = Object.entries(SPECIES_LORE).map(
   ([art, [name, lore]]) => ({ id: art, art, name, lore }),
 );
@@ -16124,6 +16348,7 @@ function bestiaryPage(index = bestiaryPageIndex) {
 }
 // END GENERATED ENCOUNTER JOURNAL
       const ENEMY_TRAITS = {
+        veil:{name:"Veil of doubt",icon:"shadow",description:"Fogs reels for one roll. With several heroes, the last actor must wait for an ally to act."},
         detonate:{name:"Burning fuse",icon:"explosion",description:"Self-destructs after two enemy turns. Deal damage quickly, stun it, or protect the team before the fuse burns down."},
         blackout:{name:'Pencil blackout',icon:'eraser',description:'Covers party reels on arrival and every third turn. Covered reels do nothing until that hero rolls, erasing the covering.'},
         carapace: {
@@ -16146,6 +16371,7 @@ function bestiaryPage(index = bestiaryPageIndex) {
         },
       };
       function assignEnemyTrait(e, depth, { force = false } = {}) {
+        if (ENEMY_PROFILES[e.art]?.trait === "veil") e.passive ??= {key:"veil",used:false,turns:0};
         if (
           !e.passive &&
           (force ||
@@ -16404,20 +16630,53 @@ const PUN_ENEMIES = Object.freeze({
   tankerchief: "Tankerchief",
   eraser: "The Progress Eraser",
   fullstop: "THE FULL STOP",
+  paperjammer: "The Paper Jammer",
+  popquiz: "Pop Quiz",
+  sporepoint: "Spore-point Pen",
+  quillking: "King of the Quills",
+  hotpress: "Hot off the Press",
+  bindwyrm: "The Book Binder",
+  icebreaker: "The Ice Breaker",
+  coldcomma: "The Cold Comma",
+  blankslate: "The Blank Slate",
+  rockpaperscissors: "Rock, Paper, Scuttlers",
+  deadletter: "The Dead Letter",
+  clipper: "The Paper Clipper",
+  marginmarksman: "The Margin Marksman",
+  foolscap: "Foolscap",
+  boss1: "The Red Pen",
+  boss2: "The Staple Warden",
+  boss3: "The Rule of Three",
+  boss4: "The Correction Officer",
+  boss5: "The Blot Thickens",
+  boss6: "The Gaol Point Pen",
+  boss7: "The Binding Agreement",
+  boss8: "The Hardback",
+  boss9: "The Penultimate",
 });
+// This table is injective: a stationery identity belongs to one bestiary entry.
 const PUN_SPECIES = Object.freeze({
   berserker: "scissors",
-  smudger: "pencil",
-  powderimp: "punch2", rootling: "goat", thornhulk: "stego", capstalker: "postit", myconarch: "pagemage", cinderhopper: "exclamation", basaltwyrm: "trex", frostmite: "protractor", rimewarden: "police",
-  zombie: "spelleton",
+  smudger: "paperjammer",
+  powderimp: "popquiz",
+  rootling: "goat",
+  thornhulk: "stego",
+  capstalker: "sporepoint",
+  myconarch: "quillking",
+  cinderhopper: "hotpress",
+  basaltwyrm: "bindwyrm",
+  frostmite: "icebreaker",
+  rimewarden: "coldcomma",
+  veilweaver: "blankslate",
+  shalecrab: "rockpaperscissors",
+  zombie: "deadletter",
   rat: "comma",
   ghost: "ghostit",
   slime: "glue",
   skull: "spelleton",
-  mimic: "punch2",
   gnawer: "pencil",
   bellkeeper: "exclamation",
-  widow: "scissors",
+  widow: "clipper",
   oracle: "question",
   pageeater: "punch3",
   pursuer: "eraser",
@@ -16433,23 +16692,12 @@ const PUN_SPECIES = Object.freeze({
   fighter: "police",
   rogue: "crook",
   mage: "pagemage",
+  ranger: "marginmarksman",
+  jester: "foolscap",
 });
 function punIdentity(e) {
   const depth = e.stairBossDepth || state.depth;
-  if (e.boss)
-    return depth === 10
-      ? "fullstop"
-      : [
-          "penknight",
-          "punch2",
-          "police",
-          "exclamation",
-          "scissors",
-          "goat",
-          "pagemage",
-          "stego",
-          "punch3",
-        ][Math.max(0, depth - 1)];
+  if (e.boss) return depth === 10 ? "fullstop" : "boss" + depth;
   return PUN_SPECIES[e.art] || "sketch";
 }
 function applyEnemyPresentation(e) {
@@ -16627,9 +16875,18 @@ function encounterTags(enemies) {
         `<span class="encounter-tag passive" data-tooltip="${escapeHTML(ENEMY_TRAITS[e.passive.key]?.description || "")}">${ENEMY_TRAITS[e.passive.key]?.name || ""}</span>`,
       );
   }
-  if (enemies.some(e => e.caughtUnaware)) tags.push('<span class="encounter-tag">FOES CAUGHT UNAWARE · +1 SPIN</span>');
-  if (enemies.some(isExploder)) tags.push('<span class="encounter-tag">BURNING FUSE · SELF-DESTRUCT</span>');
-  if (crystalSources().length) tags.push('<span class="encounter-tag" data-tooltip="Nearby crystals seal two party reels every three party rolls. Roll the affected hero to crack them.">CRYSTAL AURA · REEL SEALS</span>');
+  if (enemies.some((e) => e.caughtUnaware))
+    tags.push(
+      '<span class="encounter-tag">FOES CAUGHT UNAWARE · +1 SPIN</span>',
+    );
+  if (enemies.some(isExploder))
+    tags.push(
+      '<span class="encounter-tag">BURNING FUSE · SELF-DESTRUCT</span>',
+    );
+  if (crystalSources().length)
+    tags.push(
+      '<span class="encounter-tag" data-tooltip="Nearby crystals seal two party reels every three party rolls. Roll the affected hero to crack them.">CRYSTAL AURA · REEL SEALS</span>',
+    );
   const quick = state.party.find((h) => h.initiative);
   if (quick)
     tags.push(
@@ -16663,6 +16920,8 @@ function encounterTags(enemies) {
         GameSound.play("lever");
         let symbols = results || reels.map((r) => ({ ...weightedPick(r) })),
           root = $("#machine-" + id);
+        const heroOwner = id.startsWith("hero-") ? state.party[Number(id.slice(5))] : battleEnemies().find(e => enemyMachine(e) === id);
+        if (heroOwner) symbols = resolveMysterySymbols(heroOwner, symbols, reels);
         if (!root) return symbols;
         let ctx = { id, fast: false };
         currentRoll = ctx;
@@ -16826,7 +17085,7 @@ function encounterTags(enemies) {
         const skipButton = $("#stage-skip");
         if (skipButton) {
           skipButton.disabled = false;
-          skipButton.textContent = inline ? "Take the result now ↗" : "Strike now ↗";
+          skipButton.textContent = inline ? "Take the result now ↗" : enemy ? "Resolve enemy roll ↗" : "Strike now ↗";
         }
         const criticalMachine = $("#machine-critical");
         criticalMachine.querySelector(".machine-face").disabled = false;
@@ -17130,6 +17389,7 @@ function encounterTags(enemies) {
             });
         }
         e.hp -= actual;
+        recordCombatHit(actual);
         gainFury(e, actual, 0, { bloodPriceTier });
         GameSound.play(actual ? "hit" : "shield");
         if (e.hp === 0 && !e.corpseRecorded) {
@@ -17295,7 +17555,7 @@ function encounterTags(enemies) {
         if (entity.hp <= 0 || entity.dead) return "";
         const poison = entity.poison,
           buff = entity.stimulant;
-        return `<span class="portrait-conditions">${entity.crystalLocks?.length ? statusBadge("Crystal seals", `${entity.crystalLocks.length} reels sealed by nearby crystals. Sealed reels are empty for one roll; rolling this hero cracks all their gems.`, "crystal-badge", "crystal") : ""}${entity.reelGifts?.length ? statusBadge("Gilded reel", entity.reelGifts.map((g) => `Reel ${g.reel + 1}: +1 mark tier for ${g.uses} more rolls.`).join(" ") + " Cleared after battle.", "gift-badge", "point") : ""}${poison?.turns ? statusBadge("Poison", `${poison.damage || 1} damage each turn for ${poison.turns} more turns. Further doses stack damage once three turns are loaded. Cleared after battle.`, "poison-badge", "poison", poison.turns) : ""}${entity.rage ? statusBadge("Rage", `+${entity.rage} damage and ${Math.floor(entity.rage / 3)} damage resistance until battle ends.`, "rage-badge", "rage", "+" + entity.rage) : ""}${buff ? statusBadge("Stimulant", `+${1 + Math.floor(buff.power / 3)} damage and ${1 + Math.floor(buff.power / 5)} damage resistance; ${buff.turns} turns remaining; potency capped at 6.`, "buff-badge", "flame", buff.turns) : ""}${entity.stun ? statusBadge("Stunned", "At most one missed action. Recovery after other rolls: 60%, then guaranteed. Afterwards, two own actions resist stun. Enemy clocks are unchanged by a missed hero attempt.", "stun-badge", "stun", "1") : ""}${entity.stunWard ? statusBadge("Steady", `${entity.stunWard} own actions of stun protection. Further stuns may weaken shields or expose Vulnerable, but cannot stop another action.`,"stun-ward-badge","block") : ""}${entity.charge ? statusBadge("Execute", `${entity.charge}/${RANGER_AIM_CAP} patience. Bonus grows with the target’s missing health; consumed on the next damaging roll. Cleared after battle.`, "aim-badge", "bow", entity.charge) : ""}${entity.initiative && state.opening?.firstRoll ? statusBadge("Initiative", "Use this hero for the first roll: +25% to its effects. Lost if another hero acts first.", "initiative-badge", "beacon", "+25%") : ""}${entity.surprised && state.opening?.firstRoll ? statusBadge("Surprised", "Cannot make the first party roll. If everyone is surprised, enemies go first.", "surprised-badge", "question", "!") : ""}${entity.vulnerable ? statusBadge("Vulnerable", "The next damaging hit after this action deals 25% more HP damage.", "vulnerable-badge", "stun", "+25%") : ""}${entity.elite ? statusBadge(entity.boss ? "Boss" : "Elite", `${entity.affix || "Empowered"}. ${entity.affix === "Frenzied" ? `Attacks every ${entity.frequency} spin${entity.frequency === 1 ? "" : "s"}.` : entity.affix === "Venomous" ? "Damaging rolls also add poison." : `Begins battle with ${2 + state.depth} extra block.`}${entity.passive ? " " + (ENEMY_TRAITS[entity.passive.key]?.description || "") : ""}`, "elite-badge", "artefact") : ""}${isExploder(entity) ? statusBadge("Burning fuse", `${entity.fuseLeft ?? 2} enemy turns until ${exploderDamage(entity)} damage per hero. Team block and Unbroken page can protect you.`, "fuse-badge", "explosion") : ""}${entity.passive && !isExploder(entity) ? statusBadge(ENEMY_TRAITS[entity.passive.key]?.name || "Passive", ENEMY_TRAITS[entity.passive.key]?.description || "", "passive-badge passive-" + entity.passive.key, { carapace: "block", secondWind: "heal", summoner: "recruit", split: "flurry", blackout: "eraser" }[entity.passive.key] || "artefact") : ""}</span>`;
+        return `<span class="portrait-conditions">${entity.crystalLocks?.length ? statusBadge("Crystal seals", `${entity.crystalLocks.length} reels sealed by nearby crystals. Sealed reels are empty for one roll; rolling this hero cracks all their gems.`, "crystal-badge", "crystal") : ""}${entity.reelGifts?.length ? statusBadge("Gilded reel", entity.reelGifts.map((g) => `Reel ${g.reel + 1}: +1 mark tier for ${g.uses} more rolls.`).join(" ") + " Cleared after battle.", "gift-badge", "point") : ""}${poison?.turns ? statusBadge("Poison", `${poison.damage || 1} damage each turn for ${poison.turns} more turns. Further doses stack damage once three turns are loaded. Cleared after battle.`, "poison-badge", "poison", poison.turns) : ""}${entity.rage ? statusBadge("Rage", `+${entity.rage} damage and ${Math.floor(entity.rage / 3)} damage resistance until battle ends.`, "rage-badge", "rage", "+" + entity.rage) : ""}${buff ? statusBadge("Stimulant", `+${1 + Math.floor(buff.power / 3)} damage and ${1 + Math.floor(buff.power / 5)} damage resistance; ${buff.turns} turns remaining; potency capped at 6.`, "buff-badge", "flame", buff.turns) : ""}${entity.shadowRest ? statusBadge("Veiled", "Use a different ally before this hero can act again.", "shadow-badge", "shadow") : ""}${entity.stun ? statusBadge("Stunned", "At most one missed action. Recovery after other rolls: 60%, then guaranteed. Afterwards, two own actions resist stun. Use an available ally while stunned. If nobody is ready, one missed turn advances enemy clocks.", "stun-badge", "stun", "1") : ""}${entity.stunWard ? statusBadge("Steady", `${entity.stunWard} own actions of stun protection. Further stuns may weaken shields or expose Vulnerable, but cannot stop another action.`,"stun-ward-badge","block") : ""}${entity.charge ? statusBadge("Execute", `${entity.charge}/${RANGER_AIM_CAP} patience. Bonus grows with the target’s missing health; consumed on the next damaging roll. Cleared after battle.`, "aim-badge", "bow", entity.charge) : ""}${entity.initiative && state.opening?.firstRoll ? statusBadge("Initiative", "Use this hero for the first roll: +25% to its effects. Lost if another hero acts first.", "initiative-badge", "beacon", "+25%") : ""}${entity.surprised && state.opening?.firstRoll ? statusBadge("Surprised", "Cannot make the first party roll. If everyone is surprised, enemies go first.", "surprised-badge", "question", "!") : ""}${entity.vulnerable ? statusBadge("Vulnerable", "The next damaging hit after this action deals 25% more HP damage.", "vulnerable-badge", "stun", "+25%") : ""}${entity.elite ? statusBadge(entity.boss ? "Boss" : "Elite", `${entity.affix || "Empowered"}. ${entity.affix === "Frenzied" ? `Attacks every ${entity.frequency} spin${entity.frequency === 1 ? "" : "s"}.` : entity.affix === "Venomous" ? "Damaging rolls also add poison." : `Begins battle with ${2 + state.depth} extra block.`}${entity.passive ? " " + (ENEMY_TRAITS[entity.passive.key]?.description || "") : ""}`, "elite-badge", "artefact") : ""}${isExploder(entity) ? statusBadge("Burning fuse", `${entity.fuseLeft ?? 2} enemy turns until ${exploderDamage(entity)} damage per hero. Team block and Unbroken page can protect you.`, "fuse-badge", "explosion") : ""}${entity.passive && !isExploder(entity) ? statusBadge(ENEMY_TRAITS[entity.passive.key]?.name || "Passive", ENEMY_TRAITS[entity.passive.key]?.description || "", "passive-badge passive-" + entity.passive.key, { carapace: "block", secondWind: "heal", summoner: "recruit", split: "flurry", blackout: "eraser", veil: "shadow" }[entity.passive.key] || "artefact") : ""}</span>${entity.stun ? `<span class="stun-portrait-overlay" data-tooltip="Stunned · use a ready ally, or lose one turn if alone.">${icon("stun")}</span>` : ""}`;
       }
       function syncStatusFX() {
         state.party.forEach((h, i) => {
@@ -17446,7 +17706,7 @@ function encounterTags(enemies) {
           h.stats.spins % equipmentBonus(h, "stimEvery") === 0
         )
           base.rally += 2;
-        if (base.block) base.block += passive("block") + traitBonus(h, "block");
+        if (base.block) base.block += traitBonus(h, "block");
         if (base.heal) base.heal = Math.max(1, base.heal + traitBonus(h, "heal"));
         if (base.teamHeal) base.teamHeal = Math.max(1, base.teamHeal + traitBonus(h, "heal"));
         if (base.stun) base.stun += traitBonus(h, "stun");
@@ -17480,7 +17740,8 @@ function encounterTags(enemies) {
         return singleMark ? campRollBonus(base) : inspiredRoll(h, campRollBonus(base));
       }
       function grantRolledBlock(h, amount, impact = {}) {
-        amount = gainPartyBlock(amount);
+        amount = gainPartyBlock(amount + (amount > 0 ? pennantRollBonus(h, impact.symbols || h.last) : 0));
+        for(let group=groupedCombatLog;group;group=group.previous)group.block=(group.block||0)+amount;
         renderBlock();
         floatAt($("#block"), amount ? "+" + amount + " team block" : "BLOCK FULL", false, true);
         burst($("#block"), "shield", 18);
@@ -17498,12 +17759,13 @@ function encounterTags(enemies) {
           !$("#spotlight").hidden
         )
           return;
+        if (heroCannotRoll(h)) {toast(heroLockReason(h));return;}
         if (!openingEligible(h)) {
           toast(h.name + " is surprised. Choose a ready companion for the first roll.");
           return;
         }
         const rollRun = state;
-        let punchlinePending = false;
+        let punchlinePending = false, rollLogGroup = null;
         const stunWardAtStart = h.stunWard || 0;
         busy = true;
         state.currentHero = i;
@@ -17513,23 +17775,11 @@ function encounterTags(enemies) {
         render();
         try {
           h.stats ??= emptyStats();
-          if (h.stun) {
-            tryBreakStun(h,{missedAction:true});
-            h.stats.turnsMissed++;
-            result(
-              icon("stun") +
-                `${h.name} misses this go · enemy still attacks in ${selected.countdown} spins`,
-            );
-            log(
-              `${h.name} misses one go to stun. Enemy countdown stays at ${selected.countdown}.`,
-            );
-            advanceRangerPatience(h, false);
-            actionLabel($("#portrait-" + i), "Stunned · one missed go");
-            await feedbackPause(skip ? 180 : 300);
-            return;
-          }
+          if (h.stun) {await missStunnedTurn(h, foes);return;}
+          if (heroCannotRoll(h)) return;
 
           state.actionSerial++;
+          rollLogGroup = beginHeroRollLog(h);
           h.stats.spins++;
           partyCardFeedback(i, "acting");
           sayHero(i, "attack");
@@ -17542,6 +17792,7 @@ function encounterTags(enemies) {
           spendReelGifts(h);
           clearRolledBlackout(h, i);
           crackRolledCrystals(h, i);
+          clearShadowReels(h);
           h.last = symbols;
           const furyBeforeBlood = h.fury || 0;
           for (const face of symbols.filter((f) => f.type === "selfharm")) {
@@ -17593,7 +17844,7 @@ function encounterTags(enemies) {
             burst($("#portrait-" + i), "gold", 24);
             beam($("#portrait-" + i), $("#portrait-" + i), "rage");
           }
-          for (const [kind, ally] of [["stimulant", h], ["rally", supportStimulantTarget(h)]]) {
+          for (const [kind, ally] of [["stimulant", h], ["rally", alive(state.party[state.target]) ? state.party[state.target] : h]]) {
             if (!sums[kind]) continue;
             applyStimulant(ally, sums[kind]);
             beam(entityArt(h), entityArt(ally), kind);
@@ -17744,11 +17995,15 @@ function encounterTags(enemies) {
             await jesterMarkBurst(h);
             if (state !== rollRun) return;
           }
+          finishHeroRollLog(rollLogGroup,h);
+          rollLogGroup=null;
           advanceRangerPatience(h, !!(sums.attack || sums.magic), symbols[1]?.type === "class");
+          finishShadowAction(h);
           finishOpeningRoll();
           advanceCrystalAura();
           rallyAfterRoll(h);
           await tickPoison();
+          await showPendingCharacterMoments();
           // Burst or no burst, one ordinary action advances enemy clocks once.
           tickStimulant(h);
           advanceStunWard(h, stunWardAtStart);
@@ -17763,28 +18018,13 @@ function encounterTags(enemies) {
           }
           if (state.enemy.hp <= 0) state.enemy = livingEnemies()[0];
           await pause(260);
-          for (const e of foes.filter((e) => e.hp > 0)) {
-            e.countdown--;
-            syncEnemy(e);
-            if (e.countdown <= 0) {
-              if (e.stun) {
-                tryBreakStun(e,{missedAction:true});
-                log(`${e.name} misses its turn to stun.`);
-                actionLabel(enemyArtEl(e), "Stunned · turn missed");
-                await pause(350);
-              } else await enemyTurn(e);
-              if (!state.over) {
-                e.countdown = e.frequency;
-                state.round++;
-              }
-            }
-            if (checkDefeat()) break;
-          }
+          await advanceEnemyClocks(foes);
           if (!state.over && !livingEnemies().length) {
             await feedbackPause(skip ? 500 : 800);
             await victory(selected);
           }
         } finally {
+          if(rollLogGroup)finishHeroRollLog(rollLogGroup,h);
           if (state !== rollRun) return;
           actingEnemy = null;
           state.currentHero = null;
@@ -17836,7 +18076,7 @@ function encounterTags(enemies) {
                   el.classList.remove("blacked-out");
                 });
             }
-            if (e.job === "berserker")
+            if (e.job === "berserker" || symbols.some(f => f.fromMystery && f.type === "selfharm"))
               for (const face of symbols.filter((f) => f.type === "selfharm"))
                 damageEnemy(Math.min(Math.max(0, e.hp - 1), POWER.selfharm * face.tier), "Blood Price", e, {
                   piercing: true, bloodPriceTier: face.tier,
@@ -17935,10 +18175,12 @@ function encounterTags(enemies) {
             syncEnemy(e);
             await pause(250);
             await processDeaths();
+            await showPendingCharacterMoments();
             if (!state.party.some(alive)) break;
           }
           e.turnsTaken = (e.turnsTaken || 0) + 1;
           tickEnemyPassive(e);
+          fogPartyReels(e);
           planEnemyIntent(e);
           tickStimulant(e);
           advanceStunWard(e, stunWardAtStart);
@@ -18694,7 +18936,7 @@ function encounterTags(enemies) {
         return Object.entries(state.bag)
           .map(
             ([type, count]) =>
-              `<article class="bag-card">${icon(ITEM_DEFS[type].icon)}<div><b>${ITEM_DEFS[type].name} ×${count}</b><p>${ITEM_DEFS[type].equipment?`<b class="equipment-scope">${equipmentScope(ITEM_DEFS[type])}</b><br>`:""}${ITEM_DEFS[type].description}</p><div>${overflow ? `<button data-stage-choice="swap:${type}">Toss this stack & take the find</button>${canUseItem(type) ? `<button data-stage-choice="use:${type}">Use one now</button>` : ""}` : `<button data-use-item="${type}" ${canUseItem(type) ? "" : "disabled"}>Use one</button><button data-toss-item="${type}">Discard stack</button>`}</div></div></article>`,
+              `<article class="bag-card">${icon(ITEM_DEFS[type].icon)}<div><b>${ITEM_DEFS[type].name} ×${count}</b>${itemCategoryMarkup(type)}<p>${ITEM_DEFS[type].equipment?`<b class="equipment-scope">${equipmentScope(ITEM_DEFS[type])}</b><br>`:""}${ITEM_DEFS[type].description}</p><div>${overflow ? `<button data-stage-choice="swap:${type}">Toss this stack & take the find</button>${`<button data-stage-choice="use:${type}" ${canUseItem(type) ? "" : "disabled"}>Use one now</button>`}` : `<button data-use-item="${type}" ${canUseItem(type) ? "" : "disabled"}>Use one</button><button data-toss-item="${type}">Discard stack</button>`}</div></div></article>`,
           )
           .join("");
       }
@@ -18734,7 +18976,7 @@ function encounterTags(enemies) {
             showSpotlight(
               "The satchel is full",
               `${item.name} ×${drop.count} · three different item types already packed.`,
-              `<div class="incoming-item">${icon(item.icon)}<b>${item.name}</b><p>${item.equipment?`<b class="equipment-scope">${equipmentScope(item)}</b>`:""}${item.description}</p></div><div class="bag-grid">${bagCards(true)}</div>`,
+              `<div class="incoming-item">${icon(item.icon)}<b>${item.name}</b><p>${item.equipment?`<b class="equipment-scope">${equipmentScope(item)}</b> `:""}${item.description}</p></div><div class="bag-grid">${bagCards(true)}</div>`,
               "bag-overflow",
             );
             const choices = [
@@ -18990,6 +19232,7 @@ function encounterTags(enemies) {
         }
         if (modalPrevious?.isConnected) modalPrevious.focus();
         updateKeyboardBar();
+        scheduleStunRecovery();
       }
       function showSpotlight(title, subtitle, body, kind) {
         stagePrevious = document.activeElement;
@@ -19011,6 +19254,7 @@ function encounterTags(enemies) {
         $("#spotlight").hidden = true;
         if (stagePrevious?.isConnected) stagePrevious.focus();
         updateKeyboardBar();
+        scheduleStunRecovery();
       }
       // BEGIN GENERATED REEL UPGRADES
 // All manual edits, recruitment and autoplay share these validated operations.
@@ -19110,6 +19354,7 @@ const FACE_LABELS = Object.freeze({
   trick: "Trick",
   selfharm: "Blood Price",
   blank: "Empty",
+  mystery: "Mystery ?",
 });
 const primaryFace = (h) =>
   h.job === "mage"
@@ -19130,6 +19375,7 @@ function editableTypes(h) {
 function faceDescription(face, h) {
   const tier = face.tier || 1;
   if (face.type === "class") return classAbilityDescription(h);
+  if (face.type === "mystery") return mysteryDescription(h);
   if (h && battleEnemies().includes(h)) {
     if (["attack", "magic"].includes(face.type))
       return `Contributes ${ATTACK_POWER[tier]} ${face.type === "attack" ? "physical" : "spell"} power to one combined enemy hit. Strength ${h.damage}; stronger marks raise that hit before criticals and buffs.`;
@@ -19147,7 +19393,7 @@ function faceDescription(face, h) {
       stun: `Apply ${tier} stun power. Stops at most one action, then grants two own actions of protection. Higher power strips more block; it never extends the stun.`,
       poison: `Apply ${tier} poison power. Lasts up to 3 turns; repeated doses increase tick damage instead of adding a long duration.`,
       stimulant: `Give yourself ${tier} stimulant power. Lasts up to 3 of your actions; potency caps at 6.`,
-      rally: `Give ${tier} stimulant power to the ally who has rolled most this fight. If alone, give it to yourself. Lasts up to 3 of their actions; potency caps at 6.`,
+      rally: `Give ${tier} stimulant power to the selected healing target. Lasts up to 3 of their actions; potency caps at 6.`,
       trick: `Build ${tier} anticipation. At 6, fire six random ordinary marks from your reels. Burst marks cannot charge anticipation or roll criticals.`,
       selfharm: `Pay up to ${2 * tier} HP, staying above 0. Each HP paid adds ${2 + 0.5 * tier} Fury; all healing spends Fury.`,
       blank: "No effect. Inscribe a useful mark here with personal points.",
@@ -19160,7 +19406,7 @@ function classFacePrice(h, type, base) {
     : undefined;
 }
 function faceUpgradeCost(face, h = null) {
-  if (!face || face.type === "class") return undefined;
+  if (!face || ["class", "mystery"].includes(face.type)) return undefined;
   return face.type === "blank"
     ? classFacePrice(h, primaryFace(h || {}), 3)
     : face.tier < maxFaceTier(face.type)
@@ -19168,7 +19414,12 @@ function faceUpgradeCost(face, h = null) {
       : undefined;
 }
 function faceRefund(h, face) {
-  if (!face || face.type === "class" || face.type === "blank" || face.tier <= 1)
+  if (
+    !face ||
+    ["class", "mystery"].includes(face.type) ||
+    face.type === "blank" ||
+    face.tier <= 1
+  )
     return 0;
   const paid =
     face.investments?.[face.tier] ||
@@ -19197,11 +19448,11 @@ function reelProbabilities(reel) {
   return result;
 }
 function heroCriticalOdds(h) {
-  const [a, b, c] = h.reels.map(reelProbabilities),
+  const [a, b, c] = h.reels.map((reel) => expandedReelProbabilities(reel)),
     rows = [];
   for (const [key, p] of Object.entries(a)) {
     const [type, rank] = key.split(":");
-    if (["blank", "miss", "class"].includes(type)) continue;
+    if (["blank", "miss", "class", "mystery"].includes(type)) continue;
     const chance = p * (c[key] || 0) * ((b[key] || 0) + (b["class:1"] || 0));
     if (chance > 0) rows.push({ type, tier: Number(rank), chance });
   }
@@ -19216,7 +19467,7 @@ function faceEditCost(h, reel, index, operation, destination = null) {
   const face = h?.reels[reel]?.[index];
   if (!face) return undefined;
   if (operation === "weight") return undefined;
-  if (face.type === "class") return undefined;
+  if (["class", "mystery"].includes(face.type)) return undefined;
   if (operation === "upgrade") return faceUpgradeCost(face, h);
   if (operation === "weaken")
     return faceRefund(h, face) ? -faceRefund(h, face) : undefined;
@@ -19234,7 +19485,7 @@ function applyFaceEdit(h, reel, index, operation, destination = null) {
     cost = faceEditCost(h, reel, index, operation, destination);
   if (
     !face ||
-    face.type === "class" ||
+    ["class", "mystery"].includes(face.type) ||
     !Number.isFinite(cost) ||
     !Number.isFinite(h.points) ||
     h.points < Math.max(0, cost)
@@ -19278,7 +19529,7 @@ function editor(i) {
   const k = editorSelection.reel,
     j = Math.min(editorSelection.face, h.reels[k].length - 1),
     face = h.reels[k][j],
-    locked = face.type === "class";
+    locked = ["class", "mystery"].includes(face.type);
   if (
     !["power", "replace"].includes(editorOperation) ||
     (locked && editorOperation === "replace")
@@ -19289,18 +19540,18 @@ function editor(i) {
     data = `${i},${k},${j}`;
   openModal(
     `${h.name}’s reel workshop`,
-    `<div class="workshop-summary"><strong>${h.points} personal points</strong>${heroBuildMarkup(h)}</div>
+    `<div class="workshop-summary"><strong data-tooltip="${escapeHTML(classAffinityHint(h))}">${h.points} personal points</strong>${heroBuildMarkup(h)}</div>
     <p class="workshop-ability">Middle class mark: <b>${classAbilityName(h)}</b> · ${workshopAbilitySummary(h)}</p>
-    <nav class="workshop-nav" aria-label="Workshop pages"><button data-workshop-view="edit" aria-pressed="${editorView === "edit"}">Edit reels</button><button data-workshop-view="crits" aria-pressed="${editorView === "crits"}">Critical odds · ${(heroCriticalOdds(h).reduce((n, r) => n + r.chance, 0) * 100).toFixed(1)}%</button></nav><div class="workshop-pages"><div class="workshop-editpage workshop-page" ${editorView === "edit" ? "" : "hidden inert"}>
+    <nav class="workshop-nav" aria-label="Workshop pages"><button data-workshop-view="edit" aria-pressed="${editorView === "edit"}">Edit reels</button><button data-workshop-view="crits" aria-pressed="${editorView === "crits"}">Critical odds · ${(heroCriticalOdds(h).reduce((n, r) => n + r.chance, 0) * 100).toFixed(1)}%</button><button data-workshop-view="prices" aria-pressed="${editorView === "prices"}">Class prices</button></nav><div class="workshop-pages"><div class="workshop-editpage workshop-page" ${editorView === "edit" ? "" : "hidden inert"}>
     <div class="workshop-step-label"><b>1. Choose a reel</b><span>Each reel rolls one mark. Each face has an equal chance.</span></div>
     <div class="workshop-tabs" role="tablist" aria-label="Choose reel">${h.reels.map((_, r) => `<button role="tab" aria-selected="${r === k}" data-editor-reel="${r}">Reel ${r + 1}${r === 1 ? " · permanent class mark" : ""}</button>`).join("")}</div>
-    <div class="reel-workshop"><div class="workshop-mark-list"><b class="workshop-step-label">2. Choose a mark to edit</b><label class="workshop-face-picker">Mark<select id="workshop-face-picker">${h.reels[k].map((f, n) => `<option value="${n}" ${n === j ? "selected" : ""}>${f.type === "class" ? classAbilityName(h) : FACE_LABELS[f.type] + (f.type !== "blank" ? " " + tierName(f.tier) : "")} · ${((100 * (f.weight || 1)) / h.reels[k].reduce((sum, x) => sum + (x.weight || 1), 0)).toFixed(1)}%</option>`).join("")}</select></label><div class="workshop-faces" role="group" aria-label="Faces on reel ${k + 1}">${h.reels[k].map((f, n) => `<button data-editor-face="${n}" aria-pressed="${n === j}" title="${escapeHTML(faceDescription(f, h))}">${symbolMarkup(f)}<span>${f.type === "class" ? classAbilityName(h) : FACE_LABELS[f.type]}${!["class", "blank"].includes(f.type) ? " " + tierName(f.tier) : ""}</span><small>${((100 * (f.weight || 1)) / h.reels[k].reduce((sum, x) => sum + (x.weight || 1), 0)).toFixed(1)}% chance</small></button>`).join("")}</div></div>
-    <section class="workshop-detail" aria-label="Selected face" data-operation="${editorOperation}"><b class="workshop-step-label">3. Change this mark</b><div class="workshop-selected"><div class="workshop-preview">${symbolMarkup(face)}</div><h3>${locked ? classAbilityName(h) : FACE_LABELS[face.type] + (face.type !== "blank" ? " " + tierName(face.tier) : "")}</h3></div><p class="face-effect"><b>When it lands:</b> ${faceDescription(face, h)}</p>
+    <div class="reel-workshop"><div class="workshop-mark-list"><b class="workshop-step-label">2. Choose a mark to edit</b><label class="workshop-face-picker">Mark<select id="workshop-face-picker">${h.reels[k].map((f, n) => `<option value="${n}" ${n === j ? "selected" : ""}>${f.type === "class" ? classAbilityName(h) : FACE_LABELS[f.type] + (!["blank", "mystery"].includes(f.type) ? " " + tierName(f.tier) : "")} · ${((100 * (f.weight || 1)) / h.reels[k].reduce((sum, x) => sum + (x.weight || 1), 0)).toFixed(1)}%</option>`).join("")}</select></label><div class="workshop-faces" style="--face-rows:${h.reels[k].length}" role="group" aria-label="Faces on reel ${k + 1}">${h.reels[k].map((f, n) => `<button data-editor-face="${n}" aria-pressed="${n === j}" title="${escapeHTML(faceDescription(f, h))}">${symbolMarkup(f)}<span>${f.type === "class" ? classAbilityName(h) : FACE_LABELS[f.type]}${!["class", "blank", "mystery"].includes(f.type) ? " " + tierName(f.tier) : ""}</span><small>${((100 * (f.weight || 1)) / h.reels[k].reduce((sum, x) => sum + (x.weight || 1), 0)).toFixed(1)}% chance</small></button>`).join("")}</div></div>
+    <section class="workshop-detail" aria-label="Selected face" data-operation="${editorOperation}"><b class="workshop-step-label">3. Change this mark</b><div class="workshop-selected"><div class="workshop-preview">${symbolMarkup(face)}</div><h3>${locked ? (face.type === "mystery" ? "Mystery mark ?" : classAbilityName(h)) : FACE_LABELS[face.type] + (face.type !== "blank" ? " " + tierName(face.tier) : "")}</h3></div><p class="face-effect"><b>When it lands:</b> ${faceDescription(face, h)}</p>
     <nav class="face-operation-tabs" aria-label="Choose edit operation">${["power", "replace"].map((mode) => `<button data-editor-operation="${mode}" ${locked && mode === "replace" ? "disabled" : ""} aria-pressed="${mode === editorOperation}">${{ power: "Power ↑ ↓", replace: "Replace" }[mode]}</button>`).join("")}</nav>
     ${
       locked
-        ? `<div class="workshop-actions power-panel" data-class-seal="true"><button disabled>Permanent mark<small>Grows with your class</small></button><button disabled>Cannot remove<small>Unique middle-reel ability</small></button></div>`
-        : `<div class="workshop-actions power-panel"><button class="primary" data-upgrade="${data}" ${!upgrade || h.points < upgrade ? "disabled" : ""}>${face.type === "blank" ? "Inscribe a mark" : "Upgrade ↑"}<small>${upgrade ? `${face.type === "blank" ? FACE_LABELS[primaryFace(h)] + " I" : "Rank " + tierName(face.tier) + " → " + tierName(face.tier + 1)} · spend ${upgrade} pts` : "Already at maximum rank"}</small></button><button data-weaken="${data}" ${!refund ? "disabled" : ""}>Downgrade ↓<small>${refund ? `Rank ${tierName(face.tier)} → ${tierName(face.tier - 1)} · get ${refund} pts back` : "Already at lowest rank"}</small></button></div><div class="replace-panel"><label class="swap-choice"><b>Or replace this symbol</b><select id="face-destination">${editableTypes(
+        ? `<div class="workshop-actions power-panel" data-class-seal="true"><button disabled>${face.type === "mystery" ? "Permanent ?" : "Permanent mark"}<small>${face.type === "mystery" ? "Rank follows this reel" : "Grows with your class"}</small></button><button disabled>Cannot edit<small>${face.type === "mystery" ? "One on every Jester reel" : "Unique middle-reel ability"}</small></button></div>`
+        : `<div class="workshop-actions power-panel">${face.type === "blank" ? `<button id="blank-choose" class="primary">Choose a power ↓<small>Select its type, then inscribe</small></button>` : `<button class="primary" data-upgrade="${data}" ${!upgrade || h.points < upgrade ? "disabled" : ""}>Upgrade ↑<small>${upgrade ? `Rank ${tierName(face.tier)} → ${tierName(face.tier + 1)} · spend ${upgrade} pts` : "Already at maximum rank"}</small></button>`}<button data-weaken="${data}" ${!refund ? "disabled" : ""}>Downgrade ↓<small>${refund ? `Rank ${tierName(face.tier)} → ${tierName(face.tier - 1)} · get ${refund} pts back` : "Already at lowest rank"}</small></button></div><div class="replace-panel"><label class="swap-choice"><b>Or replace this symbol</b><select id="face-destination">${editableTypes(
             h,
           )
             .filter((t) => t !== face.type)
@@ -19312,7 +19563,7 @@ function editor(i) {
               "",
             )}</select></label><p class="swap-effect" id="swap-effect"></p><button class="swap-face" id="face-swap">Replace symbol <small id="swap-price"></small></button></div>`
     }
-</section></div></div>${criticalOddsMarkup(h)}</div><p class="workshop-note">${className(h.job)} crit ${criticalRange(h)}. ${CLASS_COMBOS[h.job]?.hint || ""}</p><div class="modal-actions"><button class="primary" data-close>Done · back to the adventure</button></div>`,
+</section></div></div>${criticalOddsMarkup(h)}${classPricesMarkup(h)}</div><p class="workshop-note">${className(h.job)} crit ${criticalRange(h)}. ${CLASS_COMBOS[h.job]?.hint || ""}</p><div class="modal-actions"><button class="primary" data-close>Done · back to the adventure</button></div>`,
     "editor",
   );
   document.querySelectorAll("[data-workshop-view]").forEach(
@@ -19323,6 +19574,12 @@ function editor(i) {
         $(`[data-workshop-view="${editorView}"]`)?.focus();
       }),
   );
+  if ($("#blank-choose"))
+    $("#blank-choose").onclick = () => {
+      editorOperation = "replace";
+      editor(i);
+      $("#face-destination")?.focus();
+    };
   $("#workshop-face-picker").onchange = (event) => {
     editorSelection.face = Number(event.target.value);
     editor(i);
@@ -19379,6 +19636,10 @@ function editor(i) {
     const update = () => {
       const cost = faceEditCost(h, k, j, "swap", select.value);
       $("#swap-price").textContent = "Spend " + cost + " points · same odds";
+      $("#face-swap").firstChild.textContent =
+        face.type === "blank"
+          ? "Inscribe " + FACE_LABELS[select.value] + " "
+          : "Replace symbol ";
       $("#swap-effect").textContent = faceDescription(
         { type: select.value, tier: face.tier },
         h,
@@ -19446,12 +19707,12 @@ const FIELD_GUIDE = Object.freeze([
   {
     id: "statuses",
     title: "Block, stun & Vulnerable",
-    body: '<ul class="guide-takeaways"><li><b>Team block.</b> Shared block caps at 20, or 30 with a living Tank. Enemies cap at 20, or 30 with a living boss. Damage spends it; battle end clears it.</li><li><b>Stun.</b> Miss at most one attempt; enemy clocks stay unchanged. Other rolls give 60% recovery, then guaranteed. Reapplying never extends stun.</li><li><b>Break through.</b> After recovery, two of your own actions cannot be stunned. Strong stuns still strip block. Healing may clear stun; healing Resonance clears all.</li><li><b>Vulnerable.</b> The next direct hit deals 25% extra damage. Healing and poison ticks do not consume it.</li><li><b>Details.</b> Hover any condition icon for its actual effect and remaining strength or duration.</li></ul>',
+    body: '<ul class="guide-takeaways"><li><b>Team block.</b> Shared block caps at 20, or 30 with a living Tank. Enemies cap at 20, or 30 with a living boss. Damage spends it; battle end clears it.</li><li><b>Stun.</b> Use a ready ally while a hero is stunned. Their rolls help recovery. If nobody is ready, one lost turn advances enemy clocks and clears stun.</li><li><b>Break through.</b> After recovery, two of your own actions cannot be stunned. Strong stuns still strip block. Healing may clear stun; healing Resonance clears all.</li><li><b>Vulnerable.</b> The next direct hit deals 25% extra damage. Healing and poison ticks do not consume it.</li><li><b>Details.</b> Hover any condition icon for its actual effect and remaining strength or duration.</li></ul>',
   },
   {
     id: "buffs",
     title: "Stimulants & shield bash",
-    body: '<ul class="guide-takeaways"><li><b>Self stimulant.</b> Tanks, Rogues and Berserkers can boost themselves with this mark.</li><li><b>Ally stimulant.</b> Mages, Rangers and Jesters boost the ally who has rolled most this fight. Alone, they boost themselves.</li><li><b>Three actions.</b> Each power adds one action of duration, up to three of the recipient’s own actions. Extra duration increases potency, up to six.</li><li><b>Potency.</b> Gain +1 damage plus one per three power, and +1 resistance plus one per five power. Hover the status for exact values.</li><li><b>Tank class mark.</b> Shield Bash adds two team block, plus one every three levels, then spends some block on a bash. Its limit grows with level. Each point of bash power removes two enemy block.</li></ul>',
+    body: '<ul class="guide-takeaways"><li><b>Self stimulant.</b> Tanks, Rogues and Berserkers can boost themselves with this mark.</li><li><b>Ally stimulant.</b> Mages, Rangers and Jesters boost the selected healing target. Random effects may choose another ally.</li><li><b>Three actions.</b> Each power adds one action of duration, up to three of the recipient’s own actions. Extra duration increases potency, up to six.</li><li><b>Potency.</b> Gain +1 damage plus one per three power, and +1 resistance plus one per five power. Hover the status for exact values.</li><li><b>Tank class mark.</b> Shield Bash adds two team block, plus one every three levels, then spends some block on a bash. Its limit grows with level. Each point of bash power removes two enemy block.</li></ul>',
   },
   {
     id: "openings",
@@ -19476,7 +19737,19 @@ const FIELD_GUIDE = Object.freeze([
   {
     id: "jester",
     title: "Jester & Punchline",
-    body: '<ul class="guide-takeaways"><li><b>Unlock.</b> Buy the Jester’s invitation at camp. It can inscribe any ordinary kind except Self stimulant and the Berserker’s Blood Price.</li><li><b>Trick.</b> These marks fill anticipation by their rank. At six, fire one Punchline burst before enemy clocks advance.</li><li><b>Punchline.</b> Six ordinary marks fire from your own reels, keeping their ranks. No reroll, extra turn or crit. Trick cannot recharge the burst.</li><li><b>Criticals.</b> Matching triples roll ×1.5–×4. Different kinds have no special critical; matching triples do not self-stun.</li><li><b>Wildcard.</b> The permanent class mark can ink enemy reels, gild allied reels, reverse a foe’s roll or scatter damage and healing.</li></ul>',
+    body: '<ul class="guide-takeaways"><li><b>Unlock.</b> Buy the Jester’s invitation at camp. It can inscribe any ordinary kind except Self stimulant and the Berserker’s Blood Price.</li><li><b>Trick.</b> These marks fill anticipation by their rank. At six, fire one Punchline burst before enemy clocks advance. Matching Trick triples multiply charge, not the number of bursts.</li><li><b>Punchline.</b> Six ordinary marks fire from your own reels, keeping their ranks. No reroll, extra turn or crit. Trick cannot recharge the burst.</li><li><b>Criticals.</b> Matching triples roll ×1.5–×4. Different kinds have no special critical; matching triples do not self-stun.</li><li><b>Wildcard.</b> The permanent class mark can ink enemy reels, gild allied reels, reverse a foe’s roll or scatter damage and healing.</li></ul>',
+  },
+  {
+    id:"mystery",title:"Mystery marks ?",
+    body:'<ul class="guide-takeaways"><li><b>Permanent.</b> Every Jester reel has one ?. It cannot be edited or copied.</li><li><b>Any power.</b> It becomes a random ordinary power, including powers the class cannot inscribe. Blood Price may cost HP.</li><li><b>Rank.</b> Other ordinary faces on that reel set its rank odds. Half rank I and half rank II means equal chances of either.</li><li><b>Matches.</b> The revealed power can complete a normal critical. Punchline draws cannot crit or chain another Punchline.</li></ul>',
+  },
+  {
+    id:"living",title:"Changing passages",
+    body:'<ul class="guide-takeaways"><li><b>Mudslide.</b> Slides you straight ahead, then blocks the tile behind you. Another way to the stairs remains.</li><li><b>Crystal aura.</b> Dotted blue tiles show where deposits can seal reels during fights. Walls stop the aura.</li><li><b>Rockfall.</b> Falling stone may block a passage permanently. Only safe blockages can occur.</li><li><b>Shaky caves.</b> Numbered ceilings count every footstep. At zero, stone falls on whoever is underneath, then the count resets.</li><li><b>The Unwritten.</b> Falling stone kills the hunter, leaving treasure. This grants no battle EXP.</li></ul>',
+  },
+  {
+    id:"shadow",title:"Shadow galleries",
+    body:'<ul class="guide-takeaways"><li><b>Returning cover.</b> Old visited tiles darken again after a varied delay. Their contents and known routes stay the same.</li><li><b>Keep moving.</b> Your current tile stays clear. Cover spreads more slowly as more passages darken.</li><li><b>Revisit.</b> Enter to erase the cover, with a higher chance of an ambush. Reading pages and fighting pause the timer.</li><li><b>Veil weaver.</b> Fogged reels count as Empty for one roll. With several heroes, use a different ally after each action to clear the last actor’s veil.</li></ul>',
   },
   {
     id: "companions",
@@ -19544,7 +19817,7 @@ function help(topic = "explore") {
       let particles = [],
         fxFrame = 0;
       function sizeCanvas() {
-        let d = Math.min(devicePixelRatio || 1, 2);
+        let d = Math.min(devicePixelRatio || 1, 1.5);
         fxCanvas.width = innerWidth * d;
         fxCanvas.height = innerHeight * d;
         fxContext.setTransform(d, 0, 0, d, 0, 0);
@@ -19576,6 +19849,7 @@ function help(topic = "explore") {
             life: 0,
             max: 450 + fxRandom() * 650,
             kind,
+            tint:kind === "jester" ? ["#b99b55","#9666b6","#8d5140"][n%3] : null,
           });
         }
         particles = particles.slice(-900);
@@ -19622,7 +19896,7 @@ function help(topic = "explore") {
       let fxLast = 0;
       function drawParticles(time) {
         fxFrame = 0;
-        let dt = Math.min(35, time - (fxLast || time - 16));
+        let dt = Math.min(250, Math.max(0, time - (fxLast || time - 16)));
         fxLast = time;
         fxContext.clearRect(0, 0, innerWidth, innerHeight);
 
@@ -19630,9 +19904,9 @@ function help(topic = "explore") {
         for (let p of particles) {
           p.life += dt;
           p.x += (p.vx * dt) / 16;
-          p.y += (p.vy * dt) / 16;
+          p.y += (p.vy * dt) / 16 + 0.5 * 0.07 * Math.pow(dt / 16, 2);
           p.vy += (0.07 * dt) / 16;
-          p.angle += p.spin;
+          p.angle += p.spin * dt / 16;
           fxContext.save();
           fxContext.translate(p.x, p.y);
           fxContext.rotate(p.angle);
@@ -19652,7 +19926,10 @@ function help(topic = "explore") {
             smoke: "#b5bfbb",
           }[p.kind];
           fxContext.strokeStyle = fxContext.fillStyle;
-          if (p.kind === "firework") {
+          if (p.kind === "jester") {
+            fxContext.beginPath();fxContext.moveTo(0,-p.size);fxContext.lineTo(p.size,p.size);fxContext.lineTo(-p.size,p.size);fxContext.closePath();fxContext.fill();
+            fxContext.beginPath();fxContext.arc(0,-p.size-1,1.5,0,Math.PI*2);fxContext.fill();
+          } else if (p.kind === "firework") {
             fxContext.lineWidth=p.size;
             fxContext.lineCap="round";
             fxContext.beginPath();fxContext.moveTo(0,0);fxContext.lineTo(-p.vx*2.2,-p.vy*2.2);fxContext.stroke();
@@ -19948,7 +20225,7 @@ function help(topic = "explore") {
             "Keep in your pack. Consume once to bring a fallen companion back at 75% health.",
           attack: `+${a.power} damage when a hero rolls attack.`,
           heal: `+${a.power} healing when a hero rolls heal.`,
-          block: `+${a.power} team block when a hero rolls shields.`,
+          block: `Once per roll, +${a.power} team block if a shield lands. Added after criticals.`,
           gold: `+${a.power}% gold from chests and battle spoils.`,
           guard: `Start every battle with ${a.power} shared team block.`,
         }[a.key];
@@ -20132,7 +20409,7 @@ function help(topic = "explore") {
           )
             .map(
               (key) =>
-                `<button data-buy="${key}" ${!c.shop[key] || state.gold < prices[key] || (key === "reveal" && state.exitFound) ? "disabled" : ""}>${icon(key === "heal" ? "well" : key === "reveal" ? "stairs" : key === "potion" ? "potion" : ITEM_DEFS[key]?.icon || "ward")}<span>${labels[key]}<small>${!c.shop[key] ? "Sold out" : key === "reveal" && state.exitFound ? "Stairs already marked" : prices[key] + " gold · one in stock" + (ITEM_DEFS[key] && !state.bag[key] && Object.keys(state.bag).length>=3 ? " · BAG FULL" : "")}</small></span></button>`,
+                `<button data-buy="${key}" ${!c.shop[key] || state.gold < prices[key] || (key === "reveal" && state.exitFound) ? "disabled" : ""}>${icon(key === "heal" ? "well" : key === "reveal" ? "stairs" : key === "potion" ? "potion" : ITEM_DEFS[key]?.icon || "ward")}<span>${itemCategoryMarkup(key)}${labels[key]}<small>${!c.shop[key] ? "Sold out" : key === "reveal" && state.exitFound ? "Stairs already marked" : prices[key] + " gold · one in stock" + (ITEM_DEFS[key] && !state.bag[key] && Object.keys(state.bag).length>=3 ? " · BAG FULL" : "")}</small></span></button>`,
             )
             .join(
               "",
@@ -21038,6 +21315,11 @@ const SOUND_SAMPLES = Object.freeze({
           null,
         ],
       });
+      const BATTLE_MUSIC_SCORE = Object.freeze({
+        stepSeconds:.29,
+        chords:[[50,53,57],[48,52,55],[46,50,53],[45,49,52]],
+        melody:[62,65,69,null,62,65,70,69,60,64,67,null,60,64,69,67,58,62,65,null,58,62,67,65,57,61,64,null,57,64,69,null],
+      });
       // Each species/class has its own short synthesised call, never a speech
       // recording. Contours are frequency ratios; death stretches/drops the call.
       const CRY_PROFILES = {
@@ -21347,11 +21629,14 @@ const SOUND_SAMPLES = Object.freeze({
           if (nextBeat < context.currentTime - 0.3)
             nextBeat = context.currentTime + 0.04;
           const hz = (midi) => 440 * Math.pow(2, (midi - 69) / 12);
+          const scene = state?.enemy ? "battle" : "exploration";
+          const score = scene === "battle" ? BATTLE_MUSIC_SCORE : MUSIC_SCORE;
+          if (stats.musicScene !== scene) {stats.musicScene=scene;note=0;}
           while (nextBeat < context.currentTime + 0.28) {
-            const step = note++ % MUSIC_SCORE.melody.length,
+            const step = note++ % score.melody.length,
               beat = nextBeat,
-              chord = MUSIC_SCORE.chords[Math.floor(step / 16) % 4],
-              pitch = MUSIC_SCORE.melody[step];
+              chord = score.chords[Math.floor(step / (scene === "battle" ? 8 : 16)) % score.chords.length],
+              pitch = score.melody[step];
             if (
               pitch &&
               voice(
@@ -21396,7 +21681,14 @@ const SOUND_SAMPLES = Object.freeze({
                 beat,
               );
             }
-            nextBeat += MUSIC_SCORE.stepSeconds;
+            if (scene === "battle" && step % 2 === 0) voice({frequencies:[step%4?115:70],duration:.16,gain:.025,noise:true,filter:550},"music",beat);
+            if (step % 8 === 0) {
+              const depth = Math.min(1,Math.max(0,(state?.depth||1)-1)/9);
+              stats.ambienceDepth=depth;
+              voice({frequencies:[39+step%3*4],duration:2.2,gain:.004+depth*.023,type:"sine",attack:.3},"ambience",beat);
+              voice({frequencies:[80],duration:2.4,gain:.003+depth*.014,noise:true,filter:180,attack:.45},"ambience",beat);
+            }
+            nextBeat += score.stepSeconds;
           }
         }
         document.addEventListener("pointerdown", unlock, { passive: true });
@@ -21605,6 +21897,8 @@ const SOUND_SAMPLES = Object.freeze({
         syncHero(i);
         actionLabel($("#portrait-" + i), HERO_TRAITS[id].name.toUpperCase());
         burst($("#portrait-" + i), "paper", 16);
+        showHeroNotice(h, "TRAIT: " + HERO_TRAITS[id].name.toUpperCase(), HERO_TRAITS[id].description, HERO_TRAITS[id].kind === "negative" ? "danger" : "gold");
+        burst($("#machine-hero-" + i),"gold",38);
         GameSound.play("trait");
         save();
         return true;
@@ -21751,8 +22045,8 @@ const SOUND_SAMPLES = Object.freeze({
           fittingUI = false;
           fitDialogs();
           fitText($("#result-ribbon"), 20, 11);
-          fitText($("#field-note"), 18, 11);
-          fitText($("#hover-name"), 16, 10);
+          fitText($("#field-note"), 22, 14);
+          fitText($("#hover-name"), 24, 15);
           fitText($("#map-status"), 16, 11);
           document
             .querySelectorAll(".equipment-slot span")
@@ -22454,7 +22748,7 @@ const SOUND_SAMPLES = Object.freeze({
               .find(
                 (f) =>
                   f.type !== specialty &&
-                  f.type !== "class" &&
+                  !["class", "mystery"].includes(f.type) &&
                   classFacePrice(h, specialty, FACE_COST[f.tier]) <= remaining,
               );
           if (!candidate) break;
@@ -22584,6 +22878,7 @@ function setupBattleOpening({ fresh = false } = {}) {
       e.caughtUnaware = true;
     }
     planEnemyIntent(e);
+    if (e.passive?.key === "veil") fogPartyReels(e);
   }
 }
 function openingEligible(h) {
@@ -22615,8 +22910,23 @@ async function resolveBattleOpening() {
     finishOpeningRoll();
   } else {
     const quick = living.find((h) => h.initiative);
-    if (quick)
-      combatCallout(entityArt(quick), `${quick.name}: INITIATIVE +25%`, "gold");
+    if (quick) {
+      combatCallout(
+        entityArt(quick),
+        `${quick.name}: ACT FIRST · +25%`,
+        "gold",
+      );
+      showHeroNotice(
+        quick,
+        "INITIATIVE · ACT FIRST",
+        "First roll: 25% stronger effects",
+        "gold",
+      );
+      if (!state.initiativeExplained) {
+        state.initiativeExplained = true;
+        result(`Initiative: use ${quick.name} first for a 25% stronger roll.`);
+      }
+    }
     living
       .filter((h) => h.surprised)
       .forEach((h) => actionLabel(entityArt(h), "SURPRISED · wait one roll"));
@@ -22722,6 +23032,8 @@ function clearBattleStatuses() {
     entity.anticipation = 0;
     entity.fury = 0;
     entity.stimulant = null;
+    entity.shadowRest = false;
+    entity.shadowLocks = [];
     entity.poison = null;
     entity.stun = 0;
     entity.stunGrace = 0;
@@ -22962,6 +23274,11 @@ async function resumeOpeningEncounter() {
 }
 
 function normaliseTacticalStatuses(entity) {
+  entity.shadowLocks = Array.isArray(entity.shadowLocks)
+    ? [...new Set(entity.shadowLocks.filter((k) => [0, 1, 2].includes(k)))]
+    : [];
+  entity.shadowRest =
+    !!entity.shadowRest && (state.party?.filter(alive).length || 0) > 1;
   entity.crystalLocks = [
     ...new Set(
       (Array.isArray(entity.crystalLocks) ? entity.crystalLocks : []).filter(
@@ -23211,6 +23528,24 @@ function tickStimulant(entity) {
 // Biome data is stored on the first map cell, so ordinary JSON save/HTML exports
 // retain it. Presentation never rolls a theme or consumes world RNG.
 const BIOMES = Object.freeze({
+  shadow: {
+    name: "Shadow galleries",
+    tint: "#726682",
+    minDepth: 4,
+    names: ["The unlit margins", "The veiled corridors", "The charcoal hollow"],
+    note: "Pencil-dark mist creeps back over old footsteps.",
+  },
+  unstable: {
+    name: "Shaky caverns",
+    tint: "#a08a67",
+    minDepth: 2,
+    names: [
+      "The trembling galleries",
+      "The hollow ceiling",
+      "The shifting undercroft",
+    ],
+    note: "Loose stone ticks and settles above the torch.",
+  },
   crystal: {
     name: "Crystal caves",
     tint: "#7395b6",
@@ -23339,12 +23674,14 @@ function assignFloorBiome(map, depth, { force = null } = {}) {
       map[i].wall = true;
       map[i].terrain = kind === "crystal" ? "crystal" : "lava";
       if (mapDistances(map).size < before - 1) {
-        map[i].wall = false; map[i].terrain = "floor"; return false;
+        map[i].wall = false;
+        map[i].terrain = "floor";
+        return false;
       }
       return true;
     };
     for (const i of free) if (Math.random() < 0.07) placeBarrier(i);
-    if (kind === "crystal" && !map.some(c => c.terrain === "crystal"))
+    if (kind === "crystal" && !map.some((c) => c.terrain === "crystal"))
       free.some(placeBarrier);
   }
 }
@@ -23374,6 +23711,8 @@ function updateBiomePresentation() {
       fungal: ["mushroom", "Mushrooms"],
       ice: ["ice", "Ice"],
       crystal: ["crystal", "Crystal · aura"],
+      shadow: ["shadow", "Returning shadows"],
+      unstable: ["stalactite", "Falling stone"],
     }[theme];
   if (key) {
     key.hidden = !terrain;
@@ -23387,7 +23726,7 @@ function glideCells(map, from, entry, { knownOnly = false } = {}) {
     dx = (entry % W) - (from % W),
     dy = Math.floor(entry / W) - Math.floor(from / W);
   let n = entry;
-  while (map[n].terrain === "ice") {
+  while (["ice", "mudslide"].includes(map[n].terrain)) {
     const x = (n % W) + dx,
       y = Math.floor(n / W) + dy;
     if (x < 0 || x >= W || y < 0 || y >= H) break;
@@ -23406,19 +23745,28 @@ function movementRoute(
   { omniscient = false, ignoreIce = false, directIce = true } = {},
 ) {
   if (!Number.isInteger(goal) || !map[goal]) return null;
-  const cost = new Map([[start, 0]]),
+  const mud = map
+    .map((c, i) => (c.terrain === "mudslide" ? i : -1))
+    .filter((i) => i >= 0);
+  const bit = new Map(mud.map((i, k) => [i, 2 ** k]));
+  const encode = (i, mask) => i + mask * map.length;
+  const startKey = encode(start, 0),
+    cost = new Map([[startKey, 0]]),
     came = new Map(),
-    queue = [start],
+    queue = [startKey],
     closed = new Set();
+  const blocked = (i, mask) => map[i].wall || !!(mask & (bit.get(i) || 0));
   while (queue.length) {
     queue.sort((a, b) => cost.get(a) - cost.get(b));
-    const n = queue.shift();
-    if (closed.has(n)) continue;
-    closed.add(n);
+    const key = queue.shift();
+    if (closed.has(key)) continue;
+    closed.add(key);
+    const n = key % map.length,
+      mask = Math.floor(key / map.length);
     if (n === goal) {
       const path = [];
-      let cursor = n;
-      while (cursor !== start) {
+      let cursor = key;
+      while (cursor !== startKey) {
         const edge = came.get(cursor);
         if (!edge) return null;
         path.unshift(...edge.cells);
@@ -23430,46 +23778,52 @@ function movementRoute(
       const portal = !neighbors(n).includes(j),
         c = map[j];
       if (portal && !omniscient && (!map[n].seen || !c.seen)) continue;
-      if (c.wall && (omniscient || c.seen)) continue;
+      if (blocked(j, mask) && (omniscient || c.seen)) continue;
       if (!omniscient && !c.seen && j !== goal) continue;
       let cells =
-        !portal && !ignoreIce && (c.seen || omniscient) && c.terrain === "ice"
+        !portal &&
+        !ignoreIce &&
+        (c.seen || omniscient) &&
+        ["ice", "mudslide"].includes(c.terrain)
           ? glideCells(map, n, j, { knownOnly: !omniscient })
           : [j];
-      // Selecting the ice itself is an exploratory action, not a promise
-      // that its covered landing is already a known route.
       if (
         !omniscient &&
         directIce &&
         j === goal &&
-        c.terrain === "ice" &&
-        cells?.some((i) => !map[i].seen)
+        ["ice", "mudslide"].includes(c.terrain) &&
+        cells.some((i) => !map[i].seen)
       )
         cells = [j];
-      if (!cells) {
-        if (directIce && n === start && j === goal) cells = [j];
-        else continue;
-      }
       if (!omniscient && cells.some((i) => !map[i].seen && i !== goal))
         continue;
-      const end = cells.at(-1),
-        danger = !omniscient
-          ? cells.filter(
-              (i) =>
-                i !== goal &&
-                ["enemy", "guardian", "stronghold", "trap"].includes(
-                  map[i].event,
-                ),
-            ).length * 1000
-          : 0;
-      const next = cost.get(n) + cells.length + danger;
-      if (directIce && n === start && j === goal && end !== goal) {
-        return cells;
+      let nextMask = mask,
+        valid = true;
+      for (const i of cells) {
+        if (blocked(i, nextMask) && (omniscient || map[i].seen)) {
+          valid = false;
+          break;
+        }
+        if (bit.has(i)) nextMask |= bit.get(i);
       }
-      if (next < (cost.get(end) ?? Infinity)) {
-        cost.set(end, next);
-        came.set(end, { from: n, cells });
-        queue.push(end);
+      if (!valid) continue;
+      const end = cells.at(-1),
+        nextKey = encode(end, nextMask);
+      const danger = !omniscient
+        ? cells.filter(
+            (i) =>
+              i !== goal &&
+              ["enemy", "guardian", "stronghold", "trap"].includes(
+                map[i].event,
+              ),
+          ).length * 1000
+        : 0;
+      const next = cost.get(key) + cells.length + danger;
+      if (directIce && n === start && j === goal && end !== goal) return cells;
+      if (next < (cost.get(nextKey) ?? Infinity)) {
+        cost.set(nextKey, next);
+        came.set(nextKey, { from: key, cells });
+        queue.push(nextKey);
       }
     }
   }
@@ -23484,7 +23838,8 @@ function movementPlan(goal) {
   });
   if (!relaxed) return null;
   const ice = relaxed.findIndex(
-    (i) => state.map[i].seen && state.map[i].terrain === "ice",
+    (i) =>
+      state.map[i].seen && ["ice", "mudslide"].includes(state.map[i].terrain),
   );
   if (ice < 0) return null;
   const prefix = relaxed.slice(0, ice);
@@ -23531,6 +23886,8 @@ function biomeStep(i) {
   if (c.terrain === "mushroom") revealMushrooms(i);
 }
 function biomeCoverArt(c) {
+  if (["mudslide", "mudwall", "stalactite"].includes(c.terrain))
+    return icon(c.terrain);
   return c.terrain === "ice"
     ? icon("ice")
     : c.terrain === "mushroom"
@@ -23552,7 +23909,7 @@ function allTilesCanReachStairs(map) {
       if (map[entry].wall) continue;
       const portal = !neighbors(from).includes(entry);
       const end =
-        !portal && map[entry].terrain === "ice"
+        !portal && ["ice", "mudslide"].includes(map[entry].terrain)
           ? glideCells(map, from, entry).at(-1)
           : entry;
       reverse[end].push(from);
@@ -23641,6 +23998,7 @@ async function oldTravelEvent(c, kind) {
     });
     return true;
   }
+  if (!rockfallWallCandidates().length) return false;
   showSpotlight(
     "ROCKFALL!",
     "The ceiling answers your footsteps.",
@@ -23681,6 +24039,7 @@ async function oldTravelEvent(c, kind) {
     { id: "stage-confirm", label: "Find solid ground", value: true },
   ]);
   closeSpotlight();
+  createRockfallWall();
   if (damage) damageHero(target, damage, "A sudden rockfall");
   await processDeaths();
   checkDefeat();
@@ -23849,7 +24208,7 @@ async function choiceTravelEvent(kind) {
 const bagWillOverflow = (type) =>
   !state.bag[type] && Object.keys(state.bag).length >= 3;
 function addLavaPuddles(map, depth) {
-  if (depth < 5 || Math.random() >= 0.35) return;
+  if (floorBiome(map) !== "lava" || depth < 5 || Math.random() >= 0.35) return;
   const count = Math.random() < 0.12 ? 2 : 1;
   for (let n = 0; n < count; n++) {
     const candidates = map
@@ -24249,6 +24608,11 @@ function characterMoment(id, h) {
   state.characterEvents = state.characterEvents.slice(-100);
   log(`${h.name} ${def.text}.`);
   combatCallout(entityArt(h), def.name, def.kind);
+  showHeroNotice(h, def.name, def.text, def.kind);
+  if (id === "heroic") {
+    state.pendingCharacterMoments ??= [];
+    state.pendingCharacterMoments.push({heroId:h.id,title:def.name,text:def.text});
+  }
   burst(
     entityArt(h),
     def.kind === "heal" ? "heal" : def.kind === "block" ? "shield" : "gold",
@@ -24576,14 +24940,15 @@ function autoBuildUtility(h) {
   // Recovery is valuable, especially with camp lessons, but physical classes
   // must not turn into mostly-heal wheels. Keep a few emergency marks; let
   // the Mage and genuine damage dealers complement each other.
-  const healCap = {
-    rogue: 0.18,
-    ranger: 0.22,
-    fighter: 0.24,
-    berserker: 0.36,
-    mage: 0.42,
-    jester: 0.25,
-  }[h.job] || 0.25;
+  const healCap =
+    {
+      rogue: 0.18,
+      ranger: 0.22,
+      fighter: 0.24,
+      berserker: 0.36,
+      mage: 0.42,
+      jester: 0.25,
+    }[h.job] || 0.25;
   utility -= Math.max(0, faceShare(h.reels.flat(), ["heal"]) - healCap) * 80;
   // Poison and stun are valuable tools, but their ticks/recovery saturate.
   // Avoid a cheap utility mark crowding every physical or spell combo off a build.
@@ -24600,7 +24965,15 @@ function faceShare(reel, types) {
   const weight = reel.reduce((n, f) => n + (f.weight || 1), 0);
   return weight
     ? reel.reduce(
-        (n, f) => n + (types.includes(f.type) ? f.weight || 1 : 0),
+        (n, f) =>
+          n +
+          (types.includes(f.type)
+            ? f.weight || 1
+            : f.type === "mystery"
+              ? ((f.weight || 1) *
+                  MYSTERY_TYPES.filter((t) => types.includes(t)).length) /
+                MYSTERY_TYPES.length
+              : 0),
         0,
       ) / weight
     : 0;
@@ -24666,7 +25039,8 @@ function repairSoloBuild(h) {
   for (let r = 0; r < 3 && soloOffence(h) < 2; r++) {
     let j = h.reels[r].findIndex(
       (f) =>
-        f.type !== "class" && !["attack", "magic", "poison"].includes(f.type),
+        !["class", "mystery"].includes(f.type) &&
+        !["attack", "magic", "poison"].includes(f.type),
     );
     if (j < 0) continue;
     const type = h.job === "mage" ? "magic" : "attack";
@@ -24676,7 +25050,7 @@ function repairSoloBuild(h) {
         .flatMap((reel, k) => reel.map((face, n) => ({ face, k, n })))
         .filter(
           ({ face }) =>
-            face.type !== "class" &&
+            !["class", "mystery"].includes(face.type) &&
             face.tier > 1 &&
             !["attack", "magic", "poison"].includes(face.type),
         )
@@ -24707,7 +25081,10 @@ function partyDamagePartners(h) {
 function paidIdentitySwap(h, type) {
   const candidates = h.reels
     .flatMap((reel, r) => reel.map((face, j) => ({ face, r, j })))
-    .filter(({ face }) => face.type !== "class" && face.type !== type)
+    .filter(
+      ({ face }) =>
+        !["class", "mystery"].includes(face.type) && face.type !== type,
+    )
     .sort(
       (a, b) =>
         (a.face.type === "blank"
@@ -24757,7 +25134,771 @@ function chargedActorScore(h) {
   return score;
 }
 // END GENERATED AUTO BUILDS
+      // BEGIN GENERATED LIVING DUNGEON
+// Changing terrain uses conservative graph proofs. Removing every unused mudslide
+// must still leave every ordinary tile a route to the stairs, from any approach.
+const LIVING_FLOOR = Object.freeze({
+  shadowMinSeconds: 38,
+  shadowMaxSeconds: 64,
+  shadowCoverPenalty: 0.08,
+  stalactiteMin: 4,
+  stalactiteMax: 8,
+});
+function mudApproachesSafe(map, i) {
+  return (
+    neighbors(i).length === 4 &&
+    neighbors(i).every(
+      (j) => !map[j].wall && !["ice", "mudslide"].includes(map[j].terrain),
+    )
+  );
+}
+function safeWithClosedTiles(map, extra = []) {
+  const closing = [
+    ...new Set([
+      ...extra,
+      ...map
+        .map((c, i) => (c.terrain === "mudslide" ? i : -1))
+        .filter((i) => i >= 0),
+    ]),
+  ];
+  const saved = closing.map((i) => [i, map[i].wall]);
+  try {
+    closing.forEach((i) => (map[i].wall = true));
+    return allTilesCanReachStairs(map);
+  } finally {
+    saved.forEach(([i, wall]) => (map[i].wall = wall));
+  }
+}
+function canCloseTile(map, i, { avoidPlayer = true } = {}) {
+  const c = map[i];
+  if (
+    !c ||
+    c.wall ||
+    c.event ||
+    c.structure ||
+    c.room ||
+    c.terrain !== "floor" ||
+    i === pos(1, 7) ||
+    (avoidPlayer && i === state.position)
+  )
+    return false;
+  if (neighbors(i).some((j) => map[j].terrain === "mudslide")) return false;
+  return safeWithClosedTiles(map, [i]);
+}
+function rockfallWallCandidates(map = state.map) {
+  return map.map((c, i) => i).filter((i) => canCloseTile(map, i));
+}
+function createRockfallWall() {
+  const candidates = rockfallWallCandidates();
+  if (!candidates.length) return null;
+  const i = pick(candidates),
+    c = state.map[i];
+  Object.assign(c, {
+    wall: true,
+    terrain: "stone",
+    event: null,
+    feature: null,
+    room: null,
+    rockfallWall: true,
+  });
+  renderMap();
+  smokePoof($(`[data-tile="${i}"]`), true);
+  if (c.seen)
+    combatCallout($(`[data-tile="${i}"]`), "PASSAGE BLOCKED", "danger");
+  log(
+    `Fallen stone blocks column ${(i % W) + 1}, row ${Math.floor(i / W) + 1}. Another route remains.`,
+  );
+  state.lastRockfallWall = i;
+  return i;
+}
+function decorateLivingFloor(map, depth) {
+  const theme = floorBiome(map);
+  if (
+    ["cave", "overgrown", "unstable"].includes(theme) &&
+    Math.random() < 0.3
+  ) {
+    const candidates = map
+      .map((c, i) => i)
+      .filter(
+        (i) =>
+          i !== pos(1, 7) &&
+          !map[i].wall &&
+          !map[i].event &&
+          !map[i].room &&
+          !map[i].structure &&
+          map[i].terrain === "floor",
+      );
+    const count = Math.random() < 0.2 ? 2 : 1;
+    for (const i of candidates) {
+      if (map.filter((c) => c.terrain === "mudslide").length >= count) break;
+      if (Math.random() > 0.3 || !mudApproachesSafe(map, i)) continue;
+      const c = map[i];
+      c.terrain = "mudslide";
+      if (!safeWithClosedTiles(map) || !allTilesCanReachStairs(map))
+        c.terrain = "floor";
+    }
+  }
+  if (theme === "unstable") {
+    const free = map
+      .map((c, i) => i)
+      .filter(
+        (i) =>
+          !map[i].wall &&
+          !map[i].event &&
+          !map[i].room &&
+          !map[i].structure &&
+          map[i].terrain === "floor" &&
+          i !== pos(1, 7),
+      );
+    const count = Math.min(free.length, 3 + rand(3));
+    for (let n = 0; n < count; n++) {
+      const i = free.splice(rand(free.length), 1)[0];
+      map[i].terrain = "stalactite";
+      map[i].stalactite = { remaining: stalactiteReset(), drops: 0 };
+    }
+  }
+  normaliseLivingFloor(map, { fresh: true });
+}
+function stalactiteReset() {
+  return (
+    LIVING_FLOOR.stalactiteMin +
+    rand(LIVING_FLOOR.stalactiteMax - LIVING_FLOOR.stalactiteMin + 1)
+  );
+}
+function normaliseLivingFloor(map = state.map, { fresh = false } = {}) {
+  if (fresh) map[0].shadowClock = 0;
+  map[0].shadowClock = Math.max(0, Number(map[0].shadowClock) || 0);
+  for (const c of map) {
+    if (c.terrain === "mudwall") c.wall = true;
+    if (c.terrain === "crystal") c.wall = true;
+    if (c.terrain === "lava" && floorBiome(map) !== "lava") {
+      c.terrain = "stone";
+      c.wall = true;
+    }
+    if (c.terrain === "stalactite") {
+      c.wall = false;
+      c.stalactite ??= { remaining: stalactiteReset(), drops: 0 };
+      c.stalactite.remaining = Math.max(
+        1,
+        Math.min(8, Math.floor(c.stalactite.remaining) || 4),
+      );
+    }
+    c.shadowCovered =
+      !!c.shadowCovered && c.visited && !c.wall && floorBiome(map) === "shadow";
+    if (fresh) delete c.shadowDue;
+  }
+  // Old saves/corrupt one-way cells must never create an inescapable island.
+  if (!safeWithClosedTiles(map))
+    for (const c of map) if (c.terrain === "mudslide") c.terrain = "floor";
+}
+function consumeMudslide(from) {
+  const c = state.map[from];
+  if (c?.terrain !== "mudslide") return;
+  Object.assign(c, {
+    wall: true,
+    terrain: "mudwall",
+    event: null,
+    feature: null,
+    mudUsed: true,
+  });
+  const tile = $(`[data-tile="${from}"]`);
+  smokePoof(tile);
+  GameSound.play("mudSlide");
+}
+function shadowThreshold() {
+  return (
+    LIVING_FLOOR.shadowMinSeconds +
+    rand(LIVING_FLOOR.shadowMaxSeconds - LIVING_FLOOR.shadowMinSeconds + 1)
+  );
+}
+function advanceShadowTime(seconds) {
+  if (floorBiome() !== "shadow" || !canExplore() || seconds <= 0) return false;
+  const map = state.map,
+    covered = map.filter((c) => c.shadowCovered).length;
+  map[0].shadowClock =
+    (map[0].shadowClock || 0) +
+    Math.min(2, seconds) / (1 + covered * LIVING_FLOOR.shadowCoverPenalty);
+  const now = map[0].shadowClock;
+  let changed = false;
+  map.forEach((c, i) => {
+    if (!c.visited || c.wall || i === state.position) {
+      if (i === state.position) {
+        c.shadowCovered = false;
+        c.shadowDue = now + (c.shadowDelay ??= shadowThreshold());
+      }
+      return;
+    }
+    c.shadowDue ??= now + shadowThreshold();
+    if (!c.shadowCovered && now >= c.shadowDue) {
+      c.shadowCovered = true;
+      c.fogged = true;
+      changed = true;
+    }
+  });
+  if (changed) renderMap();
+  return changed;
+}
+async function uncoverShadow(i) {
+  const c = state.map[i];
+  if (!c.shadowCovered) return false;
+  const tile = $(`[data-tile="${i}"]`);
+  tile?.classList.add("erasing");
+  burst(tile, "smoke", 20);
+  GameSound.play("erase");
+  await pause(150);
+  c.shadowCovered = false;
+  c.shadowDue = (state.map[0].shadowClock || 0) + shadowThreshold();
+  tile?.classList.remove("shadow-covered", "erasing");
+  return true;
+}
+function killPursuerByTerrain(i, reason = "falling stone") {
+  if (state.pursuer?.position !== i) return false;
+  const c = state.map[i];
+  state.pursuer = null;
+  state.pursuerSpawned = true;
+  Object.assign(c, {
+    wall: false,
+    terrain: "floor",
+    event: "treasure",
+    feature: "treasure",
+    activated: false,
+    unwrittenRemains: true,
+    stalactite: null,
+  });
+  smokePoof($(`[data-tile="${i}"]`), true);
+  log(`The Unwritten is crushed by ${reason}. Its gold lies in the rubble.`);
+  toast("The Unwritten falls · gold remains");
+  return true;
+}
+async function livingDungeonStep() {
+  let changed = false;
+  for (let i = 0; i < state.map.length; i++) {
+    const c = state.map[i];
+    if (c.terrain !== "stalactite" || !c.stalactite) continue;
+    if (--c.stalactite.remaining > 0) {
+      const badge = $(`[data-tile="${i}"] .stalactite-count`);
+      if (badge) badge.textContent = c.stalactite.remaining;
+      continue;
+    }
+    c.stalactite.drops++;
+    c.stalactite.remaining = stalactiteReset();
+    const tile = $(`[data-tile="${i}"]`);
+    if (c.seen) {
+      burst(tile, "dust", 25);
+      GameSound.play("rockDrop");
+      tile?.classList.add("stalactite-drop");
+      setTimeout(() => tile?.classList.remove("stalactite-drop"), 450);
+      shakeElement(tile, 3, "impact");
+    }
+    if (killPursuerByTerrain(i, "a stalactite")) {
+      changed = true;
+      continue;
+    }
+    if (i === state.position) {
+      const power = 2 + Math.floor(state.depth / 3);
+      damageHero(state.party.findIndex(alive), power, "A falling stalactite");
+      combatCallout($("#map-player"), "STALACTITE!", "danger");
+      shakeBook(4, "impact");
+      await processDeaths();
+      if (checkDefeat()) return true;
+    }
+    changed = true;
+  }
+  if (changed) renderMap();
+  return false;
+}
+function terrainTileAdornment(c, i, influence) {
+  const parts = [];
+  if (c.seen && c.terrain === "stalactite")
+    parts.push(
+      `<span class="stalactite-count" aria-label="Falling stone in ${c.stalactite?.remaining || 4} steps">${c.stalactite?.remaining || 4}</span>`,
+    );
+  if (c.shadowCovered)
+    parts.push('<span class="shadow-pencil" aria-hidden="true"></span>');
+  if (c.seen && !c.wall && influence?.has(i))
+    parts.push('<span class="crystal-radius" aria-hidden="true"></span>');
+  return parts.join("");
+}
+function fogPartyReels(e) {
+  if (e.passive?.key !== "veil" || e.hp <= 0) return;
+  state.party.forEach((h) => (h.shadowLocks = []));
+  const choices = state.party
+    .filter(alive)
+    .flatMap((h) => [0, 1, 2].map((k) => ({ h, k })));
+  const count = Math.min(choices.length, state.depth >= 7 ? 2 : 1);
+  for (let n = 0; n < count; n++) {
+    const { h, k } = choices.splice(rand(choices.length), 1)[0];
+    h.shadowLocks ??= [];
+    h.shadowLocks.push(k);
+    smokePoof($(`#machine-hero-${state.party.indexOf(h)} [data-reel="${k}"]`));
+  }
+  combatCallout(enemyArtEl(e), "VEIL OF DOUBT", "poison");
+  log(`${e.name} fogs ${count} reels. They count as Empty for one roll.`);
+}
+function finishShadowAction(h) {
+  state.party.forEach((other) => (other.shadowRest = false));
+  if (
+    livingEnemies().some((e) => e.passive?.key === "veil") &&
+    state.party.filter(alive).length > 1
+  )
+    h.shadowRest = true;
+}
+function clearShadowReels(h) {
+  h.shadowLocks = [];
+}
+
+function crystalInfluencedTiles() {
+  const result = new Set();
+  const sources = state.map
+    .map((c, i) => (c.seen && c.terrain === "crystal" ? i : -1))
+    .filter((i) => i >= 0);
+  for (const source of sources)
+    state.map.forEach((c, i) => {
+      if (!c.wall && tileDistance(i, source) <= 2 && lineOfSight(source, i))
+        result.add(i);
+    });
+  return result;
+}
+// END GENERATED LIVING DUNGEON
+      // BEGIN GENERATED COMBAT CLARITY
+// Shared interaction language: the same availability rules drive cards, AI and keys.
+function availableCompanions(except = null) {
+  return state.party.filter(
+    (h) =>
+      h !== except &&
+      alive(h) &&
+      !h.stun &&
+      openingEligible(h) &&
+      !h.shadowRest,
+  );
+}
+function heroLockReason(h) {
+  if (!alive(h)) return "FALLEN";
+  if (!openingEligible(h)) return "SURPRISED · use a ready ally";
+  if (h.shadowRest && availableCompanions(h).length)
+    return "VEILED · use another ally";
+  if (h.stun)
+    return availableCompanions(h).length
+      ? "STUNNED · an ally’s roll helps recovery"
+      : "STUNNED · a turn will be lost";
+  return "";
+}
+function heroCannotRoll(h) {
+  return (
+    !alive(h) ||
+    !openingEligible(h) ||
+    (!!h.shadowRest && availableCompanions(h).length > 0) ||
+    (!!h.stun && availableCompanions(h).length > 0)
+  );
+}
+function reelLockMarkup(h) {
+  const reason = heroLockReason(h);
+  if (!reason) return "";
+  const kind = !alive(h)
+    ? "fallen"
+    : h.stun
+      ? "stun"
+      : !openingEligible(h)
+        ? "surprise"
+        : "shadow";
+  return `<div class="reel-unavailable ${kind}" role="status">${icon(kind === "stun" ? "stun" : kind === "shadow" ? "shadow" : kind === "fallen" ? "skull" : "surprise")}<strong>${reason}</strong></div>`;
+}
+let soloStunTimer = null;
+function scheduleStunRecovery() {
+  if (
+    soloStunTimer ||
+    busy ||
+    !state?.enemy ||
+    state.over ||
+    !$("#overlay").hidden ||
+    !$("#spotlight").hidden
+  )
+    return;
+  const eligible = state.party.filter((h) => alive(h) && openingEligible(h));
+  if (!eligible.length || !eligible.every((h) => !!h.stun)) return;
+  const run = state;
+  soloStunTimer = setTimeout(
+    () => {
+      soloStunTimer = null;
+      if (
+        state !== run ||
+        busy ||
+        !state?.enemy ||
+        state.over ||
+        !$("#overlay").hidden ||
+        !$("#spotlight").hidden
+      )
+        return;
+      const hero = state.party.find(
+        (h) => alive(h) && openingEligible(h) && h.stun,
+      );
+      if (hero && !availableCompanions(hero).length)
+        spin(state.party.indexOf(hero));
+    },
+    Math.max(180, 550 / (skip ? 5 : pace())),
+  );
+}
+async function advanceEnemyClocks(foes = battleEnemies().slice()) {
+  for (const e of foes.filter((e) => e.hp > 0)) {
+    e.countdown--;
+    syncEnemy(e);
+    if (e.countdown <= 0) {
+      if (e.stun) {
+        tryBreakStun(e, { missedAction: true });
+        log(`${e.name} misses its turn to stun.`);
+        combatCallout(enemyArtEl(e), "STUNNED · TURN LOST", "recovery");
+        await feedbackPause(230);
+      } else await enemyTurn(e);
+      if (!state.over) {
+        e.countdown = e.frequency;
+        state.round++;
+      }
+    }
+    if (checkDefeat()) break;
+  }
+}
+async function missStunnedTurn(h, foes) {
+  if (availableCompanions(h).length) return;
+  state.actionSerial++;
+  h.stats.turnsMissed++;
+  const machine = $("#machine-hero-" + state.party.indexOf(h));
+  machine?.classList.add("stun-breaking");
+  showHeroNotice(
+    h,
+    "STUNNED · TURN LOST",
+    "Shaking free. Enemy clocks advance.",
+    "recovery",
+  );
+  GameSound.play("stunBreak");
+  burst(machine, "paper", 28);
+  shakeElement(machine, 5, "recoil");
+  await feedbackPause(skip ? 180 : 500);
+  tryBreakStun(h, { missedAction: true });
+  advanceRangerPatience(h, false);
+  tickStimulant(h);
+  finishOpeningRoll();
+  await tickPoison();
+  if (checkDefeat()) return;
+  if (!livingEnemies().length) {
+    await victory(foes[0]);
+    return;
+  }
+  log(`${h.name} loses a turn to stun and recovers. Enemy clocks advance.`);
+  await advanceEnemyClocks(foes);
+  await showPendingCharacterMoments();
+  if (!state.over && !livingEnemies().length) await victory(foes[0]);
+}
+function itemCategory(type) {
+  if (type === "heal" || type === "reveal")
+    return { kind: "instant", label: "Instant service · used here" };
+  return ITEM_DEFS[type]?.equipment
+    ? { kind: "equipment", label: "Equipment · carried, then equipped" }
+    : { kind: "consumable", label: "Consumable · carried in the satchel" };
+}
+function itemCategoryMarkup(type) {
+  const c = itemCategory(type);
+  return `<small class="item-category ${c.kind}">${c.label}</small>`;
+}
+function inspectHeroEquipment(index) {
+  if (busy || !alive(state.party[index])) return;
+  const h = state.party[index],
+    current = EQUIPMENT_DEFS[h.equipment];
+  const choices = Object.keys(state.bag).filter(
+    (type) => EQUIPMENT_DEFS[type] && canEquipGear(h, EQUIPMENT_DEFS[type]),
+  );
+  openModal(
+    `${h.name}’s equipment`,
+    `<div class="equipped-detail">${icon(current?.icon || "bag")}<div><h3>${current?.name || "Empty equipment slot"}</h3><p>${current ? `<b class="equipment-scope">${equipmentScope(current)}</b> ${current.description}` : "Equip one item from your satchel."}</p></div></div><h3>Compatible equipment in the satchel</h3><div class="equipment-alternatives">${choices.map((type) => `<button data-equip-alternative="${type}">${icon(EQUIPMENT_DEFS[type].icon)}<span><b>${EQUIPMENT_DEFS[type].name}</b><small>${EQUIPMENT_DEFS[type].description}</small></span></button>`).join("") || "<p>No compatible equipment is packed.</p>"}</div><div class="modal-actions"><button data-close class="primary">Back to the party</button></div>`,
+    "hero-equipment",
+  );
+  document
+    .querySelectorAll("[data-equip-alternative]")
+    .forEach(
+      (b) =>
+        (b.onclick = () => equipCharacter(b.dataset.equipAlternative, index)),
+    );
+}
+const heroNoticeStates = new WeakMap();
+function showHeroNotice(h, title, description, kind = "gold") {
+  const note = {
+    title,
+    description,
+    kind,
+    until: Date.now() + Math.max(1000, 2300 / Math.sqrt(skip ? 5 : pace())),
+    opening: title.startsWith("INITIATIVE"),
+  };
+  heroNoticeStates.set(h, note);
+  mountHeroNotice(h, note, true);
+}
+function restoreHeroNotices() {
+  for (const h of state.party) {
+    const note = heroNoticeStates.get(h);
+    if (!note) continue;
+    if (
+      note.until <= Date.now() ||
+      (note.opening && (!h.initiative || !state.opening?.firstRoll))
+    ) {
+      heroNoticeStates.delete(h);
+      continue;
+    }
+    mountHeroNotice(h, note, false);
+  }
+}
+function mountHeroNotice(h, note, animateIn) {
+  const machine = $("#machine-hero-" + state.party.indexOf(h));
+  if (!machine) return;
+  machine.querySelector(".hero-notice")?.remove();
+  const notice = document.createElement("div");
+  notice.className = "hero-notice " + note.kind;
+  notice.innerHTML = `<strong>${escapeHTML(note.title)}</strong><small>${escapeHTML(note.description || "")}</small>`;
+  machine.append(notice);
+  machine.classList.add("showing-notice");
+  if (animateIn)
+    animate(
+      notice,
+      [
+        { opacity: 0, transform: "scale(.8)" },
+        { opacity: 1, transform: "scale(1.07)" },
+        { opacity: 1, transform: "none" },
+      ],
+      { duration: 450, juice: true },
+    );
+  setTimeout(
+    () => {
+      notice.remove();
+      if (!machine.querySelector(".hero-notice"))
+        machine.classList.remove("showing-notice");
+    },
+    Math.max(0, note.until - Date.now()),
+  );
+}
+async function showPendingCharacterMoments() {
+  while (state.pendingCharacterMoments?.length) {
+    const moment = state.pendingCharacterMoments.shift(),
+      h = state.party.find((h) => h.id === moment.heroId);
+    if (!h || !alive(h) || state.over) continue;
+    showSpotlight(
+      moment.title,
+      `${h.name} · ${className(h.job)}`,
+      `<div class="stage-art personal-moment">${portraitArt(h.job, h)}</div><div class="stage-result"><b>${escapeHTML(h.name)} ${escapeHTML(moment.text)}.</b><p>Still standing at ${h.hp} HP.</p></div>`,
+      "personal-moment",
+    );
+    burst($("#stage-card"), "gold", 55);
+    shakeElement($("#stage-card"), 4, "settle");
+    await eventChoice([
+      { id: "stage-confirm", label: "Still standing · continue", value: true },
+    ]);
+    closeSpotlight();
+  }
+}
+function classAffinityHint(h) {
+  const prices = CLASS_PRICES[h.job] || {};
+  const cheap = Object.entries(prices)
+    .filter(([, n]) => n < 1)
+    .map(([t]) => FACE_LABELS[t]);
+  const dear = Object.entries(prices)
+    .filter(([, n]) => n > 1)
+    .map(([t]) => FACE_LABELS[t]);
+  return `${className(h.job)} prices: ${cheap.length ? cheap.join(", ") + " cost less. " : "Standard prices for native powers. "}${dear.length ? dear.join(", ") + " cost more. " : ""}Each mark keeps the same base power; criticals and class abilities differ.`;
+}
+function pennantRollBonus(h, symbols = []) {
+  if (
+    !symbols.some(
+      (f) =>
+        f.type === "block" ||
+        (f.type === "class" &&
+          (h.job === "fighter" ||
+            (h.job === "mage" && h.lastResonance === "block"))),
+    )
+  )
+    return 0;
+  const bonus = passive("block");
+  if (!bonus || state.pennantAction === state.actionSerial) return 0;
+  state.pennantAction = state.actionSerial;
+  return bonus;
+}
+let groupedCombatLog = null;
+function beginCombatLogGroup(h, activity) {
+  const previous = groupedCombatLog;
+  const group = {
+    run: state,
+    hero: h.name,
+    activity,
+    entries: [],
+    actualHits: [],
+    previous,
+  };
+  groupedCombatLog = group;
+  return group;
+}
+function finishCombatLogGroup(group, report) {
+  groupedCombatLog = group.previous;
+  if (state !== group.run) return;
+  const damage = report.shots
+    .filter((s) => s.actual > 0 && ["attack", "magic"].includes(s.type))
+    .map((s) => s.actual);
+  const utility = report.shots
+    .filter((s) => ["poison", "stun", "rally", "stimulant"].includes(s.type))
+    .map((s) => FACE_LABELS[s.type]);
+  const extras = [...new Set(utility)];
+  log(
+    `${group.hero} · ${group.activity} ×${report.shots.length}: ${damage.length ? damage.join(" + ") + " = " + report.damage + " damage; " : ""}${report.healing} HP restored; ${report.block} block${extras.length ? "; " + extras.join(", ") : ""}.`,
+  );
+  const important = group.entries.filter((s) =>
+    /second wind|summon|splits|falls|dies/i.test(s),
+  );
+  important.slice(0, 2).forEach(log);
+}
+function classPricesMarkup(h) {
+  const types = editableTypes(h).filter((t) => t !== "blank");
+  return `<section class="workshop-page workshop-prices-page" ${editorView === "prices" ? "" : "hidden inert"}><h3>${className(h.job)} specialities</h3><p>${escapeHTML(CLASS_BALANCE[h.job]?.path || "Flexible reels.")} ${escapeHTML(CLASS_COMBOS[h.job]?.hint || "")}</p><p>Affinity changes point costs, not the base power of a mark. Critical range: <b>${criticalRange(h)}</b>.</p><table class="class-price-table"><thead><tr><th>Power</th><th>Inscribe I</th><th>II</th><th>III</th><th>IV</th></tr></thead><tbody>${types.map((t) => `<tr><th>${FACE_LABELS[t]}</th><td>${classFacePrice(h, t, 3)}</td>${[2, 3, 4].map((tier) => `<td>${classFacePrice(h, t, FACE_COST[tier])}</td>`).join("")}</tr>`).join("")}</tbody></table><small>Downgrades refund half of the points actually paid. Permanent marks cannot be changed.</small></section>`;
+}
+
+function beginHeroRollLog(h) {
+  const group = beginCombatLogGroup(h, "roll");
+  group.heroId = h.id;
+  group.before = {
+    damage: h.stats.damageDealt || 0,
+    healing: h.stats.healingDone || 0,
+    punchlines: h.stats.punchlines || 0,
+  };
+  group.block = 0;
+  return group;
+}
+function finishHeroRollLog(group, h) {
+  groupedCombatLog = group.previous;
+  if (state !== group.run) return;
+  const roll =
+    state.lastPlayerRoll?.heroId === h.id ? state.lastPlayerRoll : null;
+  const hits = group.actualHits;
+  const damage = hits.reduce((n, value) => n + value, 0),
+    healing = Math.max(0, (h.stats.healingDone || 0) - group.before.healing);
+  const punch = (h.stats.punchlines || 0) > group.before.punchlines;
+  const powers = [
+    ...new Set(
+      (roll?.symbols || [])
+        .filter((f) =>
+          ["stun", "poison", "rally", "stimulant", "trick"].includes(f.type),
+        )
+        .map((f) => FACE_LABELS[f.type]),
+    ),
+  ];
+  const activity = punch
+    ? "roll + Punchline"
+    : roll?.symbols?.some((f) => f.type === "class")
+      ? classAbilityName(h)
+      : "roll";
+  const critical = Math.max(roll?.multiplier || 1, roll?.flurryMultiplier || 1);
+  log(
+    `${h.name} · ${activity}${hits.length > 1 ? " ×" + hits.length : ""}${critical > 1 ? " · CRITICAL ×" + critical : ""}: ${hits.length > 1 ? hits.join(" + ") + " = " : ""}${damage} damage; ${healing} HP restored; ${group.block} block${powers.length ? "; marks: " + powers.join(", ") : ""}.`,
+  );
+  group.entries
+    .filter((s) =>
+      /second wind|summon|splits|becomes|refuses to fall|shrugs off|turns aside/i.test(
+        s,
+      ),
+    )
+    .slice(0, 3)
+    .forEach(log);
+}
+
+// Record where HP was actually lost; nested bursts contribute to their parent
+// action as well, including Wildcard hits that precede the ordinary roll plan.
+function recordCombatHit(actual) {
+  for (let group = groupedCombatLog; group; group = group.previous)
+    if (group.run === state) group.actualHits.push(actual);
+}
+// END GENERATED COMBAT CLARITY
       // BEGIN GENERATED JESTER
+// One permanent ? per Jester reel. Its rank distribution follows editable marks.
+const MYSTERY_TYPES = Object.freeze([
+  "attack",
+  "magic",
+  "heal",
+  "block",
+  "stun",
+  "poison",
+  "stimulant",
+  "rally",
+  "selfharm",
+  "trick",
+]);
+function normaliseMysteryReels(h) {
+  for (const reel of h.reels || []) {
+    let found = false;
+    for (const face of reel)
+      if (face.type === "mystery") {
+        if (h.job === "jester" && !found) {
+          face.tier = 1;
+          face.weight = 1;
+          found = true;
+          delete face.investments;
+        } else {
+          face.type = "blank";
+          face.tier = 1;
+        }
+      }
+    if (h.job === "jester" && !found)
+      reel.push({ type: "mystery", tier: 1, weight: 1 });
+  }
+}
+function mysteryTierFaces(reel) {
+  const ordinary = reel.filter((f) => !["class", "mystery"].includes(f.type));
+  return ordinary.length
+    ? ordinary.map((f) => ({
+        tier: Math.max(1, Math.min(4, f.tier || 1)),
+        weight: 1,
+      }))
+    : [{ tier: 1, weight: 1 }];
+}
+function resolveMysteryFace(face, reel, random = Math.random) {
+  if (face.type !== "mystery") return { ...face };
+  const tier = weightedPick(mysteryTierFaces(reel), random).tier;
+  const type =
+    MYSTERY_TYPES[
+      Math.min(
+        MYSTERY_TYPES.length - 1,
+        Math.floor(random() * MYSTERY_TYPES.length),
+      )
+    ];
+  return { type, tier, weight: 1, fromMystery: true };
+}
+function resolveMysterySymbols(h, symbols, reels = h.reels) {
+  if ((h.job || h.art) !== "jester") return symbols;
+  const resolved = symbols.map((f, k) => resolveMysteryFace(f, reels[k]));
+  if (resolved.some((f) => f.fromMystery)) {
+    state.lastMysteryRoll = {
+      heroId: h.id,
+      results: resolved.map((f) => ({ ...f })),
+    };
+    GameSound.play("jesterReveal");
+    combatCallout(entityArt(h), "MYSTERY REVEALED!", "gold");
+  }
+  return resolved;
+}
+function expandedReelProbabilities(reel) {
+  const result = {},
+    total = reel.length;
+  if (!total) return result;
+  const add = (type, tier, p) => {
+    const key = type + ":" + tier;
+    result[key] = (result[key] || 0) + p;
+  };
+  for (const f of reel) {
+    if (f.type !== "mystery") {
+      add(f.type, f.tier, 1 / total);
+      continue;
+    }
+    const ranks = mysteryTierFaces(reel);
+    for (const rank of ranks)
+      for (const type of MYSTERY_TYPES)
+        add(type, rank.tier, 1 / total / ranks.length / MYSTERY_TYPES.length);
+  }
+  return result;
+}
+function mysteryDescription() {
+  return "Permanent ?. Becomes a random ordinary power, ignoring class restrictions. Its rank follows the other ordinary ranks on this reel (Empty counts as I). Cannot be upgraded, replaced or copied. The revealed power can complete a critical.";
+}
 // Trick charges a single mark burst within the paid action. It never rerolls
 // the machine, grants a second turn, rolls crits or charges another burst.
 const JESTER_ANTICIPATION_CAP = 6;
@@ -24772,6 +25913,23 @@ function jesterAnticipation(h, power) {
       total - JESTER_ANTICIPATION_CAP,
     );
   syncRangerAim(h);
+  if (ready) {
+    const meter = $(
+      "#machine-hero-" + state.party.indexOf(h) + " .anticipation-meter",
+    );
+    animate(
+      meter,
+      [
+        { transform: "scale(1)" },
+        { transform: "scale(1.15)" },
+        { transform: "scale(1)" },
+      ],
+      { duration: 450, juice: true },
+    );
+    GameSound.play("jesterReady");
+    burst(meter, "confetti", 34);
+    showHeroNotice(h, "PUNCHLINE!", "Six random reel marks", "gold");
+  }
   actionLabel(
     entityArt(h),
     ready ? "PUNCHLINE READY!" : `ANTICIPATION +${power}`,
@@ -24787,19 +25945,23 @@ async function punchlineFX(h) {
   machine?.classList.add("punchline-ready");
   machine?.style.setProperty("--punchline-motion", String(preferences().shake));
   combatCallout(entityArt(h), "PUNCHLINE! · SIX-MARK BURST", "gold");
-  GameSound.play("jesterTrick");
+  GameSound.play("jesterReady");
   screenFX("critical", 0.65);
-  burst(machine, "confetti", 48);
+  burst(machine, "jester", 60);
   shakeElement(machine, 3, "rumble");
   await feedbackPause(skip ? 180 : 420);
 }
 function giftedReels(entity) {
   return entity.reels.map((reel, k) => {
-    if (entity.blackout?.includes(k) || entity.crystalLocks?.includes(k))
+    if (
+      entity.blackout?.includes(k) ||
+      entity.crystalLocks?.includes(k) ||
+      entity.shadowLocks?.includes(k)
+    )
       return [{ type: "blank", tier: 1, blackout: true }];
     if (!entity.reelGifts?.some((g) => g.reel === k && g.uses > 0)) return reel;
     return reel.map((f) =>
-      f.type === "class"
+      ["class", "mystery"].includes(f.type)
         ? f
         : {
             ...f,
@@ -24938,9 +26100,10 @@ async function jesterMarkBurst(h) {
     $("#machine-hero-" + i)?.classList.remove("punchline-ready");
     return;
   }
-  const reels = giftedReels(h).map((reel) =>
-    reel.filter((f) => f.type !== "class"),
-  );
+  const effectiveReels = giftedReels(h),
+    reels = effectiveReels.map((reel) =>
+      reel.filter((f) => f.type !== "class"),
+    );
   const shots = Array.from(
     { length: COMBAT_LIMITS.punchlineShots },
     (_, k) => ({
@@ -24951,10 +26114,19 @@ async function jesterMarkBurst(h) {
   );
   const report = { heroId: h.id, shots: [], damage: 0, healing: 0, block: 0 };
   state.lastPunchline = report;
+  const logGroup = beginCombatLogGroup(h, "Punchline");
   try {
-    for (const face of shots) {
+    for (const [shotIndex, drawn] of shots.entries()) {
+      const face = resolveMysteryFace(drawn, effectiveReels[shotIndex % 3]);
       if (state !== run) return;
       if (!alive(h) || !livingEnemies().length || state.over) break;
+      if (face.type === "selfharm")
+        damageHero(
+          i,
+          Math.min(Math.max(0, h.hp - 1), POWER.selfharm * face.tier),
+          "Mystery Blood Price",
+          { piercing: true, selfInflicted: true, bloodPriceTier: face.tier },
+        );
       const base = await planHeroRoll(h, [face], { singleMark: true });
       const foe = pick(livingEnemies()),
         wounded = state.party
@@ -25014,6 +26186,11 @@ async function jesterMarkBurst(h) {
         record.targetIds = [foe.id];
         stunEnemy(base.stun, foe);
         beam(entityArt(h), enemyArtEl(foe), "stun", impact);
+      } else if (base.stimulant) {
+        record.power = base.stimulant;
+        record.targetIds = [h.id];
+        applyStimulant(h, base.stimulant);
+        beam(entityArt(h), entityArt(h), "stimulant", impact);
       } else if (base.rally) {
         const ally = supportStimulantTarget(h);
         record.power = base.rally;
@@ -25022,6 +26199,7 @@ async function jesterMarkBurst(h) {
         beam(entityArt(h), entityArt(ally), "rally", impact);
       } else {
         // Trick and empty marks still fly, but cannot create an infinite burst.
+        GameSound.play("jesterReveal");
         beam(entityArt(h), entityArt(h), face.type, impact);
         combatCallout(
           entityArt(h),
@@ -25029,6 +26207,8 @@ async function jesterMarkBurst(h) {
           "gold",
         );
       }
+      GameSound.play("jesterMark");
+      burst(entityArt(h), "jester", 8);
       await feedbackPause(skip ? 45 : Math.max(70, 150 / Math.sqrt(pace())));
     }
     if (state !== run) return;
@@ -25041,10 +26221,8 @@ async function jesterMarkBurst(h) {
     result(
       `<span>PUNCHLINE · ${report.shots.length} marks</span><span class="damage">−${report.damage} HP</span><span class="healing">+${report.healing} HP</span><span>+${report.block} block</span>`,
     );
-    log(
-      `${h.name} fires ${report.shots.length} marks: ${report.damage} damage, ${report.healing} healing, ${report.block} team block.`,
-    );
   } finally {
+    finishCombatLogGroup(logGroup, report);
     $("#machine-hero-" + i)?.classList.remove("punchline-ready");
   }
 }
@@ -25224,9 +26402,69 @@ function wellResultsMarkup(before = null, after = null, multiplier = 1) {
       // BEGIN GENERATED REWARD AUDIO
 // Original temporary Web Audio cues, mixed through the existing SFX bus/pool.
 const REWARD_CUES = Object.freeze({
-  iceSlide: { frequencies: [320,260,210], duration:.18,gain:.025,type:"sine",cooldown:180 },
-  fuse: { frequencies: [900,1150,1300],duration:.3,gain:.06,noise:true,cooldown:250 },
-  explosion: { frequencies: [100,55,32],duration:.65,gain:.17,noise:true,cooldown:300 },
+  stunBreak: {
+    frequencies: [95, 70, 160],
+    duration: 0.28,
+    gain: 0.05,
+    noise: true,
+    cooldown: 300,
+  },
+  mudSlide: {
+    frequencies: [160, 110, 75],
+    duration: 0.24,
+    gain: 0.03,
+    noise: true,
+    cooldown: 180,
+  },
+  rockDrop: {
+    frequencies: [78, 44, 31],
+    duration: 0.35,
+    gain: 0.045,
+    noise: true,
+    cooldown: 170,
+  },
+  jesterReady: {
+    frequencies: [392, 494, 659, 784],
+    duration: 0.36,
+    gain: 0.055,
+    type: "triangle",
+    cooldown: 500,
+  },
+  jesterReveal: {
+    frequencies: [740, 554, 880],
+    duration: 0.22,
+    gain: 0.032,
+    type: "sine",
+    cooldown: 160,
+  },
+  jesterMark: {
+    frequencies: [523, 659, 784],
+    duration: 0.12,
+    gain: 0.02,
+    type: "triangle",
+    cooldown: 110,
+  },
+  iceSlide: {
+    frequencies: [320, 260, 210],
+    duration: 0.18,
+    gain: 0.025,
+    type: "sine",
+    cooldown: 180,
+  },
+  fuse: {
+    frequencies: [900, 1150, 1300],
+    duration: 0.3,
+    gain: 0.06,
+    noise: true,
+    cooldown: 250,
+  },
+  explosion: {
+    frequencies: [100, 55, 32],
+    duration: 0.65,
+    gain: 0.17,
+    noise: true,
+    cooldown: 300,
+  },
   itemFind: {
     frequencies: [660, 880, 1320],
     duration: 0.28,
@@ -25315,35 +26553,47 @@ const REWARD_CUES = Object.freeze({
 function playCriticalTheme(options, details) {
   const mark = details.find((d) => d.value > 0)?.icon;
   if (options.context === "treasure" || mark === "coin") return;
-  const cue = options.context === "well"
-        ? "criticalHeal"
-        : ["trap", "rockfall", "ruin"].includes(options.context)
-          ? "criticalTrap"
-          : {
-              heal: "criticalHeal",
-              blessing: "criticalHeal",
-              magic: "criticalMagic",
-              poison: "criticalPoison",
-              block: "criticalBlock",
-              ward: "criticalBlock",
-              trap: "criticalTrap",
-              stun: "criticalStun",
-              flame: "criticalBuff",
-              rally: "criticalBuff",
-              trick: "jesterTrick",
-              rage: "criticalBuff",
-              bloodprice: "criticalBlood",
-            }[mark] || "criticalBlade";
+  const cue =
+    options.context === "well"
+      ? "criticalHeal"
+      : ["trap", "rockfall", "ruin"].includes(options.context)
+        ? "criticalTrap"
+        : {
+            heal: "criticalHeal",
+            blessing: "criticalHeal",
+            magic: "criticalMagic",
+            poison: "criticalPoison",
+            block: "criticalBlock",
+            ward: "criticalBlock",
+            trap: "criticalTrap",
+            stun: "criticalStun",
+            flame: "criticalBuff",
+            rally: "criticalBuff",
+            trick: "jesterTrick",
+            rage: "criticalBuff",
+            bloodprice: "criticalBlood",
+          }[mark] || "criticalBlade";
   GameSound.play(cue);
 }
 const shakeMotions = new WeakMap();
 function shakeFrames(amount, style) {
   if (style === "explosion" || style === "critical") {
-    const decay = style === "explosion" ? [0,1,-.85,.7,-.52,.35,-.22,.1,0] : [0,-.9,.65,-.4,.2,0];
-    return decay.map((n,i)=>({transform:`translate(${n*amount*(i%2?.6:1)}px,${n*amount*(i%2?-1:.45)}px) rotate(${n*amount*.08}deg)`}));
+    const decay =
+      style === "explosion"
+        ? [0, 1, -0.85, 0.7, -0.52, 0.35, -0.22, 0.1, 0]
+        : [0, -0.9, 0.65, -0.4, 0.2, 0];
+    return decay.map((n, i) => ({
+      transform: `translate(${n * amount * (i % 2 ? 0.6 : 1)}px,${n * amount * (i % 2 ? -1 : 0.45)}px) rotate(${n * amount * 0.08}deg)`,
+    }));
   }
-  if (style === "fuse") return [0,-.3,.4,-.6,.8,-1,0].map(n=>({transform:`translateX(${n*amount}px) scale(${1+Math.abs(n)*.025})`}));
-  if (style === "healing") return [0,-.4,.2,0].map(n=>({transform:`translateY(${n*amount}px)`}));
+  if (style === "fuse")
+    return [0, -0.3, 0.4, -0.6, 0.8, -1, 0].map((n) => ({
+      transform: `translateX(${n * amount}px) scale(${1 + Math.abs(n) * 0.025})`,
+    }));
+  if (style === "healing")
+    return [0, -0.4, 0.2, 0].map((n) => ({
+      transform: `translateY(${n * amount}px)`,
+    }));
   const horizontal = style === "rumble",
     recoil = style === "recoil",
     vertical = style === "jolt",
@@ -25423,6 +26673,7 @@ function closeUtilityPage() {
   for (const resume of utilityWaiters.splice(0)) resume();
   fitDialogs();
   updateKeyboardBar();
+  scheduleStunRecovery();
   return true;
 }
 const portraitMotions = new WeakMap();
@@ -25488,65 +26739,63 @@ function portraitMotion(el, kind = "talk", enemy = false) {
   portraitMotions.set(art, animation);
   animation.finished.catch(() => {});
 }
+// Retained function name for callers: all finds are visible together now.
 function lootFindCarousel(entries) {
   const target = $("#artefact-loot");
   if (!target) return;
-  if (!entries.length) {
-    target.innerHTML = "";
-    return;
-  }
-  let page = 0,
-    sequence = 0;
-  const run = state;
-  target.innerHTML = `<div class="loot-carousel"><div class="loot-find-page"></div><nav aria-label="Loot finds"><button id="loot-previous">←</button><span id="loot-count"></span><button id="loot-next">→</button></nav></div>`;
-  const show = () => {
-    const find = target.querySelector(".loot-find-page");
-    find.innerHTML = entries[page];
-    requestAnimationFrame(() => fitLootFind(find));
-    $("#loot-count").textContent = `Find ${page + 1} / ${entries.length}`;
-    $("#loot-previous").disabled = page === 0;
-    $("#loot-next").disabled = page === entries.length - 1;
-    GameSound.play("itemFind");
-    animate(
-      find,
-      [
-        { opacity: 0, transform: "scale(.88) translateY(8px)" },
-        { opacity: 1, transform: "scale(1.04)" },
-        { opacity: 1, transform: "none" },
-      ],
-      { duration: 360, juice: true },
-    );
-    burst(find, "gold", 18);
-  };
-  const manuallyShow = (delta) => {
-    sequence++;
-    target.dataset.presenting = "false";
-    page += delta;
-    show();
-  };
-  $("#loot-previous").onclick = () => manuallyShow(-1);
-  $("#loot-next").onclick = () => manuallyShow(1);
-  show();
-  if (entries.length > 1) {
-    target.dataset.presenting = "true";
-    const version = sequence;
-    (async () => {
-      while (page < entries.length - 1) {
-        await feedbackPause(Math.max(240, 650 / Math.sqrt(skip ? 5 : pace())));
-        if (
-          state !== run ||
-          !target.isConnected ||
-          !$("#spotlight").contains(target) ||
-          $("#spotlight").hidden ||
-          version !== sequence
-        )
-          return;
-        page++;
-        show();
-      }
-      target.dataset.presenting = "false";
-    })();
-  }
+  target.dataset.presenting = "false";
+  target.innerHTML = `<div class="loot-find-grid" data-count="${entries.length}">${entries.map((entry) => `<div class="loot-find-tile">${entry}</div>`).join("")}</div>`;
+  target.querySelectorAll(".loot-find-tile").forEach((tile, i) => {
+    const name = tile.querySelector("b")?.textContent || "";
+    const item = Object.values(ITEM_DEFS).find((d) => name.startsWith(d.name));
+    if (item) {
+      tile.dataset.tooltip =
+        (item.equipment ? equipmentScope(item) + ". " : "") + item.description;
+      tile.tabIndex = 0;
+      const p = tile.querySelector("p");
+      if (p)
+        p.innerHTML =
+          (item.equipment
+            ? `<b class="equipment-scope">${equipmentScope(item)}</b> `
+            : "") +
+          escapeHTML(
+            item.equipment
+              ? item.brief.replace(/^[^·]+only\s*·\s*/i, "")
+              : item.brief,
+          );
+    }
+    const artefact = state.artefacts.find((a) => a.name === name);
+    if (artefact) {
+      tile.dataset.tooltip = artefactText(artefact);
+      tile.tabIndex = 0;
+      const p = tile.querySelector("p");
+      if (p)
+        p.textContent =
+          {
+            attack: `+${artefact.power} physical damage`,
+            heal: `+${artefact.power} healing`,
+            block: `+${artefact.power} block · once per roll`,
+            gold: `+${artefact.power}% loot gold`,
+            guard: `${artefact.power} opening block`,
+            revive: "Revive once · 75% HP",
+          }[artefact.key] || artefactText(artefact);
+    }
+    setTimeout(() => {
+      if (!tile.isConnected || $("#spotlight").hidden) return;
+      GameSound.play("itemFind");
+      burst(tile, "gold", 12);
+      animate(
+        tile,
+        [
+          { opacity: 0, transform: "scale(.86)" },
+          { opacity: 1, transform: "scale(1.03)" },
+          { opacity: 1, transform: "none" },
+        ],
+        { duration: 350, juice: true },
+      );
+    }, i * 180);
+  });
+  requestFitUI();
 }
 
 // Reset only this game's progress namespace; option preferences live separately.
@@ -25605,12 +26854,24 @@ function resetSaveProgress() {
 }
 
 function fitLootFind(find) {
-  const card = find.querySelector(".item-find,.artefact-card");
-  if(!card)return;
-  const text=card.querySelector("div"), para=text?.querySelector("p"), title=text?.querySelector("b");
-  if(!text||!para||!title)return;
-  title.style.fontSize="16px";para.style.fontSize="14px";
-  for(let size=14;size>=12&&(text.scrollHeight>text.clientHeight+1||text.scrollWidth>text.clientWidth+1);size-=.5){para.style.fontSize=size+"px";title.style.fontSize=(size+2)+"px";}
+  const card = find?.querySelector(".item-find,.artefact-card");
+  if (!card) return;
+  const text = card.querySelector("div"),
+    para = text?.querySelector("p"),
+    title = text?.querySelector("b");
+  if (!text || !para || !title) return;
+  title.style.fontSize = "16px";
+  para.style.fontSize = "14px";
+  for (
+    let size = 14;
+    size >= 12 &&
+    (text.scrollHeight > text.clientHeight + 1 ||
+      text.scrollWidth > text.clientWidth + 1);
+    size -= 0.5
+  ) {
+    para.style.fontSize = size + "px";
+    title.style.fontSize = size + 2 + "px";
+  }
 }
 // END GENERATED NOTEBOOK PAGES
       // BEGIN GENERATED COMBAT FEEDBACK
@@ -26193,7 +27454,7 @@ function revealCriticalPayoff(region, details, multiplier) {
         showSpotlight(
           "A healing fountain",
           "Leave it for later, or turn the little water wheel.",
-          `<div class="stage-art">${icon("well")}</div><div class="stage-result">Each living hero receives ${Math.round(fountainBaseRate() * 1000) / 10}% maximum HP<br>plus a depth-strengthened healing roll. Triple matches can crit.</div>`,
+          `<div class="stage-art">${icon("well")}</div><div class="stage-result">Each living hero receives ${Math.round(fountainBaseRate() * 100)}% maximum HP<br>plus a depth-strengthened healing roll. Triple matches can crit.</div>`,
           "well",
         );
         let choice = await eventChoice([
@@ -26215,7 +27476,7 @@ function revealCriticalPayoff(region, details, multiplier) {
         showSpotlight(
           "The water wheel turns",
           "A little mercy, rolled into the margins.",
-          `<div class="trap-art">${icon("well")}</div>${drawMachine("fountain", [faces[0], faces[1], faces[3]], { title: `${Math.round(fountainBaseRate() * 1000) / 10}% maximum HP + ${Math.round(fountainRollRate() * 100)}% healing roll` })}${criticalSpace()}<div class="stage-result" id="fountain-result">${wellResultsMarkup()}</div>`,
+          `<div class="trap-art">${icon("well")}</div>${drawMachine("fountain", [faces[0], faces[1], faces[3]], { title: `${Math.round(fountainBaseRate() * 100)}% maximum HP + ${Math.round(fountainRollRate() * 100)}% healing roll` })}${criticalSpace()}<div class="stage-result" id="fountain-result">${wellResultsMarkup()}</div>`,
           "well",
         );
         let symbols = await runMachine("fountain", [faces, faces, faces]),
@@ -26268,7 +27529,7 @@ function revealCriticalPayoff(region, details, multiplier) {
             " Fountain used · " +
             (multiplier > 1
               ? "×" + multiplier + " critical healing"
-              : "15% health + " + bonus + " rolled HP"),
+              : Math.round(fountainBaseRate() * 100) + "% health + " + bonus + " rolled HP"),
         );
         awardTraitOccurrence(
           "well",
@@ -26474,11 +27735,7 @@ function revealCriticalPayoff(region, details, multiplier) {
         }
         if (b.hasAttribute("data-gear-hero") && !busy) {
           const h = state.party[Number(b.dataset.gearHero)];
-          toast(
-            h.equipment
-              ? EQUIPMENT_DEFS[h.equipment].description
-              : "Drag matching class equipment from your satchel, or click its item card.",
-          );
+          inspectHeroEquipment(Number(b.dataset.gearHero));
         }
         if (b.id === "memorial") inspectGraveyard();
         for (let op of ["cycle", "upgrade", "weaken"])
@@ -27213,7 +28470,10 @@ function revealCriticalPayoff(region, details, multiplier) {
           fury: 0,
           selfHeal: 0,
         };
-        const chances = h.reels.map((reel) => {
+        const forecastReels = h.reels.map(reel => Object.entries(expandedReelProbabilities(reel)).map(([key,weight]) => {
+          const [type,tier]=key.split(":");return {type,tier:Number(tier),weight};
+        }));
+        const chances = forecastReels.map((reel) => {
           const total = reel.reduce((n, f) => n + (f.weight || 1), 0),
             probabilities = {};
           for (const face of reel) {
@@ -27271,7 +28531,7 @@ function revealCriticalPayoff(region, details, multiplier) {
         // Trick is burst charge, never a free turn or a boosted reroll.
         for (const key of ["damage", "heal", "selfHeal", "teamHeal", "block", "stun", "poison"])
           out[key] *= 1 + out.crit * (meanCritical(h) - 1);
-        for (const [key, n] of Object.entries(expectedComplementaryEffects(h))) out[key] += n;
+        for (const [key, n] of Object.entries(expectedComplementaryEffects({...h,reels:forecastReels}))) out[key] += n;
         if (out.damage)
           out.damage +=
             attackBonus(h) +
@@ -27312,6 +28572,7 @@ function revealCriticalPayoff(region, details, multiplier) {
         out.damage = Math.max(0, out.damage);
         out.teamHeal += equipmentBonus(h, "teamHeal");
         out.block += equipmentBonus(h, "block");
+        if (out.block) out.block += passive("block") * Math.min(1,h.reels.reduce((n,r)=>n+faceShare(r,["block"]),0));
         if (h.initiative && state.opening?.firstRoll)
           for (const key of [
             "damage",
@@ -27376,7 +28637,7 @@ function revealCriticalPayoff(region, details, multiplier) {
         );
       }
       function autoCombatScore(h) {
-        if (h.stun || !openingEligible(h)) return -1000;
+        if (h.stun || heroCannotRoll(h)) return -1000;
         const fx = expectedHeroEffects(h),
           health = autoHealth(),
           foes = livingEnemies();
@@ -27963,6 +29224,7 @@ function revealCriticalPayoff(region, details, multiplier) {
               "travel-reward",
               "shop-bag-warning",
               "recruit-gift",
+              "personal-moment",
             ].includes(kind)
           )
             button = $("#stage-confirm");
@@ -28078,11 +29340,11 @@ function revealCriticalPayoff(region, details, multiplier) {
         return fx.damage + fx.poison * 2 + fx.stun * 0.3;
       }
       function autoChooseActor(living) {
-        const ready = living.filter(({ h }) => !h.stun),
+        const ready = living.filter(({ h }) => !h.stun && !heroCannotRoll(h) && openingEligible(h)),
           offence = living
             .filter(({ h }) => autoOffenceScore(h) > 0)
             .sort((a, b) => autoOffenceScore(b.h) - autoOffenceScore(a.h)),
-          attackers = offence.filter(({ h }) => !h.stun),
+          attackers = offence.filter(({ h }) => !h.stun && !heroCannotRoll(h) && openingEligible(h)),
           progress = state.autoCombat || { supportSpins: 0, staleSpins: 0 },
           emergency = autoHealth().weakest.h.hp / autoHealth().weakest.h.maxHp < 0.2;
         if (
@@ -28090,13 +29352,14 @@ function revealCriticalPayoff(region, details, multiplier) {
           !livingEnemies().some((e) => e.poison?.turns)
         )
           return null;
+        // Support rolls recover a stunned attacker. Breaking a support loop
+        // must not bypass the same availability rules as a manual click.
         if (
-          offence.length &&
+          offence.length && attackers.length &&
           (progress.supportSpins >= (emergency ? 3 : 2) || progress.staleSpins >= 5)
-        )
-          // If every attacker is stunned, spend their missed action to recover.
-          return attackers[0] || offence[0];
-        const pool = ready.length ? ready : living;
+        ) return attackers[0];
+        const pool = ready.length ? ready : living.filter(({h}) => !heroCannotRoll(h) && openingEligible(h));
+        if (!pool.length) return null;
         const alternates = pool.filter(({h})=>h.job!=="ranger"&&autoOffenceScore(h)>1);
         const candidates = !emergency && alternates.length ? pool.filter(({h})=>
           h.job!=="ranger" || (h.charge||0)>=RANGER_AIM_CAP*2/3 ||
@@ -28125,7 +29388,7 @@ function revealCriticalPayoff(region, details, multiplier) {
         if (!state?.autoresolve || state.over) return;
         if (!$("#spotlight").hidden) {
           if (
-            ["enemy-intro", "bomb-roll"].includes($("#spotlight").dataset.kind) ||
+            ["enemy-intro", "bomb-roll", "personal-moment"].includes($("#spotlight").dataset.kind) ||
             document.body.dataset.scene === "enemy-intro"
           ) {
             const confirm = $("#stage-confirm:not(:disabled)");
@@ -28466,6 +29729,12 @@ function revealCriticalPayoff(region, details, multiplier) {
         openBook(false);
       }
 
+      let shadowTickAt = performance.now();
+      setInterval(() => {
+        const now = performance.now(), elapsed = (now-shadowTickAt)/1000;
+        shadowTickAt=now;
+        if(state)advanceShadowTime(elapsed);
+      }, 500);
       if (!load()) {
         newRun();
         openBook(true);

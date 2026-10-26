@@ -333,7 +333,7 @@ test("named biome generation preserves directed ice/tunnel routes to distant sta
   });
   assert.equal(r.bad, 0);
   assert.ok(r.deep > r.early);
-  assert.equal(r.kinds.length, 6);
+  assert.equal(r.kinds.length, 8);
 });
 
 test("long ice routes take the forced landing into account and stop before ice when a turn is impossible", async (t) => {
@@ -475,7 +475,7 @@ test("each biome has depth-specific creatures with pencil art, lore and distinct
     };
   });
   assert.equal(r.calls, 0);
-  assert.equal(r.art.length, 9);
+  assert.equal(r.art.length, 11);
   for (const x of r.art) {
     assert.match(x.svg, new RegExp("species-" + x.k));
     assert.ok(x.lore[1]);
@@ -671,7 +671,7 @@ test("tile captions use hyphens and activated, and biome identity survives a run
   assert.equal(r.loaded, true);
   assert.equal(r.theme, "fungal");
   assert.equal(r.name, "The violet grotto");
-  assert.equal(r.version, 21);
+  assert.equal(r.version, 22);
 });
 
 test("actual Rogue damage and healing rolls use readable shared base tiers without hidden multipliers", async (t) => {
@@ -734,7 +734,7 @@ test("every supply pickup keeps its full name, class scope and description insid
           `<div class="item-find">${icon(d.icon)}<div><b>${d.name} ×12</b><p>${d.equipment ? `<b class="equipment-scope">${equipmentScope(d)}</b><br>` : ""}${d.description}</p></div></div>`,
         ]);
         fitDialogs();
-        fitLootFind(document.querySelector(".loot-find-page"));
+        fitLootFind(document.querySelector(".loot-find-tile"));
         const card = document
             .querySelector(".item-find")
             .getBoundingClientRect(),
@@ -829,5 +829,5 @@ test("version-20 migration buffs living Tanks without reviving corpses or changi
   assert.equal(r.a.points, 39); // 12 points refunded for retired weight III.
   assert.deepEqual(r.a.face, { type: "block", tier: 4, weight: 1 });
   assert.equal(r.dead, 0);
-  assert.equal(r.version, 21);
+  assert.equal(r.version, 22);
 });

@@ -220,7 +220,7 @@ test("class and temperament choose different legal starting palettes while rank 
         different: JSON.stringify(a.reels) !== JSON.stringify(b.reels),
         legal: [...a.reels, ...b.reels].every((r) =>
           r.every(
-            (f) => f.type === "class" || editableTypes(a).includes(f.type),
+            (f) => ["class", "mystery"].includes(f.type) || editableTypes(a).includes(f.type),
           ),
         ),
         base: temperamentEffects(
@@ -917,16 +917,13 @@ test("non-gold critical themes remain, coin pours are quiet and item finds keep 
       '<div class="incoming-item">' + icon("potion") + "<b>Tonic</b></div>",
     ]);
   });
-  await p.waitForFunction(
-    () =>
-      document.querySelector("#artefact-loot").dataset.presenting === "false",
-  );
+  await p.waitForFunction(() => window.findSounds.filter(x=>x === "itemFind").length === 2);
   const sequence = await p.evaluate(() => ({
     sounds: window.findSounds.filter((x) => x === "itemFind").length,
-    count: document.querySelector("#loot-count").textContent,
+    count: document.querySelectorAll(".loot-find-tile").length,
   }));
   assert.equal(sequence.sounds, 2);
-  assert.match(sequence.count, /2 \/ 2/);
+  assert.equal(sequence.count, 2);
 });
 
 test("fountain artwork, reels, critical heading and all recipient rows stay fixed before and after its roll", async (t) => {

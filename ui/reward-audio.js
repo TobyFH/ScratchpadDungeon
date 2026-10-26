@@ -1,8 +1,68 @@
 // Original temporary Web Audio cues, mixed through the existing SFX bus/pool.
 const REWARD_CUES = Object.freeze({
-  iceSlide: { frequencies: [320,260,210], duration:.18,gain:.025,type:"sine",cooldown:180 },
-  fuse: { frequencies: [900,1150,1300],duration:.3,gain:.06,noise:true,cooldown:250 },
-  explosion: { frequencies: [100,55,32],duration:.65,gain:.17,noise:true,cooldown:300 },
+  stunBreak: {
+    frequencies: [95, 70, 160],
+    duration: 0.28,
+    gain: 0.05,
+    noise: true,
+    cooldown: 300,
+  },
+  mudSlide: {
+    frequencies: [160, 110, 75],
+    duration: 0.24,
+    gain: 0.03,
+    noise: true,
+    cooldown: 180,
+  },
+  rockDrop: {
+    frequencies: [78, 44, 31],
+    duration: 0.35,
+    gain: 0.045,
+    noise: true,
+    cooldown: 170,
+  },
+  jesterReady: {
+    frequencies: [392, 494, 659, 784],
+    duration: 0.36,
+    gain: 0.055,
+    type: "triangle",
+    cooldown: 500,
+  },
+  jesterReveal: {
+    frequencies: [740, 554, 880],
+    duration: 0.22,
+    gain: 0.032,
+    type: "sine",
+    cooldown: 160,
+  },
+  jesterMark: {
+    frequencies: [523, 659, 784],
+    duration: 0.12,
+    gain: 0.02,
+    type: "triangle",
+    cooldown: 110,
+  },
+  iceSlide: {
+    frequencies: [320, 260, 210],
+    duration: 0.18,
+    gain: 0.025,
+    type: "sine",
+    cooldown: 180,
+  },
+  fuse: {
+    frequencies: [900, 1150, 1300],
+    duration: 0.3,
+    gain: 0.06,
+    noise: true,
+    cooldown: 250,
+  },
+  explosion: {
+    frequencies: [100, 55, 32],
+    duration: 0.65,
+    gain: 0.17,
+    noise: true,
+    cooldown: 300,
+  },
   itemFind: {
     frequencies: [660, 880, 1320],
     duration: 0.28,
@@ -91,35 +151,47 @@ const REWARD_CUES = Object.freeze({
 function playCriticalTheme(options, details) {
   const mark = details.find((d) => d.value > 0)?.icon;
   if (options.context === "treasure" || mark === "coin") return;
-  const cue = options.context === "well"
-        ? "criticalHeal"
-        : ["trap", "rockfall", "ruin"].includes(options.context)
-          ? "criticalTrap"
-          : {
-              heal: "criticalHeal",
-              blessing: "criticalHeal",
-              magic: "criticalMagic",
-              poison: "criticalPoison",
-              block: "criticalBlock",
-              ward: "criticalBlock",
-              trap: "criticalTrap",
-              stun: "criticalStun",
-              flame: "criticalBuff",
-              rally: "criticalBuff",
-              trick: "jesterTrick",
-              rage: "criticalBuff",
-              bloodprice: "criticalBlood",
-            }[mark] || "criticalBlade";
+  const cue =
+    options.context === "well"
+      ? "criticalHeal"
+      : ["trap", "rockfall", "ruin"].includes(options.context)
+        ? "criticalTrap"
+        : {
+            heal: "criticalHeal",
+            blessing: "criticalHeal",
+            magic: "criticalMagic",
+            poison: "criticalPoison",
+            block: "criticalBlock",
+            ward: "criticalBlock",
+            trap: "criticalTrap",
+            stun: "criticalStun",
+            flame: "criticalBuff",
+            rally: "criticalBuff",
+            trick: "jesterTrick",
+            rage: "criticalBuff",
+            bloodprice: "criticalBlood",
+          }[mark] || "criticalBlade";
   GameSound.play(cue);
 }
 const shakeMotions = new WeakMap();
 function shakeFrames(amount, style) {
   if (style === "explosion" || style === "critical") {
-    const decay = style === "explosion" ? [0,1,-.85,.7,-.52,.35,-.22,.1,0] : [0,-.9,.65,-.4,.2,0];
-    return decay.map((n,i)=>({transform:`translate(${n*amount*(i%2?.6:1)}px,${n*amount*(i%2?-1:.45)}px) rotate(${n*amount*.08}deg)`}));
+    const decay =
+      style === "explosion"
+        ? [0, 1, -0.85, 0.7, -0.52, 0.35, -0.22, 0.1, 0]
+        : [0, -0.9, 0.65, -0.4, 0.2, 0];
+    return decay.map((n, i) => ({
+      transform: `translate(${n * amount * (i % 2 ? 0.6 : 1)}px,${n * amount * (i % 2 ? -1 : 0.45)}px) rotate(${n * amount * 0.08}deg)`,
+    }));
   }
-  if (style === "fuse") return [0,-.3,.4,-.6,.8,-1,0].map(n=>({transform:`translateX(${n*amount}px) scale(${1+Math.abs(n)*.025})`}));
-  if (style === "healing") return [0,-.4,.2,0].map(n=>({transform:`translateY(${n*amount}px)`}));
+  if (style === "fuse")
+    return [0, -0.3, 0.4, -0.6, 0.8, -1, 0].map((n) => ({
+      transform: `translateX(${n * amount}px) scale(${1 + Math.abs(n) * 0.025})`,
+    }));
+  if (style === "healing")
+    return [0, -0.4, 0.2, 0].map((n) => ({
+      transform: `translateY(${n * amount}px)`,
+    }));
   const horizontal = style === "rumble",
     recoil = style === "recoil",
     vertical = style === "jolt",

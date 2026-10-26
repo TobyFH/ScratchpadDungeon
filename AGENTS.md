@@ -94,3 +94,15 @@ shared Fury spending. Stun wards last two own completed actions on both sides;
 never extend stun by repeated application. Jester bursts draw six ordinary
 marks from real reels, never crit, reroll, refill anticipation or duplicate
 once-per-roll equipment procs. Preserve equal-face saves and idempotent refunds.
+
+Read `docs/CLARITY_UPDATE.md` for version-22 availability, permanent Jester
+mysteries, fixed all-find loot and living terrain. `game/combat-clarity.js` owns
+shared hero locks/recovery, flat Pennant and grouped real-action logs;
+`game/living-dungeon.js` owns safe mud/rockfall mutation and biome-only shadow
+cover/ceiling counters. A solo/all-stunned missed turn now advances enemy clocks.
+Mysteries are immutable one per Jester reel; exact probabilities, AI and actual
+rolls must share their unrestricted type/rank distribution. Mud placement must
+prove every ordinary tile can reach stairs with all mud closed, and route state
+must not reuse consumed mud. Ordinary ambushes remain command-aged; only Shadow
+biome cover has a paused active-exploration clock. Run the focused clarity and
+ice/crystal tests plus both visual reviews after changing these systems.

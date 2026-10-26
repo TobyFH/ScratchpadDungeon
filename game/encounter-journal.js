@@ -2,6 +2,10 @@
 // expose names, stats or silhouettes. A record stores real observed encounter stats.
 const BESTIARY_KEY = "scratchpad-dungeon-bestiary-v1";
 const SPECIES_LORE = {
+  jester: [
+    "Hostile jester",
+    "A joke takes a sharp turn. Its mystery marks can become almost any power.",
+  ],
   rat: [
     "Ink rat",
     "Cellar scavengers lick spilled ink from discarded pages. Their teeth carry more than a stain.",
@@ -126,7 +130,8 @@ ENEMY_PROFILES.smudger = {
     ["miss", 1],
   ],
 };
-for(const [id,def]of Object.entries(BIOME_ENEMIES)) SPECIES_LORE[id]=[def.name,def.lore];
+for (const [id, def] of Object.entries(BIOME_ENEMIES))
+  SPECIES_LORE[id] = [def.name, def.lore];
 const BESTIARY_ENTRIES = Object.entries(SPECIES_LORE).map(
   ([art, [name, lore]]) => ({ id: art, art, name, lore }),
 );

@@ -223,14 +223,15 @@ function autoBuildUtility(h) {
   // Recovery is valuable, especially with camp lessons, but physical classes
   // must not turn into mostly-heal wheels. Keep a few emergency marks; let
   // the Mage and genuine damage dealers complement each other.
-  const healCap = {
-    rogue: 0.18,
-    ranger: 0.22,
-    fighter: 0.24,
-    berserker: 0.36,
-    mage: 0.42,
-    jester: 0.25,
-  }[h.job] || 0.25;
+  const healCap =
+    {
+      rogue: 0.18,
+      ranger: 0.22,
+      fighter: 0.24,
+      berserker: 0.36,
+      mage: 0.42,
+      jester: 0.25,
+    }[h.job] || 0.25;
   utility -= Math.max(0, faceShare(h.reels.flat(), ["heal"]) - healCap) * 80;
   // Poison and stun are valuable tools, but their ticks/recovery saturate.
   // Avoid a cheap utility mark crowding every physical or spell combo off a build.
@@ -247,7 +248,15 @@ function faceShare(reel, types) {
   const weight = reel.reduce((n, f) => n + (f.weight || 1), 0);
   return weight
     ? reel.reduce(
-        (n, f) => n + (types.includes(f.type) ? f.weight || 1 : 0),
+        (n, f) =>
+          n +
+          (types.includes(f.type)
+            ? f.weight || 1
+            : f.type === "mystery"
+              ? ((f.weight || 1) *
+                  MYSTERY_TYPES.filter((t) => types.includes(t)).length) /
+                MYSTERY_TYPES.length
+              : 0),
         0,
       ) / weight
     : 0;
@@ -313,7 +322,8 @@ function repairSoloBuild(h) {
   for (let r = 0; r < 3 && soloOffence(h) < 2; r++) {
     let j = h.reels[r].findIndex(
       (f) =>
-        f.type !== "class" && !["attack", "magic", "poison"].includes(f.type),
+        !["class", "mystery"].includes(f.type) &&
+        !["attack", "magic", "poison"].includes(f.type),
     );
     if (j < 0) continue;
     const type = h.job === "mage" ? "magic" : "attack";
@@ -323,7 +333,7 @@ function repairSoloBuild(h) {
         .flatMap((reel, k) => reel.map((face, n) => ({ face, k, n })))
         .filter(
           ({ face }) =>
-            face.type !== "class" &&
+            !["class", "mystery"].includes(face.type) &&
             face.tier > 1 &&
             !["attack", "magic", "poison"].includes(face.type),
         )
@@ -354,7 +364,10 @@ function partyDamagePartners(h) {
 function paidIdentitySwap(h, type) {
   const candidates = h.reels
     .flatMap((reel, r) => reel.map((face, j) => ({ face, r, j })))
-    .filter(({ face }) => face.type !== "class" && face.type !== type)
+    .filter(
+      ({ face }) =>
+        !["class", "mystery"].includes(face.type) && face.type !== type,
+    )
     .sort(
       (a, b) =>
         (a.face.type === "blank"

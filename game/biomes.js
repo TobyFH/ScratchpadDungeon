@@ -1,6 +1,24 @@
 // Biome data is stored on the first map cell, so ordinary JSON save/HTML exports
 // retain it. Presentation never rolls a theme or consumes world RNG.
 const BIOMES = Object.freeze({
+  shadow: {
+    name: "Shadow galleries",
+    tint: "#726682",
+    minDepth: 4,
+    names: ["The unlit margins", "The veiled corridors", "The charcoal hollow"],
+    note: "Pencil-dark mist creeps back over old footsteps.",
+  },
+  unstable: {
+    name: "Shaky caverns",
+    tint: "#a08a67",
+    minDepth: 2,
+    names: [
+      "The trembling galleries",
+      "The hollow ceiling",
+      "The shifting undercroft",
+    ],
+    note: "Loose stone ticks and settles above the torch.",
+  },
   crystal: {
     name: "Crystal caves",
     tint: "#7395b6",
@@ -129,12 +147,14 @@ function assignFloorBiome(map, depth, { force = null } = {}) {
       map[i].wall = true;
       map[i].terrain = kind === "crystal" ? "crystal" : "lava";
       if (mapDistances(map).size < before - 1) {
-        map[i].wall = false; map[i].terrain = "floor"; return false;
+        map[i].wall = false;
+        map[i].terrain = "floor";
+        return false;
       }
       return true;
     };
     for (const i of free) if (Math.random() < 0.07) placeBarrier(i);
-    if (kind === "crystal" && !map.some(c => c.terrain === "crystal"))
+    if (kind === "crystal" && !map.some((c) => c.terrain === "crystal"))
       free.some(placeBarrier);
   }
 }
@@ -164,6 +184,8 @@ function updateBiomePresentation() {
       fungal: ["mushroom", "Mushrooms"],
       ice: ["ice", "Ice"],
       crystal: ["crystal", "Crystal · aura"],
+      shadow: ["shadow", "Returning shadows"],
+      unstable: ["stalactite", "Falling stone"],
     }[theme];
   if (key) {
     key.hidden = !terrain;
@@ -177,7 +199,7 @@ function glideCells(map, from, entry, { knownOnly = false } = {}) {
     dx = (entry % W) - (from % W),
     dy = Math.floor(entry / W) - Math.floor(from / W);
   let n = entry;
-  while (map[n].terrain === "ice") {
+  while (["ice", "mudslide"].includes(map[n].terrain)) {
     const x = (n % W) + dx,
       y = Math.floor(n / W) + dy;
     if (x < 0 || x >= W || y < 0 || y >= H) break;
@@ -196,19 +218,28 @@ function movementRoute(
   { omniscient = false, ignoreIce = false, directIce = true } = {},
 ) {
   if (!Number.isInteger(goal) || !map[goal]) return null;
-  const cost = new Map([[start, 0]]),
+  const mud = map
+    .map((c, i) => (c.terrain === "mudslide" ? i : -1))
+    .filter((i) => i >= 0);
+  const bit = new Map(mud.map((i, k) => [i, 2 ** k]));
+  const encode = (i, mask) => i + mask * map.length;
+  const startKey = encode(start, 0),
+    cost = new Map([[startKey, 0]]),
     came = new Map(),
-    queue = [start],
+    queue = [startKey],
     closed = new Set();
+  const blocked = (i, mask) => map[i].wall || !!(mask & (bit.get(i) || 0));
   while (queue.length) {
     queue.sort((a, b) => cost.get(a) - cost.get(b));
-    const n = queue.shift();
-    if (closed.has(n)) continue;
-    closed.add(n);
+    const key = queue.shift();
+    if (closed.has(key)) continue;
+    closed.add(key);
+    const n = key % map.length,
+      mask = Math.floor(key / map.length);
     if (n === goal) {
       const path = [];
-      let cursor = n;
-      while (cursor !== start) {
+      let cursor = key;
+      while (cursor !== startKey) {
         const edge = came.get(cursor);
         if (!edge) return null;
         path.unshift(...edge.cells);
@@ -220,46 +251,52 @@ function movementRoute(
       const portal = !neighbors(n).includes(j),
         c = map[j];
       if (portal && !omniscient && (!map[n].seen || !c.seen)) continue;
-      if (c.wall && (omniscient || c.seen)) continue;
+      if (blocked(j, mask) && (omniscient || c.seen)) continue;
       if (!omniscient && !c.seen && j !== goal) continue;
       let cells =
-        !portal && !ignoreIce && (c.seen || omniscient) && c.terrain === "ice"
+        !portal &&
+        !ignoreIce &&
+        (c.seen || omniscient) &&
+        ["ice", "mudslide"].includes(c.terrain)
           ? glideCells(map, n, j, { knownOnly: !omniscient })
           : [j];
-      // Selecting the ice itself is an exploratory action, not a promise
-      // that its covered landing is already a known route.
       if (
         !omniscient &&
         directIce &&
         j === goal &&
-        c.terrain === "ice" &&
-        cells?.some((i) => !map[i].seen)
+        ["ice", "mudslide"].includes(c.terrain) &&
+        cells.some((i) => !map[i].seen)
       )
         cells = [j];
-      if (!cells) {
-        if (directIce && n === start && j === goal) cells = [j];
-        else continue;
-      }
       if (!omniscient && cells.some((i) => !map[i].seen && i !== goal))
         continue;
-      const end = cells.at(-1),
-        danger = !omniscient
-          ? cells.filter(
-              (i) =>
-                i !== goal &&
-                ["enemy", "guardian", "stronghold", "trap"].includes(
-                  map[i].event,
-                ),
-            ).length * 1000
-          : 0;
-      const next = cost.get(n) + cells.length + danger;
-      if (directIce && n === start && j === goal && end !== goal) {
-        return cells;
+      let nextMask = mask,
+        valid = true;
+      for (const i of cells) {
+        if (blocked(i, nextMask) && (omniscient || map[i].seen)) {
+          valid = false;
+          break;
+        }
+        if (bit.has(i)) nextMask |= bit.get(i);
       }
-      if (next < (cost.get(end) ?? Infinity)) {
-        cost.set(end, next);
-        came.set(end, { from: n, cells });
-        queue.push(end);
+      if (!valid) continue;
+      const end = cells.at(-1),
+        nextKey = encode(end, nextMask);
+      const danger = !omniscient
+        ? cells.filter(
+            (i) =>
+              i !== goal &&
+              ["enemy", "guardian", "stronghold", "trap"].includes(
+                map[i].event,
+              ),
+          ).length * 1000
+        : 0;
+      const next = cost.get(key) + cells.length + danger;
+      if (directIce && n === start && j === goal && end !== goal) return cells;
+      if (next < (cost.get(nextKey) ?? Infinity)) {
+        cost.set(nextKey, next);
+        came.set(nextKey, { from: key, cells });
+        queue.push(nextKey);
       }
     }
   }
@@ -274,7 +311,8 @@ function movementPlan(goal) {
   });
   if (!relaxed) return null;
   const ice = relaxed.findIndex(
-    (i) => state.map[i].seen && state.map[i].terrain === "ice",
+    (i) =>
+      state.map[i].seen && ["ice", "mudslide"].includes(state.map[i].terrain),
   );
   if (ice < 0) return null;
   const prefix = relaxed.slice(0, ice);
@@ -321,6 +359,8 @@ function biomeStep(i) {
   if (c.terrain === "mushroom") revealMushrooms(i);
 }
 function biomeCoverArt(c) {
+  if (["mudslide", "mudwall", "stalactite"].includes(c.terrain))
+    return icon(c.terrain);
   return c.terrain === "ice"
     ? icon("ice")
     : c.terrain === "mushroom"
@@ -342,7 +382,7 @@ function allTilesCanReachStairs(map) {
       if (map[entry].wall) continue;
       const portal = !neighbors(from).includes(entry);
       const end =
-        !portal && map[entry].terrain === "ice"
+        !portal && ["ice", "mudslide"].includes(map[entry].terrain)
           ? glideCells(map, from, entry).at(-1)
           : entry;
       reverse[end].push(from);

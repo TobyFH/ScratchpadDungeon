@@ -95,6 +95,7 @@ const FACE_LABELS = Object.freeze({
   trick: "Trick",
   selfharm: "Blood Price",
   blank: "Empty",
+  mystery: "Mystery ?",
 });
 const primaryFace = (h) =>
   h.job === "mage"
@@ -115,6 +116,7 @@ function editableTypes(h) {
 function faceDescription(face, h) {
   const tier = face.tier || 1;
   if (face.type === "class") return classAbilityDescription(h);
+  if (face.type === "mystery") return mysteryDescription(h);
   if (h && battleEnemies().includes(h)) {
     if (["attack", "magic"].includes(face.type))
       return `Contributes ${ATTACK_POWER[tier]} ${face.type === "attack" ? "physical" : "spell"} power to one combined enemy hit. Strength ${h.damage}; stronger marks raise that hit before criticals and buffs.`;
@@ -132,7 +134,7 @@ function faceDescription(face, h) {
       stun: `Apply ${tier} stun power. Stops at most one action, then grants two own actions of protection. Higher power strips more block; it never extends the stun.`,
       poison: `Apply ${tier} poison power. Lasts up to 3 turns; repeated doses increase tick damage instead of adding a long duration.`,
       stimulant: `Give yourself ${tier} stimulant power. Lasts up to 3 of your actions; potency caps at 6.`,
-      rally: `Give ${tier} stimulant power to the ally who has rolled most this fight. If alone, give it to yourself. Lasts up to 3 of their actions; potency caps at 6.`,
+      rally: `Give ${tier} stimulant power to the selected healing target. Lasts up to 3 of their actions; potency caps at 6.`,
       trick: `Build ${tier} anticipation. At 6, fire six random ordinary marks from your reels. Burst marks cannot charge anticipation or roll criticals.`,
       selfharm: `Pay up to ${2 * tier} HP, staying above 0. Each HP paid adds ${2 + 0.5 * tier} Fury; all healing spends Fury.`,
       blank: "No effect. Inscribe a useful mark here with personal points.",
@@ -145,7 +147,7 @@ function classFacePrice(h, type, base) {
     : undefined;
 }
 function faceUpgradeCost(face, h = null) {
-  if (!face || face.type === "class") return undefined;
+  if (!face || ["class", "mystery"].includes(face.type)) return undefined;
   return face.type === "blank"
     ? classFacePrice(h, primaryFace(h || {}), 3)
     : face.tier < maxFaceTier(face.type)
@@ -153,7 +155,12 @@ function faceUpgradeCost(face, h = null) {
       : undefined;
 }
 function faceRefund(h, face) {
-  if (!face || face.type === "class" || face.type === "blank" || face.tier <= 1)
+  if (
+    !face ||
+    ["class", "mystery"].includes(face.type) ||
+    face.type === "blank" ||
+    face.tier <= 1
+  )
     return 0;
   const paid =
     face.investments?.[face.tier] ||
@@ -182,11 +189,11 @@ function reelProbabilities(reel) {
   return result;
 }
 function heroCriticalOdds(h) {
-  const [a, b, c] = h.reels.map(reelProbabilities),
+  const [a, b, c] = h.reels.map((reel) => expandedReelProbabilities(reel)),
     rows = [];
   for (const [key, p] of Object.entries(a)) {
     const [type, rank] = key.split(":");
-    if (["blank", "miss", "class"].includes(type)) continue;
+    if (["blank", "miss", "class", "mystery"].includes(type)) continue;
     const chance = p * (c[key] || 0) * ((b[key] || 0) + (b["class:1"] || 0));
     if (chance > 0) rows.push({ type, tier: Number(rank), chance });
   }
@@ -201,7 +208,7 @@ function faceEditCost(h, reel, index, operation, destination = null) {
   const face = h?.reels[reel]?.[index];
   if (!face) return undefined;
   if (operation === "weight") return undefined;
-  if (face.type === "class") return undefined;
+  if (["class", "mystery"].includes(face.type)) return undefined;
   if (operation === "upgrade") return faceUpgradeCost(face, h);
   if (operation === "weaken")
     return faceRefund(h, face) ? -faceRefund(h, face) : undefined;
@@ -219,7 +226,7 @@ function applyFaceEdit(h, reel, index, operation, destination = null) {
     cost = faceEditCost(h, reel, index, operation, destination);
   if (
     !face ||
-    face.type === "class" ||
+    ["class", "mystery"].includes(face.type) ||
     !Number.isFinite(cost) ||
     !Number.isFinite(h.points) ||
     h.points < Math.max(0, cost)
@@ -263,7 +270,7 @@ function editor(i) {
   const k = editorSelection.reel,
     j = Math.min(editorSelection.face, h.reels[k].length - 1),
     face = h.reels[k][j],
-    locked = face.type === "class";
+    locked = ["class", "mystery"].includes(face.type);
   if (
     !["power", "replace"].includes(editorOperation) ||
     (locked && editorOperation === "replace")
@@ -274,18 +281,18 @@ function editor(i) {
     data = `${i},${k},${j}`;
   openModal(
     `${h.name}’s reel workshop`,
-    `<div class="workshop-summary"><strong>${h.points} personal points</strong>${heroBuildMarkup(h)}</div>
+    `<div class="workshop-summary"><strong data-tooltip="${escapeHTML(classAffinityHint(h))}">${h.points} personal points</strong>${heroBuildMarkup(h)}</div>
     <p class="workshop-ability">Middle class mark: <b>${classAbilityName(h)}</b> · ${workshopAbilitySummary(h)}</p>
-    <nav class="workshop-nav" aria-label="Workshop pages"><button data-workshop-view="edit" aria-pressed="${editorView === "edit"}">Edit reels</button><button data-workshop-view="crits" aria-pressed="${editorView === "crits"}">Critical odds · ${(heroCriticalOdds(h).reduce((n, r) => n + r.chance, 0) * 100).toFixed(1)}%</button></nav><div class="workshop-pages"><div class="workshop-editpage workshop-page" ${editorView === "edit" ? "" : "hidden inert"}>
+    <nav class="workshop-nav" aria-label="Workshop pages"><button data-workshop-view="edit" aria-pressed="${editorView === "edit"}">Edit reels</button><button data-workshop-view="crits" aria-pressed="${editorView === "crits"}">Critical odds · ${(heroCriticalOdds(h).reduce((n, r) => n + r.chance, 0) * 100).toFixed(1)}%</button><button data-workshop-view="prices" aria-pressed="${editorView === "prices"}">Class prices</button></nav><div class="workshop-pages"><div class="workshop-editpage workshop-page" ${editorView === "edit" ? "" : "hidden inert"}>
     <div class="workshop-step-label"><b>1. Choose a reel</b><span>Each reel rolls one mark. Each face has an equal chance.</span></div>
     <div class="workshop-tabs" role="tablist" aria-label="Choose reel">${h.reels.map((_, r) => `<button role="tab" aria-selected="${r === k}" data-editor-reel="${r}">Reel ${r + 1}${r === 1 ? " · permanent class mark" : ""}</button>`).join("")}</div>
-    <div class="reel-workshop"><div class="workshop-mark-list"><b class="workshop-step-label">2. Choose a mark to edit</b><label class="workshop-face-picker">Mark<select id="workshop-face-picker">${h.reels[k].map((f, n) => `<option value="${n}" ${n === j ? "selected" : ""}>${f.type === "class" ? classAbilityName(h) : FACE_LABELS[f.type] + (f.type !== "blank" ? " " + tierName(f.tier) : "")} · ${((100 * (f.weight || 1)) / h.reels[k].reduce((sum, x) => sum + (x.weight || 1), 0)).toFixed(1)}%</option>`).join("")}</select></label><div class="workshop-faces" role="group" aria-label="Faces on reel ${k + 1}">${h.reels[k].map((f, n) => `<button data-editor-face="${n}" aria-pressed="${n === j}" title="${escapeHTML(faceDescription(f, h))}">${symbolMarkup(f)}<span>${f.type === "class" ? classAbilityName(h) : FACE_LABELS[f.type]}${!["class", "blank"].includes(f.type) ? " " + tierName(f.tier) : ""}</span><small>${((100 * (f.weight || 1)) / h.reels[k].reduce((sum, x) => sum + (x.weight || 1), 0)).toFixed(1)}% chance</small></button>`).join("")}</div></div>
-    <section class="workshop-detail" aria-label="Selected face" data-operation="${editorOperation}"><b class="workshop-step-label">3. Change this mark</b><div class="workshop-selected"><div class="workshop-preview">${symbolMarkup(face)}</div><h3>${locked ? classAbilityName(h) : FACE_LABELS[face.type] + (face.type !== "blank" ? " " + tierName(face.tier) : "")}</h3></div><p class="face-effect"><b>When it lands:</b> ${faceDescription(face, h)}</p>
+    <div class="reel-workshop"><div class="workshop-mark-list"><b class="workshop-step-label">2. Choose a mark to edit</b><label class="workshop-face-picker">Mark<select id="workshop-face-picker">${h.reels[k].map((f, n) => `<option value="${n}" ${n === j ? "selected" : ""}>${f.type === "class" ? classAbilityName(h) : FACE_LABELS[f.type] + (!["blank", "mystery"].includes(f.type) ? " " + tierName(f.tier) : "")} · ${((100 * (f.weight || 1)) / h.reels[k].reduce((sum, x) => sum + (x.weight || 1), 0)).toFixed(1)}%</option>`).join("")}</select></label><div class="workshop-faces" style="--face-rows:${h.reels[k].length}" role="group" aria-label="Faces on reel ${k + 1}">${h.reels[k].map((f, n) => `<button data-editor-face="${n}" aria-pressed="${n === j}" title="${escapeHTML(faceDescription(f, h))}">${symbolMarkup(f)}<span>${f.type === "class" ? classAbilityName(h) : FACE_LABELS[f.type]}${!["class", "blank", "mystery"].includes(f.type) ? " " + tierName(f.tier) : ""}</span><small>${((100 * (f.weight || 1)) / h.reels[k].reduce((sum, x) => sum + (x.weight || 1), 0)).toFixed(1)}% chance</small></button>`).join("")}</div></div>
+    <section class="workshop-detail" aria-label="Selected face" data-operation="${editorOperation}"><b class="workshop-step-label">3. Change this mark</b><div class="workshop-selected"><div class="workshop-preview">${symbolMarkup(face)}</div><h3>${locked ? (face.type === "mystery" ? "Mystery mark ?" : classAbilityName(h)) : FACE_LABELS[face.type] + (face.type !== "blank" ? " " + tierName(face.tier) : "")}</h3></div><p class="face-effect"><b>When it lands:</b> ${faceDescription(face, h)}</p>
     <nav class="face-operation-tabs" aria-label="Choose edit operation">${["power", "replace"].map((mode) => `<button data-editor-operation="${mode}" ${locked && mode === "replace" ? "disabled" : ""} aria-pressed="${mode === editorOperation}">${{ power: "Power ↑ ↓", replace: "Replace" }[mode]}</button>`).join("")}</nav>
     ${
       locked
-        ? `<div class="workshop-actions power-panel" data-class-seal="true"><button disabled>Permanent mark<small>Grows with your class</small></button><button disabled>Cannot remove<small>Unique middle-reel ability</small></button></div>`
-        : `<div class="workshop-actions power-panel"><button class="primary" data-upgrade="${data}" ${!upgrade || h.points < upgrade ? "disabled" : ""}>${face.type === "blank" ? "Inscribe a mark" : "Upgrade ↑"}<small>${upgrade ? `${face.type === "blank" ? FACE_LABELS[primaryFace(h)] + " I" : "Rank " + tierName(face.tier) + " → " + tierName(face.tier + 1)} · spend ${upgrade} pts` : "Already at maximum rank"}</small></button><button data-weaken="${data}" ${!refund ? "disabled" : ""}>Downgrade ↓<small>${refund ? `Rank ${tierName(face.tier)} → ${tierName(face.tier - 1)} · get ${refund} pts back` : "Already at lowest rank"}</small></button></div><div class="replace-panel"><label class="swap-choice"><b>Or replace this symbol</b><select id="face-destination">${editableTypes(
+        ? `<div class="workshop-actions power-panel" data-class-seal="true"><button disabled>${face.type === "mystery" ? "Permanent ?" : "Permanent mark"}<small>${face.type === "mystery" ? "Rank follows this reel" : "Grows with your class"}</small></button><button disabled>Cannot edit<small>${face.type === "mystery" ? "One on every Jester reel" : "Unique middle-reel ability"}</small></button></div>`
+        : `<div class="workshop-actions power-panel">${face.type === "blank" ? `<button id="blank-choose" class="primary">Choose a power ↓<small>Select its type, then inscribe</small></button>` : `<button class="primary" data-upgrade="${data}" ${!upgrade || h.points < upgrade ? "disabled" : ""}>Upgrade ↑<small>${upgrade ? `Rank ${tierName(face.tier)} → ${tierName(face.tier + 1)} · spend ${upgrade} pts` : "Already at maximum rank"}</small></button>`}<button data-weaken="${data}" ${!refund ? "disabled" : ""}>Downgrade ↓<small>${refund ? `Rank ${tierName(face.tier)} → ${tierName(face.tier - 1)} · get ${refund} pts back` : "Already at lowest rank"}</small></button></div><div class="replace-panel"><label class="swap-choice"><b>Or replace this symbol</b><select id="face-destination">${editableTypes(
             h,
           )
             .filter((t) => t !== face.type)
@@ -297,7 +304,7 @@ function editor(i) {
               "",
             )}</select></label><p class="swap-effect" id="swap-effect"></p><button class="swap-face" id="face-swap">Replace symbol <small id="swap-price"></small></button></div>`
     }
-</section></div></div>${criticalOddsMarkup(h)}</div><p class="workshop-note">${className(h.job)} crit ${criticalRange(h)}. ${CLASS_COMBOS[h.job]?.hint || ""}</p><div class="modal-actions"><button class="primary" data-close>Done · back to the adventure</button></div>`,
+</section></div></div>${criticalOddsMarkup(h)}${classPricesMarkup(h)}</div><p class="workshop-note">${className(h.job)} crit ${criticalRange(h)}. ${CLASS_COMBOS[h.job]?.hint || ""}</p><div class="modal-actions"><button class="primary" data-close>Done · back to the adventure</button></div>`,
     "editor",
   );
   document.querySelectorAll("[data-workshop-view]").forEach(
@@ -308,6 +315,12 @@ function editor(i) {
         $(`[data-workshop-view="${editorView}"]`)?.focus();
       }),
   );
+  if ($("#blank-choose"))
+    $("#blank-choose").onclick = () => {
+      editorOperation = "replace";
+      editor(i);
+      $("#face-destination")?.focus();
+    };
   $("#workshop-face-picker").onchange = (event) => {
     editorSelection.face = Number(event.target.value);
     editor(i);
@@ -364,6 +377,10 @@ function editor(i) {
     const update = () => {
       const cost = faceEditCost(h, k, j, "swap", select.value);
       $("#swap-price").textContent = "Spend " + cost + " points · same odds";
+      $("#face-swap").firstChild.textContent =
+        face.type === "blank"
+          ? "Inscribe " + FACE_LABELS[select.value] + " "
+          : "Replace symbol ";
       $("#swap-effect").textContent = faceDescription(
         { type: select.value, tier: face.tier },
         h,

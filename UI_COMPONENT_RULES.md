@@ -336,3 +336,20 @@ through the shared FX and shake controls. Keep gems separate from pencil
 blackout data so one effect cannot erase another hero's seals. Starting cards
 share availability rows for locked and unlocked classes; on narrow screens use
 portrait-left cards with matching text rows, not empty grid cells.
+
+## Denied reels and fixed rewards
+
+Whole-machine availability uses `.reel-unavailable` with distinct labelled stun,
+surprise and shadow variants. Keep the fixed lever hitbox and window geometry;
+never convey an unusable hero with only a tiny portrait badge. Rare
+`.hero-notice` overlays reuse this reserved area and may blur the underlying
+machine, without moving neighbouring heroes. Shared availability predicates must
+also govern keyboard controls and automation.
+
+Treasure reserves artwork, the three-reel machine, an inline critical, the final
+value and a 2×2 `.loot-find-grid` before rolling. All finds remain visible at once.
+Compact artefact summaries keep their full rules on keyboard focus/hover. Do not
+restore a carousel, crop controls, or insert result rows that resize the sheet.
+When a machine title is absent, explicitly retain its grid row so the reel face
+cannot accidentally occupy the caption's height. Review 320px, Deck and desktop
+captures as well as dark/warm palettes after changing these shared patterns.

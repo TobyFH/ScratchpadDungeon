@@ -84,7 +84,7 @@ test("temperament is only selectable at the start, Mages have no role stat or se
   });
   assert.deepEqual(result, {
     loaded: true,
-    version: 21,
+    version: 22,
     hp: 11,
     points: 29,
     tier: 4,
@@ -720,6 +720,10 @@ test("critical readouts pulse from the original value to a large final number wi
   const p = await game(t);
   await p.evaluate(() => {
     setPace("1");
+    // Keep the real payoff visible while assertions run on a busy CI worker.
+    // Clicking fast-forward still resolves it through the production resolver.
+    window.originalCriticalHold=criticalHold;
+    criticalHold=()=>new Promise(resolve=>{criticalHoldResolver=resolve;});
     setPreference("skipCriticals", false);
     window.crit = rollCritical(
       "Test",
@@ -743,7 +747,7 @@ test("critical readouts pulse from the original value to a large final number wi
   );
   assert.equal(await p.locator("#stage-skip").isEnabled(), true);
   await p.locator("#stage-skip").click();
-  await p.evaluate(() => window.crit);
+  await p.evaluate(async()=>{await window.crit;criticalHold=window.originalCriticalHold;});
   const mixed = await p.evaluate(() => {
     const result = document.createElement("div");
     result.innerHTML = criticalPayoff(
@@ -856,7 +860,7 @@ test("field guide topics remain readable without scrolling on desktop, Deck and 
   const p = await game(t);
   await p.evaluate(() => help());
   const count = await p.locator("#guide-topic option").count();
-  assert.equal(count, 17);
+  assert.equal(count, 20);
   for (const width of [1920, 1280, 390, 320]) {
     await p.setViewportSize({
       width,

@@ -27,12 +27,12 @@ const FIELD_GUIDE = Object.freeze([
   {
     id: "statuses",
     title: "Block, stun & Vulnerable",
-    body: '<ul class="guide-takeaways"><li><b>Team block.</b> Shared block caps at 20, or 30 with a living Tank. Enemies cap at 20, or 30 with a living boss. Damage spends it; battle end clears it.</li><li><b>Stun.</b> Miss at most one attempt; enemy clocks stay unchanged. Other rolls give 60% recovery, then guaranteed. Reapplying never extends stun.</li><li><b>Break through.</b> After recovery, two of your own actions cannot be stunned. Strong stuns still strip block. Healing may clear stun; healing Resonance clears all.</li><li><b>Vulnerable.</b> The next direct hit deals 25% extra damage. Healing and poison ticks do not consume it.</li><li><b>Details.</b> Hover any condition icon for its actual effect and remaining strength or duration.</li></ul>',
+    body: '<ul class="guide-takeaways"><li><b>Team block.</b> Shared block caps at 20, or 30 with a living Tank. Enemies cap at 20, or 30 with a living boss. Damage spends it; battle end clears it.</li><li><b>Stun.</b> Use a ready ally while a hero is stunned. Their rolls help recovery. If nobody is ready, one lost turn advances enemy clocks and clears stun.</li><li><b>Break through.</b> After recovery, two of your own actions cannot be stunned. Strong stuns still strip block. Healing may clear stun; healing Resonance clears all.</li><li><b>Vulnerable.</b> The next direct hit deals 25% extra damage. Healing and poison ticks do not consume it.</li><li><b>Details.</b> Hover any condition icon for its actual effect and remaining strength or duration.</li></ul>',
   },
   {
     id: "buffs",
     title: "Stimulants & shield bash",
-    body: '<ul class="guide-takeaways"><li><b>Self stimulant.</b> Tanks, Rogues and Berserkers can boost themselves with this mark.</li><li><b>Ally stimulant.</b> Mages, Rangers and Jesters boost the ally who has rolled most this fight. Alone, they boost themselves.</li><li><b>Three actions.</b> Each power adds one action of duration, up to three of the recipient’s own actions. Extra duration increases potency, up to six.</li><li><b>Potency.</b> Gain +1 damage plus one per three power, and +1 resistance plus one per five power. Hover the status for exact values.</li><li><b>Tank class mark.</b> Shield Bash adds two team block, plus one every three levels, then spends some block on a bash. Its limit grows with level. Each point of bash power removes two enemy block.</li></ul>',
+    body: '<ul class="guide-takeaways"><li><b>Self stimulant.</b> Tanks, Rogues and Berserkers can boost themselves with this mark.</li><li><b>Ally stimulant.</b> Mages, Rangers and Jesters boost the selected healing target. Random effects may choose another ally.</li><li><b>Three actions.</b> Each power adds one action of duration, up to three of the recipient’s own actions. Extra duration increases potency, up to six.</li><li><b>Potency.</b> Gain +1 damage plus one per three power, and +1 resistance plus one per five power. Hover the status for exact values.</li><li><b>Tank class mark.</b> Shield Bash adds two team block, plus one every three levels, then spends some block on a bash. Its limit grows with level. Each point of bash power removes two enemy block.</li></ul>',
   },
   {
     id: "openings",
@@ -57,7 +57,19 @@ const FIELD_GUIDE = Object.freeze([
   {
     id: "jester",
     title: "Jester & Punchline",
-    body: '<ul class="guide-takeaways"><li><b>Unlock.</b> Buy the Jester’s invitation at camp. It can inscribe any ordinary kind except Self stimulant and the Berserker’s Blood Price.</li><li><b>Trick.</b> These marks fill anticipation by their rank. At six, fire one Punchline burst before enemy clocks advance.</li><li><b>Punchline.</b> Six ordinary marks fire from your own reels, keeping their ranks. No reroll, extra turn or crit. Trick cannot recharge the burst.</li><li><b>Criticals.</b> Matching triples roll ×1.5–×4. Different kinds have no special critical; matching triples do not self-stun.</li><li><b>Wildcard.</b> The permanent class mark can ink enemy reels, gild allied reels, reverse a foe’s roll or scatter damage and healing.</li></ul>',
+    body: '<ul class="guide-takeaways"><li><b>Unlock.</b> Buy the Jester’s invitation at camp. It can inscribe any ordinary kind except Self stimulant and the Berserker’s Blood Price.</li><li><b>Trick.</b> These marks fill anticipation by their rank. At six, fire one Punchline burst before enemy clocks advance. Matching Trick triples multiply charge, not the number of bursts.</li><li><b>Punchline.</b> Six ordinary marks fire from your own reels, keeping their ranks. No reroll, extra turn or crit. Trick cannot recharge the burst.</li><li><b>Criticals.</b> Matching triples roll ×1.5–×4. Different kinds have no special critical; matching triples do not self-stun.</li><li><b>Wildcard.</b> The permanent class mark can ink enemy reels, gild allied reels, reverse a foe’s roll or scatter damage and healing.</li></ul>',
+  },
+  {
+    id:"mystery",title:"Mystery marks ?",
+    body:'<ul class="guide-takeaways"><li><b>Permanent.</b> Every Jester reel has one ?. It cannot be edited or copied.</li><li><b>Any power.</b> It becomes a random ordinary power, including powers the class cannot inscribe. Blood Price may cost HP.</li><li><b>Rank.</b> Other ordinary faces on that reel set its rank odds. Half rank I and half rank II means equal chances of either.</li><li><b>Matches.</b> The revealed power can complete a normal critical. Punchline draws cannot crit or chain another Punchline.</li></ul>',
+  },
+  {
+    id:"living",title:"Changing passages",
+    body:'<ul class="guide-takeaways"><li><b>Mudslide.</b> Slides you straight ahead, then blocks the tile behind you. Another way to the stairs remains.</li><li><b>Crystal aura.</b> Dotted blue tiles show where deposits can seal reels during fights. Walls stop the aura.</li><li><b>Rockfall.</b> Falling stone may block a passage permanently. Only safe blockages can occur.</li><li><b>Shaky caves.</b> Numbered ceilings count every footstep. At zero, stone falls on whoever is underneath, then the count resets.</li><li><b>The Unwritten.</b> Falling stone kills the hunter, leaving treasure. This grants no battle EXP.</li></ul>',
+  },
+  {
+    id:"shadow",title:"Shadow galleries",
+    body:'<ul class="guide-takeaways"><li><b>Returning cover.</b> Old visited tiles darken again after a varied delay. Their contents and known routes stay the same.</li><li><b>Keep moving.</b> Your current tile stays clear. Cover spreads more slowly as more passages darken.</li><li><b>Revisit.</b> Enter to erase the cover, with a higher chance of an ambush. Reading pages and fighting pause the timer.</li><li><b>Veil weaver.</b> Fogged reels count as Empty for one roll. With several heroes, use a different ally after each action to clear the last actor’s veil.</li></ul>',
   },
   {
     id: "companions",

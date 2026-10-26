@@ -27,20 +27,53 @@ const PUN_ENEMIES = Object.freeze({
   tankerchief: "Tankerchief",
   eraser: "The Progress Eraser",
   fullstop: "THE FULL STOP",
+  paperjammer: "The Paper Jammer",
+  popquiz: "Pop Quiz",
+  sporepoint: "Spore-point Pen",
+  quillking: "King of the Quills",
+  hotpress: "Hot off the Press",
+  bindwyrm: "The Book Binder",
+  icebreaker: "The Ice Breaker",
+  coldcomma: "The Cold Comma",
+  blankslate: "The Blank Slate",
+  rockpaperscissors: "Rock, Paper, Scuttlers",
+  deadletter: "The Dead Letter",
+  clipper: "The Paper Clipper",
+  marginmarksman: "The Margin Marksman",
+  foolscap: "Foolscap",
+  boss1: "The Red Pen",
+  boss2: "The Staple Warden",
+  boss3: "The Rule of Three",
+  boss4: "The Correction Officer",
+  boss5: "The Blot Thickens",
+  boss6: "The Gaol Point Pen",
+  boss7: "The Binding Agreement",
+  boss8: "The Hardback",
+  boss9: "The Penultimate",
 });
+// This table is injective: a stationery identity belongs to one bestiary entry.
 const PUN_SPECIES = Object.freeze({
   berserker: "scissors",
-  smudger: "pencil",
-  powderimp: "punch2", rootling: "goat", thornhulk: "stego", capstalker: "postit", myconarch: "pagemage", cinderhopper: "exclamation", basaltwyrm: "trex", frostmite: "protractor", rimewarden: "police",
-  zombie: "spelleton",
+  smudger: "paperjammer",
+  powderimp: "popquiz",
+  rootling: "goat",
+  thornhulk: "stego",
+  capstalker: "sporepoint",
+  myconarch: "quillking",
+  cinderhopper: "hotpress",
+  basaltwyrm: "bindwyrm",
+  frostmite: "icebreaker",
+  rimewarden: "coldcomma",
+  veilweaver: "blankslate",
+  shalecrab: "rockpaperscissors",
+  zombie: "deadletter",
   rat: "comma",
   ghost: "ghostit",
   slime: "glue",
   skull: "spelleton",
-  mimic: "punch2",
   gnawer: "pencil",
   bellkeeper: "exclamation",
-  widow: "scissors",
+  widow: "clipper",
   oracle: "question",
   pageeater: "punch3",
   pursuer: "eraser",
@@ -56,23 +89,12 @@ const PUN_SPECIES = Object.freeze({
   fighter: "police",
   rogue: "crook",
   mage: "pagemage",
+  ranger: "marginmarksman",
+  jester: "foolscap",
 });
 function punIdentity(e) {
   const depth = e.stairBossDepth || state.depth;
-  if (e.boss)
-    return depth === 10
-      ? "fullstop"
-      : [
-          "penknight",
-          "punch2",
-          "police",
-          "exclamation",
-          "scissors",
-          "goat",
-          "pagemage",
-          "stego",
-          "punch3",
-        ][Math.max(0, depth - 1)];
+  if (e.boss) return depth === 10 ? "fullstop" : "boss" + depth;
   return PUN_SPECIES[e.art] || "sketch";
 }
 function applyEnemyPresentation(e) {
@@ -250,9 +272,18 @@ function encounterTags(enemies) {
         `<span class="encounter-tag passive" data-tooltip="${escapeHTML(ENEMY_TRAITS[e.passive.key]?.description || "")}">${ENEMY_TRAITS[e.passive.key]?.name || ""}</span>`,
       );
   }
-  if (enemies.some(e => e.caughtUnaware)) tags.push('<span class="encounter-tag">FOES CAUGHT UNAWARE · +1 SPIN</span>');
-  if (enemies.some(isExploder)) tags.push('<span class="encounter-tag">BURNING FUSE · SELF-DESTRUCT</span>');
-  if (crystalSources().length) tags.push('<span class="encounter-tag" data-tooltip="Nearby crystals seal two party reels every three party rolls. Roll the affected hero to crack them.">CRYSTAL AURA · REEL SEALS</span>');
+  if (enemies.some((e) => e.caughtUnaware))
+    tags.push(
+      '<span class="encounter-tag">FOES CAUGHT UNAWARE · +1 SPIN</span>',
+    );
+  if (enemies.some(isExploder))
+    tags.push(
+      '<span class="encounter-tag">BURNING FUSE · SELF-DESTRUCT</span>',
+    );
+  if (crystalSources().length)
+    tags.push(
+      '<span class="encounter-tag" data-tooltip="Nearby crystals seal two party reels every three party rolls. Roll the affected hero to crack them.">CRYSTAL AURA · REEL SEALS</span>',
+    );
   const quick = state.party.find((h) => h.initiative);
   if (quick)
     tags.push(

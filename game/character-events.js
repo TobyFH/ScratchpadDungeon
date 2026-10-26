@@ -139,6 +139,11 @@ function characterMoment(id, h) {
   state.characterEvents = state.characterEvents.slice(-100);
   log(`${h.name} ${def.text}.`);
   combatCallout(entityArt(h), def.name, def.kind);
+  showHeroNotice(h, def.name, def.text, def.kind);
+  if (id === "heroic") {
+    state.pendingCharacterMoments ??= [];
+    state.pendingCharacterMoments.push({heroId:h.id,title:def.name,text:def.text});
+  }
   burst(
     entityArt(h),
     def.kind === "heal" ? "heal" : def.kind === "block" ? "shield" : "gold",

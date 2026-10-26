@@ -58,6 +58,7 @@ function closeUtilityPage() {
   for (const resume of utilityWaiters.splice(0)) resume();
   fitDialogs();
   updateKeyboardBar();
+  scheduleStunRecovery();
   return true;
 }
 const portraitMotions = new WeakMap();
@@ -123,65 +124,63 @@ function portraitMotion(el, kind = "talk", enemy = false) {
   portraitMotions.set(art, animation);
   animation.finished.catch(() => {});
 }
+// Retained function name for callers: all finds are visible together now.
 function lootFindCarousel(entries) {
   const target = $("#artefact-loot");
   if (!target) return;
-  if (!entries.length) {
-    target.innerHTML = "";
-    return;
-  }
-  let page = 0,
-    sequence = 0;
-  const run = state;
-  target.innerHTML = `<div class="loot-carousel"><div class="loot-find-page"></div><nav aria-label="Loot finds"><button id="loot-previous">←</button><span id="loot-count"></span><button id="loot-next">→</button></nav></div>`;
-  const show = () => {
-    const find = target.querySelector(".loot-find-page");
-    find.innerHTML = entries[page];
-    requestAnimationFrame(() => fitLootFind(find));
-    $("#loot-count").textContent = `Find ${page + 1} / ${entries.length}`;
-    $("#loot-previous").disabled = page === 0;
-    $("#loot-next").disabled = page === entries.length - 1;
-    GameSound.play("itemFind");
-    animate(
-      find,
-      [
-        { opacity: 0, transform: "scale(.88) translateY(8px)" },
-        { opacity: 1, transform: "scale(1.04)" },
-        { opacity: 1, transform: "none" },
-      ],
-      { duration: 360, juice: true },
-    );
-    burst(find, "gold", 18);
-  };
-  const manuallyShow = (delta) => {
-    sequence++;
-    target.dataset.presenting = "false";
-    page += delta;
-    show();
-  };
-  $("#loot-previous").onclick = () => manuallyShow(-1);
-  $("#loot-next").onclick = () => manuallyShow(1);
-  show();
-  if (entries.length > 1) {
-    target.dataset.presenting = "true";
-    const version = sequence;
-    (async () => {
-      while (page < entries.length - 1) {
-        await feedbackPause(Math.max(240, 650 / Math.sqrt(skip ? 5 : pace())));
-        if (
-          state !== run ||
-          !target.isConnected ||
-          !$("#spotlight").contains(target) ||
-          $("#spotlight").hidden ||
-          version !== sequence
-        )
-          return;
-        page++;
-        show();
-      }
-      target.dataset.presenting = "false";
-    })();
-  }
+  target.dataset.presenting = "false";
+  target.innerHTML = `<div class="loot-find-grid" data-count="${entries.length}">${entries.map((entry) => `<div class="loot-find-tile">${entry}</div>`).join("")}</div>`;
+  target.querySelectorAll(".loot-find-tile").forEach((tile, i) => {
+    const name = tile.querySelector("b")?.textContent || "";
+    const item = Object.values(ITEM_DEFS).find((d) => name.startsWith(d.name));
+    if (item) {
+      tile.dataset.tooltip =
+        (item.equipment ? equipmentScope(item) + ". " : "") + item.description;
+      tile.tabIndex = 0;
+      const p = tile.querySelector("p");
+      if (p)
+        p.innerHTML =
+          (item.equipment
+            ? `<b class="equipment-scope">${equipmentScope(item)}</b> `
+            : "") +
+          escapeHTML(
+            item.equipment
+              ? item.brief.replace(/^[^·]+only\s*·\s*/i, "")
+              : item.brief,
+          );
+    }
+    const artefact = state.artefacts.find((a) => a.name === name);
+    if (artefact) {
+      tile.dataset.tooltip = artefactText(artefact);
+      tile.tabIndex = 0;
+      const p = tile.querySelector("p");
+      if (p)
+        p.textContent =
+          {
+            attack: `+${artefact.power} physical damage`,
+            heal: `+${artefact.power} healing`,
+            block: `+${artefact.power} block · once per roll`,
+            gold: `+${artefact.power}% loot gold`,
+            guard: `${artefact.power} opening block`,
+            revive: "Revive once · 75% HP",
+          }[artefact.key] || artefactText(artefact);
+    }
+    setTimeout(() => {
+      if (!tile.isConnected || $("#spotlight").hidden) return;
+      GameSound.play("itemFind");
+      burst(tile, "gold", 12);
+      animate(
+        tile,
+        [
+          { opacity: 0, transform: "scale(.86)" },
+          { opacity: 1, transform: "scale(1.03)" },
+          { opacity: 1, transform: "none" },
+        ],
+        { duration: 350, juice: true },
+      );
+    }, i * 180);
+  });
+  requestFitUI();
 }
 
 // Reset only this game's progress namespace; option preferences live separately.
@@ -240,10 +239,22 @@ function resetSaveProgress() {
 }
 
 function fitLootFind(find) {
-  const card = find.querySelector(".item-find,.artefact-card");
-  if(!card)return;
-  const text=card.querySelector("div"), para=text?.querySelector("p"), title=text?.querySelector("b");
-  if(!text||!para||!title)return;
-  title.style.fontSize="16px";para.style.fontSize="14px";
-  for(let size=14;size>=12&&(text.scrollHeight>text.clientHeight+1||text.scrollWidth>text.clientWidth+1);size-=.5){para.style.fontSize=size+"px";title.style.fontSize=(size+2)+"px";}
+  const card = find?.querySelector(".item-find,.artefact-card");
+  if (!card) return;
+  const text = card.querySelector("div"),
+    para = text?.querySelector("p"),
+    title = text?.querySelector("b");
+  if (!text || !para || !title) return;
+  title.style.fontSize = "16px";
+  para.style.fontSize = "14px";
+  for (
+    let size = 14;
+    size >= 12 &&
+    (text.scrollHeight > text.clientHeight + 1 ||
+      text.scrollWidth > text.clientWidth + 1);
+    size -= 0.5
+  ) {
+    para.style.fontSize = size + "px";
+    title.style.fontSize = size + 2 + "px";
+  }
 }

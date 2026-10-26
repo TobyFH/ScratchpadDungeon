@@ -208,12 +208,17 @@ function leverArt() {
 }
 const paths = {
   crystal: "M4 28 2 13l9-9 5 6 6-8 8 13-4 14ZM2 13l9 5 5-8m-5-6v14l4 10m7-26-1 18 9-5m-9 5 5 9M4 28l7-10",
-  ice: "M3 26 8 7l9-5 12 19-9 9ZM8 7l5 15 4-20m-4 20 16-1M6 27l7-5 7 8M6 10l3 1m12 4 4-1",
+  ice: "M2 5q13-4 28 0v24q-15-3-28 0ZM4 8l24 17M4 18l12 9M16 5l12 10M6 11l3 1m8 6 5 2M12 3v8m-4-4h8M25 19v10m-4-5h8",
+  mudslide:"M2 8q8-8 15-2l13 9v14H2ZM4 19q9-8 23 3M5 25q10-7 23 2M8 9l12 5m-5-8 7 9-11-1",
+  mudwall:"M1 1h30v30H1ZM3 25l6-13 7 4 5-10 8 19ZM6 24l7-4 7 5M9 12l2 6m10-11 1 12",
+  stalactite:"M2 3h28M6 3l5 17 5-17m5 0 4 12 4-12M9 23l2 5 2-5m10-5 2 7 2-7M4 30h25",
+  shadow:"M4 25q-7-12 4-14 0-12 10-7 11-5 10 7 8 9-3 15ZM7 17q7-7 17 0m-14 4 4-2m4 0 5 2",
+  surprise:"M13 2h6l-1 17h-4ZM14 24h4v5h-4M3 5l4 6m22-6-4 6",
   mushroom: "M3 15Q3 2 16 3q13-1 14 12l-4 3H7ZM12 18l-1 10q5 4 10 0l-1-10M8 11l3-3m9 0 4 4M5 17h23M6 29h3m16-2h3",
   overgrown: "M5 29Q8 13 24 3M10 21Q0 17 4 10q10 0 10 8M16 13q-2-12 7-11 6 6-3 12M9 24q12-9 20-5-2 10-16 8M3 29h26",
   explosion: "M13 10 15 1l4 8 10-5-5 11 8 3-10 5 3 9-11-6-10 5 3-11-7-5 11-1ZM12 16l5-4 5 6-6 6Z",
 
-  trick: "M4 13 9 3l8 6 8-5 4 11-8 3-6-5-6 5ZM8 21q8 12 17-1M11 22v3m10-4v3M4 5h1m23 20h1",
+  trick: "M5 20q1-14 9-12l2 11q0-14 9-16l-2 17ZM5 21h19v5H5ZM3 17a2 2 0 1 0 4 0 2 2 0 1 0-4 0M23 3a2 2 0 1 0 4 0 2 2 0 1 0-4 0M12 7a2 2 0 1 0 4 0 2 2 0 1 0-4 0",
   rally: "M6 25V13l5-9 5 9v12ZM9 15h5M20 12h9m-4-4 4 4-4 4M18 20h9m-4-4 4 4-4 4",
   jester:
     "M4 14Q1 1 10 7l6 6 5-7q10-7 7 8l-2 10H7ZM4 14l12 5 12-5M4 12a2 2 0 1 0 0 .1M21 5a2 2 0 1 0 0 .1M9 24v4h16v-4",
@@ -337,6 +342,8 @@ function specialEnemyArt(kind, entity) {
   // Every species uses the same sparse contours and material hatching. Keep
   // silhouettes legible at map-token size, without a detailed scan outlier.
   const body = {
+    veilweaver:"M20 135l5-58 15-19-6-27L60 8l28 25-7 28 16 23 6 51-24-11-21 15-17-14ZM42 40l15 7m9-1 12-9M51 65l19-3M29 87l24 18 32-19M14 71q17-20 9-30m81 35q-20-17-9-41M24 113l20-7m42 2 15 8M43 91l2 18m29-18-3 18",
+    shalecrab:"M24 57l21-29 33-3 24 32-8 45-29 20-37-16ZM35 57l27-15 27 18-4 32-23 13-24-14ZM40 65l12 6m16-1 12-8M33 85l27-8 31 9M26 64 8 53 3 77l13 9m80-20 17-13 4 24-12 11M30 99l-17 22 7 14m68-34 17 21-6 13M43 116l-3 26m36-23 5 24",
     powderimp: "M25 63Q17 29 52 24l8-17 6 17q39 2 30 42l-9 58-28 14-28-13ZM50 24l4-11h15l4 12M61 11q-8-8 5-10m3 0 4 5M37 56l17 7m15-1 14-9M41 83q16 12 36-2M45 85l4 10m20-9-3 10M32 73l-19 11-5-4m82-9 18 11 6-6M39 126l-10 16h18m30-17 9 16h15M40 102l8 3m24 4 10-4",
     rootling: "M44 141 32 104l7-29-9-20 12-7 1-30 17 15 16-24 3 37 18 10-12 29 6 25-19 29-13-11ZM45 58l11 5m10 0 12-7M48 80l24 1M38 89l-25 13-8-8m80-2 23 9 8-8M49 96l7 21m14-24-8 28M41 133l-14 12m49-15 14 15",
     thornhulk: "M27 137l-7-58 16-14-15-20 17 5-2-30 20 17L70 6l9 30 20-13-9 28 18 2-14 28 6 55-29-10-14 15-14-14ZM41 61l15 7m14 0 14-9M46 87l31 1-14 13ZM38 105l16 13m23-14-14 27M29 79 7 91l3 26m85-34 19 11-3 20M35 136l-15 10m64-12 16 11",
@@ -433,7 +440,7 @@ function basePortraitArt(kind, entity = { hp: 1, maxHp: 1 }) {
 function floorArt(c, i) {
   if (c.terrain === "bridge") return icon("bridge");
   if (c.wall)
-    return icon(["river", "lava"].includes(c.terrain) ? c.terrain : "wall");
+    return icon(["river", "lava", "mudwall", "crystal"].includes(c.terrain) ? c.terrain : "wall");
   const variants = [
     paths.floor,
     "M5 24q7-2 12 0l10-2M9 23l-3-6m11 7 5 4",
@@ -540,7 +547,27 @@ function punEnemyArt(id) {
     eraser:
       "M25 37l53-17 21 26-2 65-58 17-20-31ZM25 38l19 24 54-16M44 62l-5 65M22 86l19 25 55-17M29 99l13 18m10-6 14-4m8-3 15-4",
   };
-  const body = shapes[id] || shapes.sketch;
+  const extras = {
+    paperjammer:"M24 20h72v24H24ZM18 48h84v65H18ZM30 59h60M33 73l13 5m25-6 13-6M34 88l44 8M37 112l-2 20m45-20 5 20",
+    popquiz:"M30 28h60l10 76-20 16-52-12ZM39 40q26-10 34 9 3 12-17 19v15M55 92h4M54 28l-2-16 13-7",
+    sporepoint:"M37 50q-15-43 23-43 39 2 24 44ZM45 52v62l15 21 15-21V52M52 60v48m15-48v48",
+    quillking:"M26 44l-8-26 26 10L60 5l16 24 28-12-7 29ZM36 48l15 65 14 20 15-21 8-64M49 65l20 5m-16 13 18-6",
+    hotpress:"M20 49h80v63H20ZM35 46V29h52v17M32 65h55M35 81l14 7m22-7 14 7M27 118l-5 16m69-16 9 16M51 25l-6-15m26 14 7-17",
+    bindwyrm:"M16 110l12-68 54-20 18 73-16 34-68-19ZM31 49l40-14 13 65-45 13ZM20 59l12 3m-16 14 13 3m-17 14 14 3M50 61l10 7m10-8 8 4",
+    icebreaker:"M28 35l51-14 20 26-4 64-53 17-22-31ZM28 35l18 27 51-15M44 64l-2 63M32 80l9 5m12-5 30-11M65 37l-4-16m-8 8h18",
+    coldcomma:"M38 49q15-25 38-9 26 29-26 76l-13-8q25-20 21-29-27 7-20-30ZM29 26l4-17m-14 8h27M84 103l4-20m-13 11h25",
+    blankslate:"M25 23h71l-3 98-19-10-16 14-16-13-17 9ZM38 52l15 6m15-1 15-8M44 82q15-18 32-2M15 91 6 77m92 12 14-13",
+    rockpaperscissors:"M22 63l24-25 28 1 24 27-12 38-47 7ZM36 62l20 9 25-14M21 69 5 50l3 41 17 9m71-30 18-23-2 43-17 12M34 109l-16 25m62-27 17 27",
+    deadletter:"M20 43h83v70H20ZM20 43l42 36 41-36M22 110l28-32m24 0 26 32M38 59l12 7m22-1 13-7M45 94l31 1",
+    clipper:"M36 109Q9 74 35 35q32-40 52-4 11 19-7 56L59 123q-12 12-22-4L24 88M43 96l27-51q9-19-5-19-15 3-22 23L29 84",
+    marginmarksman:"M28 19h60v90H28ZM37 30h8m-8 13h12m-12 13h8m-8 13h12M97 25q-31 42 0 87L85 69ZM86 69H48l10-9m-10 9 10 9",
+    foolscap:"M25 74 30 28l21 22 14-35 17 31 18-18-6 48ZM25 77h69v27H25M38 89l13 3m15-1 13-4M34 105l-5 26m57-25 8 25",
+  };
+  let body = extras[id] || shapes[id] || shapes.sketch;
+  if (/^boss[1-9]$/.test(id)) {
+    const n=Number(id.slice(4)), base=["pencil","punch2","ruler","police","glue","penknight","crook","tankerchief","inkuisitor"][n-1];
+    body=shapes[base]+`M${20+n} 125h${n*5}m-${n*3} 4h${n*2}`;
+  }
   const holes =
     id === "punch2" ? [42, 78] : id === "punch3" ? [30, 60, 90] : [];
   const punchMarks = holes

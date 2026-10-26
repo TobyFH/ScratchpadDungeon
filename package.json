@@ -8,7 +8,8 @@
     "check:ui": "node tools/build-ui.cjs --check",
     "review:ui": "npm run check:ui && node tools/review-ui.cjs",
     "test": "npm run check:ui && node --test tests/*.test.cjs",
-    "audit:balance": "npm run check:ui && node tools/balance-audit.cjs"
+    "audit:balance": "npm run check:ui && node tools/balance-audit.cjs",
+    "review:clarity": "npm run check:ui && node tools/review-clarity.cjs"
   },
   "devDependencies": {
     "playwright": "1.58.2"

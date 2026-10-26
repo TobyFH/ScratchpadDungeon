@@ -1,5 +1,9 @@
 # Biomes, class identity and combat feedback
 
+> Version 22 adds Shadow/Shaky themes, safe mudslides, live rockfall walls and
+> revised fountain scaling. See [Combat clarity](CLARITY_UPDATE.md) for those
+> current rules; older numeric examples below are historical.
+
 > Current numeric tuning is documented in [Balance pass](BALANCE_PASS.md).
 > Its linear mark powers, class critical pools, prices, enemy budgets and camp
 > lesson amounts supersede earlier numeric examples below. The mechanics and

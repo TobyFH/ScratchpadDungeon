@@ -20,6 +20,7 @@ async function oldTravelEvent(c, kind) {
     });
     return true;
   }
+  if (!rockfallWallCandidates().length) return false;
   showSpotlight(
     "ROCKFALL!",
     "The ceiling answers your footsteps.",
@@ -60,6 +61,7 @@ async function oldTravelEvent(c, kind) {
     { id: "stage-confirm", label: "Find solid ground", value: true },
   ]);
   closeSpotlight();
+  createRockfallWall();
   if (damage) damageHero(target, damage, "A sudden rockfall");
   await processDeaths();
   checkDefeat();
@@ -228,7 +230,7 @@ async function choiceTravelEvent(kind) {
 const bagWillOverflow = (type) =>
   !state.bag[type] && Object.keys(state.bag).length >= 3;
 function addLavaPuddles(map, depth) {
-  if (depth < 5 || Math.random() >= 0.35) return;
+  if (floorBiome(map) !== "lava" || depth < 5 || Math.random() >= 0.35) return;
   const count = Math.random() < 0.12 ? 2 : 1;
   for (let n = 0; n < count; n++) {
     const candidates = map

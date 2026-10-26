@@ -42,7 +42,7 @@ test('stimulants last at most three recipient actions, overflow increases potenc
   assert.equal(r.migrated.turns,3); assert.equal(r.migrated.power,5); assert.deepEqual(r.again,r.migrated);
 });
 
-test('real self and ally stimulant rolls ignore the healing selector and use battle-local ally activity',async t=>{
+test('self stimulant stays on its caster; ordinary ally stimulant follows the selected healing target',async t=>{
   const p=await game(t);
   const r=await p.evaluate(async()=>{
     state.party=[makeHero('Rogue','rogue'),makeHero('Mage','mage'),makeHero('Tank','fighter')];
@@ -62,7 +62,7 @@ test('real self and ally stimulant rolls ignore the healing selector and use bat
     state.party=[state.party[1]];
     return {self,ally,target,solo:supportStimulantTarget(state.party[0])===state.party[0]};
   });
-  assert.deepEqual(r.self,[true,false,false]); assert.deepEqual(r.ally,[true,false,false]); assert.equal(r.target,'Rogue'); assert.equal(r.solo,true);
+  assert.deepEqual(r.self,[true,false,false]); assert.deepEqual(r.ally,[false,false,true]); assert.equal(r.target,'Rogue'); assert.equal(r.solo,true);
 });
 
 test('buff and Trick edit palettes, inherited support marks, saves and workshop descriptions share legal types',async t=>{

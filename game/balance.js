@@ -1,6 +1,7 @@
 // Shared numeric tuning. Keep RNG, match rules, reel counts and art outside this module.
 // All multipliers are visible in the workshop/guide; a mark has the same base power for every class.
 const POWER = Object.freeze({
+  mystery: 0,
   selfharm: 2,
   attack: 1,
   magic: 1,

@@ -77,7 +77,7 @@ test("hero faces remain equally likely; old authored weights vanish without a re
   });
   assert.equal(r.loaded, true);
   assert.ok(r.fresh.flat().every((w) => w === 1));
-  assert.equal(r.migrated.version, 21);
+  assert.equal(r.migrated.version, 22);
   assert.equal(r.migrated.tier, 4);
   assert.equal(r.migrated.points, 50);
   assert.ok(r.migrated.weights.every((w) => w === 1));
@@ -221,7 +221,7 @@ test("Ranger Execute charges faster and has a stronger meaningful payoff at both
   assert.ok(r.seal > r.wounded);
 });
 
-test("a stun costs one missed go without advancing enemy clocks, while background recovery takes at most two checks", async (t) => {
+test("a solo stun costs one missed turn and advances enemy clocks; background recovery takes at most two checks", async (t) => {
   const p = await game(t);
   const r = await p.evaluate(async () => {
     beginEncounter();
@@ -261,7 +261,7 @@ test("a stun costs one missed go without advancing enemy clocks, while backgroun
     r.attempts.map((x) => x.stun),
     [0],
   );
-  assert.ok(r.attempts.every((x) => x.count === 9 && x.spins === 0));
+  assert.ok(r.attempts.every((x) => x.count === 8 && x.spins === 0));
   assert.ok(r.mean > 1.3 && r.mean < 1.5);
 });
 
@@ -903,10 +903,10 @@ test("older ongoing guardian encounters fill the correct bestiary page once and 
   });
   assert.match(
     await p.locator(".bestiary-record h3").textContent(),
-    /Sticky Goat/,
+    /The Gaol Point Pen/,
   );
   assert.equal(
-    await p.locator(".bestiary-record .species-pun-goat").count(),
+    await p.locator(".bestiary-record .species-pun-boss6").count(),
     1,
   );
 });

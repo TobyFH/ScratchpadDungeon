@@ -15,6 +15,10 @@ Open `http://localhost:8000`. **Save HTML** downloads a complete offline copy of
 The notebook opens with a choice of **Tank, Rogue or Mage**, with locked Ranger and Berserker cards that open
 their camp unlocks. A new expedition turns to fresh pages. Start with one hero and no items; keep at most three heroes. Every staircase has an elite guardian. Defeat it to descend when you choose. **Defeating the tenth guardian wins immediately**, with a celebration and a scrollable record of every survivor, fallen companion and retired adventurer.
 
+Current additions: [Combat clarity and living floors](docs/CLARITY_UPDATE.md)
+documents permanent Jester mysteries, explicit reel inscription, stun recovery,
+all-find loot, and the Shadow and Shaky cavern themes.
+
 ## Camp and banked gold
 
 After clearing floors 1–9, optionally bank **25%, 50%, 75% or 100%** of carried gold.

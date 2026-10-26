@@ -1,6 +1,40 @@
 // Biome species are explicit depth bands. Ordinary encounter pools exclude them;
 // the matching floor adds only its eligible species to the random draw.
 const BIOME_ENEMIES = Object.freeze({
+  veilweaver: {
+    name: "Veil weaver",
+    biome: "shadow",
+    minDepth: 4,
+    maxDepth: 10,
+    hp: 1.08,
+    damage: 0.95,
+    trait: "veil",
+    faces: [
+      ["magic", 1],
+      ["magic", 2],
+      ["stun", 1],
+      ["block", 1],
+      ["miss", 1],
+    ],
+    lore: "Its cloak keeps the darkness others leave behind. Switch adventurers to shake its veil; fogged reels clear when rolled.",
+  },
+  shalecrab: {
+    name: "Shale-back scuttler",
+    biome: "unstable",
+    minDepth: 2,
+    maxDepth: 10,
+    hp: 1.2,
+    damage: 0.95,
+    trait: "carapace",
+    faces: [
+      ["attack", 1],
+      ["block", 1],
+      ["attack", 2],
+      ["stun", 1],
+      ["miss", 1],
+    ],
+    lore: "A creature of loose stone, always listening for the next crack overhead. Its shell is tougher than the ceiling.",
+  },
   powderimp: {
     name: "Powder imp",
     biome: "cave",

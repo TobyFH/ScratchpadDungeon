@@ -43,9 +43,9 @@ const tankSealBlock = (h) =>
 const furyCapacity = (h) =>
   24 + Math.max(0, Math.floor((h?.level || 1) - 1)) * 3;
 const fountainBaseRate = (depth = state.depth) =>
-  0.15 + Math.min(9, Math.max(0, depth - 1)) * 0.0025;
+  0.15 + Math.min(9, Math.max(0, depth - 1)) * 0.005;
 const fountainRollRate = (depth = state.depth) =>
-  0.5 + Math.min(9, Math.max(0, depth - 1)) * 0.012;
+  0.5 + Math.min(9, Math.max(0, depth - 1)) * 0.018;
 function heroDamagePower(h, n) {
   return n;
 }
@@ -148,7 +148,11 @@ function normaliseHeroBuild(h) {
   if (!h.reels) return;
   retireReelWeights(h);
   for (const face of h.last || []) {
-    if (face.type === "selfharm" && h.job !== "berserker") {
+    if (
+      face.type === "selfharm" &&
+      h.job !== "berserker" &&
+      !face.fromMystery
+    ) {
       face.type = h.job === "jester" ? "trick" : "blank";
       if (face.type === "blank") face.tier = 1;
     }
@@ -158,6 +162,7 @@ function normaliseHeroBuild(h) {
     }
     if (
       face.type === "stimulant" &&
+      !face.fromMystery &&
       ["mage", "ranger", "jester"].includes(h.job)
     )
       face.type = "rally";
@@ -171,7 +176,11 @@ function normaliseHeroBuild(h) {
     for (const face of reel) {
       face.weight = Math.max(1, Math.min(4, Math.floor(face.weight || 1)));
       delete face.mageRole;
-      if (face.type === "selfharm" && h.job !== "berserker") {
+      if (
+        face.type === "selfharm" &&
+        h.job !== "berserker" &&
+        !face.fromMystery
+      ) {
         face.type = h.job === "jester" ? "trick" : "blank";
         if (face.type === "blank") face.tier = 1;
       }
@@ -207,6 +216,7 @@ function normaliseHeroBuild(h) {
     if (k === 1 && !seal)
       reel.push({ type: "class", tier: 1, weight: 1, job: h.job });
   });
+  normaliseMysteryReels(h);
 }
 function classAbilityName(hero) {
   const job = typeof hero === "string" ? hero : hero?.job;
@@ -420,6 +430,7 @@ function makeHero(
     ]),
     last: [],
   };
+  normaliseMysteryReels(h);
   h.last = [h.reels[0][0], h.reels[1][1], { type: "blank", tier: 1 }].map(
     (f) => ({ ...f }),
   );

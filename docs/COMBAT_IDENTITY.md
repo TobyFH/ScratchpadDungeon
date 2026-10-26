@@ -54,8 +54,10 @@ icon/beam/both preferences, pace, shake and reduced-motion controls still apply.
 ## Stun has an end on both sides
 
 Stun can deny **at most one attempted action**. Attempting to act while stunned
-misses that go and guarantees recovery. A missed hero attempt does not advance
-enemy countdowns or count as a spin. Background recovery after real combat rolls
+misses that go and guarantees recovery. In version 22, a stunned hero is
+unavailable while a ready ally can act. If every eligible hero is stunned, an
+automatic missed turn advances enemy countdowns once without counting as a spin.
+See [Combat clarity](CLARITY_UPDATE.md) for locks, targeting and recovery. Background recovery after real combat rolls
 has a 60% chance on its first check and is guaranteed on its second.
 
 Recovery or a successful healing cleanse grants **Steady** for **two own

@@ -71,6 +71,7 @@ function setupBattleOpening({ fresh = false } = {}) {
       e.caughtUnaware = true;
     }
     planEnemyIntent(e);
+    if (e.passive?.key === "veil") fogPartyReels(e);
   }
 }
 function openingEligible(h) {
@@ -102,8 +103,23 @@ async function resolveBattleOpening() {
     finishOpeningRoll();
   } else {
     const quick = living.find((h) => h.initiative);
-    if (quick)
-      combatCallout(entityArt(quick), `${quick.name}: INITIATIVE +25%`, "gold");
+    if (quick) {
+      combatCallout(
+        entityArt(quick),
+        `${quick.name}: ACT FIRST · +25%`,
+        "gold",
+      );
+      showHeroNotice(
+        quick,
+        "INITIATIVE · ACT FIRST",
+        "First roll: 25% stronger effects",
+        "gold",
+      );
+      if (!state.initiativeExplained) {
+        state.initiativeExplained = true;
+        result(`Initiative: use ${quick.name} first for a 25% stronger roll.`);
+      }
+    }
     living
       .filter((h) => h.surprised)
       .forEach((h) => actionLabel(entityArt(h), "SURPRISED · wait one roll"));
@@ -209,6 +225,8 @@ function clearBattleStatuses() {
     entity.anticipation = 0;
     entity.fury = 0;
     entity.stimulant = null;
+    entity.shadowRest = false;
+    entity.shadowLocks = [];
     entity.poison = null;
     entity.stun = 0;
     entity.stunGrace = 0;
@@ -449,6 +467,11 @@ async function resumeOpeningEncounter() {
 }
 
 function normaliseTacticalStatuses(entity) {
+  entity.shadowLocks = Array.isArray(entity.shadowLocks)
+    ? [...new Set(entity.shadowLocks.filter((k) => [0, 1, 2].includes(k)))]
+    : [];
+  entity.shadowRest =
+    !!entity.shadowRest && (state.party?.filter(alive).length || 0) > 1;
   entity.crystalLocks = [
     ...new Set(
       (Array.isArray(entity.crystalLocks) ? entity.crystalLocks : []).filter(

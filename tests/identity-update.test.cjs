@@ -267,7 +267,7 @@ test("repeated stuns never refresh duration, cost at most one missed action and 
   });
 });
 
-test("a missed hero go leaves enemy clocks unchanged; an enemy must get real turns before its stun protection expires", async (t) => {
+test("a solo missed hero go advances enemy clocks; enemies need real turns before stun protection expires", async (t) => {
   const p = await game(t);
   const r = await p.evaluate(async () => {
     beginEncounter(false, { count: 1 });
@@ -287,7 +287,7 @@ test("a missed hero go leaves enemy clocks unchanged; an enemy must get real tur
     return { missed, first, last: e.stunWard };
   });
   assert.deepEqual(r, {
-    missed: { clock: 8, stun: 0, ward: 2 },
+    missed: { clock: 7, stun: 0, ward: 2 },
     first: 1,
     last: 0,
   });

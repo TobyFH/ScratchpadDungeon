@@ -5625,3 +5625,128 @@ body[data-motion="off"] .punchline-ready .machine-face { animation: none; }
 .tile.crystal-tile > svg {visibility:hidden;}
 /* Steady reuses the shield glyph and functional focus ink. */
 .stun-ward-badge { color: var(--focus); }
+
+/* Clear, fixed-space controls. A denied reel shows its reason over the machine. */
+#hover-name { font-size: 23px; line-height: 1.2; }
+#field-note { font-size: 22px; line-height: 1.25; }
+#exit-found { width:44px; min-width:44px; height:38px; padding:4px; flex:0 0 44px; }
+#exit-found svg { width:28px;height:28px; }
+#exit-found.unreached { opacity:.5; }
+.hero-controls .machine-shell { position:relative; }
+.reel-unavailable,.hero-notice { position:absolute;inset:3px 28px 22px 3px;z-index:7;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;pointer-events:none;text-align:center;padding:4px;background:color-mix(in srgb,var(--paper) 91%,transparent);border:1px dashed var(--ink); }
+.reel-unavailable svg { width:32px;height:32px; }
+.reel-unavailable strong {font-size:16px;line-height:1.12;}
+.reel-unavailable.stun { color:var(--gold); }
+.reel-unavailable.surprise { color:var(--red); }
+.reel-unavailable.shadow { color:#77628d;background:color-mix(in srgb,var(--paper) 85%,#77628d); }
+.hero:has(.reel-unavailable) .machine-face {filter:blur(1px);opacity:.32;}
+.portrait:has(.stun-badge) .stun-badge {position:absolute;inset:20% 18%;width:auto;height:auto;z-index:5;background:var(--paper);border:2px dashed var(--gold);}
+.portrait .stun-badge svg { width:100%;height:100%; }
+.hero.has-initiative .machine-shell { outline:2px dashed var(--gold);outline-offset:2px;box-shadow:0 0 10px color-mix(in srgb,var(--gold) 35%,transparent); }
+.hero.has-initiative .machine-footnote {color:var(--gold);font-weight:bold;}
+.hero-notice {border-style:solid;color:var(--gold);background:var(--paper);}
+.hero-notice strong {font-family:var(--display);font-size:24px;line-height:1.05;}
+.hero-notice small {font-size:15px;line-height:1.15;}
+.hero-notice.danger {color:var(--red);}.hero-notice.heal,.hero-notice.recovery {color:var(--green);}
+.machine-shell.showing-notice .machine-face {filter:blur(2px);}
+.stun-breaking .machine-face {opacity:.25;}
+.slot-window.shadow-locked::after {content:"";position:absolute;inset:0;z-index:4;background:radial-gradient(ellipse,#645571df,#8e8199a8);border:1px dashed #574461;}
+.shadow-badge {color:#77628d;}
+.item-category {display:block;font-size:14px;line-height:1.15;color:var(--soft);font-weight:normal;}
+.item-category.instant {color:var(--green);}.item-category.equipment {color:var(--focus);}
+.equipment-scope {margin-inline-end:.35em;}
+.equipped-detail {display:flex;gap:16px;align-items:center;min-height:100px;}
+.equipped-detail>svg {width:65px;height:75px;flex-shrink:0;}
+.equipment-alternatives {display:grid;gap:8px;min-height:180px;align-content:start;}
+.equipment-alternatives>button {display:flex;align-items:center;gap:12px;text-align:left;min-height:70px;}
+.equipment-alternatives svg {width:38px;height:42px;flex-shrink:0;}
+.equipment-alternatives small {display:block;font-size:17px;}
+.bag-card>div {display:flex;flex-direction:column;min-width:0;align-self:stretch;}
+.bag-card>div>div {margin-top:auto;display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.bag-card>div>div>button {min-height:38px;height:100%;}
+.workshop-nav {grid-template-columns:1fr 1fr 1fr;}
+.workshop-faces {height:338px;grid-template-rows:repeat(var(--face-rows,7),minmax(0,1fr));}
+.workshop-faces .tier-symbol,.workshop-preview .tier-symbol {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));width:48px;height:40px;gap:0;place-items:center;min-width:0;min-height:0;}
+.workshop-preview {width:52px;min-width:52px;}
+.workshop-faces .tier-symbol svg,.workshop-preview .tier-symbol svg {position:static;width:20px!important;height:20px!important;min-width:0;max-width:100%;max-height:100%;transform:none;margin:0;}
+.workshop-faces .tier-1,.workshop-preview .tier-1 {grid-template-columns:1fr;grid-template-rows:1fr;}
+.workshop-faces .tier-2,.workshop-preview .tier-2 {grid-template-columns:repeat(2,1fr);grid-template-rows:1fr;}
+.mystery-face {display:grid;place-items:center;width:32px;height:36px;color:var(--gold);border:1px dashed currentColor;}
+.mystery-face svg {width:26px;height:30px;}
+.workshop-prices-page {box-sizing:border-box;}
+.workshop-prices-page p {font-size:17px;line-height:1.2;margin:5px 0;}
+.class-price-table {width:100%;border-collapse:collapse;font-size:17px;line-height:1.15;}
+.class-price-table th,.class-price-table td {padding:5px 6px;border-bottom:1px dashed var(--line);text-align:center;}
+.class-price-table th:first-child {text-align:left;}
+.class-price-table th {font-weight:normal;}
+.stage-card.treasure .scene-layout {height:540px;min-height:540px;grid-template-rows:50px 105px 135px 45px 205px;}
+.stage-card.treasure .trap-art {height:50px;min-height:50px;}
+.stage-card.treasure .trap-art svg {width:48px;height:48px;}
+.stage-card.treasure #event-critical {height:135px;min-height:135px;}
+.stage-card.treasure #treasure-result {height:45px;min-height:45px;}
+.stage-card:is(.treasure,.well) .scene-layout > .machine-shell .machine-title {grid-row:1;}
+.stage-card:is(.treasure,.well) .scene-layout > .machine-shell .machine-face {grid-row:2;}
+.stage-card:is(.treasure,.well) .scene-layout > .machine-shell .machine-footnote {grid-row:3;}
+.stage-card.treasure #artefact-loot {display:block;height:205px;min-height:205px;width:100%;}
+.loot-find-grid {height:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:6px;}
+.loot-find-tile {min-width:0;min-height:0;}
+.loot-find-tile .item-find,.loot-find-tile .artefact-card {display:flex;align-items:center;gap:8px;box-sizing:border-box;height:100%;min-height:0;margin:0;padding:7px;border:1px dashed var(--line);}
+.loot-find-tile svg {width:35px;height:42px;flex-shrink:0;}
+.loot-find-tile b {font-size:19px;line-height:1.05;display:block;overflow-wrap:anywhere;}
+.loot-find-tile p {font-size:17px;line-height:1.12;margin:3px 0;}
+.loot-find-tile .equipment-scope {font-size:16px;display:inline;}
+.tile.terrain-ice {background:color-mix(in srgb,var(--paper) 72%,#a9d6e8);}
+.terrain-ice .biome-cover {color:#719bb0;background:repeating-linear-gradient(136deg,transparent 0 8px,#d3e5ec66 9px 11px);}
+.tile.terrain-mudslide {background:color-mix(in srgb,var(--paper) 72%,#92764c);}
+.tile.terrain-mudwall {background:color-mix(in srgb,var(--paper) 65%,#7e6b4c);}
+.tile.terrain-stalactite .biome-cover {color:var(--ink);opacity:.65;}
+.stalactite-count {position:absolute;right:3px;bottom:2px;z-index:4;min-width:18px;background:var(--paper);color:var(--red);border:1px solid currentColor;font-size:18px;line-height:1;text-align:center;}
+.stalactite-drop .biome-cover {animation:falling-stone .4s ease-in;}
+@keyframes falling-stone {0%{transform:translateY(-20px);}70%{transform:translateY(9px);}100%{transform:translateY(0);}}
+.crystal-radius {position:absolute;inset:2px;border:2px dotted #749fca;pointer-events:none;z-index:1;box-shadow:inset 0 0 8px #789ec738;}
+.shadow-pencil {position:absolute;inset:0;z-index:5;background:repeating-linear-gradient(34deg,#433c4bf2 0 1px,#655b6eeb 1px 3px,#4a4053ed 3px 4px);box-shadow:inset 0 0 10px #2a2032;pointer-events:none;}
+.tile.shadow-covered {outline:1px dashed #88778b;outline-offset:-3px;}
+.personal-moment svg {max-height:140px;}
+@media(max-width:760px){
+  .workshop-nav button {font-size:17px;padding:4px;}
+  .workshop-faces {height:338px;}
+  .workshop-prices-page p {font-size:19px;}
+  .class-price-table {font-size:19px;}
+  .class-price-table th,.class-price-table td {padding:6px 3px;}
+  .loot-find-tile b {font-size:20px;}.loot-find-tile p {font-size:18px;}.loot-find-tile svg {width:29px;height:35px;}
+  #hover-name {font-size:22px;}#field-note{font-size:21px;}
+}
+@media(prefers-reduced-motion:reduce){.stalactite-drop .biome-cover{animation:none;}}
+.workshop-faces .tier-symbol {height:32px;width:42px;}
+.workshop-faces .tier-symbol svg {height:16px!important;width:16px!important;}
+.workshop-faces>button {padding-block:2px;min-height:0;}
+.portrait .stun-badge {visibility:hidden;}
+.stun-portrait-overlay {position:absolute;inset:18% 15%;z-index:6;display:grid;place-items:center;background:color-mix(in srgb,var(--paper) 88%,transparent);border:2px dashed var(--gold);color:var(--gold);}
+.stun-portrait-overlay>svg {width:80%;height:80%;}
+.passive-veil {color:#77628d;}
+:root {--veil-ink:#6f537c;}body[data-palette="dark"] {--veil-ink:#ccb0db;}
+.reel-unavailable.shadow,.shadow-badge,.passive-veil {color:var(--veil-ink);}
+
+/* On narrow paper keep reading space, rather than shrinking the entire find. */
+@media(max-width:760px){
+  .stage-card.treasure {padding:12px 16px;}
+  .stage-card.treasure > .eyebrow {flex-basis:16px;height:16px;}
+  .stage-card.treasure > .stage-title {flex-basis:48px;height:48px;}
+  .stage-card.treasure > .stage-subtitle {flex-basis:28px;height:28px;}
+  .stage-card.treasure > .stage-actions {flex-basis:55px;height:55px;min-height:55px;}
+  .stage-card.treasure .critical-summary,.stage-card.treasure .critical-summary .critical-payoff {min-height:0;height:100%;}
+}
+
+/* Full artefact rules remain on hover/focus; the find itself stays compact. */
+.stage-card.treasure #artefact-loot {overflow:visible;}
+.loot-find-tile .artefact-card b {font-size:18px;}
+.loot-find-tile .artefact-card p {font-size:16px;line-height:1.08;}
+.loot-find-tile .artefact-card button {font-size:15px;line-height:1.1;padding:2px 5px;min-height:22px;}
+.loot-find-tile .artefact-card .revive-ready {font-size:14px;line-height:1.1;}
+
+/* Two readable supply lines fit a fixed pocket without changing its frame. */
+@media(max-width:760px){
+  .notes-and-bag .inventory-items button {grid-template-rows:25px 20px;padding-top:2px;padding-bottom:2px;}
+  .notes-and-bag .inventory-items button>span {font-size:13px;line-height:.95;}
+  .notes-and-bag .inventory-items button small {font-size:11px;line-height:.9;}
+}

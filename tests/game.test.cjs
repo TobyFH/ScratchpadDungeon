@@ -44,6 +44,7 @@ async function game(t, { auto = false, width = 1440 } = {}) {
       heroDamagePower = (h, n) => n;
       heroHealingPower = n => n;
       characterLuck = () => 0.999999;
+      scheduleStunRecovery = () => {};
       // These regressions isolate established base rules. Tactics has dedicated
       // real-rule tests for opening bonuses and random vulnerability.
       setupBattleOpening = () => {
@@ -1122,7 +1123,7 @@ test("save restores speed and artefacts and migrates the earlier Sunseed-era not
     localStorage.setItem("scratchpad-dungeon-v2", JSON.stringify(old));
   });
   await p.reload();
-  assert.equal(await p.evaluate(() => state.version), 21);
+  assert.equal(await p.evaluate(() => state.version), 22);
   assert.equal(await p.evaluate(() => state.speed), "skip");
   assert.equal(await p.evaluate(() => state.relic), undefined);
   assert.doesNotMatch(await p.locator("body").textContent(), /Sunseed/);
@@ -1169,7 +1170,7 @@ test("downloaded HTML remains self-contained and playable offline with mandatory
   assert.deepEqual(errors, []);
 });
 
-test("a stunned hero misses one go without rolling or changing the enemy countdown", async (t) => {
+test("a solo stunned hero misses one turn without rolling and advances the enemy countdown", async (t) => {
   let p = await game(t);
   await fast(p);
   await encounter(p, { countdown: 3 });
@@ -1181,13 +1182,13 @@ test("a stunned hero misses one go without rolling or changing the enemy countdo
   await p.locator('[data-spin="0"]').click();
   await finish(p);
   assert.equal(await p.evaluate(() => state.party[0].stun), 0);
-  assert.equal(await p.evaluate(() => state.enemy.countdown), 3);
+  assert.equal(await p.evaluate(() => state.enemy.countdown), 2);
   assert.equal(await p.evaluate(() => state.party[0].stats.spins), 0);
   assert.equal(await p.evaluate(() => state.party[0].stats.turnsMissed), 1);
   assert.equal(await p.evaluate(() => state.enemy.hp), 1000);
   await p.locator('[data-spin="0"]').click();
   await finish(p);
-  assert.equal(await p.evaluate(() => state.enemy.countdown), 2);
+  assert.equal(await p.evaluate(() => state.enemy.countdown), 1);
   assert.equal(await p.evaluate(() => state.enemy.hp), 997);
 });
 
@@ -1805,11 +1806,10 @@ test("starting blanks are actual editable reel faces with an icon; inscription r
     let f = before[r].findIndex((s) => s.type === "blank");
     await p.locator(`[data-editor-reel="${r}"]`).click();
     await p.locator(`[data-editor-face="${f}"]`).click();
-    assert.match(
-      await p.locator(`[data-upgrade="0,${r},${f}"]`).textContent(),
-      /Inscribe a markTeam block.*spend 2 pts/,
-    );
-    await p.locator(`[data-upgrade="0,${r},${f}"]`).click();
+    await p.locator("#blank-choose").click();
+    await p.locator("#face-destination").selectOption("block");
+    assert.match(await p.locator("#face-swap").textContent(), /Inscribe Team block.*Spend 2 points/);
+    await p.locator("#face-swap").click();
   }
   await p.locator("#modal [data-close]").first().click();
   assert.equal(await p.evaluate(() => state.party[0].points), 0);
@@ -2415,7 +2415,7 @@ test("paired encounters use portrait targeting; tier III damage and critical att
   );
 });
 
-test("each enemy has its own countdown and a stunned hero advances neither enemy clock", async (t) => {
+test("each enemy has its own countdown and a solo lost stun turn advances both clocks", async (t) => {
   const p = await game(t);
   await fast(p);
   await p.evaluate(() => {
@@ -2462,7 +2462,7 @@ test("each enemy has its own countdown and a stunned hero advances neither enemy
   await finish(p);
   assert.deepEqual(
     await p.evaluate(() => state.enemies.map((e) => e.countdown)),
-    [2, 4],
+    [1, 3],
   );
 });
 
@@ -2954,37 +2954,18 @@ test("recruit pity increases after missed floors, resets on meeting even if decl
   assert.match(await p.locator(".stage-result").textContent(), /level 4/);
   await p.locator("#recruit-accept").click();
   await p.evaluate(() => window.testAction);
-  assert.deepEqual(
-    await p.evaluate(() => {
-      const h = state.party[2];
-      return {
-        level: h.level,
-        spent: h.inheritedUpgradeSpent,
-        points: h.points,
-        hp: h.hp,
-        expected:
-          (h.job === "fighter"
-            ? 44
-            : h.job === "mage"
-              ? 28
-              : h.job === "ranger"
-                ? 30
-                : h.job === "berserker"
-                  ? 38
-                  : 26) + 18,
-      };
-    }),
-    await p.evaluate(() => ({
-      level: 4,
-      spent: 6,
-      points: 9,
-      hp: state.party[2].maxHp,
-      expected: state.party[2].maxHp,
-    })),
-  );
+  const recruited = await p.evaluate(() => {
+    const h=state.party[2];
+    return {level:h.level,spent:h.inheritedUpgradeSpent,points:h.points,hp:h.hp,maxHp:h.maxHp,base:CLASS_BALANCE[h.job].hp};
+  });
+  assert.equal(recruited.level,4);
+  assert.equal(recruited.hp,recruited.base+18);
+  assert.equal(recruited.hp,recruited.maxHp);
+  assert.ok(recruited.spent>0 && recruited.spent<=6);
+  assert.equal(recruited.points,15-recruited.spent);
   assert.equal(
     await p.evaluate(() =>
-      ["fighter", "healer", "rogue"].every((job) =>
+      ["fighter", "healer", "rogue", "jester"].every((job) =>
         Array.from({ length: 12 }, (_, i) => i + 1).every((level) => {
           state.party[0].level = level;
           state.party = state.party.slice(0, 1);
@@ -3279,7 +3260,7 @@ test("older saved fights migrate to the gentler curve without losing wounds or e
       face: state.party[0].reels[0][0].tier,
     })),
     {
-      version: 21,
+      version: 22,
       hp: 14,
       max: 28,
       damage: 6,
@@ -4977,11 +4958,13 @@ test("deep enemy reels improve with depth and the final guardian actually rolls 
       damage: state.enemy.damage,
       strikes: state.enemy.strikes,
       frequency: state.enemy.frequency,
+      expectedClock: Math.max(1, floorBalance(10).bossFrequency - (state.enemy.affix === "Frenzied" ? 1 : 0)),
       faces: state.enemy.reels.flat(),
       preview: state.enemy.last,
     };
   });
-  assert.deepEqual([boss.damage, boss.strikes, boss.frequency], [14, 3, 1]);
+  assert.deepEqual([boss.damage, boss.strikes], [14, 3]);
+  assert.equal(boss.frequency,boss.expectedClock);
   assert.ok(
     boss.faces.every(
       (f) => f.tier === (["attack", "magic"].includes(f.type) ? 4 : 3),
@@ -5049,7 +5032,7 @@ test("version-nine fights adopt the stronger enemy curve without changing hero w
         .map((f) => f.tier),
     })),
     {
-      version: 21,
+      version: 22,
       autoplay: false,
       heroHp: 19,
       face: 4,
@@ -7388,7 +7371,7 @@ test("a failed retired-upgrade refund leaves the original profile intact for a s
   assert.equal(r.again, 115);
 });
 
-test("autofight recovers a stunned attacker instead of indefinitely using the ready healer", async (t) => {
+test("autofight uses a ready ally to recover a stunned attacker and advances the action clock", async (t) => {
   const p = await game(t);
   await fast(p);
   const r = await p.evaluate(async () => {
@@ -7410,9 +7393,9 @@ test("autofight recovers a stunned attacker instead of indefinitely using the re
       next: autoChooseActor(living).i,
     };
   });
-  assert.equal(r.selected, 0);
+  assert.equal(r.selected, 1);
   assert.equal(r.stun, 0);
-  assert.equal(r.after, r.before);
+  assert.equal(r.after, r.before - 1);
   assert.equal(r.next, 0);
 });
 

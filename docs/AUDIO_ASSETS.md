@@ -39,3 +39,9 @@ to lower music/ambience. Reveal a tile, encounter an ambush, roll normally,
 fast-forward a roll, and land a critical. Verify the five sounds, normal/large
 lock distinction and SFX slider. Browser autoplay policies require the initial
 interaction; a muted browser tab/system mixer can still silence the game.
+
+Battle/exploration scores are separate in `GameSound`. Deeper floors increase
+low filtered ambience on the existing ambience bus. `ui/reward-audio.js` includes
+original temporary mud, stone, stun and Jester bell cues; these synthesised cues
+require no external service or new recording licence. Both scores and all new
+cues retain the same mute, volume, hidden-tab and voice-pool rules.

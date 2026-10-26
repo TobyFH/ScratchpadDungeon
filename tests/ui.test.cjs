@@ -414,6 +414,7 @@ test("paired encounters, party labels, satchel pockets and log fit desktop and c
         pockets: [
           ...document.querySelectorAll(".inventory-items button"),
         ].every((el) => box(el).bottom <= inventory.bottom + 1),
+        pocketDetails: [...document.querySelectorAll(".inventory-items button small")].map(el=>({text:el.textContent,height:el.getBoundingClientRect().height,parent:el.closest("button").getBoundingClientRect().height,width:el.getBoundingClientRect().width,bottom:el.getBoundingClientRect().bottom-el.closest("button").getBoundingClientRect().bottom})),
         pocketText: [
           ...document.querySelectorAll(
             ".inventory-items button > span, .inventory-items button small",
