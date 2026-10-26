@@ -106,3 +106,12 @@ prove every ordinary tile can reach stairs with all mud closed, and route state
 must not reuse consumed mud. Ordinary ambushes remain command-aged; only Shadow
 biome cover has a paused active-exploration clock. Run the focused clarity and
 ice/crystal tests plus both visual reviews after changing these systems.
+
+Read `docs/LIVING_PAPER.md` before changing current support/Execute formulas or
+portrait motion. Ranger seals fire independently; stored Execute is a separate,
+capped selected-target hit after ordinary damage and never crits twice. A whole
+enemy turn grants one patience, irrespective of strikes. Mage late recovery and
+well depth bonuses use shared helpers in hero-builds.js and AI forecasts.
+`ui/combat-life.js` / `.css` own character life, spring-box FX and concise
+artefact summaries. Keep finite FX cancellation-safe, tooltip badges intact,
+slider/reduced-motion support, and illustration transforms separate from hitboxes.

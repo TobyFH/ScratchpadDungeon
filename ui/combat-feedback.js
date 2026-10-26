@@ -5,11 +5,7 @@ function contributionType(symbol, owner) {
   if (owner?.job === "berserker") return "attack";
   if (owner?.job === "fighter") return "block";
   if (owner?.job === "rogue") return "attack";
-  if (owner?.job === "ranger")
-    return state.lastExecution?.heroId === owner.id &&
-      state.lastExecution.bonus > 0
-      ? "attack"
-      : "patience";
+  if (owner?.job === "ranger") return "attack";
   return "class";
 }
 function contributes(symbol, wanted, owner) {
@@ -384,6 +380,7 @@ async function classAbilityFX(h) {
   await feedbackPause(skip ? 65 : Math.max(90, 220 / Math.sqrt(pace())));
 }
 function passiveFX(e, text, kind = "danger") {
+  portraitMotion(enemyArtEl(e), "passive", true);
   combatCallout(enemyArtEl(e), text, kind);
   screenFX(kind === "heal" ? "heal" : "critical", 0.7);
   burst(enemyArtEl(e), kind === "heal" ? "heal" : "scary", 38);

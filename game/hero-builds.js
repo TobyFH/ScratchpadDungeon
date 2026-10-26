@@ -35,17 +35,30 @@ const MAGE_POWERS = Object.freeze({
   },
 });
 const HERO_TUNING = Object.freeze({
-  rangerExecute: 1.12,
   healing: 1,
 });
 const tankSealBlock = (h) =>
   2 + Math.floor(Math.max(0, (h?.level || 1) - 1) / 3);
 const furyCapacity = (h) =>
   24 + Math.max(0, Math.floor((h?.level || 1) - 1)) * 3;
+const SUPPORT_SCALING = Object.freeze({
+  mageStartLevel: 4,
+  magePerLevel: 0.025,
+  mageMax: 0.15,
+  wellStartFloor: 4,
+  wellBasePerFloor: 0.003,
+  wellRollPerFloor: 0.012,
+});
+const lateWellSteps = (depth) =>
+  Math.min(6, Math.max(0, depth - SUPPORT_SCALING.wellStartFloor));
 const fountainBaseRate = (depth = state.depth) =>
-  0.15 + Math.min(9, Math.max(0, depth - 1)) * 0.005;
+  0.15 +
+  Math.min(9, Math.max(0, depth - 1)) * 0.005 +
+  lateWellSteps(depth) * SUPPORT_SCALING.wellBasePerFloor;
 const fountainRollRate = (depth = state.depth) =>
-  0.5 + Math.min(9, Math.max(0, depth - 1)) * 0.018;
+  0.5 +
+  Math.min(9, Math.max(0, depth - 1)) * 0.018 +
+  lateWellSteps(depth) * SUPPORT_SCALING.wellRollPerFloor;
 function heroDamagePower(h, n) {
   return n;
 }
@@ -53,6 +66,29 @@ function heroHealingPower(n) {
   return n;
 }
 const RANGER_AIM_CAP = 6;
+const RANGER_EXECUTE = Object.freeze({
+  base: 4,
+  perLevel: 0.8,
+  healthy: 0.55,
+  missing: 1.6,
+  sealMultiplier: 2.5,
+  capBase: 12,
+  capPerLevel: 3,
+  enemyTurnGain: 1,
+});
+const rangerSealPower = (h) =>
+  2 + Math.floor(Math.max(0, (h.level || 1) - 1) / 3);
+const mageHealingFactor = (h) =>
+  h.job === "mage"
+    ? 1 +
+      Math.min(
+        SUPPORT_SCALING.mageMax,
+        Math.max(0, (h.level || 1) - SUPPORT_SCALING.mageStartLevel) *
+          SUPPORT_SCALING.magePerLevel,
+      )
+    : 1;
+const classHealingPower = (h, n) =>
+  n > 0 ? n + Math.round(n * (mageHealingFactor(h) - 1)) : n;
 // Fury scales with level; every real HP restored spends one charge.
 const BERSERKER_SUSTAIN = Object.freeze({
   bloodrushHeal: 4,
@@ -242,8 +278,7 @@ function classAbilityDescription(hero) {
       rogue: "Flurry: roll three extra attacks; each blade lands separately.",
       mage: "Resonance echoes the strongest healing, shield, poison or magic marks in this roll across the appropriate whole team. Healing also clears every ally’s stun.",
       healer: "Resonance echoes your rolled marks across the appropriate team.",
-      ranger:
-        "Execute: wait between attacks to fill patience. The next damaging roll gains a bonus against wounded enemies; the seal strengthens that shot.",
+      ranger: `Execute: fire a ${rangerSealPower(typeof hero === "object" ? hero : { level: 1 })}-power physical shot even with an empty bar. Stored patience adds a separate hit, ×${RANGER_EXECUTE.sealMultiplier} on this seal, stronger against wounded foes. That bonus is capped and never multiplied again by criticals. Other party actions and enemy turns build patience.`,
       berserker: `Bloodrush: restore ${bloodrushHealing(hero && typeof hero === "object" ? hero : { level: 1 })} HP to yourself, gain +2 physical damage. Wounds build Fury; every HP healed spends Fury. Charged Fury adds damage and lifesteal.`,
     }[job] || "Your permanent signature mark, alongside the other two results."
   );
@@ -461,24 +496,36 @@ function executionBonus(
 ) {
   if (!enemy || !charge) return 0;
   const missing = 1 - Math.max(0, enemy.hp) / Math.max(1, enemy.maxHp);
-  return Math.ceil(
-    (((3 + h.level * 0.75) * Math.min(RANGER_AIM_CAP, charge)) /
+  const raw =
+    (((RANGER_EXECUTE.base + (h.level || 1) * RANGER_EXECUTE.perLevel) *
+      Math.min(RANGER_AIM_CAP, charge)) /
       RANGER_AIM_CAP) *
-      (0.5 + 2.5 * missing) *
-      (seal ? 1.35 : 1) *
-      HERO_TUNING.rangerExecute,
+    (RANGER_EXECUTE.healthy + RANGER_EXECUTE.missing * missing) *
+    (seal ? RANGER_EXECUTE.sealMultiplier : 1);
+  return Math.min(
+    RANGER_EXECUTE.capBase + (h.level || 1) * RANGER_EXECUTE.capPerLevel,
+    Math.ceil(raw),
   );
 }
-function advanceRangerPatience(actor, attacked, seal = false) {
+function advanceRangerPatience(actor, attacked) {
   for (const h of state.party.filter(alive)) {
     if (h.job !== "ranger" || (h === actor && attacked)) continue;
-    h.charge = Math.min(
-      RANGER_AIM_CAP,
-      (h.charge || 0) + (h === actor && seal ? 3 : rangerAimGain()),
-    );
+    h.charge = Math.min(RANGER_AIM_CAP, (h.charge || 0) + rangerAimGain());
     syncRangerAim(h);
   }
 }
+function advanceRangerEnemyTurn() {
+  if (!state.enemy || !livingEnemies().length) return;
+  for (const h of state.party.filter(alive))
+    if (h.job === "ranger") {
+      h.charge = Math.min(
+        RANGER_AIM_CAP,
+        (h.charge || 0) + RANGER_EXECUTE.enemyTurnGain,
+      );
+      syncRangerAim(h);
+    }
+}
+
 function pointsNeedAttention(h) {
   return (
     !state.over &&

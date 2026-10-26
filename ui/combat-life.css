@@ -1,0 +1,249 @@
+/* Living pencil marks. Transform the illustration only; hitboxes never move. */
+:root {
+  --portrait-life: 1;
+}
+.enemy-box:not(.enemy-corpse) .enemy-art > svg {
+  transform-origin: 50% 90%;
+  animation: paper-enemy-sway 3.6s ease-in-out infinite;
+}
+.enemy-box[data-idle="float"]:not(.enemy-corpse) .enemy-art > svg {
+  animation-name: paper-enemy-float;
+  animation-duration: 3.2s;
+}
+.enemy-box[data-idle="skitter"]:not(.enemy-corpse) .enemy-art > svg {
+  animation-name: paper-enemy-skitter;
+  animation-duration: 2.7s;
+}
+.enemy-box[data-idle="heavy"]:not(.enemy-corpse) .enemy-art > svg {
+  animation-name: paper-enemy-heavy;
+  animation-duration: 4.5s;
+}
+@keyframes paper-enemy-sway {
+  0%,
+  100% {
+    rotate: calc(-0.8deg * var(--portrait-life));
+  }
+  50% {
+    translate: 0 calc(-2px * var(--portrait-life));
+    rotate: calc(0.8deg * var(--portrait-life));
+  }
+}
+@keyframes paper-enemy-float {
+  0%,
+  100% {
+    translate: 0 calc(2px * var(--portrait-life));
+    rotate: calc(-1deg * var(--portrait-life));
+  }
+  50% {
+    translate: 0 calc(-5px * var(--portrait-life));
+    rotate: calc(1deg * var(--portrait-life));
+  }
+}
+@keyframes paper-enemy-skitter {
+  0%,
+  36%,
+  100% {
+    translate: 0 0;
+  }
+  44% {
+    translate: calc(-3px * var(--portrait-life)) 0;
+    rotate: calc(-1deg * var(--portrait-life));
+  }
+  54% {
+    translate: calc(2px * var(--portrait-life)) 0;
+  }
+  64% {
+    translate: 0 0;
+  }
+}
+@keyframes paper-enemy-heavy {
+  0%,
+  100% {
+    scale: 1 1;
+  }
+  50% {
+    scale: 1 calc(1 + 0.015 * var(--portrait-life));
+    rotate: calc(0.5deg * var(--portrait-life));
+  }
+}
+.status-motes {
+  position: absolute;
+  inset: 4px;
+  pointer-events: none;
+  z-index: 3;
+  overflow: hidden;
+}
+.status-motes i {
+  position: absolute;
+  bottom: 4%;
+  left: 17%;
+  width: 5px;
+  height: 5px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  opacity: 0;
+  animation: status-mote-drift 2.6s ease-out infinite;
+}
+.status-motes i:nth-child(2) {
+  left: 69%;
+  animation-delay: -0.9s;
+  animation-duration: 3.2s;
+}
+.status-motes i:nth-child(3) {
+  left: 42%;
+  animation-delay: -1.8s;
+}
+.poison-motes {
+  color: var(--poison);
+  background: radial-gradient(
+    ellipse at 30% 95%,
+    var(--poison-wash),
+    transparent 65%
+  );
+  animation: poison-wash-pan 4s ease-in-out infinite alternate;
+}
+.stimulant-motes {
+  color: var(--gold);
+}
+.stimulant-motes i {
+  border-radius: 0;
+  transform: rotate(45deg);
+  background: color-mix(in srgb, var(--gold) 40%, transparent);
+  animation-duration: 1.8s;
+}
+@keyframes status-mote-drift {
+  0% {
+    opacity: 0;
+    translate: 0 0;
+    scale: 0.7;
+  }
+  20% {
+    opacity: 0.8;
+  }
+  75% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+    translate: calc(7px * var(--portrait-life))
+      calc(-66px * var(--portrait-life));
+    scale: 1.2;
+  }
+}
+@keyframes poison-wash-pan {
+  from {
+    background-position: -9px 7px;
+    opacity: 0.4;
+  }
+  to {
+    background-position: 10px -4px;
+    opacity: 0.8;
+  }
+}
+.powered-up .portrait::after,
+.powered-up .enemy-art::after {
+  height: 60%;
+  clip-path: none;
+  background: radial-gradient(ellipse at bottom, #d9a64e55, transparent 70%);
+  animation: stimulant-breathe 2.1s ease-in-out infinite alternate;
+}
+@keyframes stimulant-breathe {
+  from {
+    opacity: 0.3;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 0.8;
+    transform: translateY(-3px);
+  }
+}
+body.portrait-motion-disabled .enemy-art > svg,
+body.portrait-motion-disabled .status-motes,
+body.portrait-motion-disabled .status-motes i,
+body.portrait-motion-disabled .powered-up .portrait::after,
+body.portrait-motion-disabled .powered-up .enemy-art::after {
+  animation: none !important;
+}
+body.portrait-motion-disabled .status-motes {
+  display: none;
+}
+body.utility-open .enemy-art > svg,
+body.utility-open .status-motes,
+body.utility-open .status-motes i {
+  animation-play-state: paused;
+}
+.jack-in-the-box {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1800;
+  pointer-events: none;
+  overflow: visible;
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  filter: drop-shadow(1px 2px 1px #493d3622);
+}
+.jack-in-the-box .echo {
+  stroke-width: 4;
+  stroke: var(--paper);
+  opacity: 0.85;
+}
+.jack-in-the-box .jack-head {
+  stroke-width: 1.8;
+}
+/* A long artefact rule never pushes its footer out of the Run Treasures card. */
+.artefact-slot {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: row;
+  height: 88px;
+  padding: 5px;
+  gap: 7px;
+}
+.fit-notebook .artefact-slot {
+  height: 85px;
+}
+.artefact-slot > span {
+  display: grid;
+  grid-template-rows: 30px 26px 12px;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+.artefact-slot .artefact-name {
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+}
+.artefact-slot small {
+  font-size: 13px;
+  line-height: 1;
+  margin: 0;
+}
+.artefact-slot em {
+  font-size: 11px;
+  line-height: 1;
+  margin: 0;
+  white-space: nowrap;
+}
+.artefact-slot > svg {
+  width: 27px;
+  height: 32px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .enemy-box .enemy-art > svg,
+  .status-motes,
+  .status-motes i,
+  .powered-up .portrait::after,
+  .powered-up .enemy-art::after {
+    animation: none !important;
+  }
+  .status-motes {
+    display: none;
+  }
+}

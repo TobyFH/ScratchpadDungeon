@@ -11543,6 +11543,256 @@ body[data-motion="off"] .punchline-ready .machine-face { animation: none; }
   .notes-and-bag .inventory-items button>span {font-size:13px;line-height:.95;}
   .notes-and-bag .inventory-items button small {font-size:11px;line-height:.9;}
 }
+
+/* Living pencil marks. Transform the illustration only; hitboxes never move. */
+:root {
+  --portrait-life: 1;
+}
+.enemy-box:not(.enemy-corpse) .enemy-art > svg {
+  transform-origin: 50% 90%;
+  animation: paper-enemy-sway 3.6s ease-in-out infinite;
+}
+.enemy-box[data-idle="float"]:not(.enemy-corpse) .enemy-art > svg {
+  animation-name: paper-enemy-float;
+  animation-duration: 3.2s;
+}
+.enemy-box[data-idle="skitter"]:not(.enemy-corpse) .enemy-art > svg {
+  animation-name: paper-enemy-skitter;
+  animation-duration: 2.7s;
+}
+.enemy-box[data-idle="heavy"]:not(.enemy-corpse) .enemy-art > svg {
+  animation-name: paper-enemy-heavy;
+  animation-duration: 4.5s;
+}
+@keyframes paper-enemy-sway {
+  0%,
+  100% {
+    rotate: calc(-0.8deg * var(--portrait-life));
+  }
+  50% {
+    translate: 0 calc(-2px * var(--portrait-life));
+    rotate: calc(0.8deg * var(--portrait-life));
+  }
+}
+@keyframes paper-enemy-float {
+  0%,
+  100% {
+    translate: 0 calc(2px * var(--portrait-life));
+    rotate: calc(-1deg * var(--portrait-life));
+  }
+  50% {
+    translate: 0 calc(-5px * var(--portrait-life));
+    rotate: calc(1deg * var(--portrait-life));
+  }
+}
+@keyframes paper-enemy-skitter {
+  0%,
+  36%,
+  100% {
+    translate: 0 0;
+  }
+  44% {
+    translate: calc(-3px * var(--portrait-life)) 0;
+    rotate: calc(-1deg * var(--portrait-life));
+  }
+  54% {
+    translate: calc(2px * var(--portrait-life)) 0;
+  }
+  64% {
+    translate: 0 0;
+  }
+}
+@keyframes paper-enemy-heavy {
+  0%,
+  100% {
+    scale: 1 1;
+  }
+  50% {
+    scale: 1 calc(1 + 0.015 * var(--portrait-life));
+    rotate: calc(0.5deg * var(--portrait-life));
+  }
+}
+.status-motes {
+  position: absolute;
+  inset: 4px;
+  pointer-events: none;
+  z-index: 3;
+  overflow: hidden;
+}
+.status-motes i {
+  position: absolute;
+  bottom: 4%;
+  left: 17%;
+  width: 5px;
+  height: 5px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  opacity: 0;
+  animation: status-mote-drift 2.6s ease-out infinite;
+}
+.status-motes i:nth-child(2) {
+  left: 69%;
+  animation-delay: -0.9s;
+  animation-duration: 3.2s;
+}
+.status-motes i:nth-child(3) {
+  left: 42%;
+  animation-delay: -1.8s;
+}
+.poison-motes {
+  color: var(--poison);
+  background: radial-gradient(
+    ellipse at 30% 95%,
+    var(--poison-wash),
+    transparent 65%
+  );
+  animation: poison-wash-pan 4s ease-in-out infinite alternate;
+}
+.stimulant-motes {
+  color: var(--gold);
+}
+.stimulant-motes i {
+  border-radius: 0;
+  transform: rotate(45deg);
+  background: color-mix(in srgb, var(--gold) 40%, transparent);
+  animation-duration: 1.8s;
+}
+@keyframes status-mote-drift {
+  0% {
+    opacity: 0;
+    translate: 0 0;
+    scale: 0.7;
+  }
+  20% {
+    opacity: 0.8;
+  }
+  75% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+    translate: calc(7px * var(--portrait-life))
+      calc(-66px * var(--portrait-life));
+    scale: 1.2;
+  }
+}
+@keyframes poison-wash-pan {
+  from {
+    background-position: -9px 7px;
+    opacity: 0.4;
+  }
+  to {
+    background-position: 10px -4px;
+    opacity: 0.8;
+  }
+}
+.powered-up .portrait::after,
+.powered-up .enemy-art::after {
+  height: 60%;
+  clip-path: none;
+  background: radial-gradient(ellipse at bottom, #d9a64e55, transparent 70%);
+  animation: stimulant-breathe 2.1s ease-in-out infinite alternate;
+}
+@keyframes stimulant-breathe {
+  from {
+    opacity: 0.3;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 0.8;
+    transform: translateY(-3px);
+  }
+}
+body.portrait-motion-disabled .enemy-art > svg,
+body.portrait-motion-disabled .status-motes,
+body.portrait-motion-disabled .status-motes i,
+body.portrait-motion-disabled .powered-up .portrait::after,
+body.portrait-motion-disabled .powered-up .enemy-art::after {
+  animation: none !important;
+}
+body.portrait-motion-disabled .status-motes {
+  display: none;
+}
+body.utility-open .enemy-art > svg,
+body.utility-open .status-motes,
+body.utility-open .status-motes i {
+  animation-play-state: paused;
+}
+.jack-in-the-box {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1800;
+  pointer-events: none;
+  overflow: visible;
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  filter: drop-shadow(1px 2px 1px #493d3622);
+}
+.jack-in-the-box .echo {
+  stroke-width: 4;
+  stroke: var(--paper);
+  opacity: 0.85;
+}
+.jack-in-the-box .jack-head {
+  stroke-width: 1.8;
+}
+/* A long artefact rule never pushes its footer out of the Run Treasures card. */
+.artefact-slot {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: row;
+  height: 88px;
+  padding: 5px;
+  gap: 7px;
+}
+.fit-notebook .artefact-slot {
+  height: 85px;
+}
+.artefact-slot > span {
+  display: grid;
+  grid-template-rows: 30px 26px 12px;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+.artefact-slot .artefact-name {
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+}
+.artefact-slot small {
+  font-size: 13px;
+  line-height: 1;
+  margin: 0;
+}
+.artefact-slot em {
+  font-size: 11px;
+  line-height: 1;
+  margin: 0;
+  white-space: nowrap;
+}
+.artefact-slot > svg {
+  width: 27px;
+  height: 32px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .enemy-box .enemy-art > svg,
+  .status-motes,
+  .status-motes i,
+  .powered-up .portrait::after,
+  .powered-up .enemy-art::after {
+    animation: none !important;
+  }
+  .status-motes {
+    display: none;
+  }
+}
 /* END GENERATED NOTEBOOK CSS */
     </style>
   </head>
@@ -13865,17 +14115,30 @@ const MAGE_POWERS = Object.freeze({
   },
 });
 const HERO_TUNING = Object.freeze({
-  rangerExecute: 1.12,
   healing: 1,
 });
 const tankSealBlock = (h) =>
   2 + Math.floor(Math.max(0, (h?.level || 1) - 1) / 3);
 const furyCapacity = (h) =>
   24 + Math.max(0, Math.floor((h?.level || 1) - 1)) * 3;
+const SUPPORT_SCALING = Object.freeze({
+  mageStartLevel: 4,
+  magePerLevel: 0.025,
+  mageMax: 0.15,
+  wellStartFloor: 4,
+  wellBasePerFloor: 0.003,
+  wellRollPerFloor: 0.012,
+});
+const lateWellSteps = (depth) =>
+  Math.min(6, Math.max(0, depth - SUPPORT_SCALING.wellStartFloor));
 const fountainBaseRate = (depth = state.depth) =>
-  0.15 + Math.min(9, Math.max(0, depth - 1)) * 0.005;
+  0.15 +
+  Math.min(9, Math.max(0, depth - 1)) * 0.005 +
+  lateWellSteps(depth) * SUPPORT_SCALING.wellBasePerFloor;
 const fountainRollRate = (depth = state.depth) =>
-  0.5 + Math.min(9, Math.max(0, depth - 1)) * 0.018;
+  0.5 +
+  Math.min(9, Math.max(0, depth - 1)) * 0.018 +
+  lateWellSteps(depth) * SUPPORT_SCALING.wellRollPerFloor;
 function heroDamagePower(h, n) {
   return n;
 }
@@ -13883,6 +14146,29 @@ function heroHealingPower(n) {
   return n;
 }
 const RANGER_AIM_CAP = 6;
+const RANGER_EXECUTE = Object.freeze({
+  base: 4,
+  perLevel: 0.8,
+  healthy: 0.55,
+  missing: 1.6,
+  sealMultiplier: 2.5,
+  capBase: 12,
+  capPerLevel: 3,
+  enemyTurnGain: 1,
+});
+const rangerSealPower = (h) =>
+  2 + Math.floor(Math.max(0, (h.level || 1) - 1) / 3);
+const mageHealingFactor = (h) =>
+  h.job === "mage"
+    ? 1 +
+      Math.min(
+        SUPPORT_SCALING.mageMax,
+        Math.max(0, (h.level || 1) - SUPPORT_SCALING.mageStartLevel) *
+          SUPPORT_SCALING.magePerLevel,
+      )
+    : 1;
+const classHealingPower = (h, n) =>
+  n > 0 ? n + Math.round(n * (mageHealingFactor(h) - 1)) : n;
 // Fury scales with level; every real HP restored spends one charge.
 const BERSERKER_SUSTAIN = Object.freeze({
   bloodrushHeal: 4,
@@ -14072,8 +14358,7 @@ function classAbilityDescription(hero) {
       rogue: "Flurry: roll three extra attacks; each blade lands separately.",
       mage: "Resonance echoes the strongest healing, shield, poison or magic marks in this roll across the appropriate whole team. Healing also clears every ally’s stun.",
       healer: "Resonance echoes your rolled marks across the appropriate team.",
-      ranger:
-        "Execute: wait between attacks to fill patience. The next damaging roll gains a bonus against wounded enemies; the seal strengthens that shot.",
+      ranger: `Execute: fire a ${rangerSealPower(typeof hero === "object" ? hero : { level: 1 })}-power physical shot even with an empty bar. Stored patience adds a separate hit, ×${RANGER_EXECUTE.sealMultiplier} on this seal, stronger against wounded foes. That bonus is capped and never multiplied again by criticals. Other party actions and enemy turns build patience.`,
       berserker: `Bloodrush: restore ${bloodrushHealing(hero && typeof hero === "object" ? hero : { level: 1 })} HP to yourself, gain +2 physical damage. Wounds build Fury; every HP healed spends Fury. Charged Fury adds damage and lifesteal.`,
     }[job] || "Your permanent signature mark, alongside the other two results."
   );
@@ -14291,24 +14576,36 @@ function executionBonus(
 ) {
   if (!enemy || !charge) return 0;
   const missing = 1 - Math.max(0, enemy.hp) / Math.max(1, enemy.maxHp);
-  return Math.ceil(
-    (((3 + h.level * 0.75) * Math.min(RANGER_AIM_CAP, charge)) /
+  const raw =
+    (((RANGER_EXECUTE.base + (h.level || 1) * RANGER_EXECUTE.perLevel) *
+      Math.min(RANGER_AIM_CAP, charge)) /
       RANGER_AIM_CAP) *
-      (0.5 + 2.5 * missing) *
-      (seal ? 1.35 : 1) *
-      HERO_TUNING.rangerExecute,
+    (RANGER_EXECUTE.healthy + RANGER_EXECUTE.missing * missing) *
+    (seal ? RANGER_EXECUTE.sealMultiplier : 1);
+  return Math.min(
+    RANGER_EXECUTE.capBase + (h.level || 1) * RANGER_EXECUTE.capPerLevel,
+    Math.ceil(raw),
   );
 }
-function advanceRangerPatience(actor, attacked, seal = false) {
+function advanceRangerPatience(actor, attacked) {
   for (const h of state.party.filter(alive)) {
     if (h.job !== "ranger" || (h === actor && attacked)) continue;
-    h.charge = Math.min(
-      RANGER_AIM_CAP,
-      (h.charge || 0) + (h === actor && seal ? 3 : rangerAimGain()),
-    );
+    h.charge = Math.min(RANGER_AIM_CAP, (h.charge || 0) + rangerAimGain());
     syncRangerAim(h);
   }
 }
+function advanceRangerEnemyTurn() {
+  if (!state.enemy || !livingEnemies().length) return;
+  for (const h of state.party.filter(alive))
+    if (h.job === "ranger") {
+      h.charge = Math.min(
+        RANGER_AIM_CAP,
+        (h.charge || 0) + RANGER_EXECUTE.enemyTurnGain,
+      );
+      syncRangerAim(h);
+    }
+}
+
 function pointsNeedAttention(h) {
   return (
     !state.over &&
@@ -15087,8 +15384,8 @@ function wardActive(e = actingEnemy) {
         if (h.job === "jester") return anticipationMarkup(h);
         const charge = h.charge || 0,
           bonus = executionBonus(h),
-          text = `Execute: ${charge}/${RANGER_AIM_CAP} patience. Each party action without this Ranger attacking adds two (three for its seal). The next damaging roll consumes it; wounded enemies take more. Current target bonus: +${bonus}. Clears after battle.`;
-        return `<span class="aim-meter ${charge ? "charged" : ""}" role="meter" aria-label="Execute patience" aria-valuemin="0" aria-valuemax="${RANGER_AIM_CAP}" aria-valuenow="${charge}" data-tooltip="${escapeHTML(text)}"><b>EXECUTE ${charge}/${RANGER_AIM_CAP}</b><span class="aim-track"><i style="width:${(charge / RANGER_AIM_CAP) * 100}%"></i></span><small>hit +${bonus}</small></span>`;
+          text = `Patience ${charge}/${RANGER_AIM_CAP}. +2 for other party actions or your support rolls; +1 per enemy turn. The next attack spends it for +${bonus} separate damage to this target. Execute seal: its own ${rangerSealPower(h)}-power shot, plus +${executionBonus(h,state.enemy,charge,true)} stored damage (×${RANGER_EXECUTE.sealMultiplier}). Stored damage does not crit again. Clears after battle.`;
+        return `<span class="aim-meter ${charge ? "charged" : ""}" role="meter" aria-label="Execute patience" aria-valuemin="0" aria-valuemax="${RANGER_AIM_CAP}" aria-valuenow="${charge}" data-tooltip="${escapeHTML(text)}"><b>EXECUTE ${charge}/${RANGER_AIM_CAP}</b><span class="aim-track"><i style="width:${(charge / RANGER_AIM_CAP) * 100}%"></i></span><small>${charge>=RANGER_AIM_CAP ? "seal +"+executionBonus(h,state.enemy,charge,true) : "hit +"+bonus}</small></span>`;
       }
       function syncRangerAim(h) {
         if (!["ranger","berserker","jester"].includes(h.job)) return;
@@ -17138,8 +17435,7 @@ function encounterTags(enemies) {
           const k = battleEnemies().indexOf(foe),
             root = $(k ? "#enemy-2" : "#enemy");
           if (!root) continue;
-          root.querySelector(".enemy-art").innerHTML =
-            portraitArt(foe.art, foe) + statusMarkup(foe);
+          refreshPortraitMarkup(root.querySelector(".enemy-art"),portraitArt(foe.art, foe) + statusMarkup(foe));
           root.querySelector(".enemy-health-label").innerHTML =
             `HP ${foe.hp} / ${foe.maxHp} · <span class="injury ${injury(foe)}">${injury(foe)}</span>`;
           root.querySelector(".enemy-hp").outerHTML = healthMarkup(foe, "enemy-hp");
@@ -17555,7 +17851,7 @@ function encounterTags(enemies) {
         if (entity.hp <= 0 || entity.dead) return "";
         const poison = entity.poison,
           buff = entity.stimulant;
-        return `<span class="portrait-conditions">${entity.crystalLocks?.length ? statusBadge("Crystal seals", `${entity.crystalLocks.length} reels sealed by nearby crystals. Sealed reels are empty for one roll; rolling this hero cracks all their gems.`, "crystal-badge", "crystal") : ""}${entity.reelGifts?.length ? statusBadge("Gilded reel", entity.reelGifts.map((g) => `Reel ${g.reel + 1}: +1 mark tier for ${g.uses} more rolls.`).join(" ") + " Cleared after battle.", "gift-badge", "point") : ""}${poison?.turns ? statusBadge("Poison", `${poison.damage || 1} damage each turn for ${poison.turns} more turns. Further doses stack damage once three turns are loaded. Cleared after battle.`, "poison-badge", "poison", poison.turns) : ""}${entity.rage ? statusBadge("Rage", `+${entity.rage} damage and ${Math.floor(entity.rage / 3)} damage resistance until battle ends.`, "rage-badge", "rage", "+" + entity.rage) : ""}${buff ? statusBadge("Stimulant", `+${1 + Math.floor(buff.power / 3)} damage and ${1 + Math.floor(buff.power / 5)} damage resistance; ${buff.turns} turns remaining; potency capped at 6.`, "buff-badge", "flame", buff.turns) : ""}${entity.shadowRest ? statusBadge("Veiled", "Use a different ally before this hero can act again.", "shadow-badge", "shadow") : ""}${entity.stun ? statusBadge("Stunned", "At most one missed action. Recovery after other rolls: 60%, then guaranteed. Afterwards, two own actions resist stun. Use an available ally while stunned. If nobody is ready, one missed turn advances enemy clocks.", "stun-badge", "stun", "1") : ""}${entity.stunWard ? statusBadge("Steady", `${entity.stunWard} own actions of stun protection. Further stuns may weaken shields or expose Vulnerable, but cannot stop another action.`,"stun-ward-badge","block") : ""}${entity.charge ? statusBadge("Execute", `${entity.charge}/${RANGER_AIM_CAP} patience. Bonus grows with the target’s missing health; consumed on the next damaging roll. Cleared after battle.`, "aim-badge", "bow", entity.charge) : ""}${entity.initiative && state.opening?.firstRoll ? statusBadge("Initiative", "Use this hero for the first roll: +25% to its effects. Lost if another hero acts first.", "initiative-badge", "beacon", "+25%") : ""}${entity.surprised && state.opening?.firstRoll ? statusBadge("Surprised", "Cannot make the first party roll. If everyone is surprised, enemies go first.", "surprised-badge", "question", "!") : ""}${entity.vulnerable ? statusBadge("Vulnerable", "The next damaging hit after this action deals 25% more HP damage.", "vulnerable-badge", "stun", "+25%") : ""}${entity.elite ? statusBadge(entity.boss ? "Boss" : "Elite", `${entity.affix || "Empowered"}. ${entity.affix === "Frenzied" ? `Attacks every ${entity.frequency} spin${entity.frequency === 1 ? "" : "s"}.` : entity.affix === "Venomous" ? "Damaging rolls also add poison." : `Begins battle with ${2 + state.depth} extra block.`}${entity.passive ? " " + (ENEMY_TRAITS[entity.passive.key]?.description || "") : ""}`, "elite-badge", "artefact") : ""}${isExploder(entity) ? statusBadge("Burning fuse", `${entity.fuseLeft ?? 2} enemy turns until ${exploderDamage(entity)} damage per hero. Team block and Unbroken page can protect you.`, "fuse-badge", "explosion") : ""}${entity.passive && !isExploder(entity) ? statusBadge(ENEMY_TRAITS[entity.passive.key]?.name || "Passive", ENEMY_TRAITS[entity.passive.key]?.description || "", "passive-badge passive-" + entity.passive.key, { carapace: "block", secondWind: "heal", summoner: "recruit", split: "flurry", blackout: "eraser", veil: "shadow" }[entity.passive.key] || "artefact") : ""}</span>${entity.stun ? `<span class="stun-portrait-overlay" data-tooltip="Stunned · use a ready ally, or lose one turn if alone.">${icon("stun")}</span>` : ""}`;
+        return `<span class="portrait-conditions">${entity.crystalLocks?.length ? statusBadge("Crystal seals", `${entity.crystalLocks.length} reels sealed by nearby crystals. Sealed reels are empty for one roll; rolling this hero cracks all their gems.`, "crystal-badge", "crystal") : ""}${entity.reelGifts?.length ? statusBadge("Gilded reel", entity.reelGifts.map((g) => `Reel ${g.reel + 1}: +1 mark tier for ${g.uses} more rolls.`).join(" ") + " Cleared after battle.", "gift-badge", "point") : ""}${poison?.turns ? statusBadge("Poison", `${poison.damage || 1} damage each turn for ${poison.turns} more turns. Further doses stack damage once three turns are loaded. Cleared after battle.`, "poison-badge", "poison", poison.turns) : ""}${entity.rage ? statusBadge("Rage", `+${entity.rage} damage and ${Math.floor(entity.rage / 3)} damage resistance until battle ends.`, "rage-badge", "rage", "+" + entity.rage) : ""}${buff ? statusBadge("Stimulant", `+${1 + Math.floor(buff.power / 3)} damage and ${1 + Math.floor(buff.power / 5)} damage resistance; ${buff.turns} turns remaining; potency capped at 6.`, "buff-badge", "flame", buff.turns) : ""}${entity.shadowRest ? statusBadge("Veiled", "Use a different ally before this hero can act again.", "shadow-badge", "shadow") : ""}${entity.stun ? statusBadge("Stunned", "At most one missed action. Recovery after other rolls: 60%, then guaranteed. Afterwards, two own actions resist stun. Use an available ally while stunned. If nobody is ready, one missed turn advances enemy clocks.", "stun-badge", "stun", "1") : ""}${entity.stunWard ? statusBadge("Steady", `${entity.stunWard} own actions of stun protection. Further stuns may weaken shields or expose Vulnerable, but cannot stop another action.`,"stun-ward-badge","block") : ""}${entity.charge ? statusBadge("Execute", `${entity.charge}/${RANGER_AIM_CAP} patience. Bonus grows with the target’s missing health; consumed on the next damaging roll. Cleared after battle.`, "aim-badge", "bow", entity.charge) : ""}${entity.initiative && state.opening?.firstRoll ? statusBadge("Initiative", "Use this hero for the first roll: +25% to its effects. Lost if another hero acts first.", "initiative-badge", "beacon", "+25%") : ""}${entity.surprised && state.opening?.firstRoll ? statusBadge("Surprised", "Cannot make the first party roll. If everyone is surprised, enemies go first.", "surprised-badge", "question", "!") : ""}${entity.vulnerable ? statusBadge("Vulnerable", "The next damaging hit after this action deals 25% more HP damage.", "vulnerable-badge", "stun", "+25%") : ""}${entity.elite ? statusBadge(entity.boss ? "Boss" : "Elite", `${entity.affix || "Empowered"}. ${entity.affix === "Frenzied" ? `Attacks every ${entity.frequency} spin${entity.frequency === 1 ? "" : "s"}.` : entity.affix === "Venomous" ? "Damaging rolls also add poison." : `Begins battle with ${2 + state.depth} extra block.`}${entity.passive ? " " + (ENEMY_TRAITS[entity.passive.key]?.description || "") : ""}`, "elite-badge", "artefact") : ""}${isExploder(entity) ? statusBadge("Burning fuse", `${entity.fuseLeft ?? 2} enemy turns until ${exploderDamage(entity)} damage per hero. Team block and Unbroken page can protect you.`, "fuse-badge", "explosion") : ""}${entity.passive && !isExploder(entity) ? statusBadge(ENEMY_TRAITS[entity.passive.key]?.name || "Passive", ENEMY_TRAITS[entity.passive.key]?.description || "", "passive-badge passive-" + entity.passive.key, { carapace: "block", secondWind: "heal", summoner: "recruit", split: "flurry", blackout: "eraser", veil: "shadow" }[entity.passive.key] || "artefact") : ""}</span>${entity.stun ? `<span class="stun-portrait-overlay" data-tooltip="Stunned · use a ready ally, or lose one turn if alone.">${icon("stun")}</span>` : ""}${statusAtmosphereMarkup(entity)}`;
       }
       function syncStatusFX() {
         state.party.forEach((h, i) => {
@@ -17580,6 +17876,7 @@ function encounterTags(enemies) {
           root?.classList.toggle("poisoned", e.hp > 0 && !!e.poison);
           root?.classList.toggle("fragment-enemy", !!e.fragment);
           root?.classList.toggle("fuse-burning", e.hp > 0 && isExploder(e));
+          if(root)root.dataset.idle=enemyIdleStyle(e);
         });
       }
 
@@ -17617,6 +17914,7 @@ function encounterTags(enemies) {
             });
             h.lastResonance = role;
           }
+          if (h.job === "ranger") base.attack += rangerSealPower(h);
           if (h.job === "berserker") {
 
             base.selfHeal = bloodrushHealing(h);
@@ -17665,12 +17963,11 @@ function encounterTags(enemies) {
           );
         if (h.job === "ranger" && (base.attack || base.magic)) {
           const bonus = executionBonus(h, state.enemy, h.charge || 0, !!seals);
-          if (base.attack) base.attack += bonus;
-          else base.magic += bonus;
           state.lastExecution = {
             heroId: h.id,
             charge: h.charge || 0,
             bonus,
+            seal: !!seals,
             targetId: state.enemy?.id,
           };
           Object.defineProperty(base, "executionBonus", {
@@ -17736,7 +18033,7 @@ function encounterTags(enemies) {
             base.hitSegments.splice(0, raw.length, ...adjusted);
           }
         }
-        for (const key of ["heal", "teamHeal", "selfHeal"]) if (base[key]) base[key] = heroHealingPower(base[key]);
+        for (const key of ["heal", "teamHeal", "selfHeal"]) if (base[key]) base[key] = classHealingPower(h,heroHealingPower(base[key]));
         return singleMark ? campRollBonus(base) : inspiredRoll(h, campRollBonus(base));
       }
       function grantRolledBlock(h, amount, impact = {}) {
@@ -17917,6 +18214,17 @@ function encounterTags(enemies) {
               if (hit < segments.length - 1)
                 await feedbackPause(skip ? 95 : Math.max(100, 190 / pace()));
             }
+            if(base.executionBonus && selected.hp>0){
+              await executionPayoffFX(h,selected,state.lastExecution);
+              if(state!==rollRun)return;
+              const n=damageEnemy(base.executionBonus,h.name+"’s Execute",selected,{attacker:h,impact:{type:"attack",kind:"execute",critical:!!state.lastExecution.seal,flights:damageFlights,symbols:state.lastExecution.seal?[{type:"class",job:"ranger",tier:1}]:symbols}});
+              dealt+=n;h.stats.damageDealt+=n;if(!selected.hp)h.stats.kills++;
+              state.lastPlayerRoll.hits.push({enemyId:selected.id,power:base.executionBonus,actual:n,execute:true,at:Date.now()});
+              state.lastExecution.actual=n;
+              const previous=leechTargets.get(selected.id);
+              if(n)leechTargets.set(selected.id,{enemy:selected,damage:(previous?.damage||0)+n});
+              combatCallout(enemyArtEl(selected),"EXECUTE · "+n,"gold");
+            }
             state.lastPlayerRoll.actualDamage = (state.lastPlayerRoll.bash?.actual || 0) + dealt;
             parts.push(
               `<span class="damage combat-total">${icon(sums.magic ? "magic" : "sword")} <strong>−${dealt}</strong> HP${area && foes.length > 1 ? " across ALL enemies" : ""}${multiplier > 1 ? " · " + (base.attack && base.magic ? sums.attack + " physical + " + sums.magic + " spell" : (base.attack || 0) + (base.magic || 0) + " × " + multiplier + " = " + damage) : ""}</span>`,
@@ -17992,6 +18300,8 @@ function encounterTags(enemies) {
           );
           if (punchlinePending && alive(h) && livingEnemies().length) {
             h.stats.punchlines = (h.stats.punchlines || 0) + 1;
+            if(symbols[1]?.type==="class")await jackInTheBoxFX(h,livingEnemies().includes(selected)?selected:livingEnemies()[0]);
+            if(state!==rollRun)return;
             await jesterMarkBurst(h);
             if (state !== rollRun) return;
           }
@@ -18122,13 +18432,15 @@ function encounterTags(enemies) {
             }
             if (totals.attack) {
               setEnemyPhase(e, `Attacking · ${strike + 1}/${e.strikes}`);
+              const heavyAttack=multiplier>1 || e.boss || e.strikes>1;
+              if(heavyAttack)await enemyWindup(e,"heavy");
               let n = 0;
               const hits =
                 multiplier > 1 ? [base.attack, totals.attack - base.attack] : [totals.attack];
               state.lastEnemyRoll.hits = [];
               for (const power of hits) {
                 if (!alive(victim) || power <= 0) break;
-                lunge(enemyArtEl(e), true);
+                if(!heavyAttack || state.lastEnemyRoll.hits.length)lunge(enemyArtEl(e), true);
                 const actual = damageHero(
                   target,
                   power,
@@ -18179,6 +18491,7 @@ function encounterTags(enemies) {
             if (!state.party.some(alive)) break;
           }
           e.turnsTaken = (e.turnsTaken || 0) + 1;
+          advanceRangerEnemyTurn();
           tickEnemyPassive(e);
           fogPartyReels(e);
           planEnemyIntent(e);
@@ -19727,7 +20040,7 @@ const FIELD_GUIDE = Object.freeze([
   {
     id: "classes",
     title: "Classes & temperament",
-    body: '<ul class="guide-takeaways"><li><b>Temperament.</b> Aggressive and Defensive choose different starting marks. They do not change a mark’s stated power. Rebuild either way.</li><li><b>Tank & Rogue.</b> Tank crits ×1.5–×2.25; cheap shields fuel Shield Bash. Rogue crits ×2–×5; build physical combos or poison, with little recovery.</li><li><b>Mage.</b> Crits ×1.75–×3. Spell damage works alone; healing, shields or poison Resonance support a party. No chosen speciality.</li><li><b>Ranger.</b> Crits ×2–×4. Let allies act to charge Execute, then strike a wounded enemy.</li><li><b>Berserker.</b> Crits ×1.75–×4. Wounds charge Fury; higher Blood Price ranks are more efficient. Every HP healed spends one Fury.</li></ul>',
+    body: '<ul class="guide-takeaways"><li><b>Temperament.</b> Aggressive and Defensive choose different starting marks. They do not change a mark’s stated power. Rebuild either way.</li><li><b>Tank & Rogue.</b> Tank crits ×1.5–×2.25; cheap shields fuel Shield Bash. Rogue crits ×2–×5; build physical combos or poison, with little recovery.</li><li><b>Mage.</b> Crits ×1.75–×3. Spell damage works alone; healing, shields or poison Resonance support a party. Healing grows after level four.</li><li><b>Ranger.</b> Crits ×2–×4. Support/ally actions add 2 patience; enemy turns add 1. Attacks spend it. The seal fires its own shot and multiplies stored damage ×2.5; this bonus cannot crit again.</li><li><b>Berserker.</b> Crits ×1.75–×4. Wounds charge Fury; higher Blood Price ranks are more efficient. Every HP healed spends one Fury.</li></ul>',
   },
   {
     id: "combos",
@@ -20238,7 +20551,7 @@ function help(topic = "explore") {
       function renderArtefactSlot() {
         let a = state.artefacts.find((a) => a.id === state.equippedArtefact);
         $("#relic-status").innerHTML =
-          `<button class="artefact-slot" id="artefact-slot" ${busy ? "disabled" : ""}>${icon("artefact")}<span>${a ? escapeHTML(a.name) : "Empty artefact slot"}<small>${a ? artefactText(a) : "Rare finds. One passive bonus at a time."}</small><em>${state.artefacts.length ? "Inspect / swap · " + state.artefacts.length + " owned" : "Very rarely found in loot"}</em></span></button>`;
+          `<button class="artefact-slot" id="artefact-slot" data-tooltip="${escapeHTML(a ? a.name+": "+artefactText(a) : "Rare finds. One passive bonus at a time.")}" ${busy ? "disabled" : ""}>${icon("artefact")}<span><b class="artefact-name">${a ? escapeHTML(a.name) : "Empty artefact slot"}</b><small>${a ? artefactSummary(a) : "One rare passive bonus"}</small><em>${state.artefacts.length ? "Inspect / swap · " + state.artefacts.length + " owned" : "Very rarely found in loot"}</em></span></button>`;
       }
       function equipArtefact(id) {
         if (!state.artefacts.some((a) => a.id === id && a.key !== "revive")) return;
@@ -21039,6 +21352,7 @@ function help(topic = "explore") {
               .filter((a) => a.portraitMotion)
               .forEach((a) => a.cancel()),
           );
+        updatePortraitLife(p);
         updateLavaGlow();
         GameSound.configure(p);
         if ($("#combat-effects")) $("#combat-effects").value = p.combatEffects;
@@ -25547,6 +25861,7 @@ async function advanceEnemyClocks(foes = battleEnemies().slice()) {
         tryBreakStun(e, { missedAction: true });
         log(`${e.name} misses its turn to stun.`);
         combatCallout(enemyArtEl(e), "STUNNED · TURN LOST", "recovery");
+        advanceRangerEnemyTurn();
         await feedbackPause(230);
       } else await enemyTurn(e);
       if (!state.over) {
@@ -26402,6 +26717,27 @@ function wellResultsMarkup(before = null, after = null, multiplier = 1) {
       // BEGIN GENERATED REWARD AUDIO
 // Original temporary Web Audio cues, mixed through the existing SFX bus/pool.
 const REWARD_CUES = Object.freeze({
+  execute: {
+    frequencies: [220, 440, 660],
+    duration: 0.22,
+    gain: 0.05,
+    type: "triangle",
+    cooldown: 180,
+  },
+  executeFull: {
+    frequencies: [110, 330, 660, 990],
+    duration: 0.38,
+    gain: 0.075,
+    type: "triangle",
+    cooldown: 350,
+  },
+  jackBox: {
+    frequencies: [392, 523, 659, 1047, 784],
+    duration: 0.5,
+    gain: 0.07,
+    type: "triangle",
+    cooldown: 600,
+  },
   stunBreak: {
     frequencies: [95, 70, 160],
     duration: 0.28,
@@ -26612,6 +26948,170 @@ function shakeFrames(amount, style) {
 }
 Object.assign(SOUND_CUES, REWARD_CUES);
 // END GENERATED REWARD AUDIO
+      // BEGIN GENERATED COMBAT LIFE
+// Cosmetic choreography only. Never consume gameplay RNG or apply damage here.
+function artefactSummary(a) {
+  return (
+    {
+      attack: `+${a.power} physical/spell damage`,
+      heal: `+${a.power} rolled healing`,
+      block: `+${a.power} block once per shield roll`,
+      gold: `+${a.power}% loot gold`,
+      guard: `${a.power} opening team block`,
+      revive: "Revive once at 75% HP",
+    }[a.key] || artefactText(a)
+  );
+}
+function statusAtmosphereMarkup(entity) {
+  if (!alive(entity)) return "";
+  return `${entity.poison?.turns ? '<span class="status-motes poison-motes" aria-hidden="true"><i></i><i></i><i></i></span>' : ""}${entity.stimulant ? '<span class="status-motes stimulant-motes" aria-hidden="true"><i></i><i></i><i></i></span>' : ""}`;
+}
+function updatePortraitLife(p = preferences()) {
+  document.body.style.setProperty("--portrait-life", p.portraitMotion);
+  document.body.classList.toggle(
+    "portrait-motion-disabled",
+    p.portraitMotion <= 0,
+  );
+}
+function enemyIdleStyle(e) {
+  if (["ghost", "moth", "oracle", "lich", "veilweaver"].includes(e.art))
+    return "float";
+  if (["rat", "rustmite", "shalecrab", "frostmite", "widow"].includes(e.art))
+    return "skitter";
+  if (["abomination", "pageeater", "ashcolossus", "thornhulk"].includes(e.art))
+    return "heavy";
+  return "sway";
+}
+async function enemyWindup(e, kind = "heavy") {
+  if (!alive(e)) return;
+  portraitMotion(enemyArtEl(e), kind, true);
+  if (
+    !skip &&
+    !sceneFast &&
+    preferences().portraitMotion > 0 &&
+    !matchMedia("(prefers-reduced-motion: reduce)").matches
+  )
+    await pause(190);
+}
+async function executionPayoffFX(h, e, shot) {
+  if (!shot?.bonus) return;
+  const strong = shot.seal && shot.charge >= RANGER_AIM_CAP;
+  portraitMotion(entityArt(h), strong ? "heavy" : "attack");
+  combatCallout(
+    entityArt(h),
+    strong ? "FULL DRAW · EXECUTE!" : "EXECUTE!",
+    "gold",
+  );
+  GameSound.play(strong ? "executeFull" : "execute");
+  burst(entityArt(h), "gold", strong ? 45 : 16);
+  screenFX("critical", strong ? 0.8 : 0.25);
+  if (strong) shakeBook(4, "recoil");
+  if (!skip && !sceneFast) await pause(strong ? 190 : 80);
+}
+const JACK_BOX_ART = `<path d="M-22 6 L-26-18 -10-30 7-23 26-32 21-5" fill="var(--gold)"/><path d="M-23-17 Q0-29 23-15 M-26-18 L-34-26 M26-32 L34-25"/><circle cx="-35" cy="-27" r="4"/><circle cx="35" cy="-25" r="4"/><path d="M-23-9 Q-32 19-14 31 Q3 45 23 24 Q34 6 21-8Z" fill="var(--paper)"/><path d="M-15 6 L-8 2 M9 2 L16 6 M-14 18 Q0 36 16 17Z" fill="var(--paper-shade)"/><circle cx="1" cy="12" r="5" fill="var(--red)"/><path d="M-11 22 L-11 27 M-2 24 L-2 31 M7 24 L7 30"/>`;
+async function jackInTheBoxFX(h, e) {
+  const machine = $("#machine-hero-" + state.party.indexOf(h)),
+    target = enemyArtEl(e);
+  if (!machine || !target) return;
+  GameSound.play("jackBox");
+  combatCallout(entityArt(h), "POP GOES THE PUNCHLINE!", "gold");
+  burst(machine, "jester", 60);
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (skip || sceneFast || reduced || preferences().portraitMotion <= 0) {
+    burst(target, "jester", 45);
+    shakeElement(machine, 3, "rumble");
+    shakeElement(target, 4, "jolt");
+    return;
+  }
+  const run = state,
+    version = animationVersion,
+    origin = machine.querySelector('[data-reel="1"]') || machine;
+  const from = origin.getBoundingClientRect(),
+    to = target.getBoundingClientRect();
+  const sx = from.left + from.width / 2,
+    sy = from.top + from.height * 0.65,
+    tx = to.left + to.width / 2,
+    ty = to.top + to.height * 0.45;
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.classList.add("jack-in-the-box");
+  svg.setAttribute("viewBox", `0 0 ${innerWidth} ${innerHeight}`);
+  svg.setAttribute("aria-hidden", "true");
+  svg.dataset.hero = h.id;
+  svg.dataset.target = e.id;
+  svg.innerHTML = `<path class="jack-spring echo"/><path class="jack-spring"/><g class="jack-box" transform="translate(${sx} ${sy})"><path d="M-25 7 L24 4 28 34-26 37Z" fill="var(--paper)"/><path d="M-24 8 L-31-8 21-13 24 4 M-15 12 L15 31 M16 12 L-15 32"/><circle cx="0" cy="22" r="8" fill="var(--gold)"/></g><g class="jack-head">${JACK_BOX_ART}</g>`;
+  document.body.append(svg);
+  const head = svg.querySelector(".jack-head"),
+    springs = svg.querySelectorAll(".jack-spring");
+  const strength = Math.min(1.5, preferences().portraitMotion),
+    duration = 950 / Math.sqrt(pace());
+  let last = performance.now(),
+    elapsed = 0;
+  try {
+    await new Promise((resolve) => {
+      const frame = (now) => {
+        if (
+          state !== run ||
+          version !== animationVersion ||
+          skip ||
+          sceneFast || preferences().portraitMotion<=0
+        ) {
+          resolve();
+          return;
+        }
+        if (!utilityOpen && !document.hidden)
+          elapsed += Math.min(100, now - last);
+        last = now;
+        const p = Math.min(1, elapsed / duration),
+          stretch = Math.min(1, p / 0.72),
+          ease = 1 - Math.pow(1 - stretch, 3);
+        const bounce =
+          p > 0.72
+            ? Math.sin(((p - 0.72) / 0.28) * Math.PI * 2) * 9 * (1 - p)
+            : 0;
+        const x = sx + (tx - sx) * ease,
+          y =
+            sy +
+            (ty - sy) * ease -
+            Math.sin(stretch * Math.PI) * 65 * strength +
+            bounce;
+        const dx = x - sx,
+          dy = y - sy,
+          len = Math.max(1, Math.hypot(dx, dy)),
+          nx = -dy / len,
+          ny = dx / len;
+        const points = [];
+        for (let k = 0; k <= 22; k++) {
+          const t = k / 22,
+            offset =
+              k === 0 || k === 22
+                ? 0
+                : (k % 2 ? -1 : 1) * 8 * strength * Math.sin((p * Math.PI) / 2);
+          points.push(
+            `${sx + dx * t + nx * offset},${sy + dy * t + ny * offset}`,
+          );
+        }
+        springs.forEach((n) => n.setAttribute("d", "M" + points.join(" L")));
+        head.setAttribute(
+          "transform",
+          `translate(${x} ${y}) rotate(${Math.sin(p * 15) * 8 * strength}) scale(${(0.35 + 0.95 * ease) * Math.min(1, (innerWidth - 30) / 400)})`,
+        );
+        svg.dataset.progress = p.toFixed(2);
+        if (p < 1) requestAnimationFrame(frame);
+        else resolve();
+      };
+      requestAnimationFrame(frame);
+    });
+    if (state === run) {
+      burst(target, "jester", 70);
+      impactFlash(target);
+      shakeElement(target, 6, "jolt");
+      shakeBook(3, "critical");
+    }
+  } finally {
+    svg.remove();
+  }
+}
+// END GENERATED COMBAT LIFE
       // BEGIN GENERATED NOTEBOOK PAGES
 // Side pages suspend the current interaction rather than replacing its DOM or
 // resolving its promise. Keeping the nodes preserves shop/equipment callbacks.
@@ -26677,6 +27177,40 @@ function closeUtilityPage() {
   return true;
 }
 const portraitMotions = new WeakMap();
+// Status/intent updates keep the current finite gesture at its elapsed time.
+// Replacing the drawing must not erase a just-triggered passive pose.
+function refreshPortraitMarkup(el, markup) {
+  const oldArt = el.querySelector(":scope > svg"),
+    motion = oldArt && portraitMotions.get(oldArt);
+  const active =
+    motion &&
+    motion.playState === "running" &&
+    motion.effect &&
+    preferences().portraitMotion > 0;
+  const snapshot = active
+    ? {
+        frames: motion.effect.getKeyframes(),
+        timing: motion.effect.getTiming(),
+        time: motion.currentTime || 0,
+        rate: motion.playbackRate,
+      }
+    : null;
+  el.innerHTML = markup;
+  motion?.cancel();
+  const art = el.querySelector(":scope > svg");
+  if (
+    !snapshot ||
+    !art ||
+    matchMedia("(prefers-reduced-motion: reduce)").matches
+  )
+    return;
+  const next = art.animate(snapshot.frames, snapshot.timing);
+  next.currentTime = snapshot.time;
+  next.playbackRate = snapshot.rate;
+  next.portraitMotion = true;
+  portraitMotions.set(art, next);
+  next.finished.catch(() => {});
+}
 function portraitMotion(el, kind = "talk", enemy = false) {
   if (
     !el ||
@@ -26709,6 +27243,30 @@ function portraitMotion(el, kind = "talk", enemy = false) {
       },
       { transform: "none" },
     ],
+    heavy: [
+      { transform: "none" },
+      {
+        transform: `translateX(${-11 * dir * strength}px) rotate(${-9 * dir * strength}deg) scale(.96)`,
+        offset: 0.32,
+      },
+      {
+        transform: `translateX(${25 * dir * strength}px) rotate(${13 * dir * strength}deg) scaleX(1.12) scaleY(.93)`,
+        offset: 0.59,
+      },
+      { transform: "none" },
+    ],
+    passive: [
+      { transform: "none" },
+      {
+        transform: `translateY(${5 * strength}px) scaleX(1.05) scaleY(.92)`,
+        offset: 0.3,
+      },
+      {
+        transform: `translateY(${-8 * strength}px) rotate(${-5 * dir * strength}deg) scaleY(1.07)`,
+        offset: 0.6,
+      },
+      { transform: "none" },
+    ],
     hurt: [
       { transform: "none" },
       {
@@ -26732,7 +27290,16 @@ function portraitMotion(el, kind = "talk", enemy = false) {
     ],
   };
   const animation = art.animate(frames[kind] || frames.talk, {
-    duration: kind === "talk" ? 700 : kind === "death" ? 850 : 420,
+    duration:
+      kind === "talk"
+        ? 700
+        : kind === "death"
+          ? 850
+          : ["heavy", "passive"].includes(kind)
+            ? skip
+              ? 120
+              : Math.max(120, 680 / pace())
+            : 420,
     easing: "cubic-bezier(.2,.7,.3,1)",
   });
   animation.portraitMotion = true;
@@ -26882,11 +27449,7 @@ function contributionType(symbol, owner) {
   if (owner?.job === "berserker") return "attack";
   if (owner?.job === "fighter") return "block";
   if (owner?.job === "rogue") return "attack";
-  if (owner?.job === "ranger")
-    return state.lastExecution?.heroId === owner.id &&
-      state.lastExecution.bonus > 0
-      ? "attack"
-      : "patience";
+  if (owner?.job === "ranger") return "attack";
   return "class";
 }
 function contributes(symbol, wanted, owner) {
@@ -27261,6 +27824,7 @@ async function classAbilityFX(h) {
   await feedbackPause(skip ? 65 : Math.max(90, 220 / Math.sqrt(pace())));
 }
 function passiveFX(e, text, kind = "danger") {
+  portraitMotion(enemyArtEl(e), "passive", true);
   combatCallout(enemyArtEl(e), text, kind);
   screenFX(kind === "heal" ? "heal" : "critical", 0.7);
   burst(enemyArtEl(e), kind === "heal" ? "heal" : "scary", 38);
@@ -28499,7 +29063,7 @@ function revealCriticalPayoff(region, details, multiplier) {
 
                 out.selfHeal += bloodrushHealing(h) * p;
               }
-              if (h.job === "ranger") out.damage += executionBonus(h) * p;
+              if (h.job === "ranger") out.damage += rangerSealPower(h) * p;
             } else if (Object.hasOwn(out, t)) out[t] += POWER[t] * face.tier * p;
           }
           return probabilities;
@@ -28535,7 +29099,7 @@ function revealCriticalPayoff(region, details, multiplier) {
         if (out.damage)
           out.damage +=
             attackBonus(h) +
-            (h.job === "ranger" ? executionBonus(h) * 0.7 : 0) +
+
             (ruleEnabled("sharp") ? 1 : 0) +
             equipmentBonus(h, "attack") +
             equipmentBonus(h, "magic") +
@@ -28584,6 +29148,11 @@ function revealCriticalPayoff(region, details, multiplier) {
             "poison",
           ])
             out[key] *= TACTICS.initiativeMultiplier;
+        if(h.job==="ranger"){
+          const sealChance=faceShare(h.reels[1],["class"]), hitChance=1-h.reels.reduce((p,r)=>p*(1-faceShare(r,["attack","magic"])),1);
+          out.damage+=sealChance*executionBonus(h,state.enemy,h.charge||0,true)+(1-sealChance)*hitChance*executionBonus(h);
+        }
+        for(const key of ["heal","teamHeal","selfHeal"])out[key]*=mageHealingFactor(h);
         out.damage = heroDamagePower(h, out.damage);
         for (const key of ["heal", "teamHeal", "selfHeal"]) out[key] *= HERO_TUNING.healing;
         // Score the active lessons too: AI must recognise the healing and
@@ -29332,7 +29901,7 @@ function revealCriticalPayoff(region, details, multiplier) {
           reel.some(
             (f) =>
               ["attack", "magic", "poison"].includes(f.type) ||
-              (f.type === "class" && ["rogue", "mage"].includes(h.job)),
+              (f.type === "class" && ["rogue", "mage", "ranger"].includes(h.job)),
           ),
         );
         if (!canHarm) return 0;

@@ -21,7 +21,7 @@ const assets = (name) => {
   if (!mime) throw Error(`Unsupported UI asset: ${name}`);
   return `data:${mime};base64,${fs.readFileSync(file).toString("base64")}`;
 };
-const css = ["layout.css", "notebook.css"]
+const css = ["layout.css", "notebook.css", "combat-life.css"]
   .map((name) => {
     const content = read("ui/" + name).replace(
       /@asset\(([^)]+)\)/g,
@@ -92,6 +92,7 @@ for (const [label, file] of [
   ["EXPLORATION RULES", "game/exploration-rules.js"],
   ["REWARD AUDIO", "ui/reward-audio.js"],
   ["NOTEBOOK PAGES", "ui/notebook-pages.js"],
+  ["COMBAT LIFE", "ui/combat-life.js"],
   ["FIELD GUIDE", "ui/field-guide.js"],
 ]) {
   embed(`// BEGIN GENERATED ${label}`, `// END GENERATED ${label}`, read(file));

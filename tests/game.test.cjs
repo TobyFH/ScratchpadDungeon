@@ -6514,11 +6514,11 @@ test("Ranger has exactly one middle seal, saves Execute patience for a later hit
     };
   });
   assert.deepEqual(r, {
-    charge: 3,
-    damage: 3,
+    charge: 2,
+    damage: 1,
     consumed: 0,
     after: 0,
-    attack: 0,
+    attack: 2,
   });
   assert.ok(
     (await p.locator("#portrait-0").innerHTML()).includes("hero-illustration"),
@@ -7114,9 +7114,9 @@ test("Ranger Execute meter shows patience, release and battle cleanup without ad
   });
   assert.equal(
     await p.locator(".aim-meter").getAttribute("aria-valuenow"),
-    "3",
+    "2",
   );
-  assert.match(await p.locator(".aim-meter").textContent(), /EXECUTE 3\/6/);
+  assert.match(await p.locator(".aim-meter").textContent(), /EXECUTE 2\/6/);
   assert.ok(
     await p
       .locator(".aim-track i")

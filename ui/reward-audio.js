@@ -1,5 +1,26 @@
 // Original temporary Web Audio cues, mixed through the existing SFX bus/pool.
 const REWARD_CUES = Object.freeze({
+  execute: {
+    frequencies: [220, 440, 660],
+    duration: 0.22,
+    gain: 0.05,
+    type: "triangle",
+    cooldown: 180,
+  },
+  executeFull: {
+    frequencies: [110, 330, 660, 990],
+    duration: 0.38,
+    gain: 0.075,
+    type: "triangle",
+    cooldown: 350,
+  },
+  jackBox: {
+    frequencies: [392, 523, 659, 1047, 784],
+    duration: 0.5,
+    gain: 0.07,
+    type: "triangle",
+    cooldown: 600,
+  },
   stunBreak: {
     frequencies: [95, 70, 160],
     duration: 0.28,

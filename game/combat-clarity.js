@@ -84,6 +84,7 @@ async function advanceEnemyClocks(foes = battleEnemies().slice()) {
         tryBreakStun(e, { missedAction: true });
         log(`${e.name} misses its turn to stun.`);
         combatCallout(enemyArtEl(e), "STUNNED · TURN LOST", "recovery");
+        advanceRangerEnemyTurn();
         await feedbackPause(230);
       } else await enemyTurn(e);
       if (!state.over) {

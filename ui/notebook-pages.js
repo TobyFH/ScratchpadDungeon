@@ -62,6 +62,40 @@ function closeUtilityPage() {
   return true;
 }
 const portraitMotions = new WeakMap();
+// Status/intent updates keep the current finite gesture at its elapsed time.
+// Replacing the drawing must not erase a just-triggered passive pose.
+function refreshPortraitMarkup(el, markup) {
+  const oldArt = el.querySelector(":scope > svg"),
+    motion = oldArt && portraitMotions.get(oldArt);
+  const active =
+    motion &&
+    motion.playState === "running" &&
+    motion.effect &&
+    preferences().portraitMotion > 0;
+  const snapshot = active
+    ? {
+        frames: motion.effect.getKeyframes(),
+        timing: motion.effect.getTiming(),
+        time: motion.currentTime || 0,
+        rate: motion.playbackRate,
+      }
+    : null;
+  el.innerHTML = markup;
+  motion?.cancel();
+  const art = el.querySelector(":scope > svg");
+  if (
+    !snapshot ||
+    !art ||
+    matchMedia("(prefers-reduced-motion: reduce)").matches
+  )
+    return;
+  const next = art.animate(snapshot.frames, snapshot.timing);
+  next.currentTime = snapshot.time;
+  next.playbackRate = snapshot.rate;
+  next.portraitMotion = true;
+  portraitMotions.set(art, next);
+  next.finished.catch(() => {});
+}
 function portraitMotion(el, kind = "talk", enemy = false) {
   if (
     !el ||
@@ -94,6 +128,30 @@ function portraitMotion(el, kind = "talk", enemy = false) {
       },
       { transform: "none" },
     ],
+    heavy: [
+      { transform: "none" },
+      {
+        transform: `translateX(${-11 * dir * strength}px) rotate(${-9 * dir * strength}deg) scale(.96)`,
+        offset: 0.32,
+      },
+      {
+        transform: `translateX(${25 * dir * strength}px) rotate(${13 * dir * strength}deg) scaleX(1.12) scaleY(.93)`,
+        offset: 0.59,
+      },
+      { transform: "none" },
+    ],
+    passive: [
+      { transform: "none" },
+      {
+        transform: `translateY(${5 * strength}px) scaleX(1.05) scaleY(.92)`,
+        offset: 0.3,
+      },
+      {
+        transform: `translateY(${-8 * strength}px) rotate(${-5 * dir * strength}deg) scaleY(1.07)`,
+        offset: 0.6,
+      },
+      { transform: "none" },
+    ],
     hurt: [
       { transform: "none" },
       {
@@ -117,7 +175,16 @@ function portraitMotion(el, kind = "talk", enemy = false) {
     ],
   };
   const animation = art.animate(frames[kind] || frames.talk, {
-    duration: kind === "talk" ? 700 : kind === "death" ? 850 : 420,
+    duration:
+      kind === "talk"
+        ? 700
+        : kind === "death"
+          ? 850
+          : ["heavy", "passive"].includes(kind)
+            ? skip
+              ? 120
+              : Math.max(120, 680 / pace())
+            : 420,
     easing: "cubic-bezier(.2,.7,.3,1)",
   });
   animation.portraitMotion = true;

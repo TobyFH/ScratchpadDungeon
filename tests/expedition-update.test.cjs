@@ -271,7 +271,8 @@ test("a final enemy killing blow ends combat before poison can kill the survivin
     newRun("ranger");
     setPace("skip");
     setPreference("skipCriticals", true);
-    beginEncounter();
+    beginEncounter(false, { count: 1 });
+    finishOpeningRoll();
     const h = state.party[0],
       e = state.enemy;
     e.hp = 2;
@@ -289,7 +290,8 @@ test("a final enemy killing blow ends combat before poison can kill the survivin
       poison: h.poison,
       battles: state.battlesWon,
     };
-    beginEncounter();
+    beginEncounter(false, { count: 1 });
+    finishOpeningRoll();
     state.party[0].hp = 0;
     const foe = state.enemy;
     foe.poison = { turns: 3, damage: 9, appliedAt: -1 };

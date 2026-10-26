@@ -347,10 +347,10 @@ test("Execute builds while other heroes act, scales with patience and missing en
   });
   assert.equal(r.full, 6);
   assert.ok(r.wounded > r.fresh);
-  assert.equal(r.damage, 1 + r.wounded);
+  assert.equal(r.damage, 1); // Stored Execute is a separate, non-critical hit.
   assert.equal(r.consumed, 0);
   assert.equal(r.record.bonus, r.wounded);
-  assert.equal(r.sealed, 3);
+  assert.equal(r.sealed, 2);
   assert.equal(r.cleared, 0);
 });
 

@@ -87,7 +87,7 @@ test("small balance adjustments share canonical formulas while raw mark tiers re
     };
   });
   assert.equal(r.hp, 50);
-  assert.ok(r.exec > r.old);
+  assert.ok(r.exec > 0); // Execute now has a separate seal multiplier and level cap.
   assert.equal(r.rogue, 100);
   assert.equal(r.heal, 20);
   assert.equal(r.shop, 0.4);

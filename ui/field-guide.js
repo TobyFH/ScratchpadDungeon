@@ -47,7 +47,7 @@ const FIELD_GUIDE = Object.freeze([
   {
     id: "classes",
     title: "Classes & temperament",
-    body: '<ul class="guide-takeaways"><li><b>Temperament.</b> Aggressive and Defensive choose different starting marks. They do not change a mark’s stated power. Rebuild either way.</li><li><b>Tank & Rogue.</b> Tank crits ×1.5–×2.25; cheap shields fuel Shield Bash. Rogue crits ×2–×5; build physical combos or poison, with little recovery.</li><li><b>Mage.</b> Crits ×1.75–×3. Spell damage works alone; healing, shields or poison Resonance support a party. No chosen speciality.</li><li><b>Ranger.</b> Crits ×2–×4. Let allies act to charge Execute, then strike a wounded enemy.</li><li><b>Berserker.</b> Crits ×1.75–×4. Wounds charge Fury; higher Blood Price ranks are more efficient. Every HP healed spends one Fury.</li></ul>',
+    body: '<ul class="guide-takeaways"><li><b>Temperament.</b> Aggressive and Defensive choose different starting marks. They do not change a mark’s stated power. Rebuild either way.</li><li><b>Tank & Rogue.</b> Tank crits ×1.5–×2.25; cheap shields fuel Shield Bash. Rogue crits ×2–×5; build physical combos or poison, with little recovery.</li><li><b>Mage.</b> Crits ×1.75–×3. Spell damage works alone; healing, shields or poison Resonance support a party. Healing grows after level four.</li><li><b>Ranger.</b> Crits ×2–×4. Support/ally actions add 2 patience; enemy turns add 1. Attacks spend it. The seal fires its own shot and multiplies stored damage ×2.5; this bonus cannot crit again.</li><li><b>Berserker.</b> Crits ×1.75–×4. Wounds charge Fury; higher Blood Price ranks are more efficient. Every HP healed spends one Fury.</li></ul>',
   },
   {
     id: "combos",
