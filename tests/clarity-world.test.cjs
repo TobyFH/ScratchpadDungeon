@@ -766,7 +766,11 @@ test("music switches battle scores and depth ambience, while all existing volume
     {},
     { timeout: 10000 },
   );
-  await p.evaluate(() => {
+  // Volume ramps use AudioContext time, which stops when a background/hidden
+  // browser suspends it. Measure the fade on a foreground, running context.
+  await p.bringToFront();
+  await p.evaluate(async () => {
+    await GameSound.unlock();
     setPreference("musicVolume", 0);
     setPreference("ambienceVolume", 0);
   });

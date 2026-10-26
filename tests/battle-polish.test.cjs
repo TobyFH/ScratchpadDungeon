@@ -267,12 +267,19 @@ test("battle music produces bass/drums on the live music bus without RNG, stays 
         peak = Math.max(peak, ...samples.map(Math.abs));
       }
       const parts = { ...GameSound.stats.musicParts };
+      setPreference("musicVolume", 0);
+      await new Promise((resolve) => setTimeout(resolve, 450));
+      const quiet = new Float32Array(polishAnalyser.fftSize);
+      polishAnalyser.getFloatTimeDomainData(quiet);
+      const musicOffRms = Math.sqrt(quiet.reduce((s, n) => s + n * n, 0) / quiet.length);
+      setPreference("musicVolume", .7);
+      await new Promise((resolve) => setTimeout(resolve, 450));
       setPreference("muted", true);
       await new Promise((resolve) => setTimeout(resolve, 450));
       const samples = new Float32Array(polishAnalyser.fftSize);
       polishAnalyser.getFloatTimeDomainData(samples);
       const rms = Math.sqrt(samples.reduce((s, n) => s + n * n, 0) / samples.length);
-      return { calls, energy, peak, rms, parts, voices: GameSound.stats.peakVoices,
+      return { calls, energy, peak, rms, musicOffRms, parts, voices: GameSound.stats.peakVoices,
         battleTempo: BATTLE_MUSIC_SCORE.stepSeconds, explorationTempo: MUSIC_SCORE.stepSeconds };
     } finally { Math.random = random; }
   });
@@ -280,6 +287,7 @@ test("battle music produces bass/drums on the live music bus without RNG, stays 
   assert.ok(r.energy > .00001, "real low-frequency output at 30–150 Hz");
   assert.ok(r.peak > .0001 && r.peak < .99, "audible, unclipped signal");
   assert.ok(r.rms < .00001, "music obeys master mute");
+  assert.ok(r.musicOffRms < .00001, "the music slider silences the actual signal");
   for (const part of ["bass", "kick", "snare", "sub", "melody"])
     assert.ok(r.parts[part] > 0, part);
   assert.ok(r.voices <= 20);
