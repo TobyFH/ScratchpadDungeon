@@ -1,5 +1,9 @@
 # Punchline, support marks and tunnel crossings
 
+> **Current combat:** [Combat identity](COMBAT_IDENTITY.md) supersedes older
+> weighting purchases, free/boosted Punchlines, Fury, stun and uncapped-block
+> examples below. Use its shared sources and migration rules for new changes.
+
 This update uses expedition save version **20**. Camp ownership, banked gold,
 settings and edited reels survive. The standalone HTML still has no runtime
 network dependencies. Edit the source modules, then run `npm run build:ui`.

@@ -1,5 +1,9 @@
 # Readable powers and expedition difficulty
 
+> **Current combat:** [Combat identity](COMBAT_IDENTITY.md) supersedes older
+> weighting purchases, free/boosted Punchlines, Fury, stun and uncapped-block
+> examples below. Use its shared sources and migration rules for new changes.
+
 This is a numeric balance pass, not a new slot system or art pass. Match rules,
 weighted faces, editable ranks, class seals, item interactions, enemy clocks,
 statuses and player controls retain their established rules. No icon, texture,

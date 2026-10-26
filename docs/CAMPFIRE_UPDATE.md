@@ -1,5 +1,9 @@
 # Campfire lessons, luck and the Jester
 
+> **Current combat:** [Combat identity](COMBAT_IDENTITY.md) supersedes older
+> weighting purchases, free/boosted Punchlines, Fury, stun and uncapped-block
+> examples below. Use its shared sources and migration rules for new changes.
+
 > Current numeric tuning is documented in [Balance pass](BALANCE_PASS.md).
 > Its linear mark powers, class critical pools, prices, enemy budgets and camp
 > lesson amounts supersede earlier numeric examples below. The mechanics and

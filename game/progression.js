@@ -74,7 +74,7 @@ const CAMP_UNLOCKS = {
     cost: 1400,
     permanent: true,
     description:
-      "Unlock Jester starts and companions. Trick marks build anticipation for a stronger Punchline roll.",
+      "Unlock Jester starts and companions. Trick marks build anticipation for a six-mark Punchline burst.",
   },
   iron: {
     name: "Iron margins",

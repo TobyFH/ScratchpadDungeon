@@ -13,22 +13,33 @@ function entityArt(entity) {
   const i = state.party.indexOf(entity);
   return i >= 0 ? $("#portrait-" + i) : enemyArtEl(entity);
 }
-function gainFury(h, damage = 0, extra = 0) {
+function gainFury(h, damage = 0, extra = 0, { bloodPriceTier = 0 } = {}) {
   if (h?.job !== "berserker" || !state.enemy || !alive(h)) return;
-  const before = h.fury || 0;
-  h.fury = Math.min(furyCapacity(h), before + Math.ceil(damage * 1.5) + extra);
+  const before = h.fury || 0,
+    rate = bloodPriceTier ? 2 + 0.5 * Math.min(4, bloodPriceTier) : 1;
+  h.fury = Math.min(
+    furyCapacity(h),
+    before + Math.ceil(Math.max(0, damage) * rate) + Math.max(0, extra),
+  );
   if (h.fury > before) {
     burst(entityArt(h), "damage", 14);
     actionLabel(entityArt(h), `FURY +${h.fury - before}`);
     syncRangerAim(h);
   }
 }
+function spendFuryOnHealing(h, healed) {
+  if (h?.job !== "berserker" || healed <= 0) return 0;
+  const spent = Math.min(h.fury || 0, Math.ceil(healed));
+  h.fury = Math.max(0, (h.fury || 0) - spent);
+  if (spent) syncRangerAim(h);
+  return spent;
+}
 const furyBonus = (h) =>
   h?.job === "berserker" ? Math.floor((h.fury || 0) / 4) : 0;
 function furyMarkup(h) {
   const cap = furyCapacity(h),
     rate = Math.round(furyLeechRate(h) * 100);
-  return `<span class="fury-meter" role="meter" aria-label="Berserker Fury" aria-valuemin="0" aria-valuemax="${cap}" aria-valuenow="${h.fury || 0}" data-tooltip="Wounds add 1.5 Fury per HP lost. Every 4 Fury adds 1 damage and 4.5% lifesteal. Capacity grows by 3 per level. Actual lifesteal spends 1 Fury per 2 HP restored. Blood Price adds extra Fury. Clears after battle."><b>FURY ${h.fury || 0}/${cap}</b><span><i style="width:${(100 * (h.fury || 0)) / cap}%"></i></span><small>+${furyBonus(h)} dmg · ${rate}% drain</small></span>`;
+  return `<span class="fury-meter" role="meter" aria-label="Berserker Fury" aria-valuemin="0" aria-valuemax="${cap}" aria-valuenow="${h.fury || 0}" data-tooltip="Wounds add 1 Fury per HP lost. Blood Price adds 2.5/3/3.5/4 Fury per HP at ranks I–IV. Every 4 Fury adds 1 damage and 4.5% lifesteal. Capacity grows by 3 per level. Every HP actually healed spends 1 Fury, including lifesteal, allies and items. Clears after battle."><b>FURY ${h.fury || 0}/${cap}</b><span><i style="width:${(100 * (h.fury || 0)) / cap}%"></i></span><small>+${furyBonus(h)} dmg · ${rate}% drain</small></span>`;
 }
 function setupBattleOpening({ fresh = false } = {}) {
   const living = state.party.filter(alive);
@@ -187,7 +198,7 @@ function clearStuns(entity, amount, { all = false } = {}) {
   if (!all && Math.random() >= amount / (amount + guard + 4)) return false;
   entity.stun = 0;
   entity.stunAge = 0;
-  entity.stunGrace = 1;
+  grantStunWard(entity);
   combatCallout(entityArt(entity), "STUN CLEARED", "heal");
   return true;
 }
@@ -201,6 +212,7 @@ function clearBattleStatuses() {
     entity.poison = null;
     entity.stun = 0;
     entity.stunGrace = 0;
+    entity.stunWard = 0;
     entity.vulnerable = null;
     entity.initiative = null;
     entity.surprised = false;
@@ -305,7 +317,18 @@ function stunResolution(power, block) {
 function stunHero(i, power) {
   const h = state.party[i];
   if (!alive(h)) return "no living target";
-  if (h.stunGrace) return h.name + " resists a repeated stun";
+  if (h.stun || h.stunWard > 0) {
+    const hit = stunResolution(power, state.block);
+    state.block -= hit.spent;
+    renderBlock();
+    if (!h.stun) maybeVulnerable(h, Math.min(4, power), "Stun");
+    return (
+      h.name +
+      (h.stun
+        ? " is already stunned; duration unchanged"
+        : " is steady · cannot be stunned again yet")
+    );
+  }
   const hit = stunResolution(power, state.block);
   if (hit.spent) {
     state.block -= hit.spent;
@@ -319,7 +342,7 @@ function stunHero(i, power) {
     return `${h.name} protected from stun (−${hit.spent} armour)`;
   }
   if (characterMoment("ironWill", h)) {
-    h.stunGrace = 1;
+    grantStunWard(h);
     syncHero(i);
     return h.name + " shrugs off the stun";
   }
@@ -333,6 +356,15 @@ function stunHero(i, power) {
   return h.name + " stunned";
 }
 function stunEnemy(power, e = state.enemy) {
+  if (!e || e.hp <= 0) return "no living target";
+  if (e.stun || e.stunWard > 0) {
+    const hit = stunResolution(power, enemyBlock());
+    setEnemyBlock(enemyBlock() - hit.spent);
+    if (!e.stun) maybeVulnerable(e, Math.min(4, power), "Stun");
+    return e.stun
+      ? "already stunned · duration unchanged"
+      : "steady · stun resisted";
+  }
   const hit = stunResolution(power, enemyBlock());
   setEnemyBlock(enemyBlock() - hit.spent);
   if (!hit.applied) {
@@ -417,11 +449,22 @@ async function resumeOpeningEncounter() {
 }
 
 function normaliseTacticalStatuses(entity) {
-  entity.crystalLocks = [...new Set((Array.isArray(entity.crystalLocks) ? entity.crystalLocks : []).filter(k=>[0,1,2].includes(k)))];
+  entity.crystalLocks = [
+    ...new Set(
+      (Array.isArray(entity.crystalLocks) ? entity.crystalLocks : []).filter(
+        (k) => [0, 1, 2].includes(k),
+      ),
+    ),
+  ];
   normaliseStimulant(entity);
   entity.blackout = Array.isArray(entity.blackout)
     ? [...new Set(entity.blackout.filter((k) => [0, 1, 2].includes(k)))]
     : [];
+  entity.stunWard = Math.min(
+    COMBAT_LIMITS.stunWard,
+    Math.max(0, Math.floor(entity.stunWard ?? (entity.stunGrace ? 2 : 0))),
+  );
+  entity.stunGrace = entity.stunWard > 0 ? 1 : 0;
   entity.stunAge = Math.min(3, Math.max(0, entity.stunAge || 0));
   entity.vulnerable ??= null;
   entity.surprised ??= false;
@@ -440,15 +483,23 @@ function normaliseTacticalStatuses(entity) {
 
 // Recovery is checked after real combat rolls, and on a stunned creature's
 // missed attempt. A missed hero attempt still leaves enemy clocks untouched.
-function tryBreakStun(entity) {
+function grantStunWard(entity) {
+  entity.stunWard = COMBAT_LIMITS.stunWard;
+  entity.stunGrace = 1;
+}
+function advanceStunWard(entity, atStart) {
+  if (atStart > 0) entity.stunWard = Math.max(0, (entity.stunWard || 0) - 1);
+  entity.stunGrace = entity.stunWard > 0 ? 1 : 0;
+}
+function tryBreakStun(entity, { missedAction = false } = {}) {
   if (!entity?.stun || entity.hp <= 0) return false;
   entity.stunAge = (entity.stunAge || 0) + 1;
-  const chance = [0.25, 0.55, 0.9, 1][Math.min(3, entity.stunAge - 1)];
+  const chance = missedAction || entity.stunAge >= 2 ? 1 : 0.6;
   if (Math.random() >= chance) return false;
   entity.stun = 0;
-  entity.stunGrace = 1;
   entity.stunAge = 0;
-  combatCallout(entityArt(entity), "STUN BROKEN", "recovery");
+  grantStunWard(entity);
+  combatCallout(entityArt(entity), "STUN BROKEN · STEADY", "recovery");
   syncStatusFX();
   return true;
 }
@@ -557,13 +608,11 @@ async function settleFuryLeech(h, recipients, flights) {
   );
   await waitForUtility();
   if (state !== run || !alive(h)) return 0;
+  const furyBefore = h.fury || 0;
   const actual = healHero(state.party.indexOf(h), offered);
   h.stats.healingDone += actual;
   record.actual = actual;
-  record.furySpent = actual
-    ? Math.min(h.fury || 0, Math.max(1, Math.ceil(actual / 2)))
-    : 0;
-  h.fury = Math.max(0, (h.fury || 0) - record.furySpent);
+  record.furySpent = furyBefore - (h.fury || 0);
   syncRangerAim(h);
   record.healedAt = Date.now();
   return actual;
@@ -593,6 +642,11 @@ function normaliseStimulant(entity) {
       ? buff.appliedAt
       : (state.actionSerial || 0) - 1,
   };
+  if (entity.stimulant)
+    entity.stimulant.power = Math.min(
+      COMBAT_LIMITS.stimulantPower,
+      entity.stimulant.power,
+    );
 }
 function applyStimulant(entity, amount) {
   if (!alive(entity) || !Number.isFinite(amount) || amount <= 0) return;
@@ -601,9 +655,11 @@ function applyStimulant(entity, amount) {
     old = entity.stimulant,
     duration = (old?.turns || 0) + added;
   entity.stimulant = {
-    power:
+    power: Math.min(
+      COMBAT_LIMITS.stimulantPower,
       Math.max(old?.power || 0, added) +
-      Math.max(0, duration - STIMULANT_TURNS),
+        Math.max(0, duration - STIMULANT_TURNS),
+    ),
     turns: Math.min(STIMULANT_TURNS, duration),
     appliedAt: state.actionSerial,
   };

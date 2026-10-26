@@ -4000,22 +4000,6 @@ body[data-palette="dark"] {
 .workshop-faces {
   grid-template-rows: repeat(7, 45px);
 }
-.weight-face {
-  margin-top: auto;
-  display: grid;
-  gap: 4px;
-}
-.weight-face button {
-  min-height: 42px;
-}
-.weight-face button small {
-  display: block;
-  font-size: 13px;
-}
-.weight-face > small {
-  font-size: 12px;
-  line-height: 1.1;
-}
 .workshop-critpage p {
   font-size: 18px;
 }
@@ -4513,13 +4497,6 @@ body.utility-open .combat-callout {
   .workshop-faces {
     grid-template-rows: repeat(7, 38px);
   }
-  .weight-face > small {
-    font-size: 10px;
-  }
-  .weight-face button {
-    font-size: 13px;
-    min-height: 36px;
-  }
   .crit-odds-grid {
     grid-template-columns: 1fr;
     gap: 4px;
@@ -4764,9 +4741,6 @@ body.utility-open .combat-callout {
   .swap-face {
     min-height: 54px;
   }
-  .weight-face button {
-    min-height: 42px;
-  }
 }
 /* A reel's width is independent of the intrinsic size of its current marks. */
 .stage-card .scene-layout > .machine-shell:not(.one-reel),
@@ -4885,14 +4859,6 @@ body.utility-open .combat-callout {
     font-size: 21px;
     min-height: 56px;
   }
-  .weight-face button {
-    font-size: 21px;
-    min-height: 50px;
-  }
-  .weight-face button small,
-  .weight-face > small {
-    font-size: 16px;
-  }
   .modal-flow > .workshop-note {
     font-size: 16px;
     line-height: 1.15;
@@ -4914,7 +4880,7 @@ body.utility-open .combat-callout {
     font-size: 24px;
   }
 }
-/* Narrow sheets select the face natively and divide editing into three fixed
+/* Narrow sheets select the face natively and divide editing into two fixed
  * action pages. All powers and operations remain keyboard accessible. */
 .workshop-face-picker,
 .face-operation-tabs {
@@ -4982,11 +4948,7 @@ body.utility-open .combat-callout {
     outline: 1px solid var(--ink);
   }
   .workshop-detail[data-operation="power"] .replace-panel,
-  .workshop-detail[data-operation="power"] .weight-face,
-  .workshop-detail[data-operation="replace"] .power-panel,
-  .workshop-detail[data-operation="replace"] .weight-face,
-  .workshop-detail[data-operation="weight"] .power-panel,
-  .workshop-detail[data-operation="weight"] .replace-panel {
+  .workshop-detail[data-operation="replace"] .power-panel {
     display: none;
   }
   .replace-panel {
@@ -5018,15 +4980,6 @@ body.utility-open .combat-callout {
   }
   .workshop-actions button {
     min-height: 76px;
-  }
-  .weight-face {
-    margin-top: 12px;
-  }
-  .weight-face button {
-    min-height: 60px;
-  }
-  .weight-face > small {
-    font-size: 18px;
   }
   .workshop-step-label span {
     font-size: 15px;
@@ -5525,7 +5478,7 @@ body.ambient-disabled #lava-lighting { opacity: 0; }
 .well-total-note { font-size: 16px; }
 @media (max-width:760px) {
   .guide-takeaways { padding-left: 22px; }
-  .guide-takeaways li { font-size: 23px; line-height: 1.35; margin-bottom: 15px; }
+  .guide-takeaways li { font-size: 23px; line-height: 1.35; margin-bottom: 10px; }
   .camp-leaf-nav { grid-template-columns: 84px minmax(0,1fr) 84px; gap: 6px; height: 42px; }
   .camp-leaf-nav button { font-size: 18px; }
   .camp-leaf-nav span { font-size: 17px; }
@@ -5670,3 +5623,5 @@ body[data-motion="off"] .punchline-ready .machine-face { animation: none; }
 /* Deposit art sits above masonry; the dark tile frame still marks blocking. */
 .crystal-tile .biome-cover {z-index:2;background:color-mix(in srgb,var(--paper) 82%,#92b8db);}
 .tile.crystal-tile > svg {visibility:hidden;}
+/* Steady reuses the shield glyph and functional focus ink. */
+.stun-ward-badge { color: var(--focus); }

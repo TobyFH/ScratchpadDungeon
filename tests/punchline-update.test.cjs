@@ -83,13 +83,13 @@ test('buff and Trick edit palettes, inherited support marks, saves and workshop 
     const support=['mage','ranger','jester'].includes(row.job);
     assert.equal(row.types.includes('stimulant'),!support); assert.equal(row.types.includes('rally'),support);
     assert.equal(row.types.includes('trick'),row.job==='jester');
-    assert.equal(row.migrated.type,support?'rally':'stimulant'); assert.equal(row.migrated.weight,3);
+    assert.equal(row.migrated.type,support?'rally':'stimulant'); assert.equal(row.migrated.weight,1);
     assert.ok(!row.description.includes('undefined'));
   }
   assert.equal(r.loaded,true); assert.equal(r.meter,4); assert.equal(r.face.type,'trick'); assert.match(r.text,/Punchline/); assert.doesNotMatch(r.text,/Jackpot|backfire/);
 });
 
-test('Shield Bash grants shields and uses the existing count while breaking enemy block at twice its HP power', async t=>{
+test('Shield Bash spends up to its level budget while breaking enemy block at twice its HP power', async t=>{
   const p=await game(t);
   const r=await p.evaluate(async()=>{
     beginEncounter(false,{count:1}); finishOpeningRoll();
@@ -100,16 +100,16 @@ test('Shield Bash grants shields and uses the existing count while breaking enem
     const roll=state.lastPlayerRoll;
     return {block:state.block,enemyBlock:enemyBlock(),hp:e.hp,power:roll.bash.power,actual:roll.bash.actual,rage:h.rage,stats:h.stats.damageDealt};
   });
-  assert.equal(r.block,8); assert.equal(r.power,8); assert.equal(r.enemyBlock,0);
-  assert.equal(r.actual,2); assert.equal(r.hp,998); assert.equal(r.rage,0); assert.equal(r.stats,2);
+  assert.equal(r.block,2); assert.equal(r.power,6); assert.equal(r.enemyBlock,0);
+  assert.equal(r.actual,0); assert.equal(r.hp,1000); assert.equal(r.rage,0); assert.equal(r.stats,0);
 });
 
-test('Trick fills anticipation for exactly one temporary +1-tier Punchline before the enemy clock advances', async t=>{
+test('Trick fires one six-mark Punchline from unchanged reels before the enemy clock advances', async t=>{
   const p=await game(t);
   const r=await p.evaluate(async()=>{
     newRun('jester'); setPace('skip'); setPreference('skipCriticals',true);
     beginEncounter(false,{count:1}); finishOpeningRoll(); state.enemy.hp=state.enemy.maxHp=10000; state.enemy.countdown=20;
-    const h=state.party[0]; h.anticipation=5; h.reels[0][0]={type:'attack',tier:2,weight:3};
+    const h=state.party[0]; h.anticipation=5; h.reels[0][0]={type:'attack',tier:2,weight:1};
     const purchased=JSON.stringify(h.reels), calls=[];
     runMachine=async(id,reels)=>{
       calls.push({id,rank:reels[0][0].tier,weight:reels[0][0].weight});
@@ -117,23 +117,23 @@ test('Trick fills anticipation for exactly one temporary +1-tier Punchline befor
         [{type:'attack',tier:3},{type:'trick',tier:4},{type:'heal',tier:1}];
     };
     await spin(0);
-    return {calls,preserved:JSON.stringify(h.reels)===purchased,count:state.enemy.countdown,spins:h.stats.spins,meter:h.anticipation,punchlines:h.stats.punchlines,roll:state.lastPlayerRoll};
+    return {calls,preserved:JSON.stringify(h.reels)===purchased,count:state.enemy.countdown,spins:h.stats.spins,meter:h.anticipation,punchlines:h.stats.punchlines,roll:state.lastPlayerRoll,burst:state.lastPunchline};
   });
-  assert.equal(r.calls.length,2); assert.equal(r.calls[0].rank,2); assert.equal(r.calls[1].rank,3); assert.equal(r.calls[1].weight,3);
-  assert.equal(r.preserved,true); assert.equal(r.count,19); assert.equal(r.spins,2); assert.equal(r.meter,0); assert.equal(r.punchlines,1);
-  assert.equal(r.roll.punchline,true); assert.equal(r.roll.multiplier,1);
+  assert.equal(r.calls.length,1); assert.equal(r.calls[0].rank,2); assert.equal(r.calls[0].weight,1); assert.equal(r.burst.shots.length,6);
+  assert.equal(r.preserved,true); assert.equal(r.count,19); assert.equal(r.spins,1); assert.equal(r.meter,0); assert.equal(r.punchlines,1);
+  assert.equal(r.roll.punchline,false); assert.equal(r.roll.multiplier,1);
 });
 
-test('a Jester who falls before Punchline cannot suppress the enemy countdown or take a bonus roll', async t=>{
+test('a Jester who falls while the initial machine rolls cannot fire a Punchline or suppress enemy clocks', async t=>{
   const p=await game(t);
   const r=await p.evaluate(async()=>{
     newRun('jester'); setPace('skip'); state.party.push(makeHero('Survivor','fighter'));
     beginEncounter(false,{count:1}); finishOpeningRoll();
     const h=state.party[0]; h.anticipation=5; state.enemy.hp=state.enemy.maxHp=10000; state.enemy.countdown=20;
     let calls=0;
-    runMachine=async()=>{calls++;return [{type:'trick',tier:1},{type:'blank',tier:1},{type:'blank',tier:1}];};
-    // Poison/death confirmations are exercised elsewhere; isolate the bonus gate.
-    tickPoison=async()=>{h.hp=0;h.dead=true;};
+    runMachine=async()=>{calls++;h.hp=0;h.dead=true;return [{type:'trick',tier:1},{type:'blank',tier:1},{type:'blank',tier:1}];};
+    // Death confirmations are exercised elsewhere; isolate the burst gate.
+    tickPoison=async()=>{};
     await spin(0);
     return {calls,count:state.enemy.countdown,spins:h.stats.spins,punchlines:h.stats.punchlines||0};
   });
@@ -150,7 +150,7 @@ test('Jester matching triples use normal critical odds and multipliers; differen
     runMachine=async()=>Array.from({length:3},()=>({type:'attack',tier:1})); await spin(0);
     return {different,multiplier:state.lastPlayerRoll.multiplier,stun:state.party[0].stun,xp:state.party[0].stats.criticalXP,count:state.enemy.countdown};
   });
-  assert.deepEqual(r.different,{multiplier:1,spins:1,count:19}); assert.ok([2,2.5,3,4].includes(r.multiplier)); assert.equal(r.stun,0); assert.equal(r.xp,1); assert.equal(r.count,18);
+  assert.deepEqual(r.different,{multiplier:1,spins:1,count:19}); assert.ok([1.5,2,3,4].includes(r.multiplier)); assert.equal(r.stun,0); assert.equal(r.xp,1); assert.equal(r.count,18);
 });
 
 test('random recruited temperaments include both sides and trait tooltips separate immutable effects from recorded causes',async t=>{

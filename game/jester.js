@@ -1,31 +1,32 @@
-// Jesters use ordinary triple criticals. Trick marks charge one bonus Punchline;
-// its temporary tier increase never edits purchased faces or chains free rolls.
+// Trick charges a single mark burst within the paid action. It never rerolls
+// the machine, grants a second turn, rolls crits or charges another burst.
 const JESTER_ANTICIPATION_CAP = 6;
 function jesterAnticipation(h, power) {
   if (h.job !== "jester" || power <= 0) return false;
   const total = (h.anticipation || 0) + power;
   h.anticipation = Math.min(JESTER_ANTICIPATION_CAP - 1, total);
   const ready = total >= JESTER_ANTICIPATION_CAP;
-  if (ready) h.anticipation = Math.min(JESTER_ANTICIPATION_CAP - 1, total - JESTER_ANTICIPATION_CAP);
+  if (ready)
+    h.anticipation = Math.min(
+      JESTER_ANTICIPATION_CAP - 1,
+      total - JESTER_ANTICIPATION_CAP,
+    );
   syncRangerAim(h);
-  actionLabel(entityArt(h), ready ? "PUNCHLINE READY!" : `ANTICIPATION +${power}`);
+  actionLabel(
+    entityArt(h),
+    ready ? "PUNCHLINE READY!" : `ANTICIPATION +${power}`,
+  );
   burst(entityArt(h), "paper", ready ? 38 : 12);
   return ready;
 }
 function anticipationMarkup(h) {
-  return `<span class="aim-meter anticipation-meter" role="meter" aria-label="Jester anticipation" aria-valuemin="0" aria-valuemax="${JESTER_ANTICIPATION_CAP}" aria-valuenow="${h.anticipation || 0}" data-tooltip="Trick marks build anticipation. At 6, gain one free Punchline roll with every non-empty ordinary mark one rank stronger (maximum IV). Punchlines cannot charge another Punchline. Clears after battle."><b>TRICK ${h.anticipation || 0}/${JESTER_ANTICIPATION_CAP}</b><span class="aim-track"><i style="width:${100 * (h.anticipation || 0) / JESTER_ANTICIPATION_CAP}%"></i></span><small>next: Punchline</small></span>`;
-}
-function punchlineReels(h) {
-  return giftedReels(h).map((reel) => reel.map((face) =>
-    ["blank", "class"].includes(face.type) ? { ...face } :
-      { ...face, tier: Math.min(maxFaceTier(face.type), face.tier + 1), punchline: true },
-  ));
+  return `<span class="aim-meter anticipation-meter" role="meter" aria-label="Jester anticipation" aria-valuemin="0" aria-valuemax="${JESTER_ANTICIPATION_CAP}" aria-valuenow="${h.anticipation || 0}" data-tooltip="Trick marks build anticipation. At 6, fire six random ordinary marks from your reels. Each keeps its rank; no extra roll, critical, or anticipation from the burst. Clears after battle."><b>TRICK ${h.anticipation || 0}/${JESTER_ANTICIPATION_CAP}</b><span class="aim-track"><i style="width:${(100 * (h.anticipation || 0)) / JESTER_ANTICIPATION_CAP}%"></i></span><small>next: Punchline</small></span>`;
 }
 async function punchlineFX(h) {
   const machine = $("#machine-hero-" + state.party.indexOf(h));
   machine?.classList.add("punchline-ready");
   machine?.style.setProperty("--punchline-motion", String(preferences().shake));
-  combatCallout(entityArt(h), "PUNCHLINE! · +1 REEL RANK", "gold");
+  combatCallout(entityArt(h), "PUNCHLINE! · SIX-MARK BURST", "gold");
   GameSound.play("jesterTrick");
   screenFX("critical", 0.65);
   burst(machine, "confetti", 48);
@@ -34,7 +35,7 @@ async function punchlineFX(h) {
 }
 function giftedReels(entity) {
   return entity.reels.map((reel, k) => {
-    if ((entity.blackout?.includes(k) || entity.crystalLocks?.includes(k)))
+    if (entity.blackout?.includes(k) || entity.crystalLocks?.includes(k))
       return [{ type: "blank", tier: 1, blackout: true }];
     if (!entity.reelGifts?.some((g) => g.reel === k && g.uses > 0)) return reel;
     return reel.map((f) =>
@@ -143,7 +144,9 @@ async function jesterWildcard(h) {
       beam(entityArt(h), entityArt(a), "heal");
     }
     for (const e of enemies) {
-      e.hp = Math.min(e.maxHp, e.hp + 1);
+      const healed = Math.min(1, e.maxHp - e.hp);
+      e.hp += healed;
+      spendFuryOnHealing(e, healed);
       syncEnemy(e);
     }
   } else {
@@ -164,4 +167,124 @@ async function heroCriticalMultiplier(h, symbols, base) {
     actor: h,
     details: effectDetails(base),
   });
+}
+
+async function jesterMarkBurst(h) {
+  const run = state,
+    i = state.party.indexOf(h);
+  if (i < 0 || !alive(h) || !livingEnemies().length) return;
+  await punchlineFX(h);
+  if (state !== run) {
+    $("#machine-hero-" + i)?.classList.remove("punchline-ready");
+    return;
+  }
+  const reels = giftedReels(h).map((reel) =>
+    reel.filter((f) => f.type !== "class"),
+  );
+  const shots = Array.from(
+    { length: COMBAT_LIMITS.punchlineShots },
+    (_, k) => ({
+      ...(reels[k % 3].length
+        ? weightedPick(reels[k % 3])
+        : { type: "blank", tier: 1 }),
+    }),
+  );
+  const report = { heroId: h.id, shots: [], damage: 0, healing: 0, block: 0 };
+  state.lastPunchline = report;
+  try {
+    for (const face of shots) {
+      if (state !== run) return;
+      if (!alive(h) || !livingEnemies().length || state.over) break;
+      const base = await planHeroRoll(h, [face], { singleMark: true });
+      const foe = pick(livingEnemies()),
+        wounded = state.party
+          .filter(alive)
+          .sort((a, b) => a.hp / a.maxHp - b.hp / b.maxHp)[0];
+      const record = {
+        type: face.type,
+        tier: face.tier,
+        power: 0,
+        actual: 0,
+        targetIds: [],
+      };
+      report.shots.push(record);
+      const impact = {
+        symbols: [face],
+        machineId: "hero-" + i,
+        reelIndex: (report.shots.length - 1) % 3,
+        kind: "punchline",
+      };
+      if (base.attack || base.magic) {
+        record.power = (base.attack || 0) + (base.magic || 0);
+        const targets = face.tier >= 3 ? livingEnemies().slice() : [foe];
+        for (const target of targets) {
+          record.targetIds.push(target.id);
+          const dealt = damageEnemy(
+            record.power,
+            h.name + "’s Punchline",
+            target,
+            { attacker: h, impact: { ...impact, type: face.type } },
+          );
+          record.actual += dealt;
+          report.damage += dealt;
+          h.stats.damageDealt += dealt;
+          if (target.hp <= 0) h.stats.kills++;
+        }
+      } else if (base.heal) {
+        record.power = base.heal;
+        record.targetIds = [wounded.id];
+        await beam(entityArt(h), entityArt(wounded), "heal", impact);
+        const n = healHero(state.party.indexOf(wounded), base.heal);
+        record.actual = n;
+        report.healing += n;
+        h.stats.healingDone += n;
+      } else if (base.block) {
+        const before = state.block;
+        grantRolledBlock(h, base.block, impact);
+        record.power = base.block;
+        record.actual = state.block - before;
+        report.block += record.actual;
+      } else if (base.poison) {
+        record.power = base.poison;
+        record.targetIds = [foe.id];
+        applyPoison(foe, base.poison, h);
+        beam(entityArt(h), enemyArtEl(foe), "poison", impact);
+      } else if (base.stun) {
+        record.power = base.stun;
+        record.targetIds = [foe.id];
+        stunEnemy(base.stun, foe);
+        beam(entityArt(h), enemyArtEl(foe), "stun", impact);
+      } else if (base.rally) {
+        const ally = supportStimulantTarget(h);
+        record.power = base.rally;
+        record.targetIds = [ally.id];
+        applyStimulant(ally, base.rally);
+        beam(entityArt(h), entityArt(ally), "rally", impact);
+      } else {
+        // Trick and empty marks still fly, but cannot create an infinite burst.
+        beam(entityArt(h), entityArt(h), face.type, impact);
+        combatCallout(
+          entityArt(h),
+          face.type === "trick" ? "TRICK · CONFETTI" : "EMPTY",
+          "gold",
+        );
+      }
+      await feedbackPause(skip ? 45 : Math.max(70, 150 / Math.sqrt(pace())));
+    }
+    if (state !== run) return;
+    if (state.lastPlayerRoll?.heroId === h.id) {
+      state.lastPlayerRoll.actualDamage =
+        (state.lastPlayerRoll.actualDamage || 0) + report.damage;
+      state.lastPlayerRoll.actualHealing =
+        (state.lastPlayerRoll.actualHealing || 0) + report.healing;
+    }
+    result(
+      `<span>PUNCHLINE · ${report.shots.length} marks</span><span class="damage">−${report.damage} HP</span><span class="healing">+${report.healing} HP</span><span>+${report.block} block</span>`,
+    );
+    log(
+      `${h.name} fires ${report.shots.length} marks: ${report.damage} damage, ${report.healing} healing, ${report.block} team block.`,
+    );
+  } finally {
+    $("#machine-hero-" + i)?.classList.remove("punchline-ready");
+  }
 }

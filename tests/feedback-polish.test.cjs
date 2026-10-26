@@ -200,6 +200,7 @@ test("Berserker starts with more healing and Bloodrush heals its caster while a 
     e.passive = null;
     setEnemyBlock(0); // Isolate caster recovery from random Ironbound shields.
     h.hp = 8;
+    h.fury = 20; // Recovery spends wounds already earned, never free Bloodrush charge.
     h.reels = [
       [{ type: "blank", tier: 1 }],
       [{ type: "class", tier: 1, job: "berserker" }],
@@ -220,7 +221,7 @@ test("Berserker starts with more healing and Bloodrush heals its caster while a 
   assert.deepEqual(r.heals, [2, 2, 2]);
   assert.equal(r.ally, 2);
   assert.equal(r.self, 4);
-  assert.equal(r.bar, 4 - r.furySpent);
+  assert.equal(r.bar, 20 - r.furySpent - r.self);
   assert.ok(r.hp >= 12);
   assert.ok(r.leech > 0);
 });

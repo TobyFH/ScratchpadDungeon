@@ -47,7 +47,7 @@ async function game(t) {
   return p;
 }
 
-test("hero faces begin equally likely; migration removes authored weights but preserves edited powers, points and paid weighting after the new version", async (t) => {
+test("hero faces remain equally likely; old authored weights vanish without a refund and retired purchases stay disabled", async (t) => {
   const p = await game(t);
   const r = await p.evaluate(() => {
     const h = state.party[0],
@@ -81,11 +81,11 @@ test("hero faces begin equally likely; migration removes authored weights but pr
   assert.equal(r.migrated.tier, 4);
   assert.equal(r.migrated.points, 50);
   assert.ok(r.migrated.weights.every((w) => w === 1));
-  assert.equal(r.weight, 2);
-  assert.equal(r.points, 46);
+  assert.equal(r.weight, 1);
+  assert.equal(r.points, 50);
 });
 
-test("weight purchases use personal points, retain class-seal restrictions, and displayed critical chances match exhaustive weighted rolls", async (t) => {
+test("weight purchases are rejected for ordinary faces and seals; critical chances match exhaustive equal-face rolls", async (t) => {
   const p = await game(t);
   const r = await p.evaluate(() => {
     const h = state.party[0];
@@ -119,9 +119,9 @@ test("weight purchases use personal points, retain class-seal restrictions, and 
       shown: heroCriticalOdds(h).reduce((n, r) => n + r.chance, 0),
     };
   });
-  assert.equal(r.cost, 4);
-  assert.ok(r.after > r.before);
-  assert.equal(r.sealWeighted, true);
+  assert.equal(r.cost, undefined);
+  assert.equal(r.after, r.before);
+  assert.equal(r.sealWeighted, false);
   assert.equal(r.cannotSwap, false);
   assert.ok(Math.abs(r.shown - r.exact) < 1e-12);
   await p.evaluate(() => editor(0));
@@ -221,7 +221,7 @@ test("Ranger Execute charges faster and has a stronger meaningful payoff at both
   assert.ok(r.seal > r.wounded);
 });
 
-test("stuns recover on a rising chance over rolls, while failed hero attempts never advance enemy clocks", async (t) => {
+test("a stun costs one missed go without advancing enemy clocks, while background recovery takes at most two checks", async (t) => {
   const p = await game(t);
   const r = await p.evaluate(async () => {
     beginEncounter();
@@ -232,7 +232,7 @@ test("stuns recover on a rising chance over rolls, while failed hero attempts ne
     const random = Math.random;
     Math.random = () => 0.99;
     const attempts = [];
-    for (let n = 0; n < 4; n++) {
+    for (let n = 0; n < 1; n++) {
       await spin(0);
       attempts.push({
         stun: h.stun,
@@ -259,10 +259,10 @@ test("stuns recover on a rising chance over rolls, while failed hero attempts ne
   });
   assert.deepEqual(
     r.attempts.map((x) => x.stun),
-    [1, 1, 1, 0],
+    [0],
   );
   assert.ok(r.attempts.every((x) => x.count === 9 && x.spins === 0));
-  assert.ok(r.mean > 1.5 && r.mean < 2.5);
+  assert.ok(r.mean > 1.3 && r.mean < 1.5);
 });
 
 test("a final enemy killing blow ends combat before poison can kill the surviving Ranger, and poison never ticks after either faction is gone", async (t) => {
@@ -349,7 +349,7 @@ test("paired foes share one large protection control and portrait badges are ico
     render();
   });
   assert.equal(await p.locator(".enemy-team-block").count(), 1);
-  assert.equal(await p.locator(".enemy-team-block strong").textContent(), "27");
+  assert.equal(await p.locator(".enemy-team-block strong").textContent(), "20");
   assert.equal(await p.locator(".specialism-badge").innerText(), "");
   assert.equal(await p.locator(".portrait-conditions").first().innerText(), "");
   assert.ok(
@@ -925,7 +925,7 @@ test("compact workshop face selection and fixed operation pages stay legible and
     });
     await p.locator("#workshop-face-picker").selectOption("3");
     const footers = [];
-    for (const mode of ["power", "replace", "weight"]) {
+    for (const mode of ["power", "replace"]) {
       await p.locator(`[data-editor-operation="${mode}"]`).click();
       await p.waitForTimeout(100);
       footers.push(
@@ -966,10 +966,10 @@ test("compact workshop face selection and fixed operation pages stay legible and
       Math.max(...footers) - Math.min(...footers) < 2,
       "operation footer does not jump",
     );
-    await p.locator("#face-weight").click();
+    assert.equal(await p.locator("#face-weight").count(), 0);
     assert.equal(await p.locator("#workshop-face-picker").inputValue(), "3");
-    assert.equal(await p.evaluate(() => state.party[0].reels[0][3].weight), 2);
-    assert.equal(await p.evaluate(() => state.party[0].points), 76);
+    assert.equal(await p.evaluate(() => state.party[0].reels[0][3].weight), 1);
+    assert.equal(await p.evaluate(() => state.party[0].points), 80);
     await p.evaluate(() => closeModal());
   }
 });

@@ -53,7 +53,7 @@ function heroHealingPower(n) {
   return n;
 }
 const RANGER_AIM_CAP = 6;
-// Fury scales with level and is spent only when real lifesteal restores HP.
+// Fury scales with level; every real HP restored spends one charge.
 const BERSERKER_SUSTAIN = Object.freeze({
   bloodrushHeal: 4,
   healLevelInterval: 3,
@@ -82,7 +82,7 @@ const heroJobs = (rules = state?.runRules || []) => [
   ...(rules.includes("jester") ? ["jester"] : []),
 ];
 function mageResonance(h, symbols = null) {
-  // A property of the marks actually rolled, falling back to weighted wheels.
+  // A property of the marks actually rolled, falling back to reel probabilities.
   // It is never a selectable or saved Mage role.
   const scores = Object.fromEntries(
     Object.keys(MAGE_POWERS).map((t) => [t, 0]),
@@ -146,6 +146,7 @@ function normaliseHeroBuild(h) {
   h.charge = Math.min(RANGER_AIM_CAP, Math.max(0, h.charge || 0));
   h.fury = Math.min(furyCapacity(h), Math.max(0, h.fury || 0));
   if (!h.reels) return;
+  retireReelWeights(h);
   for (const face of h.last || []) {
     if (face.type === "selfharm" && h.job !== "berserker") {
       face.type = h.job === "jester" ? "trick" : "blank";
@@ -227,13 +228,13 @@ function classAbilityDescription(hero) {
     {
       jester:
         "Wildcard: tricks ink enemy reels, gild allied reels, reverse a foe’s roll, or scatter damage and healing. They usually favour your party.",
-      fighter: `Shield Bash: gain ${tankSealBlock(typeof hero === "object" ? hero : null)} team block, then strike for your shield count. Block gained increases every three levels. The bash deals double damage to enemy shields.`,
+      fighter: `Shield Bash: gain ${tankSealBlock(typeof hero === "object" ? hero : null)} team block, then spend up to ${bashLimit(typeof hero === "object" ? hero : null)} block on a bash. Block gained increases every three levels. The bash deals double damage to enemy shields.`,
       rogue: "Flurry: roll three extra attacks; each blade lands separately.",
       mage: "Resonance echoes the strongest healing, shield, poison or magic marks in this roll across the appropriate whole team. Healing also clears every ally’s stun.",
       healer: "Resonance echoes your rolled marks across the appropriate team.",
       ranger:
         "Execute: wait between attacks to fill patience. The next damaging roll gains a bonus against wounded enemies; the seal strengthens that shot.",
-      berserker: `Bloodrush: restore ${bloodrushHealing(hero && typeof hero === "object" ? hero : { level: 1 })} HP to yourself, gain 4 Fury and +2 physical damage. Charged Fury adds damage and lifesteal; restoring HP spends some Fury.`,
+      berserker: `Bloodrush: restore ${bloodrushHealing(hero && typeof hero === "object" ? hero : { level: 1 })} HP to yourself, gain +2 physical damage. Wounds build Fury; every HP healed spends Fury. Charged Fury adds damage and lifesteal.`,
     }[job] || "Your permanent signature mark, alongside the other two results."
   );
 }
@@ -393,6 +394,7 @@ function makeHero(
     traitProgress: {},
     stun: 0,
     stunAge: 0,
+    stunWard: 0,
     blackout: [],
     reelGifts: [],
     momentReceipts: {},
@@ -478,7 +480,9 @@ function enemyBlock() {
   return Math.max(0, state.enemyBlock || 0);
 }
 function setEnemyBlock(amount) {
-  state.enemyBlock = Number.isFinite(amount) ? Math.max(0, amount) : 0;
+  state.enemyBlock = Number.isFinite(amount)
+    ? Math.min(enemyBlockCap(), Math.max(0, amount))
+    : 0;
   // Non-enumerable aliases keep old saves/callers compatible without storing
   // or maintaining competing pools. New game code uses these shared helpers.
   for (const e of battleEnemies()) {
@@ -492,6 +496,7 @@ function setEnemyBlock(amount) {
   }
   document.querySelectorAll(".enemy-team-block").forEach((el) => {
     el.querySelector("strong").textContent = state.enemyBlock;
+    el.querySelector("small").textContent = "Shared · cap " + enemyBlockCap();
     el.style.setProperty(
       "--block-strength",
       Math.min(20, state.enemyBlock) / 20,
@@ -503,7 +508,7 @@ function gainEnemyBlock(amount) {
   setEnemyBlock(enemyBlock() + amount);
 }
 function enemyBlockMarkup(index = 0) {
-  return `<div id="enemy-team-block${index ? "-2" : ""}" class="enemy-team-block" style="--block-strength:${Math.min(20, enemyBlock()) / 20}" aria-label="Enemy team block: ${enemyBlock()}">${icon("block")}<strong>${enemyBlock()}</strong><span>TEAM BLOCK<small>Shared pool</small></span></div>`;
+  return `<div id="enemy-team-block${index ? "-2" : ""}" class="enemy-team-block" style="--block-strength:${Math.min(20, enemyBlock()) / 20}" aria-label="Enemy team block: ${enemyBlock()}">${icon("block")}<strong>${enemyBlock()}</strong><span>TEAM BLOCK<small>Shared · cap ${enemyBlockCap()}</small></span></div>`;
 }
 function wardActive(e = actingEnemy) {
   return !!(

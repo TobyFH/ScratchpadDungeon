@@ -521,3 +521,178 @@ function encounterXP(depth, enemy, count = 1) {
       (enemy.stronghold ? 2 : enemy.boss ? 1.35 : enemy.elite ? 1.2 : 1),
   );
 }
+
+// Bounded resources and complementary marks, shared by manual play and AI.
+const COMBAT_LIMITS = Object.freeze({
+  block: 20,
+  tankBlock: 30,
+  enemyBlock: 20,
+  bossBlock: 30,
+  stunWard: 2,
+  stimulantPower: 6,
+  punchlineShots: 6,
+});
+const partyBlockCap = () =>
+  state.party.some((h) => alive(h) && h.job === "fighter")
+    ? COMBAT_LIMITS.tankBlock
+    : COMBAT_LIMITS.block;
+const enemyBlockCap = () =>
+  livingEnemies().some((e) => e.boss)
+    ? COMBAT_LIMITS.bossBlock
+    : COMBAT_LIMITS.enemyBlock;
+function normalisePartyBlock() {
+  state.block = Math.max(0, Math.floor(Number(state.block) || 0));
+  if (state.enemy) state.block = Math.min(partyBlockCap(), state.block);
+  return state.block;
+}
+function gainPartyBlock(amount) {
+  normalisePartyBlock();
+  const before = state.block;
+  state.block = Math.min(
+    partyBlockCap(),
+    before + Math.max(0, Math.floor(amount || 0)),
+  );
+  return state.block - before;
+}
+const bashLimit = (h) => 6 + Math.max(0, (h?.level || 1) - 1);
+const CLASS_COMBOS = Object.freeze({
+  fighter: { name: "Counterstroke", hint: "Physical + block: +2 team block." },
+  rogue: {
+    name: "Venom edge",
+    hint: "Physical + poison or stun: +1 physical damage.",
+  },
+  mage: {
+    name: "Spellweave",
+    hint: "Spell/poison + healing/block/ally stimulant: +1 spell and +1 rolled healing or block.",
+  },
+  ranger: {
+    name: "Prepared shot",
+    hint: "Physical + healing/stun/ally stimulant: +2 physical damage.",
+  },
+  berserker: {
+    name: "Blood & steel",
+    hint: "Physical + healing/Blood Price: +1 physical damage.",
+  },
+  jester: {
+    name: "Variety act",
+    hint: "Trick + another useful kind: +1 anticipation.",
+  },
+});
+function complementaryEffects(h, symbols) {
+  const has = (t) => symbols.some((f) => f.type === t),
+    fx = {};
+  if (h.job === "fighter" && has("attack") && has("block")) fx.block = 2;
+  if (h.job === "rogue" && has("attack") && (has("poison") || has("stun")))
+    fx.attack = 1;
+  if (
+    h.job === "mage" &&
+    (has("magic") || has("poison")) &&
+    ["heal", "block", "rally"].some(has)
+  ) {
+    fx.magic = 1;
+    if (has("heal")) fx.heal = 1;
+    else if (has("block")) fx.block = 1;
+  }
+  if (
+    h.job === "ranger" &&
+    has("attack") &&
+    ["heal", "stun", "rally"].some(has)
+  )
+    fx.attack = 2;
+  if (
+    h.job === "berserker" &&
+    has("attack") &&
+    (has("heal") || has("selfharm"))
+  )
+    fx.attack = 1;
+  if (
+    h.job === "jester" &&
+    has("trick") &&
+    symbols.some((f) => !["trick", "blank", "class", "miss"].includes(f.type))
+  )
+    fx.trick = 1;
+  return fx;
+}
+function applyComplementaryEffects(h, symbols, base) {
+  const fx = complementaryEffects(h, symbols);
+  for (const [key, n] of Object.entries(fx)) base[key] = (base[key] || 0) + n;
+  if (Object.keys(fx).length) {
+    Object.defineProperty(base, "combo", {
+      value: CLASS_COMBOS[h.job].name,
+      enumerable: false,
+    });
+    combatCallout(
+      entityArt(h),
+      CLASS_COMBOS[h.job].name.toUpperCase(),
+      "ability",
+    );
+  }
+  return base;
+}
+// Paid weighting is retired. Equalise old faces and refund actual historic
+// 4/8/12-point purchases (6/12/18 for the middle seal) exactly once.
+function retireReelWeights(h) {
+  let refund = 0;
+  for (const reel of h.reels || [])
+    for (const f of reel) {
+      const weight = Number(f.weight) || 1;
+      if (Number.isInteger(weight) && weight >= 2 && weight <= 4)
+        refund += 2 * (weight - 1) * weight * (f.type === "class" ? 1.5 : 1);
+      f.weight = 1;
+    }
+  if (refund) {
+    h.points = (h.points || 0) + refund;
+    h.retiredWeightRefund = (h.retiredWeightRefund || 0) + refund;
+  }
+  return refund;
+}
+// Exact chance of complementary kinds on the three independent equal-face reels.
+function expectedComplementaryEffects(h) {
+  const probabilities = (types) =>
+    h.reels.map((reel) => faceShare(reel, types));
+  const both = (left, right) => {
+    const a = probabilities(left),
+      b = probabilities(right);
+    return Math.max(
+      0,
+      1 -
+        a.reduce((p, x) => p * (1 - x), 1) -
+        b.reduce((p, x) => p * (1 - x), 1) +
+        a.reduce((p, x, k) => p * (1 - x - b[k]), 1),
+    );
+  };
+  if (h.job === "fighter") return { block: 2 * both(["attack"], ["block"]) };
+  if (h.job === "rogue")
+    return { damage: both(["attack"], ["poison", "stun"]) };
+  if (h.job === "ranger")
+    return { damage: 2 * both(["attack"], ["heal", "stun", "rally"]) };
+  if (h.job === "berserker")
+    return { damage: both(["attack"], ["heal", "selfharm"]) };
+  if (h.job === "jester")
+    return {
+      trick: both(
+        ["trick"],
+        TYPES.filter(
+          (t) => !["class", "blank", "trick", "selfharm"].includes(t),
+        ),
+      ),
+    };
+  if (h.job === "mage") {
+    const l = probabilities(["magic", "poison"]),
+      a = probabilities(["heal"]),
+      b = probabilities(["block"]);
+    const triple = l.reduce(
+      (n, p, i) =>
+        n +
+        p * a[(i + 1) % 3] * b[(i + 2) % 3] +
+        p * b[(i + 1) % 3] * a[(i + 2) % 3],
+      0,
+    );
+    return {
+      damage: both(["magic", "poison"], ["heal", "block", "rally"]),
+      heal: both(["magic", "poison"], ["heal"]),
+      block: Math.max(0, both(["magic", "poison"], ["block"]) - triple),
+    };
+  }
+  return {};
+}

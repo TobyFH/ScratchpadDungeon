@@ -64,7 +64,7 @@ Enable **Autofight** alongside it for a hands-free attempt. Both modes briefly
 linger on confirmations so their animations and contents can be watched; an
 extra arrival pause leaves time to see enemy traits and party openings. Reading
 holds scale with animation speed, using 5× for Skip, and manual clicks stay immediate. Autofight estimates
-what each hero's actual weighted wheels can deliver, balancing damage, healing,
+what each hero's actual reels can deliver, balancing damage, healing,
 team protection, stun, poison and buffs. It selects targets and useful items,
 including the ink bomb's confirmed roll. Repeated support turns give way to
 offence; if no wheel or available offensive supply can hurt a foe, Autofight
@@ -120,14 +120,14 @@ returned as a zombie; their memorial remains.
 Heroes have six equally likely ordinary faces on each outer reel and seven on the
 middle, including its **single permanent class seal**. Empty faces have no effect
 and never crit. Click a portrait to open the reel workshop: choose a reel, a face,
-then upgrade, downgrade for a refund, or explicitly select a new symbol. Weights
-begin at one per face. Buy extra weight for 4/8/12 personal points, up to four;
-the permanent class mark costs 6/12/18. The workshop lists exact current
-face chances and every possible critical combination. Compact screens use a face
-selector and fixed Power, Replace and Weight pages. Downgrades remove one tier and refund half its paid price (at
-least one point). Class seals cannot be removed or copied. Base tier prices are
-1 / 4 / 9 / 16 with class affinities; a Tank pays 8 to upgrade healing I → II,
-a Mage 4. Every normal power supports tier IV.
+then upgrade, downgrade for a refund, or explicitly select a new symbol. All faces
+have equal odds. Weighting purchases are retired and old paid weights refund
+personal points once. The workshop lists current face chances and every possible
+critical combination. Compact screens use a face selector and fixed Power and
+Replace pages. Downgrades remove one tier and refund half its paid price (at
+least one point). Class seals cannot be removed or copied. Rank-up prices are
+3 / 6 / 10 before class affinities; a Tank pays 6 to upgrade healing I → II,
+a Mage 3. Every normal power supports tier IV.
 
 Each hero has **Aggressive** or **Defensive** temperament, selecting a different
 level-one mark palette without changing a rolled mark's power. Rebuild either
@@ -136,18 +136,18 @@ and any earned trait.
 
 | Class     | Starting style                                         | Middle-reel ability                                           |
 | --------- | ------------------------------------------------------ | ------------------------------------------------------------- |
-| Tank      | 50 HP; blades and team protection                      | Shield Bash grants block and strikes with the shield count                        |
+| Tank      | 50 HP; blades and team protection                      | Shield Bash grants block, then spends it on a bounded strike                        |
 | Rogue     | 26 HP; damage and poison                               | Flurry rolls three extra attacks                              |
 | Mage      | 28 HP; build healing, shields, poison or spell damage  | Resonance echoes the rolled marks across the appropriate team |
 | Berserker | 38 HP; unlock at camp; blades, healing and Blood Price | Bloodrush heals; charged Fury adds damage and lifesteal       |
-| Jester    | 30 HP; unlock at camp | Trick fills anticipation for a +1-rank Punchline roll |
+| Jester    | 30 HP; unlock at camp; Trick and mixed marks | Wildcard plays a random trick; anticipation fires a six-mark burst |
 | Ranger    | 30 HP; unlock at camp                                  | Execute rewards patience and finishing wounded enemies        |
 
 Former Healers migrate to Mages with their existing stats and edited wheels.
 There is no Mage role selector: builds follow the marks on their reels. See
 [Combat builds](docs/COMBAT_BUILDS.md) for exact rules, migration and source files.
 
-Physical and spell tiers deal 1 / 2 / 3 / 4 base damage per face. Healing and block tiers offer 2 / 4 / 6 / 8 HP or protection. Stun tiers contribute 1 / 2 / 3 / 4 power. **Three identical type-and-tier symbols crit** for ordinary classes; a middle class seal can complete two matching meaningful symbols while also casting its ability. A pair alone never crits. Jesters follow these same critical rules. Trick marks instead build six anticipation for a free +1-rank Punchline roll. Hero critical pools differ by class (shown in the workshop); other event criticals use ×2, ×2.5, ×3 or ×4; wells use ×1.25–×1.75, with the original value pulsing into the amplified total.
+Physical and spell tiers deal 1 / 2 / 3 / 4 base damage per face. Healing and block tiers offer 2 / 4 / 6 / 8 HP or protection. Stun tiers contribute 1 / 2 / 3 / 4 power. **Three identical type-and-tier symbols crit** for ordinary classes; a middle class seal can complete two matching meaningful symbols while also casting its ability. A pair alone never crits. Jesters follow these same critical rules. Trick marks build six anticipation for a burst of six ordinary reel marks, with no reroll or additional critical. Hero critical pools differ by class (shown in the workshop); other event criticals use ×2, ×2.5, ×3 or ×4; wells use ×1.25–×1.75, with the original value pulsing into the amplified total.
 
 Normal combat rolls stay on the right page. Criticals get a multiplier popup that lingers automatically; **Strike now** skips its result hold. Treasure, fountain and other event criticals stay inside their original panel and still require confirmation. Criticals show the original value while spinning, then pulse the same readout to
 the final number; no calculation box appears. Critical damage lands as the
@@ -158,8 +158,8 @@ the living wounded hero with the **lowest raw HP**, not the lowest percentage.
 A partially wounded selection stays selected even if some healing is wasted.
 Party heals, wells and floor recovery retain their individual per-hero amounts.
 
-**Enemy team block** is now shared too, with a fixed visible shield/count. **Unbroken page** blocks the next enemy’s complete turn, including all strikes, while preserving normal block. **Party team block** is a shared consumable pool, depleted point for point by damage and cleared after combat. Intercepted enemy attacks strike the team shield; any HP overflow also fires at the wounded hero. A fully absorbed hit shows a shield on its recipient. Its blue-silver tint deepens from 0 to 20 block; protection itself is uncapped. Weak stuns are stopped by any positive armour; stronger stuns consume more and can penetrate it. Stun prevents action until recovery; its chance to break rises on every combat
-roll or missed attempt, usually taking one to three checks. Missed hero attempts
+**Enemy team block** is now shared too, with a fixed visible shield/count. **Unbroken page** blocks the next enemy’s complete turn, including all strikes, while preserving normal block. **Party team block** is a shared consumable pool, depleted point for point by damage and cleared after combat. Intercepted enemy attacks strike the team shield; any HP overflow also fires at the wounded hero. A fully absorbed hit shows a shield on its recipient. Its blue-silver tint deepens from 0 to 20 block; party protection caps at 20, or 30 with a living Tank; enemy caps are 20, or 30 with a living boss. Weak stuns are stopped by any positive armour; stronger stuns consume more and can penetrate it. Stun costs at most one missed go. Background recovery takes at most two checks;
+recovery grants protection against re-stuns for two own completed actions. Missed hero attempts
 never advance or reset enemy clocks. Enemy attack frequency determines how many player actions occur between attacks; difficult enemies can make multiple separately rolled strikes.
 
 Enemy damage now grows faster with depth. Attack and magic faces advance on
@@ -394,3 +394,12 @@ Camp lessons provide a stronger progression advantage. See
 [the balance pass](docs/BALANCE_PASS.md) for exact values, class build guidance,
 save compatibility and the limitations of the seeded browser combat audit.
 Run `npm run audit:balance` to reproduce a controlled comparison of camp ranks.
+
+### Combat identity and bounded resources
+
+See [Combat identity](docs/COMBAT_IDENTITY.md) for the current rules: Fury from
+wounds and spent by all healing, six-mark Jester bursts, short stuns followed
+by Steady protection, capped shared block and stimulant potency, complementary
+class marks and the removal/refund of paid hero weighting. The workshop and
+field guide explain these changes. Existing pencil art and enemy floor budgets
+are retained.

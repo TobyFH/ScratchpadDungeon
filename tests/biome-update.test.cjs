@@ -170,7 +170,7 @@ test("Tank Shield Bash block grows every three levels in actual roll planning", 
     return out;
   });
   assert.deepEqual(r, [
-    { block: 2, bash: 7 },
+    { block: 2, bash: 6 },
     { block: 3, bash: 8 },
     { block: 4, bash: 9 },
     { block: 5, bash: 10 },
@@ -205,7 +205,7 @@ test("Blood Price and Trick are exclusive, including legacy edited faces and sav
           : "blank",
     );
     assert.equal(x.last.type, x.face.type);
-    assert.equal(x.face.weight, 3);
+    assert.equal(x.face.weight, 1);
     if (x.face.type === "blank") assert.equal(x.face.tier, 1);
   }
 });
@@ -826,8 +826,8 @@ test("version-20 migration buffs living Tanks without reviving corpses or changi
   assert.equal(r.loaded, true);
   assert.equal(r.a.hp, 14);
   assert.equal(r.a.max, 50);
-  assert.equal(r.a.points, 27);
-  assert.deepEqual(r.a.face, { type: "block", tier: 4, weight: 3 });
+  assert.equal(r.a.points, 39); // 12 points refunded for retired weight III.
+  assert.deepEqual(r.a.face, { type: "block", tier: 4, weight: 1 });
   assert.equal(r.dead, 0);
   assert.equal(r.version, 21);
 });

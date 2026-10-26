@@ -42,7 +42,7 @@ function effectSymbols(from, type, impact = {}) {
   const matches = (symbols || [])
     .map((s, i) => ({
       symbol: s,
-      origin: machine?.querySelector(`[data-reel="${i}"] .slot-symbol`),
+      origin: machine?.querySelector(`[data-reel="${impact.reelIndex ?? i}"] .slot-symbol`),
     }))
     .filter((v) => accepts(v.symbol));
   return matches.length

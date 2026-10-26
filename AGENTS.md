@@ -41,13 +41,13 @@ must use `editableTypes()` and the same validators as player/autoplay edits.
 Field-guide text and topic navigation live in `ui/field-guide.js`, embedded by
 the same builder. Keep topics short enough to read without internal scrolling.
 
-The current economy, equal-face reels, paid weighting and new exploration rules
+The economy, equal-face reels and exploration rules
 are documented in `docs/EXPEDITION_UPDATE.md`; read it before changing them.
 `game/economy.js` owns shop spending curves and permanent training lookup;
 `game/encounter-journal.js` owns bestiary IDs/receipts, lore and zombie selection;
 `ui/notebook-pages.js` owns utility suspension, portrait motion and fixed loot
 browsing. All are embedded by the builder. New hero faces start at weight one;
-only validated paid weighting changes odds. Class marks remain unique/permanent.
+paid weighting is retired; all hero faces remain weight one. Class marks remain unique/permanent.
 Utility pages must suspend an existing confirmation without discarding its DOM
 callbacks. Keep journal encounter/death receipts idempotent across reloads.
 Camp lessons use the highest selected rank, bounded by ownership, never additive ranks; selections apply to future runs.
@@ -67,15 +67,15 @@ reel presets, luck or exploration. Campfire Lessons separates owned and active
 ranks; eight families have five ranks each, and eight Challenges are untiered.
 `game/character-events.js` owns the saved personal luck stream/receipts;
 `game/auto-builds.js` owns AI editing preferences and paid solo repairs;
-`game/jester.js` owns ordinary Jester critical dispatch, anticipation, one boosted
-Punchline per action and six Wildcards; `game/exploration-rules.js` owns command-aged ambushes and
+`game/jester.js` owns ordinary Jester critical dispatch, anticipation, one six-mark
+Punchline burst per action and six Wildcards; `game/exploration-rules.js` owns command-aged ambushes and
 reserved fountain rows. All are embedded sources. Ambush age must never resume
 using wall-clock time. Bridges have no discoveries. Future UI should preserve
 bulleted guide pages, equal unlock cards and stationary paginated camp controls.
 
-Read `docs/PUNCHLINE_UPDATE.md` for current version-20 rules. Self/ally stimulants are distinct validated face types with a shared three-action overflow model. Floor connectivity must count reciprocal tunnel edges; never force physical bridge repairs across valid portal routes. Punchline uses temporary tier-adjusted copies, never edits purchased reels, never doubles critical multipliers and never chains itself.
+Read `docs/PUNCHLINE_UPDATE.md` for current version-20 rules. Self/ally stimulants are distinct validated face types with a shared three-action overflow model. Floor connectivity must count reciprocal tunnel edges; never force physical bridge repairs across valid portal routes. Punchline now fires six actual ordinary marks (see COMBAT_IDENTITY.md), never edits purchased reels, grants extra turns or chains itself.
 
-Read `docs/BIOMES_UPDATE.md` for current version-21 rules. `game/biomes.js` owns named themes, directed ice movement and bounded mushroom reveals; `game/biome-enemies.js` owns themed species and the self-destruct lifecycle. Generation must preserve a real slide/tunnel stair route. Keep all class tuning in shared hero helpers; Blood Price and Trick are class-exclusive. Fury capacity scales by level and actual lifesteal spends charge. Autoplay repairs class identity through paid validators. Gold critical lock callbacks update one reserved payoff without a later delay.
+Read `docs/BIOMES_UPDATE.md` for current version-21 rules. `game/biomes.js` owns named themes, directed ice movement and bounded mushroom reveals; `game/biome-enemies.js` owns themed species and the self-destruct lifecycle. Generation must preserve a real slide/tunnel stair route. Keep all class tuning in shared hero helpers; Blood Price and Trick are class-exclusive. Fury capacity scales by level; every actual HP restored spends charge. Autoplay repairs class identity through paid validators. Gold critical lock callbacks update one reserved payoff without a later delay.
 
 Ice generation must preserve escape to stairs from every traversable tile, not just spawn. Known ice may lead onto covered landings; do not restore a seen-only landing restriction. Crystal aura/seal rules live in `game/biomes.js`; `giftedReels` applies temporary gems and `clearBattleStatuses` clears them. Read the follow-up in `docs/BIOMES_UPDATE.md` and run `tests/ice-crystal.test.cjs` after movement, terrain or starter-card changes.
 
@@ -85,3 +85,12 @@ Keep UI descriptions, real rolls and AI expectations in agreement; never change
 art for a numeric pass. `npm run audit:balance` uses real browser combat in a
 controlled gauntlet, not a claim about player campaign win rates. Preserve
 previously paid reel-refund receipts and owned camp IDs when retuning prices.
+
+Read `docs/COMBAT_IDENTITY.md` before changing current combat. It supersedes
+older weighting, Punchline, Fury, stun and unlimited-shield examples.
+`game/balance.js` owns caps, complementary marks, Bash budgets and retirement
+refunds. All block sources must use shared capped helpers. All healing must use
+shared Fury spending. Stun wards last two own completed actions on both sides;
+never extend stun by repeated application. Jester bursts draw six ordinary
+marks from real reels, never crit, reroll, refill anticipation or duplicate
+once-per-roll equipment procs. Preserve equal-face saves and idempotent refunds.

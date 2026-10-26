@@ -220,6 +220,18 @@ function autoBuildUtility(h) {
     const over = Math.max(0, faceShare(h.reels.flat(), types) - cap);
     utility -= over * 60 + over * over * 80;
   }
+  // Recovery is valuable, especially with camp lessons, but physical classes
+  // must not turn into mostly-heal wheels. Keep a few emergency marks; let
+  // the Mage and genuine damage dealers complement each other.
+  const healCap = {
+    rogue: 0.18,
+    ranger: 0.22,
+    fighter: 0.24,
+    berserker: 0.36,
+    mage: 0.42,
+    jester: 0.25,
+  }[h.job] || 0.25;
+  utility -= Math.max(0, faceShare(h.reels.flat(), ["heal"]) - healCap) * 80;
   // Poison and stun are valuable tools, but their ticks/recovery saturate.
   // Avoid a cheap utility mark crowding every physical or spell combo off a build.
   for (const [types, cap] of [

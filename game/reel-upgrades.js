@@ -128,15 +128,15 @@ function faceDescription(face, h) {
       attack: `Deal ${ATTACK_POWER[tier]} physical damage to${area}.`,
       magic: `Deal ${ATTACK_POWER[tier]} spell damage to${area}, with a chance to leave the target Vulnerable.`,
       heal: `Restore ${POWER.heal * tier} HP to your healing target. Can clear stun; more healing helps and more team block reduces the chance.`,
-      block: `Add ${POWER.block * tier} shared team block. It absorbs damage for any party member and is spent as it protects them.`,
-      stun: `Apply ${tier} stun power. Prevents action until recovery. Recovery checks grow stronger each roll; higher power breaks through more block.`,
+      block: `Add ${POWER.block * tier} shared block (cap 20; 30 with a living Tank). It absorbs team damage and is spent as it protects.`,
+      stun: `Apply ${tier} stun power. Stops at most one action, then grants two own actions of protection. Higher power strips more block; it never extends the stun.`,
       poison: `Apply ${tier} poison power. Lasts up to 3 turns; repeated doses increase tick damage instead of adding a long duration.`,
-      stimulant: `Give yourself ${tier} stimulant power. Lasts up to 3 of your actions; extra duration becomes potency.`,
-      rally: `Give ${tier} stimulant power to the ally who has rolled most this fight. If alone, give it to yourself. Lasts up to 3 of their actions; extra duration becomes potency.`,
-      trick: `Build ${tier} anticipation. At 6, the Jester makes one free Punchline roll with ordinary marks +1 rank (maximum IV). Punchlines do not charge the meter.`,
-      selfharm: `Pay up to ${2 * tier} HP, staying above 0. Wounds feed Fury and this mark adds ${3 * tier} extra Fury.`,
+      stimulant: `Give yourself ${tier} stimulant power. Lasts up to 3 of your actions; potency caps at 6.`,
+      rally: `Give ${tier} stimulant power to the ally who has rolled most this fight. If alone, give it to yourself. Lasts up to 3 of their actions; potency caps at 6.`,
+      trick: `Build ${tier} anticipation. At 6, fire six random ordinary marks from your reels. Burst marks cannot charge anticipation or roll criticals.`,
+      selfharm: `Pay up to ${2 * tier} HP, staying above 0. Each HP paid adds ${2 + 0.5 * tier} Fury; all healing spends Fury.`,
       blank: "No effect. Inscribe a useful mark here with personal points.",
-    }[face.type] || "A mark on this weighted reel."
+    }[face.type] || "A mark on this reel."
   );
 }
 function classFacePrice(h, type, base) {
@@ -167,13 +167,10 @@ function nextFaceType(h, reel, index) {
     (editableTypes(h).indexOf(type) + 1) % editableTypes(h).length
   ];
 }
-// Equal starting faces have weight 1. Buying extra copies of a face changes only
-// its draw probability, never its power or the physical number of reel windows.
-const FACE_WEIGHT_MAX = 4;
-function faceWeightCost(face) {
-  return face && (face.weight || 1) < FACE_WEIGHT_MAX
-    ? (face.weight || 1) * 4 * (face.type === "class" ? 1.5 : 1)
-    : undefined;
+// Weighting purchases are retired. The weight field remains at one for save
+// compatibility and for shared fixed enemy/Flurry draw helpers.
+function faceWeightCost() {
+  return undefined;
 }
 function reelProbabilities(reel) {
   const total = reel.reduce((n, f) => n + (f.weight || 1), 0),
@@ -198,12 +195,12 @@ function heroCriticalOdds(h) {
 function criticalOddsMarkup(h) {
   const rows = heroCriticalOdds(h),
     total = rows.reduce((n, r) => n + r.chance, 0);
-  return `<section class="workshop-critpage workshop-page" ${editorView === "crits" ? "" : "hidden inert"}><h3>Three of a kind · ${(total * 100).toFixed(2)}% per roll</h3><p>${className(h.job)} criticals: <b>${criticalRange(h)}</b>. The middle class mark also completes two matching outer marks. Empty faces never crit. These odds include your edits and purchased weighting.</p><div class="crit-odds-grid">${rows.map((row) => `<div class="crit-odds-row">${symbolMarkup(row)}<b>${FACE_LABELS[row.type]} ${tierName(row.tier)}</b><strong>${(row.chance * 100).toFixed(2)}%</strong></div>`).join("") || "<p>No matching combinations yet. Put the same type and rank on both outer reels to start a combo.</p>"}</div></section>`;
+  return `<section class="workshop-critpage workshop-page" ${editorView === "crits" ? "" : "hidden inert"}><h3>Three of a kind · ${(total * 100).toFixed(2)}% per roll</h3><p>${className(h.job)} criticals: <b>${criticalRange(h)}</b>. The middle class mark also completes two matching outer marks. Empty faces never crit. Every face has equal odds; duplicates combine. Your edits change the possible matches.</p><div class="crit-odds-grid">${rows.map((row) => `<div class="crit-odds-row">${symbolMarkup(row)}<b>${FACE_LABELS[row.type]} ${tierName(row.tier)}</b><strong>${(row.chance * 100).toFixed(2)}%</strong></div>`).join("") || "<p>No matching combinations yet. Put the same type and rank on both outer reels to start a combo.</p>"}</div></section>`;
 }
 function faceEditCost(h, reel, index, operation, destination = null) {
   const face = h?.reels[reel]?.[index];
   if (!face) return undefined;
-  if (operation === "weight") return faceWeightCost(face);
+  if (operation === "weight") return undefined;
   if (face.type === "class") return undefined;
   if (operation === "upgrade") return faceUpgradeCost(face, h);
   if (operation === "weaken")
@@ -222,17 +219,12 @@ function applyFaceEdit(h, reel, index, operation, destination = null) {
     cost = faceEditCost(h, reel, index, operation, destination);
   if (
     !face ||
-    (face.type === "class" && operation !== "weight") ||
+    face.type === "class" ||
     !Number.isFinite(cost) ||
     !Number.isFinite(h.points) ||
     h.points < Math.max(0, cost)
   )
     return false;
-  if (operation === "weight") {
-    face.weight = (face.weight || 1) + 1;
-    h.points -= cost;
-    return true;
-  }
   if (operation === "upgrade") {
     if (face.type === "blank") {
       face.type = primaryFace(h);
@@ -272,7 +264,11 @@ function editor(i) {
     j = Math.min(editorSelection.face, h.reels[k].length - 1),
     face = h.reels[k][j],
     locked = face.type === "class";
-  if (locked && editorOperation === "replace") editorOperation = "power";
+  if (
+    !["power", "replace"].includes(editorOperation) ||
+    (locked && editorOperation === "replace")
+  )
+    editorOperation = "power";
   const upgrade = faceUpgradeCost(face, h),
     refund = faceRefund(h, face),
     data = `${i},${k},${j}`;
@@ -281,11 +277,11 @@ function editor(i) {
     `<div class="workshop-summary"><strong>${h.points} personal points</strong>${heroBuildMarkup(h)}</div>
     <p class="workshop-ability">Middle class mark: <b>${classAbilityName(h)}</b> · ${workshopAbilitySummary(h)}</p>
     <nav class="workshop-nav" aria-label="Workshop pages"><button data-workshop-view="edit" aria-pressed="${editorView === "edit"}">Edit reels</button><button data-workshop-view="crits" aria-pressed="${editorView === "crits"}">Critical odds · ${(heroCriticalOdds(h).reduce((n, r) => n + r.chance, 0) * 100).toFixed(1)}%</button></nav><div class="workshop-pages"><div class="workshop-editpage workshop-page" ${editorView === "edit" ? "" : "hidden inert"}>
-    <div class="workshop-step-label"><b>1. Choose a reel</b><span>Each reel rolls one mark. Faces begin equally likely.</span></div>
+    <div class="workshop-step-label"><b>1. Choose a reel</b><span>Each reel rolls one mark. Each face has an equal chance.</span></div>
     <div class="workshop-tabs" role="tablist" aria-label="Choose reel">${h.reels.map((_, r) => `<button role="tab" aria-selected="${r === k}" data-editor-reel="${r}">Reel ${r + 1}${r === 1 ? " · permanent class mark" : ""}</button>`).join("")}</div>
-    <div class="reel-workshop"><div class="workshop-mark-list"><b class="workshop-step-label">2. Choose a mark to edit</b><label class="workshop-face-picker">Mark<select id="workshop-face-picker">${h.reels[k].map((f, n) => `<option value="${n}" ${n === j ? "selected" : ""}>${f.type === "class" ? classAbilityName(h) : FACE_LABELS[f.type] + (f.type !== "blank" ? " " + tierName(f.tier) : "")} · ${((100 * (f.weight || 1)) / h.reels[k].reduce((sum, x) => sum + (x.weight || 1), 0)).toFixed(1)}%</option>`).join("")}</select></label><div class="workshop-faces" role="group" aria-label="Weighted faces on reel ${k + 1}">${h.reels[k].map((f, n) => `<button data-editor-face="${n}" aria-pressed="${n === j}" title="${escapeHTML(faceDescription(f, h))}">${symbolMarkup(f)}<span>${f.type === "class" ? classAbilityName(h) : FACE_LABELS[f.type]}${!["class", "blank"].includes(f.type) ? " " + tierName(f.tier) : ""}</span><small>${((100 * (f.weight || 1)) / h.reels[k].reduce((sum, x) => sum + (x.weight || 1), 0)).toFixed(1)}% chance</small></button>`).join("")}</div></div>
+    <div class="reel-workshop"><div class="workshop-mark-list"><b class="workshop-step-label">2. Choose a mark to edit</b><label class="workshop-face-picker">Mark<select id="workshop-face-picker">${h.reels[k].map((f, n) => `<option value="${n}" ${n === j ? "selected" : ""}>${f.type === "class" ? classAbilityName(h) : FACE_LABELS[f.type] + (f.type !== "blank" ? " " + tierName(f.tier) : "")} · ${((100 * (f.weight || 1)) / h.reels[k].reduce((sum, x) => sum + (x.weight || 1), 0)).toFixed(1)}%</option>`).join("")}</select></label><div class="workshop-faces" role="group" aria-label="Faces on reel ${k + 1}">${h.reels[k].map((f, n) => `<button data-editor-face="${n}" aria-pressed="${n === j}" title="${escapeHTML(faceDescription(f, h))}">${symbolMarkup(f)}<span>${f.type === "class" ? classAbilityName(h) : FACE_LABELS[f.type]}${!["class", "blank"].includes(f.type) ? " " + tierName(f.tier) : ""}</span><small>${((100 * (f.weight || 1)) / h.reels[k].reduce((sum, x) => sum + (x.weight || 1), 0)).toFixed(1)}% chance</small></button>`).join("")}</div></div>
     <section class="workshop-detail" aria-label="Selected face" data-operation="${editorOperation}"><b class="workshop-step-label">3. Change this mark</b><div class="workshop-selected"><div class="workshop-preview">${symbolMarkup(face)}</div><h3>${locked ? classAbilityName(h) : FACE_LABELS[face.type] + (face.type !== "blank" ? " " + tierName(face.tier) : "")}</h3></div><p class="face-effect"><b>When it lands:</b> ${faceDescription(face, h)}</p>
-    <nav class="face-operation-tabs" aria-label="Choose edit operation">${["power", "replace", "weight"].map((mode) => `<button data-editor-operation="${mode}" ${locked && mode === "replace" ? "disabled" : ""} aria-pressed="${mode === editorOperation}">${{ power: "Power ↑ ↓", replace: "Replace", weight: "Weight odds" }[mode]}</button>`).join("")}</nav>
+    <nav class="face-operation-tabs" aria-label="Choose edit operation">${["power", "replace"].map((mode) => `<button data-editor-operation="${mode}" ${locked && mode === "replace" ? "disabled" : ""} aria-pressed="${mode === editorOperation}">${{ power: "Power ↑ ↓", replace: "Replace" }[mode]}</button>`).join("")}</nav>
     ${
       locked
         ? `<div class="workshop-actions power-panel" data-class-seal="true"><button disabled>Permanent mark<small>Grows with your class</small></button><button disabled>Cannot remove<small>Unique middle-reel ability</small></button></div>`
@@ -301,7 +297,7 @@ function editor(i) {
               "",
             )}</select></label><p class="swap-effect" id="swap-effect"></p><button class="swap-face" id="face-swap">Replace symbol <small id="swap-price"></small></button></div>`
     }
-    <div class="weight-face"><button id="face-weight" ${!faceWeightCost(face) || h.points < faceWeightCost(face) ? "disabled" : ""}>Weight this face +1 <small>${faceWeightCost(face) ? "Spend " + faceWeightCost(face) + " pts" : "Maximum weight"}</small></button><small>Weight ${face.weight || 1}/${FACE_WEIGHT_MAX} · ${faceWeightCost(face) ? `After buying: ${((((face.weight || 1) + 1) / (h.reels[k].reduce((n, f) => n + (f.weight || 1), 0) + 1)) * 100).toFixed(1)}% chance` : "Maximum weighting reached."}</small></div></section></div></div>${criticalOddsMarkup(h)}</div><p class="workshop-note">${className(h.job)} crit ${criticalRange(h)}. ${CLASS_BALANCE[h.job]?.path || ""}</p><div class="modal-actions"><button class="primary" data-close>Done · back to the adventure</button></div>`,
+</section></div></div>${criticalOddsMarkup(h)}</div><p class="workshop-note">${className(h.job)} crit ${criticalRange(h)}. ${CLASS_COMBOS[h.job]?.hint || ""}</p><div class="modal-actions"><button class="primary" data-close>Done · back to the adventure</button></div>`,
     "editor",
   );
   document.querySelectorAll("[data-workshop-view]").forEach(
@@ -325,7 +321,7 @@ function editor(i) {
         $(`[data-editor-operation="${editorOperation}"]`)?.focus();
       }),
   );
-  $("#face-weight").onclick = () => editFace(data, "weight");
+
   document.querySelectorAll("[data-editor-reel]").forEach(
     (b) =>
       (b.onclick = () => {
@@ -394,13 +390,13 @@ function editFace(data, operation, destination = null) {
 
 function workshopAbilitySummary(h) {
   return {
-    fighter: `Gain ${tankSealBlock(h)} block, then bash with your shield count; double against enemy block.`,
+    fighter: `Gain ${tankSealBlock(h)} block; spend up to ${bashLimit(h)} on a bash (double against enemy block).`,
     rogue: "Roll three extra blade attacks.",
     mage: "Echo the rolled magic, healing, shield or poison marks across the whole team.",
     ranger: "Charge patience for a stronger finishing shot.",
     jester:
-      "Wildcard plays a random trick. Trick marks fill anticipation for a +1-rank Punchline roll.",
+      "Wildcard plays a random trick. Anticipation fires six marks in a Punchline.",
     berserker:
-      "Heal yourself, gain 4 Fury and +2 physical damage. Charged Fury adds damage and lifesteal.",
+      "Heal yourself and gain +2 physical damage. Wounds build Fury; all healing spends it.",
   }[h.job];
 }

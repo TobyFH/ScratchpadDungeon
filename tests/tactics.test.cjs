@@ -186,21 +186,21 @@ test("Berserker Fury comes from HP wounds and Blood Price, scales damage, has a 
     return { wound, charged, illegal, bar, cleared: h.fury };
   });
   assert.equal(result.wound.hp, 36);
-  assert.equal(result.wound.fury, 3);
+  assert.equal(result.wound.fury, 2);
   assert.ok(result.illegal.every((x) => x === false));
   assert.equal(
     result.charged.hp,
     38,
     "Bloodrush and Fury lifesteal offset the Blood Price wound",
   );
-  assert.equal(result.charged.fury, 18);
-  assert.equal(result.charged.bonus, 4);
+  assert.equal(result.charged.fury, 8);
+  assert.equal(result.charged.bonus, 2);
   assert.equal(
     result.charged.damage,
-    7,
-    "rank-II physical + Bloodrush + pre-roll Fury, without a temperament damage modifier",
+    8,
+    "rank-II physical + Bloodrush + wound Fury + Blood & steel, before healing spends charge",
   );
-  assert.match(result.bar, /FURY 18\/24/);
+  assert.match(result.bar, /FURY 8\/24/);
   assert.equal(result.cleared, 0);
 });
 
@@ -856,7 +856,7 @@ test("field guide topics remain readable without scrolling on desktop, Deck and 
   const p = await game(t);
   await p.evaluate(() => help());
   const count = await p.locator("#guide-topic option").count();
-  assert.equal(count, 16);
+  assert.equal(count, 17);
   for (const width of [1920, 1280, 390, 320]) {
     await p.setViewportSize({
       width,

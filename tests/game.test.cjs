@@ -3612,7 +3612,7 @@ test("each class starts with a single class seal on its middle reel; a seal comp
     assert.equal(await p.evaluate(() => state.lastPlayerRoll.multiplier), {fighter:1.5,healer:1.75,rogue:2,mage:1.75}[job]);
     if (job === "fighter") {
       assert.equal(await p.evaluate(() => state.party[0].rage), 0);
-      assert.equal(await p.evaluate(() => state.block), 3);
+      assert.equal(await p.evaluate(() => state.block), 0);
       assert.equal(
         await p.evaluate(() => state.lastPlayerRoll.actualDamage),
         6,
@@ -3697,7 +3697,7 @@ test("poison ticks for one armour-piercing damage per action, expires, and can w
       block: state.block,
       turns: state.enemy.poison.turns,
     })),
-    { hp: 49, enemy: 999, block: 50, turns: 2 },
+    { hp: 49, enemy: 999, block: 30, turns: 2 },
   );
   assert.equal(await p.locator("#portrait-0 .poison-badge").count(), 1);
   for (let n = 0; n < 2; n++) {
@@ -4521,11 +4521,11 @@ test("class-bound and generic equipment pieces work, can be dragged onto heroes,
     return out;
   });
   assert.equal(effects.length, 13);
-  assert.equal(effects.find((x) => x.type === "trailBow").damage, 3);
+  assert.equal(effects.find((x) => x.type === "trailBow").damage, 5); // Prepared shot: physical + healing.
   assert.equal(effects.find((x) => x.type === "trailCloak").defence, 1);
   assert.ok(effects.find((x) => x.type === "ironSignet").damage >= 3);
   assert.equal(effects.find((x) => x.type === "bulwarkBadge").guard, 3);
-  assert.equal(effects.find((x) => x.type === "glassRosary").heal, 4);
+  assert.equal(effects.find((x) => x.type === "glassRosary").heal, 5); // Spellweave: spell + healing.
   assert.equal(effects.find((x) => x.type === "mercyBell").teamHeal, 1);
   assert.equal(effects.find((x) => x.type === "silentBoots").stun, 1);
   assert.equal(effects.find((x) => x.type === "serpentPin").poison, 1);
@@ -6217,7 +6217,7 @@ test("trait modifiers affect attacks, defence, healing, poison, opening block an
   });
   assert.equal(r.attack, 2);
   assert.equal(r.cowardAttack, 1);
-  assert.equal(r.cowardBlock, 3);
+  assert.equal(r.cowardBlock, 5); // Counterstroke adds 2 before the trait.
   assert.equal(r.resisted, 4);
   assert.equal(r.heal, 3);
   assert.equal(r.poison, 3);
@@ -7478,7 +7478,7 @@ test("enemy hits strike the shared shield first and only HP overflow also target
   assert.equal(r.partial.block, 0);
 });
 
-test("team block tint grows to twenty while the actual protection remains uncapped", async (t) => {
+test("team block tint grows to twenty while a living Tank caps actual protection at thirty", async (t) => {
   const p = await game(t);
   await encounter(p);
   await p.addStyleTag({ content: ".team-block{transition:none!important}" });
@@ -7500,9 +7500,9 @@ test("team block tint grows to twenty while the actual protection remains uncapp
   });
   assert.deepEqual(
     r.map((x) => x.amount),
-    [0, 5, 20, 100],
+    [0, 5, 20, 30],
   );
-  assert.equal(r[3].text, "100");
+  assert.equal(r[3].text, "30");
   assert.notEqual(r[0].ink, r[1].ink);
   assert.notEqual(r[1].ink, r[2].ink);
   assert.equal(r[2].strength, "1");

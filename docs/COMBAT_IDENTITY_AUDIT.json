@@ -1,0 +1,7377 @@
+{
+  "schema": 1,
+  "description": "Controlled combat identity gauntlet; not human campaign win rates.",
+  "revision": "Capped protection; spent level-scaled Bash; Steady stun recovery; equal hero faces; class combo bonuses; class-aware recovery density.",
+  "scenario": "Four encounters per floor (three ordinary, one guardian); recruits on floors 3 and 5; one well/floor before guardian; no items, equipment, artefacts, gold shops, travel, loot points or rare personal saves. AI edits and actor selection, not perfect human play.",
+  "seedPolicy": "Same numeric seeds and starter/temperament for each lesson rank; full configuration applies rank five to every family. The middle configuration alternates ranks 2 and 3 across the eight families: exactly 20 of 40 lesson ranks, not half the gold cost. Different actions consume different RNG draws.",
+  "summary": [
+    {
+      "rank": 0,
+      "runs": 24,
+      "wins": 0,
+      "meanFloor": 5.666666666666667,
+      "stalls": 1,
+      "byStarter": {
+        "fighter": "0/8",
+        "rogue": "0/8",
+        "mage": "0/8"
+      }
+    },
+    {
+      "rank": 2.5,
+      "runs": 24,
+      "wins": 1,
+      "meanFloor": 8.125,
+      "stalls": 0,
+      "byStarter": {
+        "fighter": "0/8",
+        "rogue": "1/8",
+        "mage": "0/8"
+      }
+    },
+    {
+      "rank": 5,
+      "runs": 24,
+      "wins": 9,
+      "meanFloor": 9.5,
+      "stalls": 0,
+      "byStarter": {
+        "fighter": "2/8",
+        "rogue": "6/8",
+        "mage": "1/8"
+      }
+    }
+  ],
+  "cases": [
+    {
+      "rank": 0,
+      "seed": 1,
+      "job": "fighter",
+      "won": false,
+      "depth": 8,
+      "rolls": 630,
+      "stalled": true,
+      "survivors": 1,
+      "roster": [
+        {
+          "job": "fighter",
+          "level": 9,
+          "hp": 0,
+          "maxHp": 98,
+          "points": 5,
+          "archetype": "assault",
+          "fx": {
+            "damage": 5.389384920634918,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 0.8134920634920634,
+            "stun": 0.6101190476190476,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.48412698412698396,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 17,
+            "stun": 1,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 10,
+          "hp": 33,
+          "maxHp": 82,
+          "points": 1,
+          "archetype": "mender",
+          "fx": {
+            "damage": 3.1092509920634916,
+            "heal": 5.514880952380952,
+            "teamHeal": 1,
+            "block": 2.7251570767195754,
+            "stun": 0,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.0992063492063492,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "magic": 8,
+            "heal": 7,
+            "block": 3,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 9,
+          "hp": 0,
+          "maxHp": 74,
+          "points": 2,
+          "archetype": "assault",
+          "fx": {
+            "damage": 7.318783068783068,
+            "heal": 1,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.0510204081632653,
+            "poison": 0.8174603174603174,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.25396825396825395,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 11,
+            "poison": 2,
+            "stun": 4,
+            "heal": 1,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 0,
+      "seed": 2,
+      "job": "rogue",
+      "won": false,
+      "depth": 7,
+      "rolls": 144,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "rogue",
+          "level": 9,
+          "hp": 0,
+          "maxHp": 74,
+          "points": 39,
+          "archetype": "assault",
+          "fx": {
+            "damage": 12.124999999999993,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 0,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.9999999999999996,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 18,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 7,
+          "hp": 0,
+          "maxHp": 64,
+          "points": 3,
+          "archetype": "mender",
+          "fx": {
+            "damage": 2.0163690476190474,
+            "heal": 3.982142857142857,
+            "teamHeal": 1,
+            "block": 3.792658730158728,
+            "stun": 0.59375,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.14285714285714285,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "stun": 1,
+            "heal": 5,
+            "magic": 4,
+            "block": 8,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 8,
+          "hp": 0,
+          "maxHp": 68,
+          "points": 3,
+          "archetype": "venom",
+          "fx": {
+            "damage": 4.34297052154195,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.3356009070294783,
+            "poison": 2.143990929705216,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.19047619047619047,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 6,
+            "poison": 9,
+            "stun": 3,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 0,
+      "seed": 3,
+      "job": "mage",
+      "won": false,
+      "depth": 7,
+      "rolls": 343,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "mage",
+          "level": 8,
+          "hp": 0,
+          "maxHp": 70,
+          "points": 2,
+          "archetype": "mender",
+          "fx": {
+            "damage": 1.6149966931216928,
+            "heal": 2.651289682539683,
+            "teamHeal": 1,
+            "block": 2.6507936507936494,
+            "stun": 1.0218253968253967,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.05555555555555555,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "heal": 5,
+            "block": 6,
+            "stun": 3,
+            "magic": 4,
+            "class": 1
+          }
+        },
+        {
+          "job": "fighter",
+          "level": 8,
+          "hp": 0,
+          "maxHp": 92,
+          "points": 3,
+          "archetype": "assault",
+          "fx": {
+            "damage": 3.3759920634920637,
+            "heal": 1,
+            "teamHeal": 0,
+            "block": 5.388227513227513,
+            "stun": 0,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.1746031746031746,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 8,
+            "block": 9,
+            "heal": 1,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 7,
+          "hp": 0,
+          "maxHp": 62,
+          "points": 1,
+          "archetype": "assault",
+          "fx": {
+            "damage": 9.141581632653056,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 0,
+            "poison": 0.8293650793650791,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.595238095238095,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "poison": 1,
+            "attack": 17,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 0,
+      "seed": 4,
+      "job": "fighter",
+      "won": false,
+      "depth": 5,
+      "rolls": 314,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "fighter",
+          "level": 7,
+          "hp": 0,
+          "maxHp": 86,
+          "points": 0,
+          "archetype": "bulwark",
+          "fx": {
+            "damage": 1.6455026455026456,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 7.175429894179894,
+            "stun": 0.9255952380952381,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.09126984126984126,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 6,
+            "block": 9,
+            "stun": 3,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 6,
+          "hp": 0,
+          "maxHp": 58,
+          "points": 0,
+          "archetype": "mender",
+          "fx": {
+            "damage": 2.8847966269841248,
+            "heal": 1,
+            "teamHeal": 1,
+            "block": 2.4285714285714275,
+            "stun": 1.4062499999999998,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.07142857142857142,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "magic": 6,
+            "block": 5,
+            "stun": 4,
+            "heal": 1,
+            "blank": 2,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 6,
+          "hp": 0,
+          "maxHp": 56,
+          "points": 0,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 4.75892857142857,
+            "heal": 1,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 0.9107142857142855,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.16666666666666666,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 12,
+            "stun": 4,
+            "heal": 1,
+            "blank": 1,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 0,
+      "seed": 5,
+      "job": "rogue",
+      "won": false,
+      "depth": 5,
+      "rolls": 176,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "rogue",
+          "level": 6,
+          "hp": 0,
+          "maxHp": 56,
+          "points": 2,
+          "archetype": "assault",
+          "fx": {
+            "damage": 7.831490929705209,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 0.8293650793650791,
+            "poison": 1.954931972789115,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.595238095238095,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 15,
+            "stun": 1,
+            "poison": 2,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 7,
+          "hp": 0,
+          "maxHp": 64,
+          "points": 1,
+          "archetype": "enchanter",
+          "fx": {
+            "damage": 3.031415343915342,
+            "heal": 1,
+            "teamHeal": 0,
+            "block": 3.5545634920634894,
+            "stun": 1.4732142857142854,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.1111111111111111,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "stun": 4,
+            "magic": 6,
+            "block": 7,
+            "heal": 1,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 6,
+          "hp": 0,
+          "maxHp": 56,
+          "points": 2,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 4.1060090702947845,
+            "heal": 1,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.002267573696145,
+            "poison": 0.7959183673469388,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.09523809523809523,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 7,
+            "poison": 4,
+            "stun": 4,
+            "heal": 1,
+            "blank": 2,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 0,
+      "seed": 6,
+      "job": "mage",
+      "won": false,
+      "depth": 5,
+      "rolls": 309,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "mage",
+          "level": 7,
+          "hp": 0,
+          "maxHp": 64,
+          "points": 1,
+          "archetype": "mender",
+          "fx": {
+            "damage": 2.2336516203703694,
+            "heal": 1,
+            "teamHeal": 1,
+            "block": 3.4394841269841243,
+            "stun": 1.321924603174603,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0.3333333333333333,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.051587301587301584,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "block": 6,
+            "rally": 1,
+            "heal": 1,
+            "magic": 6,
+            "stun": 4,
+            "class": 1
+          }
+        },
+        {
+          "job": "fighter",
+          "level": 7,
+          "hp": 0,
+          "maxHp": 86,
+          "points": 1,
+          "archetype": "bulwark",
+          "fx": {
+            "damage": 3.0370370370370363,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 7.4153439153439145,
+            "stun": 1.464285714285714,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.15873015873015872,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 6,
+            "block": 8,
+            "stun": 4,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 6,
+          "hp": 0,
+          "maxHp": 56,
+          "points": 0,
+          "archetype": "assault",
+          "fx": {
+            "damage": 5.3270975056689345,
+            "heal": 1,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 0.8979591836734693,
+            "poison": 0.2328042328042328,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.15873015873015872,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 9,
+            "stun": 4,
+            "blank": 3,
+            "heal": 1,
+            "class": 1,
+            "poison": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 0,
+      "seed": 7,
+      "job": "fighter",
+      "won": false,
+      "depth": 4,
+      "rolls": 114,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "fighter",
+          "level": 5,
+          "hp": 0,
+          "maxHp": 74,
+          "points": 0,
+          "archetype": "assault",
+          "fx": {
+            "damage": 3.8437499999999996,
+            "heal": 1,
+            "teamHeal": 0,
+            "block": 2.2559523809523805,
+            "stun": 0.4270833333333333,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.32142857142857134,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 14,
+            "stun": 1,
+            "block": 2,
+            "heal": 1,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 4,
+          "hp": 0,
+          "maxHp": 46,
+          "points": 2,
+          "archetype": "venom",
+          "fx": {
+            "damage": 2.013888888888887,
+            "heal": 1,
+            "teamHeal": 0,
+            "block": 4.85722573273506e-17,
+            "stun": 0.5178571428571428,
+            "poison": 2.042658730158729,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.15873015873015872,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "magic": 4,
+            "poison": 9,
+            "blank": 3,
+            "stun": 2,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 0,
+      "seed": 8,
+      "job": "rogue",
+      "won": false,
+      "depth": 7,
+      "rolls": 238,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "rogue",
+          "level": 10,
+          "hp": 0,
+          "maxHp": 80,
+          "points": 43,
+          "archetype": "assault",
+          "fx": {
+            "damage": 12.124999999999993,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 0,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.9999999999999996,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 18,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 9,
+          "hp": 0,
+          "maxHp": 76,
+          "points": 5,
+          "archetype": "mender",
+          "fx": {
+            "damage": 2.221147486772486,
+            "heal": 3.2490079365079367,
+            "teamHeal": 1,
+            "block": 4.484809027777775,
+            "stun": 0.40798611111111105,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.17063492063492064,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "heal": 4,
+            "stun": 1,
+            "magic": 4,
+            "block": 9,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 9,
+          "hp": 0,
+          "maxHp": 74,
+          "points": 6,
+          "archetype": "venom",
+          "fx": {
+            "damage": 3.9682539682539684,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.4814814814814814,
+            "poison": 2.481481481481482,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.2222222222222222,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "stun": 3,
+            "attack": 5,
+            "poison": 10,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 0,
+      "seed": 9,
+      "job": "mage",
+      "won": false,
+      "depth": 4,
+      "rolls": 150,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "mage",
+          "level": 6,
+          "hp": 0,
+          "maxHp": 58,
+          "points": 0,
+          "archetype": "assault",
+          "fx": {
+            "damage": 5.775669642857136,
+            "heal": 1,
+            "teamHeal": 0,
+            "block": 3.732886904761902,
+            "stun": 0.5089285714285713,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.595238095238095,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "magic": 15,
+            "block": 2,
+            "stun": 1,
+            "class": 1
+          }
+        },
+        {
+          "job": "fighter",
+          "level": 5,
+          "hp": 0,
+          "maxHp": 74,
+          "points": 1,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 2.122189153439154,
+            "heal": 1,
+            "teamHeal": 0,
+            "block": 4.513558201058201,
+            "stun": 0.9986772486772487,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.05555555555555555,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 6,
+            "block": 7,
+            "stun": 4,
+            "heal": 1,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 0,
+      "seed": 10,
+      "job": "fighter",
+      "won": false,
+      "depth": 6,
+      "rolls": 278,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "fighter",
+          "level": 9,
+          "hp": 0,
+          "maxHp": 98,
+          "points": 12,
+          "archetype": "assault",
+          "fx": {
+            "damage": 5.068452380952379,
+            "heal": 1,
+            "teamHeal": 0,
+            "block": 0.9285714285714284,
+            "stun": 0.8124999999999999,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.714285714285714,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 16,
+            "heal": 1,
+            "class": 1,
+            "stun": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 6,
+          "hp": 0,
+          "maxHp": 58,
+          "points": 2,
+          "archetype": "enchanter",
+          "fx": {
+            "damage": 2.5171957671957657,
+            "heal": 1,
+            "teamHeal": 0,
+            "block": 3.0704365079365057,
+            "stun": 1.4196428571428572,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.07936507936507936,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "stun": 4,
+            "magic": 6,
+            "block": 6,
+            "heal": 1,
+            "blank": 1,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 7,
+          "hp": 0,
+          "maxHp": 62,
+          "points": 3,
+          "archetype": "venom",
+          "fx": {
+            "damage": 4.34297052154195,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 0.6678004535147392,
+            "poison": 2.143990929705216,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.19047619047619047,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 6,
+            "poison": 9,
+            "stun": 3,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 0,
+      "seed": 11,
+      "job": "rogue",
+      "won": false,
+      "depth": 7,
+      "rolls": 367,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "rogue",
+          "level": 9,
+          "hp": 0,
+          "maxHp": 74,
+          "points": 1,
+          "archetype": "venom",
+          "fx": {
+            "damage": 3.478741496598639,
+            "heal": 1,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 2.201625094482237,
+            "poison": 2.418178382464097,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.20634920634920634,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "poison": 10,
+            "attack": 3,
+            "stun": 4,
+            "heal": 1,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 8,
+          "hp": 0,
+          "maxHp": 70,
+          "points": 5,
+          "archetype": "mender",
+          "fx": {
+            "damage": 2.005456349206349,
+            "heal": 4.3236607142857135,
+            "teamHeal": 1,
+            "block": 3.745783730158728,
+            "stun": 0.5859375,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.13095238095238093,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "stun": 1,
+            "heal": 5,
+            "magic": 4,
+            "block": 8,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 8,
+          "hp": 0,
+          "maxHp": 68,
+          "points": 1,
+          "archetype": "assault",
+          "fx": {
+            "damage": 7.34901738473167,
+            "heal": 1,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.0510204081632653,
+            "poison": 0.27248677248677244,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.25396825396825395,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 11,
+            "stun": 4,
+            "poison": 1,
+            "heal": 1,
+            "blank": 1,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 0,
+      "seed": 12,
+      "job": "mage",
+      "won": false,
+      "depth": 7,
+      "rolls": 410,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "mage",
+          "level": 8,
+          "hp": 0,
+          "maxHp": 70,
+          "points": 0,
+          "archetype": "mender",
+          "fx": {
+            "damage": 2.1402116402116396,
+            "heal": 5.452380952380952,
+            "teamHeal": 1,
+            "block": 2.706349206349205,
+            "stun": 0.3888888888888889,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.12698412698412698,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "heal": 7,
+            "magic": 4,
+            "stun": 1,
+            "block": 6,
+            "class": 1
+          }
+        },
+        {
+          "job": "fighter",
+          "level": 9,
+          "hp": 0,
+          "maxHp": 98,
+          "points": 1,
+          "archetype": "assault",
+          "fx": {
+            "damage": 3.5251322751322745,
+            "heal": 1,
+            "teamHeal": 0,
+            "block": 5.33994708994709,
+            "stun": 0,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.15873015873015872,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 8,
+            "block": 9,
+            "heal": 1,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 8,
+          "hp": 0,
+          "maxHp": 68,
+          "points": 1,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 6.498724489795919,
+            "heal": 1,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 0.7312925170068026,
+            "poison": 0.9872448979591835,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.21428571428571427,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 10,
+            "poison": 4,
+            "stun": 3,
+            "heal": 1,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 0,
+      "seed": 13,
+      "job": "fighter",
+      "won": false,
+      "depth": 6,
+      "rolls": 296,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "fighter",
+          "level": 8,
+          "hp": 0,
+          "maxHp": 92,
+          "points": 0,
+          "archetype": "bulwark",
+          "fx": {
+            "damage": 2.1134259259259256,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 8.148148148148147,
+            "stun": 1.1458333333333333,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.07936507936507936,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "block": 9,
+            "attack": 6,
+            "stun": 3,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 8,
+          "hp": 0,
+          "maxHp": 70,
+          "points": 1,
+          "archetype": "mender",
+          "fx": {
+            "damage": 2.005456349206349,
+            "heal": 4.3236607142857135,
+            "teamHeal": 1,
+            "block": 3.745783730158728,
+            "stun": 0.5859375,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.13095238095238093,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "stun": 1,
+            "heal": 5,
+            "magic": 4,
+            "block": 8,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 8,
+          "hp": 0,
+          "maxHp": 68,
+          "points": 2,
+          "archetype": "venom",
+          "fx": {
+            "damage": 4.642006802721089,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 0.9875283446712019,
+            "poison": 2.5447845804988667,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.23809523809523808,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 6,
+            "poison": 10,
+            "stun": 2,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 0,
+      "seed": 14,
+      "job": "rogue",
+      "won": false,
+      "depth": 5,
+      "rolls": 158,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "rogue",
+          "level": 5,
+          "hp": 0,
+          "maxHp": 50,
+          "points": 3,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 8.954931972789108,
+            "heal": 1,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 0.9285714285714282,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.714285714285714,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "stun": 1,
+            "attack": 16,
+            "heal": 1,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 7,
+          "hp": 0,
+          "maxHp": 64,
+          "points": 1,
+          "archetype": "enchanter",
+          "fx": {
+            "damage": 4.11631944444444,
+            "heal": 1,
+            "teamHeal": 0,
+            "block": 1.5208333333333333,
+            "stun": 1.5401785714285714,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.15079365079365079,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "stun": 4,
+            "magic": 12,
+            "block": 2,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 6,
+          "hp": 0,
+          "maxHp": 56,
+          "points": 2,
+          "archetype": "assault",
+          "fx": {
+            "damage": 7.3051303854875265,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 0,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.40476190476190466,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 16,
+            "blank": 2,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 0,
+      "seed": 15,
+      "job": "mage",
+      "won": false,
+      "depth": 6,
+      "rolls": 227,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "mage",
+          "level": 6,
+          "hp": 0,
+          "maxHp": 58,
+          "points": 0,
+          "archetype": "mender",
+          "fx": {
+            "damage": 1.3766741071428572,
+            "heal": 1,
+            "teamHeal": 1,
+            "block": 1.0021081349206349,
+            "stun": 1.3861607142857142,
+            "poison": 1.3690476190476177,
+            "stimulant": 0,
+            "rally": 0.47619047619047616,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.05952380952380952,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "heal": 1,
+            "stun": 4,
+            "block": 2,
+            "poison": 6,
+            "rally": 3,
+            "magic": 2,
+            "class": 1
+          }
+        },
+        {
+          "job": "fighter",
+          "level": 7,
+          "hp": 0,
+          "maxHp": 86,
+          "points": 0,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 1.7248677248677249,
+            "heal": 1,
+            "teamHeal": 0,
+            "block": 7.376322751322752,
+            "stun": 1.1319444444444444,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.15079365079365079,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "stun": 3,
+            "block": 8,
+            "attack": 6,
+            "heal": 1,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 6,
+          "hp": 0,
+          "maxHp": 56,
+          "points": 0,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 4.3718820861678,
+            "heal": 1,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.002267573696145,
+            "poison": 0.7959183673469388,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.09523809523809523,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 8,
+            "poison": 4,
+            "stun": 4,
+            "heal": 1,
+            "blank": 1,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 0,
+      "seed": 16,
+      "job": "fighter",
+      "won": false,
+      "depth": 4,
+      "rolls": 299,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "fighter",
+          "level": 6,
+          "hp": 0,
+          "maxHp": 80,
+          "points": 1,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 2.115079365079365,
+            "heal": 1,
+            "teamHeal": 0,
+            "block": 5.231481481481481,
+            "stun": 1.0846560846560847,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.15873015873015872,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 9,
+            "stun": 3,
+            "block": 5,
+            "heal": 1,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 5,
+          "hp": 0,
+          "maxHp": 52,
+          "points": 1,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 2.367063492063491,
+            "heal": 3.0277777777777777,
+            "teamHeal": 1,
+            "block": 2.739417989417988,
+            "stun": 0.7361111111111112,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.07936507936507936,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "stun": 2,
+            "heal": 4,
+            "magic": 6,
+            "block": 6,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 0,
+      "seed": 17,
+      "job": "rogue",
+      "won": false,
+      "depth": 5,
+      "rolls": 156,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "rogue",
+          "level": 7,
+          "hp": 0,
+          "maxHp": 62,
+          "points": 3,
+          "archetype": "venom",
+          "fx": {
+            "damage": 2.990339191232048,
+            "heal": 1,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.9617346938775506,
+            "poison": 2.434004157218443,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.2103174603174603,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "poison": 10,
+            "attack": 3,
+            "stun": 4,
+            "heal": 1,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 6,
+          "hp": 0,
+          "maxHp": 58,
+          "points": 1,
+          "archetype": "mender",
+          "fx": {
+            "damage": 2.8280423280423266,
+            "heal": 1,
+            "teamHeal": 1,
+            "block": 3.7698412698412684,
+            "stun": 1.1666666666666667,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.12698412698412698,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "magic": 5,
+            "block": 8,
+            "stun": 3,
+            "heal": 1,
+            "blank": 1,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 6,
+          "hp": 0,
+          "maxHp": 56,
+          "points": 1,
+          "archetype": "venom",
+          "fx": {
+            "damage": 4.642006802721089,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 0.4557823129251701,
+            "poison": 2.5827664399092978,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.23809523809523808,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 6,
+            "poison": 10,
+            "stun": 2,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 0,
+      "seed": 18,
+      "job": "mage",
+      "won": false,
+      "depth": 6,
+      "rolls": 474,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "mage",
+          "level": 8,
+          "hp": 0,
+          "maxHp": 70,
+          "points": 1,
+          "archetype": "mender",
+          "fx": {
+            "damage": 2.828124999999999,
+            "heal": 4.874999999999999,
+            "teamHeal": 1,
+            "block": 2.9791666666666647,
+            "stun": 0,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.07142857142857142,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "magic": 6,
+            "heal": 7,
+            "block": 5,
+            "class": 1
+          }
+        },
+        {
+          "job": "fighter",
+          "level": 6,
+          "hp": 0,
+          "maxHp": 80,
+          "points": 2,
+          "archetype": "assault",
+          "fx": {
+            "damage": 3.0787037037037037,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 6.8617724867724865,
+            "stun": 0,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.365079365079365,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 6,
+            "block": 12,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 7,
+          "hp": 0,
+          "maxHp": 62,
+          "points": 0,
+          "archetype": "venom",
+          "fx": {
+            "damage": 3.601001511715797,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.263227513227513,
+            "poison": 2.418178382464097,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.20634920634920634,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 5,
+            "poison": 10,
+            "stun": 3,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 0,
+      "seed": 19,
+      "job": "fighter",
+      "won": false,
+      "depth": 5,
+      "rolls": 251,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "fighter",
+          "level": 7,
+          "hp": 0,
+          "maxHp": 86,
+          "points": 1,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 2.777612433862434,
+            "heal": 1,
+            "teamHeal": 0,
+            "block": 7.437169312169311,
+            "stun": 1.0643187830687828,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.10317460317460317,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "block": 8,
+            "attack": 6,
+            "stun": 3,
+            "heal": 1,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 7,
+          "hp": 0,
+          "maxHp": 64,
+          "points": 0,
+          "archetype": "mender",
+          "fx": {
+            "damage": 1.8165302579365072,
+            "heal": 2.9040178571428568,
+            "teamHeal": 1,
+            "block": 2.7415674603174582,
+            "stun": 0.71875,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.05952380952380952,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "heal": 5,
+            "stun": 2,
+            "magic": 4,
+            "block": 6,
+            "blank": 1,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 6,
+          "hp": 0,
+          "maxHp": 56,
+          "points": 2,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 4.1060090702947845,
+            "heal": 1,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.002267573696145,
+            "poison": 0.7959183673469388,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.09523809523809523,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 7,
+            "poison": 4,
+            "stun": 4,
+            "heal": 1,
+            "blank": 2,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 0,
+      "seed": 20,
+      "job": "rogue",
+      "won": false,
+      "depth": 7,
+      "rolls": 197,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "rogue",
+          "level": 9,
+          "hp": 0,
+          "maxHp": 74,
+          "points": 39,
+          "archetype": "assault",
+          "fx": {
+            "damage": 12.124999999999993,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 0,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.9999999999999996,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 18,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 8,
+          "hp": 0,
+          "maxHp": 70,
+          "points": 2,
+          "archetype": "mender",
+          "fx": {
+            "damage": 2.008928571428571,
+            "heal": 3.7934027777777777,
+            "teamHeal": 1,
+            "block": 3.829241071428569,
+            "stun": 0.7743055555555555,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.12301587301587301,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "stun": 2,
+            "heal": 4,
+            "magic": 4,
+            "block": 8,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 8,
+          "hp": 0,
+          "maxHp": 68,
+          "points": 2,
+          "archetype": "assault",
+          "fx": {
+            "damage": 7.831490929705209,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 0.8293650793650791,
+            "poison": 1.5402494331065755,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.595238095238095,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "poison": 2,
+            "attack": 15,
+            "class": 1,
+            "stun": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 0,
+      "seed": 21,
+      "job": "mage",
+      "won": false,
+      "depth": 6,
+      "rolls": 335,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "mage",
+          "level": 5,
+          "hp": 0,
+          "maxHp": 52,
+          "points": 1,
+          "archetype": "enchanter",
+          "fx": {
+            "damage": 2.497395833333332,
+            "heal": 1,
+            "teamHeal": 0,
+            "block": 4.1143353174603154,
+            "stun": 1.4250992063492065,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.11507936507936507,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "block": 8,
+            "magic": 6,
+            "stun": 4,
+            "class": 1
+          }
+        },
+        {
+          "job": "fighter",
+          "level": 8,
+          "hp": 0,
+          "maxHp": 92,
+          "points": 0,
+          "archetype": "assault",
+          "fx": {
+            "damage": 3.6094576719576708,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 4.144841269841269,
+            "stun": 0.7341269841269842,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.32539682539682535,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 13,
+            "block": 3,
+            "stun": 2,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 7,
+          "hp": 0,
+          "maxHp": 62,
+          "points": 3,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 5.9549319727891135,
+            "heal": 1,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 0.7974300831443687,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.26984126984126977,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 14,
+            "stun": 3,
+            "heal": 1,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 0,
+      "seed": 22,
+      "job": "fighter",
+      "won": false,
+      "depth": 3,
+      "rolls": 162,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "fighter",
+          "level": 5,
+          "hp": 0,
+          "maxHp": 74,
+          "points": 0,
+          "archetype": "bulwark",
+          "fx": {
+            "damage": 1.5967261904761905,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 5.910714285714286,
+            "stun": 0.6607142857142857,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.17857142857142855,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 6,
+            "block": 10,
+            "stun": 2,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 4,
+          "hp": 0,
+          "maxHp": 46,
+          "points": 2,
+          "archetype": "venom",
+          "fx": {
+            "damage": 2.013888888888887,
+            "heal": 1,
+            "teamHeal": 0,
+            "block": 4.85722573273506e-17,
+            "stun": 0.5178571428571428,
+            "poison": 2.042658730158729,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.15873015873015872,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "magic": 4,
+            "poison": 9,
+            "blank": 3,
+            "stun": 2,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 0,
+      "seed": 23,
+      "job": "rogue",
+      "won": false,
+      "depth": 7,
+      "rolls": 214,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "rogue",
+          "level": 9,
+          "hp": 0,
+          "maxHp": 74,
+          "points": 1,
+          "archetype": "assault",
+          "fx": {
+            "damage": 6.766416288737714,
+            "heal": 1.2800453514739225,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.1200396825396823,
+            "poison": 2.0800736961451243,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.4960317460317459,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 14,
+            "stun": 1,
+            "heal": 1,
+            "poison": 2,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 7,
+          "hp": 0,
+          "maxHp": 64,
+          "points": 0,
+          "archetype": "mender",
+          "fx": {
+            "damage": 3.5778769841269815,
+            "heal": 1,
+            "teamHeal": 1,
+            "block": 4.264384920634919,
+            "stun": 0.40625,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.16666666666666663,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "stun": 1,
+            "magic": 6,
+            "block": 9,
+            "class": 1,
+            "heal": 1,
+            "blank": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 7,
+          "hp": 0,
+          "maxHp": 62,
+          "points": 0,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 5.087372448979592,
+            "heal": 1,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.074546485260771,
+            "poison": 0.8533163265306122,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.13095238095238093,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 9,
+            "poison": 4,
+            "stun": 4,
+            "heal": 1,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 0,
+      "seed": 24,
+      "job": "mage",
+      "won": false,
+      "depth": 4,
+      "rolls": 201,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "mage",
+          "level": 6,
+          "hp": 0,
+          "maxHp": 58,
+          "points": 0,
+          "archetype": "enchanter",
+          "fx": {
+            "damage": 2.7725694444444433,
+            "heal": 1,
+            "teamHeal": 0,
+            "block": 2.7971230158730136,
+            "stun": 1.3477182539682542,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0.6666666666666666,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.06746031746031746,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "block": 5,
+            "rally": 2,
+            "magic": 7,
+            "stun": 4,
+            "class": 1
+          }
+        },
+        {
+          "job": "fighter",
+          "level": 6,
+          "hp": 0,
+          "maxHp": 80,
+          "points": 1,
+          "archetype": "bulwark",
+          "fx": {
+            "damage": 2.3119212962962967,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 6.514715608465608,
+            "stun": 0.4895833333333333,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.16269841269841268,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 6,
+            "block": 11,
+            "stun": 1,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 2.5,
+      "seed": 1,
+      "job": "fighter",
+      "won": false,
+      "depth": 9,
+      "rolls": 421,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "fighter",
+          "level": 11,
+          "hp": 0,
+          "maxHp": 135,
+          "points": 1,
+          "archetype": "assault",
+          "fx": {
+            "damage": 6.806448412698411,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 7.779761904761904,
+            "stun": 0.5451388888888888,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.10317460317460317,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 11,
+            "block": 6,
+            "class": 1,
+            "stun": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 11,
+          "hp": 0,
+          "maxHp": 102,
+          "points": 2,
+          "archetype": "mender",
+          "fx": {
+            "damage": 4.356758432539684,
+            "heal": 8.615575396825397,
+            "teamHeal": 1.5714285714285714,
+            "block": 2.568907076719576,
+            "stun": 0.3576388888888889,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.055555555555555546,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "magic": 4,
+            "heal": 8,
+            "block": 5,
+            "class": 1,
+            "stun": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 11,
+          "hp": 0,
+          "maxHp": 99,
+          "points": 2,
+          "archetype": "assault",
+          "fx": {
+            "damage": 13.52116402116402,
+            "heal": 3.412698412698412,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.2456538170823883,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.25396825396825395,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 11,
+            "stun": 4,
+            "heal": 3,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 2.5,
+      "seed": 2,
+      "job": "rogue",
+      "won": true,
+      "depth": 10,
+      "rolls": 204,
+      "stalled": false,
+      "survivors": 2,
+      "roster": [
+        {
+          "job": "rogue",
+          "level": 14,
+          "hp": 62,
+          "maxHp": 117,
+          "points": 70,
+          "archetype": "assault",
+          "fx": {
+            "damage": 23.037499999999984,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 0,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.9999999999999996,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 18,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 13,
+          "hp": 75,
+          "maxHp": 114,
+          "points": 9,
+          "archetype": "mender",
+          "fx": {
+            "damage": 3.8970734126984126,
+            "heal": 9.128968253968255,
+            "teamHeal": 1.5714285714285714,
+            "block": 4.778769841269838,
+            "stun": 0.5520833333333334,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.07936507936507935,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "stun": 1,
+            "heal": 8,
+            "magic": 4,
+            "block": 5,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 12,
+          "hp": 0,
+          "maxHp": 105,
+          "points": 1,
+          "archetype": "venom",
+          "fx": {
+            "damage": 8.301055839002267,
+            "heal": 1.5714285714285712,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.6711073318216172,
+            "poison": 2.434004157218443,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.2103174603174603,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 4,
+            "poison": 10,
+            "stun": 3,
+            "heal": 1,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 2.5,
+      "seed": 3,
+      "job": "mage",
+      "won": false,
+      "depth": 7,
+      "rolls": 285,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "mage",
+          "level": 9,
+          "hp": 0,
+          "maxHp": 90,
+          "points": 0,
+          "archetype": "mender",
+          "fx": {
+            "damage": 4.447627314814811,
+            "heal": 7.518849206349206,
+            "teamHeal": 1.5714285714285714,
+            "block": 2.6589781746031735,
+            "stun": 0.5442708333333334,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.06746031746031746,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "block": 6,
+            "magic": 4,
+            "stun": 1,
+            "heal": 7,
+            "class": 1
+          }
+        },
+        {
+          "job": "fighter",
+          "level": 9,
+          "hp": 0,
+          "maxHp": 123,
+          "points": 1,
+          "archetype": "assault",
+          "fx": {
+            "damage": 6.102430555555553,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 6.401124338624339,
+            "stun": 0.6076388888888888,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.246031746031746,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 12,
+            "block": 5,
+            "class": 1,
+            "stun": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 9,
+          "hp": 0,
+          "maxHp": 87,
+          "points": 2,
+          "archetype": "assault",
+          "fx": {
+            "damage": 9.850595238095238,
+            "heal": 3.1349206349206344,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 0.8401360544217686,
+            "poison": 0.45238095238095233,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.14285714285714282,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 9,
+            "poison": 2,
+            "stun": 4,
+            "heal": 3,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 2.5,
+      "seed": 4,
+      "job": "fighter",
+      "won": false,
+      "depth": 7,
+      "rolls": 323,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "fighter",
+          "level": 10,
+          "hp": 0,
+          "maxHp": 129,
+          "points": 2,
+          "archetype": "bulwark",
+          "fx": {
+            "damage": 3.7054398148148144,
+            "heal": 1.5714285714285712,
+            "teamHeal": 0,
+            "block": 8.617559523809524,
+            "stun": 1.1701388888888888,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.19444444444444442,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "block": 9,
+            "attack": 6,
+            "stun": 2,
+            "heal": 1,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 9,
+          "hp": 0,
+          "maxHp": 90,
+          "points": 0,
+          "archetype": "mender",
+          "fx": {
+            "damage": 3.9140376984126966,
+            "heal": 8.092261904761905,
+            "teamHeal": 1.5714285714285714,
+            "block": 3.360863095238094,
+            "stun": 0.7291666666666666,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.07142857142857142,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "heal": 7,
+            "magic": 4,
+            "block": 5,
+            "stun": 2,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 10,
+          "hp": 0,
+          "maxHp": 93,
+          "points": 0,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 7.410610355253212,
+            "heal": 3.1984126984126986,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.540816326530612,
+            "poison": 0.9701436130007558,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.07936507936507936,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 7,
+            "heal": 3,
+            "stun": 4,
+            "poison": 3,
+            "blank": 1,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 2.5,
+      "seed": 5,
+      "job": "rogue",
+      "won": false,
+      "depth": 8,
+      "rolls": 168,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "rogue",
+          "level": 11,
+          "hp": 0,
+          "maxHp": 99,
+          "points": 1,
+          "archetype": "assault",
+          "fx": {
+            "damage": 14.879832766439897,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 2.310374149659863,
+            "poison": 1.6587301587301582,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.595238095238095,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 15,
+            "poison": 1,
+            "stun": 2,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 10,
+          "hp": 0,
+          "maxHp": 96,
+          "points": 2,
+          "archetype": "mender",
+          "fx": {
+            "damage": 3.471670386904762,
+            "heal": 9.18452380952381,
+            "teamHeal": 1.5714285714285714,
+            "block": 3.5410672949735433,
+            "stun": 0.9418402777777777,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.09920634920634919,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "heal": 8,
+            "magic": 4,
+            "block": 4,
+            "stun": 2,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 11,
+          "hp": 0,
+          "maxHp": 99,
+          "points": 0,
+          "archetype": "venom",
+          "fx": {
+            "damage": 8.071364795918367,
+            "heal": 1.5714285714285712,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.4531368102796673,
+            "poison": 2.470332577475435,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.2103174603174603,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "stun": 3,
+            "attack": 4,
+            "poison": 10,
+            "heal": 1,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 2.5,
+      "seed": 6,
+      "job": "mage",
+      "won": false,
+      "depth": 10,
+      "rolls": 507,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "mage",
+          "level": 12,
+          "hp": 0,
+          "maxHp": 108,
+          "points": 2,
+          "archetype": "mender",
+          "fx": {
+            "damage": 4.0111896494709,
+            "heal": 9.099702380952381,
+            "teamHeal": 1.5714285714285714,
+            "block": 4.775710978835976,
+            "stun": 0.7326388888888888,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.07539682539682538,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "block": 4,
+            "heal": 8,
+            "magic": 4,
+            "stun": 2,
+            "class": 1
+          }
+        },
+        {
+          "job": "fighter",
+          "level": 12,
+          "hp": 0,
+          "maxHp": 141,
+          "points": 3,
+          "archetype": "bulwark",
+          "fx": {
+            "damage": 4.276256613756614,
+            "heal": 1.5714285714285712,
+            "teamHeal": 0,
+            "block": 10.014550264550264,
+            "stun": 0.5694444444444444,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.15873015873015872,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 6,
+            "block": 10,
+            "stun": 1,
+            "heal": 1,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 12,
+          "hp": 0,
+          "maxHp": 105,
+          "points": 1,
+          "archetype": "venom",
+          "fx": {
+            "damage": 8.695138888888888,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.349206349206349,
+            "poison": 2.7321428571428568,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.16666666666666666,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "stun": 3,
+            "attack": 5,
+            "poison": 10,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 2.5,
+      "seed": 7,
+      "job": "fighter",
+      "won": false,
+      "depth": 10,
+      "rolls": 534,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "fighter",
+          "level": 13,
+          "hp": 0,
+          "maxHp": 147,
+          "points": 0,
+          "archetype": "assault",
+          "fx": {
+            "damage": 8.568377976190476,
+            "heal": 1.6666666666666665,
+            "teamHeal": 0,
+            "block": 5.580853174603174,
+            "stun": 0.5538194444444444,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.12301587301587301,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "heal": 1,
+            "attack": 12,
+            "block": 4,
+            "class": 1,
+            "stun": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 11,
+          "hp": 0,
+          "maxHp": 102,
+          "points": 3,
+          "archetype": "mender",
+          "fx": {
+            "damage": 4.013231646825397,
+            "heal": 9.198412698412696,
+            "teamHeal": 1.5714285714285714,
+            "block": 3.6964285714285694,
+            "stun": 0.7430555555555555,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.08730158730158728,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "heal": 8,
+            "magic": 4,
+            "block": 4,
+            "stun": 2,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 13,
+          "hp": 0,
+          "maxHp": 111,
+          "points": 0,
+          "archetype": "venom",
+          "fx": {
+            "damage": 8.387223639455781,
+            "heal": 1.5714285714285712,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.6493764172335599,
+            "poison": 2.4382086167800456,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.20238095238095238,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "stun": 3,
+            "attack": 4,
+            "poison": 10,
+            "heal": 1,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 2.5,
+      "seed": 8,
+      "job": "rogue",
+      "won": false,
+      "depth": 8,
+      "rolls": 161,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "rogue",
+          "level": 11,
+          "hp": 0,
+          "maxHp": 99,
+          "points": 49,
+          "archetype": "assault",
+          "fx": {
+            "damage": 23.037499999999984,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 0,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.9999999999999996,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 18,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 10,
+          "hp": 0,
+          "maxHp": 96,
+          "points": 1,
+          "archetype": "mender",
+          "fx": {
+            "damage": 4.5765873015873035,
+            "heal": 8.436507936507937,
+            "teamHeal": 1.5714285714285714,
+            "block": 2.5674603174603168,
+            "stun": 0.3888888888888889,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.12698412698412698,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "magic": 4,
+            "block": 6,
+            "heal": 7,
+            "class": 1,
+            "stun": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 10,
+          "hp": 0,
+          "maxHp": 93,
+          "points": 4,
+          "archetype": "assault",
+          "fx": {
+            "damage": 14.992479213907773,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 2.38851095993953,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.6031746031746029,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "stun": 3,
+            "attack": 15,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 2.5,
+      "seed": 9,
+      "job": "mage",
+      "won": false,
+      "depth": 6,
+      "rolls": 261,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "mage",
+          "level": 9,
+          "hp": 0,
+          "maxHp": 90,
+          "points": 5,
+          "archetype": "mender",
+          "fx": {
+            "damage": 4.607531415343912,
+            "heal": 6.702876984126984,
+            "teamHeal": 1.5714285714285714,
+            "block": 3.6807208994708978,
+            "stun": 0.6755952380952381,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.1388888888888889,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "heal": 8,
+            "magic": 4,
+            "block": 4,
+            "stun": 2,
+            "class": 1
+          }
+        },
+        {
+          "job": "fighter",
+          "level": 8,
+          "hp": 0,
+          "maxHp": 117,
+          "points": 3,
+          "archetype": "assault",
+          "fx": {
+            "damage": 5.42417328042328,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 6.9907407407407405,
+            "stun": 0.6180555555555556,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.26984126984126977,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 11,
+            "block": 6,
+            "class": 1,
+            "stun": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 9,
+          "hp": 0,
+          "maxHp": 87,
+          "points": 0,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 6.4307208994708995,
+            "heal": 3.138888888888889,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.3015873015873014,
+            "poison": 1.0846560846560847,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.05555555555555555,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 6,
+            "heal": 3,
+            "stun": 4,
+            "poison": 4,
+            "blank": 1,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 2.5,
+      "seed": 10,
+      "job": "fighter",
+      "won": false,
+      "depth": 7,
+      "rolls": 239,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "fighter",
+          "level": 10,
+          "hp": 0,
+          "maxHp": 129,
+          "points": 4,
+          "archetype": "assault",
+          "fx": {
+            "damage": 6.468576388888887,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 7.583829365079366,
+            "stun": 0.6440972222222222,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.3293650793650793,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 12,
+            "block": 5,
+            "stun": 1,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 9,
+          "hp": 0,
+          "maxHp": 90,
+          "points": 0,
+          "archetype": "mender",
+          "fx": {
+            "damage": 3.44610615079365,
+            "heal": 9.18452380952381,
+            "teamHeal": 1.5714285714285714,
+            "block": 3.5410672949735433,
+            "stun": 0.7534722222222221,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.09920634920634919,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "heal": 8,
+            "magic": 4,
+            "block": 4,
+            "stun": 2,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 9,
+          "hp": 0,
+          "maxHp": 87,
+          "points": 3,
+          "archetype": "venom",
+          "fx": {
+            "damage": 6.65341080876795,
+            "heal": 1.5714285714285712,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.4436885865457292,
+            "poison": 2.4542705971277403,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.20634920634920634,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "stun": 3,
+            "attack": 4,
+            "poison": 10,
+            "heal": 1,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 2.5,
+      "seed": 11,
+      "job": "rogue",
+      "won": false,
+      "depth": 10,
+      "rolls": 328,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "rogue",
+          "level": 13,
+          "hp": 0,
+          "maxHp": 111,
+          "points": 2,
+          "archetype": "venom",
+          "fx": {
+            "damage": 8.879681594860166,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 2.1728080120937263,
+            "poison": 2.3865268329554046,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.1984126984126984,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 4,
+            "poison": 10,
+            "stun": 4,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 8,
+          "hp": 0,
+          "maxHp": 84,
+          "points": 2,
+          "archetype": "mender",
+          "fx": {
+            "damage": 4.6929811507936465,
+            "heal": 5.455357142857142,
+            "teamHeal": 1.5714285714285714,
+            "block": 2.6152033730158717,
+            "stun": 0.7395833333333333,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.08333333333333333,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "magic": 4,
+            "block": 6,
+            "heal": 6,
+            "stun": 2,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 13,
+          "hp": 0,
+          "maxHp": 111,
+          "points": 0,
+          "archetype": "assault",
+          "fx": {
+            "damage": 16.939961262282687,
+            "heal": 3.63095238095238,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 0.9265873015873014,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.34126984126984117,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 13,
+            "stun": 2,
+            "heal": 3,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 2.5,
+      "seed": 12,
+      "job": "mage",
+      "won": false,
+      "depth": 9,
+      "rolls": 350,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "mage",
+          "level": 11,
+          "hp": 0,
+          "maxHp": 102,
+          "points": 1,
+          "archetype": "mender",
+          "fx": {
+            "damage": 3.984250992063493,
+            "heal": 9.128968253968255,
+            "teamHeal": 1.5714285714285714,
+            "block": 3.4532076719576703,
+            "stun": 0.9201388888888888,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.07936507936507935,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "heal": 8,
+            "stun": 2,
+            "magic": 4,
+            "block": 4,
+            "class": 1
+          }
+        },
+        {
+          "job": "fighter",
+          "level": 11,
+          "hp": 0,
+          "maxHp": 135,
+          "points": 2,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 5.805555555555555,
+            "heal": 2.1428571428571423,
+            "teamHeal": 0,
+            "block": 8.595238095238095,
+            "stun": 0.7777777777777778,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.19047619047619047,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 6,
+            "block": 9,
+            "stun": 1,
+            "heal": 2,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 12,
+          "hp": 0,
+          "maxHp": 105,
+          "points": 0,
+          "archetype": "assault",
+          "fx": {
+            "damage": 14.936155990173837,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 3.21173469387755,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.599206349206349,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "stun": 3,
+            "attack": 15,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 2.5,
+      "seed": 13,
+      "job": "fighter",
+      "won": false,
+      "depth": 6,
+      "rolls": 223,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "fighter",
+          "level": 8,
+          "hp": 0,
+          "maxHp": 117,
+          "points": 0,
+          "archetype": "bulwark",
+          "fx": {
+            "damage": 3.984722222222222,
+            "heal": 1.5714285714285712,
+            "teamHeal": 0,
+            "block": 8.005291005291005,
+            "stun": 0.9487433862433862,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.05555555555555555,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "block": 8,
+            "attack": 6,
+            "stun": 3,
+            "heal": 1,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 8,
+          "hp": 0,
+          "maxHp": 84,
+          "points": 2,
+          "archetype": "mender",
+          "fx": {
+            "damage": 4.6929811507936465,
+            "heal": 5.455357142857142,
+            "teamHeal": 1.5714285714285714,
+            "block": 2.6152033730158717,
+            "stun": 0.7395833333333333,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.08333333333333333,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "magic": 4,
+            "block": 6,
+            "heal": 6,
+            "stun": 2,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 8,
+          "hp": 0,
+          "maxHp": 81,
+          "points": 0,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 6.383373488284203,
+            "heal": 3.128968253968254,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.1020880574452003,
+            "poison": 1.0752078609221465,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.051587301587301584,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 6,
+            "heal": 3,
+            "stun": 4,
+            "poison": 4,
+            "blank": 1,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 2.5,
+      "seed": 14,
+      "job": "rogue",
+      "won": false,
+      "depth": 7,
+      "rolls": 134,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "rogue",
+          "level": 10,
+          "hp": 0,
+          "maxHp": 93,
+          "points": 7,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 10.751856575963714,
+            "heal": 5.8015873015873005,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.4370748299319727,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.40476190476190466,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "heal": 3,
+            "attack": 13,
+            "stun": 2,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 9,
+          "hp": 0,
+          "maxHp": 90,
+          "points": 1,
+          "archetype": "mender",
+          "fx": {
+            "damage": 5.15839947089947,
+            "heal": 9.593253968253968,
+            "teamHeal": 1.5714285714285714,
+            "block": 2.1980820105820094,
+            "stun": 0.32738095238095233,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.1111111111111111,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "heal": 8,
+            "magic": 6,
+            "block": 3,
+            "stun": 1,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 8,
+          "hp": 0,
+          "maxHp": 81,
+          "points": 1,
+          "archetype": "venom",
+          "fx": {
+            "damage": 6.2494992441421005,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.4797808012093725,
+            "poison": 2.418178382464097,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.20634920634920634,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 4,
+            "poison": 10,
+            "stun": 4,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 2.5,
+      "seed": 15,
+      "job": "mage",
+      "won": false,
+      "depth": 6,
+      "rolls": 200,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "mage",
+          "level": 9,
+          "hp": 0,
+          "maxHp": 90,
+          "points": 1,
+          "archetype": "mender",
+          "fx": {
+            "damage": 4.5436011904761875,
+            "heal": 5.906746031746032,
+            "teamHeal": 1.5714285714285714,
+            "block": 2.799107142857141,
+            "stun": 1.0625,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.047619047619047616,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "block": 6,
+            "magic": 4,
+            "stun": 3,
+            "heal": 5,
+            "class": 1
+          }
+        },
+        {
+          "job": "fighter",
+          "level": 9,
+          "hp": 0,
+          "maxHp": 123,
+          "points": 2,
+          "archetype": "assault",
+          "fx": {
+            "damage": 5.363227513227513,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 7.333333333333334,
+            "stun": 0.6111111111111112,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.25396825396825395,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 11,
+            "block": 6,
+            "class": 1,
+            "stun": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 9,
+          "hp": 0,
+          "maxHp": 87,
+          "points": 0,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 6.4307208994708995,
+            "heal": 3.138888888888889,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.3015873015873014,
+            "poison": 1.0846560846560847,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.05555555555555555,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 6,
+            "heal": 3,
+            "stun": 4,
+            "poison": 4,
+            "blank": 1,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 2.5,
+      "seed": 16,
+      "job": "fighter",
+      "won": false,
+      "depth": 7,
+      "rolls": 351,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "fighter",
+          "level": 10,
+          "hp": 0,
+          "maxHp": 129,
+          "points": 0,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 4.651041666666666,
+            "heal": 1.6666666666666665,
+            "teamHeal": 0,
+            "block": 7.534556878306879,
+            "stun": 1.087962962962963,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.1626984126984127,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 9,
+            "block": 5,
+            "heal": 1,
+            "stun": 3,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 9,
+          "hp": 0,
+          "maxHp": 90,
+          "points": 0,
+          "archetype": "mender",
+          "fx": {
+            "damage": 3.407465277777777,
+            "heal": 8.211309523809524,
+            "teamHeal": 1.5714285714285714,
+            "block": 3.818204365079364,
+            "stun": 0.7465277777777778,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.09126984126984126,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "heal": 7,
+            "magic": 4,
+            "block": 5,
+            "stun": 2,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 9,
+          "hp": 0,
+          "maxHp": 87,
+          "points": 2,
+          "archetype": "assault",
+          "fx": {
+            "damage": 9.850595238095238,
+            "heal": 3.1349206349206344,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 0.8401360544217686,
+            "poison": 0.45238095238095233,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.14285714285714282,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 9,
+            "poison": 2,
+            "stun": 4,
+            "heal": 3,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 2.5,
+      "seed": 17,
+      "job": "rogue",
+      "won": false,
+      "depth": 8,
+      "rolls": 236,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "rogue",
+          "level": 10,
+          "hp": 0,
+          "maxHp": 93,
+          "points": 1,
+          "archetype": "venom",
+          "fx": {
+            "damage": 7.317979969765683,
+            "heal": 1.6666666666666665,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.9489795918367345,
+            "poison": 2.418178382464097,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.20634920634920634,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "heal": 1,
+            "attack": 3,
+            "poison": 10,
+            "stun": 4,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 9,
+          "hp": 0,
+          "maxHp": 90,
+          "points": 0,
+          "archetype": "mender",
+          "fx": {
+            "damage": 3.9140376984126966,
+            "heal": 8.092261904761905,
+            "teamHeal": 1.5714285714285714,
+            "block": 3.360863095238094,
+            "stun": 0.7291666666666666,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.07142857142857142,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "heal": 7,
+            "magic": 4,
+            "block": 5,
+            "stun": 2,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 11,
+          "hp": 0,
+          "maxHp": 99,
+          "points": 0,
+          "archetype": "venom",
+          "fx": {
+            "damage": 8.071364795918367,
+            "heal": 1.5714285714285712,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.4531368102796673,
+            "poison": 2.470332577475435,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.2103174603174603,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "stun": 3,
+            "attack": 4,
+            "poison": 10,
+            "heal": 1,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 2.5,
+      "seed": 18,
+      "job": "mage",
+      "won": false,
+      "depth": 8,
+      "rolls": 296,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "mage",
+          "level": 10,
+          "hp": 0,
+          "maxHp": 96,
+          "points": 0,
+          "archetype": "mender",
+          "fx": {
+            "damage": 3.9987413194444446,
+            "heal": 9.154265873015873,
+            "teamHeal": 1.5714285714285714,
+            "block": 3.469122023809522,
+            "stun": 0.7395833333333333,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.08333333333333331,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "heal": 8,
+            "stun": 2,
+            "magic": 4,
+            "block": 4,
+            "class": 1
+          }
+        },
+        {
+          "job": "fighter",
+          "level": 10,
+          "hp": 0,
+          "maxHp": 129,
+          "points": 3,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 8.972222222222221,
+            "heal": 2.1428571428571423,
+            "teamHeal": 0,
+            "block": 8.595238095238095,
+            "stun": 0.5833333333333334,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.19047619047619047,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 6,
+            "block": 9,
+            "stun": 1,
+            "heal": 2,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 11,
+          "hp": 0,
+          "maxHp": 99,
+          "points": 0,
+          "archetype": "assault",
+          "fx": {
+            "damage": 14.879832766439897,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 2.7842970521541943,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.595238095238095,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "stun": 3,
+            "attack": 15,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 2.5,
+      "seed": 19,
+      "job": "fighter",
+      "won": false,
+      "depth": 9,
+      "rolls": 384,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "fighter",
+          "level": 11,
+          "hp": 0,
+          "maxHp": 135,
+          "points": 2,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 6.012896825396825,
+            "heal": 1.5714285714285712,
+            "teamHeal": 0,
+            "block": 9.748015873015872,
+            "stun": 0.6041666666666666,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.23809523809523808,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "block": 10,
+            "attack": 6,
+            "stun": 1,
+            "heal": 1,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 11,
+          "hp": 0,
+          "maxHp": 102,
+          "points": 0,
+          "archetype": "mender",
+          "fx": {
+            "damage": 4.290079365079366,
+            "heal": 9.50793650793651,
+            "teamHeal": 1.5714285714285714,
+            "block": 3.2658730158730154,
+            "stun": 0,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.12698412698412698,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "magic": 4,
+            "block": 6,
+            "heal": 8,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 11,
+          "hp": 0,
+          "maxHp": 99,
+          "points": 7,
+          "archetype": "venom",
+          "fx": {
+            "damage": 8.121808862433863,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.4531368102796673,
+            "poison": 2.470332577475435,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.2103174603174603,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "stun": 3,
+            "attack": 5,
+            "poison": 10,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 2.5,
+      "seed": 20,
+      "job": "rogue",
+      "won": false,
+      "depth": 10,
+      "rolls": 224,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "rogue",
+          "level": 14,
+          "hp": 0,
+          "maxHp": 117,
+          "points": 69,
+          "archetype": "assault",
+          "fx": {
+            "damage": 23.037499999999984,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 0,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.9999999999999996,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 18,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 13,
+          "hp": 0,
+          "maxHp": 114,
+          "points": 2,
+          "archetype": "mender",
+          "fx": {
+            "damage": 3.726959325396826,
+            "heal": 9.692460317460316,
+            "teamHeal": 1.8561507936507933,
+            "block": 3.44345238095238,
+            "stun": 0.825892857142857,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.11904761904761904,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "block": 4,
+            "magic": 4,
+            "heal": 8,
+            "stun": 2,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 13,
+          "hp": 0,
+          "maxHp": 111,
+          "points": 2,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 9.409075018896441,
+            "heal": 4.3824640967498105,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.8134920634920633,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.32539682539682535,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "stun": 3,
+            "attack": 12,
+            "heal": 3,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 2.5,
+      "seed": 21,
+      "job": "mage",
+      "won": false,
+      "depth": 8,
+      "rolls": 368,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "mage",
+          "level": 11,
+          "hp": 0,
+          "maxHp": 102,
+          "points": 5,
+          "archetype": "mender",
+          "fx": {
+            "damage": 4.255443948412699,
+            "heal": 6.685515873015873,
+            "teamHeal": 1.5714285714285714,
+            "block": 4.972883597883595,
+            "stun": 0.5044642857142857,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.1349206349206349,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "block": 5,
+            "magic": 4,
+            "heal": 8,
+            "stun": 1,
+            "class": 1
+          }
+        },
+        {
+          "job": "fighter",
+          "level": 11,
+          "hp": 0,
+          "maxHp": 135,
+          "points": 4,
+          "archetype": "assault",
+          "fx": {
+            "damage": 7.660945767195767,
+            "heal": 1.5714285714285712,
+            "teamHeal": 0,
+            "block": 6.476851851851852,
+            "stun": 0,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.2698412698412698,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 6,
+            "block": 11,
+            "heal": 1,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 11,
+          "hp": 0,
+          "maxHp": 99,
+          "points": 2,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 8.686970899470898,
+            "heal": 3.2777777777777777,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.6428571428571426,
+            "poison": 0.7910052910052909,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.1111111111111111,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 8,
+            "heal": 3,
+            "stun": 4,
+            "poison": 3,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 2.5,
+      "seed": 22,
+      "job": "fighter",
+      "won": false,
+      "depth": 6,
+      "rolls": 257,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "fighter",
+          "level": 9,
+          "hp": 0,
+          "maxHp": 123,
+          "points": 3,
+          "archetype": "bulwark",
+          "fx": {
+            "damage": 3.2873015873015876,
+            "heal": 1.5714285714285712,
+            "teamHeal": 0,
+            "block": 7.519841269841271,
+            "stun": 1.2705853174603177,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.15476190476190477,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "block": 8,
+            "attack": 6,
+            "stun": 3,
+            "heal": 1,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 8,
+          "hp": 0,
+          "maxHp": 84,
+          "points": 2,
+          "archetype": "mender",
+          "fx": {
+            "damage": 3.289657738095237,
+            "heal": 7.631944444444443,
+            "teamHeal": 1.5714285714285714,
+            "block": 3.400793650793649,
+            "stun": 0.5338541666666666,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.051587301587301584,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "heal": 7,
+            "magic": 4,
+            "block": 5,
+            "stun": 2,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 9,
+          "hp": 0,
+          "maxHp": 87,
+          "points": 3,
+          "archetype": "venom",
+          "fx": {
+            "damage": 6.059122260015116,
+            "heal": 1.5714285714285712,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.2110733182161753,
+            "poison": 2.3865268329554046,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.1984126984126984,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 3,
+            "poison": 10,
+            "stun": 4,
+            "heal": 1,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 2.5,
+      "seed": 23,
+      "job": "rogue",
+      "won": false,
+      "depth": 9,
+      "rolls": 243,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "rogue",
+          "level": 12,
+          "hp": 0,
+          "maxHp": 105,
+          "points": 8,
+          "archetype": "assault",
+          "fx": {
+            "damage": 14.427451814058946,
+            "heal": 5.052721088435373,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.2440476190476186,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.595238095238095,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 15,
+            "stun": 1,
+            "heal": 2,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 10,
+          "hp": 0,
+          "maxHp": 96,
+          "points": 0,
+          "archetype": "mender",
+          "fx": {
+            "damage": 4.5168588789682556,
+            "heal": 7.24156746031746,
+            "teamHeal": 1.5714285714285714,
+            "block": 2.5706018518518507,
+            "stun": 0.7534722222222221,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.0992063492063492,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "magic": 4,
+            "block": 6,
+            "heal": 6,
+            "stun": 2,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 11,
+          "hp": 0,
+          "maxHp": 99,
+          "points": 0,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 9.988463718820864,
+            "heal": 3.357142857142857,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.7448979591836733,
+            "poison": 0.5816326530612245,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.14285714285714285,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 9,
+            "heal": 3,
+            "stun": 4,
+            "poison": 2,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 2.5,
+      "seed": 24,
+      "job": "mage",
+      "won": false,
+      "depth": 10,
+      "rolls": 607,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "mage",
+          "level": 13,
+          "hp": 0,
+          "maxHp": 114,
+          "points": 1,
+          "archetype": "mender",
+          "fx": {
+            "damage": 3.950950727513227,
+            "heal": 9.103670634920634,
+            "teamHeal": 1.5714285714285714,
+            "block": 5.1499669312169285,
+            "stun": 0.5494791666666666,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.07539682539682538,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "heal": 8,
+            "block": 5,
+            "magic": 4,
+            "stun": 1,
+            "class": 1
+          }
+        },
+        {
+          "job": "fighter",
+          "level": 13,
+          "hp": 0,
+          "maxHp": 147,
+          "points": 2,
+          "archetype": "assault",
+          "fx": {
+            "damage": 8.919444444444444,
+            "heal": 1.5714285714285712,
+            "teamHeal": 0,
+            "block": 6.7751322751322745,
+            "stun": 0,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.30158730158730157,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 6,
+            "block": 11,
+            "heal": 1,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 13,
+          "hp": 0,
+          "maxHp": 111,
+          "points": 5,
+          "archetype": "venom",
+          "fx": {
+            "damage": 8.301055839002267,
+            "heal": 1.5714285714285712,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.6711073318216172,
+            "poison": 2.434004157218443,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.2103174603174603,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 4,
+            "poison": 10,
+            "stun": 3,
+            "heal": 1,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 5,
+      "seed": 1,
+      "job": "fighter",
+      "won": false,
+      "depth": 7,
+      "rolls": 386,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "fighter",
+          "level": 10,
+          "hp": 0,
+          "maxHp": 167,
+          "points": 3,
+          "archetype": "assault",
+          "fx": {
+            "damage": 6.749131944444443,
+            "heal": 6.376653439153439,
+            "teamHeal": 0,
+            "block": 6.778935185185186,
+            "stun": 0.5399305555555556,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.09126984126984126,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 6,
+            "block": 7,
+            "heal": 4,
+            "stun": 1,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 10,
+          "hp": 0,
+          "maxHp": 117,
+          "points": 1,
+          "archetype": "mender",
+          "fx": {
+            "damage": 5.009300595238097,
+            "heal": 7.97420634920635,
+            "teamHeal": 2.428571428571429,
+            "block": 8.090360449735448,
+            "stun": 0.3993055555555556,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.15079365079365079,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "block": 9,
+            "magic": 4,
+            "stun": 1,
+            "heal": 4,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 10,
+          "hp": 0,
+          "maxHp": 113,
+          "points": 0,
+          "archetype": "venom",
+          "fx": {
+            "damage": 7.281923185941043,
+            "heal": 4.059523809523808,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.4342403628117912,
+            "poison": 2.4023526077097506,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.20238095238095238,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "stun": 3,
+            "poison": 10,
+            "heal": 2,
+            "attack": 3,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 5,
+      "seed": 2,
+      "job": "rogue",
+      "won": true,
+      "depth": 10,
+      "rolls": 204,
+      "stalled": false,
+      "survivors": 3,
+      "roster": [
+        {
+          "job": "rogue",
+          "level": 14,
+          "hp": 86,
+          "maxHp": 137,
+          "points": 68,
+          "archetype": "assault",
+          "fx": {
+            "damage": 30.312499999999982,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 0,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.9999999999999996,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 18,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 13,
+          "hp": 95,
+          "maxHp": 135,
+          "points": 6,
+          "archetype": "mender",
+          "fx": {
+            "damage": 5.467923280423282,
+            "heal": 8.88219246031746,
+            "teamHeal": 2.428571428571429,
+            "block": 8.447916666666664,
+            "stun": 0,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.1626984126984127,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "block": 9,
+            "magic": 4,
+            "heal": 5,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 14,
+          "hp": 63,
+          "maxHp": 137,
+          "points": 9,
+          "archetype": "venom",
+          "fx": {
+            "damage": 8.985083616780045,
+            "heal": 4.059523809523808,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.4342403628117912,
+            "poison": 2.4023526077097506,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.20238095238095238,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 3,
+            "poison": 10,
+            "stun": 3,
+            "heal": 2,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 5,
+      "seed": 3,
+      "job": "mage",
+      "won": false,
+      "depth": 10,
+      "rolls": 492,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "mage",
+          "level": 14,
+          "hp": 0,
+          "maxHp": 141,
+          "points": 1,
+          "archetype": "mender",
+          "fx": {
+            "damage": 6.294797867063493,
+            "heal": 9.166170634920636,
+            "teamHeal": 2.428571428571429,
+            "block": 8.3735119047619,
+            "stun": 0,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.15476190476190477,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "block": 9,
+            "magic": 4,
+            "heal": 5,
+            "class": 1
+          }
+        },
+        {
+          "job": "fighter",
+          "level": 14,
+          "hp": 0,
+          "maxHp": 191,
+          "points": 1,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 7.002314814814815,
+            "heal": 6.613095238095237,
+            "teamHeal": 0,
+            "block": 7.5476190476190474,
+            "stun": 0.9930555555555556,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.07936507936507936,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 6,
+            "block": 6,
+            "heal": 4,
+            "stun": 2,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 13,
+          "hp": 0,
+          "maxHp": 131,
+          "points": 1,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 13.142715419501137,
+            "heal": 6.809523809523809,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.7448979591836733,
+            "poison": 0.7755102040816326,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.14285714285714285,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 9,
+            "heal": 3,
+            "stun": 4,
+            "poison": 2,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 5,
+      "seed": 4,
+      "job": "fighter",
+      "won": false,
+      "depth": 9,
+      "rolls": 414,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "fighter",
+          "level": 13,
+          "hp": 0,
+          "maxHp": 185,
+          "points": 5,
+          "archetype": "bulwark",
+          "fx": {
+            "damage": 5.010747354497354,
+            "heal": 2.428571428571428,
+            "teamHeal": 0,
+            "block": 9.428902116402115,
+            "stun": 1.1076388888888888,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.12301587301587301,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "stun": 2,
+            "block": 9,
+            "attack": 6,
+            "heal": 1,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 13,
+          "hp": 0,
+          "maxHp": 135,
+          "points": 0,
+          "archetype": "venom",
+          "fx": {
+            "damage": 6.932043650793655,
+            "heal": 6.752976190476192,
+            "teamHeal": 2.428571428571429,
+            "block": 0,
+            "stun": 1.203125,
+            "poison": 2.2343749999999982,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.15476190476190477,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "stun": 3,
+            "magic": 3,
+            "poison": 9,
+            "heal": 3,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 9,
+          "hp": 0,
+          "maxHp": 107,
+          "points": 1,
+          "archetype": "venom",
+          "fx": {
+            "damage": 6.882322373393802,
+            "heal": 3.8571428571428568,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.4436885865457292,
+            "poison": 2.4542705971277403,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.20634920634920634,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "stun": 3,
+            "attack": 3,
+            "poison": 10,
+            "heal": 2,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 5,
+      "seed": 5,
+      "job": "rogue",
+      "won": true,
+      "depth": 10,
+      "rolls": 212,
+      "stalled": false,
+      "survivors": 2,
+      "roster": [
+        {
+          "job": "rogue",
+          "level": 15,
+          "hp": 91,
+          "maxHp": 143,
+          "points": 5,
+          "archetype": "assault",
+          "fx": {
+            "damage": 32.31947987528343,
+            "heal": 4.654761904761903,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 0.7996031746031744,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.5595238095238093,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 15,
+            "heal": 2,
+            "class": 1,
+            "stun": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 14,
+          "hp": 76,
+          "maxHp": 141,
+          "points": 3,
+          "archetype": "venom",
+          "fx": {
+            "damage": 6.006737764550265,
+            "heal": 1,
+            "teamHeal": 0,
+            "block": 7.9518849206349165,
+            "stun": 0,
+            "poison": 1.3273809523809519,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.12301587301587301,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "poison": 6,
+            "magic": 4,
+            "block": 8,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 12,
+          "hp": 0,
+          "maxHp": 125,
+          "points": 3,
+          "archetype": "assault",
+          "fx": {
+            "damage": 20.07062547241118,
+            "heal": 6.198412698412697,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 0.8352229780801208,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.3015873015873015,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 12,
+            "stun": 3,
+            "heal": 3,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 5,
+      "seed": 6,
+      "job": "mage",
+      "won": false,
+      "depth": 8,
+      "rolls": 315,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "mage",
+          "level": 11,
+          "hp": 0,
+          "maxHp": 123,
+          "points": 2,
+          "archetype": "mender",
+          "fx": {
+            "damage": 5.367373511904762,
+            "heal": 7.569444444444445,
+            "teamHeal": 2.428571428571429,
+            "block": 8.107163525132272,
+            "stun": 0.5200892857142856,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.16269841269841268,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "block": 9,
+            "heal": 4,
+            "magic": 4,
+            "stun": 1,
+            "class": 1
+          }
+        },
+        {
+          "job": "fighter",
+          "level": 11,
+          "hp": 0,
+          "maxHp": 173,
+          "points": 2,
+          "archetype": "assault",
+          "fx": {
+            "damage": 6.999007936507934,
+            "heal": 2.666666666666666,
+            "teamHeal": 0,
+            "block": 8.240079365079366,
+            "stun": 0.5763888888888888,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.1746031746031746,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 10,
+            "block": 6,
+            "heal": 1,
+            "class": 1,
+            "stun": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 11,
+          "hp": 0,
+          "maxHp": 119,
+          "points": 1,
+          "archetype": "venom",
+          "fx": {
+            "damage": 7.273242630385487,
+            "heal": 5.84126984126984,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.330309901738473,
+            "poison": 1.9954648526077097,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.15873015873015872,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "stun": 3,
+            "heal": 3,
+            "poison": 9,
+            "attack": 3,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 5,
+      "seed": 7,
+      "job": "fighter",
+      "won": false,
+      "depth": 10,
+      "rolls": 745,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "fighter",
+          "level": 14,
+          "hp": 0,
+          "maxHp": 191,
+          "points": 2,
+          "archetype": "assault",
+          "fx": {
+            "damage": 8.511904761904763,
+            "heal": 5.337301587301587,
+            "teamHeal": 0,
+            "block": 7.714285714285715,
+            "stun": 0.5416666666666666,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.09523809523809523,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 7,
+            "block": 7,
+            "heal": 3,
+            "stun": 1,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 14,
+          "hp": 0,
+          "maxHp": 141,
+          "points": 0,
+          "archetype": "mender",
+          "fx": {
+            "damage": 5.871362433862435,
+            "heal": 9.412698412698413,
+            "teamHeal": 2.428571428571429,
+            "block": 7.222222222222219,
+            "stun": 0.5833333333333334,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.12698412698412698,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "magic": 4,
+            "block": 8,
+            "heal": 5,
+            "class": 1,
+            "stun": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 14,
+          "hp": 0,
+          "maxHp": 137,
+          "points": 1,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 11.430224867724867,
+            "heal": 6.703703703703703,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.6428571428571426,
+            "poison": 0.9735449735449734,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.1111111111111111,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 8,
+            "heal": 3,
+            "stun": 4,
+            "poison": 3,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 5,
+      "seed": 8,
+      "job": "rogue",
+      "won": true,
+      "depth": 10,
+      "rolls": 192,
+      "stalled": false,
+      "survivors": 3,
+      "roster": [
+        {
+          "job": "rogue",
+          "level": 15,
+          "hp": 117,
+          "maxHp": 143,
+          "points": 72,
+          "archetype": "assault",
+          "fx": {
+            "damage": 30.312499999999982,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 0,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.9999999999999996,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 18,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 14,
+          "hp": 99,
+          "maxHp": 141,
+          "points": 1,
+          "archetype": "mender",
+          "fx": {
+            "damage": 5.413359788359788,
+            "heal": 10.097222222222221,
+            "teamHeal": 2.428571428571429,
+            "block": 7.154100529100526,
+            "stun": 0.5729166666666666,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.1111111111111111,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "stun": 1,
+            "block": 8,
+            "magic": 4,
+            "heal": 5,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 14,
+          "hp": 51,
+          "maxHp": 137,
+          "points": 6,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 10.123889833711264,
+            "heal": 6.624338624338624,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.566326530612245,
+            "poison": 1.1022297808012094,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.0873015873015873,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 7,
+            "heal": 3,
+            "stun": 4,
+            "poison": 4,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 5,
+      "seed": 9,
+      "job": "mage",
+      "won": false,
+      "depth": 8,
+      "rolls": 252,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "mage",
+          "level": 10,
+          "hp": 0,
+          "maxHp": 117,
+          "points": 1,
+          "archetype": "mender",
+          "fx": {
+            "damage": 5.772569444444446,
+            "heal": 9.274305555555555,
+            "teamHeal": 2.428571428571429,
+            "block": 6.136904761904758,
+            "stun": 0.578125,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.11904761904761904,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "block": 7,
+            "magic": 4,
+            "heal": 6,
+            "stun": 1,
+            "class": 1
+          }
+        },
+        {
+          "job": "fighter",
+          "level": 11,
+          "hp": 0,
+          "maxHp": 173,
+          "points": 2,
+          "archetype": "assault",
+          "fx": {
+            "damage": 7.002314814814815,
+            "heal": 6.613095238095237,
+            "teamHeal": 0,
+            "block": 7.038359788359789,
+            "stun": 0.6620370370370371,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.07936507936507936,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "block": 6,
+            "attack": 6,
+            "heal": 4,
+            "stun": 2,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 11,
+          "hp": 0,
+          "maxHp": 119,
+          "points": 5,
+          "archetype": "venom",
+          "fx": {
+            "damage": 8.213104686318971,
+            "heal": 2.428571428571428,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.6602418745275886,
+            "poison": 2.4542705971277403,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.20634920634920634,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "stun": 3,
+            "attack": 4,
+            "poison": 10,
+            "heal": 1,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 5,
+      "seed": 10,
+      "job": "fighter",
+      "won": false,
+      "depth": 10,
+      "rolls": 610,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "fighter",
+          "level": 14,
+          "hp": 0,
+          "maxHp": 191,
+          "points": 1,
+          "archetype": "assault",
+          "fx": {
+            "damage": 8.245287698412698,
+            "heal": 6.210317460317459,
+            "teamHeal": 0,
+            "block": 5.240079365079366,
+            "stun": 0.5677083333333334,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.15476190476190474,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 11,
+            "block": 3,
+            "heal": 3,
+            "stun": 1,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 14,
+          "hp": 0,
+          "maxHp": 141,
+          "points": 5,
+          "archetype": "mender",
+          "fx": {
+            "damage": 5.641534391534392,
+            "heal": 9.089285714285715,
+            "teamHeal": 2.428571428571429,
+            "block": 8.28306878306878,
+            "stun": 0.6041666666666666,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.15873015873015872,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "block": 9,
+            "magic": 4,
+            "stun": 1,
+            "heal": 4,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 13,
+          "hp": 0,
+          "maxHp": 131,
+          "points": 0,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 11.430224867724867,
+            "heal": 6.703703703703703,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.6428571428571426,
+            "poison": 0.7910052910052909,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.1111111111111111,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 8,
+            "heal": 3,
+            "stun": 4,
+            "poison": 3,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 5,
+      "seed": 11,
+      "job": "rogue",
+      "won": true,
+      "depth": 10,
+      "rolls": 368,
+      "stalled": false,
+      "survivors": 3,
+      "roster": [
+        {
+          "job": "rogue",
+          "level": 15,
+          "hp": 92,
+          "maxHp": 143,
+          "points": 9,
+          "archetype": "venom",
+          "fx": {
+            "damage": 8.357603458049887,
+            "heal": 5.063492063492062,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 2.1513605442176873,
+            "poison": 2.4023526077097506,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.20238095238095236,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "heal": 2,
+            "attack": 3,
+            "poison": 10,
+            "stun": 3,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 14,
+          "hp": 74,
+          "maxHp": 141,
+          "points": 3,
+          "archetype": "mender",
+          "fx": {
+            "damage": 5.529513888888888,
+            "heal": 9.101190476190476,
+            "teamHeal": 2.428571428571429,
+            "block": 8.317460317460313,
+            "stun": 0.6041666666666666,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.15873015873015872,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "block": 9,
+            "heal": 4,
+            "magic": 4,
+            "class": 1,
+            "stun": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 15,
+          "hp": 140,
+          "maxHp": 143,
+          "points": 5,
+          "archetype": "assault",
+          "fx": {
+            "damage": 16.364618764172334,
+            "heal": 5.950396825396824,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 0.9322562358276643,
+            "poison": 0.7529761904761905,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.20238095238095233,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "poison": 1,
+            "attack": 11,
+            "heal": 3,
+            "stun": 3,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 5,
+      "seed": 12,
+      "job": "mage",
+      "won": false,
+      "depth": 9,
+      "rolls": 423,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "mage",
+          "level": 9,
+          "hp": 0,
+          "maxHp": 111,
+          "points": 2,
+          "archetype": "mender",
+          "fx": {
+            "damage": 4.714471726190475,
+            "heal": 7.284970238095237,
+            "teamHeal": 2.428571428571429,
+            "block": 6.937003968253966,
+            "stun": 0.7125496031746033,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.11507936507936507,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "heal": 4,
+            "magic": 4,
+            "block": 8,
+            "stun": 2,
+            "class": 1
+          }
+        },
+        {
+          "job": "fighter",
+          "level": 12,
+          "hp": 0,
+          "maxHp": 179,
+          "points": 2,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 6.014384920634921,
+            "heal": 6.577380952380952,
+            "teamHeal": 0,
+            "block": 6.529761904761905,
+            "stun": 0.9672619047619049,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.047619047619047616,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 6,
+            "block": 6,
+            "heal": 4,
+            "stun": 2,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 12,
+          "hp": 0,
+          "maxHp": 125,
+          "points": 3,
+          "archetype": "venom",
+          "fx": {
+            "damage": 8.357603458049885,
+            "heal": 4.059523809523808,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.4342403628117912,
+            "poison": 2.4023526077097506,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.20238095238095238,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "stun": 3,
+            "poison": 10,
+            "heal": 2,
+            "attack": 3,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 5,
+      "seed": 13,
+      "job": "fighter",
+      "won": false,
+      "depth": 10,
+      "rolls": 581,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "fighter",
+          "level": 14,
+          "hp": 0,
+          "maxHp": 191,
+          "points": 1,
+          "archetype": "bulwark",
+          "fx": {
+            "damage": 6.979580026455027,
+            "heal": 2.428571428571428,
+            "teamHeal": 0,
+            "block": 9.542162698412698,
+            "stun": 1.0659722222222223,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.07539682539682539,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "block": 9,
+            "attack": 6,
+            "stun": 2,
+            "heal": 1,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 14,
+          "hp": 0,
+          "maxHp": 141,
+          "points": 0,
+          "archetype": "mender",
+          "fx": {
+            "damage": 5.871362433862435,
+            "heal": 9.412698412698413,
+            "teamHeal": 2.428571428571429,
+            "block": 7.222222222222219,
+            "stun": 0.5833333333333334,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.12698412698412698,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "magic": 4,
+            "block": 8,
+            "heal": 5,
+            "class": 1,
+            "stun": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 14,
+          "hp": 0,
+          "maxHp": 137,
+          "points": 7,
+          "archetype": "venom",
+          "fx": {
+            "damage": 9.137318121693122,
+            "heal": 2.428571428571428,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.875330687830688,
+            "poison": 2.4060846560846567,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.19444444444444442,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "stun": 3,
+            "attack": 4,
+            "poison": 10,
+            "heal": 1,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 5,
+      "seed": 14,
+      "job": "rogue",
+      "won": true,
+      "depth": 10,
+      "rolls": 336,
+      "stalled": false,
+      "survivors": 1,
+      "roster": [
+        {
+          "job": "rogue",
+          "level": 14,
+          "hp": 0,
+          "maxHp": 137,
+          "points": 4,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 13.678370653817076,
+            "heal": 9.677248677248674,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.8221371882086166,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.3849206349206348,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 13,
+            "heal": 3,
+            "stun": 2,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 14,
+          "hp": 0,
+          "maxHp": 141,
+          "points": 2,
+          "archetype": "mender",
+          "fx": {
+            "damage": 5.529513888888888,
+            "heal": 9.101190476190476,
+            "teamHeal": 2.428571428571429,
+            "block": 8.317460317460313,
+            "stun": 0.6041666666666666,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.15873015873015872,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "block": 9,
+            "heal": 4,
+            "magic": 4,
+            "class": 1,
+            "stun": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 14,
+          "hp": 125,
+          "maxHp": 137,
+          "points": 15,
+          "archetype": "venom",
+          "fx": {
+            "damage": 9.792729591836732,
+            "heal": 2.428571428571428,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.4260204081632653,
+            "poison": 2.4863945578231292,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.21428571428571427,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "stun": 2,
+            "attack": 5,
+            "poison": 10,
+            "heal": 1,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 5,
+      "seed": 15,
+      "job": "mage",
+      "won": false,
+      "depth": 8,
+      "rolls": 351,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "mage",
+          "level": 12,
+          "hp": 0,
+          "maxHp": 129,
+          "points": 1,
+          "archetype": "mender",
+          "fx": {
+            "damage": 5.6610656415343925,
+            "heal": 9.491319444444443,
+            "teamHeal": 2.428571428571429,
+            "block": 4.748263888888887,
+            "stun": 1.0572916666666667,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.04365079365079365,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "block": 6,
+            "magic": 4,
+            "stun": 3,
+            "heal": 5,
+            "class": 1
+          }
+        },
+        {
+          "job": "fighter",
+          "level": 12,
+          "hp": 0,
+          "maxHp": 179,
+          "points": 5,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 11.736111111111109,
+            "heal": 6.63095238095238,
+            "teamHeal": 0,
+            "block": 6.595238095238095,
+            "stun": 1.0317460317460316,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.09523809523809523,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 6,
+            "stun": 3,
+            "heal": 4,
+            "block": 5,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 12,
+          "hp": 0,
+          "maxHp": 125,
+          "points": 1,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 8.962762188208618,
+            "heal": 5.593253968253967,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.4223356009070294,
+            "poison": 1.4770408163265303,
+            "stimulant": 0.14285714285714285,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.05952380952380952,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 6,
+            "heal": 3,
+            "stun": 4,
+            "poison": 4,
+            "stimulant": 1,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 5,
+      "seed": 16,
+      "job": "fighter",
+      "won": false,
+      "depth": 9,
+      "rolls": 402,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "fighter",
+          "level": 13,
+          "hp": 0,
+          "maxHp": 185,
+          "points": 3,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 6.956845238095238,
+            "heal": 6.604166666666666,
+            "teamHeal": 0,
+            "block": 6.482142857142858,
+            "stun": 1.0625,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.07142857142857142,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "stun": 3,
+            "attack": 6,
+            "block": 5,
+            "heal": 4,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 13,
+          "hp": 0,
+          "maxHp": 135,
+          "points": 2,
+          "archetype": "mender",
+          "fx": {
+            "damage": 5.493551587301587,
+            "heal": 8.353174603174603,
+            "teamHeal": 2.428571428571429,
+            "block": 8.317460317460313,
+            "stun": 0.6041666666666666,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.15873015873015872,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "block": 9,
+            "heal": 4,
+            "magic": 4,
+            "class": 1,
+            "stun": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 13,
+          "hp": 0,
+          "maxHp": 131,
+          "points": 1,
+          "archetype": "assault",
+          "fx": {
+            "damage": 16.034226190476186,
+            "heal": 5.861111111111109,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 0.9107142857142855,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.16666666666666663,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 11,
+            "heal": 3,
+            "stun": 4,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 5,
+      "seed": 17,
+      "job": "rogue",
+      "won": false,
+      "depth": 10,
+      "rolls": 419,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "rogue",
+          "level": 14,
+          "hp": 0,
+          "maxHp": 137,
+          "points": 4,
+          "archetype": "venom",
+          "fx": {
+            "damage": 9.125744047619047,
+            "heal": 2.666666666666666,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 2.2645502645502646,
+            "poison": 2.3707010582010586,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.19444444444444442,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 3,
+            "poison": 10,
+            "stun": 4,
+            "class": 1,
+            "heal": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 13,
+          "hp": 0,
+          "maxHp": 135,
+          "points": 1,
+          "archetype": "mender",
+          "fx": {
+            "damage": 5.593584656084656,
+            "heal": 9.089285714285715,
+            "teamHeal": 2.428571428571429,
+            "block": 8.28306878306878,
+            "stun": 0.6041666666666666,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.15873015873015872,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "block": 9,
+            "magic": 4,
+            "stun": 1,
+            "heal": 4,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 14,
+          "hp": 0,
+          "maxHp": 137,
+          "points": 0,
+          "archetype": "venom",
+          "fx": {
+            "damage": 8.93223261526833,
+            "heal": 4.0555555555555545,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.638510959939531,
+            "poison": 2.3865268329554046,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.19841269841269837,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 3,
+            "poison": 10,
+            "stun": 3,
+            "heal": 2,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 5,
+      "seed": 18,
+      "job": "mage",
+      "won": false,
+      "depth": 10,
+      "rolls": 584,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "mage",
+          "level": 14,
+          "hp": 0,
+          "maxHp": 141,
+          "points": 5,
+          "archetype": "mender",
+          "fx": {
+            "damage": 5.529513888888888,
+            "heal": 8.755952380952381,
+            "teamHeal": 2.428571428571429,
+            "block": 8.317460317460313,
+            "stun": 0.6041666666666666,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.15873015873015872,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "heal": 4,
+            "block": 9,
+            "magic": 4,
+            "class": 1,
+            "stun": 1
+          }
+        },
+        {
+          "job": "fighter",
+          "level": 14,
+          "hp": 0,
+          "maxHp": 191,
+          "points": 1,
+          "archetype": "assault",
+          "fx": {
+            "damage": 8.05741567460317,
+            "heal": 4.624999999999998,
+            "teamHeal": 0,
+            "block": 6.5982142857142865,
+            "stun": 0.5885416666666666,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.20238095238095238,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 11,
+            "block": 4,
+            "heal": 2,
+            "class": 1,
+            "stun": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 14,
+          "hp": 0,
+          "maxHp": 137,
+          "points": 2,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 15.324546485260772,
+            "heal": 6.968253968253968,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.4058956916099774,
+            "poison": 0.8435374149659864,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.19047619047619047,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 10,
+            "heal": 3,
+            "stun": 3,
+            "poison": 2,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 5,
+      "seed": 19,
+      "job": "fighter",
+      "won": true,
+      "depth": 10,
+      "rolls": 545,
+      "stalled": false,
+      "survivors": 2,
+      "roster": [
+        {
+          "job": "fighter",
+          "level": 14,
+          "hp": 75,
+          "maxHp": 191,
+          "points": 4,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 7.916666666666668,
+            "heal": 7.301587301587301,
+            "teamHeal": 0,
+            "block": 6.825396825396825,
+            "stun": 1.0555555555555556,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.06349206349206349,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "block": 5,
+            "attack": 6,
+            "stun": 3,
+            "heal": 4,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 9,
+          "hp": 0,
+          "maxHp": 111,
+          "points": 2,
+          "archetype": "mender",
+          "fx": {
+            "damage": 4.6277695105820085,
+            "heal": 9.264880952380953,
+            "teamHeal": 2.428571428571429,
+            "block": 4.94477513227513,
+            "stun": 0.7152777777777778,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.05555555555555555,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "block": 7,
+            "heal": 5,
+            "magic": 4,
+            "stun": 2,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 14,
+          "hp": 31,
+          "maxHp": 137,
+          "points": 2,
+          "archetype": "venom",
+          "fx": {
+            "damage": 8.93223261526833,
+            "heal": 4.5515873015873005,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.4247921390778533,
+            "poison": 2.3865268329554046,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.1984126984126984,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "stun": 3,
+            "poison": 10,
+            "heal": 2,
+            "attack": 3,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 5,
+      "seed": 20,
+      "job": "rogue",
+      "won": false,
+      "depth": 10,
+      "rolls": 135,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "rogue",
+          "level": 14,
+          "hp": 0,
+          "maxHp": 137,
+          "points": 67,
+          "archetype": "assault",
+          "fx": {
+            "damage": 30.312499999999982,
+            "heal": 0,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 0,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.9999999999999996,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 18,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 13,
+          "hp": 0,
+          "maxHp": 135,
+          "points": 4,
+          "archetype": "mender",
+          "fx": {
+            "damage": 5.390211640211642,
+            "heal": 8.781746031746032,
+            "teamHeal": 2.428571428571429,
+            "block": 7.230158730158727,
+            "stun": 0.5833333333333334,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.12698412698412698,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "block": 8,
+            "magic": 4,
+            "stun": 1,
+            "heal": 5,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 13,
+          "hp": 0,
+          "maxHp": 131,
+          "points": 1,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 10.123889833711264,
+            "heal": 6.624338624338624,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.566326530612245,
+            "poison": 1.1022297808012094,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.0873015873015873,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 7,
+            "heal": 3,
+            "stun": 4,
+            "poison": 4,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 5,
+      "seed": 21,
+      "job": "mage",
+      "won": true,
+      "depth": 10,
+      "rolls": 318,
+      "stalled": false,
+      "survivors": 3,
+      "roster": [
+        {
+          "job": "mage",
+          "level": 15,
+          "hp": 147,
+          "maxHp": 147,
+          "points": 7,
+          "archetype": "mender",
+          "fx": {
+            "damage": 5.255973048941799,
+            "heal": 8.603670634920633,
+            "teamHeal": 2.428571428571429,
+            "block": 8.042782738095235,
+            "stun": 0.6119791666666666,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.17063492063492064,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "heal": 4,
+            "magic": 4,
+            "block": 9,
+            "stun": 1,
+            "class": 1
+          }
+        },
+        {
+          "job": "fighter",
+          "level": 15,
+          "hp": 197,
+          "maxHp": 197,
+          "points": 8,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 8.201058201058201,
+            "heal": 7.698412698412698,
+            "teamHeal": 0,
+            "block": 6.711309523809524,
+            "stun": 1.0251322751322751,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.0873015873015873,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 6,
+            "stun": 3,
+            "heal": 4,
+            "block": 5,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 15,
+          "hp": 127,
+          "maxHp": 143,
+          "points": 6,
+          "archetype": "assault",
+          "fx": {
+            "damage": 26.970308956916085,
+            "heal": 6.575396825396823,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 0.35515873015873006,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.4523809523809522,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 14,
+            "heal": 3,
+            "class": 1,
+            "stun": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 5,
+      "seed": 22,
+      "job": "fighter",
+      "won": true,
+      "depth": 10,
+      "rolls": 357,
+      "stalled": false,
+      "survivors": 3,
+      "roster": [
+        {
+          "job": "fighter",
+          "level": 14,
+          "hp": 145,
+          "maxHp": 191,
+          "points": 8,
+          "archetype": "bulwark",
+          "fx": {
+            "damage": 5.692791005291006,
+            "heal": 2.428571428571428,
+            "teamHeal": 0,
+            "block": 9.503306878306876,
+            "stun": 1.2679398148148147,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.0992063492063492,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "block": 8,
+            "stun": 3,
+            "attack": 6,
+            "heal": 1,
+            "class": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 13,
+          "hp": 129,
+          "maxHp": 135,
+          "points": 3,
+          "archetype": "mender",
+          "fx": {
+            "damage": 5.219907407407408,
+            "heal": 9.912698412698411,
+            "teamHeal": 2.428571428571429,
+            "block": 6.402116402116399,
+            "stun": 0.9027777777777777,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.06349206349206349,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "block": 7,
+            "magic": 4,
+            "stun": 2,
+            "heal": 5,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 13,
+          "hp": 86,
+          "maxHp": 131,
+          "points": 1,
+          "archetype": "assault",
+          "fx": {
+            "damage": 22.28942271352985,
+            "heal": 6.297619047619046,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 0.9265873015873014,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.34126984126984117,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 13,
+            "stun": 2,
+            "heal": 3,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 5,
+      "seed": 23,
+      "job": "rogue",
+      "won": true,
+      "depth": 10,
+      "rolls": 273,
+      "stalled": false,
+      "survivors": 3,
+      "roster": [
+        {
+          "job": "rogue",
+          "level": 15,
+          "hp": 143,
+          "maxHp": 143,
+          "points": 2,
+          "archetype": "assault",
+          "fx": {
+            "damage": 26.84659627739984,
+            "heal": 7.979497354497352,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 0.7070105820105819,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.44841269841269826,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "heal": 3,
+            "attack": 14,
+            "class": 1,
+            "stun": 1
+          }
+        },
+        {
+          "job": "mage",
+          "level": 14,
+          "hp": 140,
+          "maxHp": 141,
+          "points": 6,
+          "archetype": "mender",
+          "fx": {
+            "damage": 5.632027116402116,
+            "heal": 9.288690476190476,
+            "teamHeal": 2.428571428571429,
+            "block": 9.629629629629626,
+            "stun": 0,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.20634920634920634,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "block": 10,
+            "heal": 4,
+            "magic": 4,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 14,
+          "hp": 134,
+          "maxHp": 137,
+          "points": 2,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 11.281415343915345,
+            "heal": 7.12962962962963,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.6428571428571426,
+            "poison": 0.6084656084656084,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.1111111111111111,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 8,
+            "heal": 3,
+            "stun": 4,
+            "poison": 2,
+            "blank": 1,
+            "class": 1
+          }
+        }
+      ]
+    },
+    {
+      "rank": 5,
+      "seed": 24,
+      "job": "mage",
+      "won": false,
+      "depth": 10,
+      "rolls": 505,
+      "stalled": false,
+      "survivors": 0,
+      "roster": [
+        {
+          "job": "mage",
+          "level": 14,
+          "hp": 0,
+          "maxHp": 141,
+          "points": 4,
+          "archetype": "mender",
+          "fx": {
+            "damage": 5.415529927248677,
+            "heal": 8.956349206349206,
+            "teamHeal": 2.428571428571429,
+            "block": 8.217923280423278,
+            "stun": 0.5200892857142856,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.16269841269841268,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "block": 9,
+            "heal": 4,
+            "magic": 4,
+            "stun": 1,
+            "class": 1
+          }
+        },
+        {
+          "job": "fighter",
+          "level": 14,
+          "hp": 0,
+          "maxHp": 191,
+          "points": 1,
+          "archetype": "bulwark",
+          "fx": {
+            "damage": 7.552083333333335,
+            "heal": 2.428571428571428,
+            "teamHeal": 0,
+            "block": 9.324404761904761,
+            "stun": 1.09375,
+            "poison": 0,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.10714285714285714,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 6,
+            "stun": 2,
+            "block": 9,
+            "heal": 1,
+            "class": 1
+          }
+        },
+        {
+          "job": "rogue",
+          "level": 14,
+          "hp": 0,
+          "maxHp": 137,
+          "points": 1,
+          "archetype": "balanced",
+          "fx": {
+            "damage": 12.967923280423278,
+            "heal": 6.148148148148146,
+            "teamHeal": 0,
+            "block": 0,
+            "stun": 1.5820105820105819,
+            "poison": 0.7910052910052909,
+            "stimulant": 0,
+            "rally": 0,
+            "trick": 0,
+            "rage": 0,
+            "crit": 0.1111111111111111,
+            "selfharm": 0,
+            "fury": 0,
+            "selfHeal": 0
+          },
+          "faces": {
+            "attack": 9,
+            "heal": 3,
+            "stun": 4,
+            "poison": 2,
+            "class": 1
+          }
+        }
+      ]
+    }
+  ]
+}

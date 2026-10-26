@@ -60,6 +60,7 @@ const output = path.join(root, "test-results/ui-review");
       shots.push(name);
     }
     await page.waitForTimeout(1300);
+    if (process.env.UI_REVIEW_SCOPE !== "identity") {
     if (process.env.UI_REVIEW_SCOPE !== "biomes") {
     await shot("01-starting-class");
     await page.locator('[data-start-job="rogue"]').click();
@@ -713,22 +714,20 @@ const output = path.join(root, "test-results/ui-review");
     await page.evaluate(() => {
       closeModal();
       state.party[0].points = 99;
-      applyFaceEdit(state.party[0], 0, 0, "weight");
-      applyFaceEdit(state.party[0], 2, 0, "weight");
       editorView = "edit";
       editor(0);
     });
-    await shot("55-paid-reel-weighting");
+    await shot("55-equal-face-reels");
     await page.locator('[data-workshop-view="crits"]').click();
     await shot("55-live-critical-odds");
     await page.setViewportSize({ width: 390, height: 844 });
     await shot("55-live-critical-odds-mobile");
     await page.locator('[data-workshop-view="edit"]').click();
-    await shot("55-paid-reel-weighting-mobile");
+    await shot("55-equal-face-reels-mobile");
     await page.locator('[data-editor-operation="replace"]').click();
     await shot("55-replacement-controls-mobile");
-    await page.locator('[data-editor-operation="weight"]').click();
-    await shot("55-weight-controls-mobile");
+    await page.locator('[data-editor-operation="power"]').click();
+    await shot("55-power-controls-mobile");
     await page.evaluate(() => {
       window.reviewOriginalReels = state.party[0].reels;
       const h = state.party[0];
@@ -1259,13 +1258,14 @@ const output = path.join(root, "test-results/ui-review");
     await page.evaluate(() => {
       closeModal();
       window.savedPunchlineMachine = runMachine;
-      let first = true;
-      runMachine = async (id, reels, options) => {
-        if (!id.startsWith("hero-")) return savedPunchlineMachine(id,reels,options);
-        if (first) { first=false; return [{type:"trick",tier:1},{type:"blank",tier:1},{type:"blank",tier:1}]; }
-        await new Promise(resolve => window.releasePunchlinePreview=resolve);
-        return savedPunchlineMachine(id,reels,{results:[{type:"attack",tier:3},{type:"heal",tier:2},{type:"block",tier:2}]});
+      window.savedPunchlineFX = punchlineFX;
+      punchlineFX = async h => {
+        await savedPunchlineFX(h);
+        await new Promise(resolve => window.releasePunchlinePreview = resolve);
       };
+      runMachine = async (id, reels, options) => id.startsWith("hero-")
+        ? [{type:"trick",tier:1},{type:"blank",tier:1},{type:"blank",tier:1}]
+        : savedPunchlineMachine(id,reels,options);
       window.reviewPunchline = spin(0);
     });
     await page.waitForFunction(() => !!window.releasePunchlinePreview);
@@ -1274,7 +1274,7 @@ const output = path.join(root, "test-results/ui-review");
     await shot("86-punchline-toybox-390", true, "allow");
     await page.evaluate(() => { setPace("skip"); releasePunchlinePreview(); });
     await page.evaluate(() => window.reviewPunchline);
-    await page.evaluate(() => { runMachine=savedPunchlineMachine; });
+    await page.evaluate(() => { runMachine=savedPunchlineMachine; punchlineFX=savedPunchlineFX; });
     await page.setViewportSize({ width: 1920, height: 1080 });
     await page.evaluate(() => {
       newRun("fighter"); setPace("skip"); beginEncounter(false, {count:2});
@@ -1391,6 +1391,52 @@ const output = path.join(root, "test-results/ui-review");
     await shot("95-biome-guide-320");
     await page.evaluate(() => help("ice"));
     await shot("95-ice-guide-320");
+    }
+    // Current combat resources: real effects and current panels, not alternate art.
+    await page.setViewportSize({ width: 1920, height: 1080 });
+    await page.evaluate(() => {
+      closeModal(); closeSpotlight(); newRun("fighter"); setPace("1");
+      setPreference("combatEffects", "icons");
+      state.party.push(makeHero("Fang", "berserker"), makeHero("Quill", "jester"));
+      beginEncounter(false, {count:2}); finishOpeningRoll();
+      state.enemies.forEach(e => { e.hp=e.maxHp=1000; e.passive=null; e.countdown=30; });
+      state.party[1].hp=12; state.party[1].fury=18;
+      state.party[2].hp=12; state.party[2].anticipation=5;
+      grantStunWard(state.party[0]); grantStunWard(state.enemies[0]);
+      state.block=30; setEnemyBlock(20); render(); particles=[];
+    });
+    await shot("identity-caps-and-steady-1920");
+    await page.evaluate(() => {
+      const h=state.party[2];
+      h.reels=[
+        [{type:"attack",tier:3,weight:1}],
+        [{type:"heal",tier:2,weight:1},{type:"class",tier:1,weight:1,job:"jester"}],
+        [{type:"block",tier:2,weight:1}],
+      ];
+      state.block=8; render();
+      window.identityBurst=jesterMarkBurst(h);
+    });
+    await page.waitForSelector('.rolled-projectile[data-effect="punchline"]');
+    await shot("identity-six-mark-burst-1920", false, "allow");
+    await page.evaluate(() => window.identityBurst);
+    await page.evaluate(() => {
+      const h=state.party[1]; setPace("skip"); h.fury=0;
+      damageHero(1,4,"Blood Price",{piercing:true,selfInflicted:true,bloodPriceTier:4});
+      render();
+    });
+    await shot("identity-blood-price-fury-1920");
+    await page.evaluate(() => {healHero(1,5);render();});
+    await shot("identity-healing-spends-fury-1920");
+    await page.evaluate(() => {state.party[0].points=50;editor(0);});
+    await shot("identity-equal-face-workshop-1920");
+    await page.setViewportSize({width:320,height:844});
+    await page.locator('[data-editor-operation="replace"]').click();
+    await shot("identity-workshop-320");
+    await page.evaluate(() => {closeModal();help("combos");});
+    await shot("identity-mixed-builds-guide-320");
+    await page.setViewportSize({width:1280,height:800});
+    await page.evaluate(() => help("statuses"));
+    await shot("identity-steady-guide-1280");
     await page.setViewportSize({ width: 1920, height: 1080 });
     await page.evaluate(() => optionsPage("play"));
     const download = page.waitForEvent("download");
@@ -1407,7 +1453,7 @@ const output = path.join(root, "test-results/ui-review");
       ),
     };
     await fs.writeFile(
-      path.join(output, "report.json"),
+      path.join(output, process.env.UI_REVIEW_SCOPE === "identity" ? "identity-report.json" : "report.json"),
       JSON.stringify(report, null, 2) + "\n",
     );
     if (report.errors.length || report.externalRequests.length)
