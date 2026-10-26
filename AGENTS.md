@@ -115,3 +115,8 @@ well depth bonuses use shared helpers in hero-builds.js and AI forecasts.
 `ui/combat-life.js` / `.css` own character life, spring-box FX and concise
 artefact summaries. Keep finite FX cancellation-safe, tooltip badges intact,
 slider/reduced-motion support, and illustration transforms separate from hitboxes.
+
+Optional terrain motion is isolated in `ui/terrain-motion.css` and
+`docs/TERRAIN_MOTION.md`, with its own saved Display toggle and separate commit.
+Keep it cosmetic and independently reversible: animate revealed water/embers,
+never tile geometry, blocking boundaries, bridge decks, fog or gameplay data.

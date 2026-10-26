@@ -11793,6 +11793,132 @@ body.utility-open .status-motes i {
     display: none;
   }
 }
+
+/* OPTIONAL TERRAIN MOTION — presentation only, deliberately isolated for revert.
+ * Never change terrain icons, pathing, discovery state or map geometry here.
+ * Options > Display > Animated terrain controls only this sheet's new loops. */
+.tile.lava-tile > svg {
+  animation: none;
+}
+body.tile-motion-enabled .tile.water-block.river:not(.fog) > svg path,
+body.tile-motion-enabled .bridge-tile .bridge-water > path {
+  animation: terrain-river-current 3.2s ease-in-out infinite;
+  transform-origin: 50% 50%;
+}
+body.tile-motion-enabled .tile.water-block.river:not(.fog)::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  z-index: 1;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    116deg,
+    transparent 0 11px,
+    color-mix(in srgb, var(--water-ink) 18%, transparent) 12px 13px,
+    transparent 14px 24px
+  );
+  background-size: 24px 24px;
+  opacity: 0.55;
+  animation: terrain-current-glints 3s linear infinite;
+}
+body.tile-motion-enabled .tile.lava-tile:not(.fog)::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      circle at 25% 75%,
+      transparent 1px,
+      var(--lava-ink) 1.5px 2px,
+      transparent 2.6px
+    ),
+    radial-gradient(
+      circle at 68% 45%,
+      var(--lava-wash) 0 2px,
+      var(--lava-ink) 2.5px 3px,
+      transparent 3.6px
+    ),
+    radial-gradient(circle at 46% 20%, var(--lava-ink) 0 1px, transparent 1.6px);
+  box-shadow: inset 0 0 8px var(--lava-wash);
+  animation: terrain-lava-bubbles 3.6s ease-in-out infinite;
+}
+body.tile-motion-enabled
+  .tile.lava-tile:not(.fog)
+  > .lava-barrier
+  > path:last-child {
+  animation: terrain-lava-embers 2.8s ease-in-out infinite alternate;
+}
+body.tile-motion-enabled .tile:nth-child(3n)::after,
+body.tile-motion-enabled .tile:nth-child(3n) > svg path {
+  animation-delay: -1.1s;
+}
+body.tile-motion-enabled .tile:nth-child(5n)::after,
+body.tile-motion-enabled .tile:nth-child(5n) > svg path {
+  animation-delay: -2.2s;
+}
+@keyframes terrain-river-current {
+  0%,
+  100% {
+    translate: -1px 0;
+    opacity: 0.8;
+  }
+  50% {
+    translate: 1px -0.5px;
+    opacity: 1;
+  }
+}
+@keyframes terrain-current-glints {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 24px 0;
+  }
+}
+@keyframes terrain-lava-bubbles {
+  0%,
+  100% {
+    opacity: 0.18;
+    background-position: 0 3px;
+    scale: 0.94;
+  }
+  45% {
+    opacity: 0.8;
+    background-position: 0 -1px;
+    scale: 1;
+  }
+  65% {
+    opacity: 0.35;
+    background-position: 0 -3px;
+    scale: 1.02;
+  }
+}
+@keyframes terrain-lava-embers {
+  from {
+    opacity: 0.55;
+  }
+  to {
+    opacity: 1;
+    stroke: var(--gold);
+  }
+}
+body.utility-open .tile::after,
+body.utility-open .tile > svg path,
+body.utility-open .bridge-water > path {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  body.tile-motion-enabled .tile::after {
+    content: none !important;
+    animation: none !important;
+  }
+  body.tile-motion-enabled .tile > svg path,
+  body.tile-motion-enabled .bridge-water > path {
+    animation: none !important;
+  }
+}
 /* END GENERATED NOTEBOOK CSS */
     </style>
   </head>
@@ -21286,6 +21412,7 @@ function help(topic = "explore") {
         shake: 1,
         portraitMotion: 1,
         ambientEffects: true,
+        tileMotion: true,
         fullScreenEffects: true,
         skipCriticals: false,
         combatEffects: "icons",
@@ -21315,6 +21442,7 @@ function help(topic = "explore") {
         for (const key of [
           "muted",
           "ambientEffects",
+          "tileMotion",
           "fullScreenEffects",
           "skipCriticals",
           "punMode",
@@ -21337,6 +21465,7 @@ function help(topic = "explore") {
         const p = preferences();
         document.documentElement.style.setProperty("--scene-brightness", p.brightness);
         document.body.classList.toggle("ambient-disabled", !p.ambientEffects);
+        document.body.classList.toggle("tile-motion-enabled",p.tileMotion);
         let lighting = document.getElementById("screen-lighting");
         if (!lighting) {
           lighting = document.createElement("div");
@@ -30093,7 +30222,7 @@ function revealCriticalPayoff(region, details, multiplier) {
             ],
           )}<label>Animation speed<select id="option-speed">${["1", "2", "3", "5", "skip"].map((v) => `<option value="${v}" ${v === state.speed ? "selected" : ""}>${v === "skip" ? "Skip cinematics" : v + "×"}</option>`).join("")}</select></label>${check("skipCriticals", "Skip critical roll visuals", "Multipliers still roll and apply. Combat hits and event results remain visible.")}<label class="setting-check"><input type="checkbox" id="option-auto" ${state.autoresolve ? "checked" : ""}><span>Autoresolve battles<small>Choose heroes, targets and supplies automatically.</small></span></label><label class="setting-check"><input type="checkbox" id="option-autoplay" ${state.autoplay ? "checked" : ""}><span>Autoplay exploration<small>Explore, collect, upgrade and descend. Pair with Autofight for a hands-free run.</small></span></label><button id="option-reset-save" class="danger-button" ${busy ? 'disabled title="Finish the current journey or event first"' : ""}>Reset progress</button></div>`,
           audio: `<p class="settings-note">Sound starts after a click or key press. Audio pauses while this tab is hidden.</p><div class="settings-grid">${range("masterVolume", "Master volume", 0, 100)}${range("sfxVolume", "Sound effects", 0, 100)}${range("musicVolume", "Music", 0, 100)}${range("ambienceVolume", "Ambient sound", 0, 100)}${check("muted", "Mute all audio")}<button id="sound-preview">Test sound</button></div>`,
-          display: `<div class="settings-grid">${range("brightness", "Brightness", 50, 150)}${range("shake", "Shake magnitude", 0, 150)}${range("portraitMotion", "Character motion", 0, 150)}<div class="setting-stack">${check("ambientEffects", "Torchlight", "Ambient light at the page edges.")}${check("fullScreenEffects", "Full screen effects", "Edge flashes for wounds, healing, treasure and criticals.")}</div><label>Paper & ink<select id="option-palette">${["default", "dark", "warm"].map((v) => `<option value="${v}" ${v === state.palette ? "selected" : ""}>${v[0].toUpperCase() + v.slice(1)}</option>`).join("")}</select></label><button id="setting-fullscreen">${document.fullscreenElement ? "Leave fullscreen" : "Enter fullscreen"}</button><button id="shake-preview">Test shake</button></div>`,
+          display: `<div class="settings-grid">${range("brightness", "Brightness", 50, 150)}${range("shake", "Shake magnitude", 0, 150)}${range("portraitMotion", "Character motion", 0, 150)}<div class="setting-stack">${check("ambientEffects", "Torchlight", "Ambient light at the page edges.")}${check("tileMotion", "Animated terrain", "River flow and lava bubbles.")}${check("fullScreenEffects", "Full screen effects", "Edge flashes for wounds, healing, treasure and criticals.")}</div><label>Paper & ink<select id="option-palette">${["default", "dark", "warm"].map((v) => `<option value="${v}" ${v === state.palette ? "selected" : ""}>${v[0].toUpperCase() + v.slice(1)}</option>`).join("")}</select></label><button id="setting-fullscreen">${document.fullscreenElement ? "Leave fullscreen" : "Enter fullscreen"}</button><button id="shake-preview">Test shake</button></div>`,
           future: `<p class="settings-note">Preview settings: selections are saved, but resolution, translation and desktop display controls are not active yet.</p><div class="settings-grid">${select(
             "resolution",
             "Resolution (preview)",
