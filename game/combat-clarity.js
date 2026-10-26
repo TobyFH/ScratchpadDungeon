@@ -38,7 +38,25 @@ function reelLockMarkup(h) {
       : !openingEligible(h)
         ? "surprise"
         : "shadow";
+  return machineLockMarkup(kind, reason);
+}
+function machineLockMarkup(kind, reason) {
   return `<div class="reel-unavailable ${kind}" role="status">${icon(kind === "stun" ? "stun" : kind === "shadow" ? "shadow" : kind === "fallen" ? "skull" : "surprise")}<strong>${reason}</strong></div>`;
+}
+function enemyReelLockMarkup(e) {
+  return e?.hp > 0 && e.stun
+    ? machineLockMarkup("stun", "STUNNED")
+    : "";
+}
+// Called by status-only updates too: recovery must remove the veil immediately,
+// without rebuilding a machine that might be spinning or holding its result.
+function syncEnemyReelLock(e, root) {
+  const machine = root.querySelector(".machine-shell");
+  if (!machine) return;
+  const lock = machine.querySelector(":scope > .reel-unavailable");
+  if (e.hp > 0 && e.stun) {
+    if (!lock) machine.insertAdjacentHTML("beforeend", enemyReelLockMarkup(e));
+  } else lock?.remove();
 }
 let soloStunTimer = null;
 function scheduleStunRecovery() {

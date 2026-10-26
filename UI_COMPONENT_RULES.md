@@ -51,6 +51,13 @@ Regenerate the standalone HTML with `npm run build:ui`.
   headings use `fitText()`; do not abbreviate away enemy identity or decisions.
 - Keep native labels, accessible names, aria-pressed target states, keyboard
   navigation and a conspicuous focus outline. Colour must not be the only cue.
+- Options pages reserve a fixed `.settings-panel`. For unequal groups of
+  controls, use `.settings-columns` with independent `.settings-column` stacks;
+  don't let a tall checkbox group stretch a neighbouring slider's grid row.
+  Keep every control inside the panel and clear of its stationary footer.
+- Disabled combat reels use shared `machineLockMarkup()` and `.reel-unavailable`
+  overlays. Enemy status-only refreshes must add/remove their lock without
+  replacing the reel face or cancelling its current result/animation.
 - Style native `select option` backgrounds and text explicitly. Closed-select
   contrast does not prove expanded-menu contrast; check both in all palettes.
 - Retain all `id`, `data-*` hooks and animation classes used by the game and

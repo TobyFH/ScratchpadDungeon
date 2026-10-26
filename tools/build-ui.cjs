@@ -91,6 +91,7 @@ for (const [label, file] of [
   ["COMBAT CLARITY", "game/combat-clarity.js"],
   ["EXPLORATION RULES", "game/exploration-rules.js"],
   ["REWARD AUDIO", "ui/reward-audio.js"],
+  ["MUSIC", "ui/music.js"],
   ["NOTEBOOK PAGES", "ui/notebook-pages.js"],
   ["COMBAT LIFE", "ui/combat-life.js"],
   ["FIELD GUIDE", "ui/field-guide.js"],

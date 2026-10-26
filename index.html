@@ -7700,23 +7700,44 @@ body[data-palette="warm"] {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px 24px;
 }
-.settings-grid > label {
+.settings-grid > label,
+.settings-column > label {
   display: flex;
   flex-direction: column;
   gap: 6px;
   font-size: 20px;
   min-width: 0;
 }
-.settings-grid select {
+.settings-grid select,
+.settings-column select {
   width: 100%;
   font-size: 18px;
   min-height: 35px;
 }
-.settings-grid .setting-check {
+.settings-grid .setting-check,
+.settings-column .setting-check {
   flex-direction: row;
   align-items: start;
   gap: 10px;
 }
+/* Independent stacks avoid stretching sliders to a neighbouring checkbox group.
+ * Keep all Display controls inside the shared reserved options-page height. */
+.settings-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 24px;
+}
+.settings-column {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  min-width: 0;
+}
+.settings-column .setting-check > span { min-width: 0; }
+.settings-column .setting-check small { font-size: 14px; }
+.setting-actions { display: grid; gap: 10px; }
+.setting-actions button { width: 100%; min-width: 0; }
 .setting-check input {
   margin-top: 5px;
   width: 18px;
@@ -7753,12 +7774,18 @@ body[data-palette="warm"] {
   .settings-grid {
     gap: 16px 14px;
   }
-  .settings-grid > label {
+  .settings-grid > label,
+  .settings-column > label {
     font-size: 17px;
   }
-  .settings-grid select {
+  .settings-grid select,
+  .settings-column select {
     font-size: 16px;
   }
+  .settings-columns { gap: 14px; }
+  .settings-column { gap: 12px; }
+  .settings-column .setting-check { gap: 6px; }
+  .settings-column .setting-check small { font-size: 13px; }
   .setting-check small,
   .settings-note {
     font-size: 14px;
@@ -8059,13 +8086,6 @@ body[data-palette="warm"] {
 }
 .camp-grid:has(.camp-class-art) .camp-card {
   text-align: center;
-}
-.setting-stack {
-  display: grid;
-  gap: 8px;
-}
-.setting-stack .setting-check small {
-  font-size: 13px;
 }
 /* Event overlay is paint-only. Keep the centre clear and all inputs accessible. */
 #screen-edge-fx {
@@ -11428,11 +11448,12 @@ body[data-motion="off"] .punchline-ready .machine-face { animation: none; }
 .hero-controls .machine-shell { position:relative; }
 .reel-unavailable,.hero-notice { position:absolute;inset:3px 28px 22px 3px;z-index:7;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;pointer-events:none;text-align:center;padding:4px;background:color-mix(in srgb,var(--paper) 91%,transparent);border:1px dashed var(--ink); }
 .reel-unavailable svg { width:32px;height:32px; }
+.paired-enemies .reel-unavailable svg { width:22px;height:22px;flex:none; }
 .reel-unavailable strong {font-size:16px;line-height:1.12;}
 .reel-unavailable.stun { color:var(--gold); }
 .reel-unavailable.surprise { color:var(--red); }
 .reel-unavailable.shadow { color:#77628d;background:color-mix(in srgb,var(--paper) 85%,#77628d); }
-.hero:has(.reel-unavailable) .machine-face {filter:blur(1px);opacity:.32;}
+.machine-shell:has(> .reel-unavailable) > .machine-face {filter:blur(1px);opacity:.32;}
 .portrait:has(.stun-badge) .stun-badge {position:absolute;inset:20% 18%;width:auto;height:auto;z-index:5;background:var(--paper);border:2px dashed var(--gold);}
 .portrait .stun-badge svg { width:100%;height:100%; }
 .hero.has-initiative .machine-shell { outline:2px dashed var(--gold);outline-offset:2px;box-shadow:0 0 10px color-mix(in srgb,var(--gold) 35%,transparent); }
@@ -15537,7 +15558,7 @@ function wardActive(e = actingEnemy) {
             : enemy
               ? "Enemy reels"
               : "Fast-forward this slot machine";
-        return `<div class="machine-shell ${one ? "one-reel" : ""}" id="machine-${id}" data-machine="${id}">${title ? `<div class="machine-title">${title}</div>` : ""}<button class="machine-face" data-roll-area="${id}" aria-label="${label}" ${disabled ? "disabled" : ""}>${last.map((s, k) => `<span class="slot-window ${owner?.blackout?.includes(k) ? "blacked-out" : owner?.crystalLocks?.includes(k) ? "gem-locked" : ""} ${owner?.shadowLocks?.includes(k) ? "shadow-locked" : ""} ${owner?.reelGifts?.some((g) => g.reel === k && g.uses > 0) ? "gifted-reel" : ""}" data-reel="${k}" ${active ? `data-tooltip="${escapeHTML(state.party[hero].blackout?.includes(k) ? "Pencil blackout: this reel does nothing on this roll, then clears." : state.party[hero].crystalLocks?.includes(k) ? "Crystal seal: this reel is empty for one roll. Rolling this hero cracks its blocking gems." : faceDescription(s, state.party[hero]))}"` : ""}><span class="symbol-track single"><span class="slot-symbol">${symbolMarkup(s)}</span></span></span>`).join("")}</button><button class="lever" ${active ? `data-spin="${hero}"` : `data-fast-machine="${id}"`} ${disabled ? "disabled" : ""} aria-label="${active ? "Pull " + state.party[hero].name + "’s slot handle" : "Fast-forward " + (enemy ? "enemy" : "event") + " reels"}">${leverArt()}</button>${active ? reelLockMarkup(owner) : ""}<div class="machine-footnote">${active ? (owner.initiative && state.opening?.firstRoll ? "INITIATIVE · act first for +25%" : ["ranger", "berserker", "jester"].includes(state.party[hero].job) ? rangerAimMarkup(state.party[hero]) : state.enemy ? (state.party[hero].stun ? "Stunned · waiting for recovery" : "Pull handle to spin") : "Waiting for an encounter") : enemy ? "" : "Click during the roll to land it"}</div></div>`;
+        return `<div class="machine-shell ${one ? "one-reel" : ""}" id="machine-${id}" data-machine="${id}">${title ? `<div class="machine-title">${title}</div>` : ""}<button class="machine-face" data-roll-area="${id}" aria-label="${label}" ${disabled ? "disabled" : ""}>${last.map((s, k) => `<span class="slot-window ${owner?.blackout?.includes(k) ? "blacked-out" : owner?.crystalLocks?.includes(k) ? "gem-locked" : ""} ${owner?.shadowLocks?.includes(k) ? "shadow-locked" : ""} ${owner?.reelGifts?.some((g) => g.reel === k && g.uses > 0) ? "gifted-reel" : ""}" data-reel="${k}" ${active ? `data-tooltip="${escapeHTML(state.party[hero].blackout?.includes(k) ? "Pencil blackout: this reel does nothing on this roll, then clears." : state.party[hero].crystalLocks?.includes(k) ? "Crystal seal: this reel is empty for one roll. Rolling this hero cracks its blocking gems." : faceDescription(s, state.party[hero]))}"` : ""}><span class="symbol-track single"><span class="slot-symbol">${symbolMarkup(s)}</span></span></span>`).join("")}</button><button class="lever" ${active ? `data-spin="${hero}"` : `data-fast-machine="${id}"`} ${disabled ? "disabled" : ""} aria-label="${active ? "Pull " + state.party[hero].name + "’s slot handle" : "Fast-forward " + (enemy ? "enemy" : "event") + " reels"}">${leverArt()}</button>${active ? reelLockMarkup(owner) : enemy ? enemyReelLockMarkup(owner) : ""}<div class="machine-footnote">${active ? (owner.initiative && state.opening?.firstRoll ? "INITIATIVE · act first for +25%" : ["ranger", "berserker", "jester"].includes(state.party[hero].job) ? rangerAimMarkup(state.party[hero]) : state.enemy ? (state.party[hero].stun ? "Stunned · waiting for recovery" : "Pull handle to spin") : "Waiting for an encounter") : enemy ? "" : "Click during the roll to land it"}</div></div>`;
       }
       function render() {
         statusTooltip.hidden = true;
@@ -17575,6 +17596,7 @@ function encounterTags(enemies) {
                   (foe.countdown === 1 ? " spin" : " spins");
           root.classList.toggle("enemy-corpse", foe.hp <= 0);
           const intent=root.querySelector(".enemy-intent");if(intent)intent.textContent=enemyIntent(foe);
+          syncEnemyReelLock(foe, root);
           const caption = root.querySelector(".machine-title");
           if (caption) caption.innerHTML = enemyMachineCaption(foe);
         }
@@ -18002,7 +18024,7 @@ function encounterTags(enemies) {
           root?.classList.toggle("poisoned", e.hp > 0 && !!e.poison);
           root?.classList.toggle("fragment-enemy", !!e.fragment);
           root?.classList.toggle("fuse-burning", e.hp > 0 && isExploder(e));
-          if(root)root.dataset.idle=enemyIdleStyle(e);
+          if(root) { root.dataset.idle=enemyIdleStyle(e); syncEnemyReelLock(e, root); }
         });
       }
 
@@ -21681,88 +21703,139 @@ const SOUND_SAMPLES = Object.freeze({
           cooldown: 80,
         },
       };
-      // Original, deterministic miniature score: plucked melody, low strings
-      // and an airy harmony. MIDI pitches keep the composition easy to edit.
-      const MUSIC_SCORE = Object.freeze({
-        stepSeconds: 0.42,
-        chords: [
-          [50, 53, 57],
-          [46, 50, 53],
-          [48, 52, 55],
-          [45, 49, 52],
-        ],
-        melody: [
-          62,
-          null,
-          65,
-          69,
-          67,
-          65,
-          62,
-          null,
-          60,
-          62,
-          65,
-          null,
-          69,
-          67,
-          65,
-          null,
-          65,
-          null,
-          69,
-          70,
-          69,
-          65,
-          62,
-          null,
-          60,
-          null,
-          62,
-          65,
-          64,
-          61,
-          57,
-          null,
-          74,
-          69,
-          65,
-          null,
-          67,
-          69,
-          65,
-          62,
-          65,
-          62,
-          60,
-          null,
-          62,
-          65,
-          69,
-          null,
-          70,
-          69,
-          65,
-          null,
-          67,
-          65,
-          62,
-          60,
-          64,
-          null,
-          61,
-          57,
-          61,
-          64,
-          69,
-          null,
-        ],
-      });
-      const BATTLE_MUSIC_SCORE = Object.freeze({
-        stepSeconds:.29,
-        chords:[[50,53,57],[48,52,55],[46,50,53],[45,49,52]],
-        melody:[62,65,69,null,62,65,70,69,60,64,67,null,60,64,69,67,58,62,65,null,58,62,67,65,57,61,64,null,57,64,69,null],
-      });
+      // BEGIN GENERATED MUSIC
+// Original, deterministic miniature score: plucked melody, low strings
+// and an airy harmony. MIDI pitches keep the composition easy to edit.
+const MUSIC_SCORE = Object.freeze({
+  stepSeconds: 0.42,
+  chords: [
+    [50, 53, 57],
+    [46, 50, 53],
+    [48, 52, 55],
+    [45, 49, 52],
+  ],
+  melody: [
+    62,
+    null,
+    65,
+    69,
+    67,
+    65,
+    62,
+    null,
+    60,
+    62,
+    65,
+    null,
+    69,
+    67,
+    65,
+    null,
+    65,
+    null,
+    69,
+    70,
+    69,
+    65,
+    62,
+    null,
+    60,
+    null,
+    62,
+    65,
+    64,
+    61,
+    57,
+    null,
+    74,
+    69,
+    65,
+    null,
+    67,
+    69,
+    65,
+    62,
+    65,
+    62,
+    60,
+    null,
+    62,
+    65,
+    69,
+    null,
+    70,
+    69,
+    65,
+    null,
+    67,
+    65,
+    62,
+    60,
+    64,
+    null,
+    61,
+    57,
+    61,
+    64,
+    69,
+    null,
+  ],
+});
+const BATTLE_MUSIC_SCORE = Object.freeze({
+  stepSeconds: .24,
+  chords:[[50,53,57],[48,52,55],[46,50,53],[45,49,52]],
+  melody:[62,65,69,null,62,65,70,69,60,64,67,null,60,64,69,67,58,62,65,null,58,62,67,65,57,61,64,null,57,64,69,null],
+});
+
+// Deterministic arrangements feed the existing pooled music bus. Short bass
+// notes leave room for battle cries; no gameplay randomness or external audio.
+function musicVoices(scene, index) {
+  const battle = scene === "battle",
+    score = battle ? BATTLE_MUSIC_SCORE : MUSIC_SCORE,
+    step = index % score.melody.length,
+    chord = score.chords[Math.floor(step / (battle ? 8 : 16)) % score.chords.length],
+    pitch = score.melody[step],
+    hz = (midi) => 440 * Math.pow(2, (midi - 69) / 12),
+    parts = [];
+  const add = (part, cue) => parts.push({ part, cue });
+  if (pitch)
+    add("melody", {
+      frequencies: [hz(pitch)], duration: battle ? .34 : .75,
+      gain: battle ? .038 : .045, type: "triangle", filter: battle ? 1800 : 1500,
+    });
+  if (!battle) {
+    // Exploration retains its existing quiet plucks, drone and harmony.
+    if (step % 4 === 0) {
+      add("bass", { frequencies: [hz(chord[0] - 12)], duration: 1.55,
+        gain: .035, type: "sine", attack: .08 });
+      add("harmony", { frequencies: chord.map((n) => hz(n + 12)),
+        duration: 1.65, gain: .012, type: "sine", attack: .22 });
+    }
+    return parts;
+  }
+  const accent = step % 8;
+  add("bass", {
+    frequencies: [hz(chord[0] - 12 + (accent === 3 || accent === 7 ? 7 : 0))],
+    duration: .29, gain: .095, type: "triangle", filter: 650, attack: .008,
+  });
+  if ([0, 3, 4, 6].includes(accent))
+    add("kick", { frequencies: [100], contour: [1, .56, .36],
+      duration: .2, gain: .12, type: "sine", attack: .004 });
+  if (accent === 2 || accent === 6)
+    add("snare", { frequencies: [120], duration: .13, gain: .038,
+      noise: true, noiseFilter: true, filter: 2200, attack: .004 });
+  else if (accent % 2)
+    add("brush", { frequencies: [180], duration: .065, gain: .013,
+      noise: true, noiseFilter: true, filter: 6000, attack: .003 });
+  if (accent === 0) {
+    add("sub", { frequencies: [hz(chord[0] - 24)], duration: .7,
+      gain: .075, type: "sine", attack: .018 });
+    add("harmony", { frequencies: chord.map((n) => hz(n)), duration: .85,
+      gain: .012, type: "triangle", filter: 1100, attack: .06 });
+  }
+  return parts;
+}
+// END GENERATED MUSIC
       // Each species/class has its own short synthesised call, never a speech
       // recording. Contours are frequency ratios; death stretches/drops the call.
       const CRY_PROFILES = {
@@ -21814,6 +21887,7 @@ const SOUND_SAMPLES = Object.freeze({
           played: 0,
           peakVoices: 0,
           musicNotes: 0,
+          musicParts: {},
           cries: 0,
           lastCry: null,
           samplePlays: {},
@@ -21935,7 +22009,7 @@ const SOUND_SAMPLES = Object.freeze({
                   );
                 });
             }
-            if (cue.filter && !cue.noise) {
+            if (cue.filter && (!cue.noise || cue.noiseFilter)) {
               const filter = context.createBiquadFilter();
               filter.type = "lowpass";
               filter.frequency.value = cue.filter;
@@ -22071,60 +22145,23 @@ const SOUND_SAMPLES = Object.freeze({
           if (!context || document.hidden || context.state !== "running") return;
           if (nextBeat < context.currentTime - 0.3)
             nextBeat = context.currentTime + 0.04;
-          const hz = (midi) => 440 * Math.pow(2, (midi - 69) / 12);
           const scene = state?.enemy ? "battle" : "exploration";
           const score = scene === "battle" ? BATTLE_MUSIC_SCORE : MUSIC_SCORE;
-          if (stats.musicScene !== scene) {stats.musicScene=scene;note=0;}
+          if (stats.musicScene !== scene) { stats.musicScene = scene; note = 0; }
           while (nextBeat < context.currentTime + 0.28) {
             const step = note++ % score.melody.length,
-              beat = nextBeat,
-              chord = score.chords[Math.floor(step / (scene === "battle" ? 8 : 16)) % score.chords.length],
-              pitch = score.melody[step];
-            if (
-              pitch &&
-              voice(
-                {
-                  frequencies: [hz(pitch)],
-                  duration: 0.75,
-                  gain: 0.045,
-                  type: "triangle",
-                  filter: 1500,
-                },
-                "music",
-                beat,
-              )
-            )
-              stats.musicNotes++;
-            if (step % 4 === 0) {
-              voice(
-                {
-                  frequencies: [hz(chord[0] - 12)],
-                  duration: 1.55,
-                  gain: 0.035,
-                  type: "sine",
-                  attack: 0.08,
-                },
-                "music",
-                beat,
-              );
-              voice(
-                {
-                  frequencies: chord.map((n) => hz(n + 12)),
-                  duration: 1.65,
-                  gain: 0.012,
-                  type: "sine",
-                  attack: 0.22,
-                },
-                "music",
-                beat,
-              );
+              beat = nextBeat;
+            for (const { part, cue } of musicVoices(scene, step)) {
+              if (voice(cue, "music", beat)) {
+                if (part === "melody") stats.musicNotes++;
+                stats.musicParts[part] = (stats.musicParts[part] || 0) + 1;
+              }
+            }
+            if (step % 4 === 0)
               voice(
                 { frequencies: [60], duration: 1.7, gain: 0.025, noise: true },
-                "ambience",
-                beat,
+                "ambience", beat,
               );
-            }
-            if (scene === "battle" && step % 2 === 0) voice({frequencies:[step%4?115:70],duration:.16,gain:.025,noise:true,filter:550},"music",beat);
             if (step % 8 === 0) {
               const depth = Math.min(1,Math.max(0,(state?.depth||1)-1)/9);
               stats.ambienceDepth=depth;
@@ -25944,7 +25981,25 @@ function reelLockMarkup(h) {
       : !openingEligible(h)
         ? "surprise"
         : "shadow";
+  return machineLockMarkup(kind, reason);
+}
+function machineLockMarkup(kind, reason) {
   return `<div class="reel-unavailable ${kind}" role="status">${icon(kind === "stun" ? "stun" : kind === "shadow" ? "shadow" : kind === "fallen" ? "skull" : "surprise")}<strong>${reason}</strong></div>`;
+}
+function enemyReelLockMarkup(e) {
+  return e?.hp > 0 && e.stun
+    ? machineLockMarkup("stun", "STUNNED")
+    : "";
+}
+// Called by status-only updates too: recovery must remove the veil immediately,
+// without rebuilding a machine that might be spinning or holding its result.
+function syncEnemyReelLock(e, root) {
+  const machine = root.querySelector(".machine-shell");
+  if (!machine) return;
+  const lock = machine.querySelector(":scope > .reel-unavailable");
+  if (e.hp > 0 && e.stun) {
+    if (!lock) machine.insertAdjacentHTML("beforeend", enemyReelLockMarkup(e));
+  } else lock?.remove();
 }
 let soloStunTimer = null;
 function scheduleStunRecovery() {
@@ -30222,7 +30277,7 @@ function revealCriticalPayoff(region, details, multiplier) {
             ],
           )}<label>Animation speed<select id="option-speed">${["1", "2", "3", "5", "skip"].map((v) => `<option value="${v}" ${v === state.speed ? "selected" : ""}>${v === "skip" ? "Skip cinematics" : v + "×"}</option>`).join("")}</select></label>${check("skipCriticals", "Skip critical roll visuals", "Multipliers still roll and apply. Combat hits and event results remain visible.")}<label class="setting-check"><input type="checkbox" id="option-auto" ${state.autoresolve ? "checked" : ""}><span>Autoresolve battles<small>Choose heroes, targets and supplies automatically.</small></span></label><label class="setting-check"><input type="checkbox" id="option-autoplay" ${state.autoplay ? "checked" : ""}><span>Autoplay exploration<small>Explore, collect, upgrade and descend. Pair with Autofight for a hands-free run.</small></span></label><button id="option-reset-save" class="danger-button" ${busy ? 'disabled title="Finish the current journey or event first"' : ""}>Reset progress</button></div>`,
           audio: `<p class="settings-note">Sound starts after a click or key press. Audio pauses while this tab is hidden.</p><div class="settings-grid">${range("masterVolume", "Master volume", 0, 100)}${range("sfxVolume", "Sound effects", 0, 100)}${range("musicVolume", "Music", 0, 100)}${range("ambienceVolume", "Ambient sound", 0, 100)}${check("muted", "Mute all audio")}<button id="sound-preview">Test sound</button></div>`,
-          display: `<div class="settings-grid">${range("brightness", "Brightness", 50, 150)}${range("shake", "Shake magnitude", 0, 150)}${range("portraitMotion", "Character motion", 0, 150)}<div class="setting-stack">${check("ambientEffects", "Torchlight", "Ambient light at the page edges.")}${check("tileMotion", "Animated terrain", "River flow and lava bubbles.")}${check("fullScreenEffects", "Full screen effects", "Edge flashes for wounds, healing, treasure and criticals.")}</div><label>Paper & ink<select id="option-palette">${["default", "dark", "warm"].map((v) => `<option value="${v}" ${v === state.palette ? "selected" : ""}>${v[0].toUpperCase() + v.slice(1)}</option>`).join("")}</select></label><button id="setting-fullscreen">${document.fullscreenElement ? "Leave fullscreen" : "Enter fullscreen"}</button><button id="shake-preview">Test shake</button></div>`,
+          display: `<div class="settings-columns"><div class="settings-column">${range("brightness", "Brightness", 50, 150)}${range("shake", "Shake magnitude", 0, 150)}${range("portraitMotion", "Character motion", 0, 150)}<label>Paper & ink<select id="option-palette">${["default", "dark", "warm"].map((v) => `<option value="${v}" ${v === state.palette ? "selected" : ""}>${v[0].toUpperCase() + v.slice(1)}</option>`).join("")}</select></label></div><div class="settings-column">${check("ambientEffects", "Torchlight", "Ambient light at the page edges.")}${check("tileMotion", "Animated terrain", "River flow and lava bubbles.")}${check("fullScreenEffects", "Full screen effects", "Edge flashes for damage, healing, gold and criticals.")}<div class="setting-actions"><button id="setting-fullscreen">${document.fullscreenElement ? "Leave fullscreen" : "Enter fullscreen"}</button><button id="shake-preview">Test shake</button></div></div></div>`,
           future: `<p class="settings-note">Preview settings: selections are saved, but resolution, translation and desktop display controls are not active yet.</p><div class="settings-grid">${select(
             "resolution",
             "Resolution (preview)",

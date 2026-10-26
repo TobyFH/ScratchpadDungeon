@@ -742,7 +742,14 @@ test("Heroic survival keeps a large notice through rendering and waits for expli
 
 test("music switches battle scores and depth ambience, while all existing volume buses still mute", async (t) => {
   const p = await game(t);
-  await p.mouse.click(8, 8);
+  // Start audio through its real controls, not an unlabelled desk coordinate.
+  // Chromium may defer Web Audio activation; scene assertions begin only once
+  // the context is actually ready, independently of parallel browser workload.
+  await p.bringToFront();
+  await p.locator("#options-tab").click();
+  await p.locator("#tab-audio").click();
+  await p.locator("#sound-preview").click();
+  await p.waitForFunction(() => GameSound.context?.state === "running");
   await p.evaluate(async () => {
     await GameSound.unlock();
     setPreference("musicVolume", 0.25);

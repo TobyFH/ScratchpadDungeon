@@ -1907,23 +1907,44 @@ body[data-palette="warm"] {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px 24px;
 }
-.settings-grid > label {
+.settings-grid > label,
+.settings-column > label {
   display: flex;
   flex-direction: column;
   gap: 6px;
   font-size: 20px;
   min-width: 0;
 }
-.settings-grid select {
+.settings-grid select,
+.settings-column select {
   width: 100%;
   font-size: 18px;
   min-height: 35px;
 }
-.settings-grid .setting-check {
+.settings-grid .setting-check,
+.settings-column .setting-check {
   flex-direction: row;
   align-items: start;
   gap: 10px;
 }
+/* Independent stacks avoid stretching sliders to a neighbouring checkbox group.
+ * Keep all Display controls inside the shared reserved options-page height. */
+.settings-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 24px;
+}
+.settings-column {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  min-width: 0;
+}
+.settings-column .setting-check > span { min-width: 0; }
+.settings-column .setting-check small { font-size: 14px; }
+.setting-actions { display: grid; gap: 10px; }
+.setting-actions button { width: 100%; min-width: 0; }
 .setting-check input {
   margin-top: 5px;
   width: 18px;
@@ -1960,12 +1981,18 @@ body[data-palette="warm"] {
   .settings-grid {
     gap: 16px 14px;
   }
-  .settings-grid > label {
+  .settings-grid > label,
+  .settings-column > label {
     font-size: 17px;
   }
-  .settings-grid select {
+  .settings-grid select,
+  .settings-column select {
     font-size: 16px;
   }
+  .settings-columns { gap: 14px; }
+  .settings-column { gap: 12px; }
+  .settings-column .setting-check { gap: 6px; }
+  .settings-column .setting-check small { font-size: 13px; }
   .setting-check small,
   .settings-note {
     font-size: 14px;
@@ -2266,13 +2293,6 @@ body[data-palette="warm"] {
 }
 .camp-grid:has(.camp-class-art) .camp-card {
   text-align: center;
-}
-.setting-stack {
-  display: grid;
-  gap: 8px;
-}
-.setting-stack .setting-check small {
-  font-size: 13px;
 }
 /* Event overlay is paint-only. Keep the centre clear and all inputs accessible. */
 #screen-edge-fx {
@@ -5635,11 +5655,12 @@ body[data-motion="off"] .punchline-ready .machine-face { animation: none; }
 .hero-controls .machine-shell { position:relative; }
 .reel-unavailable,.hero-notice { position:absolute;inset:3px 28px 22px 3px;z-index:7;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;pointer-events:none;text-align:center;padding:4px;background:color-mix(in srgb,var(--paper) 91%,transparent);border:1px dashed var(--ink); }
 .reel-unavailable svg { width:32px;height:32px; }
+.paired-enemies .reel-unavailable svg { width:22px;height:22px;flex:none; }
 .reel-unavailable strong {font-size:16px;line-height:1.12;}
 .reel-unavailable.stun { color:var(--gold); }
 .reel-unavailable.surprise { color:var(--red); }
 .reel-unavailable.shadow { color:#77628d;background:color-mix(in srgb,var(--paper) 85%,#77628d); }
-.hero:has(.reel-unavailable) .machine-face {filter:blur(1px);opacity:.32;}
+.machine-shell:has(> .reel-unavailable) > .machine-face {filter:blur(1px);opacity:.32;}
 .portrait:has(.stun-badge) .stun-badge {position:absolute;inset:20% 18%;width:auto;height:auto;z-index:5;background:var(--paper);border:2px dashed var(--gold);}
 .portrait .stun-badge svg { width:100%;height:100%; }
 .hero.has-initiative .machine-shell { outline:2px dashed var(--gold);outline-offset:2px;box-shadow:0 0 10px color-mix(in srgb,var(--gold) 35%,transparent); }

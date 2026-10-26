@@ -120,3 +120,9 @@ Optional terrain motion is isolated in `ui/terrain-motion.css` and
 `docs/TERRAIN_MOTION.md`, with its own saved Display toggle and separate commit.
 Keep it cosmetic and independently reversible: animate revealed water/embers,
 never tile geometry, blocking boundaries, bridge decks, fog or gameplay data.
+
+Original score data and deterministic music arrangement live in `ui/music.js`,
+embedded by the builder. `GameSound` in index.html schedules those cues through
+its existing pooled music bus, gain controls and limiter; never use gameplay RNG
+for composition. See `docs/BATTLE_POLISH.md` for Display layout and shared stun
+reel presentation contracts and their browser checks.
