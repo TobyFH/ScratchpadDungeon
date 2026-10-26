@@ -4,12 +4,18 @@
 saved preference, independent of Character motion and Torchlight. Reduced-motion
 also disables these loops. Skip cinematics leaves this ambient scenery running.
 
-**Revert only this pass:** revert the commit named
-`Add optional, independently reversible terrain motion`. It comes after the
-support/Ranger/character-life commit. Reverting it removes only the new sheet,
-its display preference/integration, this note and its tests. It does not remove
-Ranger tuning, late recovery, treasure layout fixes or character animation.
-NormalisePreferences safely ignores a saved setting after its code is reverted.
+**Source boundary:** the original isolated motion pass is commit `7ea1805`,
+`Add optional, independently reversible terrain motion`. It introduced only this
+sheet, its saved preference/integration and terrain-specific documentation/tests.
+Later Display layout work retains that separate ownership.
+
+**Undo only the later water-speed adjustment:** revert the commit named
+`Quicken water currents independently`. River strokes return from 2.6s to 3.2s
+and the current sheen from 2.4s to 3s; lava is unchanged. This commit contains no
+music, combat, status or options-layout changes. To stop all new terrain motion
+immediately, use the saved Animated terrain switch above. A complete source
+removal also needs the builder entry and the Display preference removed; keep
+support, Ranger and character-life sources intact.
 
 `ui/terrain-motion.css` contains every new terrain animation. The builder embeds
 it into the standalone HTML; no new asset, art path, random call, map-generation
