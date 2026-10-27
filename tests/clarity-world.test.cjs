@@ -780,10 +780,11 @@ test("music switches battle scores and depth ambience, while all existing volume
   const r = await p.evaluate(() => ({
     gains: GameSound.gains,
     samples: GameSound.samplesReady,
+    expectedSamples: Object.keys(SFX_ASSETS).length,
   }));
   assert.ok(r.gains.music < 0.0001);
   assert.ok(r.gains.ambience < 0.0001);
-  assert.equal(r.samples, 5);
+  assert.equal(r.samples, r.expectedSamples);
 });
 
 test("a found high-level Jester preserves permanent mysteries and Punchline cannot repeat the Pennant", async (t) => {

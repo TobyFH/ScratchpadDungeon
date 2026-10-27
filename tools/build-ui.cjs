@@ -3,6 +3,8 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const root = path.resolve(__dirname, "..");
+const { loadAudioBank, credits } = require("./audio-bank.cjs");
+const { bank: audioBank } = loadAudioBank();
 const read = (name) => fs.readFileSync(path.join(root, name), "utf8");
 const assets = (name) => {
   if (!/^[\w./-]+$/.test(name) || name.includes(".."))
@@ -64,12 +66,21 @@ embed(
   "// END GENERATED CAMP PROGRESSION",
   read("game/progression.js"),
 );
+let audioTemplate = read("ui/audio-samples.js");
+for (const [token, data] of [
+  ["/* @audioAssets */ {}", Object.fromEntries(Object.entries(audioBank.assets).map(([id, asset]) => [id, {
+    src: assets(asset.path.replace(/^ui\/assets\//, "")), description: asset.description,
+  }]))],
+  ["/* @audioCues */ {}", audioBank.cues],
+  ["/* @audioCredits */ {}", credits(audioBank)],
+]) {
+  if (audioTemplate.split(token).length !== 2) throw Error(`Missing or duplicate audio template marker: ${token}`);
+  audioTemplate = audioTemplate.replace(token, JSON.stringify(data));
+}
 embed(
   "// BEGIN GENERATED AUDIO SAMPLES",
   "// END GENERATED AUDIO SAMPLES",
-  read("ui/audio-samples.js").replace(/@asset\(([^)]+)\)/g, (_, asset) =>
-    assets(asset),
-  ),
+  audioTemplate,
 );
 for (const [label, file] of [
   ["BALANCE", "game/balance.js"],
@@ -92,6 +103,7 @@ for (const [label, file] of [
   ["EXPLORATION RULES", "game/exploration-rules.js"],
   ["REWARD AUDIO", "ui/reward-audio.js"],
   ["MUSIC", "ui/music.js"],
+  ["AUDIO ENGINE", "ui/audio-engine.js"],
   ["NOTEBOOK PAGES", "ui/notebook-pages.js"],
   ["COMBAT LIFE", "ui/combat-life.js"],
   ["FIELD GUIDE", "ui/field-guide.js"],

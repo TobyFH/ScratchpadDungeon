@@ -1,0 +1,1532 @@
+{
+  "schemaVersion": 1,
+  "name": "The Living Sketchbook",
+  "retrievedAt": "2026-10-26",
+  "sampleRate": 24000,
+  "collections": {
+    "interface": {
+      "title": "Interface Sounds",
+      "creator": "Kenney",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "licensePath": "audio/licenses/kenney-interface-CC0.txt",
+      "homepage": "https://kenney.nl/assets/interface-sounds",
+      "repository": "https://github.com/Calinou/kenney-interface-sounds",
+      "revision": "4596a49eaf5a533948d49a47467f606bcdea70ff",
+      "licenseEvidence": "https://github.com/Calinou/kenney-interface-sounds/blob/4596a49eaf5a533948d49a47467f606bcdea70ff/addons/kenney_interface_sounds/LICENSE.txt",
+      "licenseSha256": "f7966c773bbed0eca6a9c75081c44a178b38eae112724dbb5fdfbd4192d118a9"
+    },
+    "rpg": {
+      "title": "RPG Audio",
+      "creator": "Kenney",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "licensePath": "audio/licenses/kenney-rpg-CC0.txt",
+      "homepage": "https://kenney.nl/assets/rpg-audio",
+      "repository": "https://github.com/Boyquotes/kenney-rpg-audio-for-godot",
+      "revision": "22eb79bb843bbcadcaa6ed119353a33265ffad11",
+      "licenseEvidence": "https://github.com/Boyquotes/kenney-rpg-audio-for-godot/blob/22eb79bb843bbcadcaa6ed119353a33265ffad11/LICENSE",
+      "licenseSha256": "a2010f343487d3f7618affe54f789f5487602331c0a8d03f49e9a7c547cf0499"
+    },
+    "impact": {
+      "title": "Impact Sounds",
+      "creator": "Kenney",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "licensePath": "audio/licenses/kenney-impact-CC0.txt",
+      "homepage": "https://kenney.nl/assets/impact-sounds",
+      "repository": "https://github.com/Boyquotes/kenney-impact-sounds-for-godot",
+      "revision": "999dd1684873f8b020a3aa5b26e713da21688924",
+      "licenseEvidence": "https://github.com/Boyquotes/kenney-impact-sounds-for-godot/blob/999dd1684873f8b020a3aa5b26e713da21688924/LICENSE",
+      "licenseSha256": "a2010f343487d3f7618affe54f789f5487602331c0a8d03f49e9a7c547cf0499"
+    },
+    "user": {
+      "title": "Original uploaded recordings",
+      "creator": "User-supplied; creator not specified",
+      "license": "user-authorized",
+      "licensePath": "audio/licenses/USER_RECORDINGS.txt",
+      "licenseSha256": "ee0e5b5363259b72672c4cc2cb47c89fc8d0eb94bcdf83086764e484dbc57a94"
+    }
+  },
+  "sources": {
+    "user.SFX_Erase": {
+      "collection": "user",
+      "path": "ui/assets/audio/SFX_Erase.wav",
+      "sha256": "1c4fbd7e21cafe95f6f76fed283b3c8ed5223fbcbbfe4377c93c077f421e2695",
+      "role": "source"
+    },
+    "user.SFX_Poof": {
+      "collection": "user",
+      "path": "ui/assets/audio/SFX_Poof.wav",
+      "sha256": "4a13924f2d26f29a73e7a63e64c83f2267ba0a3929a8707bb436e3f3f3c6dc19",
+      "role": "archive"
+    },
+    "user.SFX_SlotClick": {
+      "collection": "user",
+      "path": "ui/assets/audio/SFX_SlotClick.wav",
+      "sha256": "44525762d7f4e533dd4147db0d792ed2245cc019aae74932c1d8beddc2a9765e",
+      "role": "archive"
+    },
+    "user.SFX_SlotEnd": {
+      "collection": "user",
+      "path": "ui/assets/audio/SFX_SlotEnd.wav",
+      "sha256": "4dcd7a75bd93017c546709ed8676c4d68bcda4892e1567e8eb0044a453aefbd9",
+      "role": "archive"
+    },
+    "user.SFX_SlotEndBig": {
+      "collection": "user",
+      "path": "ui/assets/audio/SFX_SlotEndBig.wav",
+      "sha256": "a046c26a3000372863f4cf45edb99ffed7945ec38ceb5c6f9de1ff205ceb2905",
+      "role": "archive"
+    },
+    "interface.scratch_004": {
+      "collection": "interface",
+      "path": "ui/assets/audio/sources/interface/scratch_004.wav",
+      "originalPath": "addons/kenney_interface_sounds/scratch_004.wav",
+      "url": "https://github.com/Calinou/kenney-interface-sounds/blob/4596a49eaf5a533948d49a47467f606bcdea70ff/addons/kenney_interface_sounds/scratch_004.wav",
+      "sha256": "a9b0e3aff14d785414bdf22294e42bb43e4975c7c30171426aaea217d69328d1",
+      "role": "source"
+    },
+    "interface.scratch_001": {
+      "collection": "interface",
+      "path": "ui/assets/audio/sources/interface/scratch_001.wav",
+      "originalPath": "addons/kenney_interface_sounds/scratch_001.wav",
+      "url": "https://github.com/Calinou/kenney-interface-sounds/blob/4596a49eaf5a533948d49a47467f606bcdea70ff/addons/kenney_interface_sounds/scratch_001.wav",
+      "sha256": "8db53f023af3410573861dc7b434a052965b6282573b999af17e31d23557d7d2",
+      "role": "source"
+    },
+    "interface.scratch_003": {
+      "collection": "interface",
+      "path": "ui/assets/audio/sources/interface/scratch_003.wav",
+      "originalPath": "addons/kenney_interface_sounds/scratch_003.wav",
+      "url": "https://github.com/Calinou/kenney-interface-sounds/blob/4596a49eaf5a533948d49a47467f606bcdea70ff/addons/kenney_interface_sounds/scratch_003.wav",
+      "sha256": "a780f81592bf48e5615824193bccfbad1ae9673f734e43a4b2bb604a65009b7e",
+      "role": "source"
+    },
+    "rpg.cloth_3": {
+      "collection": "rpg",
+      "path": "ui/assets/audio/sources/rpg/cloth_3.ogg",
+      "originalPath": "addons/kenney rpg audio/cloth_3.ogg",
+      "url": "https://github.com/Boyquotes/kenney-rpg-audio-for-godot/blob/22eb79bb843bbcadcaa6ed119353a33265ffad11/addons/kenney%20rpg%20audio/cloth_3.ogg",
+      "sha256": "a48632d17a4f1416541d261a32a31612e01267144c407fa3ecab3ff410f0085b",
+      "role": "source"
+    },
+    "rpg.book_flip_3": {
+      "collection": "rpg",
+      "path": "ui/assets/audio/sources/rpg/book_flip_3.ogg",
+      "originalPath": "addons/kenney rpg audio/book_flip_3.ogg",
+      "url": "https://github.com/Boyquotes/kenney-rpg-audio-for-godot/blob/22eb79bb843bbcadcaa6ed119353a33265ffad11/addons/kenney%20rpg%20audio/book_flip_3.ogg",
+      "sha256": "c85db5dceb3f1df073e960630277eaa88a5afda0477c1ddd68dad707621767be",
+      "role": "source"
+    },
+    "interface.click_003": {
+      "collection": "interface",
+      "path": "ui/assets/audio/sources/interface/click_003.wav",
+      "originalPath": "addons/kenney_interface_sounds/click_003.wav",
+      "url": "https://github.com/Calinou/kenney-interface-sounds/blob/4596a49eaf5a533948d49a47467f606bcdea70ff/addons/kenney_interface_sounds/click_003.wav",
+      "sha256": "b035afe3fe08b0fd3517c612bdfd362799bffe762d2cbf8f09e6a50322067358",
+      "role": "source"
+    },
+    "impact.impact_wood_light_000": {
+      "collection": "impact",
+      "path": "ui/assets/audio/sources/impact/impact_wood_light_000.ogg",
+      "originalPath": "addons/kenney impact sounds/impact_wood_light_000.ogg",
+      "url": "https://github.com/Boyquotes/kenney-impact-sounds-for-godot/blob/999dd1684873f8b020a3aa5b26e713da21688924/addons/kenney%20impact%20sounds/impact_wood_light_000.ogg",
+      "sha256": "eb45e35b4bed784d3f120de4afec4b0d6ac09d9e143cce8cfcb7d739e1b1f3c3",
+      "role": "source"
+    },
+    "interface.tick_004": {
+      "collection": "interface",
+      "path": "ui/assets/audio/sources/interface/tick_004.wav",
+      "originalPath": "addons/kenney_interface_sounds/tick_004.wav",
+      "url": "https://github.com/Calinou/kenney-interface-sounds/blob/4596a49eaf5a533948d49a47467f606bcdea70ff/addons/kenney_interface_sounds/tick_004.wav",
+      "sha256": "7cf0ab362d64d3cc2d25a89528662ed21abd5c67a425dc0f4d1013871a481bdd",
+      "role": "source"
+    },
+    "rpg.belt_handle_1": {
+      "collection": "rpg",
+      "path": "ui/assets/audio/sources/rpg/belt_handle_1.ogg",
+      "originalPath": "addons/kenney rpg audio/belt_handle_1.ogg",
+      "url": "https://github.com/Boyquotes/kenney-rpg-audio-for-godot/blob/22eb79bb843bbcadcaa6ed119353a33265ffad11/addons/kenney%20rpg%20audio/belt_handle_1.ogg",
+      "sha256": "2ef665bd8b65dbe669f4560be38a6d8f04a162e618b15a49e3e71b58e558aab0",
+      "role": "source"
+    },
+    "rpg.book_place_1": {
+      "collection": "rpg",
+      "path": "ui/assets/audio/sources/rpg/book_place_1.ogg",
+      "originalPath": "addons/kenney rpg audio/book_place_1.ogg",
+      "url": "https://github.com/Boyquotes/kenney-rpg-audio-for-godot/blob/22eb79bb843bbcadcaa6ed119353a33265ffad11/addons/kenney%20rpg%20audio/book_place_1.ogg",
+      "sha256": "26f3ce60fbde85b678b0ad7f6624d80535fe540d88232ad1e38e47a96662d977",
+      "role": "source"
+    },
+    "rpg.book_close": {
+      "collection": "rpg",
+      "path": "ui/assets/audio/sources/rpg/book_close.ogg",
+      "originalPath": "addons/kenney rpg audio/book_close.ogg",
+      "url": "https://github.com/Boyquotes/kenney-rpg-audio-for-godot/blob/22eb79bb843bbcadcaa6ed119353a33265ffad11/addons/kenney%20rpg%20audio/book_close.ogg",
+      "sha256": "81e976532565f4372abd14e83d2684195fa548d0a28d345de221e56052454f32",
+      "role": "source"
+    },
+    "impact.impact_wood_medium_000": {
+      "collection": "impact",
+      "path": "ui/assets/audio/sources/impact/impact_wood_medium_000.ogg",
+      "originalPath": "addons/kenney impact sounds/impact_wood_medium_000.ogg",
+      "url": "https://github.com/Boyquotes/kenney-impact-sounds-for-godot/blob/999dd1684873f8b020a3aa5b26e713da21688924/addons/kenney%20impact%20sounds/impact_wood_medium_000.ogg",
+      "sha256": "1723a9fd25103ed41af06054814e84e65f4a772bac86ab2dc927da93d9592ff5",
+      "role": "source"
+    },
+    "rpg.book_place_2": {
+      "collection": "rpg",
+      "path": "ui/assets/audio/sources/rpg/book_place_2.ogg",
+      "originalPath": "addons/kenney rpg audio/book_place_2.ogg",
+      "url": "https://github.com/Boyquotes/kenney-rpg-audio-for-godot/blob/22eb79bb843bbcadcaa6ed119353a33265ffad11/addons/kenney%20rpg%20audio/book_place_2.ogg",
+      "sha256": "831874e8fd142d4d0a03ff009f1f83966338a7878c0f6f38c613ae5b80dd731e",
+      "role": "source"
+    },
+    "impact.impact_soft_medium_000": {
+      "collection": "impact",
+      "path": "ui/assets/audio/sources/impact/impact_soft_medium_000.ogg",
+      "originalPath": "addons/kenney impact sounds/impact_soft_medium_000.ogg",
+      "url": "https://github.com/Boyquotes/kenney-impact-sounds-for-godot/blob/999dd1684873f8b020a3aa5b26e713da21688924/addons/kenney%20impact%20sounds/impact_soft_medium_000.ogg",
+      "sha256": "7d3ba0bb5e60a11b5d3e558c141303dcf494256675fbf753c0d252d2cf0481e3",
+      "role": "source"
+    },
+    "rpg.book_place_3": {
+      "collection": "rpg",
+      "path": "ui/assets/audio/sources/rpg/book_place_3.ogg",
+      "originalPath": "addons/kenney rpg audio/book_place_3.ogg",
+      "url": "https://github.com/Boyquotes/kenney-rpg-audio-for-godot/blob/22eb79bb843bbcadcaa6ed119353a33265ffad11/addons/kenney%20rpg%20audio/book_place_3.ogg",
+      "sha256": "b1afa711e1cabfe5b2c56e20e20e0f9d82142d067727447fa992ddc43dbdb06e",
+      "role": "source"
+    },
+    "impact.impact_soft_heavy_000": {
+      "collection": "impact",
+      "path": "ui/assets/audio/sources/impact/impact_soft_heavy_000.ogg",
+      "originalPath": "addons/kenney impact sounds/impact_soft_heavy_000.ogg",
+      "url": "https://github.com/Boyquotes/kenney-impact-sounds-for-godot/blob/999dd1684873f8b020a3aa5b26e713da21688924/addons/kenney%20impact%20sounds/impact_soft_heavy_000.ogg",
+      "sha256": "49e7ca88743fca974bb8676ea138b751cfd8f9033b5e7af8736c2a215d6edbc1",
+      "role": "source"
+    },
+    "rpg.book_flip_2": {
+      "collection": "rpg",
+      "path": "ui/assets/audio/sources/rpg/book_flip_2.ogg",
+      "originalPath": "addons/kenney rpg audio/book_flip_2.ogg",
+      "url": "https://github.com/Boyquotes/kenney-rpg-audio-for-godot/blob/22eb79bb843bbcadcaa6ed119353a33265ffad11/addons/kenney%20rpg%20audio/book_flip_2.ogg",
+      "sha256": "3409042acbfaebc24c1a6327dc073e36f9250841712e96c5040da566a97df73c",
+      "role": "source"
+    },
+    "interface.pluck_001": {
+      "collection": "interface",
+      "path": "ui/assets/audio/sources/interface/pluck_001.wav",
+      "originalPath": "addons/kenney_interface_sounds/pluck_001.wav",
+      "url": "https://github.com/Calinou/kenney-interface-sounds/blob/4596a49eaf5a533948d49a47467f606bcdea70ff/addons/kenney_interface_sounds/pluck_001.wav",
+      "sha256": "7d676b0b09b56f7e5964ad274feb7e7307a4e552bed8cd98e1e3cecfb9c10c36",
+      "role": "source"
+    },
+    "interface.pluck_002": {
+      "collection": "interface",
+      "path": "ui/assets/audio/sources/interface/pluck_002.wav",
+      "originalPath": "addons/kenney_interface_sounds/pluck_002.wav",
+      "url": "https://github.com/Calinou/kenney-interface-sounds/blob/4596a49eaf5a533948d49a47467f606bcdea70ff/addons/kenney_interface_sounds/pluck_002.wav",
+      "sha256": "f8ad032b27cb79a66aec1d5994c88167e5fa87ccbb9dbab2f1658f8fcb06413e",
+      "role": "source"
+    },
+    "rpg.handle_coins_2": {
+      "collection": "rpg",
+      "path": "ui/assets/audio/sources/rpg/handle_coins_2.ogg",
+      "originalPath": "addons/kenney rpg audio/handle_coins_2.ogg",
+      "url": "https://github.com/Boyquotes/kenney-rpg-audio-for-godot/blob/22eb79bb843bbcadcaa6ed119353a33265ffad11/addons/kenney%20rpg%20audio/handle_coins_2.ogg",
+      "sha256": "4b857968d64f9ac9336a10ffac6694d7547e1f01566ad6857b30bc8db3ee6c32",
+      "role": "source"
+    },
+    "rpg.cloth_2": {
+      "collection": "rpg",
+      "path": "ui/assets/audio/sources/rpg/cloth_2.ogg",
+      "originalPath": "addons/kenney rpg audio/cloth_2.ogg",
+      "url": "https://github.com/Boyquotes/kenney-rpg-audio-for-godot/blob/22eb79bb843bbcadcaa6ed119353a33265ffad11/addons/kenney%20rpg%20audio/cloth_2.ogg",
+      "sha256": "8a7451193c38bc05483aec25dd193e163a15d44cf7fff04ac7912573231b0201",
+      "role": "source"
+    },
+    "rpg.book_open": {
+      "collection": "rpg",
+      "path": "ui/assets/audio/sources/rpg/book_open.ogg",
+      "originalPath": "addons/kenney rpg audio/book_open.ogg",
+      "url": "https://github.com/Boyquotes/kenney-rpg-audio-for-godot/blob/22eb79bb843bbcadcaa6ed119353a33265ffad11/addons/kenney%20rpg%20audio/book_open.ogg",
+      "sha256": "953390534377222bee89ac8cd9e60a58fdc037c71a4d7c18c43cd647c7f34ba8",
+      "role": "source"
+    },
+    "rpg.creak_1": {
+      "collection": "rpg",
+      "path": "ui/assets/audio/sources/rpg/creak_1.ogg",
+      "originalPath": "addons/kenney rpg audio/creak_1.ogg",
+      "url": "https://github.com/Boyquotes/kenney-rpg-audio-for-godot/blob/22eb79bb843bbcadcaa6ed119353a33265ffad11/addons/kenney%20rpg%20audio/creak_1.ogg",
+      "sha256": "8a346186fd297254248cab8e8117060a52a5cf2a84f603153a762108550ea95e",
+      "role": "source"
+    },
+    "rpg.cloth_4": {
+      "collection": "rpg",
+      "path": "ui/assets/audio/sources/rpg/cloth_4.ogg",
+      "originalPath": "addons/kenney rpg audio/cloth_4.ogg",
+      "url": "https://github.com/Boyquotes/kenney-rpg-audio-for-godot/blob/22eb79bb843bbcadcaa6ed119353a33265ffad11/addons/kenney%20rpg%20audio/cloth_4.ogg",
+      "sha256": "e7ab9a6c4466dea874196c61f59bf1da05cfe58748f42fadd695d441a154a99b",
+      "role": "source"
+    },
+    "interface.scratch_005": {
+      "collection": "interface",
+      "path": "ui/assets/audio/sources/interface/scratch_005.wav",
+      "originalPath": "addons/kenney_interface_sounds/scratch_005.wav",
+      "url": "https://github.com/Calinou/kenney-interface-sounds/blob/4596a49eaf5a533948d49a47467f606bcdea70ff/addons/kenney_interface_sounds/scratch_005.wav",
+      "sha256": "80dbfdd6406a0c370699ea610b06b63bef2f1ed2588816209d71f9f81c2749a3",
+      "role": "source"
+    },
+    "rpg.book_flip_1": {
+      "collection": "rpg",
+      "path": "ui/assets/audio/sources/rpg/book_flip_1.ogg",
+      "originalPath": "addons/kenney rpg audio/book_flip_1.ogg",
+      "url": "https://github.com/Boyquotes/kenney-rpg-audio-for-godot/blob/22eb79bb843bbcadcaa6ed119353a33265ffad11/addons/kenney%20rpg%20audio/book_flip_1.ogg",
+      "sha256": "fa81ac2fedc8c641661b87e349630a36c9800e795e0c800e029214efdbe26a7d",
+      "role": "source"
+    },
+    "rpg.cloth_1": {
+      "collection": "rpg",
+      "path": "ui/assets/audio/sources/rpg/cloth_1.ogg",
+      "originalPath": "addons/kenney rpg audio/cloth_1.ogg",
+      "url": "https://github.com/Boyquotes/kenney-rpg-audio-for-godot/blob/22eb79bb843bbcadcaa6ed119353a33265ffad11/addons/kenney%20rpg%20audio/cloth_1.ogg",
+      "sha256": "ddb93a3671233f95da0e0b10367f082f7eb42fa6caaddcf776410aa8833c747d",
+      "role": "source"
+    },
+    "impact.impact_wood_heavy_000": {
+      "collection": "impact",
+      "path": "ui/assets/audio/sources/impact/impact_wood_heavy_000.ogg",
+      "originalPath": "addons/kenney impact sounds/impact_wood_heavy_000.ogg",
+      "url": "https://github.com/Boyquotes/kenney-impact-sounds-for-godot/blob/999dd1684873f8b020a3aa5b26e713da21688924/addons/kenney%20impact%20sounds/impact_wood_heavy_000.ogg",
+      "sha256": "15ff82332f342c30e469215539e1cc57e11b221aa2cf7e11e811d313a9927f3d",
+      "role": "source"
+    },
+    "rpg.belt_handle_2": {
+      "collection": "rpg",
+      "path": "ui/assets/audio/sources/rpg/belt_handle_2.ogg",
+      "originalPath": "addons/kenney rpg audio/belt_handle_2.ogg",
+      "url": "https://github.com/Boyquotes/kenney-rpg-audio-for-godot/blob/22eb79bb843bbcadcaa6ed119353a33265ffad11/addons/kenney%20rpg%20audio/belt_handle_2.ogg",
+      "sha256": "f3b692d5c83263c25bce779805b212dbab515d18a603c695fc6a1e8650cf5366",
+      "role": "source"
+    }
+  },
+  "assets": {
+    "pencil-erase": {
+      "path": "ui/assets/audio/living-sketchbook/pencil-erase.wav",
+      "description": "Eraser rub with a dry graphite scratch",
+      "seconds": 0.38,
+      "targetRmsDb": -25,
+      "peakLimit": 0.82,
+      "layers": [
+        {
+          "source": "user.SFX_Erase",
+          "start": 0,
+          "length": 0.36,
+          "gain": 0.65,
+          "rate": 1.1
+        },
+        {
+          "source": "interface.scratch_004",
+          "gain": 0.35,
+          "rate": 0.85
+        }
+      ],
+      "sha256": "55aa179b4e9bb48bab56d11579d9142f8b4b1d770f86e6c8dd993ae52775f270",
+      "frames": 9120,
+      "recipeHash": "895c2f7727110c575f7284b478e127ba639b9e9035736ce84c3bc14086fb0023"
+    },
+    "pencil-step-a": {
+      "path": "ui/assets/audio/living-sketchbook/pencil-step-a.wav",
+      "description": "A tiny dry mark on paper",
+      "seconds": 0.048,
+      "targetRmsDb": -33,
+      "peakLimit": 0.82,
+      "layers": [
+        {
+          "source": "interface.scratch_001",
+          "gain": 0.7,
+          "rate": 1.2,
+          "start": 0.01,
+          "length": 0.045
+        }
+      ],
+      "sha256": "54884995457cf6c17fea72212662b67a298bcea6c3380ee0e69c288b6d228ddb",
+      "frames": 1152,
+      "recipeHash": "e171336ce5111f35e7bfc3482942cde399a1b56e079c86af19a5ed1862c09901"
+    },
+    "pencil-step-b": {
+      "path": "ui/assets/audio/living-sketchbook/pencil-step-b.wav",
+      "description": "A second quiet graphite mark",
+      "seconds": 0.052,
+      "targetRmsDb": -33,
+      "peakLimit": 0.82,
+      "layers": [
+        {
+          "source": "interface.scratch_003",
+          "gain": 0.7,
+          "rate": 1.2,
+          "start": 0.01,
+          "length": 0.05
+        }
+      ],
+      "sha256": "3bab401b5b5c5c27319a8ed9fe12f52f31d4f2c43e87ec6a07a1525d44318c3e",
+      "frames": 1248,
+      "recipeHash": "992fd80b16d2bfe8b8bf79fb4f94e19a68307a12b9862010e638cb499427a54a"
+    },
+    "paper-poof": {
+      "path": "ui/assets/audio/living-sketchbook/paper-poof.wav",
+      "description": "A light burst of paper and cloth",
+      "seconds": 0.37,
+      "targetRmsDb": -25,
+      "peakLimit": 0.82,
+      "layers": [
+        {
+          "source": "rpg.cloth_3",
+          "gain": 0.75,
+          "rate": 1.35
+        },
+        {
+          "source": "rpg.book_flip_3",
+          "gain": 0.35,
+          "rate": 1.2
+        }
+      ],
+      "sha256": "884c198b72ec27c7d10740e3aa43b19a1594eda43374c65c47857f7c99133164",
+      "frames": 8880,
+      "recipeHash": "bad5772c6b7662aeba2e25e65be8d9e508ee967d8a0035c01735050f7f573ce8"
+    },
+    "pencil-click": {
+      "path": "ui/assets/audio/living-sketchbook/pencil-click.wav",
+      "description": "A pencil-tip-like tactile click",
+      "seconds": 0.055,
+      "targetRmsDb": -28,
+      "peakLimit": 0.82,
+      "layers": [
+        {
+          "source": "interface.click_003",
+          "gain": 0.8,
+          "rate": 1
+        },
+        {
+          "source": "impact.impact_wood_light_000",
+          "gain": 0.24,
+          "rate": 1.3,
+          "length": 0.05
+        }
+      ],
+      "sha256": "840ca9a7823f733d19ef66287a80120cb4a95d3c3dd10ea084aa3e33c9a60f72",
+      "frames": 1320,
+      "recipeHash": "e1f17ad04f37096a679e4535ff87b50a4682ba64dfc31be8e1d8b874e66853db"
+    },
+    "reel-tick-a": {
+      "path": "ui/assets/audio/living-sketchbook/reel-tick-a.wav",
+      "description": "Short dry reel tooth",
+      "seconds": 0.045,
+      "targetRmsDb": -28,
+      "peakLimit": 0.82,
+      "layers": [
+        {
+          "source": "interface.tick_004",
+          "gain": 0.9,
+          "rate": 1.2,
+          "length": 0.04
+        },
+        {
+          "source": "interface.scratch_003",
+          "gain": 0.2,
+          "rate": 1,
+          "length": 0.025
+        }
+      ],
+      "sha256": "8392fb2579671cfac9493391d8b7ef6ab71defcd7523f29c3a3dc455b6f4b024",
+      "frames": 1080,
+      "recipeHash": "5b814ee26304b79d982e58947887af19b865046eb1d5b0ec0181cb2cd0ba4151"
+    },
+    "reel-tick-b": {
+      "path": "ui/assets/audio/living-sketchbook/reel-tick-b.wav",
+      "description": "A softer variation of the reel tooth",
+      "seconds": 0.043,
+      "targetRmsDb": -29,
+      "peakLimit": 0.82,
+      "layers": [
+        {
+          "source": "interface.click_003",
+          "gain": 0.65,
+          "rate": 0.85
+        },
+        {
+          "source": "interface.scratch_001",
+          "gain": 0.3,
+          "rate": 1,
+          "length": 0.035
+        }
+      ],
+      "sha256": "0896410fdc52a28a7dabfb88bcbd2e07c3d87cdad20505cdb7aa37936708b154",
+      "frames": 1032,
+      "recipeHash": "fc15c3a551f166f79f1a037becbe37544b6ff4f1c73e52115d6480095b76da70"
+    },
+    "reel-handle": {
+      "path": "ui/assets/audio/living-sketchbook/reel-handle.wav",
+      "description": "A small handmade mechanism and wooden clack",
+      "seconds": 0.27,
+      "targetRmsDb": -24,
+      "peakLimit": 0.82,
+      "layers": [
+        {
+          "source": "rpg.belt_handle_1",
+          "gain": 0.75,
+          "rate": 1.15
+        },
+        {
+          "source": "impact.impact_wood_light_000",
+          "gain": 0.4,
+          "rate": 1,
+          "delay": 0.04,
+          "length": 0.15
+        }
+      ],
+      "sha256": "81dd9c477e1963c37b6f3153e30f3e2565adc6629d287195facb2fb430da2143",
+      "frames": 6480,
+      "recipeHash": "51044d049809eb4f9670a7908f1180597c30dc45bfd8c358951e6a31479907fa"
+    },
+    "reel-lock": {
+      "path": "ui/assets/audio/living-sketchbook/reel-lock.wav",
+      "description": "A firm book-on-paper clack",
+      "seconds": 0.27,
+      "targetRmsDb": -22,
+      "peakLimit": 0.82,
+      "layers": [
+        {
+          "source": "rpg.book_place_1",
+          "gain": 0.8,
+          "rate": 1.15
+        },
+        {
+          "source": "interface.tick_004",
+          "gain": 0.5,
+          "rate": 1,
+          "delay": 0.02
+        }
+      ],
+      "sha256": "c1a9851fd68434d6d7f4b4044303d15a7e354bbaad4256beb848dfef9c08f9b4",
+      "frames": 6480,
+      "recipeHash": "91d46a5fe4295b0728bec094a8fb79933d5266b8b1180b147139076474f80654"
+    },
+    "reel-lock-big": {
+      "path": "ui/assets/audio/living-sketchbook/reel-lock-big.wav",
+      "description": "A heavier single reel landing with paper flicks",
+      "seconds": 0.39,
+      "targetRmsDb": -19,
+      "peakLimit": 0.82,
+      "layers": [
+        {
+          "source": "rpg.book_close",
+          "gain": 0.75,
+          "rate": 0.85
+        },
+        {
+          "source": "impact.impact_wood_medium_000",
+          "gain": 0.55,
+          "rate": 0.9
+        },
+        {
+          "source": "rpg.book_flip_3",
+          "gain": 0.45,
+          "rate": 1.3,
+          "delay": 0.06
+        }
+      ],
+      "sha256": "d4bf57570bf41510e42e20d64252063f25c0ee2f6a9186a93013fbeacba16ae1",
+      "frames": 9360,
+      "recipeHash": "a246ba6e40fd7b8e1f5ec63485476a2707e9a58ff107771ac7b825a31442eaf1"
+    },
+    "paper-hit-a": {
+      "path": "ui/assets/audio/living-sketchbook/paper-hit-a.wav",
+      "description": "A dry padded impact with graphite scrape",
+      "seconds": 0.34,
+      "targetRmsDb": -22,
+      "peakLimit": 0.82,
+      "layers": [
+        {
+          "source": "rpg.book_place_2",
+          "gain": 0.55,
+          "rate": 1.12
+        },
+        {
+          "source": "impact.impact_soft_medium_000",
+          "gain": 0.8,
+          "rate": 0.9
+        },
+        {
+          "source": "interface.scratch_003",
+          "gain": 0.25,
+          "rate": 1,
+          "delay": 0.03
+        }
+      ],
+      "tone": {
+        "hz": 92,
+        "gain": 0.1,
+        "seconds": 0.1
+      },
+      "sha256": "3434e2597a71fff0f55b47f9fececc06e796ed926f0db54878733097818a972a",
+      "frames": 8160,
+      "recipeHash": "700ea5d231567d2221c4faaa6c6d099b8667da158fd6d8be5eaa77a47248b157"
+    },
+    "paper-hit-b": {
+      "path": "ui/assets/audio/living-sketchbook/paper-hit-b.wav",
+      "description": "A second weighty paper impact",
+      "seconds": 0.36,
+      "targetRmsDb": -22,
+      "peakLimit": 0.82,
+      "layers": [
+        {
+          "source": "rpg.book_place_3",
+          "gain": 0.5,
+          "rate": 0.9
+        },
+        {
+          "source": "impact.impact_soft_heavy_000",
+          "gain": 0.7,
+          "rate": 1,
+          "length": 0.25
+        },
+        {
+          "source": "interface.scratch_001",
+          "gain": 0.18,
+          "rate": 1
+        }
+      ],
+      "tone": {
+        "hz": 80,
+        "gain": 0.08,
+        "seconds": 0.12
+      },
+      "sha256": "5d670ba6c8b459a1e8954e6009e7eea99d59d6f009419e65a2e4a39253bd953f",
+      "frames": 8640,
+      "recipeHash": "371e90e9fd0f66fc8a77ac63aa6646f1c034542213ccd492f69bce7785d7fe62"
+    },
+    "paper-heal": {
+      "path": "ui/assets/audio/living-sketchbook/paper-heal.wav",
+      "description": "A fresh page and gentle plucked-pencil tone",
+      "seconds": 0.43,
+      "targetRmsDb": -25,
+      "peakLimit": 0.82,
+      "layers": [
+        {
+          "source": "rpg.book_flip_2",
+          "gain": 0.55,
+          "rate": 1.2
+        },
+        {
+          "source": "interface.pluck_001",
+          "gain": 0.33,
+          "rate": 1,
+          "delay": 0.04
+        },
+        {
+          "source": "interface.pluck_002",
+          "gain": 0.24,
+          "rate": 1.15,
+          "delay": 0.13
+        }
+      ],
+      "sha256": "6a3f8ab3444ebb1a1afc75693e3d7e4b9e28cd2592c1636e00dac8f92a3c474f",
+      "frames": 10320,
+      "recipeHash": "6428aa784b09b4f5710f902544cc2d861ecb733ed48aabf7196866f89173dc28"
+    },
+    "paper-shield": {
+      "path": "ui/assets/audio/living-sketchbook/paper-shield.wav",
+      "description": "A dense wooden-paper interception",
+      "seconds": 0.3,
+      "targetRmsDb": -23,
+      "peakLimit": 0.82,
+      "layers": [
+        {
+          "source": "rpg.book_close",
+          "gain": 0.7,
+          "rate": 0.95
+        },
+        {
+          "source": "impact.impact_wood_light_000",
+          "gain": 0.7,
+          "rate": 0.8
+        }
+      ],
+      "sha256": "38adcd36c29b5da36813657193179cd5a6bbd77c076b1e9e3b4873aa8ad8b476",
+      "frames": 7200,
+      "recipeHash": "6bf85328a65bdb8cec406ec28d80f3ec4adacb1db85ccd4bdf4c381b8c3743cd"
+    },
+    "paper-coin": {
+      "path": "ui/assets/audio/living-sketchbook/paper-coin.wav",
+      "description": "A brief, restrained handful of small coins",
+      "seconds": 0.21,
+      "targetRmsDb": -28,
+      "peakLimit": 0.82,
+      "layers": [
+        {
+          "source": "rpg.handle_coins_2",
+          "gain": 0.8,
+          "rate": 1.15,
+          "start": 0.02,
+          "length": 0.18
+        },
+        {
+          "source": "interface.pluck_002",
+          "gain": 0.1,
+          "rate": 1,
+          "delay": 0.02
+        }
+      ],
+      "sha256": "e6cb1f01776fe5e44843dbc30001ceefffce9ae47f37b30be221add1433269dd",
+      "frames": 5040,
+      "recipeHash": "8c25f531ae2243ff38a8ceb108963f6bc110c5b1fe6818579522c9df8443d9a2"
+    },
+    "paper-appearance": {
+      "path": "ui/assets/audio/living-sketchbook/paper-appearance.wav",
+      "description": "An unfolding page with a low arrival thump",
+      "seconds": 0.44,
+      "targetRmsDb": -23,
+      "peakLimit": 0.82,
+      "layers": [
+        {
+          "source": "rpg.cloth_2",
+          "gain": 0.6,
+          "rate": 1.15,
+          "reverse": true
+        },
+        {
+          "source": "rpg.book_open",
+          "gain": 0.65,
+          "rate": 1,
+          "delay": 0.17
+        }
+      ],
+      "tone": {
+        "hz": 72,
+        "gain": 0.09,
+        "seconds": 0.14,
+        "delay": 0.18
+      },
+      "sha256": "c04d72c824f88637d6721cd2a50308a7b95388eaaff4ff85d317612cbde931d2",
+      "frames": 10560,
+      "recipeHash": "1f2b4b3237988a2b3bf9239699ae9b8d6926601a644253dd8c5eddcd29243136"
+    },
+    "paper-threat": {
+      "path": "ui/assets/audio/living-sketchbook/paper-threat.wav",
+      "description": "A slow page creak and low rustle",
+      "seconds": 0.63,
+      "targetRmsDb": -25,
+      "peakLimit": 0.82,
+      "layers": [
+        {
+          "source": "rpg.creak_1",
+          "gain": 0.4,
+          "rate": 0.8,
+          "length": 0.42
+        },
+        {
+          "source": "rpg.cloth_4",
+          "gain": 0.5,
+          "rate": 0.8,
+          "delay": 0.04
+        }
+      ],
+      "sha256": "b05c0497136a09292a1e7cb2db153342f97f969c30544fa239be2548df559fe1",
+      "frames": 15120,
+      "recipeHash": "3fad6866590c53870331fe5d132a6176beee7580307910393f561b2c9d924280"
+    },
+    "paper-reward": {
+      "path": "ui/assets/audio/living-sketchbook/paper-reward.wav",
+      "description": "Paper flicks and two warm plucks",
+      "seconds": 0.48,
+      "targetRmsDb": -23,
+      "peakLimit": 0.82,
+      "layers": [
+        {
+          "source": "rpg.book_flip_3",
+          "gain": 0.65,
+          "rate": 1
+        },
+        {
+          "source": "interface.pluck_001",
+          "gain": 0.4,
+          "rate": 1,
+          "delay": 0.08
+        },
+        {
+          "source": "interface.pluck_002",
+          "gain": 0.35,
+          "rate": 1.15,
+          "delay": 0.2
+        }
+      ],
+      "sha256": "cb3299061ac4fe01af12a94f5dbdefc2165fe9aa56e53a45e6d47db974db0bbd",
+      "frames": 11520,
+      "recipeHash": "d3f0b06b5b23b83c185a2c21ee9dd2241e3678de50a478705dedf681b32f3ec8"
+    },
+    "paper-critical": {
+      "path": "ui/assets/audio/living-sketchbook/paper-critical.wav",
+      "description": "A tearing-like scratch, deep impact and scattered page flicks",
+      "seconds": 0.78,
+      "targetRmsDb": -19,
+      "peakLimit": 0.82,
+      "layers": [
+        {
+          "source": "interface.scratch_005",
+          "gain": 0.6,
+          "rate": 1.1,
+          "length": 0.21,
+          "reverse": true
+        },
+        {
+          "source": "rpg.book_close",
+          "gain": 0.9,
+          "rate": 0.8,
+          "delay": 0.16
+        },
+        {
+          "source": "impact.impact_soft_heavy_000",
+          "gain": 0.8,
+          "rate": 0.85,
+          "delay": 0.17,
+          "length": 0.3
+        },
+        {
+          "source": "rpg.book_flip_3",
+          "gain": 0.4,
+          "rate": 1.35,
+          "delay": 0.3
+        },
+        {
+          "source": "interface.scratch_003",
+          "gain": 0.22,
+          "rate": 1,
+          "delay": 0.44
+        }
+      ],
+      "tone": {
+        "hz": 66,
+        "gain": 0.17,
+        "seconds": 0.19,
+        "delay": 0.17
+      },
+      "sha256": "0134839a6500ac4bd3508ff9a298a58c684a0daeaaa81e6ae9bdab97724be43b",
+      "frames": 18720,
+      "recipeHash": "f1cf9860256cd037629c19e105aaf5aba7d6092ad3183036fd2e209a7fef3af8"
+    },
+    "paper-victory": {
+      "path": "ui/assets/audio/living-sketchbook/paper-victory.wav",
+      "description": "A short celebratory cascade of pages and pencil plucks",
+      "seconds": 0.88,
+      "targetRmsDb": -23,
+      "peakLimit": 0.82,
+      "layers": [
+        {
+          "source": "rpg.book_flip_1",
+          "gain": 0.5,
+          "rate": 1.2,
+          "length": 0.37
+        },
+        {
+          "source": "rpg.book_flip_2",
+          "gain": 0.45,
+          "rate": 1.3,
+          "delay": 0.18
+        },
+        {
+          "source": "interface.pluck_001",
+          "gain": 0.4,
+          "rate": 1,
+          "delay": 0.15
+        },
+        {
+          "source": "interface.pluck_002",
+          "gain": 0.4,
+          "rate": 1.2,
+          "delay": 0.31
+        },
+        {
+          "source": "rpg.book_place_1",
+          "gain": 0.35,
+          "rate": 1,
+          "delay": 0.46
+        }
+      ],
+      "sha256": "585e2f5cabf93615411d3be1c748ac750c026f2f5a45f3758b9b23e294c3bbe2",
+      "frames": 21120,
+      "recipeHash": "a911f657000165d240a2ba91315326b4af19974dc3aceaccc5cd24496daa914b"
+    },
+    "paper-death": {
+      "path": "ui/assets/audio/living-sketchbook/paper-death.wav",
+      "description": "A falling page and soft final book thud",
+      "seconds": 0.72,
+      "targetRmsDb": -26,
+      "peakLimit": 0.82,
+      "layers": [
+        {
+          "source": "rpg.cloth_4",
+          "gain": 0.55,
+          "rate": 0.68
+        },
+        {
+          "source": "rpg.book_close",
+          "gain": 0.5,
+          "rate": 0.7,
+          "delay": 0.15,
+          "lowpass": 1800
+        }
+      ],
+      "sha256": "437c599814d76fbc6473f232e843de60410dff23c13864780a72c4df3d3baf5c",
+      "frames": 17280,
+      "recipeHash": "6d22847ff53c6e405986b20ea948c414acd9f8d18969cab8aa65e333e61a1d16"
+    },
+    "paper-status": {
+      "path": "ui/assets/audio/living-sketchbook/paper-status.wav",
+      "description": "A short drawn accent with a warm pluck",
+      "seconds": 0.36,
+      "targetRmsDb": -27,
+      "peakLimit": 0.82,
+      "layers": [
+        {
+          "source": "interface.scratch_004",
+          "gain": 0.6,
+          "rate": 1.15
+        },
+        {
+          "source": "interface.pluck_001",
+          "gain": 0.25,
+          "rate": 1,
+          "delay": 0.08
+        }
+      ],
+      "sha256": "22e4bf29a106c706f78883f98268c300b789c66a04c2bf9bf6c31efef68b75b8",
+      "frames": 8640,
+      "recipeHash": "7ade27c8c7fb0e02ba21d6f0deaab255432497f8bbad3f63bb9cef215c821418"
+    },
+    "paper-break": {
+      "path": "ui/assets/audio/living-sketchbook/paper-break.wav",
+      "description": "A dry scratch snapping free",
+      "seconds": 0.34,
+      "targetRmsDb": -25,
+      "peakLimit": 0.82,
+      "layers": [
+        {
+          "source": "interface.scratch_005",
+          "gain": 0.75,
+          "rate": 1.25
+        },
+        {
+          "source": "impact.impact_wood_light_000",
+          "gain": 0.35,
+          "rate": 1,
+          "delay": 0.07,
+          "length": 0.13
+        }
+      ],
+      "sha256": "1e9c3a35bdc431a7ff57e4029aa5e756e5d8e89907ae8c1999667660d293b505",
+      "frames": 8160,
+      "recipeHash": "a0a7a01b657b42c19b8c029166e04d0c1675a44f900a84015dae6f9bb4547fdc"
+    },
+    "paper-slide": {
+      "path": "ui/assets/audio/living-sketchbook/paper-slide.wav",
+      "description": "Paper dragging across the page",
+      "seconds": 0.56,
+      "targetRmsDb": -28,
+      "peakLimit": 0.82,
+      "layers": [
+        {
+          "source": "rpg.cloth_1",
+          "gain": 0.65,
+          "rate": 1.25
+        },
+        {
+          "source": "interface.scratch_004",
+          "gain": 0.35,
+          "rate": 0.8,
+          "delay": 0.02
+        }
+      ],
+      "sha256": "95fc86ea3b0bc89a2e01b2645aefe35656f19fb9951898e128360cf834b58557",
+      "frames": 13440,
+      "recipeHash": "a9744416805253f8ea4c8e4297e2bade613f667e508f924bb0ddc0ba2f6b118f"
+    },
+    "paper-rockfall": {
+      "path": "ui/assets/audio/living-sketchbook/paper-rockfall.wav",
+      "description": "Rumbling wooden-paper impacts",
+      "seconds": 0.85,
+      "targetRmsDb": -23,
+      "peakLimit": 0.82,
+      "layers": [
+        {
+          "source": "impact.impact_wood_heavy_000",
+          "gain": 0.7,
+          "rate": 0.8
+        },
+        {
+          "source": "rpg.book_place_3",
+          "gain": 0.55,
+          "rate": 0.75,
+          "delay": 0.12
+        },
+        {
+          "source": "impact.impact_soft_heavy_000",
+          "gain": 0.45,
+          "rate": 0.8,
+          "delay": 0.24
+        }
+      ],
+      "tone": {
+        "hz": 54,
+        "gain": 0.12,
+        "seconds": 0.24
+      },
+      "sha256": "528565c0c9cfc77e837ab3aeb188b74bcf2db3e7abe9ad907714479f371f5fcd",
+      "frames": 20400,
+      "recipeHash": "00909a1b8e80171205e8ba40fdd3493cd5b5bf8b52ae2e310e1caefa03651927"
+    },
+    "paper-spring": {
+      "path": "ui/assets/audio/living-sketchbook/paper-spring.wav",
+      "description": "A small mechanism springs into paper chaos",
+      "seconds": 0.72,
+      "targetRmsDb": -23,
+      "peakLimit": 0.82,
+      "layers": [
+        {
+          "source": "rpg.belt_handle_2",
+          "gain": 0.55,
+          "rate": 1.2
+        },
+        {
+          "source": "interface.pluck_001",
+          "gain": 0.55,
+          "rate": 0.8,
+          "delay": 0.1
+        },
+        {
+          "source": "interface.pluck_002",
+          "gain": 0.4,
+          "rate": 1.4,
+          "delay": 0.23
+        },
+        {
+          "source": "rpg.cloth_3",
+          "gain": 0.55,
+          "rate": 1.3,
+          "delay": 0.23
+        }
+      ],
+      "sha256": "5ef03c58ee25f21444d9f94748930b2bcaae3152cd1e507e615e473ee07830c5",
+      "frames": 17280,
+      "recipeHash": "aa0d2baf954950c0329399e956c246638f46fd7fe99c69994d96787af58b6efb"
+    },
+    "paper-magic": {
+      "path": "ui/assets/audio/living-sketchbook/paper-magic.wav",
+      "description": "A page swish and bright plucked overtone",
+      "seconds": 0.49,
+      "targetRmsDb": -25,
+      "peakLimit": 0.82,
+      "layers": [
+        {
+          "source": "rpg.book_flip_2",
+          "gain": 0.55,
+          "rate": 1.1,
+          "reverse": true
+        },
+        {
+          "source": "interface.pluck_002",
+          "gain": 0.4,
+          "rate": 1.4,
+          "delay": 0.15
+        }
+      ],
+      "sha256": "a09417080b6e7036406ca511e31fd2ad65834a3058abe0d89a8af279ec35b6e2",
+      "frames": 11760,
+      "recipeHash": "cf6a4cd2ad8057f838a18d56af60b431c9f207ab42fd889d1b8f35a711276c43"
+    },
+    "paper-poison": {
+      "path": "ui/assets/audio/living-sketchbook/paper-poison.wav",
+      "description": "Low, rough pencil friction",
+      "seconds": 0.57,
+      "targetRmsDb": -27,
+      "peakLimit": 0.82,
+      "layers": [
+        {
+          "source": "interface.scratch_004",
+          "gain": 0.65,
+          "rate": 0.7
+        },
+        {
+          "source": "rpg.cloth_4",
+          "gain": 0.4,
+          "rate": 0.85,
+          "lowpass": 1700
+        }
+      ],
+      "sha256": "b77976eb86766393fdca358062977bffe9ceb242057baeab893e43fe4e4b9a4e",
+      "frames": 13680,
+      "recipeHash": "79556012fcc7dbeaa20c177fa01f1c33b87ce233d42ca55a275e39ceb06dd88c"
+    },
+    "paper-tunnel": {
+      "path": "ui/assets/audio/living-sketchbook/paper-tunnel.wav",
+      "description": "A page-fold swish passing across the notebook",
+      "seconds": 0.78,
+      "targetRmsDb": -25,
+      "peakLimit": 0.82,
+      "layers": [
+        {
+          "source": "rpg.book_flip_1",
+          "gain": 0.5,
+          "rate": 1.25,
+          "reverse": true
+        },
+        {
+          "source": "rpg.cloth_2",
+          "gain": 0.5,
+          "rate": 1.2,
+          "delay": 0.16
+        },
+        {
+          "source": "interface.pluck_002",
+          "gain": 0.18,
+          "rate": 0.8,
+          "delay": 0.22
+        }
+      ],
+      "sha256": "b027b04f6ac2c066cfab55072182960e3184a973b2afedc3d1142f6fc69f334b",
+      "frames": 18720,
+      "recipeHash": "58767531425ce9bdf7c4b5f3c334c3e0e89297bc776b2cc96362dcd75c599898"
+    },
+    "book-open": {
+      "path": "ui/assets/audio/living-sketchbook/book-open.wav",
+      "description": "The notebook cover opening",
+      "seconds": 0.55,
+      "targetRmsDb": -25,
+      "peakLimit": 0.82,
+      "layers": [
+        {
+          "source": "rpg.book_open",
+          "gain": 0.8,
+          "rate": 1
+        },
+        {
+          "source": "rpg.cloth_1",
+          "gain": 0.25,
+          "rate": 1.3
+        }
+      ],
+      "sha256": "01333cb81e5395123ea9552b8462afd4c69b69dedd7d893c03f33dd6831dcb8e",
+      "frames": 13200,
+      "recipeHash": "09b591b3587c732ec836407f34301f53396faf6f23f06e18b04a234312d38fcb"
+    },
+    "page-turn-a": {
+      "path": "ui/assets/audio/living-sketchbook/page-turn-a.wav",
+      "description": "A full notebook page turn",
+      "seconds": 0.73,
+      "targetRmsDb": -25,
+      "peakLimit": 0.82,
+      "layers": [
+        {
+          "source": "rpg.book_flip_1",
+          "gain": 0.85,
+          "rate": 1.12
+        }
+      ],
+      "sha256": "983dc6734075c49fca85df1e2e2ff7ea72f4fb69a915c22a1aab4aecd53c9ea7",
+      "frames": 17520,
+      "recipeHash": "eeff3772a75c5e15b05bf9936642af99ec95cc5fa1d0e850099b0df3dd6777ba"
+    },
+    "page-turn-b": {
+      "path": "ui/assets/audio/living-sketchbook/page-turn-b.wav",
+      "description": "An alternate notebook page turn",
+      "seconds": 0.54,
+      "targetRmsDb": -25,
+      "peakLimit": 0.82,
+      "layers": [
+        {
+          "source": "rpg.book_flip_2",
+          "gain": 0.85,
+          "rate": 0.85
+        }
+      ],
+      "sha256": "9f454f2b0105c96a6549c73727f689a728ee23170d19296eef7ffa4ec7e108cb",
+      "frames": 12960,
+      "recipeHash": "b73614544534e114cbb116d77705f78572d1008a3445ee3dbb1e92428730a868"
+    }
+  },
+  "cues": {
+    "erase": {
+      "samples": [
+        "pencil-erase"
+      ],
+      "gain": 0.6,
+      "cooldown": 90,
+      "rate": 1
+    },
+    "poof": {
+      "samples": [
+        "paper-poof"
+      ],
+      "gain": 0.8,
+      "cooldown": 80,
+      "rate": 1
+    },
+    "click": {
+      "samples": [
+        "pencil-click"
+      ],
+      "gain": 0.65,
+      "cooldown": 45,
+      "rate": 1
+    },
+    "step": {
+      "samples": [
+        "pencil-step-a",
+        "pencil-step-b"
+      ],
+      "gain": 0.3,
+      "cooldown": 90,
+      "rate": 1
+    },
+    "lever": {
+      "samples": [
+        "reel-handle"
+      ],
+      "gain": 0.8,
+      "cooldown": 60,
+      "rate": 1
+    },
+    "tick": {
+      "samples": [
+        "reel-tick-a",
+        "reel-tick-b"
+      ],
+      "gain": 0.55,
+      "cooldown": 35,
+      "rate": 1
+    },
+    "lock": {
+      "samples": [
+        "reel-lock"
+      ],
+      "gain": 0.8,
+      "cooldown": 30,
+      "rate": 1
+    },
+    "lockBig": {
+      "samples": [
+        "reel-lock-big"
+      ],
+      "gain": 0.95,
+      "cooldown": 30,
+      "rate": 1,
+      "priority": true
+    },
+    "hit": {
+      "samples": [
+        "paper-hit-a",
+        "paper-hit-b"
+      ],
+      "gain": 0.85,
+      "cooldown": 35,
+      "rate": 1
+    },
+    "heal": {
+      "samples": [
+        "paper-heal"
+      ],
+      "gain": 0.8,
+      "cooldown": 70,
+      "rate": 1
+    },
+    "shield": {
+      "samples": [
+        "paper-shield"
+      ],
+      "gain": 0.85,
+      "cooldown": 50,
+      "rate": 1
+    },
+    "coin": {
+      "samples": [
+        "paper-coin"
+      ],
+      "gain": 0.65,
+      "cooldown": 80,
+      "rate": 1
+    },
+    "encounter": {
+      "samples": [
+        "paper-appearance"
+      ],
+      "gain": 0.95,
+      "cooldown": 300,
+      "rate": 1,
+      "priority": true
+    },
+    "pursuer": {
+      "samples": [
+        "paper-threat"
+      ],
+      "gain": 0.9,
+      "cooldown": 500,
+      "rate": 1,
+      "priority": true
+    },
+    "reward": {
+      "samples": [
+        "paper-reward"
+      ],
+      "gain": 0.9,
+      "cooldown": 160,
+      "rate": 1
+    },
+    "critical": {
+      "samples": [
+        "paper-critical"
+      ],
+      "gain": 1,
+      "cooldown": 100,
+      "rate": 1,
+      "priority": true
+    },
+    "victory": {
+      "samples": [
+        "paper-victory"
+      ],
+      "gain": 0.9,
+      "cooldown": 200,
+      "rate": 1,
+      "priority": true
+    },
+    "death": {
+      "samples": [
+        "paper-death"
+      ],
+      "gain": 0.85,
+      "cooldown": 100,
+      "rate": 1
+    },
+    "trait": {
+      "samples": [
+        "paper-status"
+      ],
+      "gain": 0.85,
+      "cooldown": 80,
+      "rate": 1
+    },
+    "execute": {
+      "samples": [
+        "paper-hit-b"
+      ],
+      "gain": 0.9,
+      "cooldown": 180,
+      "rate": 0.9
+    },
+    "executeFull": {
+      "samples": [
+        "paper-critical"
+      ],
+      "gain": 0.95,
+      "cooldown": 350,
+      "rate": 1.1,
+      "priority": true
+    },
+    "jackBox": {
+      "samples": [
+        "paper-spring"
+      ],
+      "gain": 0.95,
+      "cooldown": 600,
+      "rate": 1
+    },
+    "stunBreak": {
+      "samples": [
+        "paper-break"
+      ],
+      "gain": 0.8,
+      "cooldown": 300,
+      "rate": 1
+    },
+    "mudSlide": {
+      "samples": [
+        "paper-slide"
+      ],
+      "gain": 0.7,
+      "cooldown": 180,
+      "rate": 0.8
+    },
+    "rockDrop": {
+      "samples": [
+        "paper-rockfall"
+      ],
+      "gain": 0.9,
+      "cooldown": 170,
+      "rate": 1
+    },
+    "jesterReady": {
+      "samples": [
+        "paper-spring"
+      ],
+      "gain": 0.75,
+      "cooldown": 500,
+      "rate": 1.2
+    },
+    "jesterReveal": {
+      "samples": [
+        "paper-magic"
+      ],
+      "gain": 0.65,
+      "cooldown": 160,
+      "rate": 1.15
+    },
+    "jesterMark": {
+      "samples": [
+        "paper-status"
+      ],
+      "gain": 0.5,
+      "cooldown": 110,
+      "rate": 1.2
+    },
+    "iceSlide": {
+      "samples": [
+        "paper-slide"
+      ],
+      "gain": 0.65,
+      "cooldown": 180,
+      "rate": 1.3
+    },
+    "fuse": {
+      "samples": [
+        "paper-poison"
+      ],
+      "gain": 0.8,
+      "cooldown": 250,
+      "rate": 1.2
+    },
+    "explosion": {
+      "samples": [
+        "paper-rockfall"
+      ],
+      "gain": 1,
+      "cooldown": 300,
+      "rate": 0.85,
+      "priority": true
+    },
+    "itemFind": {
+      "samples": [
+        "paper-reward"
+      ],
+      "gain": 0.85,
+      "cooldown": 160,
+      "rate": 1.15
+    },
+    "criticalHeal": {
+      "samples": [
+        "paper-heal"
+      ],
+      "gain": 0.95,
+      "cooldown": 220,
+      "rate": 0.9
+    },
+    "criticalBlade": {
+      "samples": [
+        "paper-hit-b"
+      ],
+      "gain": 0.95,
+      "cooldown": 220,
+      "rate": 0.85
+    },
+    "criticalMagic": {
+      "samples": [
+        "paper-magic"
+      ],
+      "gain": 0.9,
+      "cooldown": 220,
+      "rate": 0.9
+    },
+    "criticalPoison": {
+      "samples": [
+        "paper-poison"
+      ],
+      "gain": 0.85,
+      "cooldown": 220,
+      "rate": 0.9
+    },
+    "criticalBlock": {
+      "samples": [
+        "paper-shield"
+      ],
+      "gain": 0.95,
+      "cooldown": 220,
+      "rate": 0.85
+    },
+    "criticalTrap": {
+      "samples": [
+        "paper-rockfall"
+      ],
+      "gain": 0.8,
+      "cooldown": 220,
+      "rate": 1.2
+    },
+    "criticalStun": {
+      "samples": [
+        "paper-break"
+      ],
+      "gain": 0.9,
+      "cooldown": 220,
+      "rate": 0.85
+    },
+    "criticalBuff": {
+      "samples": [
+        "paper-status"
+      ],
+      "gain": 0.9,
+      "cooldown": 220,
+      "rate": 1.1
+    },
+    "criticalBlood": {
+      "samples": [
+        "paper-hit-a"
+      ],
+      "gain": 0.85,
+      "cooldown": 220,
+      "rate": 0.85
+    },
+    "jesterTrick": {
+      "samples": [
+        "paper-spring"
+      ],
+      "gain": 0.8,
+      "cooldown": 180,
+      "rate": 1.2
+    },
+    "tunnel": {
+      "samples": [
+        "paper-tunnel"
+      ],
+      "gain": 0.85,
+      "cooldown": 220,
+      "rate": 1
+    },
+    "bookOpen": {
+      "samples": [
+        "book-open"
+      ],
+      "gain": 0.7,
+      "cooldown": 300,
+      "rate": 1
+    },
+    "pageTurn": {
+      "samples": [
+        "page-turn-a",
+        "page-turn-b"
+      ],
+      "gain": 0.75,
+      "cooldown": 300,
+      "rate": 1
+    }
+  }
+}

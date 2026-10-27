@@ -1,0 +1,4 @@
+# Licence evidence retains the exact downloaded bytes on every platform.
+audio/licenses/* -text
+# This upstream notice intentionally contains CRLF and tab-only blank lines.
+audio/licenses/kenney-interface-CC0.txt -whitespace

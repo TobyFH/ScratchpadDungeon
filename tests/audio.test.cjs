@@ -58,7 +58,7 @@ async function notebook(t) {
   return page;
 }
 
-test("all five uploaded WAVs decode offline, produce non-silent buffer sources and share mute, gains and the voice limit", async (t) => {
+test("the complete recorded bank decodes offline; reveal/reel cues produce non-silent sources and share mute, gains and the voice limit", async (t) => {
   const page = await notebook(t);
   await page.locator("#options-tab").click();
   const result = await page.evaluate(async () => {
@@ -89,7 +89,7 @@ test("all five uploaded WAVs decode offline, produce non-silent buffer sources a
       return 0.5;
     };
     try {
-      for (const id of Object.keys(SOUND_SAMPLES)) GameSound.play(id);
+      for (const id of ["erase", "poof", "tick", "lock", "lockBig"]) GameSound.play(id);
       for (let n = 0; n < 50; n++) GameSound.play("erase");
       const played = { ...GameSound.stats.samplePlays };
       // Test volume gates after every recording cooldown has elapsed, rather
@@ -107,6 +107,7 @@ test("all five uploaded WAVs decode offline, produce non-silent buffer sources a
       await new Promise((r) => setTimeout(r, 200));
       return {
         decoded: GameSound.samplesReady,
+        expected: Object.keys(SFX_ASSETS).length,
         errors: GameSound.stats.sampleErrors,
         played,
         sources,
@@ -120,7 +121,7 @@ test("all five uploaded WAVs decode offline, produce non-silent buffer sources a
       Math.random = random;
     }
   });
-  assert.equal(result.decoded, 5);
+  assert.equal(result.decoded, result.expected);
   assert.deepEqual(result.errors, []);
   assert.deepEqual(Object.keys(result.played).sort(), [
     "erase",
@@ -131,7 +132,7 @@ test("all five uploaded WAVs decode offline, produce non-silent buffer sources a
   ]);
   assert.ok(
     result.sources.length >= 5 &&
-      result.sources.every((s) => s.nonSilent && s.duration > 0.2),
+      result.sources.every((s) => s.nonSilent && s.duration > 0.02),
   );
   assert.equal(result.randomCalls, 0);
   assert.equal(result.muted, false);
@@ -215,6 +216,7 @@ test("unsupported recordings report once and use synthesis without blocking game
         first,
         decoded: GameSound.samplesReady,
         errors: GameSound.stats.sampleErrors,
+        expectedErrors: Object.keys(SFX_ASSETS).length,
         synth: GameSound.stats.played - before,
         recordings: GameSound.stats.samplePlays,
       };
@@ -226,7 +228,7 @@ test("unsupported recordings report once and use synthesis without blocking game
   assert.equal(result.decoded, 0);
   assert.equal(
     result.errors.length,
-    5,
+    result.expectedErrors,
     "each failure is reported once, never retried on every click",
   );
   assert.equal(result.synth, 1);

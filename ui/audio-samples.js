@@ -1,14 +1,6 @@
-// User-supplied recordings. Original WAVs stay replaceable; the builder embeds
-// their bytes so file:// play and Save HTML never require an asset server.
-// Gain is a mix trim, before the existing SFX and master volume controls.
-const SOUND_SAMPLES = Object.freeze({
-  erase: { src: "@asset(audio/SFX_Erase.wav)", gain: 0.35, cooldown: 90 },
-  poof: { src: "@asset(audio/SFX_Poof.wav)", gain: 0.55, cooldown: 80 },
-  tick: { src: "@asset(audio/SFX_SlotClick.wav)", gain: 0.28, cooldown: 35 },
-  lock: { src: "@asset(audio/SFX_SlotEnd.wav)", gain: 0.6, cooldown: 30 },
-  lockBig: {
-    src: "@asset(audio/SFX_SlotEndBig.wav)",
-    gain: 0.75,
-    cooldown: 30,
-  },
-});
+// The authoritative catalogue and mix recipes are audio/manifest.json.
+// The offline builder validates provenance/hashes, then embeds each mix ONCE.
+// Cues reference stable sample IDs; archives/original uploads are not duplicated.
+const SFX_ASSETS = Object.freeze(/* @audioAssets */ {});
+const SOUND_SAMPLES = Object.freeze(/* @audioCues */ {});
+const SFX_CREDITS = Object.freeze(/* @audioCredits */ {});

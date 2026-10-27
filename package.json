@@ -5,6 +5,9 @@
   "description": "A self-contained notebook dungeon crawler. No runtime dependencies.",
   "scripts": {
     "build:ui": "node tools/build-ui.cjs",
+    "build:sfx": "python3 tools/build-sfx.py && npm run build:ui",
+    "check:audio": "node tools/audio-bank.cjs",
+    "review:sfx": "node tools/review-sfx.cjs",
     "check:ui": "node tools/build-ui.cjs --check",
     "review:ui": "npm run check:ui && node tools/review-ui.cjs",
     "test": "npm run check:ui && node --test tests/*.test.cjs",
