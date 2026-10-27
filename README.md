@@ -269,15 +269,12 @@ Settings persist across fresh runs and reloads. **Skip critical roll visuals**
 still rolls and applies the same multiplier, with normal damage and event results;
 it only removes the critical machine, popup/inline animation and wait.
 
-The **Living Sketchbook** sound bank uses 32 pencil/paper/book/wood mixes for 45
-game cues, built from Kenney's CC0 collections and the original uploaded eraser
-texture. Movement stays quiet; reels clack and criticals tear through paper with
-a low impact. Music combines an original 64-step minor-key melody with
+Audio combines synthesised cues, an original 64-step minor-key melody with
 plucked tones, bass and soft chord layers, plus quiet ambient noise. Every enemy
 type and hero class has a distinct short creature call; enemies call on appearance
 and death, and heroes on death. Calls use the effects volume; music and ambience
-retain their own sliders. The five supplied WAVs remain unchanged as sources or
-archives; their separate permissions are documented with the new CC0 credits.
+retain their own sliders. The five supplied WAV recordings replace tile erasing,
+smoke puffs, reel ticks, ordinary reel locks and large single-reel locks.
 A click or key unlocks sound; hidden tabs pause it. All recordings are embedded;
 no external audio files or network service are needed. See
 [Audio assets](docs/AUDIO_ASSETS.md) for replacement and testing. Torch flicker covers the screen and
@@ -321,13 +318,7 @@ is still the single `index.html`. Read [UI_STYLE_GUIDE.md](UI_STYLE_GUIDE.md),
 npm run build:ui   # embed edited CSS, SVG artwork and assets into index.html
 npm run check:ui   # verify checked-in HTML matches the editable sources
 npm run review:ui  # generate visual-review screenshots and an HTML backup
-npm run check:audio # validate sound files, licences, references and mix levels
-npm run review:sfx  # create an offline sound audition and short WAV montage
 ```
-
-Only waveform regeneration (`npm run build:sfx`) requires Python 3 and ffmpeg.
-Normal UI builds and playback use the checked-in WAVs. See
-[Audio assets](docs/AUDIO_ASSETS.md) for pinned source licences and replacement recipes.
 
 The build uses Node's standard library and embeds fonts, textures and torn-paper sheets directly. No
 build step or network access is required to play a downloaded copy. Commit the
@@ -349,11 +340,6 @@ Tests use `/usr/bin/chromium` when present or Playwright's browser; `CHROMIUM_PA
 Coverage includes camp transactions/unlocks and interrupted saves, Ranger charge, optional run modifiers, conservative enemy criticals, status tooltips and full ten-floor progression, stair bosses and immediate victory, class selection and page animations, equipment drag/effects/swaps, autoresolve, pursuers, floor-specific species and elite odds, hidden command-aged ambush readiness, rockfalls and bodies, beacon sight lines, save migration, inventory decisions, permanent death, revives, critical and multi-hit calculations, map generation and connectivity, mobile/desktop layout and offline downloads. The campaign integration test uses controlled attack faces and extra health to exercise real navigation, encounters, rewards and progression independently of luck. Separate tests verify ordinary combat and failure paths. The offline test executes downloaded bytes with networking disabled because managed Chromium restricts `file://` navigation.
 
 ## Credits
-
-The Living Sketchbook SFX use **Kenney's CC0 1.0** Interface Sounds, RPG Audio
-and Impact Sounds, modified into paper/graphite mixes. Original uploads have
-separate user-authorised permissions. Source credits and retained licence files
-are documented in [Audio assets](docs/AUDIO_ASSETS.md).
 
 The embedded **Patrick Hand** font is by Patrick Wagesreiter, under the SIL Open Font License 1.1. Its full license is in the HTML source. All illustrations and effects run locally.
 

@@ -1,4 +1,0 @@
-These five recordings were supplied by the user for use in Scratchpad Dungeon.
-No separate public redistribution licence was provided. Do not describe them or
-derivatives containing them as CC0, or redistribute them as a standalone library.
-Their original bytes are retained in ui/assets/audio/.

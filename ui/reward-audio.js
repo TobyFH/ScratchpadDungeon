@@ -1,7 +1,5 @@
 // Original temporary Web Audio cues, mixed through the existing SFX bus/pool.
 const REWARD_CUES = Object.freeze({
-  bookOpen: { frequencies: [90], duration: .25, gain: .035, noise: true, cooldown: 300 },
-  pageTurn: { frequencies: [140], duration: .25, gain: .035, noise: true, cooldown: 300 },
   execute: {
     frequencies: [220, 440, 660],
     duration: 0.22,

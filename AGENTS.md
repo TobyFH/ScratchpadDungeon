@@ -122,19 +122,7 @@ Keep it cosmetic and independently reversible: animate revealed water/embers,
 never tile geometry, blocking boundaries, bridge decks, fog or gameplay data.
 
 Original score data and deterministic music arrangement live in `ui/music.js`,
-embedded by the builder. `GameSound` (`ui/audio-engine.js`, embedded in index.html) schedules those cues through
+embedded by the builder. `GameSound` in index.html schedules those cues through
 its existing pooled music bus, gain controls and limiter; never use gameplay RNG
 for composition. See `docs/BATTLE_POLISH.md` for Display layout and shared stun
 reel presentation contracts and their browser checks.
-
-The Living Sketchbook SFX catalogue is `audio/manifest.json`; read
-`docs/AUDIO_ASSETS.md` before audio work. `ui/audio-engine.js` is now the embedded
-mixer source. Preserve uploaded source bytes, pinned CC0 provenance, archive
-classification and the user recording's separate permission status. Every cue
-must resolve a listed mix or its synthesis fallback; variants never consume
-`Math.random()`. Normal builds validate hashes, licences, references and missing/
-unused audio through `tools/audio-bank.cjs`. Only waveform regeneration needs
-Python/ffmpeg (`npm run build:sfx`); normal UI builds use checked-in WAVs. Run
-`npm run review:sfx` for an offline listening sheet and montage, plus audio and
-full browser checks. Music balance and individual creature cries retain their
-separate roles; never reintroduce a continuous coin-rush effect.
