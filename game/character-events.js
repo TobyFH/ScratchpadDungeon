@@ -137,7 +137,10 @@ function characterMoment(id, h) {
     at: Date.now(),
   });
   state.characterEvents = state.characterEvents.slice(-100);
-  log(`${h.name} ${def.text}.`);
+  log(`${h.name} · ${def.name}: ${def.text}${id === "scavenger" ? ` (+${3 + state.depth * 2} gold)` : ""}.`, {
+    category: "personal", context: combat ? "combat" : "exploration", important: true,
+    terms: [{ name: def.name, description: `${h.name} ${def.text}. ${CHARACTER_EVENT_HELP[id]}` }],
+  });
   combatCallout(entityArt(h), def.name, def.kind);
   showHeroNotice(h, def.name, def.text, def.kind);
   if (id === "heroic") {

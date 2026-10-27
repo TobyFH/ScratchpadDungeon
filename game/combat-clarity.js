@@ -297,13 +297,10 @@ function finishCombatLogGroup(group, report) {
     .filter((s) => ["poison", "stun", "rally", "stimulant"].includes(s.type))
     .map((s) => FACE_LABELS[s.type]);
   const extras = [...new Set(utility)];
-  log(
+  logCombatSummary(group,
     `${group.hero} · ${group.activity} ×${report.shots.length}: ${damage.length ? damage.join(" + ") + " = " + report.damage + " damage; " : ""}${report.healing} HP restored; ${report.block} block${extras.length ? "; " + extras.join(", ") : ""}.`,
   );
-  const important = group.entries.filter((s) =>
-    /second wind|summon|splits|falls|dies/i.test(s),
-  );
-  important.slice(0, 2).forEach(log);
+  flushCombatLogEvents(group);
 }
 function classPricesMarkup(h) {
   const types = editableTypes(h).filter((t) => t !== "blank");
@@ -334,7 +331,7 @@ function finishHeroRollLog(group, h) {
     ...new Set(
       (roll?.symbols || [])
         .filter((f) =>
-          ["stun", "poison", "rally", "stimulant", "trick"].includes(f.type),
+          ["stun", "poison", "rally", "stimulant", "trick", "selfharm"].includes(f.type),
         )
         .map((f) => FACE_LABELS[f.type]),
     ),
@@ -345,17 +342,10 @@ function finishHeroRollLog(group, h) {
       ? classAbilityName(h)
       : "roll";
   const critical = Math.max(roll?.multiplier || 1, roll?.flurryMultiplier || 1);
-  log(
+  logCombatSummary(group,
     `${h.name} · ${activity}${hits.length > 1 ? " ×" + hits.length : ""}${critical > 1 ? " · CRITICAL ×" + critical : ""}: ${hits.length > 1 ? hits.join(" + ") + " = " : ""}${damage} damage; ${healing} HP restored; ${group.block} block${powers.length ? "; marks: " + powers.join(", ") : ""}.`,
   );
-  group.entries
-    .filter((s) =>
-      /second wind|summon|splits|becomes|refuses to fall|shrugs off|turns aside/i.test(
-        s,
-      ),
-    )
-    .slice(0, 3)
-    .forEach(log);
+  flushCombatLogEvents(group);
 }
 
 // Record where HP was actually lost; nested bursts contribute to their parent

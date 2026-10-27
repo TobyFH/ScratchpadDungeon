@@ -622,6 +622,7 @@ function applyComplementaryEffects(h, symbols, base) {
       value: CLASS_COMBOS[h.job].name,
       enumerable: false,
     });
+    log(`${h.name} · ${CLASS_COMBOS[h.job].name}.`, { inline: true, label: CLASS_COMBOS[h.job].name });
     combatCallout(
       entityArt(h),
       CLASS_COMBOS[h.job].name.toUpperCase(),

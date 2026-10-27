@@ -360,3 +360,9 @@ restore a carousel, crop controls, or insert result rows that resize the sheet.
 When a machine title is absent, explicitly retain its grid row so the reel face
 cannot accidentally occupy the caption's height. Review 320px, Deck and desktop
 captures as well as dark/warm palettes after changing these shared patterns.
+
+Event-log names reuse `.log-term` in the existing fixed journal. They have a thin
+pencil underline, a quiet token-based highlight and hover/focus explanations in
+the shared viewport tooltip. Keep them inline and keyboard focusable; never add
+an expanding explanation panel inside the scrolling log. See `docs/EVENT_LOG.md`
+for snapshot metadata and grouped-action recording.

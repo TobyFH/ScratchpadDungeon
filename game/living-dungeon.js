@@ -68,8 +68,8 @@ function createRockfallWall() {
   smokePoof($(`[data-tile="${i}"]`), true);
   if (c.seen)
     combatCallout($(`[data-tile="${i}"]`), "PASSAGE BLOCKED", "danger");
-  log(
-    `Fallen stone blocks column ${(i % W) + 1}, row ${Math.floor(i / W) + 1}. Another route remains.`,
+  if (relevantLogTile(i)) log(
+    `Rockfall: fallen stone blocks column ${(i % W) + 1}, row ${Math.floor(i / W) + 1}. Another route remains.`,
   );
   state.lastRockfallWall = i;
   return i;
@@ -253,6 +253,10 @@ async function livingDungeonStep() {
       setTimeout(() => tile?.classList.remove("stalactite-drop"), 450);
       shakeElement(tile, 3, "impact");
     }
+    if (relevantLogTile(i)) log(
+      `Stalactite falls at column ${(i % W) + 1}, row ${Math.floor(i / W) + 1}${i === state.position ? "; the party is struck" : "; keep clear of the falling stone"}.`,
+      { category: "exploration" },
+    );
     if (killPursuerByTerrain(i, "a stalactite")) {
       changed = true;
       continue;
@@ -296,7 +300,7 @@ function fogPartyReels(e) {
     smokePoof($(`#machine-hero-${state.party.indexOf(h)} [data-reel="${k}"]`));
   }
   combatCallout(enemyArtEl(e), "VEIL OF DOUBT", "poison");
-  log(`${e.name} fogs ${count} reels. They count as Empty for one roll.`);
+  log(`${e.name} · Veil of doubt: fogs ${count} reels. They count as Empty for one roll.`, { important: true });
 }
 function finishShadowAction(h) {
   state.party.forEach((other) => (other.shadowRest = false));

@@ -182,6 +182,8 @@ async function jesterWildcard(h) {
     enemyId: enemy.id,
     allyId: ally.id,
   };
+  const namedEvent = WILDCARD_LOG_EVENTS[trick];
+  log(`${h.name} · ${namedEvent.name}`, { inline: true, label: namedEvent.name });
   GameSound.play("jesterTrick");
   if (trick === 0) {
     const available = [0, 1, 2].filter((k) => !enemy.blackout?.includes(k));

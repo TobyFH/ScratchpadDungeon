@@ -531,6 +531,9 @@ test("a real Jester mixed roll grants no special multiplier, critical EXP or fre
     beginEncounter(false, { count: 1 });
     state.enemy.hp = state.enemy.maxHp = 10000;
     state.enemy.countdown = 20;
+    // Test the roll rules against an unshielded dummy, not a random elite.
+    state.enemy.passive = null;
+    setEnemyBlock(0);
     finishOpeningRoll();
     const real = Math.random;
     Math.random = () => 0;

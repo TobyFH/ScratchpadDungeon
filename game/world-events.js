@@ -11,6 +11,7 @@ async function oldTravelEvent(c, kind) {
       { id: "body-leave", label: "Let them rest", value: false },
     ]).then(async (choice) => {
       closeSpotlight();
+      log(`Forgotten traveller: ${choice === "true" ? "the party searches the abandoned satchel" : "left to rest undisturbed"}.`, { category: "exploration" });
       if (choice === "true") await treasureRoll("body");
     });
     c.corpses.push({
@@ -21,6 +22,7 @@ async function oldTravelEvent(c, kind) {
     return true;
   }
   if (!rockfallWallCandidates().length) return false;
+  log("Rockfall! The ceiling gives way above the party.", { category: "exploration" });
   showSpotlight(
     "ROCKFALL!",
     "The ceiling answers your footsteps.",
@@ -148,7 +150,10 @@ async function choiceTravelEvent(kind) {
     choices.unshift({ id: "stage-confirm", label: event.offer, value: true });
   const choice = await eventChoice(choices);
   closeSpotlight();
-  if (choice !== "true") return false;
+  if (choice !== "true") {
+    log(`${event.title}: the party leaves it alone.`, { category: "exploration" });
+    return false;
+  }
   if (kind === "cartographer") {
     state.gold -= event.cost;
     const type = offered;
@@ -162,6 +167,7 @@ async function choiceTravelEvent(kind) {
       { id: "stage-confirm", label: "Collect the supply", value: true },
     ]);
     closeSpotlight();
+    log(`${event.title}: bought ${ITEM_DEFS[type].name} for ${event.cost} gold.`, { category: "loot" });
     state.pendingItems.push({ type, count: 1 });
     await processPendingItems();
     render();
@@ -210,6 +216,10 @@ async function choiceTravelEvent(kind) {
   ]);
   closeSpotlight();
   state.gold += gold;
+  log(`${event.title}: +${gold} gold${damage ? `; ${damage} incoming damage` : "; unhurt"}${relic ? `; found ${relic.name}` : item ? `; found ${ITEM_DEFS[item].name}` : ""}.`, {
+    category: "loot",
+    terms: relic ? [{ name: relic.name, description: artefactText(relic), kind: "gold" }] : [],
+  });
   if (damage)
     damageHero(state.party.findIndex(alive), damage, "A dangerous discovery");
   if (relic) {

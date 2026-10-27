@@ -126,3 +126,11 @@ embedded by the builder. `GameSound` in index.html schedules those cues through
 its existing pooled music bus, gain controls and limiter; never use gameplay RNG
 for composition. See `docs/BATTLE_POLISH.md` for Display layout and shared stun
 reel presentation contracts and their browser checks.
+
+The unified Event log is owned by `game/event-log.js`; read `docs/EVENT_LOG.md`
+before adding records. Keep `state.logs` compatible plain strings and snapshot
+explanations in bounded `logDetails` metadata. Named moments/trait changes must
+survive nested combat groups; class bonuses stay inline in the action summary.
+Use the shared underlined `.log-term` and viewport tooltip. Local ambient hazards
+only log when seen, within two tiles and in sight. Categories prepare a future
+split without introducing another log today. Logging never consumes gameplay RNG.

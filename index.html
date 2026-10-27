@@ -11565,6 +11565,30 @@ body[data-motion="off"] .punchline-ready .machine-face { animation: none; }
   .notes-and-bag .inventory-items button small {font-size:11px;line-height:.9;}
 }
 
+/* Event-log vocabulary uses restrained pencil highlighting, never colour alone.
+   Inline spans keep entries compact; the shared viewport tooltip escapes clipping. */
+#log .log-term {
+  color: var(--ink);
+  background: color-mix(in srgb, var(--focus) 13%, transparent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: .15em;
+  text-decoration-color: var(--soft);
+  cursor: help;
+  border-radius: 1px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+#log .log-term-gold {
+  background: color-mix(in srgb, var(--gold) 16%, transparent);
+}
+#log .log-term:hover,
+#log .log-term:focus-visible {
+  outline: 1px dashed var(--ink);
+  outline-offset: 2px;
+  background: color-mix(in srgb, var(--focus) 23%, var(--paper));
+}
+
 /* Living pencil marks. Transform the illustration only; hitboxes never move. */
 :root {
   --portrait-life: 1;
@@ -12051,7 +12075,7 @@ body.utility-open .bridge-water > path {
           <div class="notes-and-bag">
             <section class="journal">
               <div class="journal-head">
-                <h3>Battle &amp; field notes</h3>
+                <h3>Event log</h3>
                 <button
                   class="quiet small"
                   id="toggle-log"
@@ -12064,7 +12088,7 @@ body.utility-open .bridge-water > path {
                 id="log"
                 tabindex="0"
                 aria-live="polite"
-                aria-label="Expedition journal"
+                aria-label="Event log · combat and exploration"
               ></ol>
             </section>
             <section class="inventory">
@@ -13407,6 +13431,7 @@ function applyComplementaryEffects(h, symbols, base) {
       value: CLASS_COMBOS[h.job].name,
       enumerable: false,
     });
+    log(`${h.name} · ${CLASS_COMBOS[h.job].name}.`, { inline: true, label: CLASS_COMBOS[h.job].name });
     combatCallout(
       entityArt(h),
       CLASS_COMBOS[h.job].name.toUpperCase(),
@@ -15449,17 +15474,198 @@ function wardActive(e = actingEnemy) {
             "Local save unavailable · keep this page open";
         }
       }
-      function log(msg) {
-        if (groupedCombatLog && groupedCombatLog.run === state) {groupedCombatLog.entries.push(msg);return;}
-        state.logs.unshift(msg);
-        state.logs = state.logs.slice(0, 60);
-        renderLog();
-      }
-      function renderLog() {
-        $("#log").innerHTML = state.logs
-          .map((x) => `<li>${escapeHTML(x)}</li>`)
-          .join("");
-      }
+      // BEGIN GENERATED EVENT LOG
+// One journal, separate presentation metadata. Keep legacy state.logs strings for
+// old saves/tools; snapshot explanations alongside them, never HTML or live hero
+// references. Categories are recorded now so future split views need no new hooks.
+const EVENT_LOG_LIMIT = 60;
+const CHARACTER_EVENT_HELP = Object.freeze({
+  heroic: "A would-be lethal hit leaves this hero at 1 HP instead.",
+  ironWill: "This incoming stun is shrugged off before it takes hold.",
+  parry: "The incoming hit is halved, rounded up, with at least 1 damage remaining.",
+  rally: "A wounded companion receives 3 HP plus 1 per three hero levels.",
+  inspired: "The strongest useful effect in this roll gains 20%, rounded up (at least +1).",
+  scavenger: "Finds 3 gold plus 2 per floor, added to carried gold.",
+  breath: "Recovers 5% of maximum HP, rounded up, with a minimum of 2 HP.",
+  footing: "This trap's damage is halved, rounded up, with at least 1 damage remaining.",
+  insight: "Gains one personal point to spend on reel edits.",
+  scout: "Reveals one hidden neighbouring discovery without activating it.",
+});
+const WILDCARD_LOG_EVENTS = Object.freeze([
+  { name: "INK IN THE GEARS", description: "The Jester covers an enemy reel in ink. It counts as empty for one roll, then clears." },
+  { name: "GILDED REEL", description: "One ally reel gains a rank on its ordinary marks for two rolls. The gift clears after battle." },
+  { name: "TURNED TABLES!", description: "Rolls an enemy machine against its own side. Damage hits that enemy; any rolled healing helps your wounded party instead." },
+  { name: "PIE FIGHT!", description: "Strikes every enemy. Stray pies also deal at most 1 HP to each ally, but cannot kill them." },
+  { name: "MERCY IN CONFETTI", description: "Heals the whole party. Each surviving enemy may also recover 1 HP." },
+  { name: "PICK A CARD!", description: "Deals spell damage to one enemy and heals a random living ally." },
+]);
+const EVENT_LOG_TERMS = Object.freeze({
+  "Cave room": "Revealing one room tile uncovers the connected room and its discoveries. Revealed discoveries are not activated until visited.",
+  "Gold": "Carried gold buys shop supplies. Bank it after clearing a floor to keep it between expeditions.",
+  "Treasure": "A chest rolls gold and possible supplies or artefacts. Three matching symbols trigger a critical reward.",
+  "Battle spoils": "Loot rolled after a won battle. Gold is added to your purse; supplies may need space in the satchel.",
+  "Beacon": "Reveals neighbouring tiles, including diagonals and sometimes a few beyond. Stone blocks its sight; discoveries remain unactivated.",
+  "Mushroom light": "Lights connected nearby mushroom tiles, revealing up to eight more without triggering discoveries.",
+  "Lava": "Impassable terrain whose glow reveals nearby stone. Walls block the light.",
+  "Stairs": "Select the staircase to face its guardian or descend after victory. You can keep exploring first.",
+  "Stalactite": "Loose ceiling stone falls when its footstep countdown runs out, then resets. It can damage the party or crush the Unwritten.",
+  "Forgotten traveller": "An abandoned satchel can hold loot. Searching it does not harm the party; you can also leave it undisturbed.",
+  "Rage": "Adds physical damage and a little damage resistance until battle ends.",
+  "Stored Execute": "Other party actions and enemy turns build Ranger patience. The next damaging roll consumes it for a separate, capped hit, stronger against wounded enemies. The Execute class seal amplifies that stored bonus.",
+  "Fury lifesteal": "Stored Berserker Fury converts part of actual damage dealt into healing. Every HP actually restored spends Fury.",
+  "Self-destruct": "The creature explodes after its fuse burns down, damaging each surviving hero and destroying itself. Shared block and Unbroken page can protect the team.",
+  "Blood Price": "Berserker-only mark. Pay a little health without dying; higher ranks pay more and build more Fury per HP spent. All healing spends Fury.",
+  "Fury": "Berserker wounds build charge. Blood Price builds it faster; all healing spends charge. Stored Fury adds physical damage and lifesteal.",
+  "Self stimulant": "Buffs the caster’s damage and resistance for at most three own actions. Further doses increase potency instead of extending a long duration.",
+  "Trick": "Builds Jester anticipation. At six, Punchline fires six ordinary marks from the hero’s own reels.",
+  "Elite": "An empowered enemy with an added affix and sometimes a passive ability. Core stats and rewards are stronger than the ordinary version.",
+  "Boss": "A powerful staircase guardian with an elite affix. Defeat it before descending; the tenth guardian ends the run.",
+  "Rockfall": "Falling stone can hurt the party and block a passage. A safe route to the stairs is preserved.",
+  "Ambush": "A wandering foe can surprise you in an old explored passage. Tiles age by move commands, not time spent reading or fighting.",
+  "Surprised": "Cannot make the first party roll. If the whole party is surprised, enemies act first.",
+  "Initiative": "The first roll gains 25% to its effects if this hero acts first. Choosing another hero loses the bonus.",
+  "Vulnerable": "The next damaging hit after the exposing action deals 25% more HP damage. Healing does not consume this effect.",
+  "Poison": "Deals damage over several actions. Further doses increase potency once three turns are loaded. Clears at battle end.",
+  "Stunned": "Cannot act until recovery. Other rolls help recovery: 60%, then guaranteed. If nobody can act, one missed turn advances enemy clocks.",
+  "Stun": "Stops an action until recovery; shields can resist it. Recovery grants two own actions of stun protection.",
+  "Steady": "Protected from stun for two own completed actions after recovering. Further stuns cannot immediately lock this character again.",
+  "Stimulant": "A short damage and resistance buff. Lasts at most three actions; extra doses strengthen it instead. Clears after battle.",
+  "Ally stimulant": "Applies stimulant to the selected living ally, even at full health; falls back to the caster if needed.",
+  "Team block": "Shared protection absorbs incoming damage and is consumed as it protects. It has a party-size cap and clears after battle.",
+  "Critical": "Three matching marks trigger a multiplier roll. The increased effects are applied to the original roll.",
+  "Punchline": "A full Jester anticipation bar fires six ordinary marks from that hero's reels. The burst cannot crit, reroll or refill itself.",
+  "Healing fountain": "Rolls a healing amount for each surviving hero, with a base maximum-health contribution that grows with depth. Matching marks can crit. Unused wells can be saved for later.",
+  "Fountain": "An optional, single-use team heal. Declining leaves it available; it cannot revive the dead.",
+  "Crystal seals": "Nearby crystals seal two random party reels every three party rolls. Sealed reels count as empty; rolling the affected hero cracks the gems.",
+  "Nearby crystals": "Nearby crystals seal two random party reels every three party rolls. Rolling an affected hero cracks the gems.",
+  "Ruins": "An optional roll that trades the risk of trap damage for loot.",
+  "Tunnel": "An optional passage to its paired tile. Both ends stay open after use.",
+});
+function eventLogDictionary() {
+  const terms = Object.entries(EVENT_LOG_TERMS).map(([name, description]) => ({ name, description }));
+  terms.push(...WILDCARD_LOG_EVENTS);
+  for (const def of Object.values(TRAVEL_EVENTS))
+    terms.push({ name: def.title, description: def.subtitle + (def.reward === "item" ? " Trade gold for the offered supply, or leave without spending." : " Roll for gold and possible finds, with a risk of injury; leaving is free.") });
+  for (const [id, def] of Object.entries(CHARACTER_EVENTS))
+    terms.push({ name: def.name, description: CHARACTER_EVENT_HELP[id] });
+  for (const def of Object.values(HERO_TRAITS))
+    terms.push({ name: def.name, description: def.description });
+  for (const def of Object.values(ENEMY_TRAITS))
+    terms.push({ name: def.name, description: def.description });
+  for (const def of Object.values(CLASS_COMBOS))
+    terms.push({ name: def.name, description: def.hint });
+  for (const h of state.party)
+    terms.push({ name: classAbilityName(h), description: classAbilityDescription(h) });
+  for (const def of Object.values(ITEM_DEFS))
+    terms.push({ name: def.name, description: def.description });
+  return terms;
+}
+function eventLogAnnotations(text, explicit = [], dictionary = eventLogDictionary()) {
+  const candidates = [], used = new Set();
+  // Explicit explanations win, including an earned trait's reason at that moment.
+  for (const term of [...explicit, ...dictionary]) {
+    if (!term || typeof term.name !== "string" || !term.name || typeof term.description !== "string" || !term.description) continue;
+    const key = term.name.toLowerCase();
+    if (used.has(key)) continue;
+    used.add(key);
+    const pattern = term.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const regex = new RegExp(pattern, "giu");
+    for (const match of text.matchAll(regex)) {
+      const start = match.index, end = start + match[0].length;
+      // Whole words only: do not underline 'stun' inside 'stunned'.
+      if ((start && /[\p{L}\p{N}_]/u.test(text[start - 1])) || /[\p{L}\p{N}_]/u.test(text[end] || "")) continue;
+      candidates.push({ start, end, description: term.description, kind: term.kind === "gold" || key === "gold" ? "gold" : "event" });
+    }
+  }
+  candidates.sort((a, b) => a.start - b.start || b.end - a.end);
+  const result = [];
+  let end = 0;
+  for (const term of candidates) {
+    if (term.start < end) continue;
+    result.push(term);
+    end = term.end;
+  }
+  return result;
+}
+function log(msg, options = {}) {
+  const text = String(msg), record = {
+    text,
+    category: options.category || (state.enemy ? "combat" : "exploration"),
+    context: options.context || (state.enemy ? "combat" : "exploration"),
+    label: typeof options.label === "string" ? options.label : null,
+    terms: eventLogAnnotations(text, options.terms || []),
+    important: !!options.important,
+  };
+  if (groupedCombatLog && groupedCombatLog.run === state) {
+    groupedCombatLog.entries.push(text);
+    if (options.inline) (groupedCombatLog.inlineEvents ??= []).push(record);
+    else if (record.important) (groupedCombatLog.eventEntries ??= []).push(record);
+    return;
+  }
+  // Discard mismatched metadata if a legacy save/tool replaced the string log.
+  state.logDetails = (state.logs || []).map((text, i) => state.logDetails?.[i]?.text === text ? state.logDetails[i] : null);
+  record.id = state.logSerial = (Number.isSafeInteger(state.logSerial) ? state.logSerial : 0) + 1;
+  state.logs.unshift(text);
+  state.logs = state.logs.slice(0, EVENT_LOG_LIMIT);
+  state.logDetails.unshift(record);
+  state.logDetails = state.logDetails.slice(0, EVENT_LOG_LIMIT);
+  renderLog();
+}
+function logCombatSummary(group, message) {
+  const inline = group.inlineEvents || [];
+  const names = [...new Set(inline.map((r) => r.label || r.text))];
+  const h = state.party.find((h) => h.id === group.heroId) || state.party.find((h) => h.name === group.hero);
+  log(message + (names.length ? " " + names.join(" · ") + "." : ""), {
+    category: "combat", context: "combat",
+    terms: h ? [{ name: classAbilityName(h), description: classAbilityDescription(h) }] : [],
+  });
+  if (group.previous) (group.previous.inlineEvents ??= []).push(...inline);
+}
+function flushCombatLogEvents(group) {
+  const records = group.eventEntries || [], texts = new Set(records.map((r) => r.text));
+  // Named personal/trait/status events must survive every level of nested bursts.
+  for (const record of records) log(record.text, {
+    category: record.category, context: record.context, important: true,
+    terms: record.terms.map((t) => ({ name: record.text.slice(t.start, t.end), description: t.description, kind: t.kind })),
+  });
+  group.entries.filter((s) => !texts.has(s) && /second wind|summon|splits|falls|dies|becomes|refuses to fall|shrugs off|turns aside/i.test(s)).slice(0, 3).forEach((s) => log(s));
+}
+let lastEventLogRender = null;
+function renderLog() {
+  const textSignature = JSON.stringify(state.logs);
+  if (lastEventLogRender?.textSignature === textSignature && lastEventLogRender?.logs === state.logs && lastEventLogRender?.details === state.logDetails && lastEventLogRender?.count === state.logs.length) return;
+  const root = $("#log"), dictionary = eventLogDictionary(), scroll = root.scrollTop;
+  const focused = root.contains(document.activeElement) ? document.activeElement : null;
+  const focusId = focused?.closest("li")?.dataset.logId, focusTerm = focused?.dataset.logTerm;
+  // A rerender must not leave a detached entry's tooltip floating over the book.
+  if (focused || root.matches(":hover")) document.getElementById("status-tooltip")?.setAttribute("hidden", "");
+  root.innerHTML = (state.logs || []).map((text, i) => {
+    text = String(text);
+    const detail = state.logDetails?.[i]?.text === text ? state.logDetails[i] : null;
+    const terms = Array.isArray(detail?.terms) ? detail.terms : eventLogAnnotations(text, [], dictionary);
+    let cursor = 0, html = "";
+    for (const t of terms) {
+      // Treat saved records as untrusted input; never render stored HTML/offsets.
+      if (!t || typeof t !== "object" || !Number.isInteger(t.start) || !Number.isInteger(t.end) || t.start < cursor || t.end <= t.start || t.end > text.length || typeof t.description !== "string") continue;
+      html += escapeHTML(text.slice(cursor, t.start));
+      html += `<span class="log-term${t.kind === "gold" ? " log-term-gold" : ""}" tabindex="0" data-log-term="${t.start}" aria-describedby="status-tooltip" data-tooltip="${escapeHTML(t.description)}" title="${escapeHTML(t.description)}">${escapeHTML(text.slice(t.start, t.end))}</span>`;
+      cursor = t.end;
+    }
+    return `<li data-log-id="${Number.isSafeInteger(detail?.id) ? detail.id : "legacy-" + i}" data-log-category="${["combat", "exploration", "personal", "trait", "loot"].includes(detail?.category) ? detail.category : "exploration"}">${html + escapeHTML(text.slice(cursor))}</li>`;
+  }).join("");
+  lastEventLogRender = { logs: state.logs, details: state.logDetails, count: state.logs.length, textSignature };
+  root.scrollTop = scroll;
+  if (focusId && focusTerm) {
+    const match = [...root.querySelectorAll(".log-term")].find((el) => el.closest("li").dataset.logId === focusId && el.dataset.logTerm === focusTerm);
+    (match || root).focus({ preventScroll: true });
+  }
+}
+// Ignore distant environmental churn and hidden tiles, without exposing the map.
+// Chebyshev range matches the immediate visual neighbourhood; walls occlude it.
+function relevantLogTile(i) {
+  return !!state.map[i]?.seen && tileDistance(i) <= 2 && lineOfSight(state.position, i);
+}
+// END GENERATED EVENT LOG
       function toast(msg) {
         $("#toast").textContent = msg;
         $("#toast").hidden = false;
@@ -15947,7 +16153,7 @@ function wardActive(e = actingEnemy) {
             }
           });
           c.roomRevealedAt = Date.now();
-          log("The torch opens onto a cave room. Its contents wait untouched.");
+          log("Cave room revealed. Its contents wait untouched.", { category: "exploration" });
         }
         revealLavaLight(i);
         if (c.event === "stairs" && !state.exitFound) {
@@ -16506,6 +16712,7 @@ async function exploderTurn(e) {
   if (e.fuseLeft) {
     e.turnsTaken = (e.turnsTaken || 0) + 1;
     combatCallout(enemyArtEl(e), "FUSE LIT · NEXT TURN!", "danger");
+    log(`${e.name} · Burning fuse: will self-destruct on its next turn.`, { important: true });
     GameSound.play("fuse");
     burst(enemyArtEl(e), "gold", 28);
     shakeElement(enemyArtEl(e), 3, "fuse");
@@ -16534,7 +16741,7 @@ async function exploderTurn(e) {
   e.selfDestructed = true;
   damageEnemy(e.hp, e.name + " burns out", e, { piercing: true });
   log(
-    `${e.name} explodes for ${power} damage toward each hero. Team block protects the party.`,
+    `${e.name} · Self-destruct: explodes for ${power} damage toward each hero. Team block protects the party.`,
   );
   result(
     icon("explosion") + `${e.name} self-destructs · ${power} power per hero`,
@@ -17813,6 +18020,7 @@ function encounterTags(enemies) {
         if (resisted && e.passive?.key === "carapace" && !e.passive.announced) {
           e.passive.announced = true;
           passiveFX(e, `ARMOURED · ${resisted} RESISTED`, "block");
+          log(`${e.name} · Armoured: resists ${resisted} damage per hit.`, { important: true });
         }
         n -= resisted;
         const blocked = piercing ? 0 : Math.min(enemyBlock(), n * shieldFactor),
@@ -17887,7 +18095,7 @@ function encounterTags(enemies) {
           spendFuryOnHealing(e, n);
           floatAt(enemyArtEl(e), "+" + n + " · SECOND WIND", true);
           burst(enemyArtEl(e), "heal", 36);
-          log(e.name + " finds a second wind: +" + n + " HP.");
+          log(e.name + " finds a second wind: +" + n + " HP.", { important: true });
         } else if (trait.key === "split" && e.hp === 0) {
           trait.used = true;
           e.fragment = true;
@@ -17906,7 +18114,7 @@ function encounterTags(enemies) {
           actionLabel(enemyArtEl(e), "IT SPLITS!");
           burst(enemyArtEl(e), "ink", 42);
           shakeBook(4);
-          log(e.name + " tears free and keeps fighting.");
+          log(e.name + " · Fractures: tears free and keeps fighting.", { important: true });
         }
       }
       function tickEnemyPassive(e) {
@@ -17959,7 +18167,7 @@ function encounterTags(enemies) {
         actionLabel(enemyArtEl(ally), "SUMMONED!");
         smokePoof(enemyArtEl(ally), true);
         shakeBook(3);
-        log(e.name + " summons " + ally.name + ".");
+        log(e.name + " · Summoner: calls " + ally.name + ".", { important: true });
       }
 
       function checkDefeat() {
@@ -18369,6 +18577,7 @@ function encounterTags(enemies) {
               dealt+=n;h.stats.damageDealt+=n;if(!selected.hp)h.stats.kills++;
               state.lastPlayerRoll.hits.push({enemyId:selected.id,power:base.executionBonus,actual:n,execute:true,at:Date.now()});
               state.lastExecution.actual=n;
+              if(n) log(`${h.name} · Stored Execute: ${n} bonus damage.`, { inline: true, label: "Stored Execute" });
               const previous=leechTargets.get(selected.id);
               if(n)leechTargets.set(selected.id,{enemy:selected,damage:(previous?.damage||0)+n});
               combatCallout(enemyArtEl(selected),"EXECUTE · "+n,"gold");
@@ -18938,7 +19147,10 @@ function encounterTags(enemies) {
           found: found.map((a) => a.id),
         };
         result(`<span class="gold">${icon("coin")}${notes.map(escapeHTML).join(" · ")}</span>`);
-        log((battle ? "Battle spoils: " : "Treasure: ") + notes.join(", ") + ".");
+        log((battle ? "Battle spoils: " : "Treasure: ") + notes.join(", ") + ".", { category: "loot", context: battle && source !== "body" ? "combat" : "exploration", terms: [
+          { name: "gold", description: `${gold} gold found${multiplier > 1 ? ` (${baseGold} × ${multiplier} critical)` : ""}. Carried gold can buy supplies or be banked after a floor.`, kind: "gold" },
+          ...found.map((a) => ({ name: a.name, description: artefactText(a), kind: "gold" })),
+        ] });
         document.querySelectorAll(".item-find").forEach((el) => {
           popTitle(el);
           burst(el, "gold", 30);
@@ -19498,6 +19710,7 @@ function encounterTags(enemies) {
           if (!state.bag[type]) delete state.bag[type];
         }
         h.stats.itemsUsed = (h.stats.itemsUsed || 0) + 1;
+        log(`${h.name} uses ${item.name}.`, { category: state.enemy ? "combat" : "exploration" });
         if (modalKind === "bag") closeModal();
         renderInventory();
         save();
@@ -20228,6 +20441,10 @@ const FIELD_GUIDE = Object.freeze([
     body: '<ul class="guide-takeaways"><li><b>Bank gold.</b> After floors 1–9, bank 25%, 50%, 75% or all carried gold. Victory banks everything. Banked gold survives failed runs.</li><li><b>Adventurers.</b> Unlock Ranger, Berserker and Jester starts and wandering companions.</li><li><b>Campfire Lessons.</b> Eight improvements have five tiers each. Buy tiers permanently; use − and + to choose an active rank, including zero.</li><li><b>Other rules.</b> Challenges add danger, sometimes with rewards. Oddities change discoveries and routes. Purchases start disabled.</li><li><b>Grow stronger.</b> Bank gold for lessons. Fresh runs are dangerous; a trained party is stronger. Select lessons before the next run.</li></ul>',
   },
   {
+    id: "event-log", title: "Event log",
+    body: '<ul class="guide-takeaways"><li><b>One record.</b> Combat, discoveries and personal moments share the Event log, newest first.</li><li><b>Learn as you go.</b> Underlined, highlighted names explain themselves on hover or keyboard focus.</li><li><b>Personal moments.</b> Traits and rare character events keep the effect and the reason it happened.</li><li><b>Nearby hazards.</b> Falling ceilings are recorded only when revealed, close by and in sight.</li><li><b>Read back.</b> Press M to focus the log; use Tab to reach its explanations. Only the entries scroll.</li></ul>',
+  },
+  {
     id: "controls",
     title: "Controls & automation",
     body: '<ul class="guide-takeaways"><li><b>Navigate.</b> Use Tab and Enter, or the shortcuts in the bottom bar. Side tabs stay available during events.</li><li><b>Autofight.</b> Chooses heroes, targets and occasional supplies. Autoplay explores, edits reels and seeks useful discoveries.</li><li><b>Builds.</b> Autoplay keeps a preferred build for each hero, while retaining damage and rebuilding a support-only survivor.</li><li><b>Options.</b> Adjust sound, motion, lighting, palette and icon/beam feedback. Reset progress keeps these settings.</li><li><b>Backup.</b> Save HTML in Options downloads the offline game, not browser-local progress.</li></ul>',
@@ -20704,6 +20921,8 @@ function help(topic = "explore") {
       function equipArtefact(id) {
         if (!state.artefacts.some((a) => a.id === id && a.key !== "revive")) return;
         state.equippedArtefact = id;
+        const artefact = state.artefacts.find((a) => a.id === id);
+        log(`Artefact equipped: ${artefact.name}.`, { terms: [{ name: artefact.name, description: artefactText(artefact), kind: "gold" }] });
         renderArtefactSlot();
         document.querySelectorAll("[data-equip]").forEach((b) => {
           b.textContent = b.dataset.equip === id ? "Equipped" : "Equip instead";
@@ -22371,7 +22590,8 @@ function musicVoices(scene, index) {
         h.traitsGained = (h.traitsGained || 0) + 1;
         h.traitXpRemainder = 0;
         log(
-          `${h.name} becomes ${HERO_TRAITS[id].name}${previous ? " (replacing " + previous + ")" : ""}. ${reason} ${HERO_TRAITS[id].description}`,
+          `${h.name} gains ${HERO_TRAITS[id].name}${previous ? " (replacing " + previous + ")" : ""}. ${reason}`,
+          { category: "trait", important: true, terms: [{ name: HERO_TRAITS[id].name, description: HERO_TRAITS[id].description + " Earned: " + reason }] },
         );
         const i = state.party.indexOf(h);
         syncHero(i);
@@ -23380,6 +23600,7 @@ async function resolveBattleOpening() {
   if (living.length && living.every((h) => h.surprised)) {
     result(icon("stun") + "Caught off guard · enemies take the opening turn!");
     combatCallout($("#encounter"), "ENEMIES GO FIRST", "danger");
+    log("Surprised: the whole party is caught off guard. Enemies act first.", { category: "combat" });
     await automaticOpeningPause();
     for (const e of livingEnemies()) {
       await enemyTurn(e);
@@ -23391,6 +23612,7 @@ async function resolveBattleOpening() {
   } else {
     const quick = living.find((h) => h.initiative);
     if (quick) {
+      log(`${quick.name} gains Initiative: act first for a stronger roll.`, { category: "combat" });
       combatCallout(
         entityArt(quick),
         `${quick.name}: ACT FIRST · +25%`,
@@ -23407,6 +23629,7 @@ async function resolveBattleOpening() {
         result(`Initiative: use ${quick.name} first for a 25% stronger roll.`);
       }
     }
+    if (living.some((h) => h.surprised)) log(`${living.filter((h) => h.surprised).map((h) => h.name).join(", ")} · Surprised: a ready ally must act first.`, { category: "combat" });
     living
       .filter((h) => h.surprised)
       .forEach((h) => actionLabel(entityArt(h), "SURPRISED · wait one roll"));
@@ -23481,6 +23704,7 @@ function maybeVulnerable(entity, power = 1, cause = "Stun") {
     bonus: TACTICS.vulnerabilityBonus,
   };
   combatCallout(entityArt(entity), "VULNERABLE · +25% next hit", "vulnerable");
+  log(`${entity.name} becomes Vulnerable after ${cause.toLowerCase()}.`, { important: true });
   syncStatusFX();
   const badge = entityArt(entity)?.querySelector(".vulnerable-badge");
   if (badge)
@@ -23503,6 +23727,7 @@ function clearStuns(entity, amount, { all = false } = {}) {
   entity.stunAge = 0;
   grantStunWard(entity);
   combatCallout(entityArt(entity), "STUN CLEARED", "heal");
+  log(`${entity.name} · Stun cleared by healing; now Steady.`, { important: true });
   return true;
 }
 function clearBattleStatuses() {
@@ -23810,6 +24035,7 @@ function tryBreakStun(entity, { missedAction = false } = {}) {
   entity.stunAge = 0;
   grantStunWard(entity);
   combatCallout(entityArt(entity), "STUN BROKEN · STEADY", "recovery");
+  log(`${entity.name} · Stun broken; now Steady.`, { important: true });
   syncStatusFX();
   return true;
 }
@@ -23854,7 +24080,8 @@ function pencilBlackout(e) {
   }
   log(
     e.name +
-      " blacks out party reels. Roll each affected machine to erase its covering.",
+      " · Pencil blackout: covers party reels. Roll each affected machine to erase its covering.",
+    { important: true },
   );
 }
 function clearRolledBlackout(h, i) {
@@ -23922,6 +24149,7 @@ async function settleFuryLeech(h, recipients, flights) {
   const actual = healHero(state.party.indexOf(h), offered);
   h.stats.healingDone += actual;
   record.actual = actual;
+  if (actual) log(`${h.name} · Fury lifesteal: +${actual} HP.`, { inline: true, label: "Fury lifesteal" });
   record.furySpent = furyBefore - (h.fury || 0);
   syncRangerAim(h);
   record.healedAt = Date.now();
@@ -24469,6 +24697,7 @@ async function oldTravelEvent(c, kind) {
       { id: "body-leave", label: "Let them rest", value: false },
     ]).then(async (choice) => {
       closeSpotlight();
+      log(`Forgotten traveller: ${choice === "true" ? "the party searches the abandoned satchel" : "left to rest undisturbed"}.`, { category: "exploration" });
       if (choice === "true") await treasureRoll("body");
     });
     c.corpses.push({
@@ -24479,6 +24708,7 @@ async function oldTravelEvent(c, kind) {
     return true;
   }
   if (!rockfallWallCandidates().length) return false;
+  log("Rockfall! The ceiling gives way above the party.", { category: "exploration" });
   showSpotlight(
     "ROCKFALL!",
     "The ceiling answers your footsteps.",
@@ -24606,7 +24836,10 @@ async function choiceTravelEvent(kind) {
     choices.unshift({ id: "stage-confirm", label: event.offer, value: true });
   const choice = await eventChoice(choices);
   closeSpotlight();
-  if (choice !== "true") return false;
+  if (choice !== "true") {
+    log(`${event.title}: the party leaves it alone.`, { category: "exploration" });
+    return false;
+  }
   if (kind === "cartographer") {
     state.gold -= event.cost;
     const type = offered;
@@ -24620,6 +24853,7 @@ async function choiceTravelEvent(kind) {
       { id: "stage-confirm", label: "Collect the supply", value: true },
     ]);
     closeSpotlight();
+    log(`${event.title}: bought ${ITEM_DEFS[type].name} for ${event.cost} gold.`, { category: "loot" });
     state.pendingItems.push({ type, count: 1 });
     await processPendingItems();
     render();
@@ -24668,6 +24902,10 @@ async function choiceTravelEvent(kind) {
   ]);
   closeSpotlight();
   state.gold += gold;
+  log(`${event.title}: +${gold} gold${damage ? `; ${damage} incoming damage` : "; unhurt"}${relic ? `; found ${relic.name}` : item ? `; found ${ITEM_DEFS[item].name}` : ""}.`, {
+    category: "loot",
+    terms: relic ? [{ name: relic.name, description: artefactText(relic), kind: "gold" }] : [],
+  });
   if (damage)
     damageHero(state.party.findIndex(alive), damage, "A dangerous discovery");
   if (relic) {
@@ -25086,7 +25324,10 @@ function characterMoment(id, h) {
     at: Date.now(),
   });
   state.characterEvents = state.characterEvents.slice(-100);
-  log(`${h.name} ${def.text}.`);
+  log(`${h.name} · ${def.name}: ${def.text}${id === "scavenger" ? ` (+${3 + state.depth * 2} gold)` : ""}.`, {
+    category: "personal", context: combat ? "combat" : "exploration", important: true,
+    terms: [{ name: def.name, description: `${h.name} ${def.text}. ${CHARACTER_EVENT_HELP[id]}` }],
+  });
   combatCallout(entityArt(h), def.name, def.kind);
   showHeroNotice(h, def.name, def.text, def.kind);
   if (id === "heroic") {
@@ -25685,8 +25926,8 @@ function createRockfallWall() {
   smokePoof($(`[data-tile="${i}"]`), true);
   if (c.seen)
     combatCallout($(`[data-tile="${i}"]`), "PASSAGE BLOCKED", "danger");
-  log(
-    `Fallen stone blocks column ${(i % W) + 1}, row ${Math.floor(i / W) + 1}. Another route remains.`,
+  if (relevantLogTile(i)) log(
+    `Rockfall: fallen stone blocks column ${(i % W) + 1}, row ${Math.floor(i / W) + 1}. Another route remains.`,
   );
   state.lastRockfallWall = i;
   return i;
@@ -25870,6 +26111,10 @@ async function livingDungeonStep() {
       setTimeout(() => tile?.classList.remove("stalactite-drop"), 450);
       shakeElement(tile, 3, "impact");
     }
+    if (relevantLogTile(i)) log(
+      `Stalactite falls at column ${(i % W) + 1}, row ${Math.floor(i / W) + 1}${i === state.position ? "; the party is struck" : "; keep clear of the falling stone"}.`,
+      { category: "exploration" },
+    );
     if (killPursuerByTerrain(i, "a stalactite")) {
       changed = true;
       continue;
@@ -25913,7 +26158,7 @@ function fogPartyReels(e) {
     smokePoof($(`#machine-hero-${state.party.indexOf(h)} [data-reel="${k}"]`));
   }
   combatCallout(enemyArtEl(e), "VEIL OF DOUBT", "poison");
-  log(`${e.name} fogs ${count} reels. They count as Empty for one roll.`);
+  log(`${e.name} · Veil of doubt: fogs ${count} reels. They count as Empty for one roll.`, { important: true });
 }
 function finishShadowAction(h) {
   state.party.forEach((other) => (other.shadowRest = false));
@@ -26240,13 +26485,10 @@ function finishCombatLogGroup(group, report) {
     .filter((s) => ["poison", "stun", "rally", "stimulant"].includes(s.type))
     .map((s) => FACE_LABELS[s.type]);
   const extras = [...new Set(utility)];
-  log(
+  logCombatSummary(group,
     `${group.hero} · ${group.activity} ×${report.shots.length}: ${damage.length ? damage.join(" + ") + " = " + report.damage + " damage; " : ""}${report.healing} HP restored; ${report.block} block${extras.length ? "; " + extras.join(", ") : ""}.`,
   );
-  const important = group.entries.filter((s) =>
-    /second wind|summon|splits|falls|dies/i.test(s),
-  );
-  important.slice(0, 2).forEach(log);
+  flushCombatLogEvents(group);
 }
 function classPricesMarkup(h) {
   const types = editableTypes(h).filter((t) => t !== "blank");
@@ -26277,7 +26519,7 @@ function finishHeroRollLog(group, h) {
     ...new Set(
       (roll?.symbols || [])
         .filter((f) =>
-          ["stun", "poison", "rally", "stimulant", "trick"].includes(f.type),
+          ["stun", "poison", "rally", "stimulant", "trick", "selfharm"].includes(f.type),
         )
         .map((f) => FACE_LABELS[f.type]),
     ),
@@ -26288,17 +26530,10 @@ function finishHeroRollLog(group, h) {
       ? classAbilityName(h)
       : "roll";
   const critical = Math.max(roll?.multiplier || 1, roll?.flurryMultiplier || 1);
-  log(
+  logCombatSummary(group,
     `${h.name} · ${activity}${hits.length > 1 ? " ×" + hits.length : ""}${critical > 1 ? " · CRITICAL ×" + critical : ""}: ${hits.length > 1 ? hits.join(" + ") + " = " : ""}${damage} damage; ${healing} HP restored; ${group.block} block${powers.length ? "; marks: " + powers.join(", ") : ""}.`,
   );
-  group.entries
-    .filter((s) =>
-      /second wind|summon|splits|becomes|refuses to fall|shrugs off|turns aside/i.test(
-        s,
-      ),
-    )
-    .slice(0, 3)
-    .forEach(log);
+  flushCombatLogEvents(group);
 }
 
 // Record where HP was actually lost; nested bursts contribute to their parent
@@ -26493,6 +26728,8 @@ async function jesterWildcard(h) {
     enemyId: enemy.id,
     allyId: ally.id,
   };
+  const namedEvent = WILDCARD_LOG_EVENTS[trick];
+  log(`${h.name} · ${namedEvent.name}`, { inline: true, label: namedEvent.name });
   GameSound.play("jesterTrick");
   if (trick === 0) {
     const available = [0, 1, 2].filter((k) => !enemy.blackout?.includes(k));
@@ -28286,7 +28523,7 @@ function revealCriticalPayoff(region, details, multiplier) {
             data: { healed: h.hp - wellHealthBefore[i] },
           })),
         );
-        log("The fountain is spent. It cannot revive the dead.");
+        log(`Healing fountain: ${state.party.filter(alive).map((h) => `${h.name} +${h.hp - wellHealthBefore[state.party.indexOf(h)]} HP`).join(", ")}. The fountain is spent.`, { category: "exploration" });
         await feedbackPause(500);
         return true;
       }
@@ -28387,9 +28624,11 @@ function revealCriticalPayoff(region, details, multiplier) {
       statusTooltip.setAttribute("role", "tooltip");
       statusTooltip.hidden = true;
       document.body.append(statusTooltip);
+      let statusTooltipSource = null;
       function showStatusTooltip(event) {
         const source = event.target.closest("[data-tooltip],[data-hero-stats]");
         if (!source) return;
+        statusTooltipSource = source;
         const hero = source.hasAttribute("data-hero-stats")
           ? state.party[Number(source.dataset.heroStats)]
           : null;
@@ -28397,8 +28636,15 @@ function revealCriticalPayoff(region, details, multiplier) {
         if (hero) statusTooltip.innerHTML = heroStatsMarkup(hero);
         else statusTooltip.textContent = source.dataset.tooltip;
         statusTooltip.hidden = false;
+        // Measure from a safe position, even after a compact-screen resize.
+        statusTooltip.style.left = "8px";
+        statusTooltip.style.top = "8px";
         const r = source.getBoundingClientRect(),
           t = statusTooltip.getBoundingClientRect();
+        if (r.bottom < 0 || r.top > innerHeight || r.right < 0 || r.left > innerWidth) {
+          statusTooltip.hidden = true;
+          return;
+        }
         statusTooltip.style.left =
           Math.max(
             8,
@@ -28411,6 +28657,14 @@ function revealCriticalPayoff(region, details, multiplier) {
             Math.min(innerHeight - t.height - 8, above >= 8 ? above : r.bottom + 8),
           ) + "px";
       }
+      window.addEventListener("resize", () => requestAnimationFrame(() => {
+        if (statusTooltip.hidden) return;
+        if (statusTooltipSource?.isConnected) showStatusTooltip({ target: statusTooltipSource });
+        else statusTooltip.hidden = true;
+      }));
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") statusTooltip.hidden = true;
+      });
       document.addEventListener("pointerover", showStatusTooltip);
       document.addEventListener("focusin", showStatusTooltip);
       document.addEventListener("pointerout", (e) => {
@@ -29136,6 +29390,7 @@ function revealCriticalPayoff(region, details, multiplier) {
         }
         const previous = h.equipment;
         h.equipment = type;
+        log(`${h.name} equips ${gear.name}.`, { terms: [{ name: gear.name, description: gear.description }] });
         if (previous) state.pendingItems.push({ type: previous, count: 1 });
         closeModal();
         renderParty();

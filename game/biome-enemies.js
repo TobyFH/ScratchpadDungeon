@@ -221,6 +221,7 @@ async function exploderTurn(e) {
   if (e.fuseLeft) {
     e.turnsTaken = (e.turnsTaken || 0) + 1;
     combatCallout(enemyArtEl(e), "FUSE LIT · NEXT TURN!", "danger");
+    log(`${e.name} · Burning fuse: will self-destruct on its next turn.`, { important: true });
     GameSound.play("fuse");
     burst(enemyArtEl(e), "gold", 28);
     shakeElement(enemyArtEl(e), 3, "fuse");
@@ -249,7 +250,7 @@ async function exploderTurn(e) {
   e.selfDestructed = true;
   damageEnemy(e.hp, e.name + " burns out", e, { piercing: true });
   log(
-    `${e.name} explodes for ${power} damage toward each hero. Team block protects the party.`,
+    `${e.name} · Self-destruct: explodes for ${power} damage toward each hero. Team block protects the party.`,
   );
   result(
     icon("explosion") + `${e.name} self-destructs · ${power} power per hero`,

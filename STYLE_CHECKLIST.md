@@ -97,3 +97,8 @@
       ordinary matching rules for other classes remain unchanged.
 - [ ] Ambushes age only by accepted move commands; bridges carry no discoveries,
       and lava reveal/glow is occluded by stone and obeys ambient settings.
+
+- [ ] Event log combines real combat/exploration outcomes; named bonuses, traits
+      and personal moments are underlined, highlighted and explained on hover/focus.
+      Explanations survive reloads, important moments survive nested action groups,
+      and hidden/distant environmental churn stays out of the journal.

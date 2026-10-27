@@ -87,6 +87,10 @@ const FIELD_GUIDE = Object.freeze([
     body: '<ul class="guide-takeaways"><li><b>Bank gold.</b> After floors 1–9, bank 25%, 50%, 75% or all carried gold. Victory banks everything. Banked gold survives failed runs.</li><li><b>Adventurers.</b> Unlock Ranger, Berserker and Jester starts and wandering companions.</li><li><b>Campfire Lessons.</b> Eight improvements have five tiers each. Buy tiers permanently; use − and + to choose an active rank, including zero.</li><li><b>Other rules.</b> Challenges add danger, sometimes with rewards. Oddities change discoveries and routes. Purchases start disabled.</li><li><b>Grow stronger.</b> Bank gold for lessons. Fresh runs are dangerous; a trained party is stronger. Select lessons before the next run.</li></ul>',
   },
   {
+    id: "event-log", title: "Event log",
+    body: '<ul class="guide-takeaways"><li><b>One record.</b> Combat, discoveries and personal moments share the Event log, newest first.</li><li><b>Learn as you go.</b> Underlined, highlighted names explain themselves on hover or keyboard focus.</li><li><b>Personal moments.</b> Traits and rare character events keep the effect and the reason it happened.</li><li><b>Nearby hazards.</b> Falling ceilings are recorded only when revealed, close by and in sight.</li><li><b>Read back.</b> Press M to focus the log; use Tab to reach its explanations. Only the entries scroll.</li></ul>',
+  },
+  {
     id: "controls",
     title: "Controls & automation",
     body: '<ul class="guide-takeaways"><li><b>Navigate.</b> Use Tab and Enter, or the shortcuts in the bottom bar. Side tabs stay available during events.</li><li><b>Autofight.</b> Chooses heroes, targets and occasional supplies. Autoplay explores, edits reels and seeks useful discoveries.</li><li><b>Builds.</b> Autoplay keeps a preferred build for each hero, while retaining damage and rebuilding a support-only survivor.</li><li><b>Options.</b> Adjust sound, motion, lighting, palette and icon/beam feedback. Reset progress keeps these settings.</li><li><b>Backup.</b> Save HTML in Options downloads the offline game, not browser-local progress.</li></ul>',

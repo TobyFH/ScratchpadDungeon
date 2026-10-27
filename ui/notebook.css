@@ -5771,3 +5771,27 @@ body[data-motion="off"] .punchline-ready .machine-face { animation: none; }
   .notes-and-bag .inventory-items button>span {font-size:13px;line-height:.95;}
   .notes-and-bag .inventory-items button small {font-size:11px;line-height:.9;}
 }
+
+/* Event-log vocabulary uses restrained pencil highlighting, never colour alone.
+   Inline spans keep entries compact; the shared viewport tooltip escapes clipping. */
+#log .log-term {
+  color: var(--ink);
+  background: color-mix(in srgb, var(--focus) 13%, transparent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: .15em;
+  text-decoration-color: var(--soft);
+  cursor: help;
+  border-radius: 1px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+#log .log-term-gold {
+  background: color-mix(in srgb, var(--gold) 16%, transparent);
+}
+#log .log-term:hover,
+#log .log-term:focus-visible {
+  outline: 1px dashed var(--ink);
+  outline-offset: 2px;
+  background: color-mix(in srgb, var(--focus) 23%, var(--paper));
+}
