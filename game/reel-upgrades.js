@@ -263,7 +263,7 @@ function applyFaceEdit(h, reel, index, operation, destination = null) {
 let editorView = "edit";
 let editorOperation = "power";
 let editorSelection = { heroId: null, reel: 0, face: 0 };
-function editor(i) {
+function legacyEditor(i) {
   if (busy || state.over) return;
   const h = state.party[i];
   if (!h || !alive(h)) return;

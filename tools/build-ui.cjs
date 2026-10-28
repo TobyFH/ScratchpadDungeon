@@ -21,7 +21,7 @@ const assets = (name) => {
   if (!mime) throw Error(`Unsupported UI asset: ${name}`);
   return `data:${mime};base64,${fs.readFileSync(file).toString("base64")}`;
 };
-const css = ["layout.css", "notebook.css", "combat-life.css", "terrain-motion.css", "expedition-presentation.css", "class-moments.css"]
+const css = ["layout.css", "notebook.css", "combat-life.css", "terrain-motion.css", "expedition-presentation.css", "class-moments.css", "icon-reel-workshop.css"]
   .map((name) => {
     const content = read("ui/" + name).replace(
       /@asset\(([^)]+)\)/g,
@@ -83,6 +83,7 @@ for (const [label, file] of [
   ["EXPEDITION EXPANSION", "game/expedition-expansion.js"],
   ["LIVING DUNGEON", "game/living-dungeon.js"],
   ["REEL UPGRADES", "game/reel-upgrades.js"],
+  ["ICON REEL WORKSHOP", "ui/icon-reel-workshop.js"],
   ["ENCOUNTER PRESENTATION", "game/encounter-presentation.js"],
   ["COMBAT FEEDBACK", "ui/combat-feedback.js"],
   ["AUTOMATION PACING", "game/automation-pacing.js"],

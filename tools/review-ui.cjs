@@ -43,6 +43,8 @@ const output = path.join(root, "test-results/ui-review");
     await page.goto(`http://127.0.0.1:${server.address().port}`);
     await page.evaluate(() => {
       characterLuck = () => 0.999999;
+      // Retained rollback editor; default icons have separate focused captures.
+      reelWorkshopLayout = "legacy";
     });
     const shots = [];
     async function shot(name, fullPage = false, animations = "disabled") {

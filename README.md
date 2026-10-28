@@ -19,6 +19,14 @@ Current additions: [Combat clarity and living floors](docs/CLARITY_UPDATE.md)
 documents permanent Jester mysteries, explicit reel inscription, stun recovery,
 all-find loot, and the Shadow and Shaky cavern themes.
 
+[Biome discoveries and recovery](docs/EXPEDITION_EXPANSION.md) adds maze
+corridors, safe collapsing ice, mushroom hazards, denser pulsing quartz, and
+optional discoveries specific to each biome. Heal faces distinguish caster-only
+recovery from healing the selected ally; Berserker Fury survives fights and
+decays per tile walked. [The icon reel workshop](docs/ICON_REEL_WORKSHOP.md)
+shows clickable replacement symbols and complete rank costs/refunds, with a
+one-switch fallback to the previous editor.
+
 ## Camp and banked gold
 
 After clearing floors 1–9, optionally bank **25%, 50%, 75% or 100%** of carried gold.

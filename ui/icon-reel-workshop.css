@@ -1,0 +1,440 @@
+/* Isolated presentation. The legacy editor has no .icon-workshop and is untouched. */
+.modal:has(.icon-workshop) {
+  width: min(1000px, calc(100vw - 24px));
+}
+.icon-workshop-pages {
+  display: grid;
+}
+.modal .icon-workshop-pages > .workshop-page {
+  height: auto;
+  min-height: 0;
+}
+.icon-workshop-pages .icon-class-prices h3 {
+  font-size: 24px;
+  margin: 6px 0;
+}
+.icon-workshop-pages .icon-class-prices p {
+  font-size: 18px;
+  line-height: 1.15;
+  margin: 7px 0;
+}
+.icon-workshop-pages .icon-class-prices th,
+.icon-workshop-pages .icon-class-prices td {
+  font-size: 18px;
+  line-height: 1.1;
+  padding: 5px 4px;
+}
+.icon-workshop-pages > .workshop-page {
+  grid-area: 1/1;
+}
+.icon-workshop-pages .icon-workshop {
+  display: grid;
+  grid-template-columns: 215px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+  min-height: 0;
+}
+.icon-workshop .workshop-mark-list > h3 {
+  font-size: 21px;
+  margin: 0 0 5px;
+}
+.icon-workshop .workshop-faces {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4px;
+}
+.icon-workshop .workshop-faces button {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) 42px;
+  align-items: center;
+  gap: 5px;
+  min-height: 39px;
+  padding: 3px 5px;
+}
+.icon-workshop .workshop-faces button > span:nth-child(2) {
+  font-size: 16px;
+  line-height: 1;
+}
+.icon-workshop .workshop-faces button > small {
+  font-size: 14px;
+}
+.icon-workshop .workshop-faces .tier-symbol,
+.icon-workshop .workshop-faces .class-face,
+.icon-workshop .workshop-faces .blank-face,
+.icon-workshop .workshop-faces .mystery-face {
+  width: 30px;
+  height: 30px;
+}
+.icon-workshop .workshop-faces svg {
+  width: 100%;
+  height: 100%;
+}
+.icon-workshop .equal-face-note {
+  display: block;
+  line-height: 1.1;
+  font-size: 15px;
+  margin-top: 6px;
+}
+.icon-workshop .workshop-detail {
+  display: block;
+  padding: 0;
+  min-width: 0;
+  height: auto;
+  min-height: 0;
+}
+.icon-workshop .workshop-selected {
+  display: grid;
+  grid-template-columns: 45px 1fr;
+  align-items: center;
+  gap: 9px;
+  min-height: 47px;
+  margin: 0;
+}
+.icon-workshop .workshop-preview {
+  width: 42px;
+  height: 42px;
+  min-height: 0;
+}
+.icon-workshop .workshop-preview > * {
+  width: 100%;
+  height: 100%;
+}
+.icon-workshop .workshop-selected h3 {
+  font-size: 25px;
+  line-height: 1.05;
+  margin: 0;
+}
+.icon-workshop .workshop-detail .face-effect {
+  font-size: 18px;
+  line-height: 1.15;
+  height: 58px;
+  min-height: 58px;
+  margin: 4px 0 8px;
+}
+.icon-workshop .choice-heading {
+  font-size: 20px;
+  line-height: 1.05;
+  margin: 8px 0 5px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 5px;
+}
+.icon-workshop .choice-heading small {
+  font-family: var(--hand);
+  font-size: 16px;
+  font-weight: normal;
+}
+.icon-workshop .tier-choices {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 7px;
+}
+.icon-workshop .tier-choices button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-height: 53px;
+  padding: 4px;
+}
+.icon-workshop .tier-choices strong {
+  font-size: 24px;
+  line-height: 1;
+}
+.icon-workshop .tier-choices small {
+  font-size: 16px;
+  line-height: 1;
+}
+.icon-workshop .symbol-choices {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-rows: repeat(var(--choice-rows), 84px);
+  gap: 5px;
+}
+.icon-workshop .symbol-choice {
+  display: grid;
+  grid-template-rows: 28px minmax(24px, 1fr) 22px;
+  align-items: center;
+  justify-items: center;
+  gap: 1px;
+  padding: 3px 2px;
+  min-width: 0;
+}
+.icon-workshop .choice-icon,
+.icon-workshop .choice-icon > * {
+  width: 28px;
+  height: 28px;
+  display: block;
+}
+.icon-workshop .choice-icon svg {
+  width: 100%;
+  height: 100%;
+}
+.icon-workshop .choice-icon .blank-face small {
+  display: none;
+}
+.icon-workshop .choice-name {
+  font-size: 18px;
+  line-height: 0.98;
+  text-align: center;
+}
+.icon-workshop .symbol-choice > small {
+  font-size: 18px;
+  line-height: 1;
+}
+.icon-workshop [aria-pressed="true"] {
+  outline: 2px solid var(--ink);
+  outline-offset: -3px;
+  background: var(--ui-label);
+  opacity: 1;
+}
+.icon-workshop .workshop-lock-note {
+  font-size: 15px;
+  line-height: 1.1;
+  min-height: 32px;
+  margin: 7px 0 0;
+}
+.modal:has(.icon-workshop) .workshop-receipt {
+  font-size: 17px;
+  line-height: 1.1;
+  min-height: 20px;
+  margin: 8px 0 2px;
+}
+@media (max-width: 760px) {
+  .modal:has(.icon-workshop) {
+    padding: 12px 10px 10px;
+  }
+  .modal:has(.icon-workshop) .workshop-ability {
+    font-size: 18px;
+    min-height: 22px;
+    line-height: 1.1;
+    margin: 3px 0;
+  }
+  .modal:has(.icon-workshop) .workshop-summary {
+    margin: 0;
+    min-height: 28px;
+    gap: 8px;
+    align-items: center;
+  }
+  .modal:has(.icon-workshop) .workshop-summary > strong {
+    font-size: 20px;
+  }
+  .modal:has(.icon-workshop) .workshop-summary .hero-specialism {
+    font-size: 17px;
+  }
+  .modal:has(.icon-workshop) .workshop-summary .hero-specialism > small {
+    display: none;
+  }
+  .modal:has(.icon-workshop) .workshop-nav,
+  .modal:has(.icon-workshop) .workshop-tabs {
+    margin: 3px 0;
+  }
+  .modal:has(.icon-workshop) .workshop-nav button,
+  .modal:has(.icon-workshop) .workshop-tabs button {
+    font-size: 18px;
+    padding: 3px;
+    min-height: 31px;
+  }
+  .icon-workshop-pages .icon-workshop {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 5px;
+  }
+  .icon-workshop .workshop-mark-list > h3,
+  .icon-workshop .equal-face-note {
+    display: none;
+  }
+  .icon-workshop .workshop-faces {
+    display: none;
+  }
+  .icon-workshop .workshop-face-picker {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 18px;
+    margin: 0;
+    height: 32px;
+  }
+  .icon-workshop .workshop-face-picker select {
+    width: 100%;
+    min-width: 0;
+    font-size: 18px;
+    padding: 3px;
+  }
+  .icon-workshop .workshop-selected {
+    min-height: 34px;
+    grid-template-columns: 32px 1fr;
+    gap: 6px;
+  }
+  .icon-workshop .workshop-preview {
+    width: 31px;
+    height: 31px;
+  }
+  .icon-workshop .workshop-selected h3 {
+    font-size: 22px;
+  }
+  .icon-workshop .workshop-detail .face-effect {
+    font-size: 18px;
+    line-height: 1.1;
+    height: 60px;
+    min-height: 60px;
+    margin: 3px 0 4px;
+  }
+  .icon-workshop .choice-heading {
+    font-size: 18px;
+    margin: 5px 0 4px;
+  }
+  .icon-workshop .choice-heading small {
+    font-size: 14px;
+  }
+  .icon-workshop .tier-choices {
+    gap: 4px;
+  }
+  .icon-workshop .tier-choices button {
+    height: 54px;
+    min-height: 0;
+    padding: 2px;
+  }
+  .icon-workshop .tier-choices strong {
+    font-size: 21px;
+  }
+  .icon-workshop .tier-choices small {
+    font-size: 20px;
+  }
+  .icon-workshop .symbol-choices {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: repeat(var(--compact-choice-rows), 56px);
+    gap: 4px;
+  }
+  .icon-workshop .symbol-choice {
+    grid-template-columns: 23px minmax(0, 1fr);
+    grid-template-rows: 24px 22px;
+    min-height: 0;
+    padding: 2px;
+  }
+  .icon-workshop .choice-icon,
+  .icon-workshop .choice-icon > * {
+    width: 24px;
+    height: 24px;
+  }
+  .icon-workshop .choice-name {
+    font-size: 22px;
+    line-height: 1;
+  }
+  .icon-workshop .symbol-choice > small {
+    font-size: 20px;
+    line-height: 1;
+    grid-column: 1/-1;
+    justify-self: center;
+    width: auto;
+    white-space: nowrap;
+  }
+  .icon-workshop .workshop-lock-note {
+    font-size: 18px;
+    min-height: 20px;
+    margin: 4px 0 0;
+  }
+  .modal:has(.icon-workshop) .workshop-receipt {
+    font-size: 15px;
+    min-height: 18px;
+    margin: 4px 0 0;
+  }
+  .icon-workshop-pages .icon-class-prices th,
+  .icon-workshop-pages .icon-class-prices td {
+    font-size: 18px;
+    padding: 4px 2px;
+  }
+  .modal:has(.icon-workshop) .modal-actions {
+    padding-top: 5px;
+    min-height: 35px;
+  }
+}
+
+@media (max-width: 360px) {
+  .modal:has(.icon-workshop) .workshop-ability {
+    display: none;
+  }
+  .icon-workshop .symbol-choices {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: repeat(var(--compact-choice-rows), 56px);
+  }
+  .icon-workshop .symbol-choice {
+    grid-template-columns: 20px minmax(0, 1fr);
+  }
+  .icon-workshop .choice-icon,
+  .icon-workshop .choice-icon > * {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* Inactive sheets reserve their real size, so page tabs and Done do not jump. */
+#modal .icon-workshop-pages > .workshop-page[aria-hidden="true"] {
+  visibility: hidden;
+  pointer-events: none;
+}
+#modal .icon-workshop-pages > .workshop-page {
+  height: auto;
+  min-height: 0;
+}
+.icon-critical-odds h3 {
+  font-size: 24px;
+  margin: 6px 0;
+}
+#modal .icon-critical-odds p {
+  font-size: 19px;
+  line-height: 1.15;
+  margin: 6px 0;
+}
+.icon-critical-odds .crit-odds-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(3, 54px);
+  gap: 6px;
+}
+.icon-critical-odds .crit-odds-row {
+  min-height: 0;
+  grid-template-columns: 30px minmax(0, 1fr) 64px;
+  padding: 4px;
+}
+.icon-critical-odds .crit-odds-row b {
+  font-size: 19px;
+  line-height: 1;
+}
+.icon-critical-odds .crit-odds-row strong {
+  font-size: 20px;
+}
+.crit-page-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 12px 0 0;
+}
+.crit-page-nav button {
+  font-size: 18px;
+  min-height: 34px;
+  padding: 3px 7px;
+}
+@media (max-width: 760px) {
+  .icon-critical-odds .crit-odds-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(6, 39px);
+  }
+  .icon-critical-odds .crit-odds-row {
+    grid-template-columns: 28px minmax(0, 1fr) 66px;
+  }
+  .icon-critical-odds .crit-odds-row .tier-symbol {
+    width: 28px;
+    height: 28px;
+  }
+  .icon-critical-odds .crit-odds-row b {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 760px) {
+  .icon-workshop [data-set-face-type="selfharm"] .choice-name {
+    font-size: 18px;
+    white-space: nowrap;
+  }
+}

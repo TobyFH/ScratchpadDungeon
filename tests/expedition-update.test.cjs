@@ -34,6 +34,8 @@ async function game(t) {
     });
   });
   await p.goto(url);
+  // Explicitly retain rollback-editor regressions; default icon controls have their own suite.
+  await p.evaluate(() => { reelWorkshopLayout = "legacy"; });
   await p.evaluate(async () => {
     newRun("fighter", { specialism: "offence" });
     setPace("skip");

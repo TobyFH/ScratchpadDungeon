@@ -34,6 +34,7 @@ async function game(t) {
     });
   });
   await p.goto(url);
+  await p.evaluate(() => { reelWorkshopLayout = "legacy"; });
   await p.evaluate(() => {
     newRun("fighter", { specialism: "offence" });
     setPace("skip");

@@ -27,6 +27,8 @@ async function game(t, width = 1920, height = 1080) {
     errors = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto(url);
+  // Explicitly retain rollback-editor regressions; default icon controls have their own suite.
+  await page.evaluate(() => { reelWorkshopLayout = "legacy"; });
   await page.evaluate(async () => {
     newRun("fighter");
     setPace("skip");

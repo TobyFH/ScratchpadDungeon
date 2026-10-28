@@ -63,6 +63,8 @@ async function game(t, { auto = false, width = 1440 } = {}) {
     };
   });
   await page.goto(baseURL);
+  // Explicitly retain rollback-editor regressions; default icon controls have their own suite.
+  await page.evaluate(() => { reelWorkshopLayout = "legacy"; });
   await page.evaluate(() => {
     localStorage.clear();
     // These mechanical regressions isolate base values from temperament, which

@@ -34,6 +34,8 @@ async function game(t) {
     });
   });
   await p.goto(url);
+  // Keep exercising the independently retained previous workshop.
+  await p.evaluate(() => { reelWorkshopLayout = "legacy"; });
   await p.evaluate(async () => {
     newRun("fighter");
     setPace("skip");
