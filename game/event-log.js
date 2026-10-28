@@ -67,6 +67,8 @@ const EVENT_LOG_TERMS = Object.freeze({
 function eventLogDictionary() {
   const terms = Object.entries(EVENT_LOG_TERMS).map(([name, description]) => ({ name, description }));
   terms.push(...WILDCARD_LOG_EVENTS);
+  for (const def of Object.values(BIOME_DISCOVERIES)) terms.push({name:def.name,description:def.description});
+  for (const [name,description] of Object.entries({"Poison mushrooms":"Crossing these caps releases damaging spores every time.","Burstcap":"Explodes within one tile, then becomes an ordinary mushroom. A reel roll decides the damage.","Brittle ice":"Slides, then collapses into an impassable hole after you leave.","Self heal":"Heals the caster only. It never retargets or spills into another hero."})) terms.push({name,description});
   for (const def of Object.values(TRAVEL_EVENTS))
     terms.push({ name: def.title, description: def.subtitle + (def.reward === "item" ? " Trade gold for the offered supply, or leave without spending." : " Roll for gold and possible finds, with a risk of injury; leaving is free.") });
   for (const [id, def] of Object.entries(CHARACTER_EVENTS))
@@ -171,7 +173,7 @@ function renderLog() {
       // Treat saved records as untrusted input; never render stored HTML/offsets.
       if (!t || typeof t !== "object" || !Number.isInteger(t.start) || !Number.isInteger(t.end) || t.start < cursor || t.end <= t.start || t.end > text.length || typeof t.description !== "string") continue;
       html += escapeHTML(text.slice(cursor, t.start));
-      html += `<span class="log-term${t.kind === "gold" ? " log-term-gold" : ""}" tabindex="0" data-log-term="${t.start}" aria-describedby="status-tooltip" data-tooltip="${escapeHTML(t.description)}" title="${escapeHTML(t.description)}">${escapeHTML(text.slice(t.start, t.end))}</span>`;
+      html += `<span class="log-term log-term-${feedbackKind(text.slice(t.start,t.end),"event")}${t.kind === "gold" ? " log-term-gold" : ""}" tabindex="0" data-log-term="${t.start}" aria-describedby="status-tooltip" data-tooltip="${escapeHTML(t.description)}" title="${escapeHTML(t.description)}">${escapeHTML(text.slice(t.start, t.end))}</span>`;
       cursor = t.end;
     }
     return `<li data-log-id="${Number.isSafeInteger(detail?.id) ? detail.id : "legacy-" + i}" data-log-category="${["combat", "exploration", "personal", "trait", "loot"].includes(detail?.category) ? detail.category : "exploration"}">${html + escapeHTML(text.slice(cursor))}</li>`;

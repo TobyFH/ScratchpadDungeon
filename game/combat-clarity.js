@@ -176,6 +176,7 @@ function inspectHeroEquipment(index) {
 }
 const heroNoticeStates = new WeakMap();
 function showHeroNotice(h, title, description, kind = "gold") {
+  kind = feedbackKind(title, kind);
   const note = {
     title,
     description,
@@ -331,7 +332,7 @@ function finishHeroRollLog(group, h) {
     ...new Set(
       (roll?.symbols || [])
         .filter((f) =>
-          ["stun", "poison", "rally", "stimulant", "trick", "selfharm"].includes(f.type),
+          ["stun", "poison", "rally", "stimulant", "trick", "selfharm", "selfheal", "heal"].includes(f.type),
         )
         .map((f) => FACE_LABELS[f.type]),
     ),

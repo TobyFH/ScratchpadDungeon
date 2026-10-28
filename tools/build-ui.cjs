@@ -21,7 +21,7 @@ const assets = (name) => {
   if (!mime) throw Error(`Unsupported UI asset: ${name}`);
   return `data:${mime};base64,${fs.readFileSync(file).toString("base64")}`;
 };
-const css = ["layout.css", "notebook.css", "combat-life.css", "terrain-motion.css"]
+const css = ["layout.css", "notebook.css", "combat-life.css", "terrain-motion.css", "expedition-presentation.css", "class-moments.css"]
   .map((name) => {
     const content = read("ui/" + name).replace(
       /@asset\(([^)]+)\)/g,
@@ -80,6 +80,7 @@ for (const [label, file] of [
   ["BATTLE TACTICS", "game/battle-tactics.js"],
   ["WORLD EVENTS", "game/world-events.js"],
   ["BIOMES", "game/biomes.js"],
+  ["EXPEDITION EXPANSION", "game/expedition-expansion.js"],
   ["LIVING DUNGEON", "game/living-dungeon.js"],
   ["REEL UPGRADES", "game/reel-upgrades.js"],
   ["ENCOUNTER PRESENTATION", "game/encounter-presentation.js"],
@@ -95,6 +96,8 @@ for (const [label, file] of [
   ["MUSIC", "ui/music.js"],
   ["NOTEBOOK PAGES", "ui/notebook-pages.js"],
   ["COMBAT LIFE", "ui/combat-life.js"],
+  ["CLASS MOMENTS", "ui/class-moments.js"],
+  ["EXPEDITION PRESENTATION", "ui/expedition-presentation.js"],
   ["FIELD GUIDE", "ui/field-guide.js"],
 ]) {
   embed(`// BEGIN GENERATED ${label}`, `// END GENERATED ${label}`, read(file));

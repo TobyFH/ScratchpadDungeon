@@ -5,6 +5,7 @@ const maxFaceTier = (type) =>
     "attack",
     "magic",
     "heal",
+    "selfheal",
     "block",
     "stun",
     "poison",
@@ -74,6 +75,7 @@ const EDITABLE_TYPES = Object.freeze([
   "attack",
   "magic",
   "heal",
+  "selfheal",
   "block",
   "stun",
   "poison",
@@ -86,7 +88,8 @@ const EDITABLE_TYPES = Object.freeze([
 const FACE_LABELS = Object.freeze({
   attack: "Physical damage",
   magic: "Spell damage",
-  heal: "Healing",
+  heal: "Ally heal",
+  selfheal: "Self heal",
   block: "Team block",
   stun: "Stun",
   poison: "Poison",
@@ -115,6 +118,7 @@ function editableTypes(h) {
 }
 function faceDescription(face, h) {
   const tier = face.tier || 1;
+  if(face.type === "selfheal")return `Restore ${POWER.selfheal * tier} HP to yourself only. Never retargets or spills over to allies; surplus healing is wasted. Can clear your stun.`;
   if (face.type === "class") return classAbilityDescription(h);
   if (face.type === "mystery") return mysteryDescription(h);
   if (h && battleEnemies().includes(h)) {
@@ -142,6 +146,7 @@ function faceDescription(face, h) {
   );
 }
 function classFacePrice(h, type, base) {
+  if(type === "selfheal") type = "heal";
   return base
     ? Math.ceil(base * (CLASS_PRICES[h?.job]?.[type] || 1))
     : undefined;

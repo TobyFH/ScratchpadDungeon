@@ -46,14 +46,14 @@ const SUPPORT_SCALING = Object.freeze({
   magePerLevel: 0.025,
   mageMax: 0.15,
   wellStartFloor: 4,
-  wellBasePerFloor: 0.003,
-  wellRollPerFloor: 0.012,
+  wellBasePerFloor: 0.004,
+  wellRollPerFloor: 0.015,
 });
 const lateWellSteps = (depth) =>
   Math.min(6, Math.max(0, depth - SUPPORT_SCALING.wellStartFloor));
 const fountainBaseRate = (depth = state.depth) =>
-  0.15 +
-  Math.min(9, Math.max(0, depth - 1)) * 0.005 +
+  0.165 +
+  Math.min(9, Math.max(0, depth - 1)) * 0.007 +
   lateWellSteps(depth) * SUPPORT_SCALING.wellBasePerFloor;
 const fountainRollRate = (depth = state.depth) =>
   0.5 +
@@ -182,6 +182,10 @@ function normaliseHeroBuild(h) {
   h.charge = Math.min(RANGER_AIM_CAP, Math.max(0, h.charge || 0));
   h.fury = Math.min(furyCapacity(h), Math.max(0, h.fury || 0));
   if (!h.reels) return;
+  if (["fighter","rogue","ranger","berserker"].includes(h.job)) {
+    h.reels.forEach(reel=>reel.forEach(f=>{if(f.type==="heal")f.type="selfheal";}));
+    h.last?.forEach(f=>{if(f.type==="heal")f.type="selfheal";});
+  }
   retireReelWeights(h);
   for (const face of h.last || []) {
     if (
@@ -231,7 +235,7 @@ function normaliseHeroBuild(h) {
         face.type = "rally";
       if (
         h.job === "berserker" &&
-        !["attack", "heal", "selfharm", "stimulant", "blank", "class"].includes(
+        !["attack", "selfheal", "selfharm", "stimulant", "blank", "class"].includes(
           face.type,
         )
       ) {
@@ -288,11 +292,11 @@ function temperamentEffects(h, base) {
   return base;
 }
 const CLASS_FACE_TYPES = Object.freeze({
-  fighter: ["attack", "block", "heal", "stun", "stimulant", "blank"],
-  rogue: ["attack", "poison", "stun", "stimulant", "heal", "blank"],
-  mage: ["magic", "heal", "block", "poison", "stun", "rally", "blank"],
-  ranger: ["attack", "stun", "heal", "rally", "poison", "blank"],
-  berserker: ["attack", "heal", "selfharm", "stimulant", "blank"],
+  fighter: ["attack", "block", "selfheal", "stun", "stimulant", "blank"],
+  rogue: ["attack", "poison", "stun", "stimulant", "selfheal", "blank"],
+  mage: ["magic", "heal", "selfheal", "block", "poison", "stun", "rally", "blank"],
+  ranger: ["attack", "stun", "selfheal", "heal", "rally", "poison", "blank"],
+  berserker: ["attack", "selfheal", "selfharm", "stimulant", "blank"],
 });
 function startingFaces(job, temperament) {
   const defensive = temperament === "defence";
@@ -399,7 +403,7 @@ function startingFaces(job, temperament) {
           ["trick", 1],
           ["blank", 1],
         ],
-  }[job];
+  }[job].map(([type,tier],index) => [type === "heal" && (["fighter","rogue","ranger","berserker"].includes(job) || job === "mage" && defensive && index === 1) ? "selfheal" : type, tier]);
 }
 // Recruits draw this independently of class and the starter selection.
 const randomTemperament = () => (Math.random() < 0.5 ? "offence" : "defence");

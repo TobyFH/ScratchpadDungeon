@@ -232,7 +232,7 @@ function autoBuildUtility(h) {
       mage: 0.42,
       jester: 0.25,
     }[h.job] || 0.25;
-  utility -= Math.max(0, faceShare(h.reels.flat(), ["heal"]) - healCap) * 80;
+  utility -= Math.max(0, faceShare(h.reels.flat(), ["heal", "selfheal"]) - healCap) * 80;
   // Poison and stun are valuable tools, but their ticks/recovery saturate.
   // Avoid a cheap utility mark crowding every physical or spell combo off a build.
   for (const [types, cap] of [

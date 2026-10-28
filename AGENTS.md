@@ -134,3 +134,13 @@ survive nested combat groups; class bonuses stay inline in the action summary.
 Use the shared underlined `.log-term` and viewport tooltip. Local ambient hazards
 only log when seen, within two tiles and in sight. Categories prepare a future
 split without introducing another log today. Logging never consumes gameplay RNG.
+
+Read `docs/EXPEDITION_EXPANSION.md` for save-23 world and recovery rules.
+`game/expedition-expansion.js` owns selected biome discoveries and shared tuning.
+Keep fragile ice safe with all fragile/mud tiles closed, and preserve directed
+slide/tunnel routes. Quartz radius is one; coverage is a union, effects never
+multiply with overlapping sources. Molten rivers retain river/bridge topology.
+Self-heal is `selfheal` on a face and `selfHeal` in effect totals; never retarget it.
+Berserker Fury survives fights and decays per walked tile, not per move command.
+Use shared semantic feedback inks and cancellation-safe class sketches; neither
+hover, animation nor margin drawings may consume gameplay RNG.

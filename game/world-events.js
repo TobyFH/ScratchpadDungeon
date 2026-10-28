@@ -275,11 +275,11 @@ function revealLavaLight(i) {
   if (
     revealingLava ||
     !state.map[i] ||
-    (state.map[i].wall && state.map[i].terrain !== "lava")
+    (state.map[i].wall && state.map[i].terrain !== "lava" && !state.map[i].lavaRiver)
   )
     return;
   const queue = [i, ...neighbors(i)].filter(
-    (j) => state.map[j].terrain === "lava" && lineOfSight(i, j),
+    (j) => (state.map[j].terrain === "lava" || state.map[j].lavaRiver) && lineOfSight(i, j),
   );
   if (!queue.length) return;
   revealingLava = true;
@@ -292,7 +292,7 @@ function revealLavaLight(i) {
       for (const j of [source, ...neighbors(source)]) {
         if (!lineOfSight(source, j)) continue;
         lit.add(j);
-        if (state.map[j].terrain === "lava" && !visited.has(j)) queue.push(j);
+        if ((state.map[j].terrain === "lava" || state.map[j].lavaRiver) && !visited.has(j)) queue.push(j);
       }
     }
     let newlyLit = 0;

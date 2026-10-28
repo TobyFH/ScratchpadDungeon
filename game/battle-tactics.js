@@ -39,7 +39,7 @@ const furyBonus = (h) =>
 function furyMarkup(h) {
   const cap = furyCapacity(h),
     rate = Math.round(furyLeechRate(h) * 100);
-  return `<span class="fury-meter" role="meter" aria-label="Berserker Fury" aria-valuemin="0" aria-valuemax="${cap}" aria-valuenow="${h.fury || 0}" data-tooltip="Wounds add 1 Fury per HP lost. Blood Price adds 2.5/3/3.5/4 Fury per HP at ranks I–IV. Every 4 Fury adds 1 damage and 4.5% lifesteal. Capacity grows by 3 per level. Every HP actually healed spends 1 Fury, including lifesteal, allies and items. Clears after battle."><b>FURY ${h.fury || 0}/${cap}</b><span><i style="width:${(100 * (h.fury || 0)) / cap}%"></i></span><small>+${furyBonus(h)} dmg · ${rate}% drain</small></span>`;
+  return `<span class="fury-meter" role="meter" aria-label="Berserker Fury" aria-valuemin="0" aria-valuemax="${cap}" aria-valuenow="${h.fury || 0}" data-tooltip="Wounds add 1 Fury per HP lost. Blood Price adds 2.5/3/3.5/4 Fury per HP at ranks I–IV. Every 4 Fury adds 1 damage and 4.5% lifesteal. Capacity grows by 3 per level. Every HP actually healed spends 1 Fury, including lifesteal, allies and items. Carries between fights; each walked tile spends 1 Fury."><b>FURY ${h.fury || 0}/${cap}</b><span><i style="width:${(100 * (h.fury || 0)) / cap}%"></i></span><small>+${furyBonus(h)} dmg · ${rate}% drain</small></span>`;
 }
 function setupBattleOpening({ fresh = false } = {}) {
   const living = state.party.filter(alive);
@@ -65,6 +65,7 @@ function setupBattleOpening({ fresh = false } = {}) {
   ) {
     pick(ready).initiative = { multiplier: TACTICS.initiativeMultiplier };
   }
+  for (const h of living) if(h.geodeGift) { h.reelGifts=[{...h.geodeGift}];delete h.geodeGift; }
   for (const e of livingEnemies()) {
     if (overgrown && fresh && !state.opening.surprise && Math.random() < 0.24) {
       e.countdown += 1;
@@ -228,7 +229,7 @@ function clearBattleStatuses() {
     entity.rage = 0;
     entity.charge = 0;
     entity.anticipation = 0;
-    entity.fury = 0;
+    if (entity.job !== "berserker" || !state.party.includes(entity)) entity.fury = 0;
     entity.stimulant = null;
     entity.shadowRest = false;
     entity.shadowLocks = [];
@@ -665,6 +666,7 @@ function normaliseStimulant(entity) {
   }
   entity.stimulant = {
     ...buff,
+    overflow: Math.max(0,Math.floor(Number(buff.overflow)||0))%3,
     power:
       Math.max(1, Math.ceil(buff.power)) +
       Math.max(0, Math.ceil(buff.turns) - STIMULANT_TURNS),
@@ -689,8 +691,9 @@ function applyStimulant(entity, amount) {
     power: Math.min(
       COMBAT_LIMITS.stimulantPower,
       Math.max(old?.power || 0, added) +
-        Math.max(0, duration - STIMULANT_TURNS),
+        Math.floor(((old?.overflow || 0) + Math.max(0, duration - STIMULANT_TURNS)) / 3),
     ),
+    overflow: ((old?.overflow || 0) + Math.max(0, duration - STIMULANT_TURNS)) % 3,
     turns: Math.min(STIMULANT_TURNS, duration),
     appliedAt: state.actionSerial,
   };
@@ -699,7 +702,7 @@ function applyStimulant(entity, amount) {
   burst(el, "gold", 22);
   actionLabel(
     el,
-    `POWER ${entity.stimulant.power} · ${entity.stimulant.turns} TURNS`,
+    `STIM ${entity.stimulant.turns}/3 · POTENCY ${entity.stimulant.power}/6`,
   );
 }
 function supportStimulantTarget(caster) {

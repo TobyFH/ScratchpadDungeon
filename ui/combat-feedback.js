@@ -10,6 +10,7 @@ function contributionType(symbol, owner) {
 }
 function contributes(symbol, wanted, owner) {
   const type = contributionType(symbol, owner);
+  if(wanted === "heal")return ["heal","selfheal"].includes(type);
   return ["attack", "magic"].includes(wanted)
     ? ["attack", "magic"].includes(type)
     : type === wanted;
@@ -270,6 +271,7 @@ function combatNumber(el, value, type) {
 // Callouts name a real state change; they never capture input or move layout.
 function combatCallout(el, text, kind = "gold") {
   if (!el) return;
+  kind=feedbackKind(text,kind);
   const r = el.getBoundingClientRect(),
     node = document.createElement("div");
   node.className = "combat-callout " + kind;

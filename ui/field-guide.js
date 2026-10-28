@@ -18,7 +18,7 @@ const FIELD_GUIDE = Object.freeze([
     id: "ice", title: "Ice & dangerous fuses",
     body: '<ul class="guide-takeaways"><li><b>Ice.</b> Entering ice carries you forward. Consecutive ice tiles continue the slide; a wall stops it.</li><li><b>Plan ahead.</b> Known ice is included in routes. You cannot choose to turn halfway through a slide.</li><li><b>No safe route.</b> If sliding makes your destination unreachable, a long move stops before the blocking ice.</li><li><b>Powder imp.</b> Watch its burning fuse. After two enemy turns it explodes, damaging the party and destroying itself.</li><li><b>Answer the fuse.</b> Kill or stun it before detonation, build team block, or use an Unbroken page. Its warning shows blast power.</li></ul>',
   },
-  {id:"crystal",title:"Crystal caves",body:'<ul class="guide-takeaways"><li><b>Deposits.</b> Crystal clusters block walking. Their blue aura reaches fights within two tiles, with stone blocking its reach.</li><li><b>Resonance.</b> Every three party rolls, two random reels become sealed with gems.</li><li><b>Crack them.</b> Roll an affected hero. Their sealed reels are empty for that roll, then the gems shatter. Other heroes keep their own seals.</li><li><b>After battle.</b> Every seal clears when the fight ends. The deposit stays on the map.</li></ul>'},
+  {id:"crystal",title:"Crystal caves",body:'<ul class="guide-takeaways"><li><b>Deposits.</b> Crystal clusters block walking. Their repeating blue pulse marks the aura reaching fights within one tile, with stone blocking its reach.</li><li><b>Resonance.</b> Every three party rolls, two random reels become sealed with gems.</li><li><b>Crack them.</b> Roll an affected hero. Their sealed reels are empty for that roll, then the gems shatter. Other heroes keep their own seals.</li><li><b>After battle.</b> Every seal clears when the fight ends. The deposit stays on the map.</li></ul>'},
   {
     id: "combat",
     title: "Combat & criticals",
@@ -85,6 +85,14 @@ const FIELD_GUIDE = Object.freeze([
     id: "camp",
     title: "By the campfire",
     body: '<ul class="guide-takeaways"><li><b>Bank gold.</b> After floors 1–9, bank 25%, 50%, 75% or all carried gold. Victory banks everything. Banked gold survives failed runs.</li><li><b>Adventurers.</b> Unlock Ranger, Berserker and Jester starts and wandering companions.</li><li><b>Campfire Lessons.</b> Eight improvements have five tiers each. Buy tiers permanently; use − and + to choose an active rank, including zero.</li><li><b>Other rules.</b> Challenges add danger, sometimes with rewards. Oddities change discoveries and routes. Purchases start disabled.</li><li><b>Grow stronger.</b> Bank gold for lessons. Fresh runs are dangerous; a trained party is stronger. Select lessons before the next run.</li></ul>',
+  },
+  {
+    id: "maze", title: "The labyrinth",
+    body: '<ul class="guide-takeaways"><li><b>Winding routes.</b> Dense walls force long corridors. Known passages still support shortest-path movement.</li><li><b>Secret doors.</b> Reveal a door, stand beside it, then select it to open a shortcut.</li><li><b>Pressure plates.</b> Accept the plate prompt to open its matching gate permanently.</li><li><b>No required switches.</b> A route to the guardian exists with every door and gate closed.</li><li><b>Paired tunnels.</b> Hover a known entrance to see its known partner and a connecting arrow.</li></ul>',
+  },
+  {
+    id: "wild-finds", title: "Nests & wild finds",
+    body: '<ul class="guide-takeaways"><li><b>Nests.</b> Roll for loot or take an egg that heals 65% of one hero’s maximum HP. Either may wake a strong broodmother; leaving is safe.</li><li><b>Overgrowth.</b> Fruit bushes offer a small, single-use team heal. Leave them for later if healthy.</li><li><b>Mushroom caves.</b> Poison caps hurt when crossed. Burstcaps explode within one tile, roll damage, then become ordinary caps.</li><li><b>Fairy rings.</b> Choose healing or loot, with a chance to disturb a guardian.</li><li><b>Other finds.</b> Search shaky rubble for salvage, or accept a dangerous optional shadow duel in the dark.</li></ul>',
   },
   {
     id: "event-log", title: "Event log",

@@ -1,6 +1,7 @@
 // Biome data is stored on the first map cell, so ordinary JSON save/HTML exports
 // retain it. Presentation never rolls a theme or consumes world RNG.
 const BIOMES = Object.freeze({
+  maze: { name: "Labyrinth", tint: "#9d8868", minDepth: 3, names: ["The winding undercroft", "The lost corridors", "The pencilled labyrinth"], note: "Narrow passages twist around tightly packed masonry." },
   shadow: {
     name: "Shadow galleries",
     tint: "#726682",
@@ -108,7 +109,7 @@ function assignFloorBiome(map, depth, { force = null } = {}) {
         map[i].terrain === "floor" &&
         !map[i].structure,
     );
-  if (kind === "overgrown") {
+  if (kind === "maze") { carveMaze(map); } else if (kind === "overgrown") {
     for (const i of candidates)
       if (Math.random() < 0.27) map[i].terrain = "overgrown";
   } else if (kind === "fungal") {
@@ -153,13 +154,15 @@ function assignFloorBiome(map, depth, { force = null } = {}) {
       }
       return true;
     };
-    for (const i of free) if (Math.random() < 0.07) placeBarrier(i);
+    if(kind === "crystal")placeCrystalFields(map,free);
+    else for (const i of free) if (Math.random() < 0.07) placeBarrier(i);
     if (kind === "crystal" && !map.some((c) => c.terrain === "crystal"))
       free.some(placeBarrier);
   }
 }
 function normaliseBiome(map = state.map) {
   state.crystalRolls = Math.max(0, Math.floor(Number(state.crystalRolls) || 0));
+  if(floorBiome(map)==="lava")map.forEach(c=>{if(["river","bridge"].includes(c.terrain))c.lavaRiver=true;});
   // Repair old one-way ice layouts without rerolling discoveries or walls.
   if (map.some((c) => c.terrain === "ice") && !allTilesCanReachStairs(map)) {
     for (const c of map.filter((c) => c.terrain === "ice").reverse()) {
@@ -177,6 +180,7 @@ function updateBiomePresentation() {
   document.body.dataset.biome = theme;
   $(".map-wrap")?.style.setProperty("--biome-tint", def.tint);
   $("#floor-name").textContent = floorName();
+  updateBiomeMargins();
   $("#floor-name").title = def.name;
   const key = $("#biome-key"),
     terrain = {
@@ -199,7 +203,7 @@ function glideCells(map, from, entry, { knownOnly = false } = {}) {
     dx = (entry % W) - (from % W),
     dy = Math.floor(entry / W) - Math.floor(from / W);
   let n = entry;
-  while (["ice", "mudslide"].includes(map[n].terrain)) {
+  while (["ice", "mudslide", "brittleIce"].includes(map[n].terrain)) {
     const x = (n % W) + dx,
       y = Math.floor(n / W) + dy;
     if (x < 0 || x >= W || y < 0 || y >= H) break;
@@ -219,7 +223,7 @@ function movementRoute(
 ) {
   if (!Number.isInteger(goal) || !map[goal]) return null;
   const mud = map
-    .map((c, i) => (c.terrain === "mudslide" ? i : -1))
+    .map((c, i) => (["mudslide","brittleIce"].includes(c.terrain) ? i : -1))
     .filter((i) => i >= 0);
   const bit = new Map(mud.map((i, k) => [i, 2 ** k]));
   const encode = (i, mask) => i + mask * map.length;
@@ -257,14 +261,14 @@ function movementRoute(
         !portal &&
         !ignoreIce &&
         (c.seen || omniscient) &&
-        ["ice", "mudslide"].includes(c.terrain)
+        ["ice", "mudslide", "brittleIce"].includes(c.terrain)
           ? glideCells(map, n, j, { knownOnly: !omniscient })
           : [j];
       if (
         !omniscient &&
         directIce &&
         j === goal &&
-        ["ice", "mudslide"].includes(c.terrain) &&
+        ["ice", "mudslide", "brittleIce"].includes(c.terrain) &&
         cells.some((i) => !map[i].seen)
       )
         cells = [j];
@@ -312,7 +316,7 @@ function movementPlan(goal) {
   if (!relaxed) return null;
   const ice = relaxed.findIndex(
     (i) =>
-      state.map[i].seen && ["ice", "mudslide"].includes(state.map[i].terrain),
+      state.map[i].seen && ["ice", "mudslide", "brittleIce"].includes(state.map[i].terrain),
   );
   if (ice < 0) return null;
   const prefix = relaxed.slice(0, ice);
@@ -324,7 +328,7 @@ function movementPlan(goal) {
   };
 }
 function revealMushrooms(source) {
-  if (state.map[source]?.terrain !== "mushroom") return;
+  if (!["mushroom","poisonMushroom","explodingMushroom"].includes(state.map[source]?.terrain)) return;
   const queue = [source],
     visited = new Set([source]);
   let revealed = 0;
@@ -332,7 +336,7 @@ function revealMushrooms(source) {
     for (const j of neighbors(i, true)) {
       if (
         visited.has(j) ||
-        state.map[j].terrain !== "mushroom" ||
+        !["mushroom","poisonMushroom","explodingMushroom"].includes(state.map[j].terrain) ||
         !lineOfSight(i, j)
       )
         continue;
@@ -354,13 +358,15 @@ function revealMushrooms(source) {
     renderMap();
   }
 }
-function biomeStep(i) {
+async function biomeStep(i) {
   const c = state.map[i];
-  if (c.terrain === "mushroom") revealMushrooms(i);
+  if (["mushroom","poisonMushroom","explodingMushroom"].includes(c.terrain)) revealMushrooms(i);
+  return expansionStep(i);
 }
 function biomeCoverArt(c) {
   if (["mudslide", "mudwall", "stalactite"].includes(c.terrain))
     return icon(c.terrain);
+  if (["poisonMushroom","explodingMushroom","brittleIce"].includes(c.terrain)) return icon(c.terrain);
   return c.terrain === "ice"
     ? icon("ice")
     : c.terrain === "mushroom"
@@ -382,7 +388,7 @@ function allTilesCanReachStairs(map) {
       if (map[entry].wall) continue;
       const portal = !neighbors(from).includes(entry);
       const end =
-        !portal && ["ice", "mudslide"].includes(map[entry].terrain)
+        !portal && ["ice", "mudslide", "brittleIce"].includes(map[entry].terrain)
           ? glideCells(map, from, entry).at(-1)
           : entry;
       reverse[end].push(from);
@@ -403,7 +409,7 @@ function crystalSources(origin = state.position, knownOnly = false) {
     .map((c, i) =>
       c.terrain === "crystal" &&
       (!knownOnly || c.seen) &&
-      tileDistance(i, origin) <= 2 &&
+      tileDistance(i, origin) <= EXPEDITION_TUNING.crystalRadius &&
       lineOfSight(origin, i)
         ? i
         : -1,

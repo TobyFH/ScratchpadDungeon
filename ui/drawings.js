@@ -207,6 +207,25 @@ function leverArt() {
   return `<svg class="pencil-art" viewBox="0 0 35 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 78 11-.5.5 13-12 .5Z M14 78l8-56 4 .5-7 57" fill="var(--paper-shade)"/><path d="m15 76 8-53m-15 60 8-.5m-8 5 8-.5M7 95l18-.5" stroke-width=".7"/><path d="M25 2q12 1 11 12-1 10-12 10-10-1-10-12Q15 2 25 2Z" fill="var(--paper)"/><path d="M25 5q9 1 8 9-1 8-9 7-7-1-7-8 0-7 8-8Zm-7 8 6-7m-6 12L30 6m-7 15 10-10" stroke-width=".65"/><path class="pencil-echo" d="m5 79 1 14 14-1M13 77l8-53"/></svg>`;
 }
 const paths = {
+  selfheal: "M16 27C-5 12 7-1 16 9 25-1 37 12 16 27ZM12 15h8m-4-4v8M4 5v7h7",
+  poisonMushroom: "M3 17Q3 1 16 2q13 0 13 15ZM12 18v10h8V18M8 8l4 5m0-5-4 5m12-5 4 5m0-5-4 5M4 29h24",
+  explodingMushroom: "M4 19Q2 5 16 6q14 0 12 13ZM12 20v9h8v-9M16 1v3m-11 0 3 3m18-3-3 3M1 13h3m24 0h3M12 12l4 6 4-6M6 29h20",
+  brittleIce: "M3 5h26v23H3ZM16 5l-4 9 8 3-5 11M3 17l9-3m8 3 9-6M7 9l2 2m14 13 3-3",
+  hole: "M2 12 7 4l9 3 9-3 5 8-5 15-9 3-10-4ZM7 12l5-2m11 1 3 3M9 24l7-7 7 6",
+  nest: "M3 20q12 13 26 0M2 24q14 13 28 0M6 17l-3 8m8-8-6 12m12-12-6 14m12-14-5 14m10-13-4 11M11 18C3 7 17-1 19 9m-2 9c-4-16 15-14 8-1",
+  egg: "M16 2C5 5-3 29 16 30S27 5 16 2ZM10 16l4-3 4 5 5-2",
+  horn: "M3 9q10 6 22-6l4 4Q17 22 7 21ZM6 13 3 23l6 4 5-7M23 4l5 7M9 10l4 10",
+  fruit: "M16 8q-3-7 5-7m-6 7q-7-9-11-2 4 6 11 2M16 10C-2 0-2 31 15 29 32 32 34 0 16 10ZM7 16l-1 6",
+  fairy: "M3 24q12 11 26 0M4 15q-1-9 7-9t8 9H4m7 0v10m6-11q0-9 7-8t6 9H17m7 0v10M3 3l1 4m2-2H1M22 1v5m-2-3h5",
+  geode: "M3 8 16 2l13 8-2 16-12 5L2 23ZM9 11l7-5 9 6-2 10-9 4-7-7Zm7-5v20M7 19l18-7",
+  prism: "M16 3 29 27H3ZM16 3v24M4 15h9m8-2 8-6m-8 9h10m-10 4 8 6",
+  rubble: "M2 28 6 15l10-3 7 7 7 1-2 8ZM6 15l7 7 10-3m-10 3-1 6M5 10l5-6 8 4m4 3 5-6 4 7",
+  plate: "M3 18 16 9l13 9-13 10ZM3 18v5l13 8 13-8v-5M10 18l6-4 6 4-6 4Z",
+  door: "M5 29V9Q16-4 27 9v20ZM10 29V11q6-8 12 0v18M18 19h2M1 6h7m18 0h5M1 15h4m22 0h4",
+  secretDoor: "M2 2h28v28H2ZM8 29V12q8-12 16 0v17M15 7l-2 7 6 4-3 11M20 20h2M2 10h5m19 0h4M2 21h5m19 0h4",
+  gate: "M2 3h28v27H2ZM7 6v21m6-21v21m6-21v21m6-21v21M3 12h26M3 23h26",
+  openGate: "M2 3h28v27H2ZM5 6l7 3v20l-7-3Zm22 0-7 3v20l7-3ZM12 15h8",
+
   crystal: "M4 28 2 13l9-9 5 6 6-8 8 13-4 14ZM2 13l9 5 5-8m-5-6v14l4 10m7-26-1 18 9-5m-9 5 5 9M4 28l7-10",
   ice: "M2 5q13-4 28 0v24q-15-3-28 0ZM4 8l24 17M4 18l12 9M16 5l12 10M6 11l3 1m8 6 5 2M12 3v8m-4-4h8M25 19v10m-4-5h8",
   mudslide:"M2 8q8-8 15-2l13 9v14H2ZM4 19q9-8 23 3M5 25q10-7 23 2M8 9l12 5m-5-8 7 9-11-1",
@@ -438,6 +457,7 @@ function basePortraitArt(kind, entity = { hp: 1, maxHp: 1 }) {
   return `<svg viewBox="0 0 120 150" fill="none" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><defs><pattern id="${id}" width="5" height="5" patternUnits="userSpaceOnUse"><rect width="5" height="5" fill="${fill}"/><path d="m-1 5 6-6m-1 7 3-3" stroke="#72664e" stroke-width=".65" opacity=".55"/></pattern></defs>${body}${bruised ? `<path d="${kind === "fighter" || kind === "hero" ? "m40 24 10 9m-9-4 10 10m24 11-8 7" : kind === "skull" || kind === "skeleton" ? "m39 17 10 7m21 15 8 5" : kind === "rat" ? "m38 77 10 6m35 25-8 7" : kind === "ghost" ? "m38 34 10 8m24 25-6 8" : "m34 77 10 8m39 26-9 7"}" stroke="#945740" stroke-width="1.5"/>` : ""}${hurt ? '<path d="m38 34 8 2m-8 2 8 2m20 11 11 4m-12 0 11 4" stroke="#8c4b39"/><path d="m72 59-2 10m3-5-1 8" stroke="#854736" stroke-width="2"/>' : ""}${dead ? `<g stroke="${paper}" stroke-width="2"><path d="${kind === "skull" || kind === "skeleton" ? "m48 23 7 6m0-6-7 6m19-6 7 6m0-6-7 6" : kind === "rat" || kind === "slime" ? "m47 80 7 6m0-6-7 6m16-6 7 6m0-6-7 6" : "m47 41 7 6m0-6-7 6m14-6 7 6m0-6-7 6"}"/></g>` : ""}</svg>`;
 }
 function floorArt(c, i) {
+  if (["hole","gate","secretDoor","openGate"].includes(c.terrain)) return icon(c.terrain);
   if (c.terrain === "bridge") return icon("bridge");
   if (c.wall)
     return icon(["river", "lava", "mudwall", "crystal"].includes(c.terrain) ? c.terrain : "wall");

@@ -20,7 +20,7 @@ function safeWithClosedTiles(map, extra = []) {
     ...new Set([
       ...extra,
       ...map
-        .map((c, i) => (c.terrain === "mudslide" ? i : -1))
+        .map((c, i) => (["mudslide","brittleIce"].includes(c.terrain) ? i : -1))
         .filter((i) => i >= 0),
     ]),
   ];
@@ -321,7 +321,7 @@ function crystalInfluencedTiles() {
     .filter((i) => i >= 0);
   for (const source of sources)
     state.map.forEach((c, i) => {
-      if (!c.wall && tileDistance(i, source) <= 2 && lineOfSight(source, i))
+      if (!c.wall && tileDistance(i, source) <= EXPEDITION_TUNING.crystalRadius && lineOfSight(source, i))
         result.add(i);
     });
   return result;

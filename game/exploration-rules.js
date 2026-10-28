@@ -71,7 +71,7 @@ function updateLavaGlow() {
         distance = tileDistance(i);
       if (
         c.seen &&
-        c.terrain === "lava" &&
+        (c.terrain === "lava" || c.lavaRiver) &&
         distance <= 2 &&
         lineOfSight(state.position, i)
       )

@@ -3,6 +3,7 @@ const MYSTERY_TYPES = Object.freeze([
   "attack",
   "magic",
   "heal",
+  "selfheal",
   "block",
   "stun",
   "poison",
@@ -360,6 +361,10 @@ async function jesterMarkBurst(h) {
         record.actual = n;
         report.healing += n;
         h.stats.healingDone += n;
+      } else if (base.selfHeal) {
+        record.power=base.selfHeal;record.targetIds=[h.id];
+        await beam(entityArt(h),entityArt(h),"heal",impact);
+        const n=healHero(i,base.selfHeal);record.actual=n;report.healing+=n;h.stats.healingDone+=n;
       } else if (base.block) {
         const before = state.block;
         grantRolledBlock(h, base.block, impact);

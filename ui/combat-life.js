@@ -44,6 +44,7 @@ async function enemyWindup(e, kind = "heavy") {
 }
 async function executionPayoffFX(h, e, shot) {
   if (!shot?.bonus) return;
+  await classSignatureFX(h,e,"execute");
   const strong = shot.seal && shot.charge >= RANGER_AIM_CAP;
   portraitMotion(entityArt(h), strong ? "heavy" : "attack");
   combatCallout(

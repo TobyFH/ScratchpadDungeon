@@ -10,6 +10,7 @@ const POWER = Object.freeze({
   rally: 1,
   trick: 1,
   heal: 2,
+  selfheal: 2,
   block: 2,
   stun: 1,
   class: 0,
@@ -597,13 +598,13 @@ function complementaryEffects(h, symbols) {
   if (
     h.job === "ranger" &&
     has("attack") &&
-    ["heal", "stun", "rally"].some(has)
+    ["heal", "selfheal", "stun", "rally"].some(has)
   )
     fx.attack = 2;
   if (
     h.job === "berserker" &&
     has("attack") &&
-    (has("heal") || has("selfharm"))
+    (has("heal") || has("selfheal") || has("selfharm"))
   )
     fx.attack = 1;
   if (
@@ -667,9 +668,9 @@ function expectedComplementaryEffects(h) {
   if (h.job === "rogue")
     return { damage: both(["attack"], ["poison", "stun"]) };
   if (h.job === "ranger")
-    return { damage: 2 * both(["attack"], ["heal", "stun", "rally"]) };
+    return { damage: 2 * both(["attack"], ["heal", "selfheal", "stun", "rally"]) };
   if (h.job === "berserker")
-    return { damage: both(["attack"], ["heal", "selfharm"]) };
+    return { damage: both(["attack"], ["heal", "selfheal", "selfharm"]) };
   if (h.job === "jester")
     return {
       trick: both(
