@@ -58,6 +58,10 @@ test("critical rolls reuse a fixed original-value readout, pulse to the final nu
     setPace("1");
     setPreference("shake", 0);
     setPreference("skipCriticals", false);
+    // Preserve the payoff while inspecting it under parallel browser load;
+    // normal automatic fade/skip timing has separate interaction coverage.
+    window.savedCriticalHold = criticalHold;
+    criticalHold = () => new Promise(resolve => { window.releaseCriticalReadout = resolve; });
     window.crit = rollCritical(
       "Test",
       [0, 1, 2].map(() => ({ type: "attack", tier: 1 })),
@@ -96,7 +100,11 @@ test("critical rolls reuse a fixed original-value readout, pulse to the final nu
   assert.equal(result.value, Math.ceil(12 * result.effects.multiplier));
   assert.equal(await p.locator("#critical-result .stage-result").count(), 0);
   await p.locator("#stage-skip").click();
-  await p.evaluate(() => window.crit);
+  await p.evaluate(async () => {
+    window.releaseCriticalReadout();
+    await window.crit;
+    criticalHold = window.savedCriticalHold;
+  });
 });
 
 test("chest and battle-skull art stay centred and reward criticals retain their original sheet with a blank reserved region", async (t) => {

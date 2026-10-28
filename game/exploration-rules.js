@@ -75,7 +75,11 @@ function updateLavaGlow() {
         distance <= 2 &&
         lineOfSight(state.position, i)
       )
-        strength = Math.max(strength, distance <= 1 ? 0.25 : 0.1);
+      {
+        const crust = c.env?.crust !== undefined ? environmentState()?.crust.find(f=>f.id===c.env.crust) : null;
+        const heat = !crust || crust.phase === "molten" ? 1 : crust.phase === "cracking" ? 0.65 : 0.3;
+        strength = Math.max(strength, (distance <= 1 ? 0.25 : 0.1) * heat);
+      }
     }
   let layer = $("#lava-lighting");
   if (!layer) {

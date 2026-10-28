@@ -48,7 +48,8 @@ function setupBattleOpening({ fresh = false } = {}) {
     h.surprised = false;
     h.initiative = null;
   });
-  const overgrown = state.map[state.position]?.terrain === "overgrown";
+  const overgrown = state.map[state.position]?.terrain === "overgrown" &&
+    !environmentLight(state.map, state.position, "clearings");
   const surpriseChance = TACTICS.surpriseChance + (overgrown ? 0.14 : 0);
   if (fresh && Math.random() < surpriseChance) {
     living.forEach(

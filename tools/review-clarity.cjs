@@ -116,8 +116,8 @@ const fs = require("fs"),
     await shot("permanent-mystery-1280");
     await p.setViewportSize({ width: 390, height: 844 });
     await shot("permanent-mystery-390");
-    await p.locator('[data-workshop-view="prices"]').click();
-    await shot("class-prices-390");
+    await p.locator('[data-workshop-view="crits"]').click();
+    await shot("critical-odds-390");
     await p.evaluate(() => {
       editorSelection.reel = 0;
       editorSelection.face = 0;

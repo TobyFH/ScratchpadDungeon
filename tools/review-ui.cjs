@@ -916,14 +916,18 @@ const output = path.join(root, "test-results/ui-review");
     await page.evaluate(() => {
       sceneFast = false;
       window.reviewMachine = runMachine;
-      runMachine = (id, reels, options = {}) =>
-        window.reviewMachine(
+      runMachine = (id, reels, options = {}) => {
+        // The previous scene was manually fast-forwarded. Restore cinematic
+        // pacing at the critical boundary so the original-value capture exists.
+        if (id === "critical") sceneFast = false;
+        return window.reviewMachine(
           id,
           reels,
           id === "treasure"
             ? { results: [0, 1, 2].map(() => ({ type: "coin", tier: 1 })) }
             : options,
         );
+      };
       busy = true;
       window.spoilsReview = treasureRoll("battle");
     });

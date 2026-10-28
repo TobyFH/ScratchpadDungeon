@@ -31,6 +31,8 @@ function updateBiomeMargins(){
 let mapHoverIndex=null;
 function mapTileDescription(c){
   if(!c.seen)return tileName(c);
+  const environmental=environmentDescription(c);
+  if(environmental)return environmental+(c.event?` · ${c.event[0].toUpperCase()+c.event.slice(1)}${c.activated?" - activated":" - active"}`:"");
   if(BIOME_DISCOVERIES[c.event])return BIOME_DISCOVERIES[c.event].name+' — '+BIOME_DISCOVERIES[c.event].description;
   const extra={
     poisonMushroom:'Poison mushrooms — spores harm the leading companion every time you cross.',

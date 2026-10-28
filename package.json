@@ -11,7 +11,8 @@
     "audit:balance": "npm run check:ui && node tools/balance-audit.cjs",
     "review:clarity": "npm run check:ui && node tools/review-clarity.cjs",
     "review:living": "npm run check:ui && node tools/review-living-paper.cjs",
-    "review:tuning": "npm run check:ui && node tools/review-curve-tuning.cjs"
+    "review:tuning": "npm run check:ui && node tools/review-curve-tuning.cjs",
+    "review:environment": "npm run check:ui && node tools/review-environment.cjs"
   },
   "devDependencies": {
     "playwright": "1.58.2"

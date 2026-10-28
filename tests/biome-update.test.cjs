@@ -157,6 +157,7 @@ test("Tank Shield Bash block grows every three levels in actual roll planning", 
     beginEncounter(false, { count: 1 });
     finishOpeningRoll();
     const h = state.party[0];
+    h.specialism = "offence"; // Isolate level scaling from Defensive's +1 support.
     const out = [];
     for (const level of [1, 4, 7, 10]) {
       h.level = level;

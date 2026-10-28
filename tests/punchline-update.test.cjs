@@ -94,6 +94,7 @@ test('Shield Bash spends up to its level budget while breaking enemy block at tw
   const r=await p.evaluate(async()=>{
     beginEncounter(false,{count:1}); finishOpeningRoll();
     const e=state.enemy,h=state.party[0]; e.hp=e.maxHp=1000; e.passive=null; e.countdown=20;
+    h.specialism='offence'; // Isolate Bash spending from Defensive's +1 block.
     state.block=6; setEnemyBlock(12); render();
     runMachine=async()=>[{type:'blank',tier:1},{type:'class',tier:1,job:'fighter'},{type:'blank',tier:1}];
     await spin(0);

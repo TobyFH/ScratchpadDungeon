@@ -76,6 +76,7 @@ async function oldTravelEvent(c, kind) {
 }
 
 const WORLD_BALANCE = Object.freeze({
+  strongholdChance: 0.18,
   shopChance: 0.46,
   marketChance: 0.7,
   riverChance: 0.41,
@@ -359,7 +360,7 @@ function tunnelDestination(map, from) {
     : null;
 }
 function floorNeighbors(map, from, tunnels = true) {
-  const next = neighbors(from),
+  const next = neighbors(from).filter(j => environmentEdgeOpen(map, from, j)),
     to = tunnels ? tunnelDestination(map, from) : null;
   if (to !== null && !next.includes(to)) next.push(to);
   return next;
@@ -481,6 +482,7 @@ async function tunnelEncounter(c) {
   closeSpotlight();
   if (choice !== "true") return false;
   const source = state.position;
+  beginEnvironmentalMovement();
   c.activated = true;
   smokePoof($("#map-player"), true);
   await feedbackPause(skip ? 100 : 260);
@@ -488,6 +490,8 @@ async function tunnelEncounter(c) {
   renderMap();
   await tunnelTransit(source, destination);
   state.position = destination;
+  markEnvironmentalMovement();
+  activateEnvironmentalArrival(destination);
   const end = state.map[destination];
   end.visited = true;
   end.activated = true;

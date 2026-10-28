@@ -575,6 +575,7 @@ function makeHero(
   h.last = [h.reels[0][0], h.reels[1][1], { type: "blank", tier: 1 }].map(
     (f) => ({ ...f }),
   );
+  normaliseTacticalStatuses(h);
   return h;
 }
 // Shared by actual recovery and the fountain's uncapped offered totals.

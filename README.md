@@ -420,3 +420,9 @@ by Steady protection, capped shared block and stimulant potency, complementary
 class marks and the removal/refund of paid hero weighting. The workshop and
 field guide explain these changes. Existing pencil art and enemy floor budgets
 are retained.
+
+Dynamic biome features now include Heartwood roots, sunlit clearings, cooling
+lava crust, faults, seismic discovery swaps, lantern islands and shifting
+corridors. See [Environmental mechanics](docs/ENVIRONMENTAL_MECHANICS.md) for
+movement timing, safety, save behaviour and central tuning. Generate live
+presentation captures with `npm run review:environment`.

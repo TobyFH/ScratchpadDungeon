@@ -377,7 +377,7 @@ test("returned companions are slightly more frequent, remain one-shot and never 
   const p = await game(t);
   const r = await p.evaluate(() => {
     state.graveyard = [{ id: "lost", name: "Wren", depth: 1, hp: 0 }];
-    Math.random = () => 0.06;
+    Math.random = () => 0.11;
     const chosen = chooseReturnedHero(2),
       again = chooseReturnedHero(3);
     return {
@@ -391,7 +391,7 @@ test("returned companions are slightly more frequent, remain one-shot and never 
   assert.equal(r.id, "lost");
   assert.equal(r.again, null);
   assert.equal(r.hp, 0);
-  assert.equal(r.chance, 0.065);
+  assert.equal(r.chance, 0.12);
   assert.equal(r.shop, 0.46);
 });
 
@@ -462,4 +462,73 @@ test("a real empty-nest treasure roll pays gold through its own confirmed coin-o
   assert.equal(r.pending, 0);
   await p.locator("#stage-confirm").click();
   await p.evaluate(() => window.coins);
+});
+
+test("faster returning shadow applies to existing deadlines, pauses for menus and combat, and preserves discoveries", async (t) => {
+  const p = await game(t);
+  const r = await p.evaluate(() => {
+    state.map[0].biome = "shadow";
+    state.map[0].shadowClock = 0;
+    for (const c of state.map) {
+      c.visited = false;
+      c.shadowCovered = false;
+    }
+    const i = pos(4, 4),
+      c = state.map[i];
+    Object.assign(c, {
+      wall: false,
+      seen: true,
+      visited: true,
+      event: "well",
+      feature: "well",
+      activated: false,
+      shadowDue: 38,
+    });
+    for (let n = 0; n < 10; n++) advanceShadowTime(2);
+    const before = {
+      clock: state.map[0].shadowClock,
+      covered: c.shadowCovered,
+    };
+    help();
+    advanceShadowTime(2);
+    const menuClock = state.map[0].shadowClock;
+    closeModal();
+    state.enemy = { hp: 1 };
+    advanceShadowTime(2);
+    const battleClock = state.map[0].shadowClock;
+    state.enemy = null;
+    advanceShadowTime(2);
+    const after = {
+      clock: state.map[0].shadowClock,
+      covered: c.shadowCovered,
+      event: c.event,
+      activated: c.activated,
+      known: c.seen,
+    };
+    state.map[0].biome = "cave";
+    advanceShadowTime(2);
+    return {
+      before,
+      menuClock,
+      battleClock,
+      after,
+      otherBiomeClock: state.map[0].shadowClock,
+    };
+  });
+  assert.ok(Math.abs(r.before.clock - 36) < 1e-8);
+  assert.equal(r.before.covered, false);
+  assert.equal(r.menuClock, r.before.clock);
+  assert.equal(r.battleClock, r.before.clock);
+  assert.ok(Math.abs(r.after.clock - 39.6) < 1e-8);
+  assert.deepEqual(
+    { ...r.after, clock: 0 },
+    {
+      clock: 0,
+      covered: true,
+      event: "well",
+      activated: false,
+      known: true,
+    },
+  );
+  assert.equal(r.otherBiomeClock, r.after.clock);
 });

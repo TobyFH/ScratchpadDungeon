@@ -1,0 +1,122 @@
+/* Environmental information overlays room art; it never changes tile geometry. */
+.environment-overlay {
+  position: absolute;
+  inset: 5%;
+  pointer-events: none;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+}
+.environment-overlay svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.environment-root-art {
+  color: var(--green);
+  background: color-mix(in srgb, var(--paper) 46%, transparent);
+}
+.environment-heartwood-art {
+  color: var(--green);
+  background: var(--paper);
+  inset: 1%;
+}
+.environment-heartwood-art svg {
+  scale: 1.12;
+}
+.tile.environment-root,
+.tile.environment-heartwood {
+  cursor: pointer;
+}
+.tile.environment-root .terrain-stop,
+.tile.environment-heartwood .terrain-stop {
+  display: none;
+}
+.environment-clearing-art {
+  inset: 2% 53% 53% 2%;
+  color: var(--gold);
+}
+.environment-lantern-art {
+  inset: 2% 53% 40% 2%;
+  color: var(--gold);
+}
+.tile.environment-lit {
+  box-shadow: inset 0 0 13px color-mix(in srgb, var(--gold) 32%, transparent);
+}
+.environment-lantern-art:not(.landmark-active) {
+  color: var(--soft);
+}
+.environment-crust-art {
+  color: var(--soft);
+  background: color-mix(in srgb, var(--paper-shade) 78%, transparent);
+}
+.crust-molten .environment-crust-art {
+  opacity: 0.4;
+  color: var(--lava-ink);
+}
+.crust-cracking .environment-crust-art {
+  color: var(--lava-ink);
+}
+.environment-fault-art {
+  color: var(--soft);
+  inset: 1%;
+  opacity: 0.65;
+}
+.environment-fault-art.fault-unstable {
+  color: var(--red);
+  opacity: 0.9;
+}
+.environment-collapse-art {
+  color: var(--ink);
+  background: var(--paper-shade);
+  inset: 0;
+  border: 2px double var(--ink);
+}
+.environment-corridor-art {
+  inset: 63% 2% 2% 63%;
+  color: var(--soft);
+}
+.environment-overlay.terrain-preview {
+  opacity: 0.3;
+  z-index: 1;
+}
+.environment-connections {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9;
+  overflow: visible;
+}
+.sliding-wall-paper {
+  stroke: var(--paper-shade);
+  stroke-width: 0.18;
+}
+.sliding-wall-ink {
+  stroke: var(--ink);
+  stroke-width: 0.1;
+  stroke-dasharray: 0.07 0.025;
+}
+.environmental-encounter-art {
+  color: var(--green);
+  width: 145px;
+  height: 145px;
+  min-height: 145px;
+  margin: auto;
+}
+.environmental-encounter-art svg {
+  width: 100%;
+  height: 100%;
+}
+@media (prefers-reduced-motion: reduce) {
+  .environment-overlay {
+    animation: none !important;
+  }
+}
+
+/* Solid crust reads as stone rather than flowing lava. */
+body.tile-motion-enabled .tile.environment-crust.crust-solid::after {
+  animation: none;
+  opacity: 0.12;
+}

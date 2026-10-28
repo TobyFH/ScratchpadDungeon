@@ -33,7 +33,11 @@ reset the receipt. The starting selection uses the chosen temperament; found com
 draw temperament independently at random.
 
 Shops rise from 40% to **46%** per floor; Markets rises from 66% to **70%**.
-Returned companions rise from 4.5% to **6.5%** of eligible ordinary encounters.
+Optional walled strongholds now attempt placement on **18%** of floors, up from
+3.5%; unsafe or occupied sites still skip placement. Their chance is centralized
+in `WORLD_BALANCE.strongholdChance`, with the existing encounter/reward rules.
+Returned companions now have **12%** chance per eligible ordinary encounter
+(up from 6.5% in the initial curve pass).
 Their existing later-floor, graveyard and one-return-per-person restrictions
 remain; nothing resurrects the original companion.
 

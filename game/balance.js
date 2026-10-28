@@ -186,7 +186,7 @@ const ENCOUNTER_TUNING = Object.freeze({
   eliteHealth: 1.18,
   strongholdHealth: 1.25,
   bulkyExcess: 0.7,
-  returnedHeroChance: 0.065,
+  returnedHeroChance: 0.12,
 });
 const enemyHitPressure = (depth) =>
   ENCOUNTER_TUNING.earlyHitPressure[

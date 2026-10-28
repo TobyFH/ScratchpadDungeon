@@ -3,6 +3,7 @@
 const LIVING_FLOOR = Object.freeze({
   shadowMinSeconds: 38,
   shadowMaxSeconds: 64,
+  shadowReturnRate: 1.8,
   shadowCoverPenalty: 0.08,
   stalactiteMin: 4,
   stalactiteMax: 8,
@@ -27,7 +28,7 @@ function safeWithClosedTiles(map, extra = []) {
   const saved = closing.map((i) => [i, map[i].wall]);
   try {
     closing.forEach((i) => (map[i].wall = true));
-    return allTilesCanReachStairs(map);
+    return environmentTraversalSafe(map);
   } finally {
     saved.forEach(([i, wall]) => (map[i].wall = wall));
   }
@@ -180,10 +181,17 @@ function advanceShadowTime(seconds) {
     covered = map.filter((c) => c.shadowCovered).length;
   map[0].shadowClock =
     (map[0].shadowClock || 0) +
-    Math.min(2, seconds) / (1 + covered * LIVING_FLOOR.shadowCoverPenalty);
+    // Scale the shared clock rather than saved deadlines: existing floors and
+    // newly visited tiles both receive the faster return rate immediately.
+    (Math.min(2, seconds) * LIVING_FLOOR.shadowReturnRate) /
+      (1 + covered * LIVING_FLOOR.shadowCoverPenalty);
   const now = map[0].shadowClock;
   let changed = false;
   map.forEach((c, i) => {
+    if (environmentLight(map, i, "lanterns", true)) {
+      if (c.shadowCovered) { c.shadowCovered = false; changed = true; }
+      return;
+    }
     if (!c.visited || c.wall || i === state.position) {
       if (i === state.position) {
         c.shadowCovered = false;

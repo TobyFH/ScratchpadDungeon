@@ -263,6 +263,7 @@ test("enemy entrance requires confirmation before shrinking into the right page"
   let p = await game(t);
   await fast(p);
   await p.evaluate(() => {
+    state.map[79].wall = false; // Explicit discovery fixture, independent of generated masonry.
     state.map[79].event = "enemy";
     render();
   });
@@ -270,7 +271,7 @@ test("enemy entrance requires confirmation before shrinking into the right page"
   await p.waitForSelector("#stage-confirm");
   assert.equal(
     await p.locator("#stage-title").textContent(),
-    await p.evaluate(() => state.enemy.name),
+    await p.evaluate(() => battleEnemies().map(e=>e.name).join(" & ")),
   );
   await p.waitForTimeout(1200);
   assert.equal(await p.locator("#entrance-art").isVisible(), true);
@@ -295,7 +296,7 @@ test("enemy entrance requires confirmation before shrinking into the right page"
       window.entranceTransferObserver.disconnect();
       return window.entranceTransfers;
     }),
-    1,
+    await p.evaluate(() => battleEnemies().length),
   );
   assert.equal(await p.locator("#enemy-art").isVisible(), true);
 });
@@ -460,6 +461,7 @@ test("well can be declined and revisited; the rolled heal affects only living he
     state.party.push(makeHero("Mira", "healer"));
     state.party[0].hp = 1;
     state.party[1].hp = 1;
+    state.map[79].wall = false; // Explicit discovery fixture, independent of generated masonry.
     state.map[79].event = "well";
     state.map[79].feature = "well";
     render();
@@ -1563,6 +1565,7 @@ test("fountain triple heals crit within the same popup at instant speed and show
   await fast(p);
   await p.evaluate(() => {
     state.party[0].hp = 1;
+    state.map[79].wall = false; // Explicit discovery fixture, independent of generated masonry.
     state.map[79].event = "well";
     render();
   });
@@ -1963,6 +1966,7 @@ test("a fountain critical retains uncapped offered healing for every hero while 
   await p.evaluate(() => {
     state.party.push(makeHero("Mira", "healer"), makeHero("Wren", "rogue"));
     state.party.forEach((h) => (h.hp = h.maxHp - 1));
+    state.map[79].wall = false; // Explicit discovery fixture, independent of generated masonry.
     state.map[79].event = "well";
     render();
   });
@@ -2096,6 +2100,7 @@ test("retargeting to another hidden tile during erasure cancels the original enc
   let p = await game(t);
   await p.evaluate(blankFloor);
   await p.evaluate(() => {
+    state.map[79].wall = false; // Explicit discovery fixture, independent of generated masonry.
     state.map[79].event = "enemy";
     render();
   });
@@ -2195,7 +2200,7 @@ test("1000 distinct random floors have distant reachable stairs, optional connec
   );
   assert.ok(r.doubleRivers > 0 && r.doubleRivers < 30, JSON.stringify(r));
   assert.ok(r.ruins > 220 && r.ruins < 420, JSON.stringify(r));
-  assert.ok(r.strongholds > 0 && r.strongholds < 60, JSON.stringify(r));
+  assert.ok(r.strongholds > 80 && r.strongholds < 220, JSON.stringify(r));
 });
 
 test("route repair uses a bridge when a connected river separates spawn from the stairs", async (t) => {
@@ -2280,6 +2285,7 @@ test("visible active traps receive the same safe-detour treatment as battles", a
       state.map[pos(x, 7)].seen = true;
       state.map[pos(x, 6)].seen = true;
     }
+    state.map[79].wall = false; // Explicit discovery fixture, independent of generated masonry.
     state.map[79].event = "trap";
     const safe = shortestPath(pos(4, 7));
     for (let x = 1; x <= 4; x++) state.map[pos(x, 6)].seen = false;
@@ -2555,6 +2561,7 @@ test("ruins can be ignored, revisited, then roll a real balance of loot and dama
   await fast(p);
   await p.evaluate(() => {
     state.depth = 3;
+    state.map[79].wall = false; // Explicit discovery fixture, independent of generated masonry.
     state.map[79].event = "ruin";
     state.map[79].feature = "ruin";
     render();
@@ -4353,6 +4360,7 @@ test("every stair has a scaling elite boss and entering an undefeated stair star
   assert.ok(data.every((x, i) => i === 0 || x.hp > data[i - 1].hp));
   await p.evaluate(blankFloor);
   await p.evaluate(() => {
+    state.map[79].wall = false; // Explicit discovery fixture, independent of generated masonry.
     state.map[79].event = "stairs";
     state.map[79].feature = "stairs";
     render();

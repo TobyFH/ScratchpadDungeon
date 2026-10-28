@@ -122,8 +122,10 @@ stone and participates in the existing safe route repair.
 
 ## Shadows are biome-specific
 
-Shadow galleries begin at floor four. Previously visited walkable tiles regain
-pencil cover after a varied **38–64 seconds of active exploration**. The current
+Shadow galleries are eligible from floor two. Previously visited walkable tiles regain
+pencil cover after approximately **21–36 seconds of active exploration** before
+coverage slowdown. The shared shadow clock advances at **1.8×** its original
+rate, including existing saved deadlines; there is no timer-reset migration. The current
 tile is exempt. Each covered tile slows that clock by a further 8% of its base
 rate. Contents, activation state and known routes remain intact: this is a
 visual cover, not a newly undiscovered room. Re-entry erases it and raises the

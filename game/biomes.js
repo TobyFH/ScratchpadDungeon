@@ -223,6 +223,7 @@ function glideCells(map, from, entry, { knownOnly = false } = {}) {
       y = Math.floor(n / W) + dy;
     if (x < 0 || x >= W || y < 0 || y >= H) break;
     const next = pos(x, y);
+    if (!environmentEdgeOpen(map, n, next)) break;
     if (knownOnly && !map[next].seen) return [...cells, next];
     if (map[next].wall) break;
     cells.push(next);
@@ -247,7 +248,9 @@ function movementRoute(
     came = new Map(),
     queue = [startKey],
     closed = new Set();
-  const blocked = (i, mask) => map[i].wall || !!(mask & (bit.get(i) || 0));
+  const blocked = (i, mask) =>
+    (map[i].wall && !(!omniscient && i === goal && environmentRoot(map[i]))) ||
+    !!(mask & (bit.get(i) || 0));
   while (queue.length) {
     queue.sort((a, b) => cost.get(a) - cost.get(b));
     const key = queue.shift();
@@ -305,9 +308,7 @@ function movementRoute(
         ? cells.filter(
             (i) =>
               i !== goal &&
-              ["enemy", "guardian", "stronghold", "trap"].includes(
-                map[i].event,
-              ),
+              (["enemy", "guardian", "stronghold", "trap"].includes(map[i].event) || environmentRoot(map[i])),
           ).length * 1000
         : 0;
       const next = cost.get(key) + cells.length + danger;

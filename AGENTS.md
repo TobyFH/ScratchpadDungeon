@@ -160,3 +160,13 @@ actual drop claim; never infer taking from a bag-count change alone.
 Boss defensive palettes and caps share `enemyFacePalette` / `enemyReelRank`.
 Stimulant bonuses, overflow threshold and cap must agree in rolls and tooltips.
 The icon workshop no longer has a class-price page; keep prices on choices.
+
+Read `docs/ENVIRONMENTAL_MECHANICS.md` before changing dynamic biome terrain.
+`game/environment.js` owns completed-journey receipts, protected escape proofs,
+root continuations and seven shared features; `ui/environment.js/.css` owns their
+pencil overlays and closed-edge drawings. Room payloads remain separate from
+`cell.env`; seismic swaps move all non-anchored metadata without rerolling it.
+All traversal, including ice and pursuers, must use the same corridor edges.
+Never melt occupied crust, depend on temporary crossings for escape, or allow an
+optional Heartwood victory to mark the staircase defeated. Run the environmental,
+ice/crystal and full suites plus the environmental and notebook visual reviews.
