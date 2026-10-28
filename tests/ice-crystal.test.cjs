@@ -231,7 +231,7 @@ test("crystal aura respects range and walls and survives an ongoing fight reload
     Object.assign(state.map[pos(2, 6)], { terrain: "crystal", wall: true });
     for(const i of [pos(2,7),pos(1,6)])Object.assign(state.map[i],{wall:true,terrain:"stone"});
     const blocked = crystalSources().length;
-    state.map[pos(2, 7)].wall = false;
+    Object.assign(state.map[pos(2, 7)], {wall:false, terrain:"floor"});
     const near = crystalSources().length;
     beginEncounter(false, { count: 1 });
     state.party[0].crystalLocks = [0, 2];
