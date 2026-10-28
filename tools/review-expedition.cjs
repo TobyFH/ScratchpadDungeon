@@ -20,6 +20,18 @@ const {chromium}=require('playwright'),fs=require('node:fs'),http=require('node:
   for(const palette of ['dark','warm']){await p.evaluate(palette=>setPalette(palette),palette);await shot('combat-'+palette+'-1280');}
   await p.evaluate(()=>{closeModal();closeSpotlight();state.enemy=null;state.enemies=[];setPalette('default');render();});
   await p.setViewportSize({width:390,height:844});await p.locator('#hover-name').scrollIntoViewIfNeeded();await shot('inspection-390');
+  // Real discovery handlers, not imitation popup markup.
+  await p.setViewportSize({width:1280,height:800});
+  for(const type of ['nest','fruit','fairy','geode','prism','rubble','shadowduel']){
+   await p.evaluate(type=>{newRun('fighter');setPace('skip');state.depth=6;const c=state.map[state.position];c.event=c.feature=type;window.previewDiscovery=resolveExpansionTile(c)},type);
+   await p.locator('#biome-leave').waitFor();await shot('discovery-'+type+'-1280');
+  }
+  for(const kind of ['fighter','rogue','mage','berserker','execute']){
+   await p.evaluate(kind=>{newRun(kind==='execute'?'ranger':kind);setPace('1');sceneFast=false;beginEncounter(false,{count:1});finishOpeningRoll();render();window.previewSketch=classSignatureFX(state.party[0],state.enemy,kind)},kind);
+   await p.locator('.class-sketch').waitFor();await p.waitForTimeout(280);
+   await p.screenshot({path:path.join(out,'class-sketch-'+kind+'-1280.png'),animations:'allow'});shots.push('class-sketch-'+kind+'-1280');
+   await p.evaluate(()=>window.previewSketch);
+  }
   fs.writeFileSync(path.join(out,'visual-report.json'),JSON.stringify({shots,errors,external},null,2));
   if(errors.length||external.length)throw Error(JSON.stringify({errors,external}));console.log(`Saved ${shots.length} expansion captures.`);
  }finally{await browser.close();await new Promise(r=>server.close(r));}

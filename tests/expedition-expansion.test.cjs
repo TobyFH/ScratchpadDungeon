@@ -166,3 +166,13 @@ test('a shadow duel copies real legal reels before creating its elite enemy and 
  assert.equal(r.name,'Shadow of '+r.hero);assert.equal(r.art,'fighter');assert.ok(r.elite&&r.shadow);assert.equal(r.reels.length,3);assert.ok(r.reels.flat().includes('selfheal'));assert.ok(!r.reels.flat().includes('class'));
  await p.locator('#stage-confirm').click();await p.evaluate(()=>window.discoveryTask);
 });
+test('cancelled discovery and secret-door promises cannot close a new run’s confirmation',async t=>{
+ const p=await game(t);
+ await discovery(p,'nest');
+ await p.evaluate(()=>{window.oldDiscovery=window.discoveryTask;newRun('fighter');const c=state.map[state.position];c.event=c.feature='geode';window.discoveryTask=resolveExpansionTile(c)});
+ await p.evaluate(()=>window.oldDiscovery);assert.equal(await p.locator('#stage-card').getAttribute('data-biome-kind'),'geode');assert.equal(await p.locator('#spotlight').isVisible(),true);await confirmDiscovery(p,'#biome-leave');
+ await p.evaluate(()=>{const i=neighbors(state.position)[0];Object.assign(state.map[i],{seen:true,wall:true,terrain:'secretDoor',event:'door'});window.oldDoor=openSecretDoor(i)});
+ await p.locator('#biome-use').waitFor();
+ await p.evaluate(()=>{newRun('fighter');const c=state.map[state.position];c.event=c.feature='fruit';window.discoveryTask=resolveExpansionTile(c)});
+ await p.evaluate(()=>window.oldDoor);assert.equal(await p.locator('#stage-card').getAttribute('data-biome-kind'),'fruit');assert.equal(await p.locator('#spotlight').isVisible(),true);await confirmDiscovery(p,'#biome-leave');
+});

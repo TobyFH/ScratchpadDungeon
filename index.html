@@ -25709,8 +25709,9 @@ async function mushroomBlast(i){
   const damage=Math.ceil(base*multiplier);
   state.pendingMushroomBlast={tile:i,damage};save();
   $('#mushroom-blast-result').textContent=damage?`${damage} incoming spore damage.`:'A narrow escape. No damage.';
-  await eventChoice([{id:'stage-confirm',label:'Let the spores settle',value:true}]);closeSpotlight();
+  await eventChoice([{id:'stage-confirm',label:'Let the spores settle',value:true}]);
   if(state!==run)return;
+  closeSpotlight();
   await settleMushroomBlast();
 }
 async function settleMushroomBlast(){
@@ -25744,7 +25745,7 @@ async function resolveExpansionTile(c){
     {id:'biome-leave',label:'Leave it untouched',value:'leave'}];
   showSpotlight(def.name,def.description,`<div class="stage-art biome-discovery-art">${icon(def.icon)}</div><div class="stage-result">${type==='nest'?'An egg restores 65% of one hero’s maximum HP. Taking it is riskier than taking the loot.':type==='fruit'?'The fruit restores a small amount of health to each living companion.':type==='shadowduel'?'Your double is stronger than an ordinary foe. Its spoils are richer, too.':'The choice is yours.'}${bagWarning?'<br><b>BAG FULL · you will choose what to keep before collecting the egg.</b>':''}</div>`,'biome-choice');
   $('#stage-card').dataset.biomeKind=type;
-  const choice=await eventChoice(choices);closeSpotlight();if(state!==run)return true;
+  const choice=await eventChoice(choices);if(state!==run)return true;closeSpotlight();
   if(choice==='leave'||choice==='cancel'){
     c.autoDeclined=true;log(`${def.name}: left untouched.`);return true;
   }
@@ -25783,13 +25784,15 @@ async function openSecretDoor(i){
   if(busy||state.enemy||state.over)return;
   const c=state.map[i];if(!c?.seen||c.event!=='door')return;
   if(tileDistance(i)>1){toast('Stand beside the door to open the shortcut.');return;}
-  busy=true;
+  const run=state;busy=true;
   try{
     showSpotlight('A secret door','A seam in the masonry leads to another passage.',`<div class="stage-art">${icon('door')}</div><div class="stage-result">Open this shortcut? It will stay open.</div>`,'biome-choice');
     $('#stage-card').dataset.biomeKind='door';
-    const choice=await eventChoice([{id:'biome-use',label:'Open the shortcut',value:'use'},{id:'biome-leave',label:'Leave it closed',value:'leave'}]);closeSpotlight();
+    const choice=await eventChoice([{id:'biome-use',label:'Open the shortcut',value:'use'},{id:'biome-leave',label:'Leave it closed',value:'leave'}]);
+    if(state!==run)return;
+    closeSpotlight();
     if(choice==='use'){Object.assign(c,{wall:false,terrain:'floor',event:null,feature:'door',activated:true});smokePoof($(`[data-tile="${i}"]`));log('Secret door opens a new shortcut.');}
-  }finally{busy=false;render();save();}
+  }finally{if(state===run){busy=false;render();save();}}
 }
 // END GENERATED EXPEDITION EXPANSION
       // BEGIN GENERATED WORLD EVENTS
