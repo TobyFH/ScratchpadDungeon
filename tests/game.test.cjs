@@ -2122,6 +2122,7 @@ test("1000 distinct random floors have distant reachable stairs, optional connec
       layouts = new Set(),
       firstRooms = new Set(),
       riverFloors = 0,
+      riverEligibleFloors = 0,
       doubleRivers = 0,
       ruins = 0,
       strongholds = 0;
@@ -2152,6 +2153,9 @@ test("1000 distinct random floors have distant reachable stairs, optional connec
           return { invalidRiver: n };
       }
       riverFloors += ids.size > 0;
+      // Labyrinth carving intentionally replaces the original river layout.
+      // Equal biome odds make that exclusion materially more common.
+      riverEligibleFloors += floorBiome(map) !== "maze";
       doubleRivers += ids.size > 1;
       locations.add(stair);
       layouts.add(map.map((c) => c.event || c.terrain).join(","));
@@ -2172,6 +2176,7 @@ test("1000 distinct random floors have distant reachable stairs, optional connec
       layouts: layouts.size,
       firstRooms: firstRooms.size,
       riverFloors,
+      riverEligibleFloors,
       doubleRivers,
       ruins,
       strongholds,
@@ -2183,7 +2188,11 @@ test("1000 distinct random floors have distant reachable stairs, optional connec
   assert.equal(r.layouts, 1000);
   assert.ok(r.locations >= 12);
   assert.ok(r.firstRooms >= 8);
-  assert.ok(r.riverFloors > 360 && r.riverFloors < 470, JSON.stringify(r));
+  assert.ok(
+    r.riverFloors > r.riverEligibleFloors * 0.34 &&
+    r.riverFloors < r.riverEligibleFloors * 0.48,
+    JSON.stringify(r),
+  );
   assert.ok(r.doubleRivers > 0 && r.doubleRivers < 30, JSON.stringify(r));
   assert.ok(r.ruins > 220 && r.ruins < 420, JSON.stringify(r));
   assert.ok(r.strongholds > 0 && r.strongholds < 60, JSON.stringify(r));
