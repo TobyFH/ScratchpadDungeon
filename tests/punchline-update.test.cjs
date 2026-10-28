@@ -163,7 +163,7 @@ test('random recruited temperaments include both sides and trait tooltips separa
     a.trait.reason=HERO_TRAITS.focused.description; normaliseTraitRecord(a);
     return {counts:temperaments.reduce((x,t)=>(x[t]=(x[t]||0)+1,x),{}),texts,legacy:traitMarkup(a)};
   });
-  assert.ok(r.counts.offence>50&&r.counts.defence>50); for(const text of r.texts) assert.match(text,/\+1 power on stun rolls/);
+  assert.ok(r.counts.offence>50&&r.counts.defence>50); for(const text of r.texts) assert.match(text,/\+2 power on stun rolls/);
   assert.match(r.texts[0],/Shrugged off/); assert.match(r.texts[1],/Repeatedly disrupted/);
   assert.match(r.legacy,/original moment was not recorded/); assert.doesNotMatch(r.legacy,/Earned: \+1 power/);
 });

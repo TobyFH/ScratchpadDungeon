@@ -3,12 +3,12 @@ const SPECIALISMS = Object.freeze({
   offence: {
     name: "Aggressive",
     description:
-      "Starts with more offensive marks. Rebuild freely; marks keep their usual power.",
+      "Starts with offensive marks; +1 physical, spell and poison power when those effects land. Fixed temperament; rebuild freely.",
   },
   defence: {
     name: "Defensive",
     description:
-      "Starts with more support marks. Rebuild freely; marks keep their usual power.",
+      "Starts with support marks; +1 healing, block and stun power when those effects land. Fixed temperament; rebuild freely.",
   },
 });
 const MAGE_POWERS = Object.freeze({
@@ -43,8 +43,9 @@ const furyCapacity = (h) =>
   24 + Math.max(0, Math.floor((h?.level || 1) - 1)) * 3;
 const SUPPORT_SCALING = Object.freeze({
   mageStartLevel: 4,
-  magePerLevel: 0.025,
-  mageMax: 0.15,
+  magePerLevel: 0.05,
+  mageMax: 0.4,
+  resonanceHealPerLevel: 0.6,
   wellStartFloor: 4,
   wellBasePerFloor: 0.004,
   wellRollPerFloor: 0.015,
@@ -117,6 +118,73 @@ const heroJobs = (rules = state?.runRules || []) => [
   ...(rules.includes("berserker") ? ["berserker"] : []),
   ...(rules.includes("jester") ? ["jester"] : []),
 ];
+const RECRUITMENT_TUNING = Object.freeze({
+  solo: 0.55,
+  pair: 0.43,
+  full: 0.3,
+  depthStep: 0.025,
+  soloPity: 0.07,
+  partyPity: 0.05,
+});
+function recruitChance(
+  partySize = state?.party.filter(alive).length || 1,
+  missedFloors = state?.recruitPity || 0,
+  depth = state?.depth || 1,
+) {
+  const size = Math.max(1, partySize),
+    base =
+      size === 1
+        ? RECRUITMENT_TUNING.solo
+        : size < 3
+          ? RECRUITMENT_TUNING.pair
+          : RECRUITMENT_TUNING.full;
+  return Math.min(
+    size === 1 ? 0.96 : size < 3 ? 0.88 : 0.65,
+    base +
+      Math.min(9, Math.max(0, depth - 1)) * RECRUITMENT_TUNING.depthStep +
+      Math.max(0, missedFloors) *
+        (size === 1
+          ? RECRUITMENT_TUNING.soloPity
+          : RECRUITMENT_TUNING.partyPity),
+  );
+}
+function earlyRecruitDue(depth, offered = state?.earlyRecruitOffered) {
+  return depth === 2 && !offered;
+}
+function guaranteeEarlyRecruit(
+  map,
+  depth,
+  offered = state?.earlyRecruitOffered,
+) {
+  if (
+    !earlyRecruitDue(depth, offered) ||
+    map.some((c) => c.event === "recruit")
+  )
+    return false;
+  const cells = map
+    .map((c, i) => ({ c, i }))
+    .filter(
+      ({ c, i }) =>
+        !c.wall &&
+        !c.event &&
+        !c.structure &&
+        i !== pos(1, 7) &&
+        ["floor", "overgrown", "mushroom", "shadow"].includes(c.terrain),
+    );
+  cells.sort(
+    (a, b) =>
+      Number(a.c.seen) - Number(b.c.seen) ||
+      tileDistance(a.i, pos(1, 7)) - tileDistance(b.i, pos(1, 7)) ||
+      a.i - b.i,
+  );
+  if (!cells.length) return false;
+  Object.assign(cells[0].c, {
+    event: "recruit",
+    feature: "recruit",
+    activated: false,
+  });
+  return true;
+}
 function mageResonance(h, symbols = null) {
   // A property of the marks actually rolled, falling back to reel probabilities.
   // It is never a selectable or saved Mage role.
@@ -124,9 +192,10 @@ function mageResonance(h, symbols = null) {
     Object.keys(MAGE_POWERS).map((t) => [t, 0]),
   );
   const add = (f, weight) => {
-    if (f && Object.hasOwn(scores, f.type))
-      scores[f.type] +=
-        (f.type === "magic" ? ATTACK_POWER[f.tier] : POWER[f.type] * f.tier) *
+    const type = f?.type === "selfheal" ? "heal" : f?.type;
+    if (f && Object.hasOwn(scores, type))
+      scores[type] +=
+        (type === "magic" ? ATTACK_POWER[f.tier] : POWER[type] * f.tier) *
         weight;
   };
   if (symbols) symbols.forEach((f) => add(f, 1));
@@ -182,9 +251,15 @@ function normaliseHeroBuild(h) {
   h.charge = Math.min(RANGER_AIM_CAP, Math.max(0, h.charge || 0));
   h.fury = Math.min(furyCapacity(h), Math.max(0, h.fury || 0));
   if (!h.reels) return;
-  if (["fighter","rogue","ranger","berserker"].includes(h.job)) {
-    h.reels.forEach(reel=>reel.forEach(f=>{if(f.type==="heal")f.type="selfheal";}));
-    h.last?.forEach(f=>{if(f.type==="heal")f.type="selfheal";});
+  if (["fighter", "rogue", "ranger", "berserker"].includes(h.job)) {
+    h.reels.forEach((reel) =>
+      reel.forEach((f) => {
+        if (f.type === "heal") f.type = "selfheal";
+      }),
+    );
+    h.last?.forEach((f) => {
+      if (f.type === "heal") f.type = "selfheal";
+    });
   }
   retireReelWeights(h);
   for (const face of h.last || []) {
@@ -235,9 +310,14 @@ function normaliseHeroBuild(h) {
         face.type = "rally";
       if (
         h.job === "berserker" &&
-        !["attack", "selfheal", "selfharm", "stimulant", "blank", "class"].includes(
-          face.type,
-        )
+        ![
+          "attack",
+          "selfheal",
+          "selfharm",
+          "stimulant",
+          "blank",
+          "class",
+        ].includes(face.type)
       ) {
         face.type = "blank";
         face.tier = 1;
@@ -288,13 +368,28 @@ function classAbilityDescription(hero) {
   );
 }
 function temperamentEffects(h, base) {
-  // Temperament selects a starting palette, never changes a mark's stated power.
+  const keys =
+    h.specialism === "offence"
+      ? ["attack", "magic", "poison"]
+      : h.specialism === "defence"
+        ? ["heal", "selfHeal", "teamHeal", "block", "stun"]
+        : [];
+  for (const key of keys) if (base[key] > 0) base[key] += 1;
   return base;
 }
 const CLASS_FACE_TYPES = Object.freeze({
   fighter: ["attack", "block", "selfheal", "stun", "stimulant", "blank"],
   rogue: ["attack", "poison", "stun", "stimulant", "selfheal", "blank"],
-  mage: ["magic", "heal", "selfheal", "block", "poison", "stun", "rally", "blank"],
+  mage: [
+    "magic",
+    "heal",
+    "selfheal",
+    "block",
+    "poison",
+    "stun",
+    "rally",
+    "blank",
+  ],
   ranger: ["attack", "stun", "selfheal", "heal", "rally", "poison", "blank"],
   berserker: ["attack", "selfheal", "selfharm", "stimulant", "blank"],
 });
@@ -403,7 +498,14 @@ function startingFaces(job, temperament) {
           ["trick", 1],
           ["blank", 1],
         ],
-  }[job].map(([type,tier],index) => [type === "heal" && (["fighter","rogue","ranger","berserker"].includes(job) || job === "mage" && defensive && index === 1) ? "selfheal" : type, tier]);
+  }[job].map(([type, tier], index) => [
+    type === "heal" &&
+    (["fighter", "rogue", "ranger", "berserker"].includes(job) ||
+      (job === "mage" && defensive && index === 1))
+      ? "selfheal"
+      : type,
+    tier,
+  ]);
 }
 // Recruits draw this independently of class and the starter selection.
 const randomTemperament = () => (Math.random() < 0.5 ? "offence" : "defence");
@@ -490,7 +592,7 @@ function specialismBadge(h) {
 }
 function heroBuildMarkup(h) {
   const s = SPECIALISMS[h.specialism] || SPECIALISMS.offence;
-  return `<span class="hero-specialism ${h.specialism}" data-tooltip="${escapeHTML(s.description)}">${icon(h.specialism === "defence" ? "block" : "sword")}<b>${s.name}</b> · ${h.specialism === "defence" ? "supporting start" : "attacking start"}<small>Fixed temperament</small></span>`;
+  return `<span class="hero-specialism ${h.specialism}" data-tooltip="${escapeHTML(s.description)}">${icon(h.specialism === "defence" ? "block" : "sword")}<b>${s.name}</b> · ${h.specialism === "defence" ? "+1 support" : "+1 offence"}<small>Fixed temperament</small></span>`;
 }
 function executionBonus(
   h,

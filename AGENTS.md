@@ -151,3 +151,12 @@ The icon workshop is an independently reversible presentation in
 rebuild. Direct tier quotes must simulate shared `applyFaceEdit()` validators,
 then commit atomically with actual paid receipts/refunds. Never fork prices or
 let permanent class/mystery marks become ordinary editable symbols.
+
+Read `docs/CURVE_TUNING.md` for current eligibility, encounter pacing, early
+recruit receipts, exclusive nests, temperament, traits and recovery numbers.
+Use `chooseFloorBiome` / `availableBiomes` for unbiased eligible themes.
+A nest has one saved `nestContents` value and its mother check requires the
+actual drop claim; never infer taking from a bag-count change alone.
+Boss defensive palettes and caps share `enemyFacePalette` / `enemyReelRank`.
+Stimulant bonuses, overflow threshold and cap must agree in rolls and tooltips.
+The icon workshop no longer has a class-price page; keep prices on choices.

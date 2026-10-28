@@ -1,5 +1,8 @@
 # Biome discoveries, recovery and class sketches (save 23)
 
+> Current follow-up: [Curve and recovery tuning](CURVE_TUNING.md) supersedes
+> earlier numeric examples for enemies, recovery, traits, biomes and nests.
+
 The distributable is still one offline `index.html`. Run `npm run build:ui`
 after editing embedded sources. No external assets, music changes or services
 were added. Prior WAV cues and pencil illustrations remain in place.

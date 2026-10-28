@@ -226,7 +226,7 @@ test("workshop exposes large explicit controls, keeps the selected face after ed
   assert.equal(await p.evaluate(() => modalKind), "editor");
 });
 
-test("temperament no longer changes rolled mark power or edited wheel odds", async (t) => {
+test("temperament adds its relevant flat bonuses without editing face powers or odds", async (t) => {
   const p = await game(t);
   const r = await p.evaluate(async () => {
     const symbols = [
@@ -253,11 +253,11 @@ test("temperament no longer changes rolled mark power or edited wheel odds", asy
       same: reels === JSON.stringify(h.reels),
     };
   });
-  assert.equal(r.attack.attack, r.neutral.attack);
+  assert.equal(r.attack.attack, r.neutral.attack + 1);
   assert.equal(r.attack.heal, r.neutral.heal);
   assert.equal(r.guard.attack, r.neutral.attack);
-  assert.equal(r.guard.heal, r.neutral.heal);
-  assert.equal(r.guard.block, r.neutral.block);
+  assert.equal(r.guard.heal, r.neutral.heal + 1);
+  assert.equal(r.guard.block, r.neutral.block + 1);
   assert.equal(r.same, true);
 });
 
@@ -704,8 +704,8 @@ test("wells have lower base healing and smaller critical multipliers; depth make
   assert.equal(r.roll.planned[0].value, 15);
   assert.ok(r.trap10 > r.trap1);
   assert.ok(r.trap10 > 2);
-  assert.ok(r.solo > 0.425 && r.solo < 0.5);
-  assert.ok(Math.abs(r.party - 0.355) < 0.00001);
+  assert.equal(r.solo, 0.55);
+  assert.ok(Math.abs(r.party - 0.43) < 0.00001);
   await p.locator("#stage-confirm").click();
   await p.evaluate(async () => {
     await window.well;

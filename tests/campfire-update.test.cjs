@@ -208,7 +208,7 @@ test("reset progress has a cancel and explicit confirmation, clears only game pr
   assert.equal(r.lighting, false);
 });
 
-test("class and temperament choose different legal starting palettes while rank power is identical across classes", async (t) => {
+test("class and temperament choose legal starting palettes with visible effect bonuses above shared rank powers", async (t) => {
   const p = await game(t);
   const r = await p.evaluate(() =>
     heroJobs(["ranger", "berserker", "jester"]).map((job) => {
@@ -246,8 +246,10 @@ test("class and temperament choose different legal starting palettes while rank 
   for (const hero of r) {
     assert.equal(hero.different, true, hero.job);
     assert.equal(hero.legal, true, hero.job);
-    assert.deepEqual(hero.base, hero.other, hero.job);
-    assert.equal(hero.base.attack, 2);
+    assert.equal(hero.other.attack, 2);
+    assert.equal(hero.other.heal, 5);
+    assert.equal(hero.other.block, 5);
+    assert.equal(hero.base.attack, 3);
     assert.equal(hero.base.heal, 4);
     assert.equal(hero.base.block, 4);
   }

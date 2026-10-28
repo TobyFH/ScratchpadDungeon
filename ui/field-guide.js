@@ -12,7 +12,7 @@ const FIELD_GUIDE = Object.freeze([
   },
   {
     id: "biomes", title: "Caves & living floors",
-    body: '<ul class="guide-takeaways"><li><b>Floor themes.</b> Each floor has a name and a softly tinted map edge. Most are stone caves; themed floors grow more common deeper down.</li><li><b>Overgrowth.</b> Roots hide approaches. Fresh fights are more likely to surprise the party, or catch foes unaware for one extra spin.</li><li><b>Mushrooms.</b> Step on a cap to light nearby connected caps, revealing up to eight more without triggering their discoveries.</li><li><b>Fire & frost.</b> Lava blocks walking and lights neighbouring stone. Ice forces a slide; see the next guide topic.</li><li><b>Local creatures.</b> Overgrown, fungal, frozen and lava caves have their own creatures. Deeper floors bring stronger local species.</li></ul>',
+    body: "<ul class=\"guide-takeaways\"><li><b>Themes.</b> Floor one is Caverns. All eight non-lava themes are equally likely from floor two; lava joins on floor five.</li><li><b>Overgrowth.</b> Roots hide approaches. Fresh fights are more likely to surprise either side.</li><li><b>Mushrooms.</b> A cap reveals up to eight connected caps without activating discoveries.</li><li><b>Fire & frost.</b> Lava blocks walking and lights nearby tiles. Ice forces a slide; see the next topic.</li><li><b>Local foes.</b> Themed creatures keep their own depth ranges. Deeper floors bring stronger local species.</li></ul>",
   },
   {
     id: "ice", title: "Ice & dangerous fuses",
@@ -32,7 +32,7 @@ const FIELD_GUIDE = Object.freeze([
   {
     id: "buffs",
     title: "Stimulants & shield bash",
-    body: '<ul class="guide-takeaways"><li><b>Self stimulant.</b> Tanks, Rogues and Berserkers can boost themselves with this mark.</li><li><b>Ally stimulant.</b> Mages, Rangers and Jesters boost the selected healing target. Random effects may choose another ally.</li><li><b>Three actions.</b> Each power adds one action of duration, up to three of the recipient’s own actions. Extra duration increases potency, up to six.</li><li><b>Potency.</b> Gain +1 damage plus one per three power, and +1 resistance plus one per five power. Hover the status for exact values.</li><li><b>Tank class mark.</b> Shield Bash adds two team block, plus one every three levels, then spends some block on a bash. Its limit grows with level. Each point of bash power removes two enemy block.</li></ul>',
+    body: "<ul class=\"guide-takeaways\"><li><b>Self stimulant.</b> Tanks, Rogues and Berserkers boost themselves.</li><li><b>Ally stimulant.</b> Mages, Rangers and Jesters boost their most-used living ally, or themselves when alone.</li><li><b>Stacks.</b> At most three own actions. Every two extra doses add one potency, capped at eight.</li><li><b>Potency.</b> Damage starts at +1, adding one per two potency. Resistance starts at +1, adding one per five. Hover the badge for exact values.</li><li><b>Shield Bash.</b> Adds level-scaled team block, then spends protection to strike. Each bash point strips two enemy block.</li></ul>",
   },
   {
     id: "openings",
@@ -47,7 +47,7 @@ const FIELD_GUIDE = Object.freeze([
   {
     id: "classes",
     title: "Classes & temperament",
-    body: '<ul class="guide-takeaways"><li><b>Temperament.</b> Aggressive and Defensive choose different starting marks. They do not change a mark’s stated power. Rebuild either way.</li><li><b>Tank & Rogue.</b> Tank crits ×1.5–×2.25; cheap shields fuel Shield Bash. Rogue crits ×2–×5; build physical combos or poison, with little recovery.</li><li><b>Mage.</b> Crits ×1.75–×3. Spell damage works alone; healing, shields or poison Resonance support a party. Healing grows after level four.</li><li><b>Ranger.</b> Crits ×2–×4. Support/ally actions add 2 patience; enemy turns add 1. Attacks spend it. The seal fires its own shot and multiplies stored damage ×2.5; this bonus cannot crit again.</li><li><b>Berserker.</b> Crits ×1.75–×4. Wounds charge Fury; higher Blood Price ranks are more efficient. Every HP healed spends one Fury.</li></ul>',
+    body: "<ul class=\"guide-takeaways\"><li><b>Temperament.</b> Aggressive: +1 physical, spell and poison. Defensive: +1 healing, block and stun. Fixed after starting.</li><li><b>Tank & Rogue.</b> Tank shields feed Shield Bash. Rogue favours physical combos or poison; little recovery.</li><li><b>Mage.</b> Spells work solo. Healing, shields or poison Resonance support a party. Healing gains 5% per level after four, up to +40%.</li><li><b>Ranger.</b> Other heroes and support rolls charge patience. Attacks spend it; the seal strengthens Execute. This bonus cannot crit again.</li><li><b>Berserker.</b> Wounds build Fury for damage and lifesteal. Every real HP healed spends Fury.</li></ul>",
   },
   {
     id: "combos",
@@ -57,7 +57,7 @@ const FIELD_GUIDE = Object.freeze([
   {
     id: "jester",
     title: "Jester & Punchline",
-    body: '<ul class="guide-takeaways"><li><b>Unlock.</b> Buy the Jester’s invitation at camp. It can inscribe any ordinary kind except Self stimulant and the Berserker’s Blood Price.</li><li><b>Trick.</b> These marks fill anticipation by their rank. At six, fire one Punchline burst before enemy clocks advance. Matching Trick triples multiply charge, not the number of bursts.</li><li><b>Punchline.</b> Six ordinary marks fire from your own reels, keeping their ranks. No reroll, extra turn or crit. Trick cannot recharge the burst.</li><li><b>Criticals.</b> Matching triples roll ×1.5–×4. Different kinds have no special critical; matching triples do not self-stun.</li><li><b>Wildcard.</b> The permanent class mark can ink enemy reels, gild allied reels, reverse a foe’s roll or scatter damage and healing.</li></ul>',
+    body: "<ul class=\"guide-takeaways\"><li><b>Unlock.</b> Buy the invitation at camp. Inscribe any ordinary type except Self stimulant or Blood Price.</li><li><b>Trick.</b> At six anticipation, fire six marks from your reels. Matching Trick triples fill the bar faster.</li><li><b>Punchline.</b> Uses real ranks, once per action. No extra turn, critical or recharge from its own marks.</li><li><b>Criticals.</b> Match three identical kinds and ranks, like other classes. Different kinds have no special rule.</li><li><b>Wildcard.</b> The class mark inks enemy reels, gilds allies, reverses enemy rolls or scatters healing and damage. Usually helpful; always unpredictable.</li></ul>",
   },
   {
     id:"mystery",title:"Mystery marks ?",
@@ -92,7 +92,7 @@ const FIELD_GUIDE = Object.freeze([
   },
   {
     id: "wild-finds", title: "Nests & wild finds",
-    body: '<ul class="guide-takeaways"><li><b>Nests.</b> Roll for loot or take an egg that heals 65% of one hero’s maximum HP. Either may wake a strong broodmother; leaving is safe.</li><li><b>Overgrowth.</b> Fruit bushes offer a small, single-use team heal. Leave them for later if healthy.</li><li><b>Mushroom caves.</b> Poison caps hurt when crossed. Burstcaps explode within one tile, roll damage, then become ordinary caps.</li><li><b>Fairy rings.</b> Choose healing or loot, with a chance to disturb a guardian.</li><li><b>Other finds.</b> Search shaky rubble for salvage, or accept a dangerous optional shadow duel in the dark.</li></ul>',
+    body: '<ul class="guide-takeaways"><li><b>Nests.</b> Empty nests offer rolled gold; full nests offer an egg healing 65% of one hero’s maximum HP. Taking either has a 50% chance of waking the mother. Leaving is safe.</li><li><b>Overgrowth.</b> Fruit bushes offer a small, single-use team heal. Leave them for later if healthy.</li><li><b>Mushroom caves.</b> Poison caps hurt when crossed. Burstcaps explode within one tile, roll damage, then become ordinary caps.</li><li><b>Fairy rings.</b> Choose healing or loot, with a chance to disturb a guardian.</li><li><b>Other finds.</b> Search shaky rubble for salvage, or accept a dangerous optional shadow duel in the dark.</li></ul>',
   },
   {
     id: "event-log", title: "Event log",

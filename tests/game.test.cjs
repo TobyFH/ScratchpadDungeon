@@ -541,7 +541,7 @@ test("floor-one enemies attack every three actions and scale gradually to faster
     14,
     "the selected skeletal warrior has its species health multiplier",
   );
-  assert.equal(scaling.dmg, 3);
+  assert.equal(scaling.dmg, 4);
   assert.ok(scaling.speed && scaling.strikes && scaling.health);
 });
 
@@ -704,7 +704,7 @@ test("rare adventurers preview class, art and dialogue; decline, accept, and the
   assert.equal(await p.evaluate(() => state.party.length), 3);
 });
 
-test("shops retain their modest 40% floor chance and early solo adventurers have a slightly increased chance", async (t) => {
+test("shops have a modestly higher 46% floor chance and solo adventurers are more likely", async (t) => {
   let p = await game(t);
   let rates = await p.evaluate(() => {
     let shops = 0,
@@ -716,9 +716,9 @@ test("shops retain their modest 40% floor chance and early solo adventurers have
     }
     return { shops: shops / 1000, recruits: recruits / 1000 };
   });
-  assert.ok(rates.shops > 0.35 && rates.shops < 0.45, JSON.stringify(rates));
+  assert.ok(rates.shops > 0.40 && rates.shops < 0.52, JSON.stringify(rates));
   assert.ok(
-    rates.recruits > 0.37 && rates.recruits < 0.51,
+    rates.recruits > 0.49 && rates.recruits < 0.61,
     JSON.stringify(rates),
   );
 });
@@ -1460,7 +1460,7 @@ test("enemy multi-strikes pause for death and burial, then retarget a surviving 
   await p.locator("#burial-confirm").click();
   await p.evaluate(() => window.testAction);
   assert.equal(await p.evaluate(() => state.party.length), 1);
-  assert.equal(await p.evaluate(() => state.party[0].hp), 44);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 43);
   assert.equal(
     await p.evaluate(() => state.lastEnemyRoll.heroId),
     await p.evaluate(() => state.party[0].id),
@@ -1733,13 +1733,13 @@ test("all 1000 generated floors have a path to the stairs; the safety carve repa
   });
   assert.equal(valid, true);
   assert.ok(
-    Math.abs((await p.evaluate(() => recruitChance(1))) - 0.47) < 0.00001,
+    Math.abs((await p.evaluate(() => recruitChance(1))) - 0.55) < 0.00001,
   );
   assert.ok(
-    Math.abs((await p.evaluate(() => recruitChance(2))) - 0.355) < 0.00001,
+    Math.abs((await p.evaluate(() => recruitChance(2))) - 0.43) < 0.00001,
   );
   assert.ok(
-    Math.abs((await p.evaluate(() => recruitChance(3))) - 0.355) < 0.00001,
+    Math.abs((await p.evaluate(() => recruitChance(3))) - 0.30) < 0.00001,
   );
 });
 
@@ -2444,14 +2444,14 @@ test("each enemy has its own countdown and a solo lost stun turn advances both c
   ]);
   await p.locator('[data-spin="0"]').click();
   await finish(p);
-  assert.equal(await p.evaluate(() => state.party[0].hp), 44);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 43);
   assert.deepEqual(
     await p.evaluate(() => state.enemies.map((e) => e.countdown)),
     [3, 1],
   );
   await p.locator('[data-spin="0"]').click();
   await finish(p);
-  assert.equal(await p.evaluate(() => state.party[0].hp), 38);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 36);
   assert.deepEqual(
     await p.evaluate(() => state.enemies.map((e) => e.countdown)),
     [2, 4],
@@ -2604,6 +2604,12 @@ test("ruin triple matches keep their critical inside the original ruin panel", a
 });
 
 async function panelFits(page, selector, holder, flow, title) {
+  // Measure the landed layout, not a finite title-pop overshoot under CI load.
+  await page.evaluate(async title=>{
+    await document.fonts.ready;
+    await Promise.all(document.querySelector(title).getAnimations().filter(a=>Number.isFinite(a.effect?.getTiming().iterations)).map(a=>a.finished.catch(()=>{})));
+    fitDialogs();await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+  },title);
   await page.waitForTimeout(120);
   const metrics = await page.evaluate(
     ({ selector, holder, flow, title }) => {
@@ -2841,8 +2847,8 @@ test("early full enemy criticals remain survivable while damage grows faster on 
   });
   await p.locator('[data-spin="0"]').click();
   await finish(p);
-  assert.equal(await p.evaluate(() => state.party[0].hp), 47);
-  assert.equal(await p.evaluate(() => state.lastEnemyRoll.damage), 3);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 45);
+  assert.equal(await p.evaluate(() => state.lastEnemyRoll.damage), 5);
 });
 
 test("tier IV attacks can be bought, saved and used as area damage with clear per-target numbers", async (t) => {
@@ -3246,6 +3252,8 @@ test("older saved fights migrate to the gentler curve without losing wounds or e
     state.enemy.strikes = 3;
     state.enemy.frequency = 1;
     state.party[0].reels[0][0] = { type: "attack", tier: 3, weight: 9 };
+    const tuned=enemyBalance(state.depth,{...state.enemy,pair:false});
+    state.testExpectedSavedFoe={version:23,hp:Math.ceil(tuned.maxHp*.5),max:tuned.maxHp,damage:tuned.damage,strikes:tuned.strikes,frequency:tuned.frequency,face:3};
     const old = { ...state, version: 6 };
     localStorage.setItem("scratchpad-dungeon-v6", JSON.stringify(old));
     localStorage.removeItem(SAVE_KEY);
@@ -3261,15 +3269,7 @@ test("older saved fights migrate to the gentler curve without losing wounds or e
       frequency: state.enemy.frequency,
       face: state.party[0].reels[0][0].tier,
     })),
-    {
-      version: 23,
-      hp: 14,
-      max: 28,
-      damage: 6,
-      strikes: 1,
-      frequency: 2,
-      face: 3,
-    },
+    await p.evaluate(()=>state.testExpectedSavedFoe),
   );
 });
 
@@ -3730,7 +3730,7 @@ test("ally stimulant targets an ally, boosts damage and defence with visible fir
   );
   await p.locator('[data-spin="1"]').click();
   await finish(p);
-  assert.equal(await p.evaluate(() => state.lastPlayerRoll.actualDamage), 4);
+  assert.equal(await p.evaluate(() => state.lastPlayerRoll.actualDamage), 5);
   assert.equal(await p.evaluate(() => damageHero(1, 5, "A jab")), 4);
   await p.evaluate(() => save());
   await p.reload();
@@ -4969,12 +4969,12 @@ test("deep enemy reels improve with depth and the final guardian actually rolls 
   assert.equal(boss.frequency,boss.expectedClock);
   assert.ok(
     boss.faces.every(
-      (f) => f.tier === (["attack", "magic"].includes(f.type) ? 4 : 3),
+      (f) => f.tier === (["attack", "magic"].includes(f.type) ? 4 : f.type === "stun" ? 1 : 2),
     ),
   );
   assert.ok(
     boss.preview.every(
-      (f) => f.tier === (["attack", "magic"].includes(f.type) ? 4 : 3),
+      (f) => f.tier === (["attack", "magic"].includes(f.type) ? 4 : f.type === "stun" ? 1 : 2),
     ),
     "the ready-state machine shows the upgraded faces before its first roll",
   );
@@ -5573,7 +5573,7 @@ test("enemy identities have thematic wheels and health differences without losin
   assert.equal(r.boss.strikes, 3);
   assert.ok(
     r.final.every(
-      (f) => f.tier === (["attack", "magic"].includes(f.type) ? 4 : 3),
+      (f) => f.tier === (["attack", "magic"].includes(f.type) ? 4 : f.type === "stun" ? 1 : 2),
     ),
   );
 });
@@ -6200,13 +6200,13 @@ test("trait modifiers affect attacks, defence, healing, poison, opening block an
       levelUnchanged: h.level === level,
     };
   });
-  assert.equal(r.attack, 2);
+  assert.equal(r.attack, 3);
   assert.equal(r.cowardAttack, 1);
-  assert.equal(r.cowardBlock, 5); // Counterstroke adds 2 before the trait.
+  assert.equal(r.cowardBlock, 6); // Counterstroke adds 2 before the trait.
   assert.equal(r.resisted, 4);
   assert.equal(r.heal, 3);
   assert.equal(r.poison, 3);
-  assert.equal(r.guard, 1);
+  assert.equal(r.guard, 2);
   assert.equal(r.xp, 21);
   assert.equal(r.levelUnchanged, true);
 });

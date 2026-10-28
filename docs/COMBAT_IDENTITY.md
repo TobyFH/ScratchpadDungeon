@@ -1,5 +1,8 @@
 # Bounded combat resources and complementary builds
 
+> Current follow-up: [Curve and recovery tuning](CURVE_TUNING.md) supersedes
+> earlier numeric examples for enemies, recovery, traits, biomes and nests.
+
 This document describes the current combat rules. It supersedes older paid
 weighting, boosted/free Punchline, unlimited-block, Fury and stun examples in
 previous update notes. Physical/spell rank values, critical matching and class

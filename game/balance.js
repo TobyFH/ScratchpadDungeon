@@ -79,18 +79,8 @@ const flurryMeanDamage = () =>
 const FLOOR_BALANCE = Object.freeze([
   {
     hp: 13,
-    damage: 3,
-    bossHp: 28,
-    bossDamage: 4,
-    frequency: 3,
-    bossFrequency: 2,
-    strikes: 1,
-    promotion: 0,
-  },
-  {
-    hp: 17,
     damage: 4,
-    bossHp: 36,
+    bossHp: 24,
     bossDamage: 5,
     frequency: 3,
     bossFrequency: 2,
@@ -98,10 +88,20 @@ const FLOOR_BALANCE = Object.freeze([
     promotion: 0,
   },
   {
-    hp: 22,
+    hp: 17,
     damage: 5,
-    bossHp: 47,
+    bossHp: 31,
     bossDamage: 6,
+    frequency: 3,
+    bossFrequency: 2,
+    strikes: 1,
+    promotion: 0,
+  },
+  {
+    hp: 22,
+    damage: 6,
+    bossHp: 40,
+    bossDamage: 7,
     frequency: 2,
     bossFrequency: 2,
     strikes: 1,
@@ -109,18 +109,8 @@ const FLOOR_BALANCE = Object.freeze([
   },
   {
     hp: 28,
-    damage: 6,
-    bossHp: 60,
-    bossDamage: 7,
-    frequency: 2,
-    bossFrequency: 2,
-    strikes: 1,
-    promotion: 1,
-  },
-  {
-    hp: 35,
     damage: 7,
-    bossHp: 76,
+    bossHp: 51,
     bossDamage: 8,
     frequency: 2,
     bossFrequency: 2,
@@ -128,10 +118,20 @@ const FLOOR_BALANCE = Object.freeze([
     promotion: 1,
   },
   {
-    hp: 43,
+    hp: 35,
     damage: 8,
-    bossHp: 94,
+    bossHp: 65,
     bossDamage: 9,
+    frequency: 2,
+    bossFrequency: 2,
+    strikes: 1,
+    promotion: 1,
+  },
+  {
+    hp: 43,
+    damage: 9,
+    bossHp: 80,
+    bossDamage: 10,
     frequency: 2,
     bossFrequency: 2,
     strikes: 2,
@@ -139,9 +139,9 @@ const FLOOR_BALANCE = Object.freeze([
   },
   {
     hp: 52,
-    damage: 9,
-    bossHp: 116,
-    bossDamage: 10,
+    damage: 10,
+    bossHp: 99,
+    bossDamage: 11,
     frequency: 2,
     bossFrequency: 2,
     strikes: 2,
@@ -150,7 +150,7 @@ const FLOOR_BALANCE = Object.freeze([
   {
     hp: 63,
     damage: 10,
-    bossHp: 140,
+    bossHp: 119,
     bossDamage: 11,
     frequency: 2,
     bossFrequency: 2,
@@ -160,7 +160,7 @@ const FLOOR_BALANCE = Object.freeze([
   {
     hp: 75,
     damage: 11,
-    bossHp: 168,
+    bossHp: 143,
     bossDamage: 12,
     frequency: 2,
     bossFrequency: 2,
@@ -170,7 +170,7 @@ const FLOOR_BALANCE = Object.freeze([
   {
     hp: 88,
     damage: 12,
-    bossHp: 205,
+    bossHp: 174,
     bossDamage: 14,
     frequency: 2,
     bossFrequency: 2,
@@ -180,6 +180,52 @@ const FLOOR_BALANCE = Object.freeze([
 ]);
 const floorBalance = (depth) =>
   FLOOR_BALANCE[Math.max(0, Math.min(9, Math.floor(depth) - 1))];
+// Shorter endurance, steadier pressure: support teams get useful damage windows.
+const ENCOUNTER_TUNING = Object.freeze({
+  earlyHitPressure: [1.08, 1.1, 1.1, 1.12, 1.12, 1.12, 1.1, 1, 1, 1],
+  eliteHealth: 1.18,
+  strongholdHealth: 1.25,
+  bulkyExcess: 0.7,
+  returnedHeroChance: 0.065,
+});
+const enemyHitPressure = (depth) =>
+  ENCOUNTER_TUNING.earlyHitPressure[
+    Math.max(0, Math.min(9, Math.floor(depth) - 1))
+  ];
+const enemyEndurance = (factor = 1) =>
+  factor > 1.1 ? 1.1 + (factor - 1.1) * ENCOUNTER_TUNING.bulkyExcess : factor;
+const enemyArmour = (e, depth = state.depth) =>
+  e.passive?.key === "carapace"
+    ? e.boss || e.stronghold
+      ? 1
+      : depth >= 8
+        ? 2
+        : 1
+    : 0;
+const enemySecondWindRate = (e) => (e.boss ? 0.18 : e.stronghold ? 0.2 : 0.25);
+function enemyFacePalette(species, boss = false) {
+  const base = (ENEMY_PROFILES[species] || ENEMY_PROFILES.skull).faces;
+  if (!boss) return base;
+  const seen = new Set(),
+    attack = base.some(([t]) => t === "magic") ? "magic" : "attack";
+  return base.map(([type, tier]) => {
+    if (!["block", "heal", "stun"].includes(type)) return [type, tier];
+    if (seen.has(type)) return [attack, 1];
+    seen.add(type);
+    return [type, tier];
+  });
+}
+function enemyReelRank(type, tier, promotion, boss = false) {
+  if (["miss", "blank"].includes(type)) return tier;
+  const cap = ["attack", "magic"].includes(type)
+    ? 4
+    : boss
+      ? type === "stun"
+        ? 1
+        : 2
+      : 3;
+  return Math.min(cap, tier + promotion);
+}
 function enemyBalance(
   depth,
   {
@@ -195,11 +241,11 @@ function enemyBalance(
     identity = ENEMY_PROFILES[species] || {};
   const stats = {
     maxHp: Math.ceil(
-      (boss ? row.bossHp : row.hp * (identity.hp || 1)) *
+      (boss ? row.bossHp : row.hp * enemyEndurance(identity.hp || 1)) *
         (boss
           ? 1
-          : (elite ? 1.25 : 1) *
-            (stronghold ? 1.4 : 1) *
+          : (elite ? ENCOUNTER_TUNING.eliteHealth : 1) *
+            (stronghold ? ENCOUNTER_TUNING.strongholdHealth : 1) *
             (mimic ? 1.15 : 1) *
             (pair ? 0.76 : 1)),
     ),
@@ -531,7 +577,7 @@ const COMBAT_LIMITS = Object.freeze({
   enemyBlock: 20,
   bossBlock: 30,
   stunWard: 2,
-  stimulantPower: 6,
+  stimulantPower: 8,
   punchlineShots: 6,
 });
 const partyBlockCap = () =>
@@ -623,7 +669,10 @@ function applyComplementaryEffects(h, symbols, base) {
       value: CLASS_COMBOS[h.job].name,
       enumerable: false,
     });
-    log(`${h.name} · ${CLASS_COMBOS[h.job].name}.`, { inline: true, label: CLASS_COMBOS[h.job].name });
+    log(`${h.name} · ${CLASS_COMBOS[h.job].name}.`, {
+      inline: true,
+      label: CLASS_COMBOS[h.job].name,
+    });
     combatCallout(
       entityArt(h),
       CLASS_COMBOS[h.job].name.toUpperCase(),
@@ -668,7 +717,9 @@ function expectedComplementaryEffects(h) {
   if (h.job === "rogue")
     return { damage: both(["attack"], ["poison", "stun"]) };
   if (h.job === "ranger")
-    return { damage: 2 * both(["attack"], ["heal", "selfheal", "stun", "rally"]) };
+    return {
+      damage: 2 * both(["attack"], ["heal", "selfheal", "stun", "rally"]),
+    };
   if (h.job === "berserker")
     return { damage: both(["attack"], ["heal", "selfheal", "selfharm"]) };
   if (h.job === "jester")

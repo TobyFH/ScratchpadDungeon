@@ -197,7 +197,8 @@ function chooseReturnedHero(depth) {
   const lost = (state.graveyard || []).filter(
     (h) => h.depth < depth && !h.returnedAsZombie,
   );
-  if (!lost.length || Math.random() >= 0.045) return null;
+  if (!lost.length || Math.random() >= ENCOUNTER_TUNING.returnedHeroChance)
+    return null;
   const hero = pick(lost);
   hero.returnedAsZombie = true;
   return hero;

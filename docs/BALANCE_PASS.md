@@ -1,5 +1,8 @@
 # Readable powers and expedition difficulty
 
+> Current follow-up: [Curve and recovery tuning](CURVE_TUNING.md) supersedes
+> earlier numeric examples for enemies, recovery, traits, biomes and nests.
+
 > **Current combat:** [Combat identity](COMBAT_IDENTITY.md) supersedes older
 > weighting purchases, free/boosted Punchlines, Fury, stun and uncapped-block
 > examples below. Use its shared sources and migration rules for new changes.

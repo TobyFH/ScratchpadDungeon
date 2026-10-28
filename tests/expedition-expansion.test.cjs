@@ -70,7 +70,7 @@ test('stimulant has three timed stacks and further doses build bounded potency w
   const h=state.party[0];applyStimulant(h,3);const initial={...h.stimulant};
   applyStimulant(h,2);const two={...h.stimulant};applyStimulant(h,1);const three={...h.stimulant};
   for(let n=0;n<30;n++)applyStimulant(h,4);return {initial,two,three,last:h.stimulant};
- });assert.equal(r.initial.turns,3);assert.equal(r.two.turns,3);assert.equal(r.two.power,3);assert.equal(r.three.power,4);assert.equal(r.last.power,6);assert.equal(r.last.turns,3);
+ });assert.equal(r.initial.turns,3);assert.equal(r.two.turns,3);assert.equal(r.two.power,4);assert.equal(r.three.power,4);assert.equal(r.last.power,8);assert.equal(r.last.turns,3);
 });
 test('nearby burstcaps roll once, require confirmation, deal their recorded damage and become ordinary caps',async t=>{
  const p=await game(t);await p.evaluate(()=>{
@@ -99,7 +99,7 @@ test('a poisonous cap hurts on repeated crossings; brittle ice collapses only af
 });
 test('ignoring a nest is safe and reversible; the horn consumes one item and opens the normal recruit interaction',async t=>{
  const p=await game(t);await p.evaluate(()=>{
-  const c=state.map[state.position];c.event=c.feature='nest';window.randomCalls=0;Math.random=()=>{randomCalls++;return .99};
+  const c=state.map[state.position];c.event=c.feature='nest';c.nestContents='gold';window.randomCalls=0;Math.random=()=>{randomCalls++;return .99};
  });
  let task=p.evaluate(()=>resolveExpansionTile(state.map[state.position]));await p.locator('#biome-leave').click();await task;
  const ignored=await p.evaluate(()=>({type:state.map[state.position].event,enemy:!!state.enemy,calls:randomCalls}));
@@ -151,7 +151,7 @@ test('maze plates and secret doors open optional shortcuts only after explicit c
  await p.evaluate(()=>{window.doorTask=openSecretDoor(pos(4,3))});await p.locator('#biome-use').click();await p.evaluate(()=>window.doorTask);assert.equal(await p.evaluate(()=>state.map[pos(4,3)].wall),false);
 });
 test('taking nest loot can introduce a correctly recorded elite broodmother; leaving never does',async t=>{
- const p=await game(t);await p.evaluate(()=>{treasureRoll=async()=>{};Math.random=()=>0;});await discovery(p,'nest');await p.locator('#nest-loot').click();await p.locator('#stage-confirm').waitFor();
+ const p=await game(t);await p.evaluate(()=>{state.map[state.position].nestContents='gold';treasureRoll=async()=>{};Math.random=()=>0;});await discovery(p,'nest');await p.locator('#nest-loot').click();await p.locator('#stage-confirm').waitFor();
  const r=await p.evaluate(()=>({name:state.enemy.name,art:state.enemy.art,elite:state.enemy.elite,mother:state.enemy.broodmother,kind:$('#spotlight').dataset.kind,eggInLoot:availableLootTypes().includes('nestEgg')}));
  assert.match(r.name,/Broodmother/i);assert.equal(r.art,'widow');assert.ok(r.elite&&r.mother);assert.equal(r.eggInLoot,false);
  await p.locator('#stage-confirm').click();await p.evaluate(()=>window.discoveryTask);

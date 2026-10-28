@@ -323,6 +323,7 @@ test("Iron Pennant adds once after critical scaling and once across a whole Punc
     ];
     state.equippedArtefact = "p";
     const h = state.party[0];
+    h.specialism="offence"; // Isolate the Pennant from Defensive’s separate +1 block.
     state.actionSerial++;
     h.last = [
       { type: "block", tier: 1 },

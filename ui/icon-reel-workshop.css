@@ -9,21 +9,7 @@
   height: auto;
   min-height: 0;
 }
-.icon-workshop-pages .icon-class-prices h3 {
-  font-size: 24px;
-  margin: 6px 0;
-}
-.icon-workshop-pages .icon-class-prices p {
-  font-size: 18px;
-  line-height: 1.15;
-  margin: 7px 0;
-}
-.icon-workshop-pages .icon-class-prices th,
-.icon-workshop-pages .icon-class-prices td {
-  font-size: 18px;
-  line-height: 1.1;
-  padding: 5px 4px;
-}
+
 .icon-workshop-pages > .workshop-page {
   grid-area: 1/1;
 }
@@ -84,15 +70,15 @@
 }
 .icon-workshop .workshop-selected {
   display: grid;
-  grid-template-columns: 45px 1fr;
+  grid-template-columns: 70px 1fr;
   align-items: center;
   gap: 9px;
-  min-height: 47px;
+  min-height: 70px;
   margin: 0;
 }
 .icon-workshop .workshop-preview {
-  width: 42px;
-  height: 42px;
+  width: 64px;
+  height: 64px;
   min-height: 0;
 }
 .icon-workshop .workshop-preview > * {
@@ -150,12 +136,12 @@
 .icon-workshop .symbol-choices {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  grid-template-rows: repeat(var(--choice-rows), 84px);
+  grid-template-rows: repeat(var(--choice-rows), 76px);
   gap: 5px;
 }
 .icon-workshop .symbol-choice {
   display: grid;
-  grid-template-rows: 28px minmax(24px, 1fr) 22px;
+  grid-template-rows: 20px minmax(24px, 1fr) 22px;
   align-items: center;
   justify-items: center;
   gap: 1px;
@@ -164,8 +150,8 @@
 }
 .icon-workshop .choice-icon,
 .icon-workshop .choice-icon > * {
-  width: 28px;
-  height: 28px;
+  width: 20px;
+  height: 20px;
   display: block;
 }
 .icon-workshop .choice-icon svg {
@@ -263,13 +249,13 @@
     padding: 3px;
   }
   .icon-workshop .workshop-selected {
-    min-height: 34px;
-    grid-template-columns: 32px 1fr;
+    min-height: 52px;
+    grid-template-columns: 52px 1fr;
     gap: 6px;
   }
   .icon-workshop .workshop-preview {
-    width: 31px;
-    height: 31px;
+    width: 48px;
+    height: 48px;
   }
   .icon-workshop .workshop-selected h3 {
     font-size: 22px;
@@ -315,8 +301,8 @@
   }
   .icon-workshop .choice-icon,
   .icon-workshop .choice-icon > * {
-    width: 24px;
-    height: 24px;
+    width: 18px;
+    height: 18px;
   }
   .icon-workshop .choice-name {
     font-size: 22px;
@@ -340,11 +326,7 @@
     min-height: 18px;
     margin: 4px 0 0;
   }
-  .icon-workshop-pages .icon-class-prices th,
-  .icon-workshop-pages .icon-class-prices td {
-    font-size: 18px;
-    padding: 4px 2px;
-  }
+
   .modal:has(.icon-workshop) .modal-actions {
     padding-top: 5px;
     min-height: 35px;
@@ -364,8 +346,8 @@
   }
   .icon-workshop .choice-icon,
   .icon-workshop .choice-icon > * {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
   }
 }
 
@@ -437,4 +419,30 @@
     font-size: 18px;
     white-space: nowrap;
   }
+}
+
+#modal:has(.icon-workshop) .workshop-nav {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+/* Scale the illustration itself; legacy previews fixed nested SVGs at 20px. */
+#modal .icon-workshop .workshop-preview {
+  min-width: 0;
+}
+#modal
+  .icon-workshop
+  .workshop-preview
+  > :is(.tier-symbol, .class-face, .mystery-face, .blank-face) {
+  width: 100%;
+  height: 100%;
+}
+#modal .icon-workshop .workshop-preview svg {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100%;
+  max-height: 100%;
+  margin: 0;
+}
+#modal .icon-workshop .workshop-preview .blank-face small {
+  display: none;
 }

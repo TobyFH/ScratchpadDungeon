@@ -91,7 +91,7 @@ test("small balance adjustments share canonical formulas while raw mark tiers re
   assert.ok(r.exec > 0); // Execute now has a separate seal multiplier and level cap.
   assert.equal(r.rogue, 100);
   assert.equal(r.heal, 20);
-  assert.equal(r.shop, 0.4);
+  assert.equal(r.shop, 0.46);
   assert.ok(r.well10 > r.well1);
   assert.ok(r.roll10 > r.roll1);
   assert.equal(r.raw.attack, 4);
@@ -675,10 +675,10 @@ test("tile captions use hyphens and activated, and biome identity survives a run
   assert.equal(r.version, 23);
 });
 
-test("actual Rogue damage and healing rolls use readable shared base tiers without hidden multipliers", async (t) => {
+test("actual Rogue damage and healing retain readable ranks with the visible Aggressive bonus", async (t) => {
   const p = await game(t);
   const r = await p.evaluate(async () => {
-    newRun("rogue");
+    newRun("rogue", {specialism:"offence"});
     setPace("skip");
     beginEncounter(false, { count: 1 });
     finishOpeningRoll();
@@ -701,13 +701,13 @@ test("actual Rogue damage and healing rolls use readable shared base tiers witho
       hits: state.lastPlayerRoll.hits.map((h) => h.power),
     };
   });
-  assert.equal(r.damage, 7);
-  assert.equal(r.enemy, 993);
+  assert.equal(r.damage, 8);
+  assert.equal(r.enemy, 992);
   assert.equal(r.heal, 8);
   assert.equal(r.hp, 13);
   assert.equal(
     r.hits.reduce((a, b) => a + b, 0),
-    7,
+    8,
   );
 });
 

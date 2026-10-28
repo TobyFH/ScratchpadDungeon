@@ -7,7 +7,9 @@ const http = require("node:http");
 const path = require("node:path");
 const { chromium } = require("playwright");
 (async () => {
-  const html = fs.readFileSync(path.join(__dirname, "../index.html"));
+  const html = fs.readFileSync(
+    process.env.BALANCE_HTML || path.join(__dirname, "../index.html"),
+  );
   const server = http.createServer((req, res) => {
     res.setHeader("Content-Type", "text/html");
     res.end(html);
@@ -67,6 +69,7 @@ const { chromium } = require("playwright");
           "healingFX",
           "animate",
           "announceEnemyBadges",
+          "enemyDeathPoof",
         ])
           window[name] = noop;
         for (const name of [
@@ -75,6 +78,10 @@ const { chromium } = require("playwright");
           "classAbilityFX",
           "punchlineFX",
           "automaticOpeningPause",
+          "classSignatureFX",
+          "jackInTheBoxFX",
+          "executionPayoffFX",
+          "enemyWindup",
         ])
           window[name] = quick;
         beam = () => Promise.resolve();

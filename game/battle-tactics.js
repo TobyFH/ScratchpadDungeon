@@ -65,7 +65,11 @@ function setupBattleOpening({ fresh = false } = {}) {
   ) {
     pick(ready).initiative = { multiplier: TACTICS.initiativeMultiplier };
   }
-  for (const h of living) if(h.geodeGift) { h.reelGifts=[{...h.geodeGift}];delete h.geodeGift; }
+  for (const h of living)
+    if (h.geodeGift) {
+      h.reelGifts = [{ ...h.geodeGift }];
+      delete h.geodeGift;
+    }
   for (const e of livingEnemies()) {
     if (overgrown && fresh && !state.opening.surprise && Math.random() < 0.24) {
       e.countdown += 1;
@@ -94,7 +98,9 @@ async function resolveBattleOpening() {
   if (living.length && living.every((h) => h.surprised)) {
     result(icon("stun") + "Caught off guard · enemies take the opening turn!");
     combatCallout($("#encounter"), "ENEMIES GO FIRST", "danger");
-    log("Surprised: the whole party is caught off guard. Enemies act first.", { category: "combat" });
+    log("Surprised: the whole party is caught off guard. Enemies act first.", {
+      category: "combat",
+    });
     await automaticOpeningPause();
     for (const e of livingEnemies()) {
       await enemyTurn(e);
@@ -106,7 +112,9 @@ async function resolveBattleOpening() {
   } else {
     const quick = living.find((h) => h.initiative);
     if (quick) {
-      log(`${quick.name} gains Initiative: act first for a stronger roll.`, { category: "combat" });
+      log(`${quick.name} gains Initiative: act first for a stronger roll.`, {
+        category: "combat",
+      });
       combatCallout(
         entityArt(quick),
         `${quick.name}: ACT FIRST · +25%`,
@@ -123,7 +131,14 @@ async function resolveBattleOpening() {
         result(`Initiative: use ${quick.name} first for a 25% stronger roll.`);
       }
     }
-    if (living.some((h) => h.surprised)) log(`${living.filter((h) => h.surprised).map((h) => h.name).join(", ")} · Surprised: a ready ally must act first.`, { category: "combat" });
+    if (living.some((h) => h.surprised))
+      log(
+        `${living
+          .filter((h) => h.surprised)
+          .map((h) => h.name)
+          .join(", ")} · Surprised: a ready ally must act first.`,
+        { category: "combat" },
+      );
     living
       .filter((h) => h.surprised)
       .forEach((h) => actionLabel(entityArt(h), "SURPRISED · wait one roll"));
@@ -198,7 +213,9 @@ function maybeVulnerable(entity, power = 1, cause = "Stun") {
     bonus: TACTICS.vulnerabilityBonus,
   };
   combatCallout(entityArt(entity), "VULNERABLE · +25% next hit", "vulnerable");
-  log(`${entity.name} becomes Vulnerable after ${cause.toLowerCase()}.`, { important: true });
+  log(`${entity.name} becomes Vulnerable after ${cause.toLowerCase()}.`, {
+    important: true,
+  });
   syncStatusFX();
   const badge = entityArt(entity)?.querySelector(".vulnerable-badge");
   if (badge)
@@ -221,7 +238,9 @@ function clearStuns(entity, amount, { all = false } = {}) {
   entity.stunAge = 0;
   grantStunWard(entity);
   combatCallout(entityArt(entity), "STUN CLEARED", "heal");
-  log(`${entity.name} · Stun cleared by healing; now Steady.`, { important: true });
+  log(`${entity.name} · Stun cleared by healing; now Steady.`, {
+    important: true,
+  });
   return true;
 }
 function clearBattleStatuses() {
@@ -229,7 +248,8 @@ function clearBattleStatuses() {
     entity.rage = 0;
     entity.charge = 0;
     entity.anticipation = 0;
-    if (entity.job !== "berserker" || !state.party.includes(entity)) entity.fury = 0;
+    if (entity.job !== "berserker" || !state.party.includes(entity))
+      entity.fury = 0;
     entity.stimulant = null;
     entity.shadowRest = false;
     entity.shadowLocks = [];
@@ -418,7 +438,9 @@ function stunEnemy(power, e = state.enemy) {
 function resonanceEffects(h, role) {
   return {
     magic: { magic: 4 + Math.floor(h.level / 2) },
-    heal: { teamHeal: 3 + Math.ceil(h.level / 2) },
+    heal: {
+      teamHeal: 3 + Math.ceil(h.level * SUPPORT_SCALING.resonanceHealPerLevel),
+    },
     block: { block: 4 + Math.floor(h.level / 3) },
     poison: { poison: 2 + Math.floor(h.level / 3) },
   }[role];
@@ -643,7 +665,11 @@ async function settleFuryLeech(h, recipients, flights) {
   const actual = healHero(state.party.indexOf(h), offered);
   h.stats.healingDone += actual;
   record.actual = actual;
-  if (actual) log(`${h.name} · Fury lifesteal: +${actual} HP.`, { inline: true, label: "Fury lifesteal" });
+  if (actual)
+    log(`${h.name} · Fury lifesteal: +${actual} HP.`, {
+      inline: true,
+      label: "Fury lifesteal",
+    });
   record.furySpent = furyBefore - (h.fury || 0);
   syncRangerAim(h);
   record.healedAt = Date.now();
@@ -653,6 +679,11 @@ async function settleFuryLeech(h, recipients, flights) {
 // Buffs age on the recipient's actions, never on another ally's turn. Stacking
 // fills three actions; applications beyond that duration increase potency.
 const STIMULANT_TURNS = 3;
+const STIMULANT_OVERFLOW = 2;
+const stimulantDamageBonus = (e) =>
+  e.stimulant ? 1 + Math.floor(e.stimulant.power / 2) : 0;
+const stimulantDefenceBonus = (e) =>
+  e.stimulant ? 1 + Math.floor(e.stimulant.power / 5) : 0;
 function normaliseStimulant(entity) {
   const buff = entity.stimulant;
   if (!buff) return;
@@ -666,9 +697,11 @@ function normaliseStimulant(entity) {
   }
   entity.stimulant = {
     ...buff,
-    overflow: Math.max(0,Math.floor(Number(buff.overflow)||0))%3,
+    overflow:
+      Math.max(0, Math.floor(Number(buff.overflow) || 0)) % STIMULANT_OVERFLOW,
     power:
       Math.max(1, Math.ceil(buff.power)) +
+      Math.floor(Math.max(0, Number(buff.overflow) || 0) / STIMULANT_OVERFLOW) +
       Math.max(0, Math.ceil(buff.turns) - STIMULANT_TURNS),
     turns: Math.min(STIMULANT_TURNS, Math.ceil(buff.turns)),
     appliedAt: Number.isFinite(buff.appliedAt)
@@ -691,9 +724,14 @@ function applyStimulant(entity, amount) {
     power: Math.min(
       COMBAT_LIMITS.stimulantPower,
       Math.max(old?.power || 0, added) +
-        Math.floor(((old?.overflow || 0) + Math.max(0, duration - STIMULANT_TURNS)) / 3),
+        Math.floor(
+          ((old?.overflow || 0) + Math.max(0, duration - STIMULANT_TURNS)) /
+            STIMULANT_OVERFLOW,
+        ),
     ),
-    overflow: ((old?.overflow || 0) + Math.max(0, duration - STIMULANT_TURNS)) % 3,
+    overflow:
+      ((old?.overflow || 0) + Math.max(0, duration - STIMULANT_TURNS)) %
+      STIMULANT_OVERFLOW,
     turns: Math.min(STIMULANT_TURNS, duration),
     appliedAt: state.actionSerial,
   };
@@ -702,7 +740,7 @@ function applyStimulant(entity, amount) {
   burst(el, "gold", 22);
   actionLabel(
     el,
-    `STIM ${entity.stimulant.turns}/3 · POTENCY ${entity.stimulant.power}/6`,
+    `STIM ${entity.stimulant.turns}/3 · POTENCY ${entity.stimulant.power}/${COMBAT_LIMITS.stimulantPower}`,
   );
 }
 function supportStimulantTarget(caster) {

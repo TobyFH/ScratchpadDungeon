@@ -2,10 +2,12 @@
 
 The default workshop shows clickable symbol cards, with their costs underneath,
 and four rank buttons showing the **whole** point cost or refund to that rank.
-There is no destination dropdown, separate Swap button, or sequential
+The default has Edit and Critical odds pages; per-choice costs replace the
+former class-price tab. There is no destination dropdown, separate Swap button, or sequential
 Upgrade/Downgrade button. Selecting an affordable symbol or rank applies it.
 Blank faces require an explicit symbol before ranking; no guessed inscription.
 Class and mystery marks remain permanent and use the same reserved geometry.
+The current-face preview is larger than the smaller replacement-button glyphs.
 
 ## Revert only this redesign
 

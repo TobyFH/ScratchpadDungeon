@@ -198,8 +198,8 @@ test("Berserker Fury comes from HP wounds and Blood Price, scales damage, has a 
   assert.equal(result.charged.bonus, 2);
   assert.equal(
     result.charged.damage,
-    8,
-    "rank-II physical + Bloodrush + wound Fury + Blood & steel, before healing spends charge",
+    9,
+    "rank-II physical + Bloodrush + wound Fury + Blood & steel + Aggressive, before healing spends charge",
   );
   assert.match(result.bar, /FURY 8\/24/);
   assert.equal(result.cleared, result.charged.fury);
@@ -239,7 +239,7 @@ test("early damage rises per floor, the middle-floor Unwritten is stronger, and 
     ),
   );
   assert.ok(r.items.length > 5);
-  assert.match(r.marketDescription, /66%.*40%/);
+  assert.match(r.marketDescription, /70%.*46%/);
   assert.ok(r.items.every((i) => !i.scalable || i.quality >= 3));
   assert.ok(
     r.weights.shopChance > 0.3 &&
@@ -340,8 +340,8 @@ test("initiative boosts only the first party roll and is forfeited when a differ
     await spin(0);
     return { bonus, ordinary: state.lastPlayerRoll.totals.attack, expired };
   });
-  assert.equal(r.bonus, 4);
-  assert.equal(r.ordinary, 3);
+  assert.equal(r.bonus, 5);
+  assert.equal(r.ordinary, 4);
   assert.equal(r.expired, true);
 });
 

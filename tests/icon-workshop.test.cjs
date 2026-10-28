@@ -104,6 +104,16 @@ test("clicking a symbol replaces it immediately and clicking any rank applies th
   await p.locator('[data-set-face-tier="1"]').click();
   assert.ok((await p.evaluate(() => state.party[0].points)) > before);
   assert.equal(await p.locator("#face-destination").count(), 0);
+  assert.equal(await p.locator('[data-workshop-view="prices"]').count(), 0);
+  assert.equal(await p.locator(".workshop-nav button").count(), 2);
+  assert.ok(
+    await p.evaluate(
+      () =>
+        $(".workshop-preview svg").getBoundingClientRect().width >
+        $("[data-set-face-type] svg").getBoundingClientRect().width * 1.5,
+    ),
+    "The actual current-face drawing must be larger than a replacement glyph",
+  );
   assert.equal(await p.locator("[data-upgrade]").count(), 0);
   assert.equal(await p.locator("[data-weaken]").count(), 0);
 });
@@ -273,8 +283,11 @@ test("every class, permanent face and workshop page fits without scrolling/overl
       });
     }
   }
-  fs.writeFileSync(path.join(out, "geometry.json"), JSON.stringify(failures, null, 2));
-    assert.deepEqual(failures, []);
+  fs.writeFileSync(
+    path.join(out, "geometry.json"),
+    JSON.stringify(failures, null, 2),
+  );
+  assert.deepEqual(failures, []);
 });
 test("page tabs and Done stay fixed, permanent marks retain edit geometry and long effect summaries do not overlap", async (t) => {
   const p = await game(t);
@@ -297,7 +310,7 @@ test("page tabs and Done stay fixed, permanent marks retain edit geometry and lo
             };
           }),
         before = await position();
-      for (const view of ["crits", "prices", "edit"]) {
+      for (const view of ["crits", "edit"]) {
         await p.locator(`[data-workshop-view="${view}"]`).click();
         const after = await position();
         assert.ok(

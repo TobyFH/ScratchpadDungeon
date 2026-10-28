@@ -152,7 +152,7 @@ test("lifesteal spends Fury through the shared healing path exactly once and wai
 test("team protection caps at 20 or 30 with a Tank; enemy protection uses one bounded shared pool", async (t) => {
   const p = await game(t);
   const r = await p.evaluate(() => {
-    state.party = [makeHero("Sage", "mage")];
+    state.party = [makeHero("Sage", "mage",null,[],{specialism:"defence"})];
     beginEncounter(false, { count: 2 });
     setEnemyBlock(0);
     state.block = 0;
@@ -489,7 +489,7 @@ test("class-specific complementary marks have exact bonuses; matching one-type c
   });
 });
 
-test("stimulants stop growing at six potency and legacy overflows normalise to the same cap", async (t) => {
+test("stimulants stop growing at eight potency and legacy overflows normalise to the same cap", async (t) => {
   const p = await game(t);
   const r = await p.evaluate(() => {
     const h = state.party[0];
@@ -504,11 +504,11 @@ test("stimulants stop growing at six potency and legacy overflows normalise to t
       defence: defenceBonus(h),
     };
   });
-  assert.equal(r.fresh.power, 6);
+  assert.equal(r.fresh.power, 8);
   assert.equal(r.fresh.turns, 3);
-  assert.equal(r.old.power, 6);
+  assert.equal(r.old.power, 8);
   assert.equal(r.old.turns, 3);
-  assert.equal(r.attack, 3);
+  assert.equal(r.attack, 5);
   assert.equal(r.defence, 2);
 });
 
@@ -559,7 +559,7 @@ test("Blood Price criticals multiply only Fury earned from real wounds and never
 test("ally healing, consumed tonics and level-up recovery all drain only actual Berserker healing; stun wards survive reload", async (t) => {
   const p = await game(t);
   const r = await p.evaluate(async () => {
-    state.party = [makeHero("Fang", "berserker"), makeHero("Sage", "mage")];
+    state.party = [makeHero("Fang", "berserker"), makeHero("Sage", "mage",null,[],{specialism:"defence"})];
     beginEncounter(false, { count: 1 });
     finishOpeningRoll();
     state.enemy.countdown = 99;
@@ -596,7 +596,7 @@ test("ally healing, consumed tonics and level-up recovery all drain only actual 
       enemyWard: state.enemy.stunWard,
     };
   });
-  assert.deepEqual(r.ally, { hp: 14, fury: 20 });
+  assert.deepEqual(r.ally, { hp: 15, fury: 19 });
   assert.ok(r.tonic.restored > 0);
   assert.equal(r.tonic.restored, r.tonic.spent);
   assert.deepEqual(r.level, { hp: 16, fury: 14 });

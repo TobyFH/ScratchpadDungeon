@@ -88,10 +88,6 @@ function iconCriticalOddsMarkup(h) {
     "<p>No matches yet. Put the same type and rank on both outer reels.</p>"
   }</div><nav class="crit-page-nav"><button data-crit-page="${workshopCritPage - 1}" ${workshopCritPage === 0 ? "disabled" : ""}>← Previous</button><span>${workshopCritPage + 1} / ${pages}</span><button data-crit-page="${workshopCritPage + 1}" ${workshopCritPage >= pages - 1 ? "disabled" : ""}>Next →</button></nav></section>`;
 }
-function iconClassPricesMarkup(h) {
-  const types = editableTypes(h).filter((t) => t !== "blank");
-  return `<section class="workshop-page icon-class-prices" ${editorView === "prices" ? "" : 'aria-hidden="true" inert'}><h3>${className(h.job)} point costs</h3><p>Rank power stays the same. Your class changes editing costs.</p><table class="class-price-table"><thead><tr><th>Symbol</th><th>Inscribe I</th><th>II</th><th>III</th><th>IV</th></tr></thead><tbody>${types.map((type) => `<tr><th>${FACE_LABELS[type]}</th><td>${classFacePrice(h, type, 3)}</td>${[2, 3, 4].map((tier) => `<td>${classFacePrice(h, type, FACE_COST[tier])}</td>`).join("")}</tr>`).join("")}</tbody></table><p>Inscribe replaces Empty. Rank costs are per step; downward edits refund half the points paid.</p></section>`;
-}
 const WORKSHOP_SHORT_LABELS = Object.freeze({
   attack: "Physical",
   magic: "Spell",
@@ -115,6 +111,7 @@ function iconReelEditor(i) {
     editorView = "edit";
     workshopEditReceipt = { heroId: h.id, text: "" };
   }
+  if (!["edit", "crits"].includes(editorView)) editorView = "edit";
   const k = editorSelection.reel,
     j = Math.min(editorSelection.face, h.reels[k].length - 1),
     face = h.reels[k][j];
@@ -161,7 +158,6 @@ function iconReelEditor(i) {
     <nav class="workshop-nav" aria-label="Workshop pages">${[
       ["edit", "Edit reels"],
       ["crits", `Critical odds · ${odds}%`],
-      ["prices", "Class prices"],
     ]
       .map(
         ([view, label]) =>
@@ -181,7 +177,7 @@ function iconReelEditor(i) {
             <p class="workshop-lock-note">${locked ? (face.type === "class" ? "This unique middle-reel mark cannot be replaced or copied." : "This Jester mystery is permanent. Its rank follows its reel.") : "Click a rank or symbol to apply its shown point change."}</p>
           </section>
         </div>
-      </section>${iconCriticalOddsMarkup(h)}${iconClassPricesMarkup(h)}
+      </section>${iconCriticalOddsMarkup(h)}
     </div><p class="workshop-receipt" role="status">${escapeHTML(receipt || "Edits save immediately. Downward ranks refund paid points.")}</p>
     <div class="modal-actions"><button class="primary" data-close>Done · back to the adventure</button></div>`,
     "editor",

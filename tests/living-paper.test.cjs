@@ -111,7 +111,7 @@ test("Mage recovery grows modestly after level four and fountains receive a smal
   }));
   assert.deepEqual(
     r.mage.map((h) => h.heal),
-    [24, 24, 25, 26, 28, 28],
+    [24, 24, 25, 28, 31, 34],
   );
   assert.equal(r.tank, 24);
   for (const f of r.wells) {
@@ -130,6 +130,7 @@ test("a late Mage's actual heal restores the advertised extra HP", async (t) => 
   const r = await p.evaluate(async () => {
     const h = state.party[0];
     h.level = 10;
+    h.specialism="defence";
     h.maxHp = 100;
     h.hp = 1;
     const real = runMachine;
@@ -150,7 +151,7 @@ test("a late Mage's actual heal restores the advertised extra HP", async (t) => 
     await spin(0);
     return { hp: h.hp, healing: h.stats.healingDone };
   });
-  assert.deepEqual(r, { hp: 10, healing: 9 });
+  assert.deepEqual(r, { hp: 13, healing: 12 });
 });
 
 test("an empty-bar Ranger seal fires its own shot and is recognised as solo offence", async (t) => {
@@ -158,6 +159,7 @@ test("an empty-bar Ranger seal fires its own shot and is recognised as solo offe
   await fight(p, ["ranger"]);
   const r = await p.evaluate(async () => {
     const h = state.party[0];
+    h.specialism="offence";
     h.reels = [
       [{ type: "blank", tier: 1 }],
       [{ type: "class", job: "ranger", tier: 1 }],
@@ -173,9 +175,9 @@ test("an empty-bar Ranger seal fires its own shot and is recognised as solo offe
     };
   });
   assert.ok(r.score > 0);
-  assert.equal(r.hp, 998);
+  assert.equal(r.hp, 997);
   assert.equal(r.charge, 0);
-  assert.equal(r.last, 2);
+  assert.equal(r.last, 3);
 });
 
 test("full patience plus Execute pays separate capped damage, with no critical squaring or final-boss one-shot", async (t) => {

@@ -1,5 +1,8 @@
 # Support, Execute and living pencil presentation
 
+> Current follow-up: [Curve and recovery tuning](CURVE_TUNING.md) supersedes
+> earlier numeric examples for enemies, recovery, traits, biomes and nests.
+
 The game still ships as one offline `index.html`. Rebuild embedded sources with
 `npm run build:ui`. No save format, artwork asset, class unlock or encounter
 budget changes are required for this update.

@@ -27,6 +27,11 @@ decays per tile walked. [The icon reel workshop](docs/ICON_REEL_WORKSHOP.md)
 shows clickable replacement symbols and complete rank costs/refunds, with a
 one-switch fallback to the previous editor.
 
+Current [curve and recovery tuning](docs/CURVE_TUNING.md) makes eligible biomes
+equally likely after the Cavern opening, guarantees an early recruit opportunity,
+shortens defensive boss fights and strengthens Mage recovery, stimulant stacks
+and temperament bonuses.
+
 ## Camp and banked gold
 
 After clearing floors 1–9, optionally bank **25%, 50%, 75% or 100%** of carried gold.

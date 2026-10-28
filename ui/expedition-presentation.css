@@ -1,57 +1,319 @@
 /* Shared semantic inks: stun/recovery never borrow healing green. */
-:root {--stun-ink:#94601c;--stun-wash:#b88b3f25;--boon-ink:#347783;--boon-wash:#3a879326;}
-body[data-palette="dark"]{--stun-ink:#e9bf70;--stun-wash:#e9bf7026;--boon-ink:#9bd4dd;--boon-wash:#9bd4dd25;}
-body[data-palette="warm"]{--stun-ink:#8b5419;--boon-ink:#306c76;}
-.combat-callout.stun,.hero-notice.stun,.action-label.stun,.combat-float.stun,.injury.stun-status,.stun-badge,.stun-ward-badge,.stun-portrait-overlay,.enemy-clock.stun-status {color:var(--stun-ink);}
-.combat-callout.stun,.hero-notice.stun {border-color:var(--stun-ink);box-shadow:0 0 16px var(--stun-wash);}
-.combat-callout.boon,.hero-notice.boon,.action-label.boon {color:var(--boon-ink);border-color:var(--boon-ink);box-shadow:0 0 16px var(--boon-wash);}
-#log .log-term-stun {color:var(--stun-ink);background:var(--stun-wash);text-decoration-color:currentColor;}
-#log .log-term-boon {color:var(--boon-ink);background:var(--boon-wash);text-decoration-color:currentColor;}
-#result-ribbon[data-feedback="stun"]{color:var(--stun-ink);}
-#result-ribbon[data-feedback="boon"]{color:var(--boon-ink);}
-.reel-unavailable.stun {color:var(--stun-ink);border-color:var(--stun-ink);}
-.map-wrap {position:relative;}
-.biome-margin {position:absolute;top:0;bottom:0;width:32px;color:var(--biome-tint);opacity:.76;pointer-events:none;z-index:2;}
-.biome-margin.left {right:calc(100% + 9px);}
-.biome-margin.right {left:calc(100% + 9px);transform:scaleX(-1);}
-.biome-margin svg {width:100%;height:100%;overflow:visible;}
-.margin-mote {transform-box:fill-box;transform-origin:center;opacity:.3;}
-body:not(.ambient-disabled) .margin-mote {animation:biome-mote-drift 5.5s ease-in-out infinite;animation-delay:calc(var(--mote) * -1.05s);}
-body[data-biome="lava"]:not(.ambient-disabled) .biome-margin > svg > path:first-child {stroke-dasharray:16 6;animation:biome-lava-pour 5s linear infinite;}
-body[data-biome="overgrown"]:not(.ambient-disabled) .biome-margin > svg > path:first-child {animation:biome-vine-breathe 6s ease-in-out infinite;transform-origin:center;}
-@keyframes biome-mote-drift {0%{translate:0 -5px;opacity:0;}20%{opacity:.6;}80%{opacity:.4;}100%{translate:5px 17px;rotate:40deg;opacity:0;}}
-@keyframes biome-lava-pour {to{stroke-dashoffset:-44;}}
-@keyframes biome-vine-breathe {50%{translate:1px 0;}}
-.map-link-overlay,.crystal-pulse-map {position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:8;overflow:hidden;}
-.map-link-overlay path {stroke:var(--focus);stroke-width:.065;fill:none;stroke-dasharray:.16 .12;}
-.map-link-overlay marker path {stroke-width:1.2;stroke-dasharray:none;}
-.tile.inspect-hover {outline:2px solid var(--focus);outline-offset:-3px;filter:brightness(1.06);}
-.tile.tunnel-linked {outline:3px double var(--focus);outline-offset:-3px;box-shadow:inset 0 0 12px var(--boon-wash);}
-.quartz-pulse {fill:none;stroke:#729fc8;stroke-width:.055;opacity:.5;}
-body.tile-motion-enabled .quartz-pulse {animation:quartz-field-pulse 2.8s ease-out infinite;}
-@keyframes quartz-field-pulse {0%{scale:.15;opacity:0;}15%{opacity:.75;}85%{scale:1;opacity:.35;}100%{scale:1;opacity:0;}}
-.tile.lava-river,.lava-river .bridge-water {color:var(--lava-ink);}
-.tile.lava-river.water-block {background:color-mix(in srgb,var(--lava-wash) 55%,var(--paper));}
-.lava-river .bridge-water {stroke:var(--lava-ink);opacity:.6;}
-.tile.terrain-poisonMushroom .biome-cover {color:var(--poison);}
-.tile.terrain-explodingMushroom .biome-cover {color:var(--red);}
-.tile.terrain-brittleIce .biome-cover {color:var(--water-ink);}
-.tile.hole-tile {background:var(--ink);border:2px double var(--soft);color:var(--paper);}
-.tile.gate-tile .biome-cover,.tile.secret-door-tile .biome-cover {inset:0;opacity:1;}
-.map-caption {position:relative;display:grid;grid-template-columns:minmax(0,1fr) 45px;align-items:center;gap:8px;height:112px;min-height:112px;}
-.map-caption #hover-name {font-size:28px;line-height:1.15;}
-.map-caption .exit-button {position:static!important;grid-column:2;grid-row:1;align-self:center;width:42px!important;height:42px!important;padding:4px!important;min-width:0!important;transform:none!important;font-size:0!important;}
-.map-caption .exit-button svg {width:100%;height:100%;}
-.biome-discovery-art svg {width:130px;height:130px;}
-body.utility-open .biome-margin *,body.utility-open .quartz-pulse {animation-play-state:paused!important;}
-@media(max-width:760px){.biome-margin {width:16px;opacity:.6;}.biome-margin.left {right:calc(100% + 2px);}.biome-margin.right {left:calc(100% + 2px);}.map-caption #hover-name{font-size:24px;}.map-caption{height:204px;min-height:204px;}}
-@media(prefers-reduced-motion:reduce){.biome-margin *,.quartz-pulse{animation:none!important;}}
+:root {
+  --stun-ink: #94601c;
+  --stun-wash: #b88b3f25;
+  --boon-ink: #347783;
+  --boon-wash: #3a879326;
+}
+body[data-palette="dark"] {
+  --stun-ink: #e9bf70;
+  --stun-wash: #e9bf7026;
+  --boon-ink: #9bd4dd;
+  --boon-wash: #9bd4dd25;
+}
+body[data-palette="warm"] {
+  --stun-ink: #8b5419;
+  --boon-ink: #306c76;
+}
+.combat-callout.stun,
+.hero-notice.stun,
+.action-label.stun,
+.combat-float.stun,
+.injury.stun-status,
+.stun-badge,
+.stun-ward-badge,
+.stun-portrait-overlay,
+.enemy-clock.stun-status {
+  color: var(--stun-ink);
+}
+.combat-callout.stun,
+.hero-notice.stun {
+  border-color: var(--stun-ink);
+  box-shadow: 0 0 16px var(--stun-wash);
+}
+.combat-callout.boon,
+.hero-notice.boon,
+.action-label.boon {
+  color: var(--boon-ink);
+  border-color: var(--boon-ink);
+  box-shadow: 0 0 16px var(--boon-wash);
+}
+#log .log-term-stun {
+  color: var(--stun-ink);
+  background: var(--stun-wash);
+  text-decoration-color: currentColor;
+}
+#log .log-term-boon {
+  color: var(--boon-ink);
+  background: var(--boon-wash);
+  text-decoration-color: currentColor;
+}
+#result-ribbon[data-feedback="stun"] {
+  color: var(--stun-ink);
+}
+#result-ribbon[data-feedback="boon"] {
+  color: var(--boon-ink);
+}
+.reel-unavailable.stun {
+  color: var(--stun-ink);
+  border-color: var(--stun-ink);
+}
+.map-wrap {
+  position: relative;
+}
+.biome-margin {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 32px;
+  color: var(--biome-tint);
+  opacity: 0.76;
+  pointer-events: none;
+  z-index: 2;
+}
+.biome-margin.left {
+  right: calc(100% + 9px);
+}
+.biome-margin.right {
+  left: calc(100% + 9px);
+  transform: scaleX(-1);
+}
+.biome-margin svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.margin-mote {
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0.3;
+}
+body:not(.ambient-disabled) .margin-mote {
+  animation: biome-mote-drift 5.5s ease-in-out infinite;
+  animation-delay: calc(var(--mote) * -1.05s);
+}
+body[data-biome="lava"]:not(.ambient-disabled)
+  .biome-margin
+  > svg
+  > path:first-child {
+  stroke-dasharray: 16 6;
+  animation: biome-lava-pour 5s linear infinite;
+}
+body[data-biome="overgrown"]:not(.ambient-disabled)
+  .biome-margin
+  > svg
+  > path:first-child {
+  animation: biome-vine-breathe 6s ease-in-out infinite;
+  transform-origin: center;
+}
+@keyframes biome-mote-drift {
+  0% {
+    translate: 0 -5px;
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.6;
+  }
+  80% {
+    opacity: 0.4;
+  }
+  100% {
+    translate: 5px 17px;
+    rotate: 40deg;
+    opacity: 0;
+  }
+}
+@keyframes biome-lava-pour {
+  to {
+    stroke-dashoffset: -44;
+  }
+}
+@keyframes biome-vine-breathe {
+  50% {
+    translate: 1px 0;
+  }
+}
+.map-link-overlay,
+.crystal-pulse-map {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 8;
+  overflow: hidden;
+}
+.map-link-overlay path {
+  stroke: var(--focus);
+  stroke-width: 0.065;
+  fill: none;
+  stroke-dasharray: 0.16 0.12;
+}
+.map-link-overlay marker path {
+  stroke-width: 1.2;
+  stroke-dasharray: none;
+}
+.tile.inspect-hover {
+  outline: 2px solid var(--focus);
+  outline-offset: -3px;
+  filter: brightness(1.06);
+}
+.tile.tunnel-linked {
+  outline: 3px double var(--focus);
+  outline-offset: -3px;
+  box-shadow: inset 0 0 12px var(--boon-wash);
+}
+.quartz-pulse {
+  fill: none;
+  stroke: #729fc8;
+  stroke-width: 0.055;
+  opacity: 0.5;
+}
+body.tile-motion-enabled .quartz-pulse {
+  animation: quartz-field-pulse 2.8s ease-out infinite;
+}
+@keyframes quartz-field-pulse {
+  0% {
+    scale: 0.15;
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.75;
+  }
+  85% {
+    scale: 1;
+    opacity: 0.35;
+  }
+  100% {
+    scale: 1;
+    opacity: 0;
+  }
+}
+.tile.lava-river,
+.lava-river .bridge-water {
+  color: var(--lava-ink);
+}
+.tile.lava-river.water-block {
+  background: color-mix(in srgb, var(--lava-wash) 55%, var(--paper));
+}
+.lava-river .bridge-water {
+  stroke: var(--lava-ink);
+  opacity: 0.6;
+}
+.tile.terrain-poisonMushroom .biome-cover {
+  color: var(--poison);
+}
+.tile.terrain-explodingMushroom .biome-cover {
+  color: var(--red);
+}
+.tile.terrain-brittleIce .biome-cover {
+  color: var(--water-ink);
+}
+.tile.hole-tile {
+  background: var(--ink);
+  border: 2px double var(--soft);
+  color: var(--paper);
+}
+.tile.gate-tile .biome-cover,
+.tile.secret-door-tile .biome-cover {
+  inset: 0;
+  opacity: 1;
+}
+.map-caption {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 45px;
+  align-items: center;
+  gap: 8px;
+  height: 112px;
+  min-height: 112px;
+}
+.map-caption #hover-name {
+  font-size: 28px;
+  line-height: 1.15;
+}
+.map-caption .exit-button {
+  position: static !important;
+  grid-column: 2;
+  grid-row: 1;
+  align-self: center;
+  width: 42px !important;
+  height: 42px !important;
+  padding: 4px !important;
+  min-width: 0 !important;
+  transform: none !important;
+  font-size: 0 !important;
+}
+.map-caption .exit-button svg {
+  width: 100%;
+  height: 100%;
+}
+.biome-discovery-art svg {
+  width: 130px;
+  height: 130px;
+}
+body.utility-open .biome-margin *,
+body.utility-open .quartz-pulse {
+  animation-play-state: paused !important;
+}
+@media (max-width: 760px) {
+  .biome-margin {
+    width: 16px;
+    opacity: 0.6;
+  }
+  .biome-margin.left {
+    right: calc(100% + 2px);
+  }
+  .biome-margin.right {
+    left: calc(100% + 2px);
+  }
+  .map-caption #hover-name {
+    font-size: 24px;
+  }
+  .map-caption {
+    height: 204px;
+    min-height: 204px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .biome-margin *,
+  .quartz-pulse {
+    animation: none !important;
+  }
+}
 
-.tile.hole-tile > svg {color:var(--paper);}
-.combat-number.stun {color:var(--stun-ink);}
-.hero-notice.block,.combat-callout.block {color:var(--block-blue);border-color:var(--block-blue);}
+.tile.hole-tile > svg {
+  color: var(--paper);
+}
+.combat-number.stun {
+  color: var(--stun-ink);
+}
+.hero-notice.block,
+.combat-callout.block {
+  color: var(--block-blue);
+  border-color: var(--block-blue);
+}
 
-
-.tile.lava-river > svg {color:var(--lava-ink);}
-.fit-notebook .map-caption {height:112px;min-height:112px;}
-.fit-notebook .map-wrap {max-width:520px;}
+.tile.lava-river > svg {
+  color: var(--lava-ink);
+}
+.fit-notebook .map-caption {
+  height: 112px;
+  min-height: 112px;
+}
+.fit-notebook .map-wrap {
+  max-width: 520px;
+}
+/* Discovery art must reserve the same space it paints, including small screens. */
+.stage-card.biome-choice .biome-discovery-art {
+  height: 145px;
+  display: grid;
+  place-items: center;
+}
+.stage-card.biome-choice .biome-discovery-art svg {
+  width: 130px;
+  height: 130px;
+  max-width: 100%;
+  max-height: 100%;
+  margin: 0;
+}
