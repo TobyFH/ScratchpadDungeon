@@ -95,7 +95,7 @@ async function flat(p, theme = "cave") {
   }, theme);
 }
 
-test("Mage recovery grows modestly after level four and late fountains improve without changing opening floors", async (t) => {
+test("Mage recovery grows modestly after level four and fountains receive a small depth-strengthened recovery increase", async (t) => {
   const p = await game(t);
   const r = await p.evaluate(() => ({
     mage: [1, 4, 5, 7, 10, 20].map((level) => ({
@@ -116,12 +116,12 @@ test("Mage recovery grows modestly after level four and late fountains improve w
   assert.equal(r.tank, 24);
   for (const f of r.wells) {
     const d = f.floor - 1;
-    assert.ok(f.base >= 0.15 + d * 0.005 - 1e-9);
+    assert.ok(f.base >= 0.165 + d * 0.007 - 1e-9);
     assert.ok(f.roll >= 0.5 + d * 0.018 - 1e-9);
-    if (f.floor <= 4) assert.ok(Math.abs(f.base - (0.15 + d * 0.005)) < 1e-9);
+    if (f.floor <= 4) assert.ok(Math.abs(f.base - (0.165 + d * 0.007)) < 1e-9);
   }
-  assert.ok(Math.abs(r.wells[9].base - 0.213) < 1e-9);
-  assert.ok(Math.abs(r.wells[9].roll - 0.734) < 1e-9);
+  assert.ok(Math.abs(r.wells[9].base - 0.252) < 1e-9);
+  assert.ok(Math.abs(r.wells[9].roll - 0.752) < 1e-9);
 });
 
 test("a late Mage's actual heal restores the advertised extra HP", async (t) => {
@@ -391,7 +391,7 @@ test("status motes keep their tooltip badges, enemy species idle differently, an
   });
   assert.equal(r.before.motes, 2);
   assert.match(r.before.poison, /3 more turns/);
-  assert.match(r.before.buff, /3 turns remaining/);
+  assert.match(r.before.buff, /3\/3 turns/);
   assert.equal(r.before.idle, "float");
   assert.match(r.before.animation, /float/);
   assert.equal(r.after, "none");

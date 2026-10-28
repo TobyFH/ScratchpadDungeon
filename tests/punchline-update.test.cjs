@@ -37,7 +37,7 @@ test('stimulants last at most three recipient actions, overflow increases potenc
     normaliseStimulant(h);
     return {first,second,third,tick,migrated,again:h.stimulant};
   });
-  assert.equal(r.first.turns,2); assert.equal(r.second.turns,3); assert.ok(r.second.power>r.first.power);
+  assert.equal(r.first.turns,2); assert.equal(r.second.turns,3); assert.equal(r.second.power,r.first.power); assert.equal(r.second.overflow,1);
   assert.equal(r.third.turns,3); assert.ok(r.third.power>r.second.power); assert.equal(r.tick.turns,2);
   assert.equal(r.migrated.turns,3); assert.equal(r.migrated.power,5); assert.deepEqual(r.again,r.migrated);
 });

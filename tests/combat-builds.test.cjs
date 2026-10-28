@@ -698,8 +698,8 @@ test("wells have lower base healing and smaller critical multipliers; depth make
   }));
   assert.equal(r.roll.multiplier, 1.25);
   assert.equal(r.roll.bonus, 3);
-  assert.equal(r.roll.base[0].value, 11);
-  assert.equal(r.roll.planned[0].value, 14);
+  assert.equal(r.roll.base[0].value, 12);
+  assert.equal(r.roll.planned[0].value, 15);
   assert.ok(r.trap10 > r.trap1);
   assert.ok(r.trap10 > 2);
   assert.ok(r.solo > 0.425 && r.solo < 0.5);
@@ -709,7 +709,7 @@ test("wells have lower base healing and smaller critical multipliers; depth make
     await window.well;
     Math.random = window.savedRandom;
   });
-  assert.equal(await p.evaluate(() => state.party[0].hp), 15);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 16);
 });
 
 test("declined adventurers can leave peacefully, offer confirmed gold, or become a real hostile encounter", async (t) => {

@@ -18871,7 +18871,7 @@ function encounterTags(enemies) {
                 poison:
                   raw.poison + (e.affix === "Venomous" && (raw.attack || raw.magic) ? 1 : 0),
                 stimulant: raw.stimulant,
-                heal: Math.ceil(raw.heal / 2),
+                heal: Math.ceil((raw.heal + (raw.selfheal || 0)) / 2),
                 block: raw.block,
                 stun: raw.stun,
                 blank: 0,
@@ -20191,7 +20191,7 @@ function faceDescription(face, h) {
       stun: `Apply ${tier} stun power. Stops at most one action, then grants two own actions of protection. Higher power strips more block; it never extends the stun.`,
       poison: `Apply ${tier} poison power. Lasts up to 3 turns; repeated doses increase tick damage instead of adding a long duration.`,
       stimulant: `Give yourself ${tier} stimulant power. Lasts up to 3 of your actions; potency caps at 6.`,
-      rally: `Give ${tier} stimulant power to the selected healing target. Lasts up to 3 of their actions; potency caps at 6.`,
+      rally: `Give ${tier} stimulant power to your most-used living ally this fight (or yourself when alone). Lasts up to 3 of their actions; potency caps at 6.`,
       trick: `Build ${tier} anticipation. At 6, fire six random ordinary marks from your reels. Burst marks cannot charge anticipation or roll criticals.`,
       selfharm: `Pay up to ${2 * tier} HP, staying above 0. Each HP paid adds ${2 + 0.5 * tier} Fury; all healing spends Fury.`,
       blank: "No effect. Inscribe a useful mark here with personal points.",
@@ -20487,7 +20487,7 @@ const FIELD_GUIDE = Object.freeze([
   {
     id: "floors",
     title: "Floors & discoveries",
-    body: '<ul class="guide-takeaways"><li><b>Win.</b> Defeat each staircase guardian. Beating the tenth guardian completes the dungeon.</li><li><b>Descend.</b> Select stairs to open their menu. After victory, descend from anywhere or keep exploring.</li><li><b>Wells.</b> Save an unused fountain for later. It starts at 15% maximum HP plus half its roll. Both grow gently with depth; triples can crit.</li><li><b>Light.</b> Beacons, cave rooms and lava reveal nearby tiles without activating events. Stone blocks beacon and lava light.</li><li><b>Other finds.</b> Ruins trade risk for loot. Strongholds shelter powerful enemies. Paired tunnels stay open after use.</li></ul>',
+    body: '<ul class="guide-takeaways"><li><b>Win.</b> Defeat each staircase guardian. Beating the tenth guardian completes the dungeon.</li><li><b>Descend.</b> Select stairs to open their menu. After victory, descend from anywhere or keep exploring.</li><li><b>Wells.</b> Save an unused fountain for later. It starts at 16.5% maximum HP plus half its roll. Both grow gently with depth; triples can crit.</li><li><b>Light.</b> Beacons, cave rooms and lava reveal nearby tiles without activating events. Stone blocks beacon and lava light.</li><li><b>Other finds.</b> Ruins trade risk for loot. Strongholds shelter powerful enemies. Paired tunnels stay open after use.</li></ul>',
   },
   {
     id: "biomes", title: "Caves & living floors",
@@ -20516,7 +20516,7 @@ const FIELD_GUIDE = Object.freeze([
   {
     id: "openings",
     title: "Openings & poison",
-    body: '<ul class="guide-takeaways"><li><b>Initiative.</b> A marked hero gains 25% stronger effects if chosen for the first roll.</li><li><b>Surprise.</b> Surprised heroes cannot open. If everyone is surprised, the enemies attack first.</li><li><b>Enemy intent.</b> The short line names a goal and target. Reels still decide what actually happens.</li><li><b>Poison.</b> Ticks bypass block. Doses load up to three turns; repeated doses then increase tick damage.</li><li><b>Temporary effects.</b> Poison, stun, Fury, Execute, anticipation and buffs all clear after combat.</li></ul>',
+    body: '<ul class="guide-takeaways"><li><b>Initiative.</b> A marked hero gains 25% stronger effects if chosen for the first roll.</li><li><b>Surprise.</b> Surprised heroes cannot open. If everyone is surprised, the enemies attack first.</li><li><b>Enemy intent.</b> The short line names a goal and target. Reels still decide what actually happens.</li><li><b>Poison.</b> Ticks bypass block. Doses load up to three turns; repeated doses then increase tick damage.</li><li><b>Temporary effects.</b> Poison, stun, Execute, anticipation and buffs clear after combat. Berserker Fury survives, losing one charge per tile walked.</li></ul>',
   },
   {
     id: "heroes",
@@ -24867,10 +24867,11 @@ function mapLineOfSight(map, from, to) {
 }
 function carveMaze(map) {
   const start=pos(1,7),stack=[start],seen=new Set([start]);
+  const structures=map.map((c,i)=>c.structure?{i,cell:{...c}}:null).filter(Boolean);
   map.forEach((c,i)=>{
     if(i%W===0||i%W===W-1||i<W||i>=W*(H-1))return;
     c.wall=true;c.terrain='stone';c.room=null;c.structure=false;
-    delete c.stalactite;delete c.shadowCovered;
+    delete c.stalactite;delete c.shadowCovered;delete c.riverId;delete c.lavaRiver;
   });
   map[start].wall=false;map[start].terrain='floor';
   while(stack.length){
@@ -24890,6 +24891,10 @@ function carveMaze(map) {
     }
     while(end!==null){Object.assign(map[end],{wall:false,terrain:'floor'});end=parent.get(end);}
   }
+  // Restore authored masonry after carving, then reconnect around its walls.
+  // The shared repair heavily penalizes stronghold walls, preserving its gate.
+  for(const {i,cell} of structures)Object.assign(map[i],cell);
+  for(let i=0;i<map.length;i++)if(!map[i].wall)ensureStairsPath(map,i);
   ensureStairsPath(map);ensureStairDistance(map);
 }
 function placeCrystalFields(map, candidates) {
@@ -24919,6 +24924,10 @@ function addExpansionDiscoveries(map,depth,theme) {
   if(theme==='fungal'){
     if(Math.random()<0.65)place('fairy');
     const candidates=map.map((c,i)=>i).filter(i=>!map[i].wall&&!map[i].event&&!map[i].room&&tileDistance(i,pos(1,7))>2&&['floor','mushroom'].includes(map[i].terrain));
+    // Keep a safe cap in even the smallest colony; hazards are additions, not a
+    // replacement for every ordinary mushroom used by the reveal chain.
+    const safe=candidates.find(i=>map[i].terrain==='mushroom')??candidates[0];
+    if(safe!==undefined){map[safe].terrain='mushroom';candidates.splice(candidates.indexOf(safe),1);}
     for(const terrain of ['poisonMushroom','poisonMushroom','explodingMushroom'])if(candidates.length)map[candidates.splice(rand(candidates.length),1)[0]].terrain=terrain;
   }
   if(theme==='ice'){
@@ -24935,7 +24944,7 @@ function addExpansionDiscoveries(map,depth,theme) {
   if(theme==='maze'){
     // Doors and gates only remove existing walls: the closed tree is always a
     // complete route. They never replace or block an authored discovery.
-    const walls=map.map((c,i)=>i).filter(i=>i%W>0&&i%W<W-1&&i>=W&&i<W*(H-1)&&map[i].wall&&!map[i].event&&neighbors(i).filter(j=>!map[j].wall).length>=2);
+    const walls=map.map((c,i)=>i).filter(i=>i%W>0&&i%W<W-1&&i>=W&&i<W*(H-1)&&map[i].wall&&!map[i].structure&&!map[i].event&&neighbors(i).filter(j=>!map[j].wall).length>=2);
     if(walls.length){const door=walls.splice(rand(walls.length),1)[0];Object.assign(map[door],{terrain:'secretDoor',event:'door',feature:'door'});}
     if(walls.length){const gate=pick(walls),plate=place('plate');if(plate!==null){Object.assign(map[gate],{terrain:'gate',linkedPlate:plate});map[plate].gateTarget=gate;}}
   }
@@ -24993,7 +25002,7 @@ async function settleMushroomBlast(){
 }
 async function expansionBattle({mother=false,shadow=false}={}){
   const hero=state.party.find(alive);
-  beginEncounter(false,{elite:mother||shadow,count:1,broodmother:mother,adventurer:shadow?{name:`Shadow of ${hero.name}`,job:hero.job}:null});
+  beginEncounter(false,{elite:mother||shadow,count:1,broodmother:mother,adventurer:shadow?{...hero,name:`Shadow of ${hero.name}`} : null});
   const e=state.enemy;
   if(mother)e.broodmother=true;
   if(shadow)e.shadowDouble=true;
@@ -27149,11 +27158,11 @@ async function jesterWildcard(h) {
       );
       if (!enemy.hp) h.stats.kills++;
     }
-    if (raw.heal) {
+    if (raw.heal || raw.selfheal) {
       const target = allies
         .slice()
         .sort((a, b) => a.hp / a.maxHp - b.hp / b.maxHp)[0];
-      h.stats.healingDone += healHero(state.party.indexOf(target), raw.heal);
+      h.stats.healingDone += healHero(state.party.indexOf(target), raw.heal + (raw.selfheal || 0));
       beam(enemyArtEl(enemy), entityArt(target), "heal", {
         fromPortrait: true,
       });
@@ -28049,7 +28058,7 @@ function renderCrystalPulses(){
   const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.id='crystal-pulse-map';svg.classList.add('crystal-pulse-map');svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.setAttribute('preserveAspectRatio','none');svg.setAttribute('aria-hidden','true');
   svg.innerHTML=sources.map((i,n)=>{
     const x=i%W+.5,y=Math.floor(i/W)+.5,r=EXPEDITION_TUNING.crystalRadius+.5;
-    const clip=state.map.map((c,j)=>!c.seen||!c.wall||j===i?`<rect x="${j%W}" y="${Math.floor(j/W)}" width="1" height="1"/>`:'').join('');
+    const clip=state.map.map((c,j)=>(j===i||!c.wall&&tileDistance(j,i)<=EXPEDITION_TUNING.crystalRadius&&mapLineOfSight(state.map,i,j))?`<rect x="${j%W}" y="${Math.floor(j/W)}" width="1" height="1"/>`:'').join('');
     return `<defs><clipPath id="quartz-clip-${i}">${clip}</clipPath></defs><g clip-path="url(#quartz-clip-${i})"><rect class="quartz-pulse" x="${x-r}" y="${y-r}" width="${r*2}" height="${r*2}" rx=".18" style="transform-origin:${x}px ${y}px;animation-delay:${-n*.31}s"/></g>`;
   }).join('');$('#map-board').append(svg);
 }

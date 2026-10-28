@@ -223,11 +223,11 @@ async function jesterWildcard(h) {
       );
       if (!enemy.hp) h.stats.kills++;
     }
-    if (raw.heal) {
+    if (raw.heal || raw.selfheal) {
       const target = allies
         .slice()
         .sort((a, b) => a.hp / a.maxHp - b.hp / b.maxHp)[0];
-      h.stats.healingDone += healHero(state.party.indexOf(target), raw.heal);
+      h.stats.healingDone += healHero(state.party.indexOf(target), raw.heal + (raw.selfheal || 0));
       beam(enemyArtEl(enemy), entityArt(target), "heal", {
         fromPortrait: true,
       });

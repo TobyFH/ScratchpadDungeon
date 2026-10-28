@@ -228,8 +228,8 @@ test("crystal aura respects range and walls and survives an ongoing fight reload
   const p = await game(t);
   await p.evaluate(blankMap);
   const r = await p.evaluate(() => {
-    Object.assign(state.map[pos(3, 7)], { terrain: "crystal", wall: true });
-    state.map[pos(2, 7)].wall = true;
+    Object.assign(state.map[pos(2, 6)], { terrain: "crystal", wall: true });
+    for(const i of [pos(2,7),pos(1,6)])Object.assign(state.map[i],{wall:true,terrain:"stone"});
     const blocked = crystalSources().length;
     state.map[pos(2, 7)].wall = false;
     const near = crystalSources().length;

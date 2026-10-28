@@ -351,12 +351,12 @@ test("blank inscription follows the chosen power; class prices and high-rank ico
     editor(0);
   });
   await p.locator("#blank-choose").click();
-  await p.locator("#face-destination").selectOption("heal");
-  assert.match(await p.locator("#face-swap").innerText(), /Inscribe Healing/);
+  await p.locator("#face-destination").selectOption("selfheal");
+  assert.match(await p.locator("#face-swap").innerText(), /Inscribe Self heal/);
   await p.locator("#face-swap").click();
   assert.equal(
     await p.evaluate(() => state.party[0].reels[0][editorSelection.face].type),
-    "heal",
+    "selfheal",
   );
   await p.locator('[data-workshop-view="prices"]').click();
   assert.match(

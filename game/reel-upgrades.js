@@ -138,7 +138,7 @@ function faceDescription(face, h) {
       stun: `Apply ${tier} stun power. Stops at most one action, then grants two own actions of protection. Higher power strips more block; it never extends the stun.`,
       poison: `Apply ${tier} poison power. Lasts up to 3 turns; repeated doses increase tick damage instead of adding a long duration.`,
       stimulant: `Give yourself ${tier} stimulant power. Lasts up to 3 of your actions; potency caps at 6.`,
-      rally: `Give ${tier} stimulant power to the selected healing target. Lasts up to 3 of their actions; potency caps at 6.`,
+      rally: `Give ${tier} stimulant power to your most-used living ally this fight (or yourself when alone). Lasts up to 3 of their actions; potency caps at 6.`,
       trick: `Build ${tier} anticipation. At 6, fire six random ordinary marks from your reels. Burst marks cannot charge anticipation or roll criticals.`,
       selfharm: `Pay up to ${2 * tier} HP, staying above 0. Each HP paid adds ${2 + 0.5 * tier} Fury; all healing spends Fury.`,
       blank: "No effect. Inscribe a useful mark here with personal points.",

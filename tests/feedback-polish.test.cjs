@@ -186,7 +186,7 @@ test("Berserker starts with more healing and Bloodrush heals its caster while a 
     setPreference("skipCriticals", true);
     const h = state.party[0],
       heals = h.reels.map(
-        (reel) => reel.filter((f) => f.type === "heal").length,
+        (reel) => reel.filter((f) => f.type === "selfheal").length,
       );
     state.party.push(makeHero("Mira", "mage"));
     state.party[1].hp = 2;

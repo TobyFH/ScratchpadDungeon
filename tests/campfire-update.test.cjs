@@ -518,7 +518,7 @@ test("Jester ordinary critical odds ignore distinct kinds and the permanent seal
   assert.equal(r.ranks, false);
   assert.equal(r.blank, false);
   assert.deepEqual(r.odds, []);
-  assert.equal(r.types, 9);
+  assert.equal(r.types, 10);
   assert.deepEqual(r.seal, [0, 1, 0]);
 });
 

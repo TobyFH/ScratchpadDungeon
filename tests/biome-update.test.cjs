@@ -305,7 +305,7 @@ test("named biome generation preserves directed ice/tunnel routes to distant sta
     let bad = 0,
       early = 0,
       deep = 0;
-    const kinds = new Set();
+    const kinds = new Set(), failures=[];
     for (let n = 0; n < 350; n++) {
       const depth = (n % 10) + 1,
         map = generateFloor(depth),
@@ -323,17 +323,17 @@ test("named biome generation preserves directed ice/tunnel routes to distant sta
           !map.some((c) => c.terrain === "mushroom")) ||
         map.some((c) => c.terrain === "bridge" && c.event)
       )
-        bad++;
+        { bad++; failures.push({n,biome:floorBiome(map),length:route?.length,roomWalls:map.filter(c=>c.room&&c.wall).length,caps:map.filter(c=>c.terrain==="mushroom").length}); }
       if (depth === 1 && floorBiome(map) !== "cave") early++;
       if (depth === 10 && floorBiome(map) !== "cave") deep++;
       kinds.add(floorBiome(map));
     }
     Math.random = old;
-    return { bad, early, deep, kinds: [...kinds] };
+    return { bad, early, deep, kinds: [...kinds], failures };
   });
-  assert.equal(r.bad, 0);
+  assert.equal(r.bad, 0, JSON.stringify(r.failures));
   assert.ok(r.deep > r.early);
-  assert.equal(r.kinds.length, 8);
+  assert.equal(r.kinds.length, 9);
 });
 
 test("long ice routes take the forced landing into account and stop before ice when a turn is impossible", async (t) => {
@@ -671,7 +671,7 @@ test("tile captions use hyphens and activated, and biome identity survives a run
   assert.equal(r.loaded, true);
   assert.equal(r.theme, "fungal");
   assert.equal(r.name, "The violet grotto");
-  assert.equal(r.version, 22);
+  assert.equal(r.version, 23);
 });
 
 test("actual Rogue damage and healing rolls use readable shared base tiers without hidden multipliers", async (t) => {
@@ -829,5 +829,5 @@ test("version-20 migration buffs living Tanks without reviving corpses or changi
   assert.equal(r.a.points, 39); // 12 points refunded for retired weight III.
   assert.deepEqual(r.a.face, { type: "block", tier: 4, weight: 1 });
   assert.equal(r.dead, 0);
-  assert.equal(r.version, 22);
+  assert.equal(r.version, 23);
 });

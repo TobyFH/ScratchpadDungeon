@@ -39,10 +39,11 @@ function mapLineOfSight(map, from, to) {
 }
 function carveMaze(map) {
   const start=pos(1,7),stack=[start],seen=new Set([start]);
+  const structures=map.map((c,i)=>c.structure?{i,cell:{...c}}:null).filter(Boolean);
   map.forEach((c,i)=>{
     if(i%W===0||i%W===W-1||i<W||i>=W*(H-1))return;
     c.wall=true;c.terrain='stone';c.room=null;c.structure=false;
-    delete c.stalactite;delete c.shadowCovered;
+    delete c.stalactite;delete c.shadowCovered;delete c.riverId;delete c.lavaRiver;
   });
   map[start].wall=false;map[start].terrain='floor';
   while(stack.length){
@@ -62,6 +63,10 @@ function carveMaze(map) {
     }
     while(end!==null){Object.assign(map[end],{wall:false,terrain:'floor'});end=parent.get(end);}
   }
+  // Restore authored masonry after carving, then reconnect around its walls.
+  // The shared repair heavily penalizes stronghold walls, preserving its gate.
+  for(const {i,cell} of structures)Object.assign(map[i],cell);
+  for(let i=0;i<map.length;i++)if(!map[i].wall)ensureStairsPath(map,i);
   ensureStairsPath(map);ensureStairDistance(map);
 }
 function placeCrystalFields(map, candidates) {
@@ -91,6 +96,10 @@ function addExpansionDiscoveries(map,depth,theme) {
   if(theme==='fungal'){
     if(Math.random()<0.65)place('fairy');
     const candidates=map.map((c,i)=>i).filter(i=>!map[i].wall&&!map[i].event&&!map[i].room&&tileDistance(i,pos(1,7))>2&&['floor','mushroom'].includes(map[i].terrain));
+    // Keep a safe cap in even the smallest colony; hazards are additions, not a
+    // replacement for every ordinary mushroom used by the reveal chain.
+    const safe=candidates.find(i=>map[i].terrain==='mushroom')??candidates[0];
+    if(safe!==undefined){map[safe].terrain='mushroom';candidates.splice(candidates.indexOf(safe),1);}
     for(const terrain of ['poisonMushroom','poisonMushroom','explodingMushroom'])if(candidates.length)map[candidates.splice(rand(candidates.length),1)[0]].terrain=terrain;
   }
   if(theme==='ice'){
@@ -107,7 +116,7 @@ function addExpansionDiscoveries(map,depth,theme) {
   if(theme==='maze'){
     // Doors and gates only remove existing walls: the closed tree is always a
     // complete route. They never replace or block an authored discovery.
-    const walls=map.map((c,i)=>i).filter(i=>i%W>0&&i%W<W-1&&i>=W&&i<W*(H-1)&&map[i].wall&&!map[i].event&&neighbors(i).filter(j=>!map[j].wall).length>=2);
+    const walls=map.map((c,i)=>i).filter(i=>i%W>0&&i%W<W-1&&i>=W&&i<W*(H-1)&&map[i].wall&&!map[i].structure&&!map[i].event&&neighbors(i).filter(j=>!map[j].wall).length>=2);
     if(walls.length){const door=walls.splice(rand(walls.length),1)[0];Object.assign(map[door],{terrain:'secretDoor',event:'door',feature:'door'});}
     if(walls.length){const gate=pick(walls),plate=place('plate');if(plate!==null){Object.assign(map[gate],{terrain:'gate',linkedPlate:plate});map[plate].gateTarget=gate;}}
   }
@@ -165,7 +174,7 @@ async function settleMushroomBlast(){
 }
 async function expansionBattle({mother=false,shadow=false}={}){
   const hero=state.party.find(alive);
-  beginEncounter(false,{elite:mother||shadow,count:1,broodmother:mother,adventurer:shadow?{name:`Shadow of ${hero.name}`,job:hero.job}:null});
+  beginEncounter(false,{elite:mother||shadow,count:1,broodmother:mother,adventurer:shadow?{...hero,name:`Shadow of ${hero.name}`} : null});
   const e=state.enemy;
   if(mother)e.broodmother=true;
   if(shadow)e.shadowDouble=true;

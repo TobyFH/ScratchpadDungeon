@@ -95,7 +95,7 @@ async function autoEvents(page) {
   await page.evaluate(() => {
     window.autoEventObserver = new MutationObserver(() => {
       let button = (window.campaignPortals ? document.querySelector("#tunnel-use:not(:disabled)") : null) || document.querySelector(
-        "#stage-confirm:not(:disabled),#recruit-accept:not(:disabled),#recruit-decline:not(:disabled),#well-use:not(:disabled),#tunnel-leave:not(:disabled),#ruin-examine:not(:disabled),#death-confirm:not(:disabled),#burial-confirm:not(:disabled),#revive-use:not(:disabled),#item-leave:not(:disabled)",
+        "#stage-confirm:not(:disabled),#recruit-accept:not(:disabled),#recruit-decline:not(:disabled),#well-use:not(:disabled),#tunnel-leave:not(:disabled),#ruin-examine:not(:disabled),#death-confirm:not(:disabled),#burial-confirm:not(:disabled),#revive-use:not(:disabled),#item-leave:not(:disabled),#biome-use:not(:disabled),#biome-leave:not(:disabled),#nest-loot:not(:disabled),#mushroom-roll:not(:disabled),#mushroom-confirm:not(:disabled)",
       );
       if (button && !document.querySelector("#spotlight").hidden)
         button.click();
@@ -501,7 +501,7 @@ test("well can be declined and revisited; the rolled heal affects only living he
   await p.waitForFunction(() => window.healingGlyphsCreated >= 8);
   assert.deepEqual(
     await p.evaluate(() => state.party.map((h) => h.hp)),
-    [12, 9],
+    [13, 9],
   );
   await finish(p);
   await p.evaluate(() => (Math.random = window.savedRandom));
@@ -555,7 +555,7 @@ test("equal faces retain thematic class powers without hidden author weights", a
         return [
           job,
           Object.fromEntries(
-            ["attack", "heal", "block", "stun"].map((type) => [
+            ["attack", "heal", "selfheal", "block", "stun"].map((type) => [
               type,
               r
                 .filter((s) => s.type === type)
@@ -566,8 +566,8 @@ test("equal faces retain thematic class powers without hidden author weights", a
       }),
     ),
   );
-  assert.equal(odds.fighter.heal, 1 / 6);
-  assert.equal(odds.healer.heal, 2 / 6);
+  assert.equal(odds.fighter.selfheal, 1 / 6);
+  assert.equal(odds.healer.heal + odds.healer.selfheal, 2 / 6);
   assert.ok(odds.healer.attack < 0.08);
   assert.equal(odds.rogue.heal, 0);
   assert.equal(odds.rogue.attack, 2 / 6);
@@ -1123,7 +1123,7 @@ test("save restores speed and artefacts and migrates the earlier Sunseed-era not
     localStorage.setItem("scratchpad-dungeon-v2", JSON.stringify(old));
   });
   await p.reload();
-  assert.equal(await p.evaluate(() => state.version), 22);
+  assert.equal(await p.evaluate(() => state.version), 23);
   assert.equal(await p.evaluate(() => state.speed), "skip");
   assert.equal(await p.evaluate(() => state.relic), undefined);
   assert.doesNotMatch(await p.locator("body").textContent(), /Sunseed/);
@@ -1580,7 +1580,7 @@ test("fountain triple heals crit within the same popup at instant speed and show
     await p
       .locator(".critical-payoff")
       .evaluate((n) => [+n.dataset.before, +n.dataset.after]),
-    [11, 14],
+    [12, 15],
   );
   await p.waitForSelector("#stage-confirm");
   assert.equal(
@@ -1590,7 +1590,7 @@ test("fountain triple heals crit within the same popup at instant speed and show
   assert.equal(await p.evaluate(() => state.lastWellRoll.multiplier), 1.25);
   await p.locator("#stage-confirm").click();
   await finish(p);
-  assert.equal(await p.evaluate(() => state.party[0].hp), 15);
+  assert.equal(await p.evaluate(() => state.party[0].hp), 16);
   await p.evaluate(() => (Math.random = window.previousRandom));
 });
 
@@ -1988,9 +1988,9 @@ test("a fountain critical retains uncapped offered healing for every hero while 
     ]),
   );
   assert.deepEqual(math, [
-    [11, 14],
+    [12, 15],
     [8, 10],
-    [7, 9],
+    [8, 10],
   ]);
   await panelFits(
     p,
@@ -2019,7 +2019,7 @@ test("a fountain critical retains uncapped offered healing for every hero while 
   );
   assert.deepEqual(
     await p.evaluate(() => state.lastWellRoll.planned.map((h) => h.value)),
-    [14, 10, 9],
+    [15, 10, 10],
   );
   await p.evaluate(() => (Math.random = window.oldRandom));
 });
@@ -3260,7 +3260,7 @@ test("older saved fights migrate to the gentler curve without losing wounds or e
       face: state.party[0].reels[0][0].tier,
     })),
     {
-      version: 22,
+      version: 23,
       hp: 14,
       max: 28,
       damage: 6,
@@ -3865,7 +3865,7 @@ test("bag stacks matching items but limits types to three; overflow can replace 
   );
   await p.reload();
   assert.equal(await p.evaluate(() => state.bag.ration), 2);
-  assert.equal(await p.evaluate(() => Object.keys(ITEM_DEFS).length), 48);
+  assert.equal(await p.evaluate(() => Object.keys(ITEM_DEFS).length), 50);
 });
 
 test("full bag lets the player use a new item immediately, use an existing last item to free a pocket, or decline the find", async (t) => {
@@ -5032,7 +5032,7 @@ test("version-nine fights adopt the stronger enemy curve without changing hero w
         .map((f) => f.tier),
     })),
     {
-      version: 22,
+      version: 23,
       autoplay: false,
       heroHp: 19,
       face: 4,

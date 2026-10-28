@@ -84,7 +84,7 @@ test("temperament is only selectable at the start, Mages have no role stat or se
   });
   assert.deepEqual(result, {
     loaded: true,
-    version: 22,
+    version: 23,
     hp: 11,
     points: 29,
     tier: 4,
@@ -201,7 +201,7 @@ test("Berserker Fury comes from HP wounds and Blood Price, scales damage, has a 
     "rank-II physical + Bloodrush + wound Fury + Blood & steel, before healing spends charge",
   );
   assert.match(result.bar, /FURY 8\/24/);
-  assert.equal(result.cleared, 0);
+  assert.equal(result.cleared, result.charged.fury);
 });
 
 test("early damage rises per floor, the middle-floor Unwritten is stronger, and its loot reels guarantee an improved supply", async (t) => {

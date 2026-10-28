@@ -124,3 +124,45 @@ test('hover inspection follows the current tile by default and links only reveal
   const current=$('#hover-name').textContent;Math.random=real;return {linked,hidden,current,calls};
  });assert.equal(r.linked,true);assert.equal(r.hidden,false);assert.equal(r.calls,0);assert.match(r.current,/Tunnel/);
 });
+
+async function discovery(p,type){
+ await p.evaluate(type=>{const c=state.map[state.position];c.event=c.feature=type;window.discoveryTask=resolveExpansionTile(c)},type);
+}
+async function confirmDiscovery(p,id){await p.locator(id).click();await p.evaluate(()=>window.discoveryTask);}
+test('fruit stays available when declined and heals only living companions when picked',async t=>{
+ const p=await game(t);await p.evaluate(()=>{state.party.push(makeHero('Mira','mage'));state.party.forEach(h=>h.hp=1)});
+ await discovery(p,'fruit');await confirmDiscovery(p,'#biome-leave');assert.equal(await p.evaluate(()=>state.map[state.position].event),'fruit');
+ await discovery(p,'fruit');await confirmDiscovery(p,'#biome-use');
+ const r=await p.evaluate(()=>({event:state.map[state.position].event,hp:state.party.map(h=>h.hp),expected:state.party.map(h=>1+Math.ceil(h.maxHp*.1)+2)}));assert.equal(r.event,null);assert.deepEqual(r.hp,r.expected);
+});
+test('a resonant geode is saved for the next battle and prism sight-lines stop at walls without activating finds',async t=>{
+ const p=await game(t);await discovery(p,'geode');await confirmDiscovery(p,'#biome-use');
+ const gift=await p.evaluate(()=>state.party[0].geodeGift);assert.equal(gift.uses,2);
+ const battle=await p.evaluate(()=>{beginEncounter(false,{count:1});return {gift:state.party[0].geodeGift,reels:state.party[0].reelGifts}});assert.equal(battle.gift,undefined);assert.ok(battle.reels.some(g=>g.reel===gift.reel&&g.uses===2));
+ await p.evaluate(()=>{closeSpotlight();state.enemy=null;state.enemies=[];busy=false;state.position=pos(3,3);state.map.forEach(c=>Object.assign(c,{wall:false,seen:false,event:null,terrain:'floor'}));state.map[pos(5,3)].wall=true;state.map[pos(5,3)].terrain='stone';state.map[pos(4,3)].event='treasure';render()});
+ await discovery(p,'prism');await confirmDiscovery(p,'#biome-use');
+ const sight=await p.evaluate(()=>({chest:state.map[pos(4,3)].seen,event:state.map[pos(4,3)].event,wall:state.map[pos(5,3)].seen,behind:state.map[pos(6,3)].seen}));assert.deepEqual(sight,{chest:true,event:'treasure',wall:true,behind:false});
+});
+test('maze plates and secret doors open optional shortcuts only after explicit confirmation',async t=>{
+ const p=await game(t);await p.evaluate(()=>{state.map.forEach(c=>Object.assign(c,{wall:false,terrain:'floor',event:null,seen:true}));state.position=pos(3,3);const gate=pos(5,3);Object.assign(state.map[gate],{wall:true,terrain:'gate'});state.map[state.position].gateTarget=gate});
+ await discovery(p,'plate');await confirmDiscovery(p,'#biome-use');assert.equal(await p.evaluate(()=>state.map[pos(5,3)].wall),false);
+ await p.evaluate(()=>{Object.assign(state.map[pos(4,3)],{wall:true,event:'door',feature:'door',terrain:'secretDoor'});window.doorTask=openSecretDoor(pos(4,3))});
+ await p.locator('#biome-leave').click();await p.evaluate(()=>window.doorTask);assert.equal(await p.evaluate(()=>state.map[pos(4,3)].wall),true);
+ await p.evaluate(()=>{window.doorTask=openSecretDoor(pos(4,3))});await p.locator('#biome-use').click();await p.evaluate(()=>window.doorTask);assert.equal(await p.evaluate(()=>state.map[pos(4,3)].wall),false);
+});
+test('taking nest loot can introduce a correctly recorded elite broodmother; leaving never does',async t=>{
+ const p=await game(t);await p.evaluate(()=>{treasureRoll=async()=>{};Math.random=()=>0;});await discovery(p,'nest');await p.locator('#nest-loot').click();await p.locator('#stage-confirm').waitFor();
+ const r=await p.evaluate(()=>({name:state.enemy.name,art:state.enemy.art,elite:state.enemy.elite,mother:state.enemy.broodmother,kind:$('#spotlight').dataset.kind,eggInLoot:availableLootTypes().includes('nestEgg')}));
+ assert.match(r.name,/Broodmother/i);assert.equal(r.art,'widow');assert.ok(r.elite&&r.mother);assert.equal(r.eggInLoot,false);
+ await p.locator('#stage-confirm').click();await p.evaluate(()=>window.discoveryTask);
+});
+test('class sketches are cosmetic, respect Skip and cancel cleanly when the run changes',async t=>{
+ const p=await game(t);const r=await p.evaluate(async()=>{beginEncounter(false,{count:1});finishOpeningRoll();render();let calls=0;const real=Math.random;Math.random=()=>{calls++;return .5};for(const kind of ['fighter','rogue','mage','berserker','execute'])await classSignatureFX(state.party[0],state.enemy,kind);Math.random=real;return {calls,remaining:document.querySelectorAll('.class-sketch').length}});assert.deepEqual(r,{calls:0,remaining:0});
+ await p.evaluate(()=>{setPace('1');sceneFast=false;window.sketchTask=classSignatureFX(state.party[0],state.enemy,'execute')});await p.locator('.class-sketch-execute').waitFor();await p.evaluate(()=>newRun('fighter'));await p.evaluate(()=>window.sketchTask);assert.equal(await p.locator('.class-sketch').count(),0);
+});
+test('a shadow duel copies real legal reels before creating its elite enemy and records the correct identity',async t=>{
+ const p=await game(t);await discovery(p,'shadowduel');await p.locator('#biome-use').click();await p.locator('#stage-confirm').waitFor();
+ const r=await p.evaluate(()=>({name:state.enemy.name,art:state.enemy.art,elite:state.enemy.elite,shadow:state.enemy.shadowDouble,reels:state.enemy.reels.map(r=>r.map(f=>f.type)),hero:state.party[0].name}));
+ assert.equal(r.name,'Shadow of '+r.hero);assert.equal(r.art,'fighter');assert.ok(r.elite&&r.shadow);assert.equal(r.reels.length,3);assert.ok(r.reels.flat().includes('selfheal'));assert.ok(!r.reels.flat().includes('class'));
+ await p.locator('#stage-confirm').click();await p.evaluate(()=>window.discoveryTask);
+});
