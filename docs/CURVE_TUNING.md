@@ -120,6 +120,8 @@ Temperament adds flat bonuses only when the relevant effect is already positive:
 Bonuses apply before criticals, like earned traits. They do not change a face's
 base rank, probability, price or saved type. Actual rolls and AI estimates call
 the same `temperamentEffects` helper. Found temperaments are still random.
+Autoplay preserves its repaired Jester Trick share during later paid upgrades,
+so the new offensive bonus cannot crowd those class marks back off the wheel.
 
 Heroic damage, Merciful healing, Cowardly block, Stoic/Wary opening block,
 Invigorated received healing and Focused stun gain one point. Reckless damage

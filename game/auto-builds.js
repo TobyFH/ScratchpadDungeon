@@ -405,6 +405,13 @@ function repairClassIdentity(h) {
   }
   return changed;
 }
+// Utility gains from temperament must not trade away the class marks repaired
+// above. Preserve an existing Trick floor while allowing paid recovery toward it.
+function preservesAutoClassIdentity(before, after) {
+  return before.job !== "jester" ||
+    faceShare(after.reels.flat(), ["trick"]) + 1e-9 >=
+      Math.min(0.15, faceShare(before.reels.flat(), ["trick"]));
+}
 function chargedActorScore(h) {
   let score = autoCombatScore(h);
   if (h.job === "berserker")

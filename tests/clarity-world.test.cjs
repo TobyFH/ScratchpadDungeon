@@ -793,7 +793,7 @@ test("a found high-level Jester preserves permanent mysteries and Punchline cann
   const p = await game(t);
   const r = await p.evaluate(async () => {
     state.party[0].level = 10;
-    const h = prepareRecruit(makeHero("Folly", "jester"));
+    const h = prepareRecruit(makeHero("Folly", "jester", null, [], { specialism: "offence" }));
     const mystery = h.reels.map(
       (r) => r.filter((f) => f.type === "mystery").length,
     );

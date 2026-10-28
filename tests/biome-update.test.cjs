@@ -215,7 +215,7 @@ test("automated identities restore Trick and Mage support through paid edits and
   const p = await game(t);
   const r = await p.evaluate(() => {
     state.depth = 4;
-    const j = makeHero("Fool", "jester");
+    const j = makeHero("Fool", "jester", null, [], { specialism: "offence" });
     state.party = [j];
     j.reels = [0, 1, 2].map((k) => [
       { type: "stun", tier: 4, weight: 1 },
