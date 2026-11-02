@@ -8,6 +8,7 @@ const {chromium}=require('playwright'),fs=require('node:fs'),http=require('node:
  try{
   const p=await browser.newPage({viewport:{width:1920,height:1080}});p.on('pageerror',e=>errors.push(e.message));
   p.on('request',r=>{if(!r.url().startsWith(url)&&!r.url().startsWith('data:'))external.push(r.url())});await p.goto(url);
+  await p.evaluate(() => CompanyIntro.skip(true));
   async function shot(name){await p.evaluate(async()=>{await document.fonts.ready;fitNotebook();requestFitUI()});await p.waitForTimeout(100);await p.screenshot({path:path.join(out,name+'.png'),fullPage:false,animations:'disabled'});shots.push(name);}
   for(const theme of ['cave','overgrown','fungal','ice','lava','crystal','unstable','shadow','maze']){
    await p.setViewportSize({width:1920,height:1080});

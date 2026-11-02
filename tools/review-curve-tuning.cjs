@@ -31,6 +31,7 @@ const { chromium } = require("playwright");
         external.push(r.url());
     });
     await p.goto(url);
+    await p.evaluate(() => CompanyIntro.skip(true));
     const shot = async (name) => {
       await p.evaluate(async () => {
         await document.fonts.ready;

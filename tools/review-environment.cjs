@@ -40,6 +40,7 @@ const fs = require("node:fs"),
   };
   try {
     await p.goto(url);
+    await p.evaluate(() => CompanyIntro.skip(true));
     for (const [width, height] of [
       [1920, 1080],
       [1280, 800],

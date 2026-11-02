@@ -17,6 +17,7 @@ async function game(t, width=1920, height=1080) {
   const page = await browser.newPage({viewport:{width,height}}), errors=[];
   page.on('pageerror', e => errors.push(e.message));
   await page.goto(url);
+  await page.evaluate(() => CompanyIntro.skip(true));
   await page.evaluate(async () => {
     newRun('fighter'); setPace('skip'); setPreference('shake',0); setPreference('skipCriticals',true);
     characterLuck = () => .99999; await document.fonts.ready;

@@ -29,6 +29,7 @@ const fs = require("fs"),
         external.push(r.url());
     });
     await p.goto("http://127.0.0.1:" + server.address().port);
+    await p.evaluate(() => CompanyIntro.skip(true));
     await p.evaluate(async () => {
       newRun("jester");
       setPace("skip");

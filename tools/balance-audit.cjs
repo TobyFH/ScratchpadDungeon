@@ -27,6 +27,7 @@ const { chromium } = require("playwright");
       if (msg.type() === "log") console.error(msg.text());
     });
     await page.goto("http://127.0.0.1:" + server.address().port);
+    await page.evaluate(() => CompanyIntro.skip(true));
     const result = await page.evaluate(
       async ({ runs }) => {
         // Everything below is test-only. The shipped game has no simulation switch.

@@ -45,6 +45,7 @@ async function game(t, { width = 1920, height = 1080 } = {}) {
     });
   });
   await page.goto(url);
+  await page.evaluate(() => CompanyIntro.skip(true));
   // Explicitly retain rollback-editor regressions; default icon controls have their own suite.
   await page.evaluate(() => { reelWorkshopLayout = "legacy"; });
   await page.evaluate(() => {

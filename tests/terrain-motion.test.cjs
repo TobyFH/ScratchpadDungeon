@@ -27,6 +27,7 @@ async function game(t, width = 1920, height = 1080) {
     errors = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto(url);
+  await page.evaluate(() => CompanyIntro.skip(true));
   await page.evaluate(async () => {
     newRun("fighter");
     window.actualScheduleStunRecovery = scheduleStunRecovery;
@@ -203,6 +204,7 @@ test("Animated terrain is a real saved display option, independent of portrait m
   });
   assert.equal(await p.evaluate(() => state.preferences.tileMotion), false);
   await p.reload();
+  await p.evaluate(() => CompanyIntro.skip(true));
   assert.equal(await p.evaluate(() => state.preferences.tileMotion), false);
   await p.evaluate(() => {
     setPreference("tileMotion", true);

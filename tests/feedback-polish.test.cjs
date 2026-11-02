@@ -34,6 +34,7 @@ async function game(t) {
     });
   });
   await p.goto(url);
+  await p.evaluate(() => CompanyIntro.skip(true));
   // Keep exercising the independently retained previous workshop.
   await p.evaluate(() => { reelWorkshopLayout = "legacy"; });
   await p.evaluate(async () => {

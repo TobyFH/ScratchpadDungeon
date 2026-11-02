@@ -34,6 +34,7 @@ async function game(t) {
     });
   });
   await p.goto(url);
+  await p.evaluate(() => CompanyIntro.skip(true));
   await p.evaluate(() => { reelWorkshopLayout = "legacy"; });
   await p.evaluate(() => {
     newRun("fighter", { specialism: "offence" });
@@ -788,6 +789,7 @@ test("a pending surprise opening resumes after reload without rerolling its rest
     save();
   });
   await p.reload();
+  await p.evaluate(() => CompanyIntro.skip(true));
   await p.waitForSelector("#stage-confirm");
   assert.equal(await p.evaluate(() => state.party[0].surprised), true);
   await p.locator("#stage-confirm").click();

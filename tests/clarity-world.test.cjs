@@ -27,6 +27,7 @@ async function game(t, width = 1920, height = 1080) {
     errors = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto(url);
+  await page.evaluate(() => CompanyIntro.skip(true));
   // Explicitly exercise the retained rollback editor; the default icon UI has its own suite.
   await page.evaluate(() => { reelWorkshopLayout = "legacy"; });
   await page.evaluate(async () => {

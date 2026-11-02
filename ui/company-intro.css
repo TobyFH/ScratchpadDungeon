@@ -1,0 +1,28 @@
+/* A black stage for the supplied studio film. Never crop the logo. */
+body.company-intro-active { overflow: hidden; background: #000; }
+body.company-intro-active > :not(#company-intro):not(script) { visibility: hidden; }
+#company-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  display: grid;
+  place-items: center;
+  background: #000;
+  isolation: isolate;
+}
+#company-intro video { width: 100%; height: 100%; object-fit: contain; min-height: 0; }
+#company-intro-skip {
+  position: absolute;
+  right: max(24px, env(safe-area-inset-right));
+  bottom: max(24px, env(safe-area-inset-bottom));
+  min-height: 44px;
+  padding: 8px 18px;
+  border: 1px solid #aaa;
+  border-radius: 3px;
+  background: #111e;
+  color: #fff;
+  font: 18px Notebook, sans-serif;
+  cursor: pointer;
+}
+#company-intro-skip:hover, #company-intro-skip:focus-visible { background: #333; outline: 2px solid #fff; outline-offset: 4px; }
+#company-intro-skip span { margin-left: 10px; }

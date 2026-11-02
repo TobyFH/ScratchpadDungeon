@@ -36,6 +36,7 @@ async function game(t) {
     return route.continue();
   });
   await page.goto(url);
+  await page.evaluate(() => CompanyIntro.skip(true));
   await page.evaluate(async () => {
     newRun("fighter");
     scheduleStunRecovery = () => {};
@@ -129,6 +130,7 @@ test("rearranged Display settings still update actual preferences and persist ac
   await p.locator("#tab-audio").click();
   await p.locator("#tab-display").click();
   await p.reload();
+  await p.evaluate(() => CompanyIntro.skip(true));
   const r = await p.evaluate(() => ({ p: preferences(), terrain: document.body.classList.contains("tile-motion-enabled") }));
   assert.equal(r.p.brightness, 1.2);
   assert.equal(r.p.shake, .7);

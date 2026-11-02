@@ -19,6 +19,7 @@ async function game(t) {
   const p = await browser.newPage({ viewport: { width: 1280, height: 800 } }), errors = [];
   p.on('pageerror', e => errors.push(e.message));
   await p.goto(url);
+  await p.evaluate(() => CompanyIntro.skip(true));
   await p.evaluate(async () => {
     newRun('fighter'); setPace('skip'); closeModal(); closeSpotlight();
     characterLuck = () => .999999; scheduleStunRecovery = () => {};
@@ -49,6 +50,7 @@ test('personal travel moments, gold and traits have named explanations that surv
   await assert.doesNotReject(() => p.locator('#status-tooltip').waitFor({ state: 'visible' }));
   assert.match(await p.locator('#status-tooltip').innerText(), /Earned: Kept calm/);
   await p.reload();
+  await p.evaluate(() => CompanyIntro.skip(true));
   assert.deepEqual(await p.evaluate(() => state.logDetails), before.details);
   assert.equal(await p.locator('#log .log-term').filter({ hasText: 'A KEEN EYE' }).count(), 1);
 });

@@ -41,6 +41,7 @@ const output = path.join(root, "test-results/ui-review");
         ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
     });
     await page.goto(`http://127.0.0.1:${server.address().port}`);
+    await page.evaluate(() => CompanyIntro.skip(true));
     await page.evaluate(() => {
       characterLuck = () => 0.999999;
       // Retained rollback editor; default icons have separate focused captures.

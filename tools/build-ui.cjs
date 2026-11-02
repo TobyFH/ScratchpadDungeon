@@ -15,13 +15,15 @@ const assets = (name) => {
       ? "font/ttf"
       : name.endsWith(".png")
         ? "image/png"
-        : name.endsWith(".wav")
-          ? "audio/wav"
-          : null;
+        : name.endsWith(".mp4")
+          ? "video/mp4"
+          : name.endsWith(".wav")
+            ? "audio/wav"
+            : null;
   if (!mime) throw Error(`Unsupported UI asset: ${name}`);
   return `data:${mime};base64,${fs.readFileSync(file).toString("base64")}`;
 };
-const css = ["layout.css", "notebook.css", "combat-life.css", "terrain-motion.css", "expedition-presentation.css", "class-moments.css", "icon-reel-workshop.css", "environment.css"]
+const css = ["layout.css", "notebook.css", "combat-life.css", "terrain-motion.css", "expedition-presentation.css", "class-moments.css", "icon-reel-workshop.css", "environment.css", "company-intro.css"]
   .map((name) => {
     const content = read("ui/" + name).replace(
       /@asset\(([^)]+)\)/g,
@@ -53,6 +55,11 @@ embed(
   `/* Caveat and Cabin Sketch. Font credits and SIL Open Font License 1.1.\n${license}\n*/\n${css}`,
 );
 embed(
+  "<!-- BEGIN GENERATED COMPANY FILM -->",
+  "<!-- END GENERATED COMPANY FILM -->",
+  read("ui/company-intro.html").replace(/@asset\(([^)]+)\)/g, (_, asset) => assets(asset)),
+);
+embed(
   "// BEGIN GENERATED NOTEBOOK ART",
   "// END GENERATED NOTEBOOK ART",
   read("ui/drawings.js").replace(/@asset\(([^)]+)\)/g, (_, asset) =>
@@ -72,6 +79,7 @@ embed(
   ),
 );
 for (const [label, file] of [
+  ["COMPANY STARTUP", "ui/company-intro.js"],
   ["BALANCE", "game/balance.js"],
   ["BIOME ENEMIES", "game/biome-enemies.js"],
   ["ENCOUNTER JOURNAL", "game/encounter-journal.js"],

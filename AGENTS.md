@@ -1,5 +1,12 @@
 # Scratchpad Dungeon UI continuity
 
+Startup uses the user-supplied offline film in `ui/company-intro.html/.css/.js`.
+Read `docs/COMPANY_INTRO.md` before changing boot, media or HTML downloads.
+Keep the real load/new-run callback behind `CompanyIntro.run`, input and auto
+drivers gated during it, and the saved HTML's original startup markup intact.
+Gameplay fixtures explicitly await `CompanyIntro.skip(true)` after navigation;
+the dedicated intro suite covers normal playback and fallbacks.
+
 For UI work, read `UI_STYLE_GUIDE.md`, `UI_COMPONENT_RULES.md` and
 `STYLE_CHECKLIST.md`. The user's supplied pencil-notebook reference is the art
 direction: purposeful rough graphite, cream paper, legible hand lettering,

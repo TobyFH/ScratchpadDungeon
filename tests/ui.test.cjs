@@ -53,6 +53,7 @@ async function notebook(t) {
     });
   });
   await page.goto(url);
+  await page.evaluate(() => CompanyIntro.skip(true));
   await page.evaluate(async () => {
     newRun("rogue");
     setPace("skip");

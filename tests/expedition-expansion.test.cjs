@@ -13,6 +13,7 @@ after(async()=>{await browser?.close();if(server)await new Promise(r=>server.clo
 async function game(t){
  const p=await browser.newPage({viewport:{width:1280,height:800}}),errors=[];
  p.on('pageerror',e=>errors.push(e.message));await p.goto(url);
+  await p.evaluate(() => CompanyIntro.skip(true));
  await p.evaluate(async()=>{newRun('fighter');setPace('skip');closeModal();closeSpotlight();characterLuck=()=>.99999;scheduleStunRecovery=()=>{};await document.fonts.ready;});
  t.after(async()=>{await p.close();assert.deepEqual(errors,[])});return p;
 }
@@ -63,7 +64,9 @@ test('Fury survives battle cleanup and reload, loses charge per walked tile, and
   clearBattleStatuses();const afterFight=h.fury;decayTravelFury();decayTravelFury();const travel=h.fury;
   const hp=healHero(0,3),afterHeal=h.fury;save();return {afterFight,travel,hp,afterHeal};
  });assert.deepEqual(r,{afterFight:20,travel:18,hp:3,afterHeal:15});
- await p.reload();assert.equal(await p.evaluate(()=>state.party[0].fury),15);
+ await p.reload();
+ await p.evaluate(() => CompanyIntro.skip(true));
+ assert.equal(await p.evaluate(()=>state.party[0].fury),15);
 });
 test('stimulant has three timed stacks and further doses build bounded potency with poison-style overflow',async t=>{
  const p=await game(t);const r=await p.evaluate(()=>{

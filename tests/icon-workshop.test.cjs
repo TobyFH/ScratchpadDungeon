@@ -29,6 +29,7 @@ async function game(t) {
     errors = [];
   p.on("pageerror", (e) => errors.push(e.message));
   await p.goto(url);
+  await p.evaluate(() => CompanyIntro.skip(true));
   await p.evaluate(async () => {
     newRun("fighter");
     setPace("skip");
