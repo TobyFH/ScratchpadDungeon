@@ -186,6 +186,8 @@ test("full patience plus Execute pays separate capped damage, with no critical s
   await fight(p, ["ranger"]);
   const r = await p.evaluate(async () => {
     const h = state.party[0];
+    // Isolate Execute's stated budget from the separate +1 Aggressive bonus.
+    h.specialism = "defence";
     h.level = 10;
     h.charge = 6;
     state.enemy.maxHp = state.enemy.hp = 205;
