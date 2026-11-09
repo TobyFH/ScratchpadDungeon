@@ -113,9 +113,8 @@ function environmentTileMarkup(c, i) {
   return `<span class="environment-overlay environment-${kind}-art ${preview ? "terrain-preview" : ""} ${active ? "landmark-active" : ""} ${f?.stage === "unstable" && !f.stopped ? "fault-unstable" : ""}" aria-hidden="true">${environmentSketch(kind)}</span>`;
 }
 function renderEnvironmentEdges() {
-  document.getElementById("environment-connections")?.remove();
   const e = environmentState();
-  if (!e?.corridors.length) return;
+  if (!e?.corridors.length) { paintMapDrawing("environment-connections", ""); return; }
   const lines = [];
   for (const s of e.corridors)
     for (const [a, b] of s.edges) {
@@ -134,20 +133,18 @@ function renderEnvironmentEdges() {
           : `M${Math.max(ax, bx)} ${ay + 0.05}v.9`,
       );
     }
-  if (!lines.length) return;
-  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  svg.id = "environment-connections";
-  svg.classList.add("environment-connections");
-  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
-  svg.setAttribute("preserveAspectRatio", "none");
-  svg.setAttribute("aria-hidden", "true");
-  svg.innerHTML = lines
-    .map(
-      (d) =>
-        `<path d="${d}" class="sliding-wall-paper"/><path d="${d}" class="sliding-wall-ink"/>`,
-    )
-    .join("");
-  $("#map-board").append(svg);
+  const markup = lines.map((d) =>
+    `<path d="${d}" class="sliding-wall-paper"/><path d="${d}" class="sliding-wall-ink"/>`
+  ).join("");
+  paintMapDrawing("environment-connections", markup, () => {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.id = "environment-connections";
+    svg.classList.add("environment-connections");
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    svg.setAttribute("preserveAspectRatio", "none");
+    svg.setAttribute("aria-hidden", "true");
+    return svg;
+  });
 }
 function environmentalFeedback(tiles, kind) {
   const visible = tiles.filter((i) => state.map[i]?.seen);

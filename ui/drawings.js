@@ -327,7 +327,14 @@ const paths = {
   pursuer:
     "M3 29 7 10 16 2l9 8 4 19-8-6-5 7-5-7z M10 13l4 2m8-2-4 2M14 21h4 M1 6l4 2m22-4 4-2",
 };
+const iconMarkupCache = new Map();
 function icon(name) {
+  if (iconMarkupCache.has(name)) return iconMarkupCache.get(name);
+  const markup = drawIcon(name);
+  iconMarkupCache.set(name, markup);
+  return markup;
+}
+function drawIcon(name) {
   if (name === "wall") return wallArt();
   if (name === "lava")
     return `<svg class="pencil-art pencil-icon lava-barrier" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" aria-hidden="true"><path class="terrain-boundary" d="M.7 1 31.1 .6 31.4 31 1 31.4Z" fill="var(--paper-shade)" stroke-width="1.4"/><path d="M1 29V12l7-8 5 8 6-10 6 9 6-4v22Z" fill="var(--paper-shade)"/><path d="m2 25 8-3 5 4 7-5 9 4M8 4l2 15m9-17-2 17m8-8-3 8M4 28l5-1m6 2 8-2"/><path d="m12 23 4-9 3 8m5 5 3-7" stroke="var(--lava-ink)" stroke-width="2.5"/></svg>`;

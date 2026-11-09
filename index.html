@@ -7636,6 +7636,10 @@ body[data-palette="warm"] {
   pointer-events: none;
   backdrop-filter: brightness(var(--scene-brightness, 1));
 }
+/* brightness(1) is an identity operation, but still captures the whole scene. */
+#screen-lighting.brightness-neutral {
+  backdrop-filter: none;
+}
 .ambient-light {
   z-index: 900;
   opacity: 0.52;
@@ -12167,8 +12171,15 @@ body.tile-motion-enabled .quartz-pulse {
   stroke: var(--lava-ink);
   opacity: 0.6;
 }
+.tile.terrain-poisonMushroom {
+  background-color: color-mix(in srgb, var(--poison) 16%, var(--paper));
+}
 .tile.terrain-poisonMushroom .biome-cover {
   color: var(--poison);
+  opacity: 0.95;
+}
+.tile.terrain-poisonMushroom.active-event .biome-cover {
+  opacity: 0.55;
 }
 .tile.terrain-explodingMushroom .biome-cover {
   color: var(--red);
@@ -13415,7 +13426,14 @@ const paths = {
   pursuer:
     "M3 29 7 10 16 2l9 8 4 19-8-6-5 7-5-7z M10 13l4 2m8-2-4 2M14 21h4 M1 6l4 2m22-4 4-2",
 };
+const iconMarkupCache = new Map();
 function icon(name) {
+  if (iconMarkupCache.has(name)) return iconMarkupCache.get(name);
+  const markup = drawIcon(name);
+  iconMarkupCache.set(name, markup);
+  return markup;
+}
+function drawIcon(name) {
   if (name === "wall") return wallArt();
   if (name === "lava")
     return `<svg class="pencil-art pencil-icon lava-barrier" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" aria-hidden="true"><path class="terrain-boundary" d="M.7 1 31.1 .6 31.4 31 1 31.4Z" fill="var(--paper-shade)" stroke-width="1.4"/><path d="M1 29V12l7-8 5 8 6-10 6 9 6-4v22Z" fill="var(--paper-shade)"/><path d="m2 25 8-3 5 4 7-5 9 4M8 4l2 15m9-17-2 17m8-8-3 8M4 28l5-1m6 2 8-2"/><path d="m12 23 4-9 3 8m5 5 3-7" stroke="var(--lava-ink)" stroke-width="2.5"/></svg>`;
@@ -17114,10 +17132,91 @@ function relevantLogTile(i) {
             ? "Cave room"
             : "Quiet room";
       }
+      // BEGIN GENERATED OVERWORLD RENDERING
+// Presentation-only caches. Never persist these or use them for world decisions.
+// Keep unchanged tile subtrees alive instead of reparsing every sketch per step.
+const mapTileFrames = new WeakMap();
+const mapDrawingFrames = new WeakMap();
+let renderedMapSource = null;
+let mapTileBoard = null, mapTileObserver = null;
+function dirtyTileContents(records) {
+  for (const record of records) {
+    const element = record.target.nodeType === Node.ELEMENT_NODE ? record.target : record.target.parentElement;
+    const tile = element?.closest("[data-tile]");
+    // Button attributes are always synchronised separately below.
+    if (!tile || (record.type === "attributes" && record.target === tile)) continue;
+    const frame = mapTileFrames.get(tile);
+    if (frame) frame.dirty = true;
+  }
+}
+function tileFrame(node, source) {
+  const attributes = [...node.attributes].map(({ name, value }) => [name, value]);
+  return { source, attributes, names: new Set(attributes.map(([name]) => name)),
+    body: node.innerHTML, first: node.firstChild, last: node.lastChild, count: node.childNodes.length };
+}
+function paintMapTiles(tiles) {
+  const board = document.getElementById("map");
+  if (mapTileBoard !== board) {
+    mapTileObserver?.disconnect();
+    mapTileBoard = board;
+    mapTileObserver = new MutationObserver(dirtyTileContents);
+    mapTileObserver.observe(board, { subtree: true, childList: true, characterData: true, attributes: true });
+  }
+  dirtyTileContents(mapTileObserver.takeRecords());
+  if (renderedMapSource !== state.map || board.children.length !== tiles.length ||
+      Array.from(board.children).some((node, i) => node.dataset.tile !== String(i))) {
+    board.innerHTML = tiles.join("");
+    renderedMapSource = state.map;
+    Array.from(board.children).forEach((node, i) => mapTileFrames.set(node, tileFrame(node, tiles[i])));
+    mapTileObserver.takeRecords();
+    return;
+  }
+  const template = document.createElement("template");
+  tiles.forEach((source, i) => {
+    const node = board.children[i];
+    let frame = mapTileFrames.get(node);
+    if (!frame || frame.source !== source) {
+      template.innerHTML = source;
+      const next = template.content.firstElementChild;
+      const desired = tileFrame(next, source);
+      // Metadata changes (visited/player/locked/etc.) don't invalidate the art.
+      if (!frame || frame.dirty || frame.body !== desired.body || node.firstChild !== frame.first ||
+          node.lastChild !== frame.last || node.childNodes.length !== frame.count)
+        node.innerHTML = desired.body;
+      frame = { ...desired, first: node.firstChild, last: node.lastChild, count: node.childNodes.length };
+      mapTileFrames.set(node, frame);
+    } else if (frame.dirty || node.firstChild !== frame.first || node.lastChild !== frame.last || node.childNodes.length !== frame.count) {
+      // revealTile intentionally writes children directly during the eraser FX.
+      node.innerHTML = frame.body;
+      Object.assign(frame, { dirty: false, first: node.firstChild, last: node.lastChild, count: node.childNodes.length });
+    }
+    // Restore the same authored attributes as a full redraw, including removing
+    // transient route/reveal classes and synchronising keyboard/disabled state.
+    for (let a = node.attributes.length - 1; a >= 0; a--)
+      if (!frame.names.has(node.attributes[a].name)) node.removeAttribute(node.attributes[a].name);
+    for (const [name, value] of frame.attributes)
+      if (node.getAttribute(name) !== value) node.setAttribute(name, value);
+  });
+  // Discard our own synchronous writes; later external writes still invalidate.
+  mapTileObserver.takeRecords();
+}
+function paintMapDrawing(id, markup, create) {
+  const old = document.getElementById(id);
+  if (!markup) { old?.remove(); return; }
+  const frame = old && mapDrawingFrames.get(old);
+  if (frame?.source === state.map && frame.markup === markup) return old;
+  const node = create();
+  node.innerHTML = markup;
+  mapDrawingFrames.set(node, { source: state.map, markup });
+  if (old) old.replaceWith(node);
+  else document.getElementById("map-board").append(node);
+  return node;
+}
+// END GENERATED OVERWORLD RENDERING
       function renderMap() {
         const locked = (busy && !travel) || !!state.enemy || state.over;
         const crystalInfluence = crystalInfluencedTiles();
-        $("#map").innerHTML = state.map
+        paintMapTiles(state.map
           .map((c, i) => {
             const feature = c.feature === "bridge" ? null : c.feature,
               bridge = c.seen && c.terrain === "bridge",
@@ -17141,7 +17240,7 @@ function relevantLogTile(i) {
                       : floorArt(environmentRoot(c) ? {...c, wall:false} : c, i);
             return `<button class="tile ${environmentTileClasses(c,i)} ${c.seen && c.lavaRiver ? "lava-river" : ""} ${c.seen && c.terrain === "hole" ? "hole-tile" : ""} ${c.seen && c.terrain === "gate" ? "gate-tile" : ""} ${c.seen && c.terrain === "secretDoor" ? "secret-door-tile" : ""} ${c.seen ? "" : "fog"} ${c.wall && c.seen ? "wall" : ""} ${water && c.seen ? "water-block " + c.terrain : ""} ${c.visited ? "visited" : ""} ${feature && !c.event ? "spent" : ""} ${active ? "active-event" : ""} ${battle ? "active-battle" : ""} ${active && c.event === "well" ? "active-well" : ""} ${active && c.event === "stairs" ? "active-stairs" : ""} ${corpse ? "has-corpse" : ""} ${!c.seen && c.hint ? "has-hint" : ""}  ${c.room && c.seen ? "cave-room" : ""} ${Date.now() - (c.roomRevealedAt || 0) < 1200 ? "room-reveal" : ""} ${c.seen && c.terrain === "bridge" ? "bridge-tile" : ""} ${c.seen && c.terrain === "lava" ? "lava-tile" : ""} ${c.seen && c.terrain === "crystal" ? "crystal-tile" : ""} ${c.seen && !c.wall && crystalInfluence.has(i) ? "crystal-influence" : ""} ${c.shadowCovered ? "shadow-covered" : ""} ${c.seen && ["ice","mushroom","overgrown","mudslide","mudwall","stalactite","brittleIce","poisonMushroom","explodingMushroom"].includes(c.terrain) ? "terrain-"+c.terrain : ""} ${i === state.position ? "player-cell" : ""} ${travel?.goal === i ? "travel-goal" : ""}" data-tile="${i}" data-event="${c.seen ? c.event || feature || "empty" : "unknown"}" data-state="${!c.seen ? "unknown" : active ? "active" : feature ? "used" : "empty"}" aria-label="${escapeHTML(tileName(c))}, column ${(i % W) + 1}, row ${Math.floor(i / W) + 1}" ${locked || (c.seen && c.wall && c.event !== "door" && !environmentRoot(c)) ? "disabled" : ""}>${environmentTileMarkup(c,i)}${terrainTileAdornment(c,i,crystalInfluence)}${cover ? `<span class="biome-cover ${c.terrain}" aria-hidden="true">${cover}</span>` : ""}${bridge ? `<span class="map-terrain bridge-layer" aria-hidden="true">${icon("bridge")}</span>` : ""}${art}${c.seen && c.wall ? '<span class="terrain-stop" aria-hidden="true">×</span>' : ""}${active ? `<span class="tile-status" aria-hidden="true">${c.event === "stairs" ? "↓" : c.event === "tunnel" ? "↔" + ((c.tunnelPair || 0) + 1) : "!"}</span>` : c.seen && feature ? '<span class="tile-status used" aria-hidden="true">✓</span>' : ""}${!c.seen && c.hint ? `<span class="tile-whisper" title="${escapeHTML(c.hint.text)}" aria-hidden="true">${icon(c.hint.kind)}</span>` : ""}${corpse && c.event ? '<span class="corpse-mark" aria-hidden="true">†</span>' : ""}</button>`;
           })
-          .join("");
+        );
         const hovered = $("#map .tile:hover");
         updateMapInspection(hovered ? Number(hovered.dataset.tile) : null);
         renderCrystalPulses();
@@ -23188,6 +23287,7 @@ function help(topic = "explore") {
           lighting.setAttribute("aria-hidden", "true");
           document.body.append(lighting);
         }
+        lighting.classList.toggle("brightness-neutral", p.brightness === 1);
         if (!p.fullScreenEffects) clearScreenFX();
         if (p.portraitMotion === 0)
           document.querySelectorAll(".portrait > svg,.enemy-art > svg").forEach((el) =>
@@ -27863,9 +27963,8 @@ function environmentTileMarkup(c, i) {
   return `<span class="environment-overlay environment-${kind}-art ${preview ? "terrain-preview" : ""} ${active ? "landmark-active" : ""} ${f?.stage === "unstable" && !f.stopped ? "fault-unstable" : ""}" aria-hidden="true">${environmentSketch(kind)}</span>`;
 }
 function renderEnvironmentEdges() {
-  document.getElementById("environment-connections")?.remove();
   const e = environmentState();
-  if (!e?.corridors.length) return;
+  if (!e?.corridors.length) { paintMapDrawing("environment-connections", ""); return; }
   const lines = [];
   for (const s of e.corridors)
     for (const [a, b] of s.edges) {
@@ -27884,20 +27983,18 @@ function renderEnvironmentEdges() {
           : `M${Math.max(ax, bx)} ${ay + 0.05}v.9`,
       );
     }
-  if (!lines.length) return;
-  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  svg.id = "environment-connections";
-  svg.classList.add("environment-connections");
-  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
-  svg.setAttribute("preserveAspectRatio", "none");
-  svg.setAttribute("aria-hidden", "true");
-  svg.innerHTML = lines
-    .map(
-      (d) =>
-        `<path d="${d}" class="sliding-wall-paper"/><path d="${d}" class="sliding-wall-ink"/>`,
-    )
-    .join("");
-  $("#map-board").append(svg);
+  const markup = lines.map((d) =>
+    `<path d="${d}" class="sliding-wall-paper"/><path d="${d}" class="sliding-wall-ink"/>`
+  ).join("");
+  paintMapDrawing("environment-connections", markup, () => {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.id = "environment-connections";
+    svg.classList.add("environment-connections");
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    svg.setAttribute("preserveAspectRatio", "none");
+    svg.setAttribute("aria-hidden", "true");
+    return svg;
+  });
 }
 function environmentalFeedback(tiles, kind) {
   const visible = tiles.filter((i) => state.map[i]?.seen);
@@ -31057,15 +31154,18 @@ function updateMapInspection(index=null){
   $('#map-board').append(svg);
 }
 function renderCrystalPulses(){
-  document.getElementById('crystal-pulse-map')?.remove();
   const sources=state.map.map((c,i)=>c.seen&&c.terrain==='crystal'?i:-1).filter(i=>i>=0);
-  if(!sources.length)return;
-  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.id='crystal-pulse-map';svg.classList.add('crystal-pulse-map');svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.setAttribute('preserveAspectRatio','none');svg.setAttribute('aria-hidden','true');
-  svg.innerHTML=sources.map((i,n)=>{
+  const markup=sources.map((i,n)=>{
     const x=i%W+.5,y=Math.floor(i/W)+.5,r=EXPEDITION_TUNING.crystalRadius+.5;
     const clip=state.map.map((c,j)=>(j===i||!c.wall&&tileDistance(j,i)<=EXPEDITION_TUNING.crystalRadius&&mapLineOfSight(state.map,i,j))?`<rect x="${j%W}" y="${Math.floor(j/W)}" width="1" height="1"/>`:'').join('');
     return `<defs><clipPath id="quartz-clip-${i}">${clip}</clipPath></defs><g clip-path="url(#quartz-clip-${i})"><rect class="quartz-pulse" x="${x-r}" y="${y-r}" width="${r*2}" height="${r*2}" rx=".18" style="transform-origin:${x}px ${y}px;animation-delay:${-n*.31}s"/></g>`;
-  }).join('');$('#map-board').append(svg);
+  }).join('');
+  paintMapDrawing('crystal-pulse-map',markup,()=>{
+    const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svg.id='crystal-pulse-map';svg.classList.add('crystal-pulse-map');
+    svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.setAttribute('preserveAspectRatio','none');svg.setAttribute('aria-hidden','true');
+    return svg;
+  });
 }
 // END GENERATED EXPEDITION PRESENTATION
       // BEGIN GENERATED NOTEBOOK PAGES

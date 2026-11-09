@@ -346,6 +346,9 @@ test("the Graphite Gaoler blackouts arrive after its portrait transfer and affec
 test("paired foes share one large protection control and portrait badges are icons with complete tooltips rather than overflowing text", async (t) => {
   const p = await game(t);
   await p.evaluate(() => {
+    // Hold this layout fixture still while inspecting it. Automatic recovery
+    // otherwise spins the stunned hero and replaces the nodes mid-assertion.
+    scheduleStunRecovery = () => {};
     beginEncounter(false, { count: 2 });
     setEnemyBlock(27);
     state.party[0].poison = { turns: 3, damage: 2 };

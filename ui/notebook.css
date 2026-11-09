@@ -1843,6 +1843,10 @@ body[data-palette="warm"] {
   pointer-events: none;
   backdrop-filter: brightness(var(--scene-brightness, 1));
 }
+/* brightness(1) is an identity operation, but still captures the whole scene. */
+#screen-lighting.brightness-neutral {
+  backdrop-filter: none;
+}
 .ambient-light {
   z-index: 900;
   opacity: 0.52;

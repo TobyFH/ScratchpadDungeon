@@ -200,8 +200,15 @@ body.tile-motion-enabled .quartz-pulse {
   stroke: var(--lava-ink);
   opacity: 0.6;
 }
+.tile.terrain-poisonMushroom {
+  background-color: color-mix(in srgb, var(--poison) 16%, var(--paper));
+}
 .tile.terrain-poisonMushroom .biome-cover {
   color: var(--poison);
+  opacity: 0.95;
+}
+.tile.terrain-poisonMushroom.active-event .biome-cover {
+  opacity: 0.55;
 }
 .tile.terrain-explodingMushroom .biome-cover {
   color: var(--red);

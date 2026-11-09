@@ -1,5 +1,10 @@
 # Scratchpad Dungeon UI continuity
 
+Read `docs/OVERWORLD_PERFORMANCE.md` before changing map rendering or icon caches.
+`ui/overworld-rendering.js` retains unchanged tile/drawing nodes with explicit
+mutation invalidation. Preserve authored DOM, hidden information, particle counts
+and all artwork; caches must never become gameplay or saved state.
+
 Startup uses the user-supplied offline film in `ui/company-intro.html/.css/.js`.
 Read `docs/COMPANY_INTRO.md` before changing boot, media or HTML downloads.
 Keep the real load/new-run callback behind `CompanyIntro.run`, input and auto
