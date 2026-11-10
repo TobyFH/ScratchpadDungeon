@@ -257,9 +257,7 @@ async function jesterWildcard(h) {
       beam(entityArt(h), entityArt(a), "heal");
     }
     for (const e of enemies) {
-      const healed = Math.min(1, e.maxHp - e.hp);
-      e.hp += healed;
-      spendFuryOnHealing(e, healed);
+      const healed = enemyRecovery(e, 1);
       syncEnemy(e);
     }
   } else {

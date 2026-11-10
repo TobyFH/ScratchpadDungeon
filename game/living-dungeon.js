@@ -242,6 +242,7 @@ function killPursuerByTerrain(i, reason = "falling stone") {
   return true;
 }
 async function livingDungeonStep() {
+  const run=state;
   let changed = false;
   for (let i = 0; i < state.map.length; i++) {
     const c = state.map[i];
@@ -254,28 +255,17 @@ async function livingDungeonStep() {
     c.stalactite.drops++;
     c.stalactite.remaining = stalactiteReset();
     const tile = $(`[data-tile="${i}"]`);
-    if (c.seen) {
-      burst(tile, "dust", 25);
-      GameSound.play("rockDrop");
-      tile?.classList.add("stalactite-drop");
-      setTimeout(() => tile?.classList.remove("stalactite-drop"), 450);
-      shakeElement(tile, 3, "impact");
-    }
-    if (relevantLogTile(i)) log(
-      `Stalactite falls at column ${(i % W) + 1}, row ${Math.floor(i / W) + 1}${i === state.position ? "; the party is struck" : "; keep clear of the falling stone"}.`,
-      { category: "exploration" },
-    );
-    if (killPursuerByTerrain(i, "a stalactite")) {
-      changed = true;
-      continue;
-    }
-    if (i === state.position) {
-      const power = 2 + Math.floor(state.depth / 3);
-      damageHero(state.party.findIndex(alive), power, "A falling stalactite");
-      combatCallout($("#map-player"), "STALACTITE!", "danger");
-      shakeBook(4, "impact");
-      await processDeaths();
-      if (checkDefeat()) return true;
+    if (c.seen) await fallingStoneFX(i);
+    if(state!==run)return true;
+    const distance=tileDistance(i);
+    if (relevantLogTile(i))log(`Stalactite falls at column ${(i%W)+1}, row ${Math.floor(i/W)+1}${distance<=1?'; fragments strike the party':''}.`,{category:'exploration'});
+    if(state.pursuer&&tileDistance(i,state.pursuer.position)<=1)killPursuerByTerrain(state.pursuer.position,'falling stone');
+    if(distance<=1){
+      const power=2+Math.floor(state.depth/3),damage=distance===0?power:Math.max(1,Math.floor(power/2));
+      damageHero(state.party.findIndex(alive),damage,'A falling stalactite');
+      combatCallout($('#map-player'),distance?'STONE FRAGMENTS!':'FALLING ROCK!', 'danger');
+      shakeBook(distance?4:7,'impact');await processDeaths();
+      if(checkDefeat())return true;
     }
     changed = true;
   }
@@ -333,4 +323,17 @@ function crystalInfluencedTiles() {
         result.add(i);
     });
   return result;
+}
+
+async function fallingStoneFX(i){
+  const run=state,version=animationVersion,tile=$(`[data-tile="${i}"]`),fx=document.createElement('div');
+  if(!tile)return;
+  fx.className='falling-rock-fx';fx.setAttribute('aria-hidden','true');
+  Object.assign(fx.style,{left:(i%W-.35)*100/W+'%',top:(Math.floor(i/W)-.35)*100/H+'%',width:170/W+'%',height:170/H+'%'});
+  fx.innerHTML=trapArt('boulder');$('#map-board').append(fx);
+  GameSound.play('rockDrop');shakeElement(tile,5,'rumble');
+  try{const motion=animate(fx,[{transform:'translateY(-90px) rotate(-18deg) scale(.65)',opacity:0},{offset:.25,opacity:1},{transform:'translateY(0) rotate(12deg) scale(1.15)',opacity:1}],{duration:skip?70:430/Math.sqrt(pace()),easing:'cubic-bezier(.6,.02,1,.7)'});if(motion?.finished)await motion.finished.catch(()=>{});
+    if(state!==run||animationVersion!==version)return;
+    burst(tile,'dust',85);burst(tile,'paper',32);smokePoof(tile,true);shakeElement(tile,7,'impact');
+  }finally{fx.remove();}
 }

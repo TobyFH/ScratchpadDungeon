@@ -389,6 +389,7 @@ async function biomeStep(i) {
   return expansionStep(i);
 }
 function biomeCoverArt(c) {
+  if(c.terrain === "brokenCrystal")return icon("brokenCrystal");
   if (["mudslide", "mudwall", "stalactite"].includes(c.terrain))
     return icon(c.terrain);
   if (["poisonMushroom", "explodingMushroom", "brittleIce"].includes(c.terrain))

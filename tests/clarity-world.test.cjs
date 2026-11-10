@@ -619,7 +619,7 @@ test("crystal deposits are blocking and their visible aura matches line of sight
   });
   assert.deepEqual(r, {
     blocked: true,
-    sourceDisabled: true,
+    sourceDisabled: false,
     near: true,
     behind: false,
   });

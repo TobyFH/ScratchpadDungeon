@@ -3,6 +3,7 @@ function contributionType(symbol, owner) {
   if (owner?.job === "mage")
     return owner.lastResonance || mageResonance(owner, owner.last);
   if (owner?.job === "berserker") return "attack";
+  if (owner?.job === "bloodbinder") return "bloodseed";
   if (owner?.job === "fighter") return "block";
   if (owner?.job === "rogue") return "attack";
   if (owner?.job === "ranger") return "attack";
@@ -235,6 +236,10 @@ function combatNumber(el, value, type) {
       type === "block"
         ? amount + " BLOCKED"
         : (type === "heal" ? "+" : "−") + amount;
+    if (["bleeding","bloodexchange"].includes(type)) {
+      node.classList.add("bleeding");
+      const label=document.createElement("small");label.textContent=type==="bloodexchange"?"BLOOD EXCHANGE":"BLEEDING";node.append(label);
+    }
     if (type === "poison") {
       const label = document.createElement("small");
       label.className = "poison-label";

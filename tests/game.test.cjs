@@ -4253,13 +4253,13 @@ test("mixed blade and magic criticals show correct rounded components and tier I
   );
 });
 
-test("first opening offers four base classes, opens the cover, and fresh runs turn a page", async (t) => {
+test("first opening offers base classes and locked invitations, opens the cover, and fresh runs turn a page", async (t) => {
   const p = await game(t);
   await p.evaluate(() => localStorage.clear());
   await p.reload();
   await p.evaluate(() => CompanyIntro.skip(true));
   await p.waitForSelector('[data-start-job="mage"]');
-  assert.equal(await p.locator(".starter-grid button").count(), 6);
+  assert.equal(await p.locator(".starter-grid button").count(), 7);
   assert.equal(
     await p.locator("#modal-title").textContent(),
     "Who opens the notebook?",
@@ -4828,6 +4828,7 @@ test("outer reels cannot acquire class seals and blank inscription uses the clas
   const p = await game(t);
   const r = await p.evaluate(() => {
     const h = state.party[0];
+    h.specialism = "defence";
     h.points = 50;
     h.reels[0][0] = { type: "stun", tier: 1, weight: 9 };
     editFace("0,0,0", "swap", "blank");
@@ -4917,7 +4918,7 @@ test("reloading before the starting class choice keeps the choice pending", asyn
   await p.waitForSelector('[data-start-job="rogue"]');
   await p.reload();
   await p.evaluate(() => CompanyIntro.skip(true));
-  assert.equal(await p.locator(".starter-grid button").count(), 6);
+  assert.equal(await p.locator(".starter-grid button").count(), 7);
   await p.locator('[data-start-job="rogue"]').click();
   await p.reload();
   await p.evaluate(() => CompanyIntro.skip(true));

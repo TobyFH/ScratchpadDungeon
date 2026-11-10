@@ -5833,7 +5833,7 @@ body[data-motion="off"] .punchline-ready .machine-face { animation: none; }
 .guide-picture svg {width:42px;height:46px;max-width:100%;}
 .guide-classes .guide-picture svg {width:44px;height:65px;}
 @media (max-width:760px){
- .field-guide .guide-grid {height:auto;min-height:0;margin:10px 0;}
+ .field-guide .guide-grid {height:auto;min-height:0;margin:6px 0;}
  .illustrated-guide.guide-takeaways {grid-template-columns:1fr;gap:12px;}
  .illustrated-guide.guide-takeaways > li {grid-template-columns:34px minmax(0,1fr);gap:8px;font-size:18px;line-height:1.15;}
  .illustrated-guide b {font-size:21px;margin-bottom:2px;}
@@ -5859,7 +5859,7 @@ body[data-motion="off"] .punchline-ready .machine-face { animation: none; }
  #modal[data-kind="help"] {padding-left:10px;padding-right:10px;}
  #modal[data-kind="help"] > .eyebrow {display:none;}
  #modal[data-kind="help"] #modal-title {flex:0 0 38px;height:38px;min-height:38px;line-height:1.05;margin-bottom:8px;}
- .illustrated-guide.guide-takeaways {gap:7px;}
+ .illustrated-guide.guide-takeaways {gap:6px;}
  .illustrated-guide.guide-takeaways > li {font-size:20px;line-height:1.15;grid-template-columns:34px minmax(0,1fr);gap:8px;}
  .illustrated-guide b {display:inline;font-size:21px;margin:0;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:2px;}
  .field-guide .guide-navigation {min-height:0;gap:6px;}
@@ -5874,3 +5874,31 @@ body[data-motion="off"] .punchline-ready .machine-face { animation: none; }
 .expedition-boxes .sketch-box > p {font-size:25px;line-height:1.24;}
 .expedition-boxes .sketch-box > p:has(#gold) {font-size:28px;margin-bottom:18px;}
 .expedition-boxes #relic-status {margin-top:16px;}
+
+/* Stable prompts reserve both contexts at the same size; only one is accessible. */
+#keyboard-bar:has(.keyboard-context) {display:grid;grid-template-areas:"prompts";gap:0;}
+.keyboard-context {grid-area:prompts;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:7px 16px;min-width:0;}
+.keyboard-context[inert] {visibility:hidden;pointer-events:none;}
+#encounter > .enemy-label {animation:none;transition:none;opacity:1;}
+/* A detached, graphite-outlined paper callout must contrast with every palette. */
+.speech-bubble {background:var(--paper-raised);outline:2px solid var(--ink);outline-offset:2px;filter:drop-shadow(2px 4px 2px #21170e66);font-weight:600;z-index:2200;}
+body[data-palette="warm"] .speech-bubble {background:#fff5da;color:#352b25;}
+:root {--blood-ink:#954354;}
+body[data-palette="dark"] {--blood-ink:#efa0b2;}
+.bleeding-badge,.clotted-badge,.combat-callout.bleeding,.combat-callout.clotted {color:var(--blood-ink);border-color:var(--blood-ink);}
+.bleeding-badge {animation:blood-beat 1.8s ease-in-out infinite;}
+@keyframes blood-beat {50% {filter:drop-shadow(0 0 3px var(--blood-ink));}}
+.crystal-tile {cursor:pointer;}
+.tile.terrain-brokenCrystal .biome-cover {color:#7193ad;opacity:.65;}
+.falling-rock-fx {position:absolute;pointer-events:none;z-index:18;display:grid;place-items:center;color:var(--ink);}
+.falling-rock-fx svg {width:100%;height:100%;}
+@media(prefers-reduced-motion:reduce){.bleeding-badge{animation:none;}}
+
+.tier-symbol.bloodseed,.combat-number.bleeding,.rolled-projectile.bloodseed,.symbol-arrival.bloodseed {color:var(--blood-ink);}
+.combat-number.bleeding small {display:block;font-size:.46em;letter-spacing:.06em;}
+
+@media(max-width:760px){
+ #modal[data-kind="editor"] #modal-title {flex:0 0 34px;height:34px;min-height:34px;line-height:1.05;margin-bottom:2px;}
+}
+
+@media(max-width:760px){.keyboard-context{gap:3px 6px;}}

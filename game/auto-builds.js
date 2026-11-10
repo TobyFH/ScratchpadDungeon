@@ -96,6 +96,7 @@ function autoBuildFor(h) {
         : ["venom", "assault", "enchanter"],
     ranger: ["assault", "balanced", "enchanter"],
     berserker: ["assault", "balanced"],
+    bloodbinder: h.specialism === "defence" ? ["mender", "balanced"] : ["balanced", "assault"],
     jester: ["trickster", "balanced", "enchanter"],
   }[h.job] || ["balanced"];
   if (h.job === "mage" && partyDamagePartners(h) >= 2) {
@@ -123,6 +124,7 @@ function autoBuildUtility(h) {
     selfharm: -0.3,
     fury: 0.2,
   };
+  if(h.job==="bloodbinder")weights.bloodseed=2;
   weights.stimulant = Math.min(0.65, weights.stimulant || 0);
   const otherDamage = partyDamagePartners(h);
   if (h.job === "mage" && otherDamage >= 2) {

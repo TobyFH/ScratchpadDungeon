@@ -263,6 +263,8 @@ function clearBattleStatuses() {
     entity.surprised = false;
     entity.stunAge = 0;
     entity.blackout = [];
+    entity.bleeding = null;
+    entity.clotted = null;
     entity.crystalLocks = [];
     entity.reelGifts = [];
   }
@@ -496,6 +498,7 @@ async function resumeOpeningEncounter() {
 }
 
 function normaliseTacticalStatuses(entity) {
+  normaliseBloodStatuses(entity);
   entity.shadowLocks = Array.isArray(entity.shadowLocks)
     ? [...new Set(entity.shadowLocks.filter((k) => [0, 1, 2].includes(k)))]
     : [];

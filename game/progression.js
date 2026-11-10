@@ -51,6 +51,7 @@ const CAMP_LESSONS = Object.freeze({
     costs: [550, 1200, 2400, 4100, 6500],
   },
 });
+const CAMP_CLASS_PAGE_SIZE = 3;
 const CAMP_UNLOCKS = {
   ranger: {
     name: "A ranger's invitation",
@@ -76,6 +77,7 @@ const CAMP_UNLOCKS = {
     description:
       "Unlock Jester starts and companions. Trick marks build anticipation for a six-mark Punchline burst.",
   },
+  bloodbinder: {name:"A bloodbinder’s covenant",category:"classes",cost:1200,permanent:true,description:"Unlock Bloodbinder starts and companions. Drain foes, share recovery and prevent enemy healing."},
   iron: {
     name: "Iron margins",
     category: "challenges",
@@ -518,7 +520,7 @@ let campLeaf = 0,
   campCategory = "classes",
   campPageSize = 4;
 function responsiveCampPage() {
-  const size = campCategory !== "classes" && innerWidth <= 760 ? 2 : 4;
+  const size = campCategory === "classes" ? CAMP_CLASS_PAGE_SIZE : innerWidth <= 760 ? 2 : 4;
   if (modalKind !== "camp" || size === campPageSize) return false;
   campPage(campCategory, Math.floor((campLeaf * campPageSize) / size));
   return true;
@@ -559,7 +561,7 @@ function campPage(category = "classes", leaf = null) {
         d.category === category &&
         (!d.family || id === nextTrainingCard(d.family, p)),
     ),
-    pageSize = category !== "classes" && innerWidth <= 760 ? 2 : 4,
+    pageSize = category === "classes" ? CAMP_CLASS_PAGE_SIZE : innerWidth <= 760 ? 2 : 4,
     count = Math.ceil(entries.length / pageSize);
   campLeaf = Math.max(0, Math.min(count - 1, leaf ?? campLeaf));
   campPageSize = pageSize;

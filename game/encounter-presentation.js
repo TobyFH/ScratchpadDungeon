@@ -51,9 +51,11 @@ const PUN_ENEMIES = Object.freeze({
   boss8: "The Hardback",
   boss9: "The Penultimate",
   spellingbees: "The Spelling Bees",
+  redletter: "The Red Letter",
 });
 // This table is injective: a stationery identity belongs to one bestiary entry.
 const PUN_SPECIES = Object.freeze({
+  bloodbinder: "redletter",
   bees: "spellingbees",
   berserker: "scissors",
   smudger: "paperjammer",

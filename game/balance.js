@@ -1,6 +1,7 @@
 // Shared numeric tuning. Keep RNG, match rules, reel counts and art outside this module.
 // All multipliers are visible in the workshop/guide; a mark has the same base power for every class.
 const POWER = Object.freeze({
+  bloodseed: 1,
   mystery: 0,
   selfharm: 2,
   attack: 1,
@@ -21,7 +22,7 @@ const ATTACK_POWER = Object.freeze([0, 1, 2, 3, 4]);
 const markDamage = (type, tier = 1) => ATTACK_POWER[tier] * (type === "heavy" ? POWER.heavy : 1);
 const PHYSICAL_TYPES = Object.freeze(["attack", "heavy"]);
 const DAMAGE_TYPES = Object.freeze([...PHYSICAL_TYPES, "magic"]);
-const OFFENSIVE_TYPES = Object.freeze([...DAMAGE_TYPES, "poison"]);
+const OFFENSIVE_TYPES = Object.freeze([...DAMAGE_TYPES, "poison", "bloodseed"]);
 const FACE_COST = Object.freeze({ 1: 1, 2: 3, 3: 6, 4: 10 });
 const CLASS_BALANCE = Object.freeze({
   fighter: {
@@ -49,6 +50,7 @@ const CLASS_BALANCE = Object.freeze({
     critical: [1.75, 2.5, 3, 4],
     path: "Blood Price builds Fury. Balance damage with healing and lifesteal.",
   },
+  bloodbinder: {hp:32,critical:[1.5,2,2.5,3],path:"Drain wounds to sustain allies; Blood Seed prevents enemy recovery."},
   jester: {
     hp: 30,
     critical: [1.5, 2, 3, 4],

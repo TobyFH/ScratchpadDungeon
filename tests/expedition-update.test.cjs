@@ -143,7 +143,7 @@ test("Ranger, Berserker and Jester remain visible but locked; purchasing Berserk
     localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
     chooseStartingClass();
   });
-  assert.equal(await p.locator("[data-unlock-class]").count(), 3);
+  assert.equal(await p.locator("[data-unlock-class]").count(), 4);
   assert.equal(await p.locator('[data-start-job="berserker"]').count(), 0);
   await p.locator('[data-unlock-class="berserker"]').click();
   await p.locator('[data-camp-buy="berserker"]').click();

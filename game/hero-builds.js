@@ -117,6 +117,7 @@ const heroJobs = (rules = state?.runRules || []) => [
   ...(rules.includes("ranger") ? ["ranger"] : []),
   ...(rules.includes("berserker") ? ["berserker"] : []),
   ...(rules.includes("jester") ? ["jester"] : []),
+  ...(rules.includes("bloodbinder") ? ["bloodbinder"] : []),
 ];
 const RECRUITMENT_TUNING = Object.freeze({
   solo: 0.55,
@@ -220,6 +221,7 @@ function normaliseHeroBuild(h) {
   if (h.job === "healer") h.job = "mage";
   delete h.mageRole;
   normaliseTacticalStatuses(h);
+  normaliseBloodStatuses(h);
   h.momentReceipts =
     h.momentReceipts &&
     typeof h.momentReceipts === "object" &&
@@ -251,6 +253,7 @@ function normaliseHeroBuild(h) {
   h.charge = Math.min(RANGER_AIM_CAP, Math.max(0, h.charge || 0));
   h.fury = Math.min(furyCapacity(h), Math.max(0, h.fury || 0));
   if (!h.reels) return;
+  for(const face of h.reels.flat())if(face.type==="bloodseed"&&h.job!=="bloodbinder"){face.type="blank";face.tier=1;}
   if (["fighter", "rogue", "ranger", "berserker"].includes(h.job)) {
     h.reels.forEach((reel) =>
       reel.forEach((f) => {
@@ -349,6 +352,7 @@ function classAbilityName(hero) {
       ranger: "EXECUTE",
       berserker: "BLOODRUSH",
       jester: "WILDCARD",
+      bloodbinder: "BLOOD EXCHANGE",
     }[job] || "CLASS"
   );
 }
@@ -356,6 +360,7 @@ function classAbilityDescription(hero) {
   const job = typeof hero === "string" ? hero : hero?.job;
   return (
     {
+      bloodbinder: "Blood Exchange: transfer 25% of the HP percentage gap from a healthier enemy to your weakest ally. Otherwise strike using the gap to your healthiest ally. Boss loss capped at 10% of max HP; healing follows the actual percentage lost. Never crits or cleaves.",
       jester:
         "Wildcard: tricks ink enemy reels, gild allied reels, reverse a foe’s roll, or scatter damage and healing. They usually favour your party.",
       fighter: `Shield Bash: gain ${tankSealBlock(typeof hero === "object" ? hero : null)} team block, then spend up to ${bashLimit(typeof hero === "object" ? hero : null)} block on a bash. Block gained increases every three levels. The bash deals double damage to enemy shields.`,
@@ -378,6 +383,7 @@ function temperamentEffects(h, base) {
   return base;
 }
 const CLASS_FACE_TYPES = Object.freeze({
+  bloodbinder: ["attack", "magic", "heal", "bloodseed", "blank"],
   fighter: ["attack", "heavy", "block", "selfheal", "stun", "stimulant", "blank"],
   rogue: ["attack", "poison", "stun", "stimulant", "selfheal", "blank"],
   mage: [
@@ -396,6 +402,7 @@ const CLASS_FACE_TYPES = Object.freeze({
 function startingFaces(job, temperament) {
   const defensive = temperament === "defence";
   return {
+    bloodbinder: defensive ? [["heal",1],["heal",1],["bloodseed",1],["magic",1],["blank",1]] : [["attack",1],["magic",1],["bloodseed",1],["heal",1],["blank",1]],
     fighter: defensive
       ? [
           ["attack", 1],
@@ -576,6 +583,7 @@ function makeHero(
     (f) => ({ ...f }),
   );
   normaliseTacticalStatuses(h);
+  normaliseBloodStatuses(h);
   return h;
 }
 // Shared by actual recovery and the fountain's uncapped offered totals.

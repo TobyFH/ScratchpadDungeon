@@ -131,11 +131,11 @@ test('only revealed nearby visible stalactites log drops; distant and occluded d
     for(const i of [near,blocked,far]) Object.assign(state.map[i], {seen:true,terrain:'stalactite',stalactite:{remaining:1,drops:0}});
     Object.assign(state.map[state.position-W], {wall:true,terrain:'stone'});
     renderMap(); await livingDungeonStep();
-    const visible=state.logs.slice();
+    const visible=state.logs.filter(text=>text.startsWith("Stalactite falls"));
     state.logs=[];
     state.map[near].seen=false; state.map[near].stalactite.remaining=1;
     await livingDungeonStep();
-    return {visible, hidden:state.logs, near};
+    return {visible, hidden:state.logs.filter(text=>text.startsWith("Stalactite falls")), near};
   });
   assert.equal(r.visible.length,1);
   assert.match(r.visible[0],/Stalactite falls/);

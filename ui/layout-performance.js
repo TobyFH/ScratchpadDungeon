@@ -26,10 +26,24 @@ const notebookLayout = (() => {
       invalidate();
     }
   }
-  function writeBar(next) {
-    if (bar.innerHTML === next) return;
-    bar.innerHTML = next;
-    invalidate();
+  let barContent = null, barEvent = null;
+  function writeBar(next, event = false) {
+    if (typeof next === 'string') {
+      if(bar.innerHTML===next)return;
+      bar.innerHTML=next;barContent=null;invalidate();syncBarHeight();return;
+    }
+    const signature=next.field+'\n'+next.event;
+    if(barContent===signature&&barEvent===event)return;
+    barEvent=event;
+    if(barContent!==signature){
+      bar.innerHTML=`<div class="keyboard-context" data-context="field">${next.field}</div><div class="keyboard-context" data-context="event">${next.event}</div>`;
+      barContent=signature;invalidate();
+    }
+    for(const node of bar.children){
+      const inactive=node.dataset.context!==(event?'event':'field');
+      if(node.inert!==inactive)node.inert=inactive;
+      node.setAttribute('aria-hidden',String(inactive));
+    }
     syncBarHeight();
   }
   // Observer sizes are layout sizes, before the desk's CSS zoom. A changed zoom

@@ -23,6 +23,11 @@ const WILDCARD_LOG_EVENTS = Object.freeze([
   { name: "PICK A CARD!", description: "Deals spell damage to one enemy and heals a random living ally." },
 ]);
 const EVENT_LOG_TERMS = Object.freeze({
+  "Blood Seed": "Applies Bleeding for up to three enemy turns. Further seeds then increase damage and the shared healing pool, up to 12 per tick. Expiry leaves Clotted.",
+  "Blood Exchange": "Transfers a quarter of the HP percentage gap to an injured ally, or damages an enemy using the healthiest ally's advantage. Boss HP loss is capped at 10%; criticals never multiply it.",
+  "Bleeding": "Deals damage at the start of the affected enemy's turn and shares a healing pool among injured allies. Ends after at most three turns, then leaves Clotted.",
+  "Clotted": "Halves enemy healing for as many enemy turns as the longest Bleeding duration reached (up to three).",
+
   "Cave room": "Revealing one room tile uncovers the connected room and its discoveries. Revealed discoveries are not activated until visited.",
   "Gold": "Carried gold buys shop supplies. Bank it after clearing a floor to keep it between expeditions.",
   "Treasure": "A chest rolls gold and possible supplies or artefacts. Three matching symbols trigger a critical reward.",
@@ -31,7 +36,7 @@ const EVENT_LOG_TERMS = Object.freeze({
   "Mushroom light": "Lights connected nearby mushroom tiles, revealing up to eight more without triggering discoveries.",
   "Lava": "Impassable terrain whose glow reveals nearby stone. Walls block the light.",
   "Stairs": "Select the staircase to face its guardian or descend after victory. You can keep exploring first.",
-  "Stalactite": "Loose ceiling stone falls when its footstep countdown runs out, then resets. It can damage the party or crush the Unwritten.",
+  "Stalactite": "Loose ceiling stone falls when its footstep countdown runs out, then resets. It deals full damage on its own tile and half damage one tile away, and can crush the Unwritten.",
   "Forgotten traveller": "An abandoned satchel can hold loot. Searching it does not harm the party; you can also leave it undisturbed.",
   "Rage": "Adds physical damage and a little damage resistance until battle ends.",
   "Stored Execute": "Other party actions and enemy turns build Ranger patience. The next damaging roll consumes it for a separate, capped hit, stronger against wounded enemies. The Execute class seal amplifies that stored bonus.",

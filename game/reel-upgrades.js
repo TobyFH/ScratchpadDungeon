@@ -2,6 +2,7 @@
 const tierName = (tier) => ["", "I", "II", "III", "IV"][tier];
 const maxFaceTier = (type) =>
   [
+    "bloodseed",
     "attack",
     "heavy",
     "magic",
@@ -20,6 +21,7 @@ const maxFaceTier = (type) =>
       ? 1
       : 3;
 const CLASS_PRICES = {
+  bloodbinder: {attack:1.2,magic:1.1,heal:1,bloodseed:1.25},
   berserker: { heavy: 1.75, attack: 0.9, heal: 1, selfharm: 1 },
   ranger: {
     attack: 1,
@@ -74,6 +76,7 @@ const CLASS_PRICES = {
   },
 };
 const EDITABLE_TYPES = Object.freeze([
+  "bloodseed",
   "attack",
   "heavy",
   "magic",
@@ -89,6 +92,7 @@ const EDITABLE_TYPES = Object.freeze([
   "blank",
 ]);
 const FACE_LABELS = Object.freeze({
+  bloodseed: "Blood Seed",
   attack: "Physical attack",
   heavy: "Heavy attack",
   magic: "Spell damage",
@@ -114,7 +118,7 @@ const primaryFace = (h) =>
       : "attack";
 function editableTypes(h) {
   return h.job === "jester"
-    ? EDITABLE_TYPES.filter((t) => !["stimulant", "selfharm", "heavy"].includes(t))
+    ? EDITABLE_TYPES.filter((t) => !["stimulant", "selfharm", "heavy", "bloodseed"].includes(t))
     : [
         ...(CLASS_FACE_TYPES[h.job] ||
           EDITABLE_TYPES.filter((t) => !["selfharm", "trick"].includes(t))),
@@ -135,6 +139,7 @@ function faceDescription(face, h) {
   const area = tier >= 3 ? " every enemy" : " the selected enemy";
   return (
     {
+      bloodseed: `Plant ${tier} Blood Seed power. Bleeding lasts up to 3 enemy turns; more Seeds then raise damage and shared healing (maximum 12 per tick). When it ends, Clotted halves enemy healing for the longest Bleeding duration reached.`,
       attack: `Deal ${markDamage("attack",tier)} physical damage to${area}. Cheaper to improve than a heavy attack.`,
       heavy: `Deal ${markDamage("heavy",tier)} physical damage to${area}. Tank and Berserker only; costs more personal points to inscribe and upgrade.`,
       magic: `Deal ${ATTACK_POWER[tier]} spell damage to${area}, with a chance to leave the target Vulnerable.`,
@@ -417,6 +422,7 @@ function editFace(data, operation, destination = null) {
 
 function workshopAbilitySummary(h) {
   return {
+    bloodbinder: "Drain an HP percentage gap to heal an ally, or strike using the healthiest ally’s advantage. Boss loss capped at 10%; cannot crit.",
     fighter: `Gain ${tankSealBlock(h)} block; spend up to ${bashLimit(h)} on a bash (double against enemy block).`,
     rogue: "Roll three extra blade attacks.",
     mage: "Echo the rolled magic, healing, shield or poison marks across the whole team.",

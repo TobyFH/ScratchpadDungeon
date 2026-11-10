@@ -53,6 +53,7 @@ function workshopFaceSummary(face, h) {
   const n = face.tier || 1;
   return (
     {
+      bloodseed: `${n} Seed power. Bleed for up to 3 turns, then halve healing. Extra Seeds boost drain, up to 12 per tick.`,
       heavy: `${markDamage("heavy",n)} physical damage${n >= 3 ? " to every enemy" : " to the selected enemy"}. Stronger, more costly; Tank and Berserker only.`,
       attack: `${n} physical damage${n >= 3 ? " to every enemy" : " to the selected enemy"}.`,
       magic: `${n} spell damage${n >= 3 ? " to every enemy" : " to the selected enemy"}; may expose Vulnerable.`,
@@ -90,6 +91,7 @@ function iconCriticalOddsMarkup(h) {
   }</div><nav class="crit-page-nav"><button data-crit-page="${workshopCritPage - 1}" ${workshopCritPage === 0 ? "disabled" : ""}>← Previous</button><span>${workshopCritPage + 1} / ${pages}</span><button data-crit-page="${workshopCritPage + 1}" ${workshopCritPage >= pages - 1 ? "disabled" : ""}>Next →</button></nav></section>`;
 }
 const WORKSHOP_SHORT_LABELS = Object.freeze({
+  bloodseed: "Blood Seed",
   attack: "Physical",
   heavy: "Heavy",
   magic: "Spell",

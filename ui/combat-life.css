@@ -247,3 +247,12 @@ body.utility-open .status-motes i {
     display: none;
   }
 }
+
+/* Run Treasures: the card's reserved rows grow with its type, not just its ink. */
+@media(min-width:1260px) and (min-height:560px){
+ .fit-notebook .artefact-slot {height:136px;padding:8px;}
+ .fit-notebook .artefact-slot > span {grid-template-rows:46px 44px 20px;gap:2px;}
+ .fit-notebook .artefact-slot .artefact-name {font-size:22px;line-height:1.05;}
+ .fit-notebook .artefact-slot small {font-size:19px;line-height:1.15;}
+ .fit-notebook .artefact-slot em {font-size:16px;line-height:1.1;}
+}

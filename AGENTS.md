@@ -1,3 +1,9 @@
+Read `docs/BLOODBINDER_UPDATE.md` for Blood Seed/Exchange, exact leech healing,
+Clotted recovery, breakable quartz, falling-stone radius and stable prompts.
+`game/bloodbinder.js` owns percentage calculations; never crit or cleave them.
+All enemy healing uses `enemyRecovery()`. Camp class-page size is shared with
+responsive fitting. Keep both footer contexts reserved and inactive content inert.
+
 Read `docs/RECORDED_MUSIC.md` for uploaded looping tracks, biome/menu selection,
 bounded media decks, jingle ducking and fallback. Originals stay in
 `ui/assets/audio/music/source`; only MP3s embed. The old score is fallback only.

@@ -21,7 +21,7 @@ function musicSelection() {
   const kind = utilityOpen ? utilityContext?.kind : modalKind;
   if (!state || state.awaitingStarter || ["starter", "camp"].includes(kind))
     return { id: "title", key: "title", scene: "title" };
-  if (state.enemy && !state.over)
+  if (state.enemy && !state.over && preferences().battleMusic !== false)
     return { id: "battle", key: "battle", scene: "battle" };
   const id = BIOME_MUSIC[floorBiome()] || "chill";
   return { id, key: `${state.runId}:${state.depth}:${id}`, scene: "exploration" };

@@ -207,6 +207,9 @@ function leverArt() {
   return `<svg class="pencil-art" viewBox="0 0 35 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 78 11-.5.5 13-12 .5Z M14 78l8-56 4 .5-7 57" fill="var(--paper-shade)"/><path d="m15 76 8-53m-15 60 8-.5m-8 5 8-.5M7 95l18-.5" stroke-width=".7"/><path d="M25 2q12 1 11 12-1 10-12 10-10-1-10-12Q15 2 25 2Z" fill="var(--paper)"/><path d="M25 5q9 1 8 9-1 8-9 7-7-1-7-8 0-7 8-8Zm-7 8 6-7m-6 12L30 6m-7 15 10-10" stroke-width=".65"/><path class="pencil-echo" d="m5 79 1 14 14-1M13 77l8-53"/></svg>`;
 }
 const paths = {
+  bloodseed:"M16 3Q1 21 9 27q7 6 14-1Q31 19 16 3ZM9 23l7-10 5 11m-5-11v15",
+  bloodexchange:"M5 12h21l-6-6m6 6-6 6M27 22H6l6 6m-6-6 6-6",
+  brokenCrystal:"M4 27 7 18l5 7-2 4Zm11-3 4-15 6 11-2 8Zm-4-8 3-8 3 8M3 30h26",
   heavy: "M5 29 24 3l3 2L8 31ZM13 5q-8 1-10 9l10 2 4-5 6 5 7-10q-8-5-12-3ZM7 23l5 4m-7-1 5 4",
   selfheal: "M16 27C-5 12 7-1 16 9 25-1 37 12 16 27ZM12 15h8m-4-4v8M4 5v7h7",
   poisonMushroom: "M3 17Q3 1 16 2q13 0 13 15ZM12 18v10h8V18M8 8l4 5m0-5-4 5m12-5 4 5m0-5-4 5M4 29h24",
@@ -432,7 +435,9 @@ function portraitArt(kind, entity = { hp: 1, maxHp: 1 }) {
   const marks = `<g class="injury-marks" stroke="#ae493c" stroke-width="${severe ? 3.8 : 2.4}" fill="none" opacity=".95"><path d="m40 35 14 12m-15-7 12 12m19 2 12 5m-13 0 10 4"/>${severe ? '<path d="m34 94 17 13m-17-6 17 13m24-42-3 13m5-10-2 12M45 126l13 3"/><path d="m39 58 16 5" stroke="#f1e5c3" stroke-width="8"/><path d="m40 57 14 7m-9-6-1 5" stroke="#796248" stroke-width="1.2"/>' : ""}</g>`;
   return pencilIllustration(art.replace("</svg>", marks + "</svg>"));
 }
+function bloodbinderArt(){return `<svg class="pencil-art bloodbinder-art" viewBox="0 0 120 150" fill="var(--paper-shade)" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M14 146 24 96 36 72Q16 20 61 5q45 17 24 66l15 26 9 49Z"/><path d="M36 42q24-30 48 0l-8 31-16 13-17-13Z" fill="var(--paper)"/><path d="m42 47 12-2m12 0 11 2M49 49v5m22-5v5M60 53l-4 10h9m-14 8q10 5 18-1M35 75l25 28 25-29M60 103v41M26 102l19 12-8 26M96 102l-20 13 8 26m-52-8 12-3m35 0 13 3M25 95l12-7m-12 20 12-7m48-13 12 9m-10 5 12 8" fill="none"/><path d="M60 92q-15 17 0 20 15-3 0-20Z" fill="var(--blood-ink,#964958)"/><path d="M31 119q-9-14-15-2t14 18m59-16q10-14 15-2t-14 18" fill="var(--paper)"/><path d="m39 15-8 18m48-14 7 17m-67 93 14 5m62-6-12 7" opacity=".45"/></svg>`;}
 function basePortraitArt(kind, entity = { hp: 1, maxHp: 1 }) {
+  if(kind === "bloodbinder" && entity.hp>0 && !entity.dead)return bloodbinderArt();
   if (entity.hp <= 0 || entity.dead) return corpseArt(kind);
   if (
     [
@@ -532,6 +537,8 @@ function trapArt(type) {
 // Purposeful stationery silhouettes for Pun-nishing Mode. These are ordinary
 // palette-aware pencil paths, with the same portrait/injury/corpse contract.
 function punEnemyArt(id) {
+  if(id === "redletter")return `<svg class="horror-art species-pun-redletter" viewBox="0 0 120 150" fill="var(--paper)" stroke="currentColor" stroke-width="1.8"><path d="M11 41 101 31l9 72-91 12Z"/><path d="m12 42 49 29 40-39M21 107l30-35m20 0 36 24M43 56l10 4m18-5 10-5M49 62v5m27-7v5m-26 18 27-4" fill="none"/><path d="M64 69q-19 24 2 28 20-6-2-28Z" fill="var(--blood-ink)"/><path d="m32 115-8 24h20m38-29 14 24h15" fill="none"/></svg>`;
+
   if(id === "spellingbees")return beeSwarmArt().replace("</svg>",'<path d="M76 126l13-3 13 4v17l-13-4-13 3Zm13-3v17m-9-11 5-1m8 1 5 2" fill="var(--paper)"/></svg>');
   if (id === "fullstop")
     return `<svg class="horror-art species-pun-fullstop" viewBox="0 0 120 150" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M60 31C7 29 5 120 59 123c56 2 58-93 1-92Z" fill="currentColor"/><g stroke="var(--paper)" stroke-width="3"><path d="m31 60 20 8m20 0 18-9M43 75h4m27 0h4M39 100q20-24 42-1"/></g><path d="m20 127 20-2m39 4 18-1" opacity=".5"/></svg>`;

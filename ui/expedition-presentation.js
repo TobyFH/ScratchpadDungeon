@@ -59,7 +59,7 @@ function mapTileDescription(c){
   };
   if(extra[c.terrain])return extra[c.terrain];
   if(c.lavaRiver)return c.terrain==='bridge'?'Lava bridge — a safe crossing above the molten river.':'Lava river — impassable molten rock. Cross on a bridge or use a tunnel.';
-  if(c.terrain==='crystal')return 'Quartz — impassable. Its 1-tile field seals two reels every 3 party rolls. Overlapping fields do not stack.';
+  if(c.terrain==='crystal')return 'Quartz — blocks movement. Nearby fights can seal reels. Stand beside it and click to smash or leave.';
   if(c.event==='tunnel'){const to=tunnelDestination(state.map,state.map.indexOf(c));return tileName(c)+(to!==null&&state.map[to].seen?' — linked to the highlighted entrance.':' — its other entrance is still unknown.');}
   return tileName(c);
 }

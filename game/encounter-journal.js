@@ -114,6 +114,7 @@ const SPECIES_LORE = {
     "Hostile berserker",
     "Pain sharpens its purpose. A wounded berserker is never a harmless one.",
   ],
+  bloodbinder: ["Hostile bloodbinder", "A healer with a harsher bargain. Its crimson binding has turned against the company."],
 };
 ENEMY_PROFILES.smudger = {
   name: "Graphite gaoler",
