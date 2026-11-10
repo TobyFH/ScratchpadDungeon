@@ -161,6 +161,9 @@ Self-heal is `selfheal` on a face and `selfHeal` in effect totals; never retarge
 Berserker Fury survives fights and decays per walked tile, not per move command.
 Use shared semantic feedback inks and cancellation-safe class sketches; neither
 hover, animation nor margin drawings may consume gameplay RNG.
+Rogue Flurry uses the portrait-based shadow backstab in `ui/class-moments.js`;
+see `docs/ROGUE_BACKSTAB.md`. Keep it cosmetic, restore hidden portraits on every
+exit and leave the real Flurry hit pipeline and clickable card geometry intact.
 
 The icon workshop is an independently reversible presentation in
 `ui/icon-reel-workshop.js/.css`; read `docs/ICON_REEL_WORKSHOP.md`. Switch

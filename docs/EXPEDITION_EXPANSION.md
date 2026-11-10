@@ -110,12 +110,14 @@ Map inspection reserves fixed space and moves the stair action to its right.
 It defaults to the current tile when no tile is hovered. Hovered revealed tunnels
 link only to a revealed partner; drawing hints never discloses a covered exit.
 
-Ranger Execute fires a large sketched arrow. Tank shields, Rogue blades, Mage
+Ranger Execute fires a large sketched arrow. Tank shields, Rogue shadow backstabs, Mage
 runes and Berserker Fury marks emphasize their actual defining actions, alongside
 the existing Jester spring-box. Presentation promises pause for utility pages,
 respect speed/Skip/reduced motion and cancel on a changed run. Skip retains
 bounded particles and impact shake. Death clouds add larger, species-themed
 paper/ink/spore/ember bursts without changing corpse identity or loot timing.
+See [Rogue backstab](ROGUE_BACKSTAB.md) for Flurry's current portrait choreography
+and its cleanup/accessibility contracts.
 
 ## Validation
 
