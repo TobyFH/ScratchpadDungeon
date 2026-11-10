@@ -79,6 +79,15 @@ source from every aura query. Other crystals keep their existing effects,
 including overlaps. The seen wall is clickable for interaction, but remains
 impassable until smashed. Mouse and keyboard share `move()`/`crystalEncounter()`.
 
+Autoplay recognises the `crystal-choice` sheet and selects **Smash** through its
+real button after the normal reading delay. This also works while the movement
+driver is awaiting a newly revealed deposit, or when autoplay is enabled on an
+already-open prompt. It then resumes exploration through the shattered tile.
+Side pages and disabling autoplay still pause the decision; Autofight alone
+leaves it manual. `tests/crystal-autoplay.test.cjs` covers those flows and verifies
+that the deposit's aura and blocking flag disappear without leaving busy/travel
+locks behind.
+
 `game/living-dungeon.js` retains ceiling countdowns. Falls now show a larger
 accelerating rock, smoke/dust, and a stronger impact. Source-tile damage stays
 `2 + floor(depth/3)`; within one tile (including diagonals), damage is half,

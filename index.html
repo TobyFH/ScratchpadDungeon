@@ -34928,6 +34928,10 @@ function revealCriticalPayoff(region, details, multiplier) {
               index >= 0
                 ? $(`#stage-card [data-stage-choice="replace:${index}"]`)
                 : $("#recruit-decline");
+          } else if (kind === "crystal-choice") {
+            // Breaking quartz is free, removes its reel-sealing aura and opens
+            // the tile. Use the real confirmation before releasing movement.
+            button = $("#crystal-smash");
           } else if (kind === "well" && $("#well-use"))
             button = $(autoNeedsWell() ? "#well-use" : "#well-decline");
           else if (kind === "ruin" && $("#ruin-leave")) {
