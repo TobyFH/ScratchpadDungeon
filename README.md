@@ -37,6 +37,12 @@ equally likely after the Cavern opening, guarantees an early recruit opportunity
 shortens defensive boss fights and strengthens Mage recovery, stimulant stacks
 and temperament bonuses.
 
+The unlockable **Bloodbinder** now focuses on sustained drain and anti-healing.
+Seed strength has a level-based cap; stronger wounds cost increasing caster HP,
+while refreshing their duration is free. Maintained Bleeding also applies Clotted
+instead of endlessly delaying it. See the [Bloodbinder balance notes and measured
+comparisons](docs/BLOODBINDER_BALANCE.md), or run `npm run audit:bloodbinder`.
+
 ## Camp and banked gold
 
 After clearing floors 1–9, optionally bank **25%, 50%, 75% or 100%** of carried gold.

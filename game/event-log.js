@@ -23,10 +23,10 @@ const WILDCARD_LOG_EVENTS = Object.freeze([
   { name: "PICK A CARD!", description: "Deals spell damage to one enemy and heals a random living ally." },
 ]);
 const EVENT_LOG_TERMS = Object.freeze({
-  "Blood Seed": "Applies Bleeding for up to three enemy turns. Further seeds then increase damage and the shared healing pool, up to 12 per tick. Expiry leaves Clotted.",
-  "Blood Exchange": "Transfers a quarter of the HP percentage gap to an injured ally, or damages an enemy using the healthiest ally's advantage. Boss HP loss is capped at 10%; criticals never multiply it.",
-  "Bleeding": "Deals damage at the start of the affected enemy's turn and shares a healing pool among injured allies. Ends after at most three turns, then leaves Clotted.",
-  "Clotted": "Halves enemy healing for as many enemy turns as the longest Bleeding duration reached (up to three).",
+  "Blood Seed": "First extends Bleeding to three enemy turns. Extra power strengthens its drain, spending increasing caster HP without killing them. Duration refresh is free. Strength is capped by level; excess power is wasted.",
+  "Blood Exchange": "Transfers part of the HP percentage gap to an injured ally, or strikes using the healthiest ally's advantage. Strength improves with level. Boss HP loss is capped at 10%; criticals never multiply it.",
+  "Bleeding": "Deals damage at the start of the enemy's whole turn and shares healing among injured allies. Level improves the drain. Expiry or three ticks applies Clotted, even if Seeds keep refreshing Bleeding.",
+  "Clotted": "Reduces enemy healing by 35–65%, improving with the Bloodbinder's level, for up to three enemy turns. Maintaining Bleeding can refresh it.",
 
   "Cave room": "Revealing one room tile uncovers the connected room and its discoveries. Revealed discoveries are not activated until visited.",
   "Gold": "Carried gold buys shop supplies. Bank it after clearing a floor to keep it between expeditions.",

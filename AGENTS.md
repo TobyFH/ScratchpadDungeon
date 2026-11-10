@@ -1,6 +1,11 @@
 Read `docs/BLOODBINDER_UPDATE.md` for Blood Seed/Exchange, exact leech healing,
 Clotted recovery, breakable quartz, falling-stone radius and stable prompts.
 `game/bloodbinder.js` owns percentage calculations; never crit or cleave them.
+Read `docs/BLOODBINDER_BALANCE.md` for current level-scaled drain caps, rising
+nonlethal HP offerings, shared healing and maintained-Bleeding Clotted timing.
+Real Seeds and AI share the pure `bloodSeedPlan`; excess power never buys free
+strength at 1 HP or charges beyond the cap. Preserve saved tick progress and
+legacy 50% Clotted; all fixed blood pools bypass camp/gear/crit multiplication.
 All enemy healing uses `enemyRecovery()`. Camp class-page size is shared with
 responsive fitting. Keep both footer contexts reserved and inactive content inert.
 

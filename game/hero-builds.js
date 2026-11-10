@@ -360,7 +360,7 @@ function classAbilityDescription(hero) {
   const job = typeof hero === "string" ? hero : hero?.job;
   return (
     {
-      bloodbinder: "Blood Exchange: transfer 25% of the HP percentage gap from a healthier enemy to your weakest ally. Otherwise strike using the gap to your healthiest ally. Boss loss capped at 10% of max HP; healing follows the actual percentage lost. Never crits or cleaves.",
+      bloodbinder: `Blood Exchange: transfer ${Math.round(bloodProfile(typeof hero === 'object' ? hero : null).exchange*100)}% of the HP percentage gap from a healthier enemy to your weakest ally. Otherwise strike using the gap to your healthiest ally. Boss loss capped at 10% of max HP; healing follows the actual percentage lost. Never crits or cleaves.`,
       jester:
         "Wildcard: tricks ink enemy reels, gild allied reels, reverse a foe’s roll, or scatter damage and healing. They usually favour your party.",
       fighter: `Shield Bash: gain ${tankSealBlock(typeof hero === "object" ? hero : null)} team block, then spend up to ${bashLimit(typeof hero === "object" ? hero : null)} block on a bash. Block gained increases every three levels. The bash deals double damage to enemy shields.`,

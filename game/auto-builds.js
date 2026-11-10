@@ -124,7 +124,7 @@ function autoBuildUtility(h) {
     selfharm: -0.3,
     fury: 0.2,
   };
-  if(h.job==="bloodbinder")weights.bloodseed=2;
+  if(h.job==="bloodbinder")weights.bloodseed=0.8;
   weights.stimulant = Math.min(0.65, weights.stimulant || 0);
   const otherDamage = partyDamagePartners(h);
   if (h.job === "mage" && otherDamage >= 2) {
@@ -193,6 +193,17 @@ function autoBuildUtility(h) {
     utility += Math.min(1.25, fx.trick) * 5;
     utility -= Math.max(0, 0.15 - faceShare(h.reels.flat(), ["trick"])) * 100;
     utility -= Math.max(0, faceShare(h.reels.flat(), ["stun"]) - 0.23) * 65;
+  }
+  if(h.job==='bloodbinder'){
+    // Keep a sustainable drain, direct healing and a way to finish wounded foes.
+    // A capped, already-established wound does not reward filling every face.
+    const seeds=faceShare(h.reels.flat(),['bloodseed']),heals=faceShare(h.reels.flat(),['heal']);
+    utility+=Math.min(.2,seeds)*12;
+    utility-=Math.max(0,.15-seeds)*100;
+    utility-=Math.max(0,seeds-.35)*90;
+    utility-=Math.max(0,.18-heals)*(solo?35:60);
+    const attacks=h.reels.reduce((n,r)=>n+faceShare(r,DAMAGE_TYPES),0)/3;
+    utility-=Math.max(0,(solo?.25:.18)-attacks)*80;
   }
   const offence = fx.damage + fx.poison * 1.2,
     minDamage = solo

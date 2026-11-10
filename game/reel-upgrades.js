@@ -139,7 +139,7 @@ function faceDescription(face, h) {
   const area = tier >= 3 ? " every enemy" : " the selected enemy";
   return (
     {
-      bloodseed: `Plant ${tier} Blood Seed power. Bleeding lasts up to 3 enemy turns; more Seeds then raise damage and shared healing (maximum 12 per tick). When it ends, Clotted halves enemy healing for the longest Bleeding duration reached.`,
+      bloodseed: `Plant ${tier} Seed power on the selected enemy. First extend Bleeding to 3 turns, then raise its damage, capped at ${bloodProfile(h).cap} at this level. Each extra damage costs ${bloodOfferingBands()}; cannot kill you. Refreshing duration is free. Drains share up to ${Math.round(bloodProfile(h).healing*100)}% of damage as team healing. After 3 ticks or expiry, Clotted cuts healing by ${Math.round(bloodProfile(h).clot*100)}%.`,
       attack: `Deal ${markDamage("attack",tier)} physical damage to${area}. Cheaper to improve than a heavy attack.`,
       heavy: `Deal ${markDamage("heavy",tier)} physical damage to${area}. Tank and Berserker only; costs more personal points to inscribe and upgrade.`,
       magic: `Deal ${ATTACK_POWER[tier]} spell damage to${area}, with a chance to leave the target Vulnerable.`,

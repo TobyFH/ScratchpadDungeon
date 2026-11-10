@@ -50,7 +50,7 @@ const CLASS_BALANCE = Object.freeze({
     critical: [1.75, 2.5, 3, 4],
     path: "Blood Price builds Fury. Balance damage with healing and lifesteal.",
   },
-  bloodbinder: {hp:32,critical:[1.5,2,2.5,3],path:"Drain wounds to sustain allies; Blood Seed prevents enemy recovery."},
+  bloodbinder: {hp:32,critical:[1.5,2,2.5,3],path:"Spend HP on stronger drains; sustain allies and hinder enemy healing."},
   jester: {
     hp: 30,
     critical: [1.5, 2, 3, 4],

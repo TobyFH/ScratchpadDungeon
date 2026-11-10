@@ -53,7 +53,7 @@ function workshopFaceSummary(face, h) {
   const n = face.tier || 1;
   return (
     {
-      bloodseed: `${n} Seed power. Bleed for up to 3 turns, then halve healing. Extra Seeds boost drain, up to 12 per tick.`,
+      bloodseed: `${n} Seed power. Drain cap ${bloodProfile(h).cap}. Strengthening costs rising HP; duration refresh is free. Clotted: −${Math.round(bloodProfile(h).clot*100)}% healing.`,
       heavy: `${markDamage("heavy",n)} physical damage${n >= 3 ? " to every enemy" : " to the selected enemy"}. Stronger, more costly; Tank and Berserker only.`,
       attack: `${n} physical damage${n >= 3 ? " to every enemy" : " to the selected enemy"}.`,
       magic: `${n} spell damage${n >= 3 ? " to every enemy" : " to the selected enemy"}; may expose Vulnerable.`,

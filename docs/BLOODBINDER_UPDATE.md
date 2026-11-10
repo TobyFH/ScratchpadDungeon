@@ -1,5 +1,10 @@
 # Bloodbinder and stable notebook interactions
 
+> Current Bloodbinder tuning: [BLOODBINDER_BALANCE.md](BLOODBINDER_BALANCE.md)
+> supersedes the original fixed drain cap, flat 50% Clotted and 25% Exchange
+> examples below. It adds level scaling, increasing caster HP offerings and
+> reliable anti-healing during maintained Bleeding.
+
 The distributable is still one offline `index.html`. Edit the owning modules,
 run `npm run build:ui`, and commit the generated HTML alongside the sources.
 Existing paid reel faces, camp ranks, gold, artwork and explicit settings are
