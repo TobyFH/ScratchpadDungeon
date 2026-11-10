@@ -1,5 +1,12 @@
 # UI review checklist
 
+- [ ] Quartz coverage stays visibly filled, with one exterior boundary and no
+      stacking opacity; terrain-motion/reduced-motion options retain a static zone.
+- [ ] Guide text describes what players do and what happens, and introduces class
+      roles without requiring knowledge of named powers. All six pages fit.
+- [ ] Music uses the correct recorded biome/menu/battle scene, jingles duck and
+      restore the score, and the standalone HTML requests no audio files.
+
 - [ ] It resembles the supplied pencil-notebook reference: cream paper, graphite,
       purposeful uneven lines, expressive sketches and clean hierarchy.
 - [ ] It uses `ui/notebook.css` tokens and shared component primitives.

@@ -163,31 +163,25 @@ body[data-biome="overgrown"]:not(.ambient-disabled)
   outline-offset: -3px;
   box-shadow: inset 0 0 12px var(--boon-wash);
 }
-.quartz-pulse {
+.quartz-zone {
+  fill: #729fc8;
+  fill-opacity: .17;
+  stroke: none;
+}
+.quartz-boundary {
   fill: none;
-  stroke: #729fc8;
-  stroke-width: 0.055;
-  opacity: 0.5;
+  stroke: #6691bb;
+  stroke-width: .055;
+  stroke-linejoin: round;
+  stroke-dasharray: .19 .045;
+  opacity: .82;
 }
-body.tile-motion-enabled .quartz-pulse {
-  animation: quartz-field-pulse 2.8s ease-out infinite;
+body.tile-motion-enabled .quartz-zone {
+  animation: quartz-field-breathe 3.4s ease-in-out infinite;
 }
-@keyframes quartz-field-pulse {
-  0% {
-    scale: 0.15;
-    opacity: 0;
-  }
-  15% {
-    opacity: 0.75;
-  }
-  85% {
-    scale: 1;
-    opacity: 0.35;
-  }
-  100% {
-    scale: 1;
-    opacity: 0;
-  }
+@keyframes quartz-field-breathe {
+  0%,100% { fill-opacity: .14; }
+  50% { fill-opacity: .23; }
 }
 .tile.lava-river,
 .lava-river .bridge-water {
@@ -232,8 +226,8 @@ body.tile-motion-enabled .quartz-pulse {
   grid-template-columns: minmax(0, 1fr) 45px;
   align-items: center;
   gap: 8px;
-  height: 112px;
-  min-height: 112px;
+  height: 92px;
+  min-height: 92px;
 }
 .map-caption #hover-name {
   font-size: 28px;
@@ -260,7 +254,7 @@ body.tile-motion-enabled .quartz-pulse {
   height: 130px;
 }
 body.utility-open .biome-margin *,
-body.utility-open .quartz-pulse {
+body.utility-open .quartz-zone {
   animation-play-state: paused !important;
 }
 @media (max-width: 760px) {
@@ -278,8 +272,8 @@ body.utility-open .quartz-pulse {
     font-size: 24px;
   }
   .map-caption {
-    height: 204px;
-    min-height: 204px;
+    height: 184px;
+    min-height: 184px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -303,10 +297,6 @@ body.utility-open .quartz-pulse {
 
 .tile.lava-river > svg {
   color: var(--lava-ink);
-}
-.fit-notebook .map-caption {
-  height: 86px;
-  min-height: 86px;
 }
 .fit-notebook .map-wrap {
   max-width: 520px;

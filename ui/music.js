@@ -1,3 +1,4 @@
+// Fallback for an unsupported recording (normal playback is recorded-music.js).
 // Original, deterministic miniature score: plucked melody, low strings
 // and an airy harmony. MIDI pitches keep the composition easy to edit.
 const MUSIC_SCORE = Object.freeze({

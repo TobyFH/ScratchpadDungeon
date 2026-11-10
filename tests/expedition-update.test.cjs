@@ -702,7 +702,7 @@ test("portrait movement has independent persistent magnitude and zero disables i
   assert.equal(r.none, 0);
   assert.equal(r.playing, true);
   assert.equal(r.value, 1.5);
-  assert.equal(r.shake, 1);
+  assert.equal(r.shake, 1.5);
 });
 
 test("all four tiers, class marks and blank icons are centred within party reel windows without clipping", async (t) => {

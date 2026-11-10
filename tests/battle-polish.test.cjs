@@ -231,7 +231,7 @@ test("Venom Edge and Spellweave callouts agree with their exact mixed-roll bonus
   assert.deepEqual(r.magePure, {});
 });
 
-test("battle music produces bass/drums on the live music bus without RNG, stays pooled and obeys mute", async (t) => {
+test("uploaded battle recording produces bass on the live music bus without RNG and obeys mute", async (t) => {
   const p = await game(t);
   await fight(p);
   await p.evaluate(() => {
@@ -251,10 +251,15 @@ test("battle music produces bass/drums on the live music bus without RNG, stays 
   });
   await p.mouse.click(8, 8);
   await p.evaluate(() => GameSound.unlock());
-  await p.waitForFunction(() => GameSound.stats.musicParts.sub > 0 && GameSound.stats.musicParts.snare > 0);
+  await p.waitForFunction(() => GameSound.music?.status.id === "battle" && GameSound.music.status.playing && GameSound.music.status.position > .7);
   const r = await p.evaluate(async () => {
     const random = Math.random;
     let calls = 0, energy = 0, peak = 0;
+    const waitAudio = seconds => new Promise(resolve => {
+      const until = GameSound.context.currentTime + seconds;
+      const check = () => GameSound.context.currentTime >= until ? resolve() : setTimeout(check, 30);
+      check();
+    });
     Math.random = () => { calls++; return .5; };
     try {
       for (let i = 0; i < 8; i++) {
@@ -268,32 +273,32 @@ test("battle music produces bass/drums on the live music bus without RNG, stays 
         polishAnalyser.getFloatTimeDomainData(samples);
         peak = Math.max(peak, ...samples.map(Math.abs));
       }
-      const parts = { ...GameSound.stats.musicParts };
+      const recording = { ...GameSound.music.status };
       setPreference("musicVolume", 0);
-      await new Promise((resolve) => setTimeout(resolve, 450));
+      await waitAudio(.7);
       const quiet = new Float32Array(polishAnalyser.fftSize);
       polishAnalyser.getFloatTimeDomainData(quiet);
       const musicOffRms = Math.sqrt(quiet.reduce((s, n) => s + n * n, 0) / quiet.length);
       setPreference("musicVolume", .7);
-      await new Promise((resolve) => setTimeout(resolve, 450));
+      await waitAudio(.7);
       setPreference("muted", true);
-      await new Promise((resolve) => setTimeout(resolve, 450));
+      await waitAudio(.7);
       const samples = new Float32Array(polishAnalyser.fftSize);
       polishAnalyser.getFloatTimeDomainData(samples);
       const rms = Math.sqrt(samples.reduce((s, n) => s + n * n, 0) / samples.length);
-      return { calls, energy, peak, rms, musicOffRms, parts, voices: GameSound.stats.peakVoices,
-        battleTempo: BATTLE_MUSIC_SCORE.stepSeconds, explorationTempo: MUSIC_SCORE.stepSeconds };
+      return { calls, energy, peak, rms, musicOffRms, recording, voices: GameSound.stats.peakVoices,
+        gains: GameSound.gains };
     } finally { Math.random = random; }
   });
+  fs.writeFileSync(path.join(output, "music-validation.json"), JSON.stringify(r, null, 2));
   assert.equal(r.calls, 0);
   assert.ok(r.energy > .00001, "real low-frequency output at 30–150 Hz");
   assert.ok(r.peak > .0001 && r.peak < .99, "audible, unclipped signal");
   assert.ok(r.rms < .00001, "music obeys master mute");
   assert.ok(r.musicOffRms < .00001, "the music slider silences the actual signal");
-  for (const part of ["bass", "kick", "snare", "sub", "melody"])
-    assert.ok(r.parts[part] > 0, part);
+  assert.equal(r.recording.id, "battle");
+  assert.ok(r.recording.playing);
+  assert.deepEqual(r.recording.errors, []);
+  assert.ok(r.recording.decks <= 2);
   assert.ok(r.voices <= 20);
-  assert.ok(r.battleTempo < .29);
-  assert.equal(r.explorationTempo, .42);
-  fs.writeFileSync(path.join(output, "music-validation.json"), JSON.stringify(r, null, 2));
 });

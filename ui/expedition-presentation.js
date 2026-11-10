@@ -81,11 +81,22 @@ function updateMapInspection(index=null){
 }
 function renderCrystalPulses(){
   const sources=state.map.map((c,i)=>c.seen&&c.terrain==='crystal'?i:-1).filter(i=>i>=0);
-  const markup=sources.map((i,n)=>{
-    const x=i%W+.5,y=Math.floor(i/W)+.5,r=EXPEDITION_TUNING.crystalRadius+.5;
-    const clip=state.map.map((c,j)=>(j===i||!c.wall&&tileDistance(j,i)<=EXPEDITION_TUNING.crystalRadius&&mapLineOfSight(state.map,i,j))?`<rect x="${j%W}" y="${Math.floor(j/W)}" width="1" height="1"/>`:'').join('');
-    return `<defs><clipPath id="quartz-clip-${i}">${clip}</clipPath></defs><g clip-path="url(#quartz-clip-${i})"><rect class="quartz-pulse" x="${x-r}" y="${y-r}" width="${r*2}" height="${r*2}" rx=".18" style="transform-origin:${x}px ${y}px;animation-delay:${-n*.31}s"/></g>`;
-  }).join('');
+  // A union of affected cells: overlapping crystals never darken the same
+  // tile twice. Draw only the outer boundary, with no growing/overlaid squares.
+  const covered=new Set();
+  for(const i of sources)state.map.forEach((c,j)=>{
+    if(j===i||!c.wall&&tileDistance(j,i)<=EXPEDITION_TUNING.crystalRadius&&mapLineOfSight(state.map,i,j))covered.add(j);
+  });
+  let fill='',edge='';
+  for(const j of [...covered].sort((a,b)=>a-b)){
+    const x=j%W,y=Math.floor(j/W);
+    fill+=`M${x} ${y}h1v1h-1Z`;
+    if(y===0||!covered.has(j-W))edge+=`M${x} ${y}h1`;
+    if(x===W-1||!covered.has(j+1))edge+=`M${x+1} ${y}v1`;
+    if(y===H-1||!covered.has(j+W))edge+=`M${x+1} ${y+1}h-1`;
+    if(x===0||!covered.has(j-1))edge+=`M${x} ${y+1}v-1`;
+  }
+  const markup=covered.size?`<path class="quartz-pulse quartz-zone" data-zone-cells="${[...covered].sort((a,b)=>a-b).join(',')}" d="${fill}"/><path class="quartz-boundary" d="${edge}"/>`:'';
   paintMapDrawing('crystal-pulse-map',markup,()=>{
     const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
     svg.id='crystal-pulse-map';svg.classList.add('crystal-pulse-map');

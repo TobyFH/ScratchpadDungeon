@@ -93,7 +93,7 @@ async function jackInTheBoxFX(h, e) {
   document.body.append(svg);
   const head = svg.querySelector(".jack-head"),
     springs = svg.querySelectorAll(".jack-spring");
-  const strength = Math.min(1.5, preferences().portraitMotion),
+  const strength = Math.min(3, preferences().portraitMotion),
     duration = 950 / Math.sqrt(pace());
   let last = performance.now(),
     elapsed = 0;

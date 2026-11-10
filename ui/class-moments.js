@@ -129,7 +129,7 @@ async function rogueBackstabFX(h,e,to){
     <g class="rogue-cuts" transform="translate(${tx} ${ty}) scale(${Math.max(.65,Math.min(1.4,b.height/130))})">${[-1,0,1].map((n)=>`<g class="rogue-cut"><path d="M${-47+n*13} -48Q${37+n*7} -16 ${44+n*7} 43"/><path class="rogue-cut-core" d="M${-47+n*13} -48Q${37+n*7} -16 ${44+n*7} 43"/><path class="rogue-cut-sparks" d="m${43+n*7} 23 15-7m-13 17 18 3m-20 5 10 13"/></g>`).join('')}</g>`;
   document.body.append(svg);
   const actor=svg.querySelector('.rogue-actor'),dagger=svg.querySelector('.rogue-dagger'),trail=svg.querySelector('.rogue-shadow-trail'),cuts=[...svg.querySelectorAll('.rogue-cut')];
-  const hidden=new Set(),strikes=[.47,.57,.67],motion=Math.min(1.5,Math.max(0,preferences().portraitMotion));
+  const hidden=new Set(),strikes=[.47,.57,.67],motion=Math.min(3,Math.max(0,preferences().portraitMotion));
   const smooth=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t)};
   let elapsed=0,last=performance.now(),hit=0,finished=false,fastForward=false;
   const duration=1050/Math.sqrt(pace());

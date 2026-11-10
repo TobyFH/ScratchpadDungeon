@@ -1,5 +1,9 @@
 # Battle sound and interface follow-up
 
+> Current music playback is described in [Recorded music](RECORDED_MUSIC.md).
+> Uploaded tracks now play normally; the original arrangement below is retained
+> only as a deterministic fallback if a recording cannot play.
+
 No save migration, combat rule, enemy budget, purchased reel or art asset changes.
 
 ## Music

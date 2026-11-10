@@ -17,9 +17,11 @@ const assets = (name) => {
         ? "image/png"
         : name.endsWith(".mp4")
           ? "video/mp4"
-          : name.endsWith(".wav")
-            ? "audio/wav"
-            : null;
+          : name.endsWith(".mp3")
+            ? "audio/mpeg"
+            : name.endsWith(".wav")
+              ? "audio/wav"
+              : null;
   if (!mime) throw Error(`Unsupported UI asset: ${name}`);
   return `data:${mime};base64,${fs.readFileSync(file).toString("base64")}`;
 };
@@ -106,6 +108,7 @@ for (const [label, file] of [
   ["EXPLORATION RULES", "game/exploration-rules.js"],
   ["REWARD AUDIO", "ui/reward-audio.js"],
   ["MUSIC", "ui/music.js"],
+  ["RECORDED MUSIC", "ui/recorded-music.js"],
   ["NOTEBOOK PAGES", "ui/notebook-pages.js"],
   ["COMBAT LIFE", "ui/combat-life.js"],
   ["OVERWORLD RENDERING", "ui/overworld-rendering.js"],
@@ -114,7 +117,10 @@ for (const [label, file] of [
   ["EXPEDITION PRESENTATION", "ui/expedition-presentation.js"],
   ["FIELD GUIDE", "ui/field-guide.js"],
 ]) {
-  embed(`// BEGIN GENERATED ${label}`, `// END GENERATED ${label}`, read(file));
+  embed(
+    `// BEGIN GENERATED ${label}`, `// END GENERATED ${label}`,
+    read(file).replace(/@asset\(([^)]+)\)/g, (_, asset) => assets(asset)),
+  );
 }
 if (process.argv.includes("--check")) {
   if (html !== read("index.html")) {

@@ -1,3 +1,10 @@
+Read `docs/RECORDED_MUSIC.md` for uploaded looping tracks, biome/menu selection,
+bounded media decks, jingle ducking and fallback. Originals stay in
+`ui/assets/audio/music/source`; only MP3s embed. The old score is fallback only.
+Preserve zero/saved motion values; defaults are 150%, maximum 300%. Quartz zones
+are one constant union, never expanding squares or overlapping opacity layers.
+Keep guide copy plain, describe class roles before unexplained ability names.
+
 Read `docs/EXPEDITION_POLISH.md` for heavy physical marks, Execute anticipation,
 roaming jungle swarms, condensed battle receipts and shared notebook baselines.
 Heavy resolves into physical `attack`, never a second damage channel. Preserve

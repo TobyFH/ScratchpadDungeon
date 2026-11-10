@@ -7809,7 +7809,7 @@ test("species cries cover every enemy and class, trigger at appearance and death
   assert.ok(r.seen.some((x) => x[0] === "fighter" && x[1] === "death"));
 });
 
-test("the layered music and creature calls synthesize audio without gameplay RNG and remain bounded and mutable by volume", async (t) => {
+test("recorded music and synthesised creature calls produce audio without gameplay RNG and obey volume", async (t) => {
   const p = await game(t);
   await p.evaluate(() => {
     const create = AudioContext.prototype.createGain;
@@ -7827,8 +7827,7 @@ test("the layered music and creature calls synthesize audio without gameplay RNG
   await p.locator("#sound-preview").click();
   await p.waitForFunction(() => GameSound.context?.state === "running");
   const r = await p.evaluate(async () => {
-    const before = GameSound.stats.musicNotes,
-      rand = Math.random;
+    const rand = Math.random;
     let calls = 0;
     Math.random = () => {
       calls++;
@@ -7840,7 +7839,7 @@ test("the layered music and creature calls synthesize audio without gameplay RNG
       setPreference("sfxVolume", 0);
       setPreference("ambienceVolume", 0);
       await new Promise((r) => setTimeout(r, 1200));
-      const notes = GameSound.stats.musicNotes - before;
+      const recording = { ...GameSound.music.status };
       const samples = new Float32Array(window.musicAnalyser.fftSize);
       window.musicAnalyser.getFloatTimeDomainData(samples);
       const rms = Math.sqrt(
@@ -7849,20 +7848,20 @@ test("the layered music and creature calls synthesize audio without gameplay RNG
       setPreference("muted", true);
       const muted = GameSound.cry("pursuer");
       return {
-        notes,
+        recording,
         rms,
         calls,
         muted,
         cries: GameSound.stats.cries,
         voices: GameSound.stats.peakVoices,
-        phrases: MUSIC_SCORE.melody.length,
-        chords: MUSIC_SCORE.chords.length,
       };
     } finally {
       Math.random = rand;
     }
   });
-  assert.ok(r.notes >= 1);
+  assert.ok(r.recording.playing);
+  assert.deepEqual(r.recording.errors, []);
+  assert.ok(r.recording.decks <= 2);
   assert.ok(
     r.rms > 0.00001,
     "music produces a real audio signal with SFX and ambience silenced",
@@ -7871,7 +7870,6 @@ test("the layered music and creature calls synthesize audio without gameplay RNG
   assert.equal(r.muted, false);
   assert.ok(r.cries >= 2);
   assert.ok(r.voices <= 20);
-  assert.ok(r.phrases >= 64 && r.chords >= 4);
 });
 
 test("final automatic banking reconciles an interrupted run write and extends an older partial tenth-floor deposit once", async (t) => {
