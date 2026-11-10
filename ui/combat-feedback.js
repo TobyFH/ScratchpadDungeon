@@ -11,8 +11,8 @@ function contributionType(symbol, owner) {
 function contributes(symbol, wanted, owner) {
   const type = contributionType(symbol, owner);
   if(wanted === "heal")return ["heal","selfheal"].includes(type);
-  return ["attack", "magic"].includes(wanted)
-    ? ["attack", "magic"].includes(type)
+  return DAMAGE_TYPES.includes(wanted)
+    ? DAMAGE_TYPES.includes(type)
     : type === wanted;
 }
 // Presentation uses its own FX randomness and never changes damage calculations.
@@ -190,7 +190,7 @@ function impactNumberParts(value, type) {
           ? 2
           : type === "heal"
             ? POWER.heal * s.tier
-            : ATTACK_POWER[s.tier] || 1,
+            : markDamage(s.type,s.tier) || 1,
       );
   if (weights.length < 2) return [];
   const total = weights.reduce((a, b) => a + b, 0),

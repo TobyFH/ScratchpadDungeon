@@ -1,121 +1,70 @@
-// Short, scannable topics share one fixed notebook frame. No filler text.
+// Six illustrated quick-reference pages. Detailed live rules belong in the
+// existing hover tooltips and reel workshop, not an encyclopaedia here.
+function guideRows(rows, classPage = false) {
+  return `<ul class="guide-takeaways illustrated-guide ${classPage ? 'guide-classes' : ''}">${rows.map(([art,title,copy]) => `<li><span class="guide-picture" aria-hidden="true">${classPage ? portraitArt(art,{hp:1,maxHp:1}) : art === 'wall' ? wallArt() : icon(art)}</span><span><b>${title}</b> ${copy}</span></li>`).join('')}</ul>`;
+}
 const FIELD_GUIDE = Object.freeze([
-  {
-    id: "explore",
-    title: "Exploration",
-    body: '<ul class="guide-takeaways"><li><b>Move.</b> Click an adjacent unknown tile to reveal it. Click a known tile for a shortest route.</li><li><b>Change course.</b> Click a new valid destination while walking. Routes prefer to avoid active fights and traps.</li><li><b>Terrain.</b> Stone, rivers and lava block walking. Bridges are clear crossings; tunnels offer optional travel.</li><li><b>Old passages.</b> After 12 move commands away, explored tiles can hide an ambush. Long routes count once; waiting does not age tiles.</li><li><b>The Unwritten.</b> From floor three, watch for a hunter that moves one tile for each of your footsteps.</li></ul>',
-  },
-  {
-    id: "floors",
-    title: "Floors & discoveries",
-    body: '<ul class="guide-takeaways"><li><b>Win.</b> Defeat each staircase guardian. Beating the tenth guardian completes the dungeon.</li><li><b>Descend.</b> Select stairs to open their menu. After victory, descend from anywhere or keep exploring.</li><li><b>Wells.</b> Save an unused fountain for later. It starts at 16.5% maximum HP plus half its roll. Both grow gently with depth; triples can crit.</li><li><b>Light.</b> Beacons, cave rooms and lava reveal nearby tiles without activating events. Stone blocks beacon and lava light.</li><li><b>Other finds.</b> Ruins trade risk for loot. Strongholds shelter powerful enemies. Paired tunnels stay open after use.</li></ul>',
-  },
-  {
-    id: "biomes", title: "Caves & living floors",
-    body: "<ul class=\"guide-takeaways\"><li><b>Themes.</b> Floor one is Caverns. All eight non-lava themes are equally likely from floor two; lava joins on floor five.</li><li><b>Overgrowth.</b> Roots hide approaches. Fresh fights are more likely to surprise either side.</li><li><b>Mushrooms.</b> A cap reveals up to eight connected caps without activating discoveries.</li><li><b>Fire & frost.</b> Lava blocks walking and lights nearby tiles. Ice forces a slide; see the next topic.</li><li><b>Local foes.</b> Themed creatures keep their own depth ranges. Deeper floors bring stronger local species.</li></ul>",
-  },
-  {id:"heartwood",title:"Heartwood & sunlight",body:'<ul class="guide-takeaways"><li><b>Roots.</b> Select a rooted passage to fight its cluster. Victory clears it permanently, then you enter its original room.</li><li><b>Heartwood.</b> An optional tree boss. Defeat it for an artefact and wither every root.</li><li><b>Growth.</b> Every three completed journeys, one new root may grow. Your escape route stays open.</li><li><b>Clearings.</b> Enter sunlight to scout four neighbouring rooms. Light blocks roots and removes the extra Overgrowth surprise chance.</li></ul>'},
-  {id:"crust",title:"Cooling lava crust",body:'<ul class="guide-takeaways"><li><b>Shortcuts.</b> Some lava crossings harden into temporary stone. Permanent bridges and tunnels remain.</li><li><b>Cycle.</b> Three journeys molten; five solid. The last solid journey shows bright cracks.</li><li><b>Safety.</b> The whole crossing holds while you stand on it. It can melt after you reach permanent ground.</li><li><b>Clock.</b> A completed journey counts once, including long paths, ice slides and tunnel travel. Battles and menus pause changes.</li></ul>'},
-  {id:"faults",title:"Faults & earthquakes",body:'<ul class="guide-takeaways"><li><b>Fault lines.</b> Cracks spread every two journeys. Older cracks turn unstable, then may collapse into blocking rubble.</li><li><b>Warnings.</b> Cracked ground stays walkable until collapse. Your current tile and permanent escape route are protected.</li><li><b>Tremors.</b> Every four journeys, some Shaky Caverns swap two unvisited discoveries.</li><li><b>Contents.</b> Scouted previews update. Visited rooms stay put; terrain, rewards and room counts are preserved.</li></ul>'},
-  {id:"landmarks",title:"Lanterns & moving walls",body:'<ul class="guide-takeaways"><li><b>Lantern islands.</b> Shadow-gallery lanterns light automatically on entry. Their tile and four neighbours protect visited passages from returning darkness.</li><li><b>No free scouting.</b> Lanterns do not reveal unvisited room contents.</li><li><b>Shifting corridors.</b> Labyrinth wall connections change every four journeys. Heavy boundary lines show closed passages.</li><li><b>Stable escape.</b> A permanent stair route remains. Secret doors and pressure-plate gates keep their own rules.</li></ul>'},
-  {
-    id: "ice", title: "Ice & dangerous fuses",
-    body: '<ul class="guide-takeaways"><li><b>Ice.</b> Entering ice carries you forward. Consecutive ice tiles continue the slide; a wall stops it.</li><li><b>Plan ahead.</b> Known ice is included in routes. You cannot choose to turn halfway through a slide.</li><li><b>No safe route.</b> If sliding makes your destination unreachable, a long move stops before the blocking ice.</li><li><b>Powder imp.</b> Watch its burning fuse. After two enemy turns it explodes, damaging the party and destroying itself.</li><li><b>Answer the fuse.</b> Kill or stun it before detonation, build team block, or use an Unbroken page. Its warning shows blast power.</li></ul>',
-  },
-  {id:"crystal",title:"Crystal caves",body:'<ul class="guide-takeaways"><li><b>Deposits.</b> Crystal clusters block walking. Their repeating blue pulse marks the aura reaching fights within one tile, with stone blocking its reach.</li><li><b>Resonance.</b> Every three party rolls, two random reels become sealed with gems.</li><li><b>Crack them.</b> Roll an affected hero. Their sealed reels are empty for that roll, then the gems shatter. Other heroes keep their own seals.</li><li><b>After battle.</b> Every seal clears when the fight ends. The deposit stays on the map.</li></ul>'},
-  {
-    id: "combat",
-    title: "Combat & criticals",
-    body: '<ul class="guide-takeaways"><li><b>Hero powers.</b> Physical/spell ranks I–IV deal 1/2/3/4 damage. Healing/block give 2/4/6/8. Bonuses and criticals add to these.</li><li><b>Targets.</b> Click an enemy to aim damage. Choose an ally for healing. Stimulants boost self or an ally.</li><li><b>Critical.</b> Match three kinds AND ranks. The middle class mark completes matching outer marks. Blanks do nothing.</li><li><b>Big hits.</b> Criticals and tier III–IV attacks hit all foes. Each enemy has its own countdown.</li><li><b>Roll freely.</b> Click any hero card or handle; portraits edit reels. Click rolling reels to land them. Events need confirmation; hero crits grant 1 EXP.</li></ul>',
-  },
-  {
-    id: "statuses",
-    title: "Block, stun & Vulnerable",
-    body: '<ul class="guide-takeaways"><li><b>Team block.</b> Shared block caps at 20, or 30 with a living Tank. Enemies cap at 20, or 30 with a living boss. Damage spends it; battle end clears it.</li><li><b>Stun.</b> Use a ready ally while a hero is stunned. Their rolls help recovery. If nobody is ready, one lost turn advances enemy clocks and clears stun.</li><li><b>Break through.</b> After recovery, two of your own actions cannot be stunned. Strong stuns still strip block. Healing may clear stun; healing Resonance clears all.</li><li><b>Vulnerable.</b> The next direct hit deals 25% extra damage. Healing and poison ticks do not consume it.</li><li><b>Details.</b> Hover any condition icon for its actual effect and remaining strength or duration.</li></ul>',
-  },
-  {
-    id: "buffs",
-    title: "Stimulants & shield bash",
-    body: "<ul class=\"guide-takeaways\"><li><b>Self stimulant.</b> Tanks, Rogues and Berserkers boost themselves.</li><li><b>Ally stimulant.</b> Mages, Rangers and Jesters boost their most-used living ally, or themselves when alone.</li><li><b>Stacks.</b> At most three own actions. Every two extra doses add one potency, capped at eight.</li><li><b>Potency.</b> Damage starts at +1, adding one per two potency. Resistance starts at +1, adding one per five. Hover the badge for exact values.</li><li><b>Shield Bash.</b> Adds level-scaled team block, then spends protection to strike. Each bash point strips two enemy block.</li></ul>",
-  },
-  {
-    id: "openings",
-    title: "Openings & poison",
-    body: '<ul class="guide-takeaways"><li><b>Initiative.</b> A marked hero gains 25% stronger effects if chosen for the first roll.</li><li><b>Surprise.</b> Surprised heroes cannot open. If everyone is surprised, the enemies attack first.</li><li><b>Enemy intent.</b> The short line names a goal and target. Reels still decide what actually happens.</li><li><b>Poison.</b> Ticks bypass block. Doses load up to three turns; repeated doses then increase tick damage.</li><li><b>Temporary effects.</b> Poison, stun, Execute, anticipation and buffs clear after combat. Berserker Fury survives, losing one charge per tile walked.</li></ul>',
-  },
-  {
-    id: "heroes",
-    title: "Reel editing",
-    body: '<ul class="guide-takeaways"><li><b>Earn points.</b> Victories grant EXP and personal points. A level adds 6 maximum HP and 4 points.</li><li><b>Edit.</b> Choose a reel, then a mark. Upgrade raises power; Replace lets you choose its type.</li><li><b>Refund.</b> Downgrade returns half the rank cost. Rebuild support heroes if they must fight alone.</li><li><b>Odds.</b> Every face has equal odds. There is no weighting purchase. Duplicate kinds combine; the Critical odds page shows each match.</li><li><b>Permanent mark.</b> Only the middle reel has the class mark. It cannot be removed, copied or upgraded.</li></ul>',
-  },
-  {
-    id: "classes",
-    title: "Classes & temperament",
-    body: "<ul class=\"guide-takeaways\"><li><b>Temperament.</b> Aggressive: +1 physical, spell and poison. Defensive: +1 healing, block and stun. Fixed after starting.</li><li><b>Tank & Rogue.</b> Tank shields feed Shield Bash. Rogue favours physical combos or poison; little recovery.</li><li><b>Mage.</b> Spells work solo. Healing, shields or poison Resonance support a party. Healing gains 5% per level after four, up to +40%.</li><li><b>Ranger.</b> Other heroes and support rolls charge patience. Attacks spend it; the seal strengthens Execute. This bonus cannot crit again.</li><li><b>Berserker.</b> Wounds build Fury for damage and lifesteal. Every real HP healed spends Fury.</li></ul>",
-  },
-  {
-    id: "combos",
-    title: "Mixed builds",
-    body: '<ul class="guide-takeaways"><li><b>Tank.</b> Physical + block adds 2 block. Shield Bash spends protection; keep attacks for solo progress.</li><li><b>Rogue.</b> Physical + poison/stun adds 1 physical damage. Matching physical combos remain strong.</li><li><b>Mage.</b> Spell/poison + support adds 1 spell, plus 1 rolled healing or block.</li><li><b>Ranger.</b> Physical + healing/stun/ally stimulant adds 2 damage. Let allies charge Execute.</li><li><b>Berserker & Jester.</b> Physical + healing/Blood Price adds 1 damage. Trick + another useful kind adds 1 anticipation.</li></ul>',
-  },
-  {
-    id: "jester",
-    title: "Jester & Punchline",
-    body: "<ul class=\"guide-takeaways\"><li><b>Unlock.</b> Buy the invitation at camp. Inscribe any ordinary type except Self stimulant or Blood Price.</li><li><b>Trick.</b> At six anticipation, fire six marks from your reels. Matching Trick triples fill the bar faster.</li><li><b>Punchline.</b> Uses real ranks, once per action. No extra turn, critical or recharge from its own marks.</li><li><b>Criticals.</b> Match three identical kinds and ranks, like other classes. Different kinds have no special rule.</li><li><b>Wildcard.</b> The class mark inks enemy reels, gilds allies, reverses enemy rolls or scatters healing and damage. Usually helpful; always unpredictable.</li></ul>",
-  },
-  {
-    id:"mystery",title:"Mystery marks ?",
-    body:'<ul class="guide-takeaways"><li><b>Permanent.</b> Every Jester reel has one ?. It cannot be edited or copied.</li><li><b>Any power.</b> It becomes a random ordinary power, including powers the class cannot inscribe. Blood Price may cost HP.</li><li><b>Rank.</b> Other ordinary faces on that reel set its rank odds. Half rank I and half rank II means equal chances of either.</li><li><b>Matches.</b> The revealed power can complete a normal critical. Punchline draws cannot crit or chain another Punchline.</li></ul>',
-  },
-  {
-    id:"living",title:"Changing passages",
-    body:'<ul class="guide-takeaways"><li><b>Mudslide.</b> Slides you straight ahead, then blocks the tile behind you. Another way to the stairs remains.</li><li><b>Crystal aura.</b> Dotted blue tiles show where deposits can seal reels during fights. Walls stop the aura.</li><li><b>Rockfall.</b> Falling stone may block a passage permanently. Only safe blockages can occur.</li><li><b>Shaky caves.</b> Numbered ceilings count every footstep. At zero, stone falls on whoever is underneath, then the count resets.</li><li><b>The Unwritten.</b> Falling stone kills the hunter, leaving treasure. This grants no battle EXP.</li></ul>',
-  },
-  {
-    id:"shadow",title:"Shadow galleries",
-    body:'<ul class="guide-takeaways"><li><b>Returning cover.</b> Old visited tiles darken again after a varied delay. Their contents and known routes stay the same.</li><li><b>Keep moving.</b> Your current tile stays clear. Cover spreads more slowly as more passages darken.</li><li><b>Revisit.</b> Enter to erase the cover, with a higher chance of an ambush. Reading pages and fighting pause the timer.</li><li><b>Veil weaver.</b> Fogged reels count as Empty for one roll. With several heroes, use a different ally after each action to clear the last actor’s veil.</li></ul>',
-  },
-  {
-    id: "companions",
-    title: "Traits & fallen companions",
-    body: '<ul class="guide-takeaways"><li><b>Traits.</b> Relevant experiences sometimes grant one hero a trait. Only one trait is active; a later trait can replace it.</li><li><b>Rare moments.</b> A hero might hold at 1 HP, shrug off stun, parry, rally or roll with inspiration. Each fight permits at most two such moments.</li><li><b>On the road.</b> Coins, insight, a warning, a second breath or sure footing may reward one adventurer. Moments can occasionally leave a related trait.</li><li><b>Death.</b> A carried Revive Stone can restore a fallen hero at 75% HP. Otherwise death is permanent.</li><li><b>Records.</b> Names remembered and the final roster keep the stories and statistics of fallen and retired companions.</li></ul>',
-  },
-  {
-    id: "supplies",
-    title: "Supplies & equipment",
-    body: '<ul class="guide-takeaways"><li><b>Satchel.</b> Carry three item types; matching supplies stack. Inspect to use or discard. A full bag offers swap, use or leave.</li><li><b>Spend supplies.</b> Later floors offer stronger variants. Ink bombs roll damage and poison; Unbroken page blocks one full enemy turn.</li><li><b>Equipment.</b> Drag compatible gear onto a hero. Class-bound items say who can wear them; generic gear fits anyone.</li><li><b>Artefacts.</b> One equipped artefact provides a passive bonus. Revive Stones work from the pack without equipping.</li><li><b>Companions.</b> Invite up to three, or replace one. Declining at either invitation step can bring a farewell, gift or fight.</li></ul>',
-  },
-  {
-    id: "camp",
-    title: "By the campfire",
-    body: '<ul class="guide-takeaways"><li><b>Bank gold.</b> After floors 1–9, bank 25%, 50%, 75% or all carried gold. Victory banks everything. Banked gold survives failed runs.</li><li><b>Adventurers.</b> Unlock Ranger, Berserker and Jester starts and wandering companions.</li><li><b>Campfire Lessons.</b> Eight improvements have five tiers each. Buy tiers permanently; use − and + to choose an active rank, including zero.</li><li><b>Other rules.</b> Challenges add danger, sometimes with rewards. Oddities change discoveries and routes. Purchases start disabled.</li><li><b>Grow stronger.</b> Bank gold for lessons. Fresh runs are dangerous; a trained party is stronger. Select lessons before the next run.</li></ul>',
-  },
-  {
-    id: "maze", title: "The labyrinth",
-    body: '<ul class="guide-takeaways"><li><b>Winding routes.</b> Dense walls force long corridors. Known passages still support shortest-path movement.</li><li><b>Secret doors.</b> Reveal a door, stand beside it, then select it to open a shortcut.</li><li><b>Pressure plates.</b> Accept the plate prompt to open its matching gate permanently.</li><li><b>No required switches.</b> A route to the guardian exists with every door and gate closed.</li><li><b>Paired tunnels.</b> Hover a known entrance to see its known partner and a connecting arrow.</li></ul>',
-  },
-  {
-    id: "wild-finds", title: "Nests & wild finds",
-    body: '<ul class="guide-takeaways"><li><b>Nests.</b> Empty nests offer rolled gold; full nests offer an egg healing 65% of one hero’s maximum HP. Taking either has a 50% chance of waking the mother. Leaving is safe.</li><li><b>Overgrowth.</b> Fruit bushes offer a small, single-use team heal. Leave them for later if healthy.</li><li><b>Mushroom caves.</b> Poison caps hurt when crossed. Burstcaps explode within one tile, roll damage, then become ordinary caps.</li><li><b>Fairy rings.</b> Choose healing or loot, with a chance to disturb a guardian.</li><li><b>Other finds.</b> Search shaky rubble for salvage, or accept a dangerous optional shadow duel in the dark.</li></ul>',
-  },
-  {
-    id: "event-log", title: "Event log",
-    body: '<ul class="guide-takeaways"><li><b>One record.</b> Combat, discoveries and personal moments share the Event log, newest first.</li><li><b>Learn as you go.</b> Underlined, highlighted names explain themselves on hover or keyboard focus.</li><li><b>Personal moments.</b> Traits and rare character events keep the effect and the reason it happened.</li><li><b>Nearby hazards.</b> Falling ceilings are recorded only when revealed, close by and in sight.</li><li><b>Read back.</b> Press M to focus the log; use Tab to reach its explanations. Only the entries scroll.</li></ul>',
-  },
-  {
-    id: "controls",
-    title: "Controls & automation",
-    body: '<ul class="guide-takeaways"><li><b>Navigate.</b> Use Tab and Enter, or the shortcuts in the bottom bar. Side tabs stay available during events.</li><li><b>Autofight.</b> Chooses heroes, targets and occasional supplies. Autoplay explores, edits reels and seeks useful discoveries.</li><li><b>Builds.</b> Autoplay keeps a preferred build for each hero, while retaining damage and rebuilding a support-only survivor.</li><li><b>Options.</b> Adjust sound, motion, lighting, palette and icon/beam feedback. Reset progress keeps these settings.</li><li><b>Backup.</b> Save HTML in Options downloads the offline game, not browser-local progress.</li></ul>',
-  },
+  {id:'explore',title:'Explore & descend',body:guideRows([
+    ['hero','Walk into the pencil.','Click covered neighbours. Click known passages for a route.'],
+    ['treasure','Take your chances.','Chests roll loot. Traps roll danger. Confirm each discovery.'],
+    ['well','Save a fountain.','Return when wounded. Dead companions cannot be healed.'],
+    ['stairs','Find the guardian.','Defeat each stair boss. The tenth boss wins the run.'],
+    ['tunnel','Read the route.','Walls and water block walking. Bridges cross; tunnels teleport.'],
+    ['pursuer','Watch your back.','Old paths hide ambushes. The Unwritten and bees pursue.'],
+  ])},
+  {id:'combat',title:'Roll & fight',body:guideRows([
+    ['sword','Choose any ready hero.','Click a card or handle repeatedly. Watch enemy countdowns.'],
+    ['heal','Choose your targets.','Click enemies to attack; select allies to heal. Self-heal stays personal.'],
+    ['class','Match three marks.','Match kind AND rank. The class mark completes matching outer marks.'],
+    ['block','Protect the party.','Shared and spent when hit. Cap 20; 30 with a Tank.'],
+    ['stun','Read the condition icons.','Stun stops actions; poison hurts; stimulant strengthens. Hover for details.'],
+    ['magic','Make big hits count.','Criticals and rank III–IV attacks hit every enemy.'],
+  ])},
+  {id:'heroes',title:'Build your reels',body:guideRows([
+    ['sword','Regular physical: 1 / 2 / 3 / 4.','Cheaper to improve. Spells have the same base damage.'],
+    ['heavy','Heavy physical: 2 / 4 / 6 / 8.','Tank/Berserker only. More expensive; matches separately from regular attacks.'],
+    ['heal','Healing & block: 2 / 4 / 6 / 8.','Support keeps the party alive. Mixed powers earn class bonuses.'],
+    ['class','Keep the class mark.','One permanent middle-reel ability. Cannot be removed or copied.'],
+    ['point','Spend personal points.','Portrait → reel → mark → type or rank. Prices/refunds are shown.'],
+    ['blank','Build a matching set.','Equal face odds. Duplicates improve matches. Victories earn EXP/points.'],
+  ])},
+  {id:'classes',title:'Know your party',body:guideRows([
+    ['fighter','Tank.','Shields and heavy weapons. Shield Bash spends protection on damage.'],
+    ['rogue','Rogue.','Fragile physical combos and poison. Flurry adds three attacks.'],
+    ['mage','Mage.','Spells or support. Resonance echoes rolled powers across a team.'],
+    ['ranger','Ranger.','Let allies charge patience, then spend it on Execute.'],
+    ['berserker','Berserker.','Wounds build Fury for damage and lifesteal. Healing spends it.'],
+    ['jester','Jester.','Wildcard surprises. Trick charges Punchline: six marks from their reels.'],
+  ],true)},
+  {id:'biomes',title:'Recognise the terrain',body:guideRows([
+    ['overgrown','Overgrowth.','Roots, fruit, clearings; bee swarms follow nearby travellers.'],
+    ['explodingMushroom','Mushrooms.','Purple caps poison. Red caps explode. Ordinary caps reveal neighbours.'],
+    ['ice','Frozen caves.','Ice slides forward. Brittle ice leaves an impassable hole.'],
+    ['lava','Lava caves.','Molten rivers block. Bridges and cooling crust offer crossings.'],
+    ['crystal','Crystal caves.','Blue auras seal reels. Roll affected heroes to crack gems.'],
+    ['stalactite','Shaky caves.','Ceilings count footsteps. Cracks collapse; tremors move discoveries.'],
+    ['shadow','Shadow galleries.','Old rooms darken. Lantern islands keep visited passages clear.'],
+    ['wall','Labyrinth.','Walls shift often. Watch warnings; an escape route remains.'],
+  ])},
+  {id:'camp',title:'Supplies, camp & controls',body:guideRows([
+    ['bag','Use your satchel.','Three item types. Drag equipment to heroes; artefacts grant passives.'],
+    ['recruit','Build a party.','Up to three companions. Temperament favours aggressive or defensive powers.'],
+    ['coin','Bank your gold.','Bank after cleared floors. Banked gold survives failed runs.'],
+    ['camp','Prepare the next run.','Lessons improve heroes. Invitations unlock classes. Other rules change runs.'],
+    ['safe','Use your own pace.','Options control effects. Autofight rolls; Autoplay explores and builds.'],
+    ['sound','Event log.','Hover underlined names. Reopen old battles. Shortcuts line the bottom.'],
+  ])},
 ]);
+const GUIDE_ALIASES = Object.freeze({floors:'explore',statuses:'combat',buffs:'combat',openings:'combat',combos:'heroes',jester:'classes',mystery:'classes',companions:'classes',controls:'camp','event-log':'camp',roots:'biomes',crust:'biomes',faults:'biomes',landmarks:'biomes',ice:'biomes',crystal:'biomes',living:'biomes',shadow:'biomes',maze:'biomes','wild-finds':'explore'});
 function help(topic = "explore") {
+  topic = GUIDE_ALIASES[topic] || topic;
   let page = Math.max(
     0,
     FIELD_GUIDE.findIndex((p) => p.id === topic),
   );
   openModal(
-    "A field guide for the brave",
-    `<section class="field-guide"><nav class="guide-navigation" aria-label="Field guide topics"><label for="guide-topic">Topic<select id="guide-topic">${FIELD_GUIDE.map((p, i) => `<option value="${i}" ${i === page ? "selected" : ""}>${p.title}</option>`).join("")}</select></label><button id="guide-previous" aria-label="Previous topic">← Previous</button><button id="guide-next" aria-label="Next topic">Next →</button></nav><div class="guide-grid" id="guide-content" aria-live="polite">${FIELD_GUIDE.map((topic, i) => `<div class="guide-topic-body" data-guide-page="${i}" aria-hidden="true" inert>${topic.body}</div>`).join("")}</div><div class="guide-page-count" aria-live="polite"></div></section><div class="modal-actions"><button class="primary" data-close>Into the margins ↗</button></div>`,
+    "Field guide",
+    `<section class="field-guide"><nav class="guide-navigation" aria-label="Field guide topics"><label for="guide-topic">Topic<select id="guide-topic">${FIELD_GUIDE.map((p, i) => `<option value="${i}" ${i === page ? "selected" : ""}>${p.title}</option>`).join("")}</select></label><button id="guide-previous" aria-label="Previous topic">← Previous</button><button id="guide-next" aria-label="Next topic">Next →</button></nav><div class="guide-grid" id="guide-content" aria-live="polite">${FIELD_GUIDE.map((topic, i) => `<div class="guide-topic-body" data-guide-page="${i}" aria-hidden="true" inert>${topic.body}</div>`).join("")}</div><div class="guide-page-count" aria-live="polite"></div></section><div class="modal-actions"><button class="primary" data-close>Back to the dungeon ↗</button></div>`,
     "help",
   );
   const showPage = (next) => {

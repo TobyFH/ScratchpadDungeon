@@ -1,3 +1,12 @@
+Read `docs/EXPEDITION_POLISH.md` for heavy physical marks, Execute anticipation,
+roaming jungle swarms, condensed battle receipts and shared notebook baselines.
+Heavy resolves into physical `attack`, never a second damage channel. Preserve
+paid faces/refunds and exact class permissions in every edit/forecast path.
+Closed battle archives hydrate on opening; only the outer Event log scrolls.
+The six illustrated guide pages reserve their tallest content, retain old topic
+aliases and reuse actual game assets. New-run fitting holds must still allow
+real resize/forced fits. Protect swarms as well as the hunter during wall changes.
+
 # Scratchpad Dungeon UI continuity
 
 Read `docs/LAYOUT_PERFORMANCE.md` before changing notebook fitting, keyboard

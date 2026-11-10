@@ -181,6 +181,18 @@ const BIOME_ENEMIES = Object.freeze({
     ],
     lore: "A guardian buried in clear ice. When its shell cracks, a colder shape rises inside.",
   },
+  bees: {
+    name: "Canopy bee swarm",
+    biome: "overgrown",
+    minDepth: 2,
+    maxDepth: 10,
+    roamerOnly: true,
+    hp: 0.85,
+    damage: 0.85,
+    cadence: -1,
+    faces: [["attack", 1], ["attack", 1], ["poison", 1], ["attack", 2], ["miss", 1]],
+    lore: "Wax-striped hunters drift between the roots. A nearby footstep turns their lazy wandering into a pursuit.",
+  },
 });
 for (const [id, def] of Object.entries(BIOME_ENEMIES))
   ENEMY_PROFILES[id] = { ...def };
@@ -189,7 +201,7 @@ function biomeEnemyPool(depth, theme = floorBiome()) {
   return Object.entries(BIOME_ENEMIES)
     .filter(
       ([id, p]) =>
-        depth >= p.minDepth &&
+        !p.roamerOnly && depth >= p.minDepth &&
         depth <= p.maxDepth &&
         (p.biome === theme || (id === "powderimp" && theme === "lava")),
     )

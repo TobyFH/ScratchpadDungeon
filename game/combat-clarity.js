@@ -292,7 +292,7 @@ function finishCombatLogGroup(group, report) {
   groupedCombatLog = group.previous;
   if (state !== group.run) return;
   const damage = report.shots
-    .filter((s) => s.actual > 0 && ["attack", "magic"].includes(s.type))
+    .filter((s) => s.actual > 0 && DAMAGE_TYPES.includes(s.type))
     .map((s) => s.actual);
   const utility = report.shots
     .filter((s) => ["poison", "stun", "rally", "stimulant"].includes(s.type))

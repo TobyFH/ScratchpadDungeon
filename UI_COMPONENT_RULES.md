@@ -366,3 +366,17 @@ pencil underline, a quiet token-based highlight and hover/focus explanations in
 the shared viewport tooltip. Keep them inline and keyboard focusable; never add
 an expanding explanation panel inside the scrolling log. See `docs/EVENT_LOG.md`
 for snapshot metadata and grouped-action recording.
+
+## Current notebook follow-up
+
+- Six illustrated guide pages use actual `icon`/portrait assets. Keep inactive
+  topics in their shared grid so the tallest page reserves navigation space;
+  never restore an encyclopaedia of tiny subtopics or fixed heights that clip.
+- Desktop bottom panels share `--ui-bottom-panels-height`. Long logs must remain
+  inside that frame; nested battle records expand only within the outer scroller.
+- Speech uses shared torn-paper/tape tokens, palette ink and a folded pointer.
+  New lines remain meaningful gameplay speech, never decorative filler notes.
+- Shake the whole notebook/map with snapped translation; do not rotate/scale
+  their tile coordinate grid. Individual illustrations can still lean/recoil.
+- Heavy marks use the axe illustration and shared tier grid, with clear power
+  and costs. A heavy mark is not a class seal or another physical damage channel.

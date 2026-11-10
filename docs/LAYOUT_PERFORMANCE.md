@@ -88,3 +88,12 @@ Run `npm run build:ui`, the focused layout checks, `npm test`,
 screenshots and retain reports in `test-results/performance-two-*`.
 Broader party/combat rendering and text-fitting refactors are left for a later
 trace-guided pass if still needed.
+
+## New-run choice hold
+
+`notebookLayout.hold()` keeps the current fit while the player chooses a new
+adventurer. Prompt changes must not resize the expedition underneath that sheet.
+`release()` invalidates fitting on close/start. A real viewport change or explicit
+force still refits. The scale formula, footer observer and font invalidation are
+unchanged. See [Expedition polish](EXPEDITION_POLISH.md) for the new shared panel
+baselines and pixel-snapped whole-map shake.

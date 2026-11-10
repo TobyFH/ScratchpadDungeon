@@ -1,7 +1,7 @@
 # Event log
 
 Combat and exploration share one **Event log**. Newest entries come first, with
-at most 60 retained entries. The existing M shortcut and Focus log button remain.
+at most 60 raw lines, plus ten bounded battle receipts. The existing M shortcut and Focus log button remain.
 Only the entries scroll; the notebook geometry and gameplay rules are unchanged.
 
 Underlined, lightly highlighted names have explanations on hover or keyboard
@@ -82,3 +82,13 @@ local ceiling relevance, bounded history, focus/scroll, no logging RNG and
 hover/focus geometry in all palettes at 1920, 1280, 390 and 320px. Screenshots go
 to ignored `test-results/event-log/`. Run the full suite and `npm run review:ui`
 for integration and notebook review.
+
+## Current battle folding
+
+See [Expedition polish](EXPEDITION_POLISH.md). `state.logBattles` snapshots up to
+ten encounters with 160 lines each. `battleId` associates raw metadata with its
+receipt. `beginBattleLog` and `completeBattleLog` bracket real combat, including
+XP/loot and final defeat/victory. The latest completed fight stays expanded until
+the next completes. Older fights become native details summaries whose lines
+hydrate only on opening. No extra nested scrollbar or second log is introduced.
+Descriptions stay frozen; all archived text and offsets use the same escaping.

@@ -102,3 +102,14 @@
       and personal moments are underlined, highlighted and explained on hover/focus.
       Explanations survive reloads, important moments survive nested action groups,
       and hidden/distant environmental churn stays out of the journal.
+
+- [ ] Execute grows/holds on the Ranger, accelerates into a forward gold impact,
+      and moves only enemy art; Skip and portrait-motion options still work.
+- [ ] Heavy marks show correct damage, class permissions, costs and matching;
+      new axe marks fit every rank and their flying effects.
+- [ ] Burstcaps are clearly red/spiked, poison caps purple, holes shaded/blocked;
+      travelling swarms never disclose hidden tile contents or replace discoveries.
+- [ ] Guide pages reuse real artwork, stay concise/readable, and keep their
+      navigation stationary; desktop panel frames share their page baselines.
+- [ ] Older battles fold only after another completes, reopen with their saved
+      explanations, and never create a second scrolling panel or hidden-node flood.

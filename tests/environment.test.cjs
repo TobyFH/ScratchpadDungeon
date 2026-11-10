@@ -493,7 +493,7 @@ test("shifting corridor connections are shared by actual routing, ice and perman
     const hiddenLanding = glideCells(state.map, a - 1, a, { knownOnly: true });
     state.map[b].seen = true;
     const safe = environmentTraversalSafe(state.map, b);
-    for (let n = 0; n < 4; n++) advanceFloorEnvironment();
+    for (let n = 0; n < ENVIRONMENT_TUNING.corridorInterval; n++) advanceFloorEnvironment();
     return {
       open,
       closed,

@@ -48,7 +48,7 @@ brittle ice. Roots, trees and faults cannot occupy it. Every proposed wall or
 edge change additionally proves escape from every remaining walkable tile, using
 actual directed movement. The conservative proof closes all temporary crust,
 consumable mud and brittle ice, and exhaustively checks every corridor-layout
-combination (at most two sections). Optional root/tree battles and waiting for
+combination (at most three sections). Optional root/tree battles and waiting for
 crust are never counted as an escape route. Rejected mutations restore their
 previous walls/layouts. An occupied crust formation is held as one unit. The moving hunter is also
 kept out of newly blocking terrain: crust holds and faults delay while it
@@ -64,7 +64,7 @@ occupies them, and new roots cannot grow under it.
 | **Spreading faults** | 60% Shaky Caverns attempt; one safe 2–4-cell chain. With faults present, ceilings cap at three and mudslides at one. A crack propagates every 2 journeys; each cell warns for 4 journeys before collapse. Unsafe/current-tile collapses are cancelled permanently for that cell. Contents are retained beneath impassable rubble. |
 | **Seismic shifts** | 60% Shaky Caverns chance, reduced to 35% when faults already exist. Every 4 journeys, one pair of eligible unvisited discoveries swaps. Scouted previews are preferred. Visited/completed rooms, stairs, tunnels, adventurers, fixed structures and environmental landmarks never move. |
 | **Lantern islands** | Shadow Galleries have 2–3 where space permits. First entry permanently lights the tile and four cardinal neighbours. Already visited cover clears and cannot return inside the light; unvisited contents are not scouted. |
-| **Shifting corridors** | 75% Labyrinth attempt; 1–2 optional sections controlling 2–3 neighbouring connections. Each cycles predictably between two proved layouts every 4 journeys, with a warning one journey beforehand. A permanent anchor connection remains open; secret doors and pressure gates are excluded. |
+| **Shifting corridors** | Every Labyrinth attempts three optional sections controlling 2–3 neighbouring connections. Each cycles predictably between two proved layouts every 2 journeys with staggered phases, with a warning one journey beforehand. A permanent anchor connection remains open; secret doors and pressure gates are excluded. |
 
 No safe placement means that feature is omitted rather than damaging the floor.
 Features may coexist with a room where appropriate: a rooted Treasure remains a
@@ -108,3 +108,5 @@ light/scouting, copied room metadata, phases, route rejection and save roundtrip
 Also run the existing ice/crystal, biome, clarity, expedition and full tests.
 `npm run review:environment` captures the live overlays and choices at desktop,
 Deck and phone sizes. The field guide has four compact environmental topics.
+
+See [Expedition polish](EXPEDITION_POLISH.md) for the current wall presentation, phase-aware countdowns and separately owned roaming bee swarms. Closures protect both floor travellers.

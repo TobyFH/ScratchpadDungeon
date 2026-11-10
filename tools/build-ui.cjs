@@ -88,6 +88,7 @@ for (const [label, file] of [
   ["BATTLE TACTICS", "game/battle-tactics.js"],
   ["WORLD EVENTS", "game/world-events.js"],
   ["ENVIRONMENT RULES", "game/environment.js"],
+  ["ROAMING SWARMS", "game/roaming-swarms.js"],
   ["ENVIRONMENT PRESENTATION", "ui/environment.js"],
   ["BIOMES", "game/biomes.js"],
   ["EXPEDITION EXPANSION", "game/expedition-expansion.js"],

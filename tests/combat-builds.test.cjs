@@ -195,6 +195,8 @@ test("workshop exposes large explicit controls, keeps the selected face after ed
   const p = await game(t);
   await p.evaluate(() => {
     state.party[0].points = 40;
+    // Test the regular-attack refund independently of the new heavy starter.
+    state.party[0].reels[0][1] = {type:"attack",tier:2,weight:1};
     beginEncounter(false, { count: 1 });
     render();
   });

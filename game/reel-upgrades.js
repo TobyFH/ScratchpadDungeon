@@ -3,6 +3,7 @@ const tierName = (tier) => ["", "I", "II", "III", "IV"][tier];
 const maxFaceTier = (type) =>
   [
     "attack",
+    "heavy",
     "magic",
     "heal",
     "selfheal",
@@ -19,7 +20,7 @@ const maxFaceTier = (type) =>
       ? 1
       : 3;
 const CLASS_PRICES = {
-  berserker: { attack: 0.9, heal: 1, selfharm: 1 },
+  berserker: { heavy: 1.75, attack: 0.9, heal: 1, selfharm: 1 },
   ranger: {
     attack: 1,
     poison: 1.25,
@@ -31,6 +32,7 @@ const CLASS_PRICES = {
     rally: 1.25,
   },
   fighter: {
+    heavy: 2,
     attack: 1.35,
     block: 0.65,
     stun: 0.85,
@@ -73,6 +75,7 @@ const CLASS_PRICES = {
 };
 const EDITABLE_TYPES = Object.freeze([
   "attack",
+  "heavy",
   "magic",
   "heal",
   "selfheal",
@@ -86,7 +89,8 @@ const EDITABLE_TYPES = Object.freeze([
   "blank",
 ]);
 const FACE_LABELS = Object.freeze({
-  attack: "Physical damage",
+  attack: "Physical attack",
+  heavy: "Heavy attack",
   magic: "Spell damage",
   heal: "Ally heal",
   selfheal: "Self heal",
@@ -110,7 +114,7 @@ const primaryFace = (h) =>
       : "attack";
 function editableTypes(h) {
   return h.job === "jester"
-    ? EDITABLE_TYPES.filter((t) => !["stimulant", "selfharm"].includes(t))
+    ? EDITABLE_TYPES.filter((t) => !["stimulant", "selfharm", "heavy"].includes(t))
     : [
         ...(CLASS_FACE_TYPES[h.job] ||
           EDITABLE_TYPES.filter((t) => !["selfharm", "trick"].includes(t))),
@@ -122,8 +126,8 @@ function faceDescription(face, h) {
   if (face.type === "class") return classAbilityDescription(h);
   if (face.type === "mystery") return mysteryDescription(h);
   if (h && battleEnemies().includes(h)) {
-    if (["attack", "magic"].includes(face.type))
-      return `Contributes ${ATTACK_POWER[tier]} ${face.type === "attack" ? "physical" : "spell"} power to one combined enemy hit. Strength ${h.damage}; stronger marks raise that hit before criticals and buffs.`;
+    if (DAMAGE_TYPES.includes(face.type))
+      return `Contributes ${markDamage(face.type,tier)} ${face.type === "magic" ? "spell" : "physical"} power to one combined enemy hit. Strength ${h.damage}; stronger marks raise that hit before criticals and buffs.`;
     if (face.type === "heal")
       return `Restore ${tier} enemy HP before criticals.`;
   }
@@ -131,7 +135,8 @@ function faceDescription(face, h) {
   const area = tier >= 3 ? " every enemy" : " the selected enemy";
   return (
     {
-      attack: `Deal ${ATTACK_POWER[tier]} physical damage to${area}.`,
+      attack: `Deal ${markDamage("attack",tier)} physical damage to${area}. Cheaper to improve than a heavy attack.`,
+      heavy: `Deal ${markDamage("heavy",tier)} physical damage to${area}. Tank and Berserker only; costs more personal points to inscribe and upgrade.`,
       magic: `Deal ${ATTACK_POWER[tier]} spell damage to${area}, with a chance to leave the target Vulnerable.`,
       heal: `Restore ${POWER.heal * tier} HP to your healing target. Can clear stun; more healing helps and more team block reduces the chance.`,
       block: `Add ${POWER.block * tier} shared block (cap 20; 30 with a living Tank). It absorbs team damage and is spent as it protects.`,

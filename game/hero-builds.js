@@ -378,7 +378,7 @@ function temperamentEffects(h, base) {
   return base;
 }
 const CLASS_FACE_TYPES = Object.freeze({
-  fighter: ["attack", "block", "selfheal", "stun", "stimulant", "blank"],
+  fighter: ["attack", "heavy", "block", "selfheal", "stun", "stimulant", "blank"],
   rogue: ["attack", "poison", "stun", "stimulant", "selfheal", "blank"],
   mage: [
     "magic",
@@ -391,7 +391,7 @@ const CLASS_FACE_TYPES = Object.freeze({
     "blank",
   ],
   ranger: ["attack", "stun", "selfheal", "heal", "rally", "poison", "blank"],
-  berserker: ["attack", "selfheal", "selfharm", "stimulant", "blank"],
+  berserker: ["attack", "heavy", "selfheal", "selfharm", "stimulant", "blank"],
 });
 function startingFaces(job, temperament) {
   const defensive = temperament === "defence";
@@ -407,7 +407,7 @@ function startingFaces(job, temperament) {
         ]
       : [
           ["attack", 1],
-          ["attack", 2],
+          ["heavy", 1],
           ["block", 1],
           ["heal", 1],
           ["stun", 1],
@@ -475,7 +475,7 @@ function startingFaces(job, temperament) {
         ]
       : [
           ["attack", 1],
-          ["attack", 2],
+          ["heavy", 1],
           ["heal", 1],
           ["selfharm", 1],
           ["heal", 2],

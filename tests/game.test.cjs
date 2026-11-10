@@ -930,7 +930,7 @@ test("stairs permit optional descent only after their guardian; final guardian d
   assert.equal(await p.evaluate(() => state.won && state.over), true);
   assert.equal(
     await p.locator("#modal-title").textContent(),
-    "YOU WROTE THE ENDING!",
+    "THE FINAL GUARDIAN FALLS!",
   );
 });
 
@@ -4423,7 +4423,7 @@ test("final guardian death celebrates a complete living, fallen and retired rost
   assert.equal(await p.evaluate(() => state.over && state.won), true);
   assert.match(
     await p.locator("#modal-title").textContent(),
-    /WROTE THE ENDING/,
+    /THE FINAL GUARDIAN FALLS/,
   );
   assert.equal(await p.locator(".fallen-entry").count(), 3);
   const text = await p.locator(".fallen-roster").textContent();
@@ -5263,7 +5263,7 @@ test("Autoplay and Autofight handle discoveries, recruit, descend and win withou
     );
   assert.match(
     await p.locator("#modal-title").textContent(),
-    /YOU WROTE THE ENDING!/,
+    /THE FINAL GUARDIAN FALLS!/,
   );
 });
 
@@ -6887,7 +6887,9 @@ test("a single guardian frame aligns with the party base and never reaches heali
       const box = (s) => document.querySelector(s).getBoundingClientRect();
       return {
         party: box(".party-side").bottom,
-        enemy: box(".enemy-box").bottom,
+        enemy: box("#encounter").bottom,
+        partyTop: box(".party-side").top,
+        enemyTop: box("#encounter").top,
         target: box("#targets").top,
       };
     });
@@ -6895,6 +6897,7 @@ test("a single guardian frame aligns with the party base and never reaches heali
       Math.abs(bounds.party - bounds.enemy) < 1,
       JSON.stringify(bounds),
     );
+    assert.ok(Math.abs(bounds.partyTop-bounds.enemyTop)<1);
     assert.ok(bounds.enemy <= bounds.target + 1);
   }
 });

@@ -120,3 +120,18 @@ body.tile-motion-enabled .tile.environment-crust.crust-solid::after {
   animation: none;
   opacity: 0.12;
 }
+
+/* Swarms are travelling drawings above the board, never tile contents. */
+.swarm-token {position:absolute;z-index:9;pointer-events:none;color:var(--gold);}
+.swarm-token > svg {width:100%;height:110%;overflow:visible;filter:drop-shadow(1px 2px 0 var(--paper));}
+.bee-wing {transform-box:fill-box;transform-origin:50% 100%;}
+body:not(.ambient-disabled):not(.portrait-motion-disabled) :is(.swarm-token,.enemy-box:not(.enemy-corpse),.entrance-roster,.bestiary-record.known) .bee-wing {animation:bee-wingbeat .11s ease-in-out infinite alternate;}
+@keyframes bee-wingbeat {to{scale:1 .35;rotate:12deg;}}
+.utility-open .bee-wing {animation-play-state:paused !important;}
+@media (prefers-reduced-motion:reduce){.bee-wing {animation:none !important;}}
+/* A sliding boundary is a small strip of drawn masonry, not a hairline. */
+.environment-connections .sliding-wall-paper {stroke-width:.19;}
+.environment-connections .sliding-wall-ink {stroke-width:.1;stroke-dasharray:.22 .025;}
+.environment-corridor-art {inset:52% 1% 1% 52%;color:var(--ink);}
+.sliding-wall-piece {transform-box:fill-box;transform-origin:0% 50%;}
+.sliding-wall-piece.vertical {transform-origin:50% 0%;}

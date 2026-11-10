@@ -210,7 +210,7 @@ function autoBuildUtility(h) {
         : 0.3;
   utility -= Math.max(0, minShare - directDamageShare(h)) * 75;
   for (const reel of h.reels) {
-    const p = faceShare(reel, ["attack", "magic", "poison"]);
+    const p = faceShare(reel, OFFENSIVE_TYPES);
     utility -= Math.max(0, (solo ? 0.2 : 0.12) - p) * 16;
   }
   for (const [types, cap] of [
@@ -264,7 +264,7 @@ function faceShare(reel, types) {
 function directDamageShare(h) {
   return (
     h.reels.reduce(
-      (n, reel) => n + faceShare(reel, ["attack", "magic", "poison"]),
+      (n, reel) => n + faceShare(reel, OFFENSIVE_TYPES),
       0,
     ) / 3
   );
@@ -323,7 +323,7 @@ function repairSoloBuild(h) {
     let j = h.reels[r].findIndex(
       (f) =>
         !["class", "mystery"].includes(f.type) &&
-        !["attack", "magic", "poison"].includes(f.type),
+        !OFFENSIVE_TYPES.includes(f.type),
     );
     if (j < 0) continue;
     const type = h.job === "mage" ? "magic" : "attack";
@@ -335,7 +335,7 @@ function repairSoloBuild(h) {
           ({ face }) =>
             !["class", "mystery"].includes(face.type) &&
             face.tier > 1 &&
-            !["attack", "magic", "poison"].includes(face.type),
+            !OFFENSIVE_TYPES.includes(face.type),
         )
         .sort((a, b) => faceRefund(h, b.face) - faceRefund(h, a.face))[0];
       if (!candidate || !applyFaceEdit(h, candidate.k, candidate.n, "weaken"))
@@ -357,7 +357,7 @@ function partyDamagePartners(h) {
       ((["rogue", "ranger", "berserker"].includes(a.job) &&
         a.reels
           .flat()
-          .some((f) => ["attack", "magic", "poison"].includes(f.type))) ||
+          .some((f) => OFFENSIVE_TYPES.includes(f.type))) ||
         directDamageShare(a) >= 0.3),
   ).length;
 }

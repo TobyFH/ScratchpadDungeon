@@ -11593,6 +11593,74 @@ body[data-motion="off"] .punchline-ready .machine-face { animation: none; }
   background: color-mix(in srgb, var(--focus) 23%, var(--paper));
 }
 
+/* Shared notebook baselines. Both pages use the same reserved bottom row;
+   illustrations and changing messages never negotiate these panel dimensions. */
+:root { --ui-bottom-panels-height:250px; }
+@media (min-width:1260px) and (min-height:560px) {
+  .fit-notebook .left-page, .fit-notebook .right-page {display:flex;flex-direction:column;}
+  .fit-notebook .page > * {flex-shrink:0;}
+  .fit-notebook .map-wrap {width:100%;}
+  .fit-notebook .map-caption {height:86px;min-height:86px;max-height:86px;}
+  .fit-notebook .field-note {height:28px;min-height:28px;max-height:28px;line-height:1.2;}
+  .fit-notebook .expedition-boxes, .fit-notebook .notes-and-bag {height:var(--ui-bottom-panels-height);min-height:var(--ui-bottom-panels-height);margin-top:auto;}
+  .fit-notebook .notes-and-bag .journal, .fit-notebook .notes-and-bag .inventory {height:100%;}
+  .fit-notebook .save-line {height:0;min-height:0;margin:0;padding:0;}
+  .fit-notebook #encounter {border:var(--ui-stroke) solid transparent;border-image:var(--frame) 12 / var(--ui-stroke) / 2px stretch;padding:0 10px 5px;box-sizing:border-box;}
+  .fit-notebook #encounter .enemy-box {border:0;border-image:none;}
+  .fit-notebook #encounter .enemy-label {align-self:start;}
+}
+/* Paint-only hover and fixed pencil covers leave every tile edge in place. */
+.tile.fog::after {inset:0;transform:none;}
+.tile.inspect-hover {transform:none;}
+/* Speech is a small torn paper callout with a folded pencil pointer. */
+.speech-bubble {max-width:210px;min-width:64px;padding:7px 12px;color:var(--ink);background:none;border:5px solid transparent;border-image:var(--torn-paper) 28 fill / 11px / 3px stretch;border-radius:0;box-shadow:none;font-family:'Notebook',cursive;font-size:19px;line-height:1.15;}
+.speech-bubble::before {content:'';position:absolute;top:-7px;left:12px;width:32px;height:9px;background:var(--tape) center/100% 100% no-repeat;}
+.speech-bubble::after {width:12px;height:9px;left:calc(50% - 8px);bottom:-8px;background:var(--paper);border:0;border-right:1px solid var(--ink);border-bottom:1px solid var(--ink);transform:skew(-22deg) rotate(35deg);}
+/* The quick guide uses existing game drawings, concise copy and fixed controls. */
+.field-guide .guide-grid {height:auto;min-height:360px;margin:14px 0 10px;max-width:none;}
+.guide-topic-body {height:auto;min-height:0;}
+.illustrated-guide.guide-takeaways {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-content:start;gap:16px 24px;list-style:none;padding:0;margin:0;}
+.illustrated-guide.guide-takeaways > li {display:grid;grid-template-columns:46px minmax(0,1fr);align-items:start;gap:10px;margin:0;font-size:20px;line-height:1.25;}
+.illustrated-guide b {display:block;color:var(--ink);font-weight:400;font-size:23px;line-height:1.2;margin-bottom:3px;}
+.guide-picture {display:grid;place-items:center;min-width:0;color:var(--soft);}
+.guide-picture svg {width:42px;height:46px;max-width:100%;}
+.guide-classes .guide-picture svg {width:44px;height:65px;}
+@media (max-width:760px){
+ .field-guide .guide-grid {height:auto;min-height:0;margin:10px 0;}
+ .illustrated-guide.guide-takeaways {grid-template-columns:1fr;gap:12px;}
+ .illustrated-guide.guide-takeaways > li {grid-template-columns:34px minmax(0,1fr);gap:8px;font-size:18px;line-height:1.15;}
+ .illustrated-guide b {font-size:21px;margin-bottom:2px;}
+ .guide-picture svg {width:31px;height:35px;}
+ .guide-classes .guide-picture svg {width:34px;height:49px;}
+}
+#log .log-battle {list-style:none;margin:4px 0;padding:0;}
+#log .log-battle summary {cursor:pointer;display:flex;gap:6px;align-items:start;padding:5px 2px;border-top:1px dashed var(--line);color:var(--ink);}
+#log .log-battle summary::before {content:'▸';color:var(--soft);}
+#log .log-battle details[open] > summary::before {content:'▾';}
+#log .log-battle summary > svg {width:17px;height:20px;flex-shrink:0;}
+#log .log-battle small {display:block;color:var(--soft);font-size:.86em;}
+#log .log-battle ol {height:auto;min-height:0;max-height:none;overflow:visible;margin:4px 0;padding:0 0 0 20px;font-size:inherit;}
+#log .log-battle-heading {list-style:none;color:var(--soft);font-size:.9em;border-bottom:1px dashed var(--line);padding-bottom:3px;margin-top:3px;}
+.field-note {transform:none;}
+@media (min-width:1260px) and (min-height:560px){
+ .fit-notebook .notes-and-bag {grid-template-rows:minmax(0,1fr);}
+ .fit-notebook .notes-and-bag .journal,.fit-notebook .notes-and-bag .inventory {height:var(--ui-bottom-panels-height);min-height:0;}
+}
+.journal > #log {height:auto;min-height:0;}
+@media (max-width:760px){
+ .field-guide .guide-grid {height:auto;min-height:0;}
+ #modal[data-kind="help"] {padding-left:14px;padding-right:14px;}
+ .illustrated-guide.guide-takeaways {gap:7px;}
+ .illustrated-guide.guide-takeaways > li {font-size:20px;line-height:1.15;grid-template-columns:34px minmax(0,1fr);gap:8px;}
+ .illustrated-guide b {display:inline;font-size:21px;margin:0;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:2px;}
+ .field-guide .guide-navigation {min-height:0;gap:6px;}
+ .field-guide .guide-navigation label {font-size:0;gap:0;}
+ .field-guide .guide-navigation select {font-size:20px;}
+}
+@media (min-width:1260px) and (min-height:560px){
+ .fit-notebook #encounter:not(.paired-enemies) .enemy-box {outline:none;}
+}
+
 /* Living pencil marks. Transform the illustration only; hitboxes never move. */
 :root {
   --portrait-life: 1;
@@ -12276,8 +12344,8 @@ body.utility-open .quartz-pulse {
   color: var(--lava-ink);
 }
 .fit-notebook .map-caption {
-  height: 112px;
-  min-height: 112px;
+  height: 86px;
+  min-height: 86px;
 }
 .fit-notebook .map-wrap {
   max-width: 520px;
@@ -12296,8 +12364,35 @@ body.utility-open .quartz-pulse {
   margin: 0;
 }
 
+/* More character at the page margins, always outside the coordinate board. */
+.biome-margin {width:44px;opacity:.94;}
+.biome-margin.left {right:calc(100% + 12px);}
+.biome-margin.right {left:calc(100% + 12px);}
+.margin-mote {stroke-width:1.4;opacity:.65;}
+body:not(.ambient-disabled) .margin-mote {animation-duration:3.8s;animation-delay:calc(var(--mote) * -.47s);}
+body[data-biome="lava"]:not(.ambient-disabled) .biome-margin > svg > path:first-child {stroke-width:2.3;animation-duration:2.5s;}
+body[data-biome="overgrown"]:not(.ambient-disabled) .biome-margin > svg > path:first-child {stroke-width:1.8;}
+@keyframes biome-mote-drift {0%{translate:0 -12px;opacity:0;}18%{opacity:.9;}80%{opacity:.65;}100%{translate:8px 34px;rotate:65deg;opacity:0;}}
+@keyframes biome-vine-breathe {50%{translate:3px 0;rotate:1deg;}}
+@media (max-width:760px){.biome-margin{width:20px;opacity:.8;}.biome-margin.left{right:calc(100% + 2px);}.biome-margin.right{left:calc(100% + 2px);}}
+/* Red spiked caps and a steady warning rim distinguish burstcaps at a glance. */
+.tile.terrain-explodingMushroom {background:color-mix(in srgb,var(--red) 17%,var(--paper));box-shadow:inset 0 0 0 2px var(--red);}
+.tile.terrain-explodingMushroom .biome-cover {color:var(--red);opacity:1;inset:2%;}
+.tile.terrain-explodingMushroom .biome-cover > svg {width:96%;height:96%;stroke-width:1.8;}
+body.tile-motion-enabled .tile.terrain-explodingMushroom .biome-cover > svg {animation:burstcap-breathe 1.5s ease-in-out infinite;transform-origin:50% 85%;}
+@keyframes burstcap-breathe {50%{scale:1.07 1.02;}}
+.utility-open .biome-margin *, .utility-open .tile.terrain-explodingMushroom .biome-cover > svg {animation-play-state:paused !important;}
+@media (prefers-reduced-motion:reduce){.biome-margin *, .tile.terrain-explodingMushroom .biome-cover > svg {animation:none !important;}}
+
 .class-sketch {position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:220;overflow:visible;color:var(--ink);fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(2px 3px 1px #0004);}
 .class-sketch-execute {color:var(--gold);stroke-width:2.5;}
+.ranger-arrow {filter:none;}
+.ranger-arrow .signature-glyph {stroke-width:2.6;}
+.ranger-arrow-trail {stroke-width:7;stroke-dasharray:18 7;opacity:0;}
+.ranger-draw-rings {stroke-width:1.5;stroke-dasharray:6 5;opacity:0;}
+.ranger-impact {opacity:0;stroke-width:3;}
+.ranger-impact circle {fill:none;stroke-dasharray:9 6;}
+.utility-open .ranger-arrow {visibility:hidden;}
 .class-sketch-fighter {color:var(--block-blue);}
 .class-sketch-mage {color:var(--boon-ink);}
 .class-sketch-berserker {color:var(--red);}
@@ -12892,6 +12987,21 @@ body.tile-motion-enabled .tile.environment-crust.crust-solid::after {
   opacity: 0.12;
 }
 
+/* Swarms are travelling drawings above the board, never tile contents. */
+.swarm-token {position:absolute;z-index:9;pointer-events:none;color:var(--gold);}
+.swarm-token > svg {width:100%;height:110%;overflow:visible;filter:drop-shadow(1px 2px 0 var(--paper));}
+.bee-wing {transform-box:fill-box;transform-origin:50% 100%;}
+body:not(.ambient-disabled):not(.portrait-motion-disabled) :is(.swarm-token,.enemy-box:not(.enemy-corpse),.entrance-roster,.bestiary-record.known) .bee-wing {animation:bee-wingbeat .11s ease-in-out infinite alternate;}
+@keyframes bee-wingbeat {to{scale:1 .35;rotate:12deg;}}
+.utility-open .bee-wing {animation-play-state:paused !important;}
+@media (prefers-reduced-motion:reduce){.bee-wing {animation:none !important;}}
+/* A sliding boundary is a small strip of drawn masonry, not a hairline. */
+.environment-connections .sliding-wall-paper {stroke-width:.19;}
+.environment-connections .sliding-wall-ink {stroke-width:.1;stroke-dasharray:.22 .025;}
+.environment-corridor-art {inset:52% 1% 1% 52%;color:var(--ink);}
+.sliding-wall-piece {transform-box:fill-box;transform-origin:0% 50%;}
+.sliding-wall-piece.vertical {transform-origin:50% 0%;}
+
 /* A black stage for the supplied studio film. Never crop the logo. */
 body.company-intro-active { overflow: hidden; background: #000; }
 body.company-intro-active > :not(#company-intro):not(script) { visibility: hidden; }
@@ -13320,11 +13430,12 @@ function leverArt() {
   return `<svg class="pencil-art" viewBox="0 0 35 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 78 11-.5.5 13-12 .5Z M14 78l8-56 4 .5-7 57" fill="var(--paper-shade)"/><path d="m15 76 8-53m-15 60 8-.5m-8 5 8-.5M7 95l18-.5" stroke-width=".7"/><path d="M25 2q12 1 11 12-1 10-12 10-10-1-10-12Q15 2 25 2Z" fill="var(--paper)"/><path d="M25 5q9 1 8 9-1 8-9 7-7-1-7-8 0-7 8-8Zm-7 8 6-7m-6 12L30 6m-7 15 10-10" stroke-width=".65"/><path class="pencil-echo" d="m5 79 1 14 14-1M13 77l8-53"/></svg>`;
 }
 const paths = {
+  heavy: "M5 29 24 3l3 2L8 31ZM13 5q-8 1-10 9l10 2 4-5 6 5 7-10q-8-5-12-3ZM7 23l5 4m-7-1 5 4",
   selfheal: "M16 27C-5 12 7-1 16 9 25-1 37 12 16 27ZM12 15h8m-4-4v8M4 5v7h7",
   poisonMushroom: "M3 17Q3 1 16 2q13 0 13 15ZM12 18v10h8V18M8 8l4 5m0-5-4 5m12-5 4 5m0-5-4 5M4 29h24",
-  explodingMushroom: "M4 19Q2 5 16 6q14 0 12 13ZM12 20v9h8v-9M16 1v3m-11 0 3 3m18-3-3 3M1 13h3m24 0h3M12 12l4 6 4-6M6 29h20",
+  explodingMushroom: "M3 18 1 10l6 1-2-7 7 3 4-6 4 6 7-3-2 7 6-1-2 8ZM12 19v10h8V19M16 7v6m0 2v1M6 29h20M3 22l-2 3m28-3 2 3",
   brittleIce: "M3 5h26v23H3ZM16 5l-4 9 8 3-5 11M3 17l9-3m8 3 9-6M7 9l2 2m14 13 3-3",
-  hole: "M2 12 7 4l9 3 9-3 5 8-5 15-9 3-10-4ZM7 12l5-2m11 1 3 3M9 24l7-7 7 6",
+  hole: "M2 11 7 6l8 1 7-2 8 7-3 12-8 5-12-4-5-8ZM5 13l3 9 10 4 7-5 2-8-7-5-11 2ZM7 13l1 7m3-10 1 13m3-14 1 15m3-15 1 14m3-12-1 10M1 9l3-5m24 0 3 4M4 27l-3 3m27-3 3 3",
   nest: "M3 20q12 13 26 0M2 24q14 13 28 0M6 17l-3 8m8-8-6 12m12-12-6 14m12-14-5 14m10-13-4 11M11 18C3 7 17-1 19 9m-2 9c-4-16 15-14 8-1",
   egg: "M16 2C5 5-3 29 16 30S27 5 16 2ZM10 16l4-3 4 5 5-2",
   horn: "M3 9q10 6 22-6l4 4Q17 22 7 21ZM6 13 3 23l6 4 5-7M23 4l5 7M9 10l4 10",
@@ -13449,6 +13560,7 @@ function icon(name) {
 }
 function drawIcon(name) {
   if (name === "wall") return wallArt();
+  if(name === 'hole')return `<svg class="pencil-art pencil-icon chasm-art" viewBox="0 0 32 32" fill="none" stroke="var(--ink)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 11 7 5l8 2 7-3 8 8-3 12-8 5-12-4-5-8Z" fill="var(--paper-shade)"/><path class="chasm-dark" d="M5 13 9 9l10-1 8 6-3 8-7 4-9-4Z" fill="var(--ink)"/><path d="M8 12l2 9m3-10 2 12m3-13 2 12m3-11-1 9" stroke="var(--paper)" stroke-width=".6" opacity=".3"/><path d="m2 8 2-5m23 1 4 4M3 27l-2 4m27-4 3 3M3 11l4 2m20 1 3-2M7 25l1-3m11 7-2-3"/></svg>`;
   if (name === "lava")
     return `<svg class="pencil-art pencil-icon lava-barrier" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" aria-hidden="true"><path class="terrain-boundary" d="M.7 1 31.1 .6 31.4 31 1 31.4Z" fill="var(--paper-shade)" stroke-width="1.4"/><path d="M1 29V12l7-8 5 8 6-10 6 9 6-4v22Z" fill="var(--paper-shade)"/><path d="m2 25 8-3 5 4 7-5 9 4M8 4l2 15m9-17-2 17m8-8-3 8M4 28l5-1m6 2 8-2"/><path d="m12 23 4-9 3 8m5 5 3-7" stroke="var(--lava-ink)" stroke-width="2.5"/></svg>`;
   if (name === "bridge") {
@@ -13476,7 +13588,12 @@ function wallArt() {
 
 let artSerial = 0;
 
+function beeSwarmArt(){
+  const bee=(x,y,size,tilt)=>`<g transform="translate(${x} ${y}) rotate(${tilt}) scale(${size})"><g class="bee-wing"><path d="M-3-7Q-27-34-23-10q7 9 20 3M3-7Q12-35 22-19q3 11-19 12" fill="var(--paper)"/><path d="m-17-17 12 8M15-20 4-10" stroke-width=".6"/></g><path d="M-19 3Q-16-16 4-10q22 7 10 22-16 11-31-2L-27 6Z" fill="var(--paper-shade)"/><path d="M-7-10q-7 12 0 23M1-10q-6 12 1 24M15 0l9-6m-8 11 11 2M-9 15l-5 8m15-9 2 9"/><circle cx="13" cy="0" r="2" fill="currentColor"/></g>`;
+  return `<svg class="pencil-art bee-swarm-art species-bees" viewBox="0 0 120 150" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${bee(39,44,.95,-15)}${bee(82,70,.9,18)}${bee(38,107,.83,-8)}<path d="m9 64 9-3m62-39 10 3M88 112l11-5m-84 26 10-3" stroke-width=".8" opacity=".5"/></svg>`;
+}
 function specialEnemyArt(kind, entity) {
+  if(kind==='bees')return beeSwarmArt();
   if (kind.startsWith("pun-")) return punEnemyArt(kind.slice(4));
   // Every species uses the same sparse contours and material hatching. Keep
   // silhouettes legible at map-token size, without a detailed scan outlier.
@@ -13638,6 +13755,7 @@ function trapArt(type) {
 // Purposeful stationery silhouettes for Pun-nishing Mode. These are ordinary
 // palette-aware pencil paths, with the same portrait/injury/corpse contract.
 function punEnemyArt(id) {
+  if(id === "spellingbees")return beeSwarmArt().replace("</svg>",'<path d="M76 126l13-3 13 4v17l-13-4-13 3Zm13-3v17m-9-11 5-1m8 1 5 2" fill="var(--paper)"/></svg>');
   if (id === "fullstop")
     return `<svg class="horror-art species-pun-fullstop" viewBox="0 0 120 150" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M60 31C7 29 5 120 59 123c56 2 58-93 1-92Z" fill="currentColor"/><g stroke="var(--paper)" stroke-width="3"><path d="m31 60 20 8m20 0 18-9M43 75h4m27 0h4M39 100q20-24 42-1"/></g><path d="m20 127 20-2m39 4 18-1" opacity=".5"/></svg>`;
   const shapes = {
@@ -13765,6 +13883,7 @@ function stairwayArt() {
       }
       const TYPES = [
           "attack",
+          "heavy",
           "magic",
           "poison",
           "stimulant",
@@ -13782,6 +13901,7 @@ function stairwayArt() {
         ICONS = {
           selfharm: "bloodprice",
           attack: "sword",
+          heavy: "heavy",
           magic: "magic",
           poison: "poison",
           stimulant: "flame",
@@ -13804,6 +13924,7 @@ const POWER = Object.freeze({
   mystery: 0,
   selfharm: 2,
   attack: 1,
+  heavy: 2,
   magic: 1,
   poison: 1,
   stimulant: 1,
@@ -13817,6 +13938,10 @@ const POWER = Object.freeze({
   blank: 0,
 });
 const ATTACK_POWER = Object.freeze([0, 1, 2, 3, 4]);
+const markDamage = (type, tier = 1) => ATTACK_POWER[tier] * (type === "heavy" ? POWER.heavy : 1);
+const PHYSICAL_TYPES = Object.freeze(["attack", "heavy"]);
+const DAMAGE_TYPES = Object.freeze([...PHYSICAL_TYPES, "magic"]);
+const OFFENSIVE_TYPES = Object.freeze([...DAMAGE_TYPES, "poison"]);
 const FACE_COST = Object.freeze({ 1: 1, 2: 3, 3: 6, 4: 10 });
 const CLASS_BALANCE = Object.freeze({
   fighter: {
@@ -14017,7 +14142,7 @@ function enemyFacePalette(species, boss = false) {
 }
 function enemyReelRank(type, tier, promotion, boss = false) {
   if (["miss", "blank"].includes(type)) return tier;
-  const cap = ["attack", "magic"].includes(type)
+  const cap = DAMAGE_TYPES.includes(type)
     ? 4
     : boss
       ? type === "stun"
@@ -14427,7 +14552,7 @@ const CLASS_COMBOS = Object.freeze({
   },
 });
 function complementaryEffects(h, symbols) {
-  const has = (t) => symbols.some((f) => f.type === t),
+  const has = (t) => symbols.some((f) => f.type === t || t === "attack" && f.type === "heavy"),
     fx = {};
   if (h.job === "fighter" && has("attack") && has("block")) fx.block = 2;
   if (h.job === "rogue" && has("attack") && (has("poison") || has("stun")))
@@ -14513,15 +14638,15 @@ function expectedComplementaryEffects(h) {
         a.reduce((p, x, k) => p * (1 - x - b[k]), 1),
     );
   };
-  if (h.job === "fighter") return { block: 2 * both(["attack"], ["block"]) };
+  if (h.job === "fighter") return { block: 2 * both(PHYSICAL_TYPES, ["block"]) };
   if (h.job === "rogue")
-    return { damage: both(["attack"], ["poison", "stun"]) };
+    return { damage: both(PHYSICAL_TYPES, ["poison", "stun"]) };
   if (h.job === "ranger")
     return {
-      damage: 2 * both(["attack"], ["heal", "selfheal", "stun", "rally"]),
+      damage: 2 * both(PHYSICAL_TYPES, ["heal", "selfheal", "stun", "rally"]),
     };
   if (h.job === "berserker")
-    return { damage: both(["attack"], ["heal", "selfheal", "selfharm"]) };
+    return { damage: both(PHYSICAL_TYPES, ["heal", "selfheal", "selfharm"]) };
   if (h.job === "jester")
     return {
       trick: both(
@@ -15673,7 +15798,7 @@ function temperamentEffects(h, base) {
   return base;
 }
 const CLASS_FACE_TYPES = Object.freeze({
-  fighter: ["attack", "block", "selfheal", "stun", "stimulant", "blank"],
+  fighter: ["attack", "heavy", "block", "selfheal", "stun", "stimulant", "blank"],
   rogue: ["attack", "poison", "stun", "stimulant", "selfheal", "blank"],
   mage: [
     "magic",
@@ -15686,7 +15811,7 @@ const CLASS_FACE_TYPES = Object.freeze({
     "blank",
   ],
   ranger: ["attack", "stun", "selfheal", "heal", "rally", "poison", "blank"],
-  berserker: ["attack", "selfheal", "selfharm", "stimulant", "blank"],
+  berserker: ["attack", "heavy", "selfheal", "selfharm", "stimulant", "blank"],
 });
 function startingFaces(job, temperament) {
   const defensive = temperament === "defence";
@@ -15702,7 +15827,7 @@ function startingFaces(job, temperament) {
         ]
       : [
           ["attack", 1],
-          ["attack", 2],
+          ["heavy", 1],
           ["block", 1],
           ["heal", 1],
           ["stun", 1],
@@ -15770,7 +15895,7 @@ function startingFaces(job, temperament) {
         ]
       : [
           ["attack", 1],
-          ["attack", 2],
+          ["heavy", 1],
           ["heal", 1],
           ["selfharm", 1],
           ["heal", 2],
@@ -16216,6 +16341,7 @@ function wardActive(e = actingEnemy) {
         addExpansionDiscoveries(map, depth, floorBiome(map));
         guaranteeEarlyRecruit(map, depth);
         initializeFloorEnvironment(map, depth);
+        seedBeeSwarm(map);
         return map;
       }
 
@@ -16387,7 +16513,7 @@ function wardActive(e = actingEnemy) {
                         Number.isInteger(f.tier) &&
                         f.tier >= 1 &&
                         f.tier <=
-                          (["attack", "magic"].includes(f.type)
+                          (DAMAGE_TYPES.includes(f.type)
                             ? 4
                             : f.type === "class"
                               ? 1
@@ -16752,11 +16878,79 @@ function eventLogAnnotations(text, explicit = [], dictionary = eventLogDictionar
   }
   return result;
 }
+// The latest completed fight stays fully readable. Earlier fights become one
+// reopenable record; the archive survives raw-line trimming and saved reloads.
+const BATTLE_LOG_HISTORY = 10, BATTLE_LOG_LINES = 160;
+function beginBattleLog() {
+  const id=String(state.runId||'legacy')+':'+state.encounterSerial;
+  state.logBattles=Array.isArray(state.logBattles)?state.logBattles.filter(b=>b&&typeof b.id==='string').slice(-(BATTLE_LOG_HISTORY-1)):[];
+  const existing=state.logBattles.find(b=>b.id===id);
+  if(existing&&!existing.complete){state.activeLogBattle=id;return existing;}
+  const battle={id,names:battleEnemies().map(e=>e.name),floor:state.depth,startAction:state.actionSerial||0,entries:[],complete:false,lastId:state.logSerial||0};
+  state.logBattles.push(battle);state.activeLogBattle=id;return battle;
+}
+function activeBattleLog(){
+  const current=state.logBattles?.find(b=>b.id===state.activeLogBattle&&!b.complete);
+  return current||(state.enemy?beginBattleLog():null);
+}
+function completeBattleLog(outcome='Victory'){
+  const battle=state.logBattles?.find(b=>b.id===state.activeLogBattle&&!b.complete);
+  if(!battle)return;
+  battle.complete=true;battle.outcome=outcome;battle.actions=Math.max(0,(state.actionSerial||0)-battle.startAction);
+  state.lastCompletedLogBattle=battle.id;state.activeLogBattle=null;
+  state.logBattleRevision=(state.logBattleRevision||0)+1;renderLog();
+}
+function eventLogLineMarkup(text,detail,dictionary,legacyId){
+  text=String(text);
+  const terms=Array.isArray(detail?.terms)?detail.terms:eventLogAnnotations(text,[],dictionary);
+  let cursor=0,html='';
+  for(const t of terms){
+    if(!t||!Number.isInteger(t.start)||!Number.isInteger(t.end)||t.start<cursor||t.end<=t.start||t.end>text.length||typeof t.description!=='string')continue;
+    html+=escapeHTML(text.slice(cursor,t.start));
+    html+=`<span class="log-term log-term-${feedbackKind(text.slice(t.start,t.end),'event')}${t.kind==='gold'?' log-term-gold':''}" tabindex="0" data-log-term="${t.start}" aria-describedby="status-tooltip" data-tooltip="${escapeHTML(t.description)}" title="${escapeHTML(t.description)}">${escapeHTML(text.slice(t.start,t.end))}</span>`;
+    cursor=t.end;
+  }
+  return `<li data-log-id="${Number.isSafeInteger(detail?.id)?detail.id:legacyId}" data-log-category="${['combat','exploration','personal','trait','loot'].includes(detail?.category)?detail.category:'exploration'}">${html+escapeHTML(text.slice(cursor))}</li>`;
+}
+function battleLogLines(battle,dictionary){
+  return [...battle.entries].filter(r=>r&&typeof r.text==='string').slice(-BATTLE_LOG_LINES).reverse().map((r,i)=>eventLogLineMarkup(r.text,r,dictionary,'battle-'+i)).join('');
+}
+// Closed histories contain just their summary. Draw the preserved lines only
+// when opened, keeping long runs from accumulating thousands of hidden nodes.
+$('#log').addEventListener('toggle',event=>{
+  const details=event.target;
+  if(!(details instanceof HTMLElement)||!details.matches('details[data-battle-log]')||!details.open||details.dataset.loaded==='true')return;
+  const battle=(state.logBattles||[]).find(b=>b.id===details.dataset.battleLog&&Array.isArray(b.entries));
+  if(!battle)return;
+  details.querySelector('ol').innerHTML=battleLogLines(battle,eventLogDictionary());
+  details.dataset.loaded='true';
+},true);
+function battleLogMarkup(dictionary,expanded){
+  const battles=(Array.isArray(state.logBattles)?state.logBattles:[]).filter(b=>b&&typeof b.id==='string'&&Array.isArray(b.entries)).slice(-BATTLE_LOG_HISTORY);
+  const battleIds=new Set(battles.map(b=>b.id)),items=[];
+  (state.logs||[]).forEach((text,i)=>{
+    const detail=state.logDetails?.[i]?.text===text?state.logDetails[i]:null;
+    if(detail?.battleId&&battleIds.has(detail.battleId))return;
+    items.push({order:Number.isSafeInteger(detail?.id)?detail.id:(state.logSerial||state.logs.length)-i,html:eventLogLineMarkup(text,detail,dictionary,'legacy-'+i)});
+  });
+  for(const battle of battles){
+    const entries=battle.entries.filter(r=>r&&typeof r.text==='string').slice(-BATTLE_LOG_LINES);
+    if(!entries.length)continue;
+    const title=`Floor ${Math.max(1,Math.min(10,Number(battle.floor)||1))} · ${(Array.isArray(battle.names)?battle.names:[]).filter(n=>typeof n==='string').join(' & ')} · ${battle.complete?(battle.outcome==='Defeat'?'Defeat':'Victory'):'Fighting'}`;
+    const latest=!battle.complete||battle.id===state.lastCompletedLogBattle;
+    const open=expanded.has(battle.id),lines=latest||open?battleLogLines(battle,dictionary):'';
+    const content=latest?`<li class="log-battle-heading">${escapeHTML(title)}</li>${lines}`:`<li class="log-battle" data-log-category="combat"><details data-battle-log="${escapeHTML(battle.id)}" data-loaded="${open}" ${open?'open':''}><summary>${icon('sword')}<span>${escapeHTML(title)}<small>${Number(battle.actions)||0} party rolls · click to reread</small></span></summary><ol aria-label="Battle record">${lines}</ol></details></li>`;
+    items.push({order:Number(battle.lastId)||0,html:content});
+  }
+  return items.sort((a,b)=>b.order-a.order).map(item=>item.html).join('');
+}
 function log(msg, options = {}) {
+  const battle = activeBattleLog();
   const text = String(msg), record = {
+    battleId: battle?.id || null,
     text,
-    category: options.category || (state.enemy ? "combat" : "exploration"),
-    context: options.context || (state.enemy ? "combat" : "exploration"),
+    category: options.category || (battle ? "combat" : "exploration"),
+    context: options.context || (battle ? "combat" : "exploration"),
     label: typeof options.label === "string" ? options.label : null,
     terms: eventLogAnnotations(text, options.terms || []),
     important: !!options.important,
@@ -16770,6 +16964,10 @@ function log(msg, options = {}) {
   // Discard mismatched metadata if a legacy save/tool replaced the string log.
   state.logDetails = (state.logs || []).map((text, i) => state.logDetails?.[i]?.text === text ? state.logDetails[i] : null);
   record.id = state.logSerial = (Number.isSafeInteger(state.logSerial) ? state.logSerial : 0) + 1;
+  if(battle){
+    battle.entries.push({...record});battle.entries=battle.entries.slice(-BATTLE_LOG_LINES);battle.lastId=record.id;
+    state.logBattleRevision=(state.logBattleRevision||0)+1;
+  }
   state.logs.unshift(text);
   state.logs = state.logs.slice(0, EVENT_LOG_LIMIT);
   state.logDetails.unshift(record);
@@ -16797,27 +16995,16 @@ function flushCombatLogEvents(group) {
 }
 let lastEventLogRender = null;
 function renderLog() {
-  const textSignature = JSON.stringify(state.logs);
+  const textSignature = JSON.stringify([state.logs,state.logBattleRevision||0]);
   if (lastEventLogRender?.textSignature === textSignature && lastEventLogRender?.logs === state.logs && lastEventLogRender?.details === state.logDetails && lastEventLogRender?.count === state.logs.length) return;
   const root = $("#log"), dictionary = eventLogDictionary(), scroll = root.scrollTop;
   const focused = root.contains(document.activeElement) ? document.activeElement : null;
   const focusId = focused?.closest("li")?.dataset.logId, focusTerm = focused?.dataset.logTerm;
   // A rerender must not leave a detached entry's tooltip floating over the book.
   if (focused || root.matches(":hover")) document.getElementById("status-tooltip")?.setAttribute("hidden", "");
-  root.innerHTML = (state.logs || []).map((text, i) => {
-    text = String(text);
-    const detail = state.logDetails?.[i]?.text === text ? state.logDetails[i] : null;
-    const terms = Array.isArray(detail?.terms) ? detail.terms : eventLogAnnotations(text, [], dictionary);
-    let cursor = 0, html = "";
-    for (const t of terms) {
-      // Treat saved records as untrusted input; never render stored HTML/offsets.
-      if (!t || typeof t !== "object" || !Number.isInteger(t.start) || !Number.isInteger(t.end) || t.start < cursor || t.end <= t.start || t.end > text.length || typeof t.description !== "string") continue;
-      html += escapeHTML(text.slice(cursor, t.start));
-      html += `<span class="log-term log-term-${feedbackKind(text.slice(t.start,t.end),"event")}${t.kind === "gold" ? " log-term-gold" : ""}" tabindex="0" data-log-term="${t.start}" aria-describedby="status-tooltip" data-tooltip="${escapeHTML(t.description)}" title="${escapeHTML(t.description)}">${escapeHTML(text.slice(t.start, t.end))}</span>`;
-      cursor = t.end;
-    }
-    return `<li data-log-id="${Number.isSafeInteger(detail?.id) ? detail.id : "legacy-" + i}" data-log-category="${["combat", "exploration", "personal", "trait", "loot"].includes(detail?.category) ? detail.category : "exploration"}">${html + escapeHTML(text.slice(cursor))}</li>`;
-  }).join("");
+  const expanded=new Set([...root.querySelectorAll('details[data-battle-log][open]')].map(n=>n.dataset.battleLog));
+  if(focusId)for(const b of state.logBattles||[])if(b.entries?.some(r=>String(r.id)===focusId))expanded.add(b.id);
+  root.innerHTML = battleLogMarkup(dictionary,expanded);
   lastEventLogRender = { logs: state.logs, details: state.logDetails, count: state.logs.length, textSignature };
   root.scrollTop = scroll;
   if (focusId && focusTerm) {
@@ -17009,6 +17196,7 @@ function relevantLogTile(i) {
         const c = state.map[state.position];
         if (state.enemy)
           return "Boots scrape the stone. The torchlight catches drawn weapons.";
+        if (c.terrain === "hole") return "Open hole - impassable";
         if (c.terrain === "mudslide") return "Wet stone gives way to a one-way slide. The mud will close behind you.";
         if (c.terrain === "stalactite") return "Loose stone hangs above. Watch the countdown before your next footstep.";
         if (c.corpses?.length)
@@ -17106,6 +17294,7 @@ function relevantLogTile(i) {
         if (c.shadowCovered) return "Re-covered passage - ambush risk";
         const environmental = environmentDescription(c);
         if (environmental) return environmental;
+        if (c.terrain === "hole") return "Open hole - impassable";
         if (c.terrain === "mudslide") return "Mudslide - one-way slide; collapses behind you";
         if (c.terrain === "mudwall") return "Collapsed mudslide - impassable";
         if (c.terrain === "stalactite") return `Unstable ceiling - falling stone in ${c.stalactite?.remaining || 4} steps`;
@@ -17268,6 +17457,7 @@ function paintMapDrawing(id, markup, create) {
           '<span class="walk-boots"><i></i><i></i></span>';
         positionPlayer(false);
         renderPursuer();
+        renderBeeSwarm();
         updateLavaGlow();
       }
 
@@ -17589,6 +17779,7 @@ function paintMapDrawing(id, markup, create) {
             refreshStaleMap();
             if (await biomeStep(i)) {travel=null;break;}
             if (await livingDungeonStep()) {travel=null;break;}
+            if (await advanceBeeSwarm()) { travel=null;break; }
             if (await advancePursuer()) {
               travel = null;
               break;
@@ -17944,6 +18135,18 @@ const BIOME_ENEMIES = Object.freeze({
     ],
     lore: "A guardian buried in clear ice. When its shell cracks, a colder shape rises inside.",
   },
+  bees: {
+    name: "Canopy bee swarm",
+    biome: "overgrown",
+    minDepth: 2,
+    maxDepth: 10,
+    roamerOnly: true,
+    hp: 0.85,
+    damage: 0.85,
+    cadence: -1,
+    faces: [["attack", 1], ["attack", 1], ["poison", 1], ["attack", 2], ["miss", 1]],
+    lore: "Wax-striped hunters drift between the roots. A nearby footstep turns their lazy wandering into a pursuit.",
+  },
 });
 for (const [id, def] of Object.entries(BIOME_ENEMIES))
   ENEMY_PROFILES[id] = { ...def };
@@ -17952,7 +18155,7 @@ function biomeEnemyPool(depth, theme = floorBiome()) {
   return Object.entries(BIOME_ENEMIES)
     .filter(
       ([id, p]) =>
-        depth >= p.minDepth &&
+        !p.roamerOnly && depth >= p.minDepth &&
         depth <= p.maxDepth &&
         (p.biome === theme || (id === "powderimp" && theme === "lava")),
     )
@@ -18344,7 +18547,7 @@ function bestiaryPage(index = bestiaryPageIndex) {
       function beginEncounter(boss = false, options = {}) {
         const returned =
           options.zombie ||
-          (!boss && !options.elite && !options.pursuer && !options.mimic && !options.adventurer && !options.environment
+          (!boss && !options.elite && !options.pursuer && !options.mimic && !options.adventurer && !options.environment && !options.swarm
             ? chooseReturnedHero(state.depth)
             : null);
         const depth = state.depth,
@@ -18393,6 +18596,8 @@ function bestiaryPage(index = bestiaryPageIndex) {
                       art: "zombie",
                       formJob: returned.job,
                     }
+                  : options.swarm
+                    ? {name:"Canopy bee swarm",art:"bees"}
                   : options.environment
                     ? { name: options.environment.kind === "heartwood" ? "The Heartwood" : "Root cluster",
                         art: options.environment.kind === "heartwood" ? "thornhulk" : "rootling" }
@@ -18469,6 +18674,7 @@ function bestiaryPage(index = bestiaryPageIndex) {
         state.characterEventMemo.combat = 0;
         state.enemies = Array.from({ length: count }, (_, i) => create(i));
         state.enemy = state.enemies[0];
+        beginBattleLog();
         setEnemyBlock(state.enemies.reduce((n, e) => n + (e.block || 0), 0));
         state.enemies.forEach((e) => {
           if (options.adventurer) {
@@ -18579,9 +18785,11 @@ const PUN_ENEMIES = Object.freeze({
   boss7: "The Binding Agreement",
   boss8: "The Hardback",
   boss9: "The Penultimate",
+  spellingbees: "The Spelling Bees",
 });
 // This table is injective: a stationery identity belongs to one bestiary entry.
 const PUN_SPECIES = Object.freeze({
+  bees: "spellingbees",
   berserker: "scissors",
   smudger: "paperjammer",
   powderimp: "popquiz",
@@ -19034,8 +19242,8 @@ function encounterTags(enemies) {
         let total = Object.fromEntries(TYPES.map((type) => [type, 0]));
         for (let s of symbols)
           if (TYPES.includes(s.type))
-            total[s.type] += ["attack", "magic"].includes(s.type)
-              ? ATTACK_POWER[s.tier]
+            total[s.type === "heavy" ? "attack" : s.type] += DAMAGE_TYPES.includes(s.type)
+              ? markDamage(s.type,s.tier)
               : POWER[s.type] * s.tier;
         for (let t of TYPES) total[t] = Math.ceil(total[t] * multiplier);
         return total;
@@ -19449,6 +19657,7 @@ function encounterTags(enemies) {
       function checkDefeat() {
         if (state.party.some(alive)) return false;
         GameSound.play("death");
+        completeBattleLog("Defeat");
         state.over = true;
         clearBattleStatuses();
         state.enemy = null;
@@ -19744,7 +19953,7 @@ function encounterTags(enemies) {
             criticalImpact = multiplier > 1 || base.flurryMultiplier > 1,
             area =
               criticalImpact ||
-              symbols.some((s) => ["attack", "magic"].includes(s.type) && s.tier >= 3) ||
+              symbols.some((s) => DAMAGE_TYPES.includes(s.type) && s.tier >= 3) ||
               (h.job === "mage" &&
                 base.resonanceType === "magic" &&
                 symbols.some((s) => s.type === "class")),
@@ -20299,10 +20508,12 @@ function encounterTags(enemies) {
         log(`${e.name} is defeated. EXP for the survivors. Team armour expires.`);
         renderBlock();
         if (e.boss && state.depth === 10) {
+          completeBattleLog();
           finishVictory();
           return;
         }
         await treasureRoll(e.pursuer ? "unwritten" : e.stronghold ? "stronghold" : e.boss ? "boss" : "battle");
+        completeBattleLog();
         if (e.boss) await celebrateFloorClear();
         $("#field-note").textContent =
           "“The passage is clear. Choose your next tile.”";
@@ -21190,6 +21401,7 @@ function encounterTags(enemies) {
       }
       function closeModal() {
         if (closeUtilityPage()) return;
+        notebookLayout.release();
         let shop = modalKind === "shop";
         $("#overlay").hidden = true;
         modalKind = "";
@@ -21230,6 +21442,7 @@ const tierName = (tier) => ["", "I", "II", "III", "IV"][tier];
 const maxFaceTier = (type) =>
   [
     "attack",
+    "heavy",
     "magic",
     "heal",
     "selfheal",
@@ -21246,7 +21459,7 @@ const maxFaceTier = (type) =>
       ? 1
       : 3;
 const CLASS_PRICES = {
-  berserker: { attack: 0.9, heal: 1, selfharm: 1 },
+  berserker: { heavy: 1.75, attack: 0.9, heal: 1, selfharm: 1 },
   ranger: {
     attack: 1,
     poison: 1.25,
@@ -21258,6 +21471,7 @@ const CLASS_PRICES = {
     rally: 1.25,
   },
   fighter: {
+    heavy: 2,
     attack: 1.35,
     block: 0.65,
     stun: 0.85,
@@ -21300,6 +21514,7 @@ const CLASS_PRICES = {
 };
 const EDITABLE_TYPES = Object.freeze([
   "attack",
+  "heavy",
   "magic",
   "heal",
   "selfheal",
@@ -21313,7 +21528,8 @@ const EDITABLE_TYPES = Object.freeze([
   "blank",
 ]);
 const FACE_LABELS = Object.freeze({
-  attack: "Physical damage",
+  attack: "Physical attack",
+  heavy: "Heavy attack",
   magic: "Spell damage",
   heal: "Ally heal",
   selfheal: "Self heal",
@@ -21337,7 +21553,7 @@ const primaryFace = (h) =>
       : "attack";
 function editableTypes(h) {
   return h.job === "jester"
-    ? EDITABLE_TYPES.filter((t) => !["stimulant", "selfharm"].includes(t))
+    ? EDITABLE_TYPES.filter((t) => !["stimulant", "selfharm", "heavy"].includes(t))
     : [
         ...(CLASS_FACE_TYPES[h.job] ||
           EDITABLE_TYPES.filter((t) => !["selfharm", "trick"].includes(t))),
@@ -21349,8 +21565,8 @@ function faceDescription(face, h) {
   if (face.type === "class") return classAbilityDescription(h);
   if (face.type === "mystery") return mysteryDescription(h);
   if (h && battleEnemies().includes(h)) {
-    if (["attack", "magic"].includes(face.type))
-      return `Contributes ${ATTACK_POWER[tier]} ${face.type === "attack" ? "physical" : "spell"} power to one combined enemy hit. Strength ${h.damage}; stronger marks raise that hit before criticals and buffs.`;
+    if (DAMAGE_TYPES.includes(face.type))
+      return `Contributes ${markDamage(face.type,tier)} ${face.type === "magic" ? "spell" : "physical"} power to one combined enemy hit. Strength ${h.damage}; stronger marks raise that hit before criticals and buffs.`;
     if (face.type === "heal")
       return `Restore ${tier} enemy HP before criticals.`;
   }
@@ -21358,7 +21574,8 @@ function faceDescription(face, h) {
   const area = tier >= 3 ? " every enemy" : " the selected enemy";
   return (
     {
-      attack: `Deal ${ATTACK_POWER[tier]} physical damage to${area}.`,
+      attack: `Deal ${markDamage("attack",tier)} physical damage to${area}. Cheaper to improve than a heavy attack.`,
+      heavy: `Deal ${markDamage("heavy",tier)} physical damage to${area}. Tank and Berserker only; costs more personal points to inscribe and upgrade.`,
       magic: `Deal ${ATTACK_POWER[tier]} spell damage to${area}, with a chance to leave the target Vulnerable.`,
       heal: `Restore ${POWER.heal * tier} HP to your healing target. Can clear stun; more healing helps and more team block reduces the chance.`,
       block: `Add ${POWER.block * tier} shared block (cap 20; 30 with a living Tank). It absorbs team damage and is spent as it protects.`,
@@ -21706,6 +21923,7 @@ function workshopFaceSummary(face, h) {
   const n = face.tier || 1;
   return (
     {
+      heavy: `${markDamage("heavy",n)} physical damage${n >= 3 ? " to every enemy" : " to the selected enemy"}. Stronger, more costly; Tank and Berserker only.`,
       attack: `${n} physical damage${n >= 3 ? " to every enemy" : " to the selected enemy"}.`,
       magic: `${n} spell damage${n >= 3 ? " to every enemy" : " to the selected enemy"}; may expose Vulnerable.`,
       heal: `${POWER.heal * n} HP to the selected ally. Full-health misclicks redirect to a wounded ally.`,
@@ -21743,6 +21961,7 @@ function iconCriticalOddsMarkup(h) {
 }
 const WORKSHOP_SHORT_LABELS = Object.freeze({
   attack: "Physical",
+  heavy: "Heavy",
   magic: "Spell",
   heal: "Ally heal",
   selfheal: "Self heal",
@@ -21927,124 +22146,73 @@ function iconReelEditor(i) {
 }
 // END GENERATED ICON REEL WORKSHOP
       // BEGIN GENERATED FIELD GUIDE
-// Short, scannable topics share one fixed notebook frame. No filler text.
+// Six illustrated quick-reference pages. Detailed live rules belong in the
+// existing hover tooltips and reel workshop, not an encyclopaedia here.
+function guideRows(rows, classPage = false) {
+  return `<ul class="guide-takeaways illustrated-guide ${classPage ? 'guide-classes' : ''}">${rows.map(([art,title,copy]) => `<li><span class="guide-picture" aria-hidden="true">${classPage ? portraitArt(art,{hp:1,maxHp:1}) : art === 'wall' ? wallArt() : icon(art)}</span><span><b>${title}</b> ${copy}</span></li>`).join('')}</ul>`;
+}
 const FIELD_GUIDE = Object.freeze([
-  {
-    id: "explore",
-    title: "Exploration",
-    body: '<ul class="guide-takeaways"><li><b>Move.</b> Click an adjacent unknown tile to reveal it. Click a known tile for a shortest route.</li><li><b>Change course.</b> Click a new valid destination while walking. Routes prefer to avoid active fights and traps.</li><li><b>Terrain.</b> Stone, rivers and lava block walking. Bridges are clear crossings; tunnels offer optional travel.</li><li><b>Old passages.</b> After 12 move commands away, explored tiles can hide an ambush. Long routes count once; waiting does not age tiles.</li><li><b>The Unwritten.</b> From floor three, watch for a hunter that moves one tile for each of your footsteps.</li></ul>',
-  },
-  {
-    id: "floors",
-    title: "Floors & discoveries",
-    body: '<ul class="guide-takeaways"><li><b>Win.</b> Defeat each staircase guardian. Beating the tenth guardian completes the dungeon.</li><li><b>Descend.</b> Select stairs to open their menu. After victory, descend from anywhere or keep exploring.</li><li><b>Wells.</b> Save an unused fountain for later. It starts at 16.5% maximum HP plus half its roll. Both grow gently with depth; triples can crit.</li><li><b>Light.</b> Beacons, cave rooms and lava reveal nearby tiles without activating events. Stone blocks beacon and lava light.</li><li><b>Other finds.</b> Ruins trade risk for loot. Strongholds shelter powerful enemies. Paired tunnels stay open after use.</li></ul>',
-  },
-  {
-    id: "biomes", title: "Caves & living floors",
-    body: "<ul class=\"guide-takeaways\"><li><b>Themes.</b> Floor one is Caverns. All eight non-lava themes are equally likely from floor two; lava joins on floor five.</li><li><b>Overgrowth.</b> Roots hide approaches. Fresh fights are more likely to surprise either side.</li><li><b>Mushrooms.</b> A cap reveals up to eight connected caps without activating discoveries.</li><li><b>Fire & frost.</b> Lava blocks walking and lights nearby tiles. Ice forces a slide; see the next topic.</li><li><b>Local foes.</b> Themed creatures keep their own depth ranges. Deeper floors bring stronger local species.</li></ul>",
-  },
-  {id:"heartwood",title:"Heartwood & sunlight",body:'<ul class="guide-takeaways"><li><b>Roots.</b> Select a rooted passage to fight its cluster. Victory clears it permanently, then you enter its original room.</li><li><b>Heartwood.</b> An optional tree boss. Defeat it for an artefact and wither every root.</li><li><b>Growth.</b> Every three completed journeys, one new root may grow. Your escape route stays open.</li><li><b>Clearings.</b> Enter sunlight to scout four neighbouring rooms. Light blocks roots and removes the extra Overgrowth surprise chance.</li></ul>'},
-  {id:"crust",title:"Cooling lava crust",body:'<ul class="guide-takeaways"><li><b>Shortcuts.</b> Some lava crossings harden into temporary stone. Permanent bridges and tunnels remain.</li><li><b>Cycle.</b> Three journeys molten; five solid. The last solid journey shows bright cracks.</li><li><b>Safety.</b> The whole crossing holds while you stand on it. It can melt after you reach permanent ground.</li><li><b>Clock.</b> A completed journey counts once, including long paths, ice slides and tunnel travel. Battles and menus pause changes.</li></ul>'},
-  {id:"faults",title:"Faults & earthquakes",body:'<ul class="guide-takeaways"><li><b>Fault lines.</b> Cracks spread every two journeys. Older cracks turn unstable, then may collapse into blocking rubble.</li><li><b>Warnings.</b> Cracked ground stays walkable until collapse. Your current tile and permanent escape route are protected.</li><li><b>Tremors.</b> Every four journeys, some Shaky Caverns swap two unvisited discoveries.</li><li><b>Contents.</b> Scouted previews update. Visited rooms stay put; terrain, rewards and room counts are preserved.</li></ul>'},
-  {id:"landmarks",title:"Lanterns & moving walls",body:'<ul class="guide-takeaways"><li><b>Lantern islands.</b> Shadow-gallery lanterns light automatically on entry. Their tile and four neighbours protect visited passages from returning darkness.</li><li><b>No free scouting.</b> Lanterns do not reveal unvisited room contents.</li><li><b>Shifting corridors.</b> Labyrinth wall connections change every four journeys. Heavy boundary lines show closed passages.</li><li><b>Stable escape.</b> A permanent stair route remains. Secret doors and pressure-plate gates keep their own rules.</li></ul>'},
-  {
-    id: "ice", title: "Ice & dangerous fuses",
-    body: '<ul class="guide-takeaways"><li><b>Ice.</b> Entering ice carries you forward. Consecutive ice tiles continue the slide; a wall stops it.</li><li><b>Plan ahead.</b> Known ice is included in routes. You cannot choose to turn halfway through a slide.</li><li><b>No safe route.</b> If sliding makes your destination unreachable, a long move stops before the blocking ice.</li><li><b>Powder imp.</b> Watch its burning fuse. After two enemy turns it explodes, damaging the party and destroying itself.</li><li><b>Answer the fuse.</b> Kill or stun it before detonation, build team block, or use an Unbroken page. Its warning shows blast power.</li></ul>',
-  },
-  {id:"crystal",title:"Crystal caves",body:'<ul class="guide-takeaways"><li><b>Deposits.</b> Crystal clusters block walking. Their repeating blue pulse marks the aura reaching fights within one tile, with stone blocking its reach.</li><li><b>Resonance.</b> Every three party rolls, two random reels become sealed with gems.</li><li><b>Crack them.</b> Roll an affected hero. Their sealed reels are empty for that roll, then the gems shatter. Other heroes keep their own seals.</li><li><b>After battle.</b> Every seal clears when the fight ends. The deposit stays on the map.</li></ul>'},
-  {
-    id: "combat",
-    title: "Combat & criticals",
-    body: '<ul class="guide-takeaways"><li><b>Hero powers.</b> Physical/spell ranks I–IV deal 1/2/3/4 damage. Healing/block give 2/4/6/8. Bonuses and criticals add to these.</li><li><b>Targets.</b> Click an enemy to aim damage. Choose an ally for healing. Stimulants boost self or an ally.</li><li><b>Critical.</b> Match three kinds AND ranks. The middle class mark completes matching outer marks. Blanks do nothing.</li><li><b>Big hits.</b> Criticals and tier III–IV attacks hit all foes. Each enemy has its own countdown.</li><li><b>Roll freely.</b> Click any hero card or handle; portraits edit reels. Click rolling reels to land them. Events need confirmation; hero crits grant 1 EXP.</li></ul>',
-  },
-  {
-    id: "statuses",
-    title: "Block, stun & Vulnerable",
-    body: '<ul class="guide-takeaways"><li><b>Team block.</b> Shared block caps at 20, or 30 with a living Tank. Enemies cap at 20, or 30 with a living boss. Damage spends it; battle end clears it.</li><li><b>Stun.</b> Use a ready ally while a hero is stunned. Their rolls help recovery. If nobody is ready, one lost turn advances enemy clocks and clears stun.</li><li><b>Break through.</b> After recovery, two of your own actions cannot be stunned. Strong stuns still strip block. Healing may clear stun; healing Resonance clears all.</li><li><b>Vulnerable.</b> The next direct hit deals 25% extra damage. Healing and poison ticks do not consume it.</li><li><b>Details.</b> Hover any condition icon for its actual effect and remaining strength or duration.</li></ul>',
-  },
-  {
-    id: "buffs",
-    title: "Stimulants & shield bash",
-    body: "<ul class=\"guide-takeaways\"><li><b>Self stimulant.</b> Tanks, Rogues and Berserkers boost themselves.</li><li><b>Ally stimulant.</b> Mages, Rangers and Jesters boost their most-used living ally, or themselves when alone.</li><li><b>Stacks.</b> At most three own actions. Every two extra doses add one potency, capped at eight.</li><li><b>Potency.</b> Damage starts at +1, adding one per two potency. Resistance starts at +1, adding one per five. Hover the badge for exact values.</li><li><b>Shield Bash.</b> Adds level-scaled team block, then spends protection to strike. Each bash point strips two enemy block.</li></ul>",
-  },
-  {
-    id: "openings",
-    title: "Openings & poison",
-    body: '<ul class="guide-takeaways"><li><b>Initiative.</b> A marked hero gains 25% stronger effects if chosen for the first roll.</li><li><b>Surprise.</b> Surprised heroes cannot open. If everyone is surprised, the enemies attack first.</li><li><b>Enemy intent.</b> The short line names a goal and target. Reels still decide what actually happens.</li><li><b>Poison.</b> Ticks bypass block. Doses load up to three turns; repeated doses then increase tick damage.</li><li><b>Temporary effects.</b> Poison, stun, Execute, anticipation and buffs clear after combat. Berserker Fury survives, losing one charge per tile walked.</li></ul>',
-  },
-  {
-    id: "heroes",
-    title: "Reel editing",
-    body: '<ul class="guide-takeaways"><li><b>Earn points.</b> Victories grant EXP and personal points. A level adds 6 maximum HP and 4 points.</li><li><b>Edit.</b> Choose a reel, then a mark. Upgrade raises power; Replace lets you choose its type.</li><li><b>Refund.</b> Downgrade returns half the rank cost. Rebuild support heroes if they must fight alone.</li><li><b>Odds.</b> Every face has equal odds. There is no weighting purchase. Duplicate kinds combine; the Critical odds page shows each match.</li><li><b>Permanent mark.</b> Only the middle reel has the class mark. It cannot be removed, copied or upgraded.</li></ul>',
-  },
-  {
-    id: "classes",
-    title: "Classes & temperament",
-    body: "<ul class=\"guide-takeaways\"><li><b>Temperament.</b> Aggressive: +1 physical, spell and poison. Defensive: +1 healing, block and stun. Fixed after starting.</li><li><b>Tank & Rogue.</b> Tank shields feed Shield Bash. Rogue favours physical combos or poison; little recovery.</li><li><b>Mage.</b> Spells work solo. Healing, shields or poison Resonance support a party. Healing gains 5% per level after four, up to +40%.</li><li><b>Ranger.</b> Other heroes and support rolls charge patience. Attacks spend it; the seal strengthens Execute. This bonus cannot crit again.</li><li><b>Berserker.</b> Wounds build Fury for damage and lifesteal. Every real HP healed spends Fury.</li></ul>",
-  },
-  {
-    id: "combos",
-    title: "Mixed builds",
-    body: '<ul class="guide-takeaways"><li><b>Tank.</b> Physical + block adds 2 block. Shield Bash spends protection; keep attacks for solo progress.</li><li><b>Rogue.</b> Physical + poison/stun adds 1 physical damage. Matching physical combos remain strong.</li><li><b>Mage.</b> Spell/poison + support adds 1 spell, plus 1 rolled healing or block.</li><li><b>Ranger.</b> Physical + healing/stun/ally stimulant adds 2 damage. Let allies charge Execute.</li><li><b>Berserker & Jester.</b> Physical + healing/Blood Price adds 1 damage. Trick + another useful kind adds 1 anticipation.</li></ul>',
-  },
-  {
-    id: "jester",
-    title: "Jester & Punchline",
-    body: "<ul class=\"guide-takeaways\"><li><b>Unlock.</b> Buy the invitation at camp. Inscribe any ordinary type except Self stimulant or Blood Price.</li><li><b>Trick.</b> At six anticipation, fire six marks from your reels. Matching Trick triples fill the bar faster.</li><li><b>Punchline.</b> Uses real ranks, once per action. No extra turn, critical or recharge from its own marks.</li><li><b>Criticals.</b> Match three identical kinds and ranks, like other classes. Different kinds have no special rule.</li><li><b>Wildcard.</b> The class mark inks enemy reels, gilds allies, reverses enemy rolls or scatters healing and damage. Usually helpful; always unpredictable.</li></ul>",
-  },
-  {
-    id:"mystery",title:"Mystery marks ?",
-    body:'<ul class="guide-takeaways"><li><b>Permanent.</b> Every Jester reel has one ?. It cannot be edited or copied.</li><li><b>Any power.</b> It becomes a random ordinary power, including powers the class cannot inscribe. Blood Price may cost HP.</li><li><b>Rank.</b> Other ordinary faces on that reel set its rank odds. Half rank I and half rank II means equal chances of either.</li><li><b>Matches.</b> The revealed power can complete a normal critical. Punchline draws cannot crit or chain another Punchline.</li></ul>',
-  },
-  {
-    id:"living",title:"Changing passages",
-    body:'<ul class="guide-takeaways"><li><b>Mudslide.</b> Slides you straight ahead, then blocks the tile behind you. Another way to the stairs remains.</li><li><b>Crystal aura.</b> Dotted blue tiles show where deposits can seal reels during fights. Walls stop the aura.</li><li><b>Rockfall.</b> Falling stone may block a passage permanently. Only safe blockages can occur.</li><li><b>Shaky caves.</b> Numbered ceilings count every footstep. At zero, stone falls on whoever is underneath, then the count resets.</li><li><b>The Unwritten.</b> Falling stone kills the hunter, leaving treasure. This grants no battle EXP.</li></ul>',
-  },
-  {
-    id:"shadow",title:"Shadow galleries",
-    body:'<ul class="guide-takeaways"><li><b>Returning cover.</b> Old visited tiles darken again after a varied delay. Their contents and known routes stay the same.</li><li><b>Keep moving.</b> Your current tile stays clear. Cover spreads more slowly as more passages darken.</li><li><b>Revisit.</b> Enter to erase the cover, with a higher chance of an ambush. Reading pages and fighting pause the timer.</li><li><b>Veil weaver.</b> Fogged reels count as Empty for one roll. With several heroes, use a different ally after each action to clear the last actor’s veil.</li></ul>',
-  },
-  {
-    id: "companions",
-    title: "Traits & fallen companions",
-    body: '<ul class="guide-takeaways"><li><b>Traits.</b> Relevant experiences sometimes grant one hero a trait. Only one trait is active; a later trait can replace it.</li><li><b>Rare moments.</b> A hero might hold at 1 HP, shrug off stun, parry, rally or roll with inspiration. Each fight permits at most two such moments.</li><li><b>On the road.</b> Coins, insight, a warning, a second breath or sure footing may reward one adventurer. Moments can occasionally leave a related trait.</li><li><b>Death.</b> A carried Revive Stone can restore a fallen hero at 75% HP. Otherwise death is permanent.</li><li><b>Records.</b> Names remembered and the final roster keep the stories and statistics of fallen and retired companions.</li></ul>',
-  },
-  {
-    id: "supplies",
-    title: "Supplies & equipment",
-    body: '<ul class="guide-takeaways"><li><b>Satchel.</b> Carry three item types; matching supplies stack. Inspect to use or discard. A full bag offers swap, use or leave.</li><li><b>Spend supplies.</b> Later floors offer stronger variants. Ink bombs roll damage and poison; Unbroken page blocks one full enemy turn.</li><li><b>Equipment.</b> Drag compatible gear onto a hero. Class-bound items say who can wear them; generic gear fits anyone.</li><li><b>Artefacts.</b> One equipped artefact provides a passive bonus. Revive Stones work from the pack without equipping.</li><li><b>Companions.</b> Invite up to three, or replace one. Declining at either invitation step can bring a farewell, gift or fight.</li></ul>',
-  },
-  {
-    id: "camp",
-    title: "By the campfire",
-    body: '<ul class="guide-takeaways"><li><b>Bank gold.</b> After floors 1–9, bank 25%, 50%, 75% or all carried gold. Victory banks everything. Banked gold survives failed runs.</li><li><b>Adventurers.</b> Unlock Ranger, Berserker and Jester starts and wandering companions.</li><li><b>Campfire Lessons.</b> Eight improvements have five tiers each. Buy tiers permanently; use − and + to choose an active rank, including zero.</li><li><b>Other rules.</b> Challenges add danger, sometimes with rewards. Oddities change discoveries and routes. Purchases start disabled.</li><li><b>Grow stronger.</b> Bank gold for lessons. Fresh runs are dangerous; a trained party is stronger. Select lessons before the next run.</li></ul>',
-  },
-  {
-    id: "maze", title: "The labyrinth",
-    body: '<ul class="guide-takeaways"><li><b>Winding routes.</b> Dense walls force long corridors. Known passages still support shortest-path movement.</li><li><b>Secret doors.</b> Reveal a door, stand beside it, then select it to open a shortcut.</li><li><b>Pressure plates.</b> Accept the plate prompt to open its matching gate permanently.</li><li><b>No required switches.</b> A route to the guardian exists with every door and gate closed.</li><li><b>Paired tunnels.</b> Hover a known entrance to see its known partner and a connecting arrow.</li></ul>',
-  },
-  {
-    id: "wild-finds", title: "Nests & wild finds",
-    body: '<ul class="guide-takeaways"><li><b>Nests.</b> Empty nests offer rolled gold; full nests offer an egg healing 65% of one hero’s maximum HP. Taking either has a 50% chance of waking the mother. Leaving is safe.</li><li><b>Overgrowth.</b> Fruit bushes offer a small, single-use team heal. Leave them for later if healthy.</li><li><b>Mushroom caves.</b> Poison caps hurt when crossed. Burstcaps explode within one tile, roll damage, then become ordinary caps.</li><li><b>Fairy rings.</b> Choose healing or loot, with a chance to disturb a guardian.</li><li><b>Other finds.</b> Search shaky rubble for salvage, or accept a dangerous optional shadow duel in the dark.</li></ul>',
-  },
-  {
-    id: "event-log", title: "Event log",
-    body: '<ul class="guide-takeaways"><li><b>One record.</b> Combat, discoveries and personal moments share the Event log, newest first.</li><li><b>Learn as you go.</b> Underlined, highlighted names explain themselves on hover or keyboard focus.</li><li><b>Personal moments.</b> Traits and rare character events keep the effect and the reason it happened.</li><li><b>Nearby hazards.</b> Falling ceilings are recorded only when revealed, close by and in sight.</li><li><b>Read back.</b> Press M to focus the log; use Tab to reach its explanations. Only the entries scroll.</li></ul>',
-  },
-  {
-    id: "controls",
-    title: "Controls & automation",
-    body: '<ul class="guide-takeaways"><li><b>Navigate.</b> Use Tab and Enter, or the shortcuts in the bottom bar. Side tabs stay available during events.</li><li><b>Autofight.</b> Chooses heroes, targets and occasional supplies. Autoplay explores, edits reels and seeks useful discoveries.</li><li><b>Builds.</b> Autoplay keeps a preferred build for each hero, while retaining damage and rebuilding a support-only survivor.</li><li><b>Options.</b> Adjust sound, motion, lighting, palette and icon/beam feedback. Reset progress keeps these settings.</li><li><b>Backup.</b> Save HTML in Options downloads the offline game, not browser-local progress.</li></ul>',
-  },
+  {id:'explore',title:'Explore & descend',body:guideRows([
+    ['hero','Walk into the pencil.','Click covered neighbours. Click known passages for a route.'],
+    ['treasure','Take your chances.','Chests roll loot. Traps roll danger. Confirm each discovery.'],
+    ['well','Save a fountain.','Return when wounded. Dead companions cannot be healed.'],
+    ['stairs','Find the guardian.','Defeat each stair boss. The tenth boss wins the run.'],
+    ['tunnel','Read the route.','Walls and water block walking. Bridges cross; tunnels teleport.'],
+    ['pursuer','Watch your back.','Old paths hide ambushes. The Unwritten and bees pursue.'],
+  ])},
+  {id:'combat',title:'Roll & fight',body:guideRows([
+    ['sword','Choose any ready hero.','Click a card or handle repeatedly. Watch enemy countdowns.'],
+    ['heal','Choose your targets.','Click enemies to attack; select allies to heal. Self-heal stays personal.'],
+    ['class','Match three marks.','Match kind AND rank. The class mark completes matching outer marks.'],
+    ['block','Protect the party.','Shared and spent when hit. Cap 20; 30 with a Tank.'],
+    ['stun','Read the condition icons.','Stun stops actions; poison hurts; stimulant strengthens. Hover for details.'],
+    ['magic','Make big hits count.','Criticals and rank III–IV attacks hit every enemy.'],
+  ])},
+  {id:'heroes',title:'Build your reels',body:guideRows([
+    ['sword','Regular physical: 1 / 2 / 3 / 4.','Cheaper to improve. Spells have the same base damage.'],
+    ['heavy','Heavy physical: 2 / 4 / 6 / 8.','Tank/Berserker only. More expensive; matches separately from regular attacks.'],
+    ['heal','Healing & block: 2 / 4 / 6 / 8.','Support keeps the party alive. Mixed powers earn class bonuses.'],
+    ['class','Keep the class mark.','One permanent middle-reel ability. Cannot be removed or copied.'],
+    ['point','Spend personal points.','Portrait → reel → mark → type or rank. Prices/refunds are shown.'],
+    ['blank','Build a matching set.','Equal face odds. Duplicates improve matches. Victories earn EXP/points.'],
+  ])},
+  {id:'classes',title:'Know your party',body:guideRows([
+    ['fighter','Tank.','Shields and heavy weapons. Shield Bash spends protection on damage.'],
+    ['rogue','Rogue.','Fragile physical combos and poison. Flurry adds three attacks.'],
+    ['mage','Mage.','Spells or support. Resonance echoes rolled powers across a team.'],
+    ['ranger','Ranger.','Let allies charge patience, then spend it on Execute.'],
+    ['berserker','Berserker.','Wounds build Fury for damage and lifesteal. Healing spends it.'],
+    ['jester','Jester.','Wildcard surprises. Trick charges Punchline: six marks from their reels.'],
+  ],true)},
+  {id:'biomes',title:'Recognise the terrain',body:guideRows([
+    ['overgrown','Overgrowth.','Roots, fruit, clearings; bee swarms follow nearby travellers.'],
+    ['explodingMushroom','Mushrooms.','Purple caps poison. Red caps explode. Ordinary caps reveal neighbours.'],
+    ['ice','Frozen caves.','Ice slides forward. Brittle ice leaves an impassable hole.'],
+    ['lava','Lava caves.','Molten rivers block. Bridges and cooling crust offer crossings.'],
+    ['crystal','Crystal caves.','Blue auras seal reels. Roll affected heroes to crack gems.'],
+    ['stalactite','Shaky caves.','Ceilings count footsteps. Cracks collapse; tremors move discoveries.'],
+    ['shadow','Shadow galleries.','Old rooms darken. Lantern islands keep visited passages clear.'],
+    ['wall','Labyrinth.','Walls shift often. Watch warnings; an escape route remains.'],
+  ])},
+  {id:'camp',title:'Supplies, camp & controls',body:guideRows([
+    ['bag','Use your satchel.','Three item types. Drag equipment to heroes; artefacts grant passives.'],
+    ['recruit','Build a party.','Up to three companions. Temperament favours aggressive or defensive powers.'],
+    ['coin','Bank your gold.','Bank after cleared floors. Banked gold survives failed runs.'],
+    ['camp','Prepare the next run.','Lessons improve heroes. Invitations unlock classes. Other rules change runs.'],
+    ['safe','Use your own pace.','Options control effects. Autofight rolls; Autoplay explores and builds.'],
+    ['sound','Event log.','Hover underlined names. Reopen old battles. Shortcuts line the bottom.'],
+  ])},
 ]);
+const GUIDE_ALIASES = Object.freeze({floors:'explore',statuses:'combat',buffs:'combat',openings:'combat',combos:'heroes',jester:'classes',mystery:'classes',companions:'classes',controls:'camp','event-log':'camp',roots:'biomes',crust:'biomes',faults:'biomes',landmarks:'biomes',ice:'biomes',crystal:'biomes',living:'biomes',shadow:'biomes',maze:'biomes','wild-finds':'explore'});
 function help(topic = "explore") {
+  topic = GUIDE_ALIASES[topic] || topic;
   let page = Math.max(
     0,
     FIELD_GUIDE.findIndex((p) => p.id === topic),
   );
   openModal(
-    "A field guide for the brave",
-    `<section class="field-guide"><nav class="guide-navigation" aria-label="Field guide topics"><label for="guide-topic">Topic<select id="guide-topic">${FIELD_GUIDE.map((p, i) => `<option value="${i}" ${i === page ? "selected" : ""}>${p.title}</option>`).join("")}</select></label><button id="guide-previous" aria-label="Previous topic">← Previous</button><button id="guide-next" aria-label="Next topic">Next →</button></nav><div class="guide-grid" id="guide-content" aria-live="polite">${FIELD_GUIDE.map((topic, i) => `<div class="guide-topic-body" data-guide-page="${i}" aria-hidden="true" inert>${topic.body}</div>`).join("")}</div><div class="guide-page-count" aria-live="polite"></div></section><div class="modal-actions"><button class="primary" data-close>Into the margins ↗</button></div>`,
+    "Field guide",
+    `<section class="field-guide"><nav class="guide-navigation" aria-label="Field guide topics"><label for="guide-topic">Topic<select id="guide-topic">${FIELD_GUIDE.map((p, i) => `<option value="${i}" ${i === page ? "selected" : ""}>${p.title}</option>`).join("")}</select></label><button id="guide-previous" aria-label="Previous topic">← Previous</button><button id="guide-next" aria-label="Next topic">Next →</button></nav><div class="guide-grid" id="guide-content" aria-live="polite">${FIELD_GUIDE.map((topic, i) => `<div class="guide-topic-body" data-guide-page="${i}" aria-hidden="true" inert>${topic.body}</div>`).join("")}</div><div class="guide-page-count" aria-live="polite"></div></section><div class="modal-actions"><button class="primary" data-close>Back to the dungeon ↗</button></div>`,
     "help",
   );
   const showPage = (next) => {
@@ -22087,20 +22255,21 @@ function help(topic = "explore") {
         fxCanvas.height = innerHeight * d;
         fxContext.setTransform(d, 0, 0, d, 0, 0);
       }
-      function burst(el, kind = "paper", count = 15) {
+      function burst(el, kind = "paper", count = 15, directed = null) {
         if (!el) return;
         let r = el.getBoundingClientRect(),
           x = r.left + r.width / 2,
           y = r.top + r.height / 2;
         for (let n = 0; n < count; n++) {
-          let angle = fxRandom() * Math.PI * 2,
+          let angle = directed ? directed.angle + (fxRandom()-.5) * directed.spread * 2 : fxRandom() * Math.PI * 2,
             speed =
-              (kind === "dust" ? 1.5 : 3) + fxRandom() * (kind === "scary" ? 5 : 4);
+              (kind === "dust" ? 1.5 : 3) + fxRandom() * (kind === "scary" ? 5 : 4),
+            launchSpeed=directed?.speed ? directed.speed * (.4 + fxRandom() * .6) : speed;
           particles.push({
             x,
             y,
-            vx: Math.cos(angle) * speed,
-            vy: Math.sin(angle) * speed - (kind === "paper" ? 3 : 0),
+            vx: Math.cos(angle) * launchSpeed,
+            vy: Math.sin(angle) * launchSpeed - (kind === "paper" ? 3 : 0),
             size:
               kind === "smoke"
                 ? 9 + fxRandom() * 16
@@ -22263,7 +22432,12 @@ function help(topic = "explore") {
         )
           return previous.animation;
         previous?.animation?.cancel();
-        const animation = animate(el, shakeFrames(amount, style), {
+        let frames = shakeFrames(amount, style);
+        if(el.id === "book" || el.id === "map-wrap"){
+          const scale=el.getBoundingClientRect().width/Math.max(1,el.offsetWidth),snap=n=>Math.round(n*scale*devicePixelRatio)/(scale*devicePixelRatio);
+          frames=frames.map(frame=>{const values=/translate(?:X|Y)?\(([-\d.]+)px(?:,([-\d.]+)px)?\)/.exec(frame.transform);return {...frame,transform:`translate(${snap(frame.transform.startsWith("translateY")?0:Number(values?.[1])||0)}px,${snap(frame.transform.startsWith("translateY")?Number(values?.[1])||0:Number(values?.[2])||0)}px)`};});
+        }
+        const animation = animate(el, frames, {
           duration:
             style === "rumble"
               ? 650
@@ -22972,6 +23146,8 @@ function help(topic = "explore") {
           Math.min(innerWidth - 105, Math.max(105, r.left + r.width / 2)) + "px";
         node.style.top = Math.max(12, r.top - 15) + "px";
         document.body.append(node);
+        const half=node.getBoundingClientRect().width/2;
+        node.style.left=Math.max(half+8,Math.min(innerWidth-half-8,r.left+r.width/2))+"px";
         setTimeout(() => node.remove(), 2200);
       }
       let lastPartySpeechAt = 0;
@@ -24309,9 +24485,14 @@ function musicVoices(scene, index) {
 const notebookLayout = (() => {
   const desk = document.querySelector(".desk");
   const bar = document.getElementById("keyboard-bar");
-  let dirty = true, viewport = "", scale = null;
+  let dirty = true, viewport = "", scale = null, heldViewport = null;
+  function hold() { heldViewport = `${innerWidth}:${innerHeight}`; }
+  function release() { if(heldViewport!==null){heldViewport=null;invalidate();requestFitUI();} }
   function invalidate() { dirty = true; }
   function needsFit(force, fitted) {
+    // Choosing a replacement run changes keyboard prompts, not the expedition
+    // underneath. Real resizing and explicit forced fits remain available.
+    if(!force&&heldViewport===`${innerWidth}:${innerHeight}`&&desk.classList.contains('fit-notebook')===fitted)return false;
     return force || dirty || viewport !== `${innerWidth}:${innerHeight}` ||
       desk.classList.contains("fit-notebook") !== fitted ||
       desk.style.getPropertyValue("--desk-scale") !== scale;
@@ -24350,7 +24531,7 @@ const notebookLayout = (() => {
   });
   observer.observe(desk); observer.observe(bar);
   document.fonts.addEventListener("loadingdone", invalidate);
-  return { needsFit, fitted, invalidate, writeBar };
+  return { needsFit, fitted, invalidate, writeBar, hold, release };
 })();
 
 function stayedInsideControl(event, control) {
@@ -27089,9 +27270,11 @@ const ENVIRONMENT_TUNING = Object.freeze({
   faultCollapseAge: 4,
   seismicChance: 0.6,
   seismicInterval: 4,
-  corridorChance: 0.75,
-  corridorInterval: 4,
+  corridorChance: 1,
+  corridorInterval: 2,
+  corridorSections: 3,
 });
+const corridorMovesRemaining = (s, e = environmentState()) => ENVIRONMENT_TUNING.corridorInterval - ((e.moves + (s?.phase || 0)) % ENVIRONMENT_TUNING.corridorInterval);
 const environmentState = (map = state?.map) => map?.[0]?.environment || null;
 const environmentEdgeKey = (a, b) => (a < b ? `${a}:${b}` : `${b}:${a}`);
 function environmentEdgeOpen(map, a, b) {
@@ -27133,7 +27316,7 @@ function environmentTraversalSafe(map, position = null) {
   const layouts = (e?.corridors || []).map((s) => s.layout || 0);
   try {
     if (position !== null && map[position]?.wall) return false;
-    // With at most two sections, exhaustively prove every future combination.
+    // Three small sections: exhaustively prove all eight future layout combinations.
     const sections = e?.corridors || [];
     const prove = (n) => {
       if (n === sections.length) return allTilesCanReachStairs(map);
@@ -27415,7 +27598,7 @@ function initializeFloorEnvironment(map, depth) {
               !["tunnel", "door", "plate", "stairs"].includes(map[j].event),
           ).length >= 2,
       );
-    const count = 1 + rand(2);
+    const count = ENVIRONMENT_TUNING.corridorSections;
     for (const i of candidates) {
       if (e.corridors.length >= count) break;
       const adjacent = neighbors(i).filter(
@@ -27454,6 +27637,7 @@ function initializeFloorEnvironment(map, depth) {
               ]
             : [[...keys], [keys[0]]],
         layout: 0,
+        phase: e.corridors.length % ENVIRONMENT_TUNING.corridorInterval,
       };
       map[i].wall = false;
       map[i].terrain = "floor";
@@ -27479,6 +27663,10 @@ function normaliseFloorEnvironment(map = state.map) {
   const e = environmentState(map);
   if (!e) return;
   e.moves = Math.max(0, Math.floor(e.moves || 0));
+  if(e.swarm){
+    if(!Number.isInteger(e.swarm.position)||!map[e.swarm.position]||map[e.swarm.position].wall)e.swarm=null;
+    else e.swarm.steps=Math.max(0,Math.floor(Number(e.swarm.steps)||0));
+  }
   for (const key of ["clearings", "lanterns", "crust", "corridors", "faults"])
     e[key] ||= [];
   for (const f of e.crust) {
@@ -27591,7 +27779,7 @@ function swapUnresolvedRooms(a, b, map = state.map) {
   return true;
 }
 function environmentHunterAt(map, tile) {
-  return map === state?.map && state.pursuer?.position === tile;
+  return map === state?.map && (state.pursuer?.position === tile || environmentState(map)?.swarm?.position === tile);
 }
 function advanceFloorEnvironment(map = state.map, position = state.position) {
   const e = environmentState(map);
@@ -27708,11 +27896,11 @@ function advanceFloorEnvironment(map = state.map, position = state.position) {
   }
   for (const s of e.corridors) {
     if (
-      e.moves % ENVIRONMENT_TUNING.corridorInterval ===
+      (e.moves + (s.phase || 0)) % ENVIRONMENT_TUNING.corridorInterval ===
       ENVIRONMENT_TUNING.corridorInterval - 1
     )
       push([s.tile], "corridor-warning");
-    if (e.moves % ENVIRONMENT_TUNING.corridorInterval) continue;
+    if ((e.moves + (s.phase || 0)) % ENVIRONMENT_TUNING.corridorInterval) continue;
     const old = s.layout;
     s.layout = (old + 1) % s.layouts.length;
     if (environmentTraversalSafe(map, position))
@@ -27919,6 +28107,51 @@ function pumpEnvironmentalContinuation() {
   );
 }
 // END GENERATED ENVIRONMENT RULES
+      // BEGIN GENERATED ROAMING SWARMS
+// A floor-owned Overgrowth traveller. It takes one step per party footstep,
+// never from timers, rendering, menus or battle actions.
+const SWARM_TUNING = Object.freeze({ chance:.48, noticeRadius:4, chaseChance:.82 });
+function seedBeeSwarm(map) {
+  const e=environmentState(map);
+  if(!e||floorBiome(map)!=='overgrown'||Math.random()>=SWARM_TUNING.chance)return;
+  const cells=map.map((c,i)=>i).filter(i=>!map[i].wall&&!map[i].env&&!map[i].structure&&tileDistance(i,pos(1,7))>=5&&!['stairs','tunnel','recruit'].includes(map[i].event));
+  if(cells.length)e.swarm={position:pick(cells),steps:0};
+}
+function renderBeeSwarm(){
+  const swarm=environmentState()?.swarm,visible=swarm&&state.map[swarm.position]?.seen;
+  let marker=document.querySelector('.swarm-token');
+  if(!visible){marker?.remove();return;}
+  if(!marker){marker=document.createElement('div');marker.className='swarm-token';marker.setAttribute('aria-hidden','true');marker.innerHTML=beeSwarmArt();$('#map-board').append(marker);}
+  marker.style.left=(swarm.position%W)/W*100+'%';marker.style.top=Math.floor(swarm.position/W)/H*100+'%';
+  marker.style.width=100/W+'%';marker.style.height=100/H+'%';marker.dataset.position=swarm.position;
+}
+async function advanceBeeSwarm({move=true}={}){
+  const e=environmentState(),swarm=e?.swarm;
+  if(!swarm||state.enemy||state.over||utilityOpen||!$("#overlay").hidden||!$("#spotlight").hidden)return false;
+  const old=swarm.position;
+  if(!Number.isInteger(old)||!state.map[old]||state.map[old].wall){e.swarm=null;renderBeeSwarm();return false;}
+  let contact=old===state.position;
+  if(move&&!contact){
+    const choices=neighbors(old).filter(i=>!state.map[i].wall&&!environmentRoot(state.map[i])&&environmentEdgeOpen(state.map,old,i));
+    const close=tileDistance(old)<=SWARM_TUNING.noticeRadius&&mapLineOfSight(state.map,old,state.position);
+    const route=close&&Math.random()<SWARM_TUNING.chaseChance?pursuerRoute(old,state.position):[];
+    swarm.position=route.length&&choices.includes(route[0])?route[0]:choices.length?pick(choices):old;
+    swarm.steps=(swarm.steps||0)+1;contact=swarm.position===state.position;
+  }
+  renderBeeSwarm();
+  if(contact){
+    e.swarm=null;travel=null;renderBeeSwarm();
+    beginEncounter(false,{swarm:true,count:1});renderEncounter();renderMap();
+    log('A bee swarm descends from the canopy!',{category:'combat',terms:[{name:'bee swarm',description:'A roaming jungle swarm. It wanders between footsteps and pursues nearby travellers.'}]});
+    smokePoof($(`[data-tile="${state.position}"]`));await encounterEntrance();return true;
+  }
+  const marker=document.querySelector('.swarm-token');
+  if(marker&&state.map[old].seen&&old!==swarm.position){
+    animate(marker,[{transform:`translate(${(old%W-swarm.position%W)*100}%,${(Math.floor(old/W)-Math.floor(swarm.position/W))*100}%)`},{transform:'translate(0,0)'}],{duration:260/moveRate()});
+  }
+  return false;
+}
+// END GENERATED ROAMING SWARMS
       // BEGIN GENERATED ENVIRONMENT PRESENTATION
 // Purposeful graphite overlays. No gameplay RNG, timing or room mutations here.
 const ENVIRONMENT_SKETCHES = Object.freeze({
@@ -27974,7 +28207,7 @@ function environmentDescription(c) {
               : "hairline cracks; still traversable");
   }
   if (v.corridor)
-    return `Shifting corridor — walls change in ${ENVIRONMENT_TUNING.corridorInterval - (e.moves % ENVIRONMENT_TUNING.corridorInterval)} moves`;
+    return `Shifting corridor — walls change in ${corridorMovesRemaining(e.corridors.find(s=>s.tile===i),e)} moves`;
   return "";
 }
 function environmentTileClasses(c, i) {
@@ -28050,13 +28283,13 @@ function renderEnvironmentEdges() {
         bx = b % W,
         by = Math.floor(b / W);
       lines.push(
-        ax === bx
+        {key:environmentEdgeKey(a,b),axis:ax===bx?"horizontal":"vertical",d:ax === bx
           ? `M${ax + 0.05} ${Math.max(ay, by)}h.9`
-          : `M${Math.max(ax, bx)} ${ay + 0.05}v.9`,
+          : `M${Math.max(ax, bx)} ${ay + 0.05}v.9`},
       );
     }
-  const markup = lines.map((d) =>
-    `<path d="${d}" class="sliding-wall-paper"/><path d="${d}" class="sliding-wall-ink"/>`
+  const markup = lines.map(({d,key,axis}) =>
+    `<g class="sliding-wall-piece ${axis}" data-sliding-edge="${key}"><path d="${d}" class="sliding-wall-paper"/><path d="${d}" class="sliding-wall-ink"/></g>`
   ).join("");
   paintMapDrawing("environment-connections", markup, () => {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -28113,6 +28346,15 @@ function environmentalFeedback(tiles, kind) {
       }
     }
   }
+  if(kind === 'corridor')for(const piece of document.querySelectorAll('.sliding-wall-piece')){
+    if(!piece.dataset.slidingEdge.split(':').map(Number).some(i=>visible.includes(i)))continue;
+    const vertical=piece.classList.contains('vertical');
+    animate(piece,[{transform:vertical?'scale(1,.03)':'scale(.03,1)'},{transform:vertical?'scale(1,1.04)':'scale(1.04,1)',offset:.8},{transform:'scale(1,1)'}],{duration:420,easing:'ease-out'});
+  }
+  if(kind === 'corridor-warning')for(const i of visible){
+    const drawing=$(`[data-tile="${i}"] .environment-corridor-art svg`);
+    animate(drawing,[{transform:'scale(1)',color:'var(--ink)'},{transform:'scale(1.3)',color:'var(--gold)',offset:.4},{transform:'scale(1)',color:'var(--ink)'}],{duration:500,juice:true});
+  }
   if (["seismic", "corridor", "collapse"].includes(kind)) {
     // A quake moves the map; a corridor shift moves only its drawn wall edges.
     shakeElement(
@@ -28139,7 +28381,7 @@ function renderEnvironmentStatus() {
     );
   if (e.corridors.length)
     notes.push(
-      `Walls shift in ${ENVIRONMENT_TUNING.corridorInterval - (e.moves % ENVIRONMENT_TUNING.corridorInterval)} moves`,
+      `Walls shift in ${Math.min(...e.corridors.map(s=>corridorMovesRemaining(s,e)))} moves`,
     );
   if (notes.length) $("#map-status").textContent = notes.join(" · ");
 }
@@ -28656,6 +28898,7 @@ async function tunnelEncounter(c) {
       " The other end of the tunnel. Both entrances remain open.",
   );
   refreshStaleMap();
+  await advanceBeeSwarm({move:false});
   save();
   return true;
 }
@@ -29189,7 +29432,7 @@ function autoBuildUtility(h) {
         : 0.3;
   utility -= Math.max(0, minShare - directDamageShare(h)) * 75;
   for (const reel of h.reels) {
-    const p = faceShare(reel, ["attack", "magic", "poison"]);
+    const p = faceShare(reel, OFFENSIVE_TYPES);
     utility -= Math.max(0, (solo ? 0.2 : 0.12) - p) * 16;
   }
   for (const [types, cap] of [
@@ -29243,7 +29486,7 @@ function faceShare(reel, types) {
 function directDamageShare(h) {
   return (
     h.reels.reduce(
-      (n, reel) => n + faceShare(reel, ["attack", "magic", "poison"]),
+      (n, reel) => n + faceShare(reel, OFFENSIVE_TYPES),
       0,
     ) / 3
   );
@@ -29302,7 +29545,7 @@ function repairSoloBuild(h) {
     let j = h.reels[r].findIndex(
       (f) =>
         !["class", "mystery"].includes(f.type) &&
-        !["attack", "magic", "poison"].includes(f.type),
+        !OFFENSIVE_TYPES.includes(f.type),
     );
     if (j < 0) continue;
     const type = h.job === "mage" ? "magic" : "attack";
@@ -29314,7 +29557,7 @@ function repairSoloBuild(h) {
           ({ face }) =>
             !["class", "mystery"].includes(face.type) &&
             face.tier > 1 &&
-            !["attack", "magic", "poison"].includes(face.type),
+            !OFFENSIVE_TYPES.includes(face.type),
         )
         .sort((a, b) => faceRefund(h, b.face) - faceRefund(h, a.face))[0];
       if (!candidate || !applyFaceEdit(h, candidate.k, candidate.n, "weaken"))
@@ -29336,7 +29579,7 @@ function partyDamagePartners(h) {
       ((["rogue", "ranger", "berserker"].includes(a.job) &&
         a.reels
           .flat()
-          .some((f) => ["attack", "magic", "poison"].includes(f.type))) ||
+          .some((f) => OFFENSIVE_TYPES.includes(f.type))) ||
         directDamageShare(a) >= 0.3),
   ).length;
 }
@@ -30036,7 +30279,7 @@ function finishCombatLogGroup(group, report) {
   groupedCombatLog = group.previous;
   if (state !== group.run) return;
   const damage = report.shots
-    .filter((s) => s.actual > 0 && ["attack", "magic"].includes(s.type))
+    .filter((s) => s.actual > 0 && DAMAGE_TYPES.includes(s.type))
     .map((s) => s.actual);
   const utility = report.shots
     .filter((s) => ["poison", "stun", "rally", "stimulant"].includes(s.type))
@@ -30982,7 +31225,7 @@ async function enemyWindup(e, kind = "heavy") {
 }
 async function executionPayoffFX(h, e, shot) {
   if (!shot?.bonus) return;
-  await classSignatureFX(h,e,"execute");
+  const run=state;
   const strong = shot.seal && shot.charge >= RANGER_AIM_CAP;
   portraitMotion(entityArt(h), strong ? "heavy" : "attack");
   combatCallout(
@@ -30990,11 +31233,12 @@ async function executionPayoffFX(h, e, shot) {
     strong ? "FULL DRAW · EXECUTE!" : "EXECUTE!",
     "gold",
   );
-  GameSound.play(strong ? "executeFull" : "execute");
+  if(skip||sceneFast||preferences().portraitMotion<=0||matchMedia("(prefers-reduced-motion: reduce)").matches)GameSound.play(strong ? "executeFull" : "execute");
   burst(entityArt(h), "gold", strong ? 45 : 16);
-  screenFX("critical", strong ? 0.8 : 0.25);
-  if (strong) shakeBook(4, "recoil");
-  if (!skip && !sceneFast) await pause(strong ? 190 : 80);
+  await classSignatureFX(h,e,"execute");
+  if(state!==run)return;
+
+
 }
 const JACK_BOX_ART = `<path d="M-22 6 L-26-18 -10-30 7-23 26-32 21-5" fill="var(--gold)"/><path d="M-23-17 Q0-29 23-15 M-26-18 L-34-26 M26-32 L34-25"/><circle cx="-35" cy="-27" r="4"/><circle cx="35" cy="-25" r="4"/><path d="M-23-9 Q-32 19-14 31 Q3 45 23 24 Q34 6 21-8Z" fill="var(--paper)"/><path d="M-15 6 L-8 2 M9 2 L16 6 M-14 18 Q0 36 16 17Z" fill="var(--paper-shade)"/><circle cx="1" cy="12" r="5" fill="var(--red)"/><path d="M-11 22 L-11 27 M-2 24 L-2 31 M7 24 L7 30"/>`;
 async function jackInTheBoxFX(h, e) {
@@ -31108,16 +31352,17 @@ const CLASS_SKETCHES=Object.freeze({
   berserker:'<path d="M-41-25-22-40 0-34 23-43 43-22 34 23 0 45-34 20Z" fill="var(--paper)"/><path d="m-27-17 19 10m16 0 20-12M-21 16 0 29 23 13M-31-20l-9-17m71 14 12-15M-48 7l-17 2m113-1 17 2M-17-10v14M17-10v14M-12 16l5 9m18-9-4 10"/>',
 });
 async function classSignatureFX(h,e=state.enemy,kind=h.job){
-  const from=$('#machine-hero-'+state.party.indexOf(h)),to=kind==='mage'&&['heal','block'].includes(mageResonance(h,h.last))?entityArt(h):enemyArtEl(e);
+  const from=kind==='execute'?entityArt(h):$('#machine-hero-'+state.party.indexOf(h)),to=kind==='mage'&&['heal','block'].includes(mageResonance(h,h.last))?entityArt(h):enemyArtEl(e);
   if(!from||!to||(!CLASS_SKETCHES[kind]&&kind!=='rogue'))return;
   state.lastClassSketch={heroId:h.id,kind,targetId:e?.id,at:Date.now()};
   const utility=kind==='mage'&&mageResonance(h,h.last)==='heal';
-  const paint=utility?'heal':kind==='berserker'?'damage':'paper';
+  const paint=utility?'heal':kind==='execute'?'gold':kind==='berserker'?'damage':'paper';
   burst(from,paint,30);
   if(skip||sceneFast||preferences().portraitMotion<=0||matchMedia('(prefers-reduced-motion: reduce)').matches){
     burst(to,paint,55);shakeElement(to,kind==='execute'?6:4,'jolt');return;
   }
   if(kind==='rogue')return rogueBackstabFX(h,e,to);
+  if(kind==='execute')return rangerArrowFX(h,e,from,to);
   const run=state,version=animationVersion,a=from.getBoundingClientRect(),b=to.getBoundingClientRect();
   const sx=a.left+a.width*.5,sy=a.top+a.height*.5,tx=b.left+b.width*.5,ty=b.top+b.height*.45;
   const angle=Math.atan2(ty-sy,tx-sx)*180/Math.PI;
@@ -31145,6 +31390,63 @@ async function classSignatureFX(h,e=state.enemy,kind=h.job){
     });
     if(state===run){burst(to,paint,kind==='execute'?75:48);shakeElement(to,kind==='execute'?6:4,'jolt');screenFX(utility?'heal':'critical',.55);}
   }finally{svg.remove();}
+}
+
+// Grow on the bow, hold the draw, then accelerate through the target. Damage
+// remains in the combat pipeline; this promise only stages its defining shot.
+async function rangerArrowFX(h,e,from,to){
+  const run=state,version=animationVersion,width=innerWidth,height=innerHeight,a=from.getBoundingClientRect(),b=to.getBoundingClientRect();
+  const sx=a.left+a.width*.55,sy=a.top+a.height*.5,tx=b.left+b.width*.5,ty=b.top+b.height*.46;
+  const angle=Math.atan2(ty-sy,tx-sx),dx=Math.cos(angle),dy=Math.sin(angle);
+  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.classList.add('class-sketch','class-sketch-execute','ranger-arrow');
+  svg.setAttribute('viewBox',`0 0 ${innerWidth} ${innerHeight}`);svg.setAttribute('aria-hidden','true');
+  svg.innerHTML=`<path class="ranger-arrow-trail"/><g class="ranger-draw-rings"><ellipse rx="46" ry="31"/><path d="M-64 0h-14m142 0h14M0-42v-10m0 94v10"/></g><g class="signature-glyph">${CLASS_SKETCHES.execute}</g><g class="ranger-impact"><path d="M-36 0h115M-11-9 70-35M-10 10 72 36M16-18 36-46M18 17 40 47"/><circle r="24"/></g>`;
+  document.body.append(svg);
+  const glyph=svg.querySelector('.signature-glyph'),trail=svg.querySelector('.ranger-arrow-trail'),rings=svg.querySelector('.ranger-draw-rings'),impact=svg.querySelector('.ranger-impact');
+  const duration=800/Math.sqrt(pace()),motion=preferences().portraitMotion;
+  let elapsed=0,last=performance.now(),landed=false,complete=false,fast=false,launched=false,knockback=null;
+  const strike=()=>{
+    if(landed||state!==run||animationVersion!==version||!to.isConnected)return;
+    landed=true;svg.dataset.impacted='true';
+    burst(to,'gold',100,{angle,spread:.78,speed:11});burst(to,'paper',28);
+    screenFX('critical',.75);
+    const art=to.querySelector(':scope > svg');
+    if(art&&motion>0){
+      portraitMotions.get(art)?.cancel();
+      const recoil=22*motion;
+      knockback=animate(art,[{transform:'translate(0,0) scale(1)'},{transform:`translate(${dx*recoil}px,${dy*recoil}px) rotate(${dx*9*motion}deg) scale(.9,1.08)`,offset:.2},{transform:`translate(${-dx*4*motion}px,${-dy*4*motion}px) rotate(${-dx*2*motion}deg) scale(1.04,.98)`,offset:.7},{transform:'translate(0,0) scale(1)'}],{duration:310/Math.sqrt(pace()),juice:true,easing:'ease-out'});
+    }
+    shakeBook(3,'recoil');
+  };
+  try{
+    await new Promise(resolve=>{
+      const frame=now=>{
+        if(state!==run||animationVersion!==version||h.hp<=0||e.hp<=0||!from.isConnected||!to.isConnected||innerWidth!==width||innerHeight!==height){resolve();return;}
+        if(skip||sceneFast||preferences().portraitMotion<=0||matchMedia('(prefers-reduced-motion: reduce)').matches){fast=true;resolve();return;}
+        if(!utilityOpen&&!document.hidden)elapsed+=Math.min(80,now-last);last=now;
+        const p=Math.min(1,elapsed/duration),grow=Math.min(1,p/.4),flight=Math.max(0,Math.min(1,(p-.56)/.23)),travel=flight**3;
+        const size=.26+grow*.94,pull=p<.56?Math.sin(grow*Math.PI/2)*18*motion:0;
+        // Put the point, rather than the arrow's centre, at the impact position.
+        let x=sx-dx*pull+(tx-sx-65*size*dx)*travel,y=sy-dy*pull+(ty-sy-65*size*dy)*travel;
+        if(p>.79){const through=(p-.79)/.21;x+=dx*through*115;y+=dy*through*115;}
+        glyph.setAttribute('transform',`translate(${x} ${y}) rotate(${angle*180/Math.PI}) scale(${size})`);
+        glyph.style.opacity=p>.82?String((1-p)/.18):'1';
+        rings.setAttribute('transform',`translate(${sx} ${sy}) rotate(${angle*180/Math.PI}) scale(${.45+grow*.8})`);
+        rings.style.opacity=p<.56?String(Math.sin(grow*Math.PI*.7)*.75):'0';
+        trail.setAttribute('d',`M${sx} ${sy}L${x} ${y}`);trail.style.opacity=flight>0?String((1-Math.max(0,(p-.79)/.21))*.7):'0';
+        impact.setAttribute('transform',`translate(${tx} ${ty}) rotate(${angle*180/Math.PI}) scale(${Math.max(.3,(p-.79)/.21*1.5)})`);impact.style.opacity=p>.79?String((1-p)/.21):'0';
+        svg.dataset.progress=p.toFixed(3);svg.dataset.phase=p<.4?'draw':p<.56?'hold':p<.79?'flight':'impact';
+        if(p>=.56&&!launched&&!utilityOpen&&!document.hidden){launched=true;GameSound.play(state.lastExecution?.seal&&state.lastExecution?.charge>=RANGER_AIM_CAP?'executeFull':'execute');burst(from,'gold',22,{angle,spread:.3,speed:7});}
+        if(p>=.79&&!utilityOpen&&!document.hidden)strike();
+        if(p<1)requestAnimationFrame(frame);else{complete=true;resolve();}
+      };requestAnimationFrame(frame);
+    });
+    if(fast&&state===run&&animationVersion===version){burst(to,'gold',55);shakeElement(to,4,'recoil');}
+  }finally{
+    svg.remove();
+    if(!complete)knockback?.cancel();
+  }
 }
 
 // A travelling illustration, never a travelling button. Flurry's real three
@@ -31250,6 +31552,21 @@ const BIOME_MARGIN_PATHS=Object.freeze({
   shadow:'M15 0q-23 39 0 76t0 77 0 77 0 77 0 83M24 0q-22 39 0 76t0 77 0 77 0 77 0 83M5 38l10 6m0 66 13 6M5 187l10 6m0 67 13 6M5 339l10 6',
   maze:'M6 0v48h21V22H15v13M27 52v50H6V75h11v14M6 106v49h21v-27H15v13M27 160v49H6v-27h11v14M6 214v49h21v-27H15v13M27 268v49H6v-27h11v14M6 322v49h21v-27H15v13',
 });
+function biomeMoteArt(theme,i){
+  const x=5+i%3*9,y=24+i*39;
+  const shapes={
+    overgrown:`<path d="M${x} ${y}q12-13 9 1-3 10-9 8Zm1 7 6-7" fill="var(--paper-shade)"/>`,
+    fungal:`<circle cx="${x+4}" cy="${y+4}" r="2"/><circle cx="${x}" cy="${y+11}" r="1.4"/><circle cx="${x+8}" cy="${y+14}" r="1.6"/>`,
+    lava:`<path d="M${x+4} ${y}q-9 13-1 15 9 0 1-15Z" fill="currentColor"/>`,
+    ice:`<path d="M${x+4} ${y}v14m-6-10 12 6m-12 0 12-6"/>`,
+    crystal:`<path d="m${x+4} ${y} 5 8-5 8-4-8Zm0 0v16"/>`,
+    unstable:`<path d="m${x} ${y+3} 6-3 5 8-5 5-7-4Z" fill="var(--paper-shade)"/>`,
+    shadow:`<path d="M${x} ${y}q15 6 3 13t4 12m-2-20q8 4 1 9"/>`,
+    maze:`<path d="M${x} ${y}h10v9H${x}Zm5 0v4m-5 1h10"/>`,
+    cave:`<path d="m${x} ${y} 5 5-3 6-5-5Z"/>`,
+  };
+  return shapes[theme]||shapes.cave;
+}
 function updateBiomeMargins(){
   const theme=floorBiome(),wrap=$('#map-wrap');if(!wrap)return;
   if(wrap.dataset.marginBiome===theme)return;
@@ -31257,7 +31574,7 @@ function updateBiomeMargins(){
   wrap.querySelectorAll('.biome-margin').forEach(el=>el.remove());
   for(const side of ['left','right']){
     const el=document.createElement('div');el.className=`biome-margin ${side}`;el.setAttribute('aria-hidden','true');
-    el.innerHTML=`<svg class="pencil-art" viewBox="0 0 34 390" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="${pencilPath(BIOME_MARGIN_PATHS[theme],0.35)}"/><path opacity=".25" transform="translate(.7 .3)" d="${BIOME_MARGIN_PATHS[theme]}"/>${Array.from({length:5},(_,i)=>`<g class="margin-mote" style="--mote:${i}"><path d="M${5+i%3*9} ${35+i*68}l3 5-3 4-2-4Z"/></g>`).join('')}</svg>`;
+    el.innerHTML=`<svg class="pencil-art" viewBox="0 0 34 390" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="${pencilPath(BIOME_MARGIN_PATHS[theme],0.35)}"/><path opacity=".25" transform="translate(.7 .3)" d="${BIOME_MARGIN_PATHS[theme]}"/>${Array.from({length:9},(_,i)=>`<g class="margin-mote" style="--mote:${i}">${biomeMoteArt(theme,i)}</g>`).join('')}</svg>`;
     wrap.append(el);
   }
 }
@@ -31655,8 +31972,8 @@ function contributionType(symbol, owner) {
 function contributes(symbol, wanted, owner) {
   const type = contributionType(symbol, owner);
   if(wanted === "heal")return ["heal","selfheal"].includes(type);
-  return ["attack", "magic"].includes(wanted)
-    ? ["attack", "magic"].includes(type)
+  return DAMAGE_TYPES.includes(wanted)
+    ? DAMAGE_TYPES.includes(type)
     : type === wanted;
 }
 // Presentation uses its own FX randomness and never changes damage calculations.
@@ -31834,7 +32151,7 @@ function impactNumberParts(value, type) {
           ? 2
           : type === "heal"
             ? POWER.heal * s.tier
-            : ATTACK_POWER[s.tier] || 1,
+            : markDamage(s.type,s.tier) || 1,
       );
   if (weights.length < 2) return [];
   const total = weights.reduce((a, b) => a + b, 0),
@@ -32869,6 +33186,7 @@ function revealCriticalPayoff(region, details, multiplier) {
             log("Something is scratching toward you: The Unwritten.");
             toast("THE UNWRITTEN · Something has begun to follow.");
             renderPursuer();
+        renderBeeSwarm();
             const spawn = $(".pursuer-token"),
               anchor = spawn || $("#floor-tag");
             smokePoof(anchor);
@@ -32917,6 +33235,7 @@ function revealCriticalPayoff(region, details, multiplier) {
           return false;
         }
         renderPursuer();
+        renderBeeSwarm();
         if (
           oldPosition !== p.position &&
           state.map[oldPosition].seen &&
@@ -32976,6 +33295,7 @@ function revealCriticalPayoff(region, details, multiplier) {
         if (state.won) return;
         GameSound.play("victory");
         const finalFloorSummary = recordFloorClear();
+        completeBattleLog("Victory");
         state.over = true;
         state.won = true;
         state.enemy = null;
@@ -32992,7 +33312,7 @@ function revealCriticalPayoff(region, details, multiplier) {
         save();
         const bankedNow = bankVictoryGold();
         openModal(
-          "YOU WROTE THE ENDING!",
+          "THE FINAL GUARDIAN FALLS!",
           `<div class="victory-heading">TEN FLOORS CONQUERED</div>${runSummaryMarkup(true, finalFloorSummary)}${victoryBankingMarkup()}<div class="modal-actions"><button class="primary" data-restart>A fresh page</button><button data-close>Keep this story</button></div>`,
           "end",
         );
@@ -33235,7 +33555,7 @@ function revealCriticalPayoff(region, details, multiplier) {
               key = t + ":" + face.tier;
             probabilities[key] = (probabilities[key] || 0) + p;
             if (t === "selfheal") out.selfHeal += POWER.selfheal * face.tier * p;
-            else if (["attack", "magic"].includes(t)) out.damage += ATTACK_POWER[face.tier] * p;
+            else if (DAMAGE_TYPES.includes(t)) out.damage += markDamage(t,face.tier) * p;
             else if (t === "class") {
               if (h.job === "fighter") {
                 out.block += tankSealBlock(h) * p;
@@ -33340,7 +33660,7 @@ function revealCriticalPayoff(region, details, multiplier) {
           ])
             out[key] *= TACTICS.initiativeMultiplier;
         if(h.job==="ranger"){
-          const sealChance=faceShare(h.reels[1],["class"]), hitChance=1-h.reels.reduce((p,r)=>p*(1-faceShare(r,["attack","magic"])),1);
+          const sealChance=faceShare(h.reels[1],["class"]), hitChance=1-h.reels.reduce((p,r)=>p*(1-faceShare(r,DAMAGE_TYPES)),1);
           out.damage+=sealChance*executionBonus(h,state.enemy,h.charge||0,true)+(1-sealChance)*hitChance*executionBonus(h);
         }
         for(const key of ["heal","teamHeal","selfHeal"])out[key]*=mageHealingFactor(h);
@@ -34110,7 +34430,7 @@ function revealCriticalPayoff(region, details, multiplier) {
         const canHarm = h.reels.some((reel) =>
           reel.some(
             (f) =>
-              ["attack", "magic", "poison"].includes(f.type) ||
+              OFFENSIVE_TYPES.includes(f.type) ||
               (f.type === "class" && ["rogue", "mage", "ranger"].includes(h.job)),
           ),
         );
@@ -34262,8 +34582,8 @@ function revealCriticalPayoff(region, details, multiplier) {
                 (a, f) =>
                   a +
                   (f.weight || 1) *
-                    (["attack", "magic"].includes(f.type)
-                      ? ATTACK_POWER[f.tier]
+                    (DAMAGE_TYPES.includes(f.type)
+                      ? markDamage(f.type,f.tier)
                       : f.type === "class"
                         ? h.job === "rogue"
                           ? 7
@@ -34424,6 +34744,8 @@ function revealCriticalPayoff(region, details, multiplier) {
 
       let starterBuild={specialism:"offence"};
       function chooseStartingClass(initial = false) {
+        if(utilityOpen)closeUtilityPage();
+        if(!initial)notebookLayout.hold();
         if (initial) {
           state.awaitingStarter = true;
           save();

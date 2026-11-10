@@ -4,6 +4,7 @@ const POWER = Object.freeze({
   mystery: 0,
   selfharm: 2,
   attack: 1,
+  heavy: 2,
   magic: 1,
   poison: 1,
   stimulant: 1,
@@ -17,6 +18,10 @@ const POWER = Object.freeze({
   blank: 0,
 });
 const ATTACK_POWER = Object.freeze([0, 1, 2, 3, 4]);
+const markDamage = (type, tier = 1) => ATTACK_POWER[tier] * (type === "heavy" ? POWER.heavy : 1);
+const PHYSICAL_TYPES = Object.freeze(["attack", "heavy"]);
+const DAMAGE_TYPES = Object.freeze([...PHYSICAL_TYPES, "magic"]);
+const OFFENSIVE_TYPES = Object.freeze([...DAMAGE_TYPES, "poison"]);
 const FACE_COST = Object.freeze({ 1: 1, 2: 3, 3: 6, 4: 10 });
 const CLASS_BALANCE = Object.freeze({
   fighter: {
@@ -217,7 +222,7 @@ function enemyFacePalette(species, boss = false) {
 }
 function enemyReelRank(type, tier, promotion, boss = false) {
   if (["miss", "blank"].includes(type)) return tier;
-  const cap = ["attack", "magic"].includes(type)
+  const cap = DAMAGE_TYPES.includes(type)
     ? 4
     : boss
       ? type === "stun"
@@ -627,7 +632,7 @@ const CLASS_COMBOS = Object.freeze({
   },
 });
 function complementaryEffects(h, symbols) {
-  const has = (t) => symbols.some((f) => f.type === t),
+  const has = (t) => symbols.some((f) => f.type === t || t === "attack" && f.type === "heavy"),
     fx = {};
   if (h.job === "fighter" && has("attack") && has("block")) fx.block = 2;
   if (h.job === "rogue" && has("attack") && (has("poison") || has("stun")))
@@ -713,15 +718,15 @@ function expectedComplementaryEffects(h) {
         a.reduce((p, x, k) => p * (1 - x - b[k]), 1),
     );
   };
-  if (h.job === "fighter") return { block: 2 * both(["attack"], ["block"]) };
+  if (h.job === "fighter") return { block: 2 * both(PHYSICAL_TYPES, ["block"]) };
   if (h.job === "rogue")
-    return { damage: both(["attack"], ["poison", "stun"]) };
+    return { damage: both(PHYSICAL_TYPES, ["poison", "stun"]) };
   if (h.job === "ranger")
     return {
-      damage: 2 * both(["attack"], ["heal", "selfheal", "stun", "rally"]),
+      damage: 2 * both(PHYSICAL_TYPES, ["heal", "selfheal", "stun", "rally"]),
     };
   if (h.job === "berserker")
-    return { damage: both(["attack"], ["heal", "selfheal", "selfharm"]) };
+    return { damage: both(PHYSICAL_TYPES, ["heal", "selfheal", "selfharm"]) };
   if (h.job === "jester")
     return {
       trick: both(

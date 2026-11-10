@@ -5,16 +5,17 @@ const CLASS_SKETCHES=Object.freeze({
   berserker:'<path d="M-41-25-22-40 0-34 23-43 43-22 34 23 0 45-34 20Z" fill="var(--paper)"/><path d="m-27-17 19 10m16 0 20-12M-21 16 0 29 23 13M-31-20l-9-17m71 14 12-15M-48 7l-17 2m113-1 17 2M-17-10v14M17-10v14M-12 16l5 9m18-9-4 10"/>',
 });
 async function classSignatureFX(h,e=state.enemy,kind=h.job){
-  const from=$('#machine-hero-'+state.party.indexOf(h)),to=kind==='mage'&&['heal','block'].includes(mageResonance(h,h.last))?entityArt(h):enemyArtEl(e);
+  const from=kind==='execute'?entityArt(h):$('#machine-hero-'+state.party.indexOf(h)),to=kind==='mage'&&['heal','block'].includes(mageResonance(h,h.last))?entityArt(h):enemyArtEl(e);
   if(!from||!to||(!CLASS_SKETCHES[kind]&&kind!=='rogue'))return;
   state.lastClassSketch={heroId:h.id,kind,targetId:e?.id,at:Date.now()};
   const utility=kind==='mage'&&mageResonance(h,h.last)==='heal';
-  const paint=utility?'heal':kind==='berserker'?'damage':'paper';
+  const paint=utility?'heal':kind==='execute'?'gold':kind==='berserker'?'damage':'paper';
   burst(from,paint,30);
   if(skip||sceneFast||preferences().portraitMotion<=0||matchMedia('(prefers-reduced-motion: reduce)').matches){
     burst(to,paint,55);shakeElement(to,kind==='execute'?6:4,'jolt');return;
   }
   if(kind==='rogue')return rogueBackstabFX(h,e,to);
+  if(kind==='execute')return rangerArrowFX(h,e,from,to);
   const run=state,version=animationVersion,a=from.getBoundingClientRect(),b=to.getBoundingClientRect();
   const sx=a.left+a.width*.5,sy=a.top+a.height*.5,tx=b.left+b.width*.5,ty=b.top+b.height*.45;
   const angle=Math.atan2(ty-sy,tx-sx)*180/Math.PI;
@@ -42,6 +43,63 @@ async function classSignatureFX(h,e=state.enemy,kind=h.job){
     });
     if(state===run){burst(to,paint,kind==='execute'?75:48);shakeElement(to,kind==='execute'?6:4,'jolt');screenFX(utility?'heal':'critical',.55);}
   }finally{svg.remove();}
+}
+
+// Grow on the bow, hold the draw, then accelerate through the target. Damage
+// remains in the combat pipeline; this promise only stages its defining shot.
+async function rangerArrowFX(h,e,from,to){
+  const run=state,version=animationVersion,width=innerWidth,height=innerHeight,a=from.getBoundingClientRect(),b=to.getBoundingClientRect();
+  const sx=a.left+a.width*.55,sy=a.top+a.height*.5,tx=b.left+b.width*.5,ty=b.top+b.height*.46;
+  const angle=Math.atan2(ty-sy,tx-sx),dx=Math.cos(angle),dy=Math.sin(angle);
+  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.classList.add('class-sketch','class-sketch-execute','ranger-arrow');
+  svg.setAttribute('viewBox',`0 0 ${innerWidth} ${innerHeight}`);svg.setAttribute('aria-hidden','true');
+  svg.innerHTML=`<path class="ranger-arrow-trail"/><g class="ranger-draw-rings"><ellipse rx="46" ry="31"/><path d="M-64 0h-14m142 0h14M0-42v-10m0 94v10"/></g><g class="signature-glyph">${CLASS_SKETCHES.execute}</g><g class="ranger-impact"><path d="M-36 0h115M-11-9 70-35M-10 10 72 36M16-18 36-46M18 17 40 47"/><circle r="24"/></g>`;
+  document.body.append(svg);
+  const glyph=svg.querySelector('.signature-glyph'),trail=svg.querySelector('.ranger-arrow-trail'),rings=svg.querySelector('.ranger-draw-rings'),impact=svg.querySelector('.ranger-impact');
+  const duration=800/Math.sqrt(pace()),motion=preferences().portraitMotion;
+  let elapsed=0,last=performance.now(),landed=false,complete=false,fast=false,launched=false,knockback=null;
+  const strike=()=>{
+    if(landed||state!==run||animationVersion!==version||!to.isConnected)return;
+    landed=true;svg.dataset.impacted='true';
+    burst(to,'gold',100,{angle,spread:.78,speed:11});burst(to,'paper',28);
+    screenFX('critical',.75);
+    const art=to.querySelector(':scope > svg');
+    if(art&&motion>0){
+      portraitMotions.get(art)?.cancel();
+      const recoil=22*motion;
+      knockback=animate(art,[{transform:'translate(0,0) scale(1)'},{transform:`translate(${dx*recoil}px,${dy*recoil}px) rotate(${dx*9*motion}deg) scale(.9,1.08)`,offset:.2},{transform:`translate(${-dx*4*motion}px,${-dy*4*motion}px) rotate(${-dx*2*motion}deg) scale(1.04,.98)`,offset:.7},{transform:'translate(0,0) scale(1)'}],{duration:310/Math.sqrt(pace()),juice:true,easing:'ease-out'});
+    }
+    shakeBook(3,'recoil');
+  };
+  try{
+    await new Promise(resolve=>{
+      const frame=now=>{
+        if(state!==run||animationVersion!==version||h.hp<=0||e.hp<=0||!from.isConnected||!to.isConnected||innerWidth!==width||innerHeight!==height){resolve();return;}
+        if(skip||sceneFast||preferences().portraitMotion<=0||matchMedia('(prefers-reduced-motion: reduce)').matches){fast=true;resolve();return;}
+        if(!utilityOpen&&!document.hidden)elapsed+=Math.min(80,now-last);last=now;
+        const p=Math.min(1,elapsed/duration),grow=Math.min(1,p/.4),flight=Math.max(0,Math.min(1,(p-.56)/.23)),travel=flight**3;
+        const size=.26+grow*.94,pull=p<.56?Math.sin(grow*Math.PI/2)*18*motion:0;
+        // Put the point, rather than the arrow's centre, at the impact position.
+        let x=sx-dx*pull+(tx-sx-65*size*dx)*travel,y=sy-dy*pull+(ty-sy-65*size*dy)*travel;
+        if(p>.79){const through=(p-.79)/.21;x+=dx*through*115;y+=dy*through*115;}
+        glyph.setAttribute('transform',`translate(${x} ${y}) rotate(${angle*180/Math.PI}) scale(${size})`);
+        glyph.style.opacity=p>.82?String((1-p)/.18):'1';
+        rings.setAttribute('transform',`translate(${sx} ${sy}) rotate(${angle*180/Math.PI}) scale(${.45+grow*.8})`);
+        rings.style.opacity=p<.56?String(Math.sin(grow*Math.PI*.7)*.75):'0';
+        trail.setAttribute('d',`M${sx} ${sy}L${x} ${y}`);trail.style.opacity=flight>0?String((1-Math.max(0,(p-.79)/.21))*.7):'0';
+        impact.setAttribute('transform',`translate(${tx} ${ty}) rotate(${angle*180/Math.PI}) scale(${Math.max(.3,(p-.79)/.21*1.5)})`);impact.style.opacity=p>.79?String((1-p)/.21):'0';
+        svg.dataset.progress=p.toFixed(3);svg.dataset.phase=p<.4?'draw':p<.56?'hold':p<.79?'flight':'impact';
+        if(p>=.56&&!launched&&!utilityOpen&&!document.hidden){launched=true;GameSound.play(state.lastExecution?.seal&&state.lastExecution?.charge>=RANGER_AIM_CAP?'executeFull':'execute');burst(from,'gold',22,{angle,spread:.3,speed:7});}
+        if(p>=.79&&!utilityOpen&&!document.hidden)strike();
+        if(p<1)requestAnimationFrame(frame);else{complete=true;resolve();}
+      };requestAnimationFrame(frame);
+    });
+    if(fast&&state===run&&animationVersion===version){burst(to,'gold',55);shakeElement(to,4,'recoil');}
+  }finally{
+    svg.remove();
+    if(!complete)knockback?.cancel();
+  }
 }
 
 // A travelling illustration, never a travelling button. Flurry's real three

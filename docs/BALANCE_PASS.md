@@ -1,3 +1,8 @@
+> Heavy physical marks were added in [Expedition polish](EXPEDITION_POLISH.md).
+> Regular physical/spell ranks remain 1–4; Tank/Berserker heavy ranks are 2–8
+> through the same physical pipeline, with separate matching and higher prices.
+> Earlier recorded gauntlet results are historical samples, not a new win-rate claim.
+
 # Readable powers and expedition difficulty
 
 > Current follow-up: [Curve and recovery tuning](CURVE_TUNING.md) supersedes

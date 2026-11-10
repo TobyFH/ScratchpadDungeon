@@ -2,9 +2,14 @@
 const notebookLayout = (() => {
   const desk = document.querySelector(".desk");
   const bar = document.getElementById("keyboard-bar");
-  let dirty = true, viewport = "", scale = null;
+  let dirty = true, viewport = "", scale = null, heldViewport = null;
+  function hold() { heldViewport = `${innerWidth}:${innerHeight}`; }
+  function release() { if(heldViewport!==null){heldViewport=null;invalidate();requestFitUI();} }
   function invalidate() { dirty = true; }
   function needsFit(force, fitted) {
+    // Choosing a replacement run changes keyboard prompts, not the expedition
+    // underneath. Real resizing and explicit forced fits remain available.
+    if(!force&&heldViewport===`${innerWidth}:${innerHeight}`&&desk.classList.contains('fit-notebook')===fitted)return false;
     return force || dirty || viewport !== `${innerWidth}:${innerHeight}` ||
       desk.classList.contains("fit-notebook") !== fitted ||
       desk.style.getPropertyValue("--desk-scale") !== scale;
@@ -43,7 +48,7 @@ const notebookLayout = (() => {
   });
   observer.observe(desk); observer.observe(bar);
   document.fonts.addEventListener("loadingdone", invalidate);
-  return { needsFit, fitted, invalidate, writeBar };
+  return { needsFit, fitted, invalidate, writeBar, hold, release };
 })();
 
 function stayedInsideControl(event, control) {

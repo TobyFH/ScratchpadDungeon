@@ -44,7 +44,7 @@ async function enemyWindup(e, kind = "heavy") {
 }
 async function executionPayoffFX(h, e, shot) {
   if (!shot?.bonus) return;
-  await classSignatureFX(h,e,"execute");
+  const run=state;
   const strong = shot.seal && shot.charge >= RANGER_AIM_CAP;
   portraitMotion(entityArt(h), strong ? "heavy" : "attack");
   combatCallout(
@@ -52,11 +52,12 @@ async function executionPayoffFX(h, e, shot) {
     strong ? "FULL DRAW · EXECUTE!" : "EXECUTE!",
     "gold",
   );
-  GameSound.play(strong ? "executeFull" : "execute");
+  if(skip||sceneFast||preferences().portraitMotion<=0||matchMedia("(prefers-reduced-motion: reduce)").matches)GameSound.play(strong ? "executeFull" : "execute");
   burst(entityArt(h), "gold", strong ? 45 : 16);
-  screenFX("critical", strong ? 0.8 : 0.25);
-  if (strong) shakeBook(4, "recoil");
-  if (!skip && !sceneFast) await pause(strong ? 190 : 80);
+  await classSignatureFX(h,e,"execute");
+  if(state!==run)return;
+
+
 }
 const JACK_BOX_ART = `<path d="M-22 6 L-26-18 -10-30 7-23 26-32 21-5" fill="var(--gold)"/><path d="M-23-17 Q0-29 23-15 M-26-18 L-34-26 M26-32 L34-25"/><circle cx="-35" cy="-27" r="4"/><circle cx="35" cy="-25" r="4"/><path d="M-23-9 Q-32 19-14 31 Q3 45 23 24 Q34 6 21-8Z" fill="var(--paper)"/><path d="M-15 6 L-8 2 M9 2 L16 6 M-14 18 Q0 36 16 17Z" fill="var(--paper-shade)"/><circle cx="1" cy="12" r="5" fill="var(--red)"/><path d="M-11 22 L-11 27 M-2 24 L-2 31 M7 24 L7 30"/>`;
 async function jackInTheBoxFX(h, e) {

@@ -478,7 +478,7 @@ test("each biome has depth-specific creatures with pencil art, lore and distinct
     };
   });
   assert.equal(r.calls, 0);
-  assert.equal(r.art.length, 11);
+  assert.equal(r.art.length, 12);
   for (const x of r.art) {
     assert.match(x.svg, new RegExp("species-" + x.k));
     assert.ok(x.lore[1]);

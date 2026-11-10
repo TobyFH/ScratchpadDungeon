@@ -1,5 +1,12 @@
 .class-sketch {position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:220;overflow:visible;color:var(--ink);fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(2px 3px 1px #0004);}
 .class-sketch-execute {color:var(--gold);stroke-width:2.5;}
+.ranger-arrow {filter:none;}
+.ranger-arrow .signature-glyph {stroke-width:2.6;}
+.ranger-arrow-trail {stroke-width:7;stroke-dasharray:18 7;opacity:0;}
+.ranger-draw-rings {stroke-width:1.5;stroke-dasharray:6 5;opacity:0;}
+.ranger-impact {opacity:0;stroke-width:3;}
+.ranger-impact circle {fill:none;stroke-dasharray:9 6;}
+.utility-open .ranger-arrow {visibility:hidden;}
 .class-sketch-fighter {color:var(--block-blue);}
 .class-sketch-mage {color:var(--boon-ink);}
 .class-sketch-berserker {color:var(--red);}

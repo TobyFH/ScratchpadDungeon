@@ -5799,3 +5799,71 @@ body[data-motion="off"] .punchline-ready .machine-face { animation: none; }
   outline-offset: 2px;
   background: color-mix(in srgb, var(--focus) 23%, var(--paper));
 }
+
+/* Shared notebook baselines. Both pages use the same reserved bottom row;
+   illustrations and changing messages never negotiate these panel dimensions. */
+:root { --ui-bottom-panels-height:250px; }
+@media (min-width:1260px) and (min-height:560px) {
+  .fit-notebook .left-page, .fit-notebook .right-page {display:flex;flex-direction:column;}
+  .fit-notebook .page > * {flex-shrink:0;}
+  .fit-notebook .map-wrap {width:100%;}
+  .fit-notebook .map-caption {height:86px;min-height:86px;max-height:86px;}
+  .fit-notebook .field-note {height:28px;min-height:28px;max-height:28px;line-height:1.2;}
+  .fit-notebook .expedition-boxes, .fit-notebook .notes-and-bag {height:var(--ui-bottom-panels-height);min-height:var(--ui-bottom-panels-height);margin-top:auto;}
+  .fit-notebook .notes-and-bag .journal, .fit-notebook .notes-and-bag .inventory {height:100%;}
+  .fit-notebook .save-line {height:0;min-height:0;margin:0;padding:0;}
+  .fit-notebook #encounter {border:var(--ui-stroke) solid transparent;border-image:var(--frame) 12 / var(--ui-stroke) / 2px stretch;padding:0 10px 5px;box-sizing:border-box;}
+  .fit-notebook #encounter .enemy-box {border:0;border-image:none;}
+  .fit-notebook #encounter .enemy-label {align-self:start;}
+}
+/* Paint-only hover and fixed pencil covers leave every tile edge in place. */
+.tile.fog::after {inset:0;transform:none;}
+.tile.inspect-hover {transform:none;}
+/* Speech is a small torn paper callout with a folded pencil pointer. */
+.speech-bubble {max-width:210px;min-width:64px;padding:7px 12px;color:var(--ink);background:none;border:5px solid transparent;border-image:var(--torn-paper) 28 fill / 11px / 3px stretch;border-radius:0;box-shadow:none;font-family:'Notebook',cursive;font-size:19px;line-height:1.15;}
+.speech-bubble::before {content:'';position:absolute;top:-7px;left:12px;width:32px;height:9px;background:var(--tape) center/100% 100% no-repeat;}
+.speech-bubble::after {width:12px;height:9px;left:calc(50% - 8px);bottom:-8px;background:var(--paper);border:0;border-right:1px solid var(--ink);border-bottom:1px solid var(--ink);transform:skew(-22deg) rotate(35deg);}
+/* The quick guide uses existing game drawings, concise copy and fixed controls. */
+.field-guide .guide-grid {height:auto;min-height:360px;margin:14px 0 10px;max-width:none;}
+.guide-topic-body {height:auto;min-height:0;}
+.illustrated-guide.guide-takeaways {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-content:start;gap:16px 24px;list-style:none;padding:0;margin:0;}
+.illustrated-guide.guide-takeaways > li {display:grid;grid-template-columns:46px minmax(0,1fr);align-items:start;gap:10px;margin:0;font-size:20px;line-height:1.25;}
+.illustrated-guide b {display:block;color:var(--ink);font-weight:400;font-size:23px;line-height:1.2;margin-bottom:3px;}
+.guide-picture {display:grid;place-items:center;min-width:0;color:var(--soft);}
+.guide-picture svg {width:42px;height:46px;max-width:100%;}
+.guide-classes .guide-picture svg {width:44px;height:65px;}
+@media (max-width:760px){
+ .field-guide .guide-grid {height:auto;min-height:0;margin:10px 0;}
+ .illustrated-guide.guide-takeaways {grid-template-columns:1fr;gap:12px;}
+ .illustrated-guide.guide-takeaways > li {grid-template-columns:34px minmax(0,1fr);gap:8px;font-size:18px;line-height:1.15;}
+ .illustrated-guide b {font-size:21px;margin-bottom:2px;}
+ .guide-picture svg {width:31px;height:35px;}
+ .guide-classes .guide-picture svg {width:34px;height:49px;}
+}
+#log .log-battle {list-style:none;margin:4px 0;padding:0;}
+#log .log-battle summary {cursor:pointer;display:flex;gap:6px;align-items:start;padding:5px 2px;border-top:1px dashed var(--line);color:var(--ink);}
+#log .log-battle summary::before {content:'▸';color:var(--soft);}
+#log .log-battle details[open] > summary::before {content:'▾';}
+#log .log-battle summary > svg {width:17px;height:20px;flex-shrink:0;}
+#log .log-battle small {display:block;color:var(--soft);font-size:.86em;}
+#log .log-battle ol {height:auto;min-height:0;max-height:none;overflow:visible;margin:4px 0;padding:0 0 0 20px;font-size:inherit;}
+#log .log-battle-heading {list-style:none;color:var(--soft);font-size:.9em;border-bottom:1px dashed var(--line);padding-bottom:3px;margin-top:3px;}
+.field-note {transform:none;}
+@media (min-width:1260px) and (min-height:560px){
+ .fit-notebook .notes-and-bag {grid-template-rows:minmax(0,1fr);}
+ .fit-notebook .notes-and-bag .journal,.fit-notebook .notes-and-bag .inventory {height:var(--ui-bottom-panels-height);min-height:0;}
+}
+.journal > #log {height:auto;min-height:0;}
+@media (max-width:760px){
+ .field-guide .guide-grid {height:auto;min-height:0;}
+ #modal[data-kind="help"] {padding-left:14px;padding-right:14px;}
+ .illustrated-guide.guide-takeaways {gap:7px;}
+ .illustrated-guide.guide-takeaways > li {font-size:20px;line-height:1.15;grid-template-columns:34px minmax(0,1fr);gap:8px;}
+ .illustrated-guide b {display:inline;font-size:21px;margin:0;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:2px;}
+ .field-guide .guide-navigation {min-height:0;gap:6px;}
+ .field-guide .guide-navigation label {font-size:0;gap:0;}
+ .field-guide .guide-navigation select {font-size:20px;}
+}
+@media (min-width:1260px) and (min-height:560px){
+ .fit-notebook #encounter:not(.paired-enemies) .enemy-box {outline:none;}
+}

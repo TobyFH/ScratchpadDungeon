@@ -207,11 +207,12 @@ function leverArt() {
   return `<svg class="pencil-art" viewBox="0 0 35 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 78 11-.5.5 13-12 .5Z M14 78l8-56 4 .5-7 57" fill="var(--paper-shade)"/><path d="m15 76 8-53m-15 60 8-.5m-8 5 8-.5M7 95l18-.5" stroke-width=".7"/><path d="M25 2q12 1 11 12-1 10-12 10-10-1-10-12Q15 2 25 2Z" fill="var(--paper)"/><path d="M25 5q9 1 8 9-1 8-9 7-7-1-7-8 0-7 8-8Zm-7 8 6-7m-6 12L30 6m-7 15 10-10" stroke-width=".65"/><path class="pencil-echo" d="m5 79 1 14 14-1M13 77l8-53"/></svg>`;
 }
 const paths = {
+  heavy: "M5 29 24 3l3 2L8 31ZM13 5q-8 1-10 9l10 2 4-5 6 5 7-10q-8-5-12-3ZM7 23l5 4m-7-1 5 4",
   selfheal: "M16 27C-5 12 7-1 16 9 25-1 37 12 16 27ZM12 15h8m-4-4v8M4 5v7h7",
   poisonMushroom: "M3 17Q3 1 16 2q13 0 13 15ZM12 18v10h8V18M8 8l4 5m0-5-4 5m12-5 4 5m0-5-4 5M4 29h24",
-  explodingMushroom: "M4 19Q2 5 16 6q14 0 12 13ZM12 20v9h8v-9M16 1v3m-11 0 3 3m18-3-3 3M1 13h3m24 0h3M12 12l4 6 4-6M6 29h20",
+  explodingMushroom: "M3 18 1 10l6 1-2-7 7 3 4-6 4 6 7-3-2 7 6-1-2 8ZM12 19v10h8V19M16 7v6m0 2v1M6 29h20M3 22l-2 3m28-3 2 3",
   brittleIce: "M3 5h26v23H3ZM16 5l-4 9 8 3-5 11M3 17l9-3m8 3 9-6M7 9l2 2m14 13 3-3",
-  hole: "M2 12 7 4l9 3 9-3 5 8-5 15-9 3-10-4ZM7 12l5-2m11 1 3 3M9 24l7-7 7 6",
+  hole: "M2 11 7 6l8 1 7-2 8 7-3 12-8 5-12-4-5-8ZM5 13l3 9 10 4 7-5 2-8-7-5-11 2ZM7 13l1 7m3-10 1 13m3-14 1 15m3-15 1 14m3-12-1 10M1 9l3-5m24 0 3 4M4 27l-3 3m27-3 3 3",
   nest: "M3 20q12 13 26 0M2 24q14 13 28 0M6 17l-3 8m8-8-6 12m12-12-6 14m12-14-5 14m10-13-4 11M11 18C3 7 17-1 19 9m-2 9c-4-16 15-14 8-1",
   egg: "M16 2C5 5-3 29 16 30S27 5 16 2ZM10 16l4-3 4 5 5-2",
   horn: "M3 9q10 6 22-6l4 4Q17 22 7 21ZM6 13 3 23l6 4 5-7M23 4l5 7M9 10l4 10",
@@ -336,6 +337,7 @@ function icon(name) {
 }
 function drawIcon(name) {
   if (name === "wall") return wallArt();
+  if(name === 'hole')return `<svg class="pencil-art pencil-icon chasm-art" viewBox="0 0 32 32" fill="none" stroke="var(--ink)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 11 7 5l8 2 7-3 8 8-3 12-8 5-12-4-5-8Z" fill="var(--paper-shade)"/><path class="chasm-dark" d="M5 13 9 9l10-1 8 6-3 8-7 4-9-4Z" fill="var(--ink)"/><path d="M8 12l2 9m3-10 2 12m3-13 2 12m3-11-1 9" stroke="var(--paper)" stroke-width=".6" opacity=".3"/><path d="m2 8 2-5m23 1 4 4M3 27l-2 4m27-4 3 3M3 11l4 2m20 1 3-2M7 25l1-3m11 7-2-3"/></svg>`;
   if (name === "lava")
     return `<svg class="pencil-art pencil-icon lava-barrier" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" aria-hidden="true"><path class="terrain-boundary" d="M.7 1 31.1 .6 31.4 31 1 31.4Z" fill="var(--paper-shade)" stroke-width="1.4"/><path d="M1 29V12l7-8 5 8 6-10 6 9 6-4v22Z" fill="var(--paper-shade)"/><path d="m2 25 8-3 5 4 7-5 9 4M8 4l2 15m9-17-2 17m8-8-3 8M4 28l5-1m6 2 8-2"/><path d="m12 23 4-9 3 8m5 5 3-7" stroke="var(--lava-ink)" stroke-width="2.5"/></svg>`;
   if (name === "bridge") {
@@ -363,7 +365,12 @@ function wallArt() {
 
 let artSerial = 0;
 
+function beeSwarmArt(){
+  const bee=(x,y,size,tilt)=>`<g transform="translate(${x} ${y}) rotate(${tilt}) scale(${size})"><g class="bee-wing"><path d="M-3-7Q-27-34-23-10q7 9 20 3M3-7Q12-35 22-19q3 11-19 12" fill="var(--paper)"/><path d="m-17-17 12 8M15-20 4-10" stroke-width=".6"/></g><path d="M-19 3Q-16-16 4-10q22 7 10 22-16 11-31-2L-27 6Z" fill="var(--paper-shade)"/><path d="M-7-10q-7 12 0 23M1-10q-6 12 1 24M15 0l9-6m-8 11 11 2M-9 15l-5 8m15-9 2 9"/><circle cx="13" cy="0" r="2" fill="currentColor"/></g>`;
+  return `<svg class="pencil-art bee-swarm-art species-bees" viewBox="0 0 120 150" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${bee(39,44,.95,-15)}${bee(82,70,.9,18)}${bee(38,107,.83,-8)}<path d="m9 64 9-3m62-39 10 3M88 112l11-5m-84 26 10-3" stroke-width=".8" opacity=".5"/></svg>`;
+}
 function specialEnemyArt(kind, entity) {
+  if(kind==='bees')return beeSwarmArt();
   if (kind.startsWith("pun-")) return punEnemyArt(kind.slice(4));
   // Every species uses the same sparse contours and material hatching. Keep
   // silhouettes legible at map-token size, without a detailed scan outlier.
@@ -525,6 +532,7 @@ function trapArt(type) {
 // Purposeful stationery silhouettes for Pun-nishing Mode. These are ordinary
 // palette-aware pencil paths, with the same portrait/injury/corpse contract.
 function punEnemyArt(id) {
+  if(id === "spellingbees")return beeSwarmArt().replace("</svg>",'<path d="M76 126l13-3 13 4v17l-13-4-13 3Zm13-3v17m-9-11 5-1m8 1 5 2" fill="var(--paper)"/></svg>');
   if (id === "fullstop")
     return `<svg class="horror-art species-pun-fullstop" viewBox="0 0 120 150" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M60 31C7 29 5 120 59 123c56 2 58-93 1-92Z" fill="currentColor"/><g stroke="var(--paper)" stroke-width="3"><path d="m31 60 20 8m20 0 18-9M43 75h4m27 0h4M39 100q20-24 42-1"/></g><path d="m20 127 20-2m39 4 18-1" opacity=".5"/></svg>`;
   const shapes = {

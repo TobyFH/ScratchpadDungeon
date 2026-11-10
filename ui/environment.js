@@ -52,7 +52,7 @@ function environmentDescription(c) {
               : "hairline cracks; still traversable");
   }
   if (v.corridor)
-    return `Shifting corridor — walls change in ${ENVIRONMENT_TUNING.corridorInterval - (e.moves % ENVIRONMENT_TUNING.corridorInterval)} moves`;
+    return `Shifting corridor — walls change in ${corridorMovesRemaining(e.corridors.find(s=>s.tile===i),e)} moves`;
   return "";
 }
 function environmentTileClasses(c, i) {
@@ -128,13 +128,13 @@ function renderEnvironmentEdges() {
         bx = b % W,
         by = Math.floor(b / W);
       lines.push(
-        ax === bx
+        {key:environmentEdgeKey(a,b),axis:ax===bx?"horizontal":"vertical",d:ax === bx
           ? `M${ax + 0.05} ${Math.max(ay, by)}h.9`
-          : `M${Math.max(ax, bx)} ${ay + 0.05}v.9`,
+          : `M${Math.max(ax, bx)} ${ay + 0.05}v.9`},
       );
     }
-  const markup = lines.map((d) =>
-    `<path d="${d}" class="sliding-wall-paper"/><path d="${d}" class="sliding-wall-ink"/>`
+  const markup = lines.map(({d,key,axis}) =>
+    `<g class="sliding-wall-piece ${axis}" data-sliding-edge="${key}"><path d="${d}" class="sliding-wall-paper"/><path d="${d}" class="sliding-wall-ink"/></g>`
   ).join("");
   paintMapDrawing("environment-connections", markup, () => {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -191,6 +191,15 @@ function environmentalFeedback(tiles, kind) {
       }
     }
   }
+  if(kind === 'corridor')for(const piece of document.querySelectorAll('.sliding-wall-piece')){
+    if(!piece.dataset.slidingEdge.split(':').map(Number).some(i=>visible.includes(i)))continue;
+    const vertical=piece.classList.contains('vertical');
+    animate(piece,[{transform:vertical?'scale(1,.03)':'scale(.03,1)'},{transform:vertical?'scale(1,1.04)':'scale(1.04,1)',offset:.8},{transform:'scale(1,1)'}],{duration:420,easing:'ease-out'});
+  }
+  if(kind === 'corridor-warning')for(const i of visible){
+    const drawing=$(`[data-tile="${i}"] .environment-corridor-art svg`);
+    animate(drawing,[{transform:'scale(1)',color:'var(--ink)'},{transform:'scale(1.3)',color:'var(--gold)',offset:.4},{transform:'scale(1)',color:'var(--ink)'}],{duration:500,juice:true});
+  }
   if (["seismic", "corridor", "collapse"].includes(kind)) {
     // A quake moves the map; a corridor shift moves only its drawn wall edges.
     shakeElement(
@@ -217,7 +226,7 @@ function renderEnvironmentStatus() {
     );
   if (e.corridors.length)
     notes.push(
-      `Walls shift in ${ENVIRONMENT_TUNING.corridorInterval - (e.moves % ENVIRONMENT_TUNING.corridorInterval)} moves`,
+      `Walls shift in ${Math.min(...e.corridors.map(s=>corridorMovesRemaining(s,e)))} moves`,
     );
   if (notes.length) $("#map-status").textContent = notes.join(" · ");
 }

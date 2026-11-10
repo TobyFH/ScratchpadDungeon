@@ -53,6 +53,7 @@ function workshopFaceSummary(face, h) {
   const n = face.tier || 1;
   return (
     {
+      heavy: `${markDamage("heavy",n)} physical damage${n >= 3 ? " to every enemy" : " to the selected enemy"}. Stronger, more costly; Tank and Berserker only.`,
       attack: `${n} physical damage${n >= 3 ? " to every enemy" : " to the selected enemy"}.`,
       magic: `${n} spell damage${n >= 3 ? " to every enemy" : " to the selected enemy"}; may expose Vulnerable.`,
       heal: `${POWER.heal * n} HP to the selected ally. Full-health misclicks redirect to a wounded ally.`,
@@ -90,6 +91,7 @@ function iconCriticalOddsMarkup(h) {
 }
 const WORKSHOP_SHORT_LABELS = Object.freeze({
   attack: "Physical",
+  heavy: "Heavy",
   magic: "Spell",
   heal: "Ally heal",
   selfheal: "Self heal",

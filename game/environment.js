@@ -13,9 +13,11 @@ const ENVIRONMENT_TUNING = Object.freeze({
   faultCollapseAge: 4,
   seismicChance: 0.6,
   seismicInterval: 4,
-  corridorChance: 0.75,
-  corridorInterval: 4,
+  corridorChance: 1,
+  corridorInterval: 2,
+  corridorSections: 3,
 });
+const corridorMovesRemaining = (s, e = environmentState()) => ENVIRONMENT_TUNING.corridorInterval - ((e.moves + (s?.phase || 0)) % ENVIRONMENT_TUNING.corridorInterval);
 const environmentState = (map = state?.map) => map?.[0]?.environment || null;
 const environmentEdgeKey = (a, b) => (a < b ? `${a}:${b}` : `${b}:${a}`);
 function environmentEdgeOpen(map, a, b) {
@@ -57,7 +59,7 @@ function environmentTraversalSafe(map, position = null) {
   const layouts = (e?.corridors || []).map((s) => s.layout || 0);
   try {
     if (position !== null && map[position]?.wall) return false;
-    // With at most two sections, exhaustively prove every future combination.
+    // Three small sections: exhaustively prove all eight future layout combinations.
     const sections = e?.corridors || [];
     const prove = (n) => {
       if (n === sections.length) return allTilesCanReachStairs(map);
@@ -339,7 +341,7 @@ function initializeFloorEnvironment(map, depth) {
               !["tunnel", "door", "plate", "stairs"].includes(map[j].event),
           ).length >= 2,
       );
-    const count = 1 + rand(2);
+    const count = ENVIRONMENT_TUNING.corridorSections;
     for (const i of candidates) {
       if (e.corridors.length >= count) break;
       const adjacent = neighbors(i).filter(
@@ -378,6 +380,7 @@ function initializeFloorEnvironment(map, depth) {
               ]
             : [[...keys], [keys[0]]],
         layout: 0,
+        phase: e.corridors.length % ENVIRONMENT_TUNING.corridorInterval,
       };
       map[i].wall = false;
       map[i].terrain = "floor";
@@ -403,6 +406,10 @@ function normaliseFloorEnvironment(map = state.map) {
   const e = environmentState(map);
   if (!e) return;
   e.moves = Math.max(0, Math.floor(e.moves || 0));
+  if(e.swarm){
+    if(!Number.isInteger(e.swarm.position)||!map[e.swarm.position]||map[e.swarm.position].wall)e.swarm=null;
+    else e.swarm.steps=Math.max(0,Math.floor(Number(e.swarm.steps)||0));
+  }
   for (const key of ["clearings", "lanterns", "crust", "corridors", "faults"])
     e[key] ||= [];
   for (const f of e.crust) {
@@ -515,7 +522,7 @@ function swapUnresolvedRooms(a, b, map = state.map) {
   return true;
 }
 function environmentHunterAt(map, tile) {
-  return map === state?.map && state.pursuer?.position === tile;
+  return map === state?.map && (state.pursuer?.position === tile || environmentState(map)?.swarm?.position === tile);
 }
 function advanceFloorEnvironment(map = state.map, position = state.position) {
   const e = environmentState(map);
@@ -632,11 +639,11 @@ function advanceFloorEnvironment(map = state.map, position = state.position) {
   }
   for (const s of e.corridors) {
     if (
-      e.moves % ENVIRONMENT_TUNING.corridorInterval ===
+      (e.moves + (s.phase || 0)) % ENVIRONMENT_TUNING.corridorInterval ===
       ENVIRONMENT_TUNING.corridorInterval - 1
     )
       push([s.tile], "corridor-warning");
-    if (e.moves % ENVIRONMENT_TUNING.corridorInterval) continue;
+    if ((e.moves + (s.phase || 0)) % ENVIRONMENT_TUNING.corridorInterval) continue;
     const old = s.layout;
     s.layout = (old + 1) % s.layouts.length;
     if (environmentTraversalSafe(map, position))

@@ -509,6 +509,7 @@ async function tunnelEncounter(c) {
       " The other end of the tunnel. Both entrances remain open.",
   );
   refreshStaleMap();
+  await advanceBeeSwarm({move:false});
   save();
   return true;
 }

@@ -112,11 +112,79 @@ function eventLogAnnotations(text, explicit = [], dictionary = eventLogDictionar
   }
   return result;
 }
+// The latest completed fight stays fully readable. Earlier fights become one
+// reopenable record; the archive survives raw-line trimming and saved reloads.
+const BATTLE_LOG_HISTORY = 10, BATTLE_LOG_LINES = 160;
+function beginBattleLog() {
+  const id=String(state.runId||'legacy')+':'+state.encounterSerial;
+  state.logBattles=Array.isArray(state.logBattles)?state.logBattles.filter(b=>b&&typeof b.id==='string').slice(-(BATTLE_LOG_HISTORY-1)):[];
+  const existing=state.logBattles.find(b=>b.id===id);
+  if(existing&&!existing.complete){state.activeLogBattle=id;return existing;}
+  const battle={id,names:battleEnemies().map(e=>e.name),floor:state.depth,startAction:state.actionSerial||0,entries:[],complete:false,lastId:state.logSerial||0};
+  state.logBattles.push(battle);state.activeLogBattle=id;return battle;
+}
+function activeBattleLog(){
+  const current=state.logBattles?.find(b=>b.id===state.activeLogBattle&&!b.complete);
+  return current||(state.enemy?beginBattleLog():null);
+}
+function completeBattleLog(outcome='Victory'){
+  const battle=state.logBattles?.find(b=>b.id===state.activeLogBattle&&!b.complete);
+  if(!battle)return;
+  battle.complete=true;battle.outcome=outcome;battle.actions=Math.max(0,(state.actionSerial||0)-battle.startAction);
+  state.lastCompletedLogBattle=battle.id;state.activeLogBattle=null;
+  state.logBattleRevision=(state.logBattleRevision||0)+1;renderLog();
+}
+function eventLogLineMarkup(text,detail,dictionary,legacyId){
+  text=String(text);
+  const terms=Array.isArray(detail?.terms)?detail.terms:eventLogAnnotations(text,[],dictionary);
+  let cursor=0,html='';
+  for(const t of terms){
+    if(!t||!Number.isInteger(t.start)||!Number.isInteger(t.end)||t.start<cursor||t.end<=t.start||t.end>text.length||typeof t.description!=='string')continue;
+    html+=escapeHTML(text.slice(cursor,t.start));
+    html+=`<span class="log-term log-term-${feedbackKind(text.slice(t.start,t.end),'event')}${t.kind==='gold'?' log-term-gold':''}" tabindex="0" data-log-term="${t.start}" aria-describedby="status-tooltip" data-tooltip="${escapeHTML(t.description)}" title="${escapeHTML(t.description)}">${escapeHTML(text.slice(t.start,t.end))}</span>`;
+    cursor=t.end;
+  }
+  return `<li data-log-id="${Number.isSafeInteger(detail?.id)?detail.id:legacyId}" data-log-category="${['combat','exploration','personal','trait','loot'].includes(detail?.category)?detail.category:'exploration'}">${html+escapeHTML(text.slice(cursor))}</li>`;
+}
+function battleLogLines(battle,dictionary){
+  return [...battle.entries].filter(r=>r&&typeof r.text==='string').slice(-BATTLE_LOG_LINES).reverse().map((r,i)=>eventLogLineMarkup(r.text,r,dictionary,'battle-'+i)).join('');
+}
+// Closed histories contain just their summary. Draw the preserved lines only
+// when opened, keeping long runs from accumulating thousands of hidden nodes.
+$('#log').addEventListener('toggle',event=>{
+  const details=event.target;
+  if(!(details instanceof HTMLElement)||!details.matches('details[data-battle-log]')||!details.open||details.dataset.loaded==='true')return;
+  const battle=(state.logBattles||[]).find(b=>b.id===details.dataset.battleLog&&Array.isArray(b.entries));
+  if(!battle)return;
+  details.querySelector('ol').innerHTML=battleLogLines(battle,eventLogDictionary());
+  details.dataset.loaded='true';
+},true);
+function battleLogMarkup(dictionary,expanded){
+  const battles=(Array.isArray(state.logBattles)?state.logBattles:[]).filter(b=>b&&typeof b.id==='string'&&Array.isArray(b.entries)).slice(-BATTLE_LOG_HISTORY);
+  const battleIds=new Set(battles.map(b=>b.id)),items=[];
+  (state.logs||[]).forEach((text,i)=>{
+    const detail=state.logDetails?.[i]?.text===text?state.logDetails[i]:null;
+    if(detail?.battleId&&battleIds.has(detail.battleId))return;
+    items.push({order:Number.isSafeInteger(detail?.id)?detail.id:(state.logSerial||state.logs.length)-i,html:eventLogLineMarkup(text,detail,dictionary,'legacy-'+i)});
+  });
+  for(const battle of battles){
+    const entries=battle.entries.filter(r=>r&&typeof r.text==='string').slice(-BATTLE_LOG_LINES);
+    if(!entries.length)continue;
+    const title=`Floor ${Math.max(1,Math.min(10,Number(battle.floor)||1))} · ${(Array.isArray(battle.names)?battle.names:[]).filter(n=>typeof n==='string').join(' & ')} · ${battle.complete?(battle.outcome==='Defeat'?'Defeat':'Victory'):'Fighting'}`;
+    const latest=!battle.complete||battle.id===state.lastCompletedLogBattle;
+    const open=expanded.has(battle.id),lines=latest||open?battleLogLines(battle,dictionary):'';
+    const content=latest?`<li class="log-battle-heading">${escapeHTML(title)}</li>${lines}`:`<li class="log-battle" data-log-category="combat"><details data-battle-log="${escapeHTML(battle.id)}" data-loaded="${open}" ${open?'open':''}><summary>${icon('sword')}<span>${escapeHTML(title)}<small>${Number(battle.actions)||0} party rolls · click to reread</small></span></summary><ol aria-label="Battle record">${lines}</ol></details></li>`;
+    items.push({order:Number(battle.lastId)||0,html:content});
+  }
+  return items.sort((a,b)=>b.order-a.order).map(item=>item.html).join('');
+}
 function log(msg, options = {}) {
+  const battle = activeBattleLog();
   const text = String(msg), record = {
+    battleId: battle?.id || null,
     text,
-    category: options.category || (state.enemy ? "combat" : "exploration"),
-    context: options.context || (state.enemy ? "combat" : "exploration"),
+    category: options.category || (battle ? "combat" : "exploration"),
+    context: options.context || (battle ? "combat" : "exploration"),
     label: typeof options.label === "string" ? options.label : null,
     terms: eventLogAnnotations(text, options.terms || []),
     important: !!options.important,
@@ -130,6 +198,10 @@ function log(msg, options = {}) {
   // Discard mismatched metadata if a legacy save/tool replaced the string log.
   state.logDetails = (state.logs || []).map((text, i) => state.logDetails?.[i]?.text === text ? state.logDetails[i] : null);
   record.id = state.logSerial = (Number.isSafeInteger(state.logSerial) ? state.logSerial : 0) + 1;
+  if(battle){
+    battle.entries.push({...record});battle.entries=battle.entries.slice(-BATTLE_LOG_LINES);battle.lastId=record.id;
+    state.logBattleRevision=(state.logBattleRevision||0)+1;
+  }
   state.logs.unshift(text);
   state.logs = state.logs.slice(0, EVENT_LOG_LIMIT);
   state.logDetails.unshift(record);
@@ -157,27 +229,16 @@ function flushCombatLogEvents(group) {
 }
 let lastEventLogRender = null;
 function renderLog() {
-  const textSignature = JSON.stringify(state.logs);
+  const textSignature = JSON.stringify([state.logs,state.logBattleRevision||0]);
   if (lastEventLogRender?.textSignature === textSignature && lastEventLogRender?.logs === state.logs && lastEventLogRender?.details === state.logDetails && lastEventLogRender?.count === state.logs.length) return;
   const root = $("#log"), dictionary = eventLogDictionary(), scroll = root.scrollTop;
   const focused = root.contains(document.activeElement) ? document.activeElement : null;
   const focusId = focused?.closest("li")?.dataset.logId, focusTerm = focused?.dataset.logTerm;
   // A rerender must not leave a detached entry's tooltip floating over the book.
   if (focused || root.matches(":hover")) document.getElementById("status-tooltip")?.setAttribute("hidden", "");
-  root.innerHTML = (state.logs || []).map((text, i) => {
-    text = String(text);
-    const detail = state.logDetails?.[i]?.text === text ? state.logDetails[i] : null;
-    const terms = Array.isArray(detail?.terms) ? detail.terms : eventLogAnnotations(text, [], dictionary);
-    let cursor = 0, html = "";
-    for (const t of terms) {
-      // Treat saved records as untrusted input; never render stored HTML/offsets.
-      if (!t || typeof t !== "object" || !Number.isInteger(t.start) || !Number.isInteger(t.end) || t.start < cursor || t.end <= t.start || t.end > text.length || typeof t.description !== "string") continue;
-      html += escapeHTML(text.slice(cursor, t.start));
-      html += `<span class="log-term log-term-${feedbackKind(text.slice(t.start,t.end),"event")}${t.kind === "gold" ? " log-term-gold" : ""}" tabindex="0" data-log-term="${t.start}" aria-describedby="status-tooltip" data-tooltip="${escapeHTML(t.description)}" title="${escapeHTML(t.description)}">${escapeHTML(text.slice(t.start, t.end))}</span>`;
-      cursor = t.end;
-    }
-    return `<li data-log-id="${Number.isSafeInteger(detail?.id) ? detail.id : "legacy-" + i}" data-log-category="${["combat", "exploration", "personal", "trait", "loot"].includes(detail?.category) ? detail.category : "exploration"}">${html + escapeHTML(text.slice(cursor))}</li>`;
-  }).join("");
+  const expanded=new Set([...root.querySelectorAll('details[data-battle-log][open]')].map(n=>n.dataset.battleLog));
+  if(focusId)for(const b of state.logBattles||[])if(b.entries?.some(r=>String(r.id)===focusId))expanded.add(b.id);
+  root.innerHTML = battleLogMarkup(dictionary,expanded);
   lastEventLogRender = { logs: state.logs, details: state.logDetails, count: state.logs.length, textSignature };
   root.scrollTop = scroll;
   if (focusId && focusTerm) {

@@ -17,6 +17,21 @@ const BIOME_MARGIN_PATHS=Object.freeze({
   shadow:'M15 0q-23 39 0 76t0 77 0 77 0 77 0 83M24 0q-22 39 0 76t0 77 0 77 0 77 0 83M5 38l10 6m0 66 13 6M5 187l10 6m0 67 13 6M5 339l10 6',
   maze:'M6 0v48h21V22H15v13M27 52v50H6V75h11v14M6 106v49h21v-27H15v13M27 160v49H6v-27h11v14M6 214v49h21v-27H15v13M27 268v49H6v-27h11v14M6 322v49h21v-27H15v13',
 });
+function biomeMoteArt(theme,i){
+  const x=5+i%3*9,y=24+i*39;
+  const shapes={
+    overgrown:`<path d="M${x} ${y}q12-13 9 1-3 10-9 8Zm1 7 6-7" fill="var(--paper-shade)"/>`,
+    fungal:`<circle cx="${x+4}" cy="${y+4}" r="2"/><circle cx="${x}" cy="${y+11}" r="1.4"/><circle cx="${x+8}" cy="${y+14}" r="1.6"/>`,
+    lava:`<path d="M${x+4} ${y}q-9 13-1 15 9 0 1-15Z" fill="currentColor"/>`,
+    ice:`<path d="M${x+4} ${y}v14m-6-10 12 6m-12 0 12-6"/>`,
+    crystal:`<path d="m${x+4} ${y} 5 8-5 8-4-8Zm0 0v16"/>`,
+    unstable:`<path d="m${x} ${y+3} 6-3 5 8-5 5-7-4Z" fill="var(--paper-shade)"/>`,
+    shadow:`<path d="M${x} ${y}q15 6 3 13t4 12m-2-20q8 4 1 9"/>`,
+    maze:`<path d="M${x} ${y}h10v9H${x}Zm5 0v4m-5 1h10"/>`,
+    cave:`<path d="m${x} ${y} 5 5-3 6-5-5Z"/>`,
+  };
+  return shapes[theme]||shapes.cave;
+}
 function updateBiomeMargins(){
   const theme=floorBiome(),wrap=$('#map-wrap');if(!wrap)return;
   if(wrap.dataset.marginBiome===theme)return;
@@ -24,7 +39,7 @@ function updateBiomeMargins(){
   wrap.querySelectorAll('.biome-margin').forEach(el=>el.remove());
   for(const side of ['left','right']){
     const el=document.createElement('div');el.className=`biome-margin ${side}`;el.setAttribute('aria-hidden','true');
-    el.innerHTML=`<svg class="pencil-art" viewBox="0 0 34 390" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="${pencilPath(BIOME_MARGIN_PATHS[theme],0.35)}"/><path opacity=".25" transform="translate(.7 .3)" d="${BIOME_MARGIN_PATHS[theme]}"/>${Array.from({length:5},(_,i)=>`<g class="margin-mote" style="--mote:${i}"><path d="M${5+i%3*9} ${35+i*68}l3 5-3 4-2-4Z"/></g>`).join('')}</svg>`;
+    el.innerHTML=`<svg class="pencil-art" viewBox="0 0 34 390" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="${pencilPath(BIOME_MARGIN_PATHS[theme],0.35)}"/><path opacity=".25" transform="translate(.7 .3)" d="${BIOME_MARGIN_PATHS[theme]}"/>${Array.from({length:9},(_,i)=>`<g class="margin-mote" style="--mote:${i}">${biomeMoteArt(theme,i)}</g>`).join('')}</svg>`;
     wrap.append(el);
   }
 }

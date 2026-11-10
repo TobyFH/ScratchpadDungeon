@@ -864,7 +864,7 @@ test("field guide topics remain readable without scrolling on desktop, Deck and 
   await p.evaluate(() => help());
   const count = await p.locator("#guide-topic option").count();
   assert.equal(count, await p.evaluate(() => FIELD_GUIDE.length));
-  assert.ok(await p.evaluate(() => FIELD_GUIDE.some((topic) => topic.id === "event-log")));
+  assert.ok(await p.evaluate(() => GUIDE_ALIASES["event-log"] === "camp" && FIELD_GUIDE.some((topic) => topic.id === "camp" && topic.body.includes("Event log"))));
   for (const width of [1920, 1280, 390, 320]) {
     await p.setViewportSize({
       width,
