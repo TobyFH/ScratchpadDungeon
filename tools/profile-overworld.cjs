@@ -5,6 +5,7 @@ const path = require('node:path');
 const { chromium } = require('playwright');
 (async () => {
   const args = process.argv.slice(2), value = (key, fallback) => args.includes(key) ? args[args.indexOf(key)+1] : fallback;
+  const full = args.includes('--full');
   const html = await fs.readFile(value('--html', path.resolve(__dirname, '../index.html')));
   const output = value('--out', path.resolve(__dirname, '../test-results/overworld-performance'));
   await fs.mkdir(output, { recursive: true });
@@ -37,19 +38,28 @@ const { chromium } = require('playwright');
     await cdp.send('Emulation.setCPUThrottlingRate',{rate:4});
     await cdp.send('Performance.enable');
     const before=await cdp.send('Performance.getMetrics');
-    const refresh=await p.evaluate(async()=>{
+    const refresh=await p.evaluate(async(full)=>{
+      const functions=['renderMap','renderParty','renderEncounter','renderInventory','applyPreferences','fitNotebook','fitDialogs','fitText'];
+      const originals={}, functionTimes={};
+      for(const name of functions){
+        originals[name]=eval(name);functionTimes[name]={calls:0,ms:0};
+        window.__profileWrapper=(...args)=>{const start=performance.now();try{return originals[name](...args)}finally{functionTimes[name].calls++;functionTimes[name].ms+=performance.now()-start}};
+        eval(name+' = window.__profileWrapper');
+      }
       let additions=0, removals=0;
       const observer=new MutationObserver(rows=>rows.forEach(r=>{additions+=r.addedNodes.length;removals+=r.removedNodes.length}));
       observer.observe(document.querySelector('#map'),{childList:true,subtree:true});
       const original=[...document.querySelectorAll('#map > .tile')], times=[];
       for(let n=0;n<24;n++){
-        const start=performance.now();renderMap();times.push(performance.now()-start);
+        const start=performance.now();if(full)render();else renderMap();times.push(performance.now()-start);
         await new Promise(r=>requestAnimationFrame(r));
       }
       await Promise.resolve();observer.disconnect();
       const retained=original.filter((node,i)=>node===document.querySelector('#map').children[i]).length;
-      return {times,additions,removals,retained};
-    });
+      for(const name of functions){window.__profileOriginal=originals[name];eval(name+' = window.__profileOriginal')}
+      delete window.__profileWrapper;delete window.__profileOriginal;
+      return {times,additions,removals,retained,functionTimes};
+    },full);
     const after=await cdp.send('Performance.getMetrics');
     const travel=await p.evaluate(async()=>{
       const gaps=[];let frame,last=performance.now();const start=last;
@@ -64,7 +74,7 @@ const { chromium } = require('playwright');
     const stats=(xs)=>{const sorted=[...xs].sort((a,b)=>a-b);return{mean:xs.reduce((a,b)=>a+b,0)/xs.length,median:sorted[Math.floor(sorted.length/2)],p95:sorted[Math.floor(sorted.length*.95)],max:Math.max(...xs)}};
     const tracked=['LayoutCount','RecalcStyleCount','LayoutDuration','RecalcStyleDuration','TaskDuration','ScriptDuration','Nodes','JSHeapUsedSize','JSHeapTotalSize'];
     const metrics=Object.fromEntries(after.metrics.filter(m=>tracked.includes(m.name)).map(m=>[m.name,m.value-(before.metrics.find(b=>b.name===m.name)?.value||0)]));
-    const report={cpuThrottle:4,refresh:{...refresh,times:stats(refresh.times)},travel:{...travel,gaps:stats(travel.gaps)},metrics,errors};
+    const report={cpuThrottle:4,fullRender:full,refresh:{...refresh,times:stats(refresh.times)},travel:{...travel,gaps:stats(travel.gaps)},metrics,errors};
     await fs.writeFile(path.join(output,'report.json'),JSON.stringify(report,null,2)+'\n');
     console.log(JSON.stringify(report,null,2));if(errors.length)throw Error(errors.join('\n'));
   } finally {await browser.close();await new Promise(r=>server.close(r));}

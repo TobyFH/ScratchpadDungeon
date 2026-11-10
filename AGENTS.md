@@ -1,5 +1,10 @@
 # Scratchpad Dungeon UI continuity
 
+Read `docs/LAYOUT_PERFORMANCE.md` before changing notebook fitting, keyboard
+prompts or hover work. `ui/layout-performance.js` owns dimension invalidation;
+keep real resize/font/content changes observable and preserve live tooltips.
+Never trade effect quality, input responsiveness or game rules for benchmark gains.
+
 Read `docs/OVERWORLD_PERFORMANCE.md` before changing map rendering or icon caches.
 `ui/overworld-rendering.js` retains unchanged tile/drawing nodes with explicit
 mutation invalidation. Preserve authored DOM, hidden information, particle counts

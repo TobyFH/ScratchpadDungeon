@@ -108,6 +108,7 @@ for (const [label, file] of [
   ["NOTEBOOK PAGES", "ui/notebook-pages.js"],
   ["COMBAT LIFE", "ui/combat-life.js"],
   ["OVERWORLD RENDERING", "ui/overworld-rendering.js"],
+  ["LAYOUT PERFORMANCE", "ui/layout-performance.js"],
   ["CLASS MOMENTS", "ui/class-moments.js"],
   ["EXPEDITION PRESENTATION", "ui/expedition-presentation.js"],
   ["FIELD GUIDE", "ui/field-guide.js"],

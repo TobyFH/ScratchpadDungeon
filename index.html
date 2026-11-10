@@ -17213,7 +17213,9 @@ function paintMapDrawing(id, markup, create) {
   return node;
 }
 // END GENERATED OVERWORLD RENDERING
+      let mapHoverRevision = 0;
       function renderMap() {
+        mapHoverRevision++;
         const locked = (busy && !travel) || !!state.enemy || state.over;
         const crystalInfluence = crystalInfluencedTiles();
         paintMapTiles(state.map
@@ -17256,6 +17258,7 @@ function paintMapDrawing(id, markup, create) {
       }
 
       function positionPlayer(animate = true) {
+        if (!state) return; // Resizing during the studio intro precedes run loading.
         let cell = $(`[data-tile="${state.position}"]`),
           p = $("#map-player");
         if (!cell) return;
@@ -24287,6 +24290,60 @@ function musicVoices(scene, index) {
         $("#palette").value = value;
         save();
       }
+      // BEGIN GENERATED LAYOUT PERFORMANCE
+// Ephemeral layout bookkeeping. No game state, timers, animation or RNG changes.
+const notebookLayout = (() => {
+  const desk = document.querySelector(".desk");
+  const bar = document.getElementById("keyboard-bar");
+  let dirty = true, viewport = "", scale = null;
+  function invalidate() { dirty = true; }
+  function needsFit(force, fitted) {
+    return force || dirty || viewport !== `${innerWidth}:${innerHeight}` ||
+      desk.classList.contains("fit-notebook") !== fitted ||
+      desk.style.getPropertyValue("--desk-scale") !== scale;
+  }
+  function fitted() {
+    dirty = false;
+    viewport = `${innerWidth}:${innerHeight}`;
+    scale = desk.style.getPropertyValue("--desk-scale");
+  }
+  function syncBarHeight() {
+    const height = bar.offsetHeight + "px";
+    if (document.documentElement.style.getPropertyValue("--keyboard-bar-height") !== height) {
+      document.documentElement.style.setProperty("--keyboard-bar-height", height);
+      invalidate();
+    }
+  }
+  function writeBar(next) {
+    if (bar.innerHTML === next) return;
+    bar.innerHTML = next;
+    invalidate();
+    syncBarHeight();
+  }
+  // Observer sizes are layout sizes, before the desk's CSS zoom. A changed zoom
+  // doesn't start a feedback loop; genuine content/font/viewport changes refit.
+  const dimensions = new WeakMap();
+  const observer = new ResizeObserver((entries) => {
+    let changed = false;
+    for (const entry of entries) {
+      const size = entry.borderBoxSize?.[0];
+      const next = `${size?.inlineSize ?? entry.contentRect.width}:${size?.blockSize ?? entry.contentRect.height}`;
+      if (dimensions.get(entry.target) === next) continue;
+      dimensions.set(entry.target, next); changed = true;
+      if (entry.target === bar) syncBarHeight();
+    }
+    if (changed) { invalidate(); requestFitUI(); }
+  });
+  observer.observe(desk); observer.observe(bar);
+  document.fonts.addEventListener("loadingdone", invalidate);
+  return { needsFit, fitted, invalidate, writeBar };
+})();
+
+function stayedInsideControl(event, control) {
+  return !!control && event.type === "pointerover" &&
+    event.relatedTarget instanceof Element && control.contains(event.relatedTarget);
+}
+// END GENERATED LAYOUT PERFORMANCE
       function fitText(el, max = 20, min = 11) {
         if (!el || !el.clientHeight || !el.clientWidth) return;
         const overflows = () => {
@@ -24317,6 +24374,7 @@ function musicVoices(scene, index) {
         fittingUI = true;
         requestAnimationFrame(() => {
           fittingUI = false;
+          fitNotebook();
           fitDialogs();
           fitText($("#result-ribbon"), 20, 11);
           fitText($("#field-note"), 22, 14);
@@ -24343,6 +24401,7 @@ function musicVoices(scene, index) {
         });
       }
       function fitDialogs() {
+        if ($("#spotlight").hidden && $("#overlay").hidden) return;
         if (responsiveCampPage()) return;
         const toolbar = $(".desk-top").getBoundingClientRect(),
           // Reserve a visible toolbar, including multiple wrapped rows on phones.
@@ -24433,13 +24492,9 @@ function musicVoices(scene, index) {
       }
       function updateKeyboardBar() {
         const event = !$("#spotlight").hidden || !$("#overlay").hidden;
-        $("#keyboard-bar").innerHTML = event
+        notebookLayout.writeBar(event
           ? "<span><kbd>Tab</kbd> / <kbd>Shift Tab</kbd> choose</span><span><kbd>Enter</kbd> confirm highlighted button</span><span><kbd>Space</kbd> / <kbd>Esc</kbd> land reels</span><span><kbd>T</kbd> pace · <kbd>C</kbd> palette</span><span>Mouse: click buttons or rolling reels</span>"
-          : "<span><kbd>WASD</kbd> / <kbd>↑↓←→</kbd> move</span><span><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> spin hero · <kbd>Shift 1–3</kbd> heal target</span><span><kbd>[</kbd><kbd>]</kbd> damage target · <kbd>E</kbd> edit</span><span><kbd>P</kbd> tonic · <kbd>B</kbd> bomb · <kbd>V</kbd> ward · <kbd>X</kbd> stairs · <kbd>R</kbd> revisit</span><span><kbd>O</kbd> options · <kbd>F</kbd> guide · <kbd>Y</kbd> bestiary · <kbd>T</kbd> pace · <kbd>C</kbd> palette · <kbd>M</kbd> log</span><span><kbd>Tab</kbd> / <kbd>Enter</kbd> navigate all controls · Mouse: click tile, portrait or handle</span>";
-        document.documentElement.style.setProperty(
-          "--keyboard-bar-height",
-          $("#keyboard-bar").offsetHeight + "px",
-        );
+          : "<span><kbd>WASD</kbd> / <kbd>↑↓←→</kbd> move</span><span><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> spin hero · <kbd>Shift 1–3</kbd> heal target</span><span><kbd>[</kbd><kbd>]</kbd> damage target · <kbd>E</kbd> edit</span><span><kbd>P</kbd> tonic · <kbd>B</kbd> bomb · <kbd>V</kbd> ward · <kbd>X</kbd> stairs · <kbd>R</kbd> revisit</span><span><kbd>O</kbd> options · <kbd>F</kbd> guide · <kbd>Y</kbd> bestiary · <kbd>T</kbd> pace · <kbd>C</kbd> palette · <kbd>M</kbd> log</span><span><kbd>Tab</kbd> / <kbd>Enter</kbd> navigate all controls · Mouse: click tile, portrait or handle</span>");
       }
       function keyboardShortcut(e) {
         const key = e.key.toLowerCase(),
@@ -24602,12 +24657,14 @@ function musicVoices(scene, index) {
           .forEach((el) => el.classList.remove("travel-goal"));
         $(`[data-tile="${goal}"]`)?.classList.add("travel-goal");
       }
-      function fitNotebook() {
+      function fitNotebook(force = false) {
         const desk = $(".desk"),
           fit = innerWidth >= 1260 && innerHeight >= 560;
+        if (!notebookLayout.needsFit(force, fit)) return;
         desk.classList.toggle("fit-notebook", fit);
         if (!fit) {
           desk.style.removeProperty("--desk-scale");
+          notebookLayout.fitted();
           return;
         }
         const scale = Math.min(
@@ -24616,6 +24673,7 @@ function musicVoices(scene, index) {
           (innerHeight - $("#keyboard-bar").offsetHeight - 16) / desk.offsetHeight,
         );
         desk.style.setProperty("--desk-scale", Math.max(0.35, scale).toFixed(4));
+        notebookLayout.fitted();
       }
 
       let travel = null,
@@ -32208,9 +32266,13 @@ function revealCriticalPayoff(region, details, multiplier) {
         let b = e.target.closest("[data-tile]");
         if (b) { const n=Number(b.dataset.tile); if(state.map[n]?.seen && state.map[n]?.event==="door")openSecretDoor(n);else move(n); }
       });
+      let mapHoverControl = null, mapHoverHandledRevision = -1;
       $("#map").addEventListener("pointerover", (e) => {
         let b = e.target.closest("[data-tile]");
         if (!b) return;
+        if (mapHoverControl === b && mapHoverHandledRevision === mapHoverRevision && stayedInsideControl(e, b)) return;
+        mapHoverControl = b;
+        mapHoverHandledRevision = mapHoverRevision;
         let n = Number(b.dataset.tile);
         updateMapInspection(n);
         document
@@ -32224,6 +32286,7 @@ function revealCriticalPayoff(region, details, multiplier) {
         }
       });
       $("#map").addEventListener("pointerleave", () => {
+        mapHoverControl = null;
         document
           .querySelectorAll(".tile.route")
           .forEach((el) => el.classList.remove("route"));
@@ -32248,14 +32311,21 @@ function revealCriticalPayoff(region, details, multiplier) {
       statusTooltip.setAttribute("role", "tooltip");
       statusTooltip.hidden = true;
       document.body.append(statusTooltip);
-      let statusTooltipSource = null;
+      let statusTooltipSource = null, statusTooltipKey = null;
       function showStatusTooltip(event) {
         const source = event.target.closest("[data-tooltip],[data-hero-stats]");
         if (!source) return;
-        statusTooltipSource = source;
         const hero = source.hasAttribute("data-hero-stats")
           ? state.party[Number(source.dataset.heroStats)]
           : null;
+        // Preserve live stats/text while avoiding repeated layout for the same
+        // unchanged tooltip as the pointer crosses its illustration's paths.
+        const key = hero ? JSON.stringify([hero, state.party, state.enemy, state.runRules,
+          state.artefacts, state.equippedArtefact, state.steps, state.finishedAt,
+          Math.floor(Date.now() / 1000)]) : source.dataset.tooltip;
+        if (!statusTooltip.hidden && source === statusTooltipSource && key === statusTooltipKey && stayedInsideControl(event, source)) return;
+        statusTooltipSource = source;
+        statusTooltipKey = key;
         statusTooltip.classList.toggle("hero-stats-tooltip", !!hero);
         if (hero) statusTooltip.innerHTML = heroStatsMarkup(hero);
         else statusTooltip.textContent = source.dataset.tooltip;
@@ -32292,7 +32362,10 @@ function revealCriticalPayoff(region, details, multiplier) {
       document.addEventListener("pointerover", showStatusTooltip);
       document.addEventListener("focusin", showStatusTooltip);
       document.addEventListener("pointerout", (e) => {
-        if (e.target.closest("[data-tooltip],[data-hero-stats]")) statusTooltip.hidden = true;
+        const selector = "[data-tooltip],[data-hero-stats]";
+        const source = e.target.closest(selector);
+        if (source && e.relatedTarget instanceof Element && e.relatedTarget.closest(selector) === source) return;
+        if (source) statusTooltip.hidden = true;
       });
       document.addEventListener("focusout", () => (statusTooltip.hidden = true));
       document.addEventListener("click", (e) => {

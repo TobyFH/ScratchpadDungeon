@@ -917,17 +917,25 @@ const output = path.join(root, "test-results/ui-review");
     await page.evaluate(() => {
       sceneFast = false;
       window.reviewMachine = runMachine;
+      window.releaseSpoilsResult = null;
       runMachine = (id, reels, options = {}) => {
         // The previous scene was manually fast-forwarded. Restore cinematic
         // pacing at the critical boundary so the original-value capture exists.
         if (id === "critical") sceneFast = false;
-        return window.reviewMachine(
+        const roll = window.reviewMachine(
           id,
           reels,
           id === "treasure"
             ? { results: [0, 1, 2].map(() => ({ type: "coin", tier: 1 })) }
             : options,
         );
+        // A busy screenshot worker can outlast the treasure spin. Hold its
+        // result before it opens the critical, so the next click cannot skip
+        // that critical before its original-value capture has been requested.
+        return id === "treasure" ? roll.then(async (symbols) => {
+          await new Promise((resolve) => { window.releaseSpoilsResult = resolve; });
+          return symbols;
+        }) : roll;
       };
       busy = true;
       window.spoilsReview = treasureRoll("battle");
@@ -935,6 +943,8 @@ const output = path.join(root, "test-results/ui-review");
     await page.waitForSelector("#machine-treasure.rolling");
     await shot("66-centred-battle-spoils");
     await page.locator("#stage-skip").click();
+    await page.waitForFunction(() => window.releaseSpoilsResult);
+    await page.evaluate(() => window.releaseSpoilsResult());
     await page.waitForSelector("#machine-critical.rolling");
     await page.setViewportSize({ width: 390, height: 844 });
     await shot("66-spoils-critical-original-mobile", false, "allow");
