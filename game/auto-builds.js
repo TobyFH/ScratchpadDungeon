@@ -96,6 +96,7 @@ function autoBuildFor(h) {
         : ["venom", "assault", "enchanter"],
     ranger: ["assault", "balanced", "enchanter"],
     berserker: ["assault", "balanced"],
+    necromancer: ["balanced", "venom", "assault"],
     bloodbinder: h.specialism === "defence" ? ["mender", "balanced"] : ["balanced", "assault"],
     jester: ["trickster", "balanced", "enchanter"],
   }[h.job] || ["balanced"];
@@ -124,7 +125,8 @@ function autoBuildUtility(h) {
     selfharm: -0.3,
     fury: 0.2,
   };
-  if(h.job==="bloodbinder")weights.bloodseed=0.8;
+  if(h.job==="bloodbinder"){weights.bloodseed=1.5;weights.rally=1;}
+  if(h.job==="necromancer")weights.harvest=h.autoArchetype==="balanced"?2.4:h.autoArchetype==="venom"?1.2:.8;
   weights.stimulant = Math.min(0.65, weights.stimulant || 0);
   const otherDamage = partyDamagePartners(h);
   if (h.job === "mage" && otherDamage >= 2) {
@@ -196,14 +198,21 @@ function autoBuildUtility(h) {
   }
   if(h.job==='bloodbinder'){
     // Keep a sustainable drain, direct healing and a way to finish wounded foes.
-    // A capped, already-established wound does not reward filling every face.
+    // Unused stacks need direct hits or Bloom before they become recovery.
     const seeds=faceShare(h.reels.flat(),['bloodseed']),heals=faceShare(h.reels.flat(),['heal']);
     utility+=Math.min(.2,seeds)*12;
     utility-=Math.max(0,.15-seeds)*100;
-    utility-=Math.max(0,seeds-.35)*90;
+    utility-=Math.max(0,seeds-.42)*75;
     utility-=Math.max(0,.18-heals)*(solo?35:60);
     const attacks=h.reels.reduce((n,r)=>n+faceShare(r,DAMAGE_TYPES),0)/3;
     utility-=Math.max(0,(solo?.25:.18)-attacks)*80;
+  }
+  if(h.job==='necromancer'){
+    const preferred={balanced:'harvest',venom:'poison',assault:'magic'}[h.autoArchetype]||'magic';
+    utility-=Math.max(0,.32-faceShare(h.reels.flat(),[preferred]))*90;
+    const harvest=faceShare(h.reels.flat(),['harvest']);
+    utility-=Math.max(0,.12-harvest)*80;
+    utility-=Math.max(0,harvest-.5)*60;
   }
   const offence = fx.damage + fx.poison * 1.2,
     minDamage = solo
@@ -309,7 +318,7 @@ function repairOverbuffBuild(h) {
             : "block"
           : h.job === "mage"
             ? "magic"
-            : "attack";
+            : editableTypes(h).includes("attack") ? "attack" : "magic";
     let cost = faceEditCost(h, r, j, "swap", type);
     while (
       cost > h.points &&
@@ -339,7 +348,7 @@ function repairSoloBuild(h) {
         !OFFENSIVE_TYPES.includes(f.type),
     );
     if (j < 0) continue;
-    const type = h.job === "mage" ? "magic" : "attack";
+    const type = ["mage","bloodbinder","necromancer"].includes(h.job) ? "magic" : "attack";
     let cost = faceEditCost(h, r, j, "swap", type);
     while (cost > h.points) {
       const candidate = h.reels

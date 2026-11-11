@@ -17,7 +17,7 @@ then reveals the notebook. Skip with its button, Enter, Space, Escape or a
 controller button. Reduced-motion preferences bypass it. Playback failures
 continue to the game. See [startup film maintenance](docs/COMPANY_INTRO.md).
 
-The notebook opens with a choice of **Tank, Rogue or Mage**, with locked Ranger and Berserker cards that open
+The notebook opens with a choice of **Tank, Rogue, Mage or Necromancer**, with locked Ranger and Berserker cards that open
 their camp unlocks. A new expedition turns to fresh pages. Start with one hero and no items; keep at most three heroes. Every staircase has an elite guardian. Defeat it to descend when you choose. **Defeating the tenth guardian wins immediately**, with a celebration and a scrollable record of every survivor, fallen companion and retired adventurer.
 
 Current additions: [Combat clarity and living floors](docs/CLARITY_UPDATE.md)
@@ -37,11 +37,18 @@ equally likely after the Cavern opening, guarantees an early recruit opportunity
 shortens defensive boss fights and strengthens Mage recovery, stimulant stacks
 and temperament bonuses.
 
-The unlockable **Bloodbinder** now focuses on sustained drain and anti-healing.
-Seed strength has a level-based cap; stronger wounds cost increasing caster HP,
-while refreshing their duration is free. Maintained Bleeding also applies Clotted
-instead of endlessly delaying it. See the [Bloodbinder balance notes and measured
-comparisons](docs/BLOODBINDER_BALANCE.md), or run `npm run audit:bloodbinder`.
+The unlockable **Bloodbinder** plants unlimited Blood Seeds on enemies at a
+nonlethal HP cost. Actual HP damage consumes Seeds to share healing among wounded
+allies; **Blood Bloom** detonates every remaining Seed for damage and healing.
+Its ordinary marks are healing, Seeds, spell damage and ally stimulant.
+
+The free, starting-only **Necromancer** replaces living companions with up to two
+automatic Skeletons. Harvest, damage and poison fill a persistent Soul bar.
+Skeletons attack after each action and intercept the first eligible attack each
+enemy turn. A full bar with two Skeletons heals the team. Ordinary healing does
+not work; enemy deaths restore health. Losing the Necromancer ends the run.
+See [Soul classes](docs/SOUL_CLASSES.md) for precise rules, tuning and save
+migration. `npm run audit:bloodbinder` provides controlled Seed-build comparisons.
 
 ## Camp and banked gold
 
@@ -170,6 +177,8 @@ and any earned trait.
 | Berserker | 38 HP; unlock at camp; blades, healing and Blood Price | Bloodrush heals; charged Fury adds damage and lifesteal       |
 | Jester    | 30 HP; unlock at camp; Trick and mixed marks | Wildcard plays a random trick; anticipation fires a six-mark burst |
 | Ranger    | 30 HP; unlock at camp                                  | Execute rewards patience and finishing wounded enemies        |
+| Bloodbinder | 32 HP; unlock at camp; Seeds, spells and ally support | Blood Bloom detonates all Seeds for damage and shared healing |
+| Necromancer | 22 HP; starting-only; spells, poison and Harvest | Soul Call gathers Souls to raise automatic Skeletons, then heal the undead team |
 
 Former Healers migrate to Mages with their existing stats and edited wheels.
 There is no Mage role selector: builds follow the marks on their reels. See
@@ -254,6 +263,9 @@ Each hero also has one personal equipment slot. **Drag equipment from the bag on
 | Scout Cloak     | Ranger | Resist 1 damage; +2 opening team block               |
 
 Rare run artefacts use a separate collection and one shared passive slot beneath the map. Their power grows with depth. Attack, healing, block, gold and opening-guard artefacts grant bonuses only while equipped. **Revive Stones** stay ready without occupying that slot: choose to consume one when a hero falls to restore 75% HP. Otherwise death is permanent. Survivors confirm a burial recording cause, origin, time and statistics. The last death leads directly from acknowledgement to the expedition's complete fallen roster.
+
+Necromancer runs are the exception: losing the master ends the run immediately,
+without using a Revive Stone. Skeleton losses never enter the adventurer roster.
 
 ## Notebook controls and presentation
 

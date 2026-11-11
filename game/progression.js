@@ -77,7 +77,7 @@ const CAMP_UNLOCKS = {
     description:
       "Unlock Jester starts and companions. Trick marks build anticipation for a six-mark Punchline burst.",
   },
-  bloodbinder: {name:"A bloodbinder’s covenant",category:"classes",cost:1200,permanent:true,description:"Unlock Bloodbinder starts and companions. Drain foes, share recovery and hinder enemy healing."},
+  bloodbinder: {name:"A bloodbinder’s covenant",category:"classes",cost:1200,permanent:true,description:"Unlock Bloodbinder starts and companions. Plant Blood Seeds; wounds and Blood Bloom release shared healing."},
   iron: {
     name: "Iron margins",
     category: "challenges",

@@ -141,6 +141,8 @@ async function tunnelTransit(source, destination) {
   layer.remove();
 }
 const STARTER_SUMMARIES = Object.freeze({
+  bloodbinder: "Plant Seeds, turn enemy wounds into shared healing, and detonate them with Blood Bloom.",
+  necromancer: "Gather Souls to raise two Skeletons. Enemy deaths and Soul surges heal you; ordinary healing cannot.",
   fighter: "Physical hits, shields and stun. Shield Bash spends block to strike.",
   rogue: "Quick blades, poison and tricks. Flurry throws three attacks.",
   mage: "Shape magic, healing, wards and poison. Resonance echoes your marks.",

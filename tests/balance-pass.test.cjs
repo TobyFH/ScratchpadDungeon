@@ -180,7 +180,10 @@ test("class affinities price shields, physical combos and spells differently wit
       mageSpell: classFacePrice(heroes.mage, "magic", 10),
       mageAttack: classFacePrice(heroes.mage, "attack", 10),
       primary: primaryFace(heroes.fighter),
-      damage: Object.values(heroes).map((h) => heroDamagePower(h, 4)),
+      damage: Object.values(heroes).map((h) => ({
+        job: h.job,
+        power: heroDamagePower(h, 4),
+      })),
       palettes: Object.values(heroes).map((h) => ({
         job: h.job,
         damage: h.reels
@@ -194,7 +197,9 @@ test("class affinities price shields, physical combos and spells differently wit
   assert.ok(r.rogueAttack < r.tankAttack);
   assert.ok(r.mageSpell < r.mageAttack);
   assert.equal(r.primary, "block");
-  assert.ok(r.damage.length >= 7 && r.damage.every(n => n === 4));
+  assert.ok(r.damage.length >= 8);
+  for (const row of r.damage)
+    assert.equal(row.power, row.job === "necromancer" ? 3 : 4, row.job);
   for (const row of r.palettes) {
     assert.ok(row.damage, row.job);
     assert.equal(row.seal, 1);

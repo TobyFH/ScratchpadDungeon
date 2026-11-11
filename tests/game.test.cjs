@@ -1062,10 +1062,12 @@ test("full ten-floor expedition can progress through fog, loot confirmations, ba
       await p.locator("#exit-found").click();
     } else
       await p.evaluate(async () => {
-        let goal = state.map.findIndex((c) => c.event === "stairs"),
+        let goal = state.map.findIndex((c) => c.event === "stairs" || c.feature === "stairs"),
           route = shortestPath(goal, true);
-        if (!route?.length) throw Error("No campaign route");
-        await move(route[0]);
+        if (!route) throw Error("No campaign route: " + JSON.stringify({depth:state.depth,position:state.position,goal}));
+        // An interrupted arrival may already be on the stairs. Selecting that
+        // same tile is a valid zero-step action that reopens its real prompt.
+        await move(route[0] ?? goal);
       });
   }
   assert.ok(
@@ -1130,7 +1132,7 @@ test("save restores speed and artefacts and migrates the earlier Sunseed-era not
   });
   await p.reload();
   await p.evaluate(() => CompanyIntro.skip(true));
-  assert.equal(await p.evaluate(() => state.version), 23);
+  assert.equal(await p.evaluate(() => state.version), 24);
   assert.equal(await p.evaluate(() => state.speed), "skip");
   assert.equal(await p.evaluate(() => state.relic), undefined);
   assert.doesNotMatch(await p.locator("body").textContent(), /Sunseed/);
@@ -3282,7 +3284,7 @@ test("older saved fights migrate to the gentler curve without losing wounds or e
     state.enemy.frequency = 1;
     state.party[0].reels[0][0] = { type: "attack", tier: 3, weight: 9 };
     const tuned=enemyBalance(state.depth,{...state.enemy,pair:false});
-    state.testExpectedSavedFoe={version:23,hp:Math.ceil(tuned.maxHp*.5),max:tuned.maxHp,damage:tuned.damage,strikes:tuned.strikes,frequency:tuned.frequency,face:3};
+    state.testExpectedSavedFoe={version:24,hp:Math.ceil(tuned.maxHp*.5),max:tuned.maxHp,damage:tuned.damage,strikes:tuned.strikes,frequency:tuned.frequency,face:3};
     const old = { ...state, version: 6 };
     localStorage.setItem("scratchpad-dungeon-v6", JSON.stringify(old));
     localStorage.removeItem(SAVE_KEY);
@@ -4259,7 +4261,7 @@ test("first opening offers base classes and locked invitations, opens the cover,
   await p.reload();
   await p.evaluate(() => CompanyIntro.skip(true));
   await p.waitForSelector('[data-start-job="mage"]');
-  assert.equal(await p.locator(".starter-grid button").count(), 7);
+  assert.equal(await p.locator(".starter-grid button").count(), 8);
   assert.equal(
     await p.locator("#modal-title").textContent(),
     "Who opens the notebook?",
@@ -4918,7 +4920,7 @@ test("reloading before the starting class choice keeps the choice pending", asyn
   await p.waitForSelector('[data-start-job="rogue"]');
   await p.reload();
   await p.evaluate(() => CompanyIntro.skip(true));
-  assert.equal(await p.locator(".starter-grid button").count(), 7);
+  assert.equal(await p.locator(".starter-grid button").count(), 8);
   await p.locator('[data-start-job="rogue"]').click();
   await p.reload();
   await p.evaluate(() => CompanyIntro.skip(true));
@@ -5082,7 +5084,7 @@ test("version-nine fights adopt the stronger enemy curve without changing hero w
         .map((f) => f.tier),
     })),
     {
-      version: 23,
+      version: 24,
       autoplay: false,
       heroHp: 19,
       face: 4,
@@ -5284,7 +5286,7 @@ test("autoplay settings persist through fresh runs and reloads without bypassing
   assert.equal(await p.evaluate(() => state.autoplay), true);
   await p.waitForTimeout(500);
   assert.equal(await p.evaluate(() => state.steps), 0);
-  assert.equal(await p.locator("[data-start-job]").count(), 3);
+  assert.equal(await p.locator("[data-start-job]").count(), 4);
   await p.locator("#autoplay").uncheck();
   await p.reload();
   await p.evaluate(() => CompanyIntro.skip(true));

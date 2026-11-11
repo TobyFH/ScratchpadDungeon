@@ -1,373 +1,229 @@
-// Bloodbinder rules: one shared calculation for real rolls, previews and AI.
+// Damage-triggered Seed stacks. One unit is one shared HP of healing.
+// No gameplay cap or expiry; all direct hits, poison and items use damageEnemy.
 const BLOOD_BINDING = Object.freeze({
-  turns: 3,
-  potency: 12,
-  basePotency: 3,
-  potencyPerLevel: 0.75,
-  healingBase: 0.75,
-  healingPerLevel: 0.075,
-  healingStart: 4,
-  healingMax: 1.5,
-  clotBase: 0.35,
-  clotPerLevel: 0.03,
-  clotStart: 3,
-  clotMax: 0.65,
-  exchange: 0.18,
-  exchangePerLevel: 0.01,
-  exchangeStart: 3,
-  exchangeMax: 0.28,
-  bossCap: 0.1,
-  costBand: 4,
+  selfCostRankStep: 2,
+  seedHealing: 1,
+  detonationDamage: 1,
 });
-function bloodProfile(h) {
-  const level = Math.max(1, Math.min(100, Math.floor(Number(h?.level) || 1)));
-  return {
-    level,
-    cap: Math.min(
-      BLOOD_BINDING.potency,
-      BLOOD_BINDING.basePotency +
-        Math.floor((level - 1) * BLOOD_BINDING.potencyPerLevel),
-    ),
-    healing: Math.min(
-      BLOOD_BINDING.healingMax,
-      BLOOD_BINDING.healingBase +
-        Math.max(0, level - BLOOD_BINDING.healingStart) *
-          BLOOD_BINDING.healingPerLevel,
-    ),
-    clot: Math.min(
-      BLOOD_BINDING.clotMax,
-      BLOOD_BINDING.clotBase +
-        Math.max(0, level - BLOOD_BINDING.clotStart) *
-          BLOOD_BINDING.clotPerLevel,
-    ),
-    exchange: Math.min(
-      BLOOD_BINDING.exchangeMax,
-      BLOOD_BINDING.exchange +
-        Math.max(0, level - BLOOD_BINDING.exchangeStart) *
-          BLOOD_BINDING.exchangePerLevel,
-    ),
-  };
-}
-function bloodHealingAmount(b, damage = b.damage) {
-  return damage > 0
-    ? Math.max(1, Math.floor(damage * bloodProfile(b).healing))
-    : 0;
-}
-function normalisedBleeding(raw, h = null) {
-  if (!raw || typeof raw !== "object") return null;
-  const bounded = (n, min, max, fallback) =>
-    Math.min(
-      max,
-      Math.max(
-        min,
-        Math.floor(Number.isFinite(Number(n)) ? Number(n) : fallback),
-      ),
-    );
-  const turns = bounded(raw.turns, 0, BLOOD_BINDING.turns, 0);
-  if (!turns) return null;
-  // Legacy saves acquire the owner's current profile; never charge old wounds.
-  const level = bloodProfile({ level: raw.level ?? h?.level }).level,
-    profile = bloodProfile({ level });
-  const b = {
-    turns,
-    duration: bounded(raw.duration, turns, BLOOD_BINDING.turns, turns),
-    damage: bounded(raw.damage, 1, profile.cap, 1),
-    level,
-    ticks: bounded(raw.ticks, 0, BLOOD_BINDING.turns - 1, 0),
-    sourceId: raw.sourceId,
-  };
-  b.healing = bloodHealingAmount(b);
-  return b;
+function bloodSeedCount(e) {
+  return Math.max(0, Math.floor(Number(e?.bloodSeeds?.count) || 0));
 }
 function normaliseBloodStatuses(e) {
-  const owner = [...(state?.party || []), ...(state?.graveyard || [])].find(
-    (h) => h.id === e.bleeding?.sourceId,
-  );
-  e.bleeding = normalisedBleeding(e.bleeding, owner);
-  const c = e.clotted;
-  e.clotted =
-    c && typeof c === "object" && Math.floor(Number(c.turns)) > 0
-      ? {
-          turns: Math.min(
-            BLOOD_BINDING.turns,
-            Math.floor(Number(c.turns) || 0),
-          ),
-          // Old Clotted receipts keep their original 50% reduction until expiry.
-          reduction: Math.min(
-            BLOOD_BINDING.clotMax,
-            Math.max(
-              BLOOD_BINDING.clotBase,
-              Number.isFinite(Number(c.reduction)) ? Number(c.reduction) : 0.5,
-            ),
-          ),
-        }
-      : null;
+  const old = e.bleeding;
+  const count =
+    e.bloodSeeds?.count ??
+    (old
+      ? Math.max(1, Number(old.damage) || 1) *
+        Math.max(1, Number(old.turns) || 1)
+      : 0);
+  const bounded = Number.isFinite(Number(count))
+    ? Math.min(Number.MAX_SAFE_INTEGER, Math.max(0, Math.floor(Number(count))))
+    : 0;
+  e.bloodSeeds = bounded
+    ? {
+        count: bounded,
+        sourceId: e.bloodSeeds?.sourceId ?? old?.sourceId ?? null,
+      }
+    : null;
+  delete e.bleeding;
+  delete e.clotted;
 }
-function bloodOfferingCost(strength) {
-  const band = Math.ceil(strength / BLOOD_BINDING.costBand);
-  return (band * (band + 1)) / 2; // Strength 1–4 / 5–8 / 9–12: 1 / 3 / 6 HP.
+function bloodSeedCost(power, symbols = null) {
+  const marks = symbols?.filter((f) => f.type === "bloodseed");
+  return marks?.length
+    ? marks.reduce(
+        (n, f) => n + Math.ceil(f.tier / BLOOD_BINDING.selfCostRankStep),
+        0,
+      )
+    : Math.ceil(Math.max(0, power) / BLOOD_BINDING.selfCostRankStep);
 }
-function bloodOfferingBands() {
-  return Array.from(
-    { length: Math.ceil(BLOOD_BINDING.potency / BLOOD_BINDING.costBand) },
-    (_, i) => {
-      const from = i * BLOOD_BINDING.costBand + 1,
-        to = Math.min(BLOOD_BINDING.potency, (i + 1) * BLOOD_BINDING.costBand);
-      return `${bloodOfferingCost(from)} HP at strength ${from}–${to}`;
-    },
-  ).join(", ");
+function bloodSeedPlan(e, power, h, symbols = null) {
+  const added = Number.isFinite(power) ? Math.max(0, Math.ceil(power)) : 0;
+  return {
+    added,
+    count: Math.min(Number.MAX_SAFE_INTEGER, bloodSeedCount(e) + added),
+    hpCost: Math.min(Math.max(0, h.hp - 1), bloodSeedCost(added, symbols)),
+  };
 }
-function bloodSeedPlan(e, power, h) {
-  const profile = bloodProfile(h),
-    previous = normalisedBleeding(e?.bleeding, h);
-  let b = previous
-      ? { ...previous, level: Math.max(previous.level, profile.level) }
-      : null,
-    hpCost = 0;
-  const available = Math.max(0, (Number(h?.hp) || 0) - 1),
-    units = Math.min(
-      BLOOD_BINDING.turns + BLOOD_BINDING.potency,
-      Math.max(0, Math.ceil(Number(power) || 0)),
-    ); // Further units are guaranteed to hit the cap and cannot change the plan.
-  for (let n = 0; n < units; n++) {
-    if (!b)
-      b = {
-        turns: 1,
-        duration: 1,
-        damage: 1,
-        level: profile.level,
-        ticks: 0,
-        sourceId: h.id,
-      };
-    else if (b.turns < BLOOD_BINDING.turns) b.turns++;
-    else {
-      if (b.damage >= bloodProfile(b).cap) break;
-      const cost = bloodOfferingCost(b.damage);
-      if (hpCost + cost > available) break; // Never buy free potency at 1 HP or kill the caster.
-      hpCost += cost;
-      b.damage++;
-    }
-    b.duration = Math.max(b.duration, b.turns);
-    b.sourceId = h.id;
-  }
-  if (b) b.healing = bloodHealingAmount(b);
-  return { bleeding: b, hpCost, previous };
-}
-function bloodSeedForecast(h, power, e = state.enemy) {
-  if (power <= 0) return { damage: 0, heal: 0, cost: 0, antiheal: 0 };
-  const totals = { damage: 0, heal: 0, cost: 0, antiheal: 0 },
-    frequency = Math.max(1, e?.frequency || 3);
-  // Interpolate fractional mean power instead of rounding every forecast up.
-  for (const [n, p] of [
-    [Math.floor(power), 1 - (power % 1)],
-    [Math.ceil(power), power % 1],
-  ]) {
-    if (!p || !n) continue;
-    const { bleeding: b, previous: old, hpCost } = bloodSeedPlan(e, n, h);
-    if (!b) continue;
-    const lifetime = (s, key) => (s ? s[key] * s.turns : 0);
-    totals.damage +=
-      (p * Math.max(0, lifetime(b, "damage") - lifetime(old, "damage"))) /
-      frequency;
-    totals.heal +=
-      (p * Math.max(0, lifetime(b, "healing") - lifetime(old, "healing"))) /
-      frequency;
-    totals.cost += p * hpCost;
-    const recovery = e?.reels ? faceShare(e.reels.flat(), ["heal"]) * 4 : 0;
-    totals.antiheal +=
-      ((p * Math.max(0, b.turns - (old?.turns || 0))) / BLOOD_BINDING.turns) *
-      bloodProfile(b).clot *
-      recovery;
-  }
-  return totals;
-}
-function applyBloodSeed(e, power, h) {
-  if (!alive(e) || !alive(h) || power <= 0) return;
-  const { bleeding: b, hpCost } = bloodSeedPlan(e, power, h);
-  if (!b) return;
-  if (hpCost) {
-    damageHero(state.party.indexOf(h), hpCost, "Blood Seed offering", {
+function applyBloodSeed(e, power, h, { symbols = null } = {}) {
+  if (!alive(e) || !alive(h) || !(power > 0)) return 0;
+  const plan = bloodSeedPlan(e, power, h, symbols);
+  if (plan.hpCost) {
+    damageHero(state.party.indexOf(h), plan.hpCost, "Blood Seed offering", {
       piercing: true,
       selfInflicted: true,
       impact: { type: "bleeding" },
     });
-    h.stats.bloodSpent = (h.stats.bloodSpent || 0) + hpCost;
-    combatCallout(entityArt(h), `BLOOD OFFERING · −${hpCost} HP`, "bleeding");
+    h.stats.bloodSpent = (h.stats.bloodSpent || 0) + plan.hpCost;
+    combatCallout(
+      entityArt(h),
+      `BLOOD OFFERING · −${plan.hpCost} HP`,
+      "bleeding",
+    );
   }
-  e.bleeding = b;
-  combatCallout(
-    enemyArtEl(e),
-    `BLOOD SEED · ${b.damage} × ${b.turns}`,
-    "bleeding",
+  e.bloodSeeds = { count: plan.count, sourceId: h.id };
+  trackBloodFeedback(
+    beam(entityArt(h), enemyArtEl(e), "bloodseed", {
+      fromPortrait: true,
+      symbols: [{ type: "bloodseed", tier: 1 }],
+      kind: "blood-seed-plant",
+    }),
   );
-  beam(entityArt(h), enemyArtEl(e), "bloodseed");
-  burst(enemyArtEl(e), "damage", 20);
+  combatCallout(enemyArtEl(e), `BLOOD SEEDS · ${plan.count}`, "bleeding");
   syncEnemy(e);
   log(
-    `${h.name} plants Blood Seed on ${e.name}: ${b.damage} bleeding damage and up to ${b.healing} shared healing per enemy turn for ${b.turns} turns${hpCost ? `; ${hpCost} HP offered` : ""}.`,
+    `${h.name} plants ${plan.added} Blood Seeds on ${e.name}: ${plan.count} ready${plan.hpCost ? `; ${plan.hpCost} HP offered` : ""}.`,
   );
+  return plan.added;
 }
-function bloodExchangePlan(h, e = state.enemy) {
-  const allies = state.party.filter(alive);
-  if (!alive(e) || !allies.length)
-    return { loss: 0, healing: 0, ally: null, rate: 0 };
-  const lowest = allies.reduce((a, b) =>
-      a.hp / a.maxHp <= b.hp / b.maxHp ? a : b,
-    ),
-    highest = allies.reduce((a, b) =>
-      a.hp / a.maxHp >= b.hp / b.maxHp ? a : b,
-    ),
-    enemyRate = e.hp / e.maxHp,
-    difference = enemyRate - lowest.hp / lowest.maxHp;
-  if (difference > 0) {
-    const rate = Math.min(
-        difference * bloodProfile(h).exchange,
-        e.boss ? BLOOD_BINDING.bossCap : 1,
-      ),
-      loss = Math.min(e.hp, Math.floor(e.maxHp * rate));
-    // Healing uses the percentage actually removed after rounding and boss cap.
-    return {
-      loss,
-      healing: Math.floor((lowest.maxHp * loss) / e.maxHp),
-      ally: lowest,
-      rate: loss / e.maxHp,
-      transfer: true,
-    };
-  }
-  const rate =
-    Math.max(0, highest.hp / highest.maxHp - enemyRate) *
-    bloodProfile(h).exchange;
-  return {
-    loss: Math.min(
-      e.hp,
-      Math.floor(e.maxHp * Math.min(rate, e.boss ? BLOOD_BINDING.bossCap : 1)),
-    ),
-    healing: 0,
-    ally: null,
-    rate,
-    transfer: false,
-  };
-}
-async function bloodExchange(h, e = state.enemy) {
-  const run = state;
-  const plan = bloodExchangePlan(h, e),
-    enemyMax = e?.maxHp;
-  if (!alive(h) || !alive(e)) return;
-  // Percentage loss is a separate fixed transfer: never crits, cleaves, receives
-  // camp/equipment bonuses, or consumes Vulnerable a second time.
-  const n = damageEnemy(plan.loss, "Blood Exchange", e, {
-    piercing: true,
-    bloodTransfer: true,
-    impact: { type: "bloodexchange" },
-  });
-  h.stats.damageDealt += n;
-  if (!e.hp && n) h.stats.kills++;
-  const healed = plan.ally
-    ? healHero(
-        state.party.indexOf(plan.ally),
-        Math.floor((plan.ally.maxHp * n) / enemyMax),
-        { exact: true },
-      )
-    : 0;
-  h.stats.healingDone += healed;
-  combatCallout(enemyArtEl(e), `BLOOD EXCHANGE · −${n}`, "bleeding");
-  const flight = beam(entityArt(h), enemyArtEl(e), "bloodseed");
-  if (flight?.then) await flight;
-  if (state !== run) return;
-  if (healed) beam(enemyArtEl(e), entityArt(plan.ally), "heal");
-  if (state.lastPlayerRoll?.heroId === h.id)
-    state.lastPlayerRoll.actualDamage =
-      (state.lastPlayerRoll.actualDamage || 0) + n;
-  state.lastBloodExchange = {
-    heroId: h.id,
-    targetId: e.id,
-    loss: n,
-    healing: healed,
-    allyId: plan.ally?.id || null,
-    transfer: plan.transfer,
-  };
-  log(
-    `${h.name} · Blood Exchange: ${n} HP taken${healed ? `, ${healed} HP restored to ${plan.ally.name}` : ""}.`,
-  );
-}
-function distributeBloodHealing(amount, h) {
-  let total = 0;
-  // One shared pool, allocated to the most injured health ratios; no per-ally
-  // multiplication and no revival. Shared healHero owns Fury/stun interactions.
+function distributeBloodHealing(amount, h, enemy = null) {
   const allocations = new Map(),
     hp = new Map(state.party.map((a) => [a, a.hp]));
+  // Bound work by actual missing HP, never by an arbitrarily large stack.
+  amount = Math.min(
+    Math.max(0, Math.floor(amount)),
+    state.party
+      .filter((a) => alive(a) && canReceiveOrdinaryHealing(a))
+      .reduce((n, a) => n + a.maxHp - a.hp, 0),
+  );
   while (amount-- > 0) {
     const allies = state.party
-      .filter((a) => alive(a) && hp.get(a) < a.maxHp)
+      .filter(
+        (a) => alive(a) && canReceiveOrdinaryHealing(a) && hp.get(a) < a.maxHp,
+      )
       .sort((a, b) => hp.get(a) / a.maxHp - hp.get(b) / b.maxHp);
     if (!allies.length) break;
-    const ally = allies[0];
-    allocations.set(ally, (allocations.get(ally) || 0) + 1);
-    hp.set(ally, hp.get(ally) + 1);
+    const a = allies[0];
+    allocations.set(a, (allocations.get(a) || 0) + 1);
+    hp.set(a, hp.get(a) + 1);
   }
-  for (const [ally, n] of allocations)
+  let total = 0;
+  for (const [ally, n] of allocations) {
+    if (enemy)
+      trackBloodFeedback(
+        beam(enemyArtEl(enemy), entityArt(ally), "heal", {
+          fromPortrait: true,
+          symbols: [{ type: "heal", tier: 1 }],
+          kind: "blood-seed-heal",
+        }),
+      );
     total += healHero(state.party.indexOf(ally), n, { exact: true });
+  }
   if (h) {
     h.stats.healingDone += total;
     if (h.death) h.death.stats.healingDone += total;
   }
   return total;
 }
-async function tickBleeding(e) {
-  if (!alive(e) || !state.party.some(alive) || !state.enemy || !e.bleeding)
-    return;
-  const b = e.bleeding,
-    owner =
-      state.party.find((h) => h.id === b.sourceId) ||
-      state.graveyard.find((h) => h.id === b.sourceId),
-    n = damageEnemy(b.damage, "Bleeding", e, {
-      piercing: true,
-      bloodTransfer: true,
-    });
-  if (owner) {
-    owner.stats.damageDealt += n;
-    if (!e.hp && n) owner.stats.kills++;
-  }
+function consumeBloodSeeds(e, damage) {
+  const used = Math.min(bloodSeedCount(e), Math.max(0, Math.floor(damage)));
+  if (!used) return 0;
+  const owner =
+    state.party.find((h) => h.id === e.bloodSeeds.sourceId) ||
+    state.graveyard.find((h) => h.id === e.bloodSeeds.sourceId);
+  e.bloodSeeds.count -= used;
+  if (!e.bloodSeeds.count) e.bloodSeeds = null;
+  trackBloodFeedback(bloodSeedBurstFX(e, used));
   const healed = distributeBloodHealing(
-    Math.min(b.healing, bloodHealingAmount(b, n)),
+    used * BLOOD_BINDING.seedHealing,
     owner,
+    e,
   );
-  combatCallout(enemyArtEl(e), `BLEEDING · −${n}`, "bleeding");
-
-  b.turns--;
   log(
-    `${e.name} · Bleeding: ${n} damage; ${healed} HP shared among injured allies.`,
+    `${e.name} · Blood Seeds: ${used} burst; ${healed} HP shared among injured allies.`,
   );
-  b.ticks = (b.ticks || 0) + 1;
-  // Maintaining Bleeding must not indefinitely postpone its anti-heal payoff.
-  if (b.turns <= 0 || b.ticks >= BLOOD_BINDING.turns) {
-    b.ticks = 0;
-    if (alive(e)) {
-      e.clotted = {
-        turns: Math.max(e.clotted?.turns || 0, b.duration),
-        reduction: Math.max(e.clotted?.reduction ?? 0, bloodProfile(b).clot),
-      };
-      combatCallout(
-        enemyArtEl(e),
-        `CLOTTED · −${Math.round(e.clotted.reduction * 100)}% HEALING`,
-        "clotted",
-      );
-    }
-  }
-  if (b.turns <= 0) e.bleeding = null;
-  syncEnemy(e);
-  await feedbackPause(skip ? 70 : 180);
+  return used;
 }
-function finishClottedTurn(e, prior) {
-  if (prior && e.clotted === prior && --prior.turns <= 0) e.clotted = null;
+function bloodDetonationPlan() {
+  return battleEnemies()
+    .filter((e) => alive(e) && bloodSeedCount(e) > 0)
+    .map((e) => ({ enemy: e, seeds: bloodSeedCount(e) }));
+}
+async function detonateBloodSeeds(h) {
+  const run = state,
+    plan = bloodDetonationPlan();
+  let damage = 0,
+    healing = 0,
+    seeds = 0;
+  for (const { enemy: e, seeds: count } of plan) {
+    if (state !== run || !alive(h)) break;
+    e.bloodSeeds = null;
+    seeds += count;
+    trackBloodFeedback(bloodSeedBurstFX(e, count, true));
+    const n = damageEnemy(
+      count * BLOOD_BINDING.detonationDamage,
+      "Blood Bloom",
+      e,
+      {
+        piercing: true,
+        bloodTransfer: true,
+        skipBloodSeeds: true,
+        impact: { type: "bloodseed", critical: true },
+      },
+    );
+    damage += n;
+    h.stats.damageDealt += n;
+    if (!alive(e)) h.stats.kills++;
+    healing += distributeBloodHealing(count * BLOOD_BINDING.seedHealing, h, e);
+    combatCallout(enemyArtEl(e), `BLOOD BLOOM · ${count}`, "bleeding");
+  }
+  state.lastBloodDetonation = { heroId: h.id, seeds, damage, healing };
+  if (state.lastPlayerRoll?.heroId === h.id)
+    state.lastPlayerRoll.actualDamage =
+      (state.lastPlayerRoll.actualDamage || 0) + damage;
+  log(
+    `${h.name} · Blood Bloom: ${seeds} Seeds burst across all enemies, ${damage} damage and ${healing} shared healing.`,
+  );
+  await settleBloodFeedback();
+  return { seeds, damage, healing };
+}
+function bloodSeedForecast(h, power, e = state.enemy) {
+  const cost = Math.min(
+      Math.max(0, h.hp - 1),
+      h.reels.reduce(
+        (n, r) =>
+          n +
+          r.reduce(
+            (v, f) =>
+              v +
+              (f.type === "bloodseed"
+                ? Math.ceil(f.tier / BLOOD_BINDING.selfCostRankStep)
+                : 0),
+            0,
+          ) /
+            r.length,
+        0,
+      ),
+    ),
+    existing = bloodSeedCount(e);
+  const potential = Math.max(0, power),
+    demand = state.party
+      .filter(alive)
+      .reduce((n, a) => n + Math.max(1, expectedDirectMarkPower(a)), 0);
+  return {
+    damage: 0,
+    heal: Math.min(potential, Math.max(0, demand - existing)),
+    cost,
+    antiheal: 0,
+  };
+}
+function expectedDirectMarkPower(h) {
+  return (h.reels || []).reduce(
+    (n, r) =>
+      n +
+      r.reduce(
+        (s, f) =>
+          s + (DAMAGE_TYPES.includes(f.type) ? markDamage(f.type, f.tier) : 0),
+        0,
+      ) /
+        Math.max(1, r.length),
+    0,
+  );
 }
 function enemyRecovery(e, amount) {
   const n = Math.min(
     Math.max(0, e.maxHp - e.hp),
-    Math.floor(
-      Math.max(0, amount) *
-        (1 - (e.clotted?.turns > 0 ? (e.clotted.reduction ?? 0.5) : 0)),
-    ),
+    Math.floor(Math.max(0, amount)),
   );
   if (alive(e)) {
     e.hp += n;
@@ -377,5 +233,29 @@ function enemyRecovery(e, amount) {
   return 0;
 }
 function bloodStatusMarkup(e) {
-  return `${e.bleeding ? statusBadge("Bleeding", `${e.bleeding.damage}/${bloodProfile(e.bleeding).cap} damage each enemy turn; up to ${e.bleeding.healing} HP shared among injured allies. ${e.bleeding.turns} turns left. Clotted on expiry or after ${BLOOD_BINDING.turns - (e.bleeding.ticks || 0)} more ticks: −${Math.round(bloodProfile(e.bleeding).clot * 100)}% healing. Strengthening costs the caster increasing HP; refreshing duration is free.`, "bleeding-badge", "bloodseed") : ""}${e.clotted ? statusBadge("Clotted", `Healing received reduced by ${Math.round((e.clotted.reduction ?? 0.5) * 100)}% for ${e.clotted.turns} more enemy turns.`, "clotted-badge", "bloodseed") : ""}`;
+  const n = bloodSeedCount(e);
+  return n
+    ? statusBadge(
+        "Blood Seeds",
+        `${n} Seeds ready. Each actual HP of damage consumes one Seed and shares one HP of healing among injured allies. No expiry or stack cap. Blood Bloom detonates all remaining Seeds for damage and shared healing.`,
+        "bleeding-badge",
+        "bloodseed",
+      )
+    : "";
+}
+
+function bloodSeedCaption() {
+  const total = battleEnemies()
+    .filter(alive)
+    .reduce((n, e) => n + bloodSeedCount(e), 0);
+  return state.enemy
+    ? `Seeds ${bloodSeedCount(state.enemy)} target · ${total} total`
+    : "Plant Seeds; wounds release healing.";
+}
+function syncBloodSeedCounters() {
+  state.party.forEach((h, i) => {
+    if (h.job !== "bloodbinder") return;
+    const node = $("#hero-" + i + " .machine-footnote");
+    if (node) node.textContent = bloodSeedCaption();
+  });
 }

@@ -263,8 +263,7 @@ function clearBattleStatuses() {
     entity.surprised = false;
     entity.stunAge = 0;
     entity.blackout = [];
-    entity.bleeding = null;
-    entity.clotted = null;
+    entity.bloodSeeds = null;
     entity.crystalLocks = [];
     entity.reelGifts = [];
   }
@@ -345,6 +344,7 @@ async function tickPoison() {
     if (!poison.turns || entity.hp <= 0) entity.poison = null;
     await pause(100);
   }
+  await settleBloodFeedback();
   await processDeaths();
   syncStatusFX();
 }

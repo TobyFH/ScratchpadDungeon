@@ -66,7 +66,7 @@ const { chromium } = require("playwright");
             drain: ["bloodseed"],
             hybrid: ["bloodseed", "heal", "magic", "bloodseed", "heal"],
             mender: ["heal"],
-            striker: ["attack"],
+            striker: [job === "bloodbinder" ? "magic" : "attack"],
           }[style];
           // Spread legal swaps/upgrades across all three reels, paying live prices.
           const faces = [];
@@ -163,7 +163,7 @@ const { chromium } = require("playwright");
                 e = state.enemy,
                 spent = stage.budget - h.points;
               // Injured-team throughput: enemy never attacks, but its real whole turn
-              // (every three rolls) ticks Bleeding/Clotted. Keep wounds available.
+              // (every three rolls) keeps normal action clocks. Keep wounds available.
               Object.assign(e, {
                 hp: 100000,
                 maxHp: 100000,
@@ -177,14 +177,18 @@ const { chromium } = require("playwright");
                 ]),
               });
               let healing = 0,
-                clotted = 0,
                 directDamage = 0,
-                bleedingDamage = 0;
+                bloomDamage = 0,
+                consumedSeeds = 0;
               const realDamage = damageEnemy;
               damageEnemy = (n, label, target, options) => {
+                const before = bloodSeedCount(target);
                 const dealt = realDamage(n, label, target, options);
-                if (label === "Bleeding") bleedingDamage += dealt;
-                else if (label !== "Blood Exchange") directDamage += dealt;
+                if (label === "Blood Bloom") bloomDamage += dealt;
+                else {
+                  directDamage += dealt;
+                  consumedSeeds += Math.max(0, before - bloodSeedCount(target));
+                }
                 return dealt;
               };
               for (let i = 0; i < 18 && state.enemy; i++) {
@@ -195,7 +199,6 @@ const { chromium } = require("playwright");
                 const oldH = h.stats.healingDone;
                 await spin(state.party.indexOf(h));
                 healing += h.stats.healingDone - oldH;
-                if (e.clotted) clotted++;
               }
               damageEnemy = realDamage;
               const hpCost = h.stats.bloodSpent || 0;
@@ -204,8 +207,9 @@ const { chromium } = require("playwright");
                 hpCost: hpCost / 18,
                 netHealing: (healing - hpCost) / 18,
                 directDamage: directDamage / 18,
-                bleedingDamage: bleedingDamage / 18,
-                clotCoverage: clotted / 18,
+                bloomDamage: bloomDamage / 18,
+                consumedSeeds: consumedSeeds / 18,
+                remainingSeeds: bloodSeedCount(e),
                 spent,
                 faces: h.reels.flat().map((f) => f.type + ":" + f.tier),
               });
@@ -253,8 +257,9 @@ const { chromium } = require("playwright");
               hpCostPerRoll: avg(probes, "hpCost"),
               netHealingPerRoll: avg(probes, "netHealing"),
               directDamagePerRoll: avg(probes, "directDamage"),
-              bleedingDamagePerRoll: avg(probes, "bleedingDamage"),
-              clotCoverage: avg(probes, "clotCoverage"),
+              bloomDamagePerRoll: avg(probes, "bloomDamage"),
+              consumedSeedsPerRoll: avg(probes, "consumedSeeds"),
+              remainingSeeds: avg(probes, "remainingSeeds"),
               faces: probes[0].faces,
               party: {
                 wins: duels.filter((x) => x.party && x.won).length,
@@ -280,6 +285,7 @@ const { chromium } = require("playwright");
     );
     if (errors.length) throw Error(errors.join("\n"));
     const report = {
+      rules: "Save 24: damage-triggered reservoirs and fixed Blood Bloom; no timed Bleeding, Clotted or percentage Exchange.",
       scenario:
         "Equal point allowances; legal paid edits to intended archetypes; levels 2/7/13 at floors 2/5/10. Injury-throughput probe resets wounds before each of 18 rolls against a harmless, three-roll-frequency dummy. Separate fresh real staircase guardian trials use unchanged actor selection, no gear, items, lessons, rare luck saves or travel. Fixed stages are not campaign outcomes; some builds leave points unspent because the next purchase is unaffordable.",
       rows: data,
@@ -296,7 +302,8 @@ const { chromium } = require("playwright");
           style,
           spent,
           healingPerRoll,
-          clotCoverage,
+          bloomDamagePerRoll,
+          consumedSeedsPerRoll,
           party,
           solo,
         }) => ({
@@ -305,7 +312,8 @@ const { chromium } = require("playwright");
           style,
           spent,
           healingPerRoll,
-          clotCoverage,
+          bloomDamagePerRoll,
+          consumedSeedsPerRoll,
           party: party.wins + "/" + party.runs,
           partyActions: party.meanActions,
           solo: solo.wins + "/" + solo.runs,

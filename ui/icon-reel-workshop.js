@@ -53,7 +53,8 @@ function workshopFaceSummary(face, h) {
   const n = face.tier || 1;
   return (
     {
-      bloodseed: `${n} Seed power. Drain cap ${bloodProfile(h).cap}. Strengthening costs rising HP; duration refresh is free. Clotted: −${Math.round(bloodProfile(h).clot*100)}% healing.`,
+      bloodseed: `${n} Seeds; ${bloodSeedCost(n)} HP cost. Damage consumes Seeds for shared healing. No cap or expiry.`,
+      harvest: `${harvestSpellPower(n)} spell power + ${n*NECROMANCER.harvestSouls} Souls. Full bar raises a Skeleton or heals your team.`,
       heavy: `${markDamage("heavy",n)} physical damage${n >= 3 ? " to every enemy" : " to the selected enemy"}. Stronger, more costly; Tank and Berserker only.`,
       attack: `${n} physical damage${n >= 3 ? " to every enemy" : " to the selected enemy"}.`,
       magic: `${n} spell damage${n >= 3 ? " to every enemy" : " to the selected enemy"}; may expose Vulnerable.`,
@@ -92,6 +93,7 @@ function iconCriticalOddsMarkup(h) {
 }
 const WORKSHOP_SHORT_LABELS = Object.freeze({
   bloodseed: "Blood Seed",
+  harvest: "Harvest",
   attack: "Physical",
   heavy: "Heavy",
   magic: "Spell",

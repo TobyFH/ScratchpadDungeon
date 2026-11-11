@@ -1,0 +1,96 @@
+/* Functional blood/soul effects keep the existing pencil illustrations. */
+.blood-seed-pop {
+  position: fixed;
+  z-index: 4100;
+  pointer-events: none;
+  color: var(--blood-ink);
+  width: 28px;
+  height: 32px;
+  filter: drop-shadow(0 1px 0 var(--paper));
+}
+.blood-seed-pop svg {
+  width: 100%;
+  height: 100%;
+}
+.blood-seed-pop small {
+  position: absolute;
+  left: 75%;
+  top: 70%;
+  font:
+    18px "Patrick Hand",
+    cursive;
+  color: var(--blood-ink);
+}
+.soul-meter {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 14px;
+  max-height: 18px;
+  color: var(--poison-ink, #8253a1);
+  font-size: 14px;
+  line-height: 1;
+}
+.soul-meter > span {
+  flex: 1;
+  border: 1px solid currentColor;
+  height: 7px;
+  background: var(--paper-shade);
+}
+.soul-meter i {
+  display: block;
+  height: 100%;
+  background: currentColor;
+  opacity: 0.75;
+  transition: width 0.12s;
+}
+.hero.skeleton-card .hero-controls {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
+.skeleton-duty {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 20px;
+}
+.skeleton-duty svg {
+  width: 28px;
+  height: 28px;
+}
+.skeleton-card .portrait {
+  pointer-events: auto;
+  cursor: help;
+}
+.skeleton-card small {
+  color: var(--soft);
+}
+.summon-bone-flash {
+  position: fixed;
+  pointer-events: none;
+  z-index: 4000;
+  width: 80px;
+  height: 90px;
+  color: var(--poison-ink, #8253a1);
+}
+.summon-bone-flash svg {
+  width: 100%;
+  height: 100%;
+}
+
+.skeleton-card .hp-bar {
+  height: 10px;
+  min-height: 10px;
+  flex: none;
+}
+.tier-symbol.harvest,
+.combat-callout.soul,
+.rolled-projectile.harvest,
+.symbol-arrival.harvest {
+  color: var(--poison-ink, #8253a1);
+}
+.hero.necromancer .soul-meter {
+  font-size: 14px;
+}

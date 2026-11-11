@@ -3,6 +3,7 @@ const tierName = (tier) => ["", "I", "II", "III", "IV"][tier];
 const maxFaceTier = (type) =>
   [
     "bloodseed",
+    "harvest",
     "attack",
     "heavy",
     "magic",
@@ -21,7 +22,8 @@ const maxFaceTier = (type) =>
       ? 1
       : 3;
 const CLASS_PRICES = {
-  bloodbinder: {attack:1.2,magic:1.1,heal:1,bloodseed:1.25},
+  bloodbinder: {magic:1.1,heal:1,bloodseed:1.25,rally:1},
+  necromancer: {magic:1,poison:1,harvest:1.25},
   berserker: { heavy: 1.75, attack: 0.9, heal: 1, selfharm: 1 },
   ranger: {
     attack: 1,
@@ -77,6 +79,7 @@ const CLASS_PRICES = {
 };
 const EDITABLE_TYPES = Object.freeze([
   "bloodseed",
+  "harvest",
   "attack",
   "heavy",
   "magic",
@@ -93,6 +96,7 @@ const EDITABLE_TYPES = Object.freeze([
 ]);
 const FACE_LABELS = Object.freeze({
   bloodseed: "Blood Seed",
+  harvest: "Harvest",
   attack: "Physical attack",
   heavy: "Heavy attack",
   magic: "Spell damage",
@@ -109,16 +113,16 @@ const FACE_LABELS = Object.freeze({
   mystery: "Mystery ?",
 });
 const primaryFace = (h) =>
-  h.job === "mage"
+  ["mage","bloodbinder"].includes(h.job)
     ? h.specialism === "defence"
       ? "heal"
       : "magic"
-    : h.job === "fighter" && h.specialism === "defence"
+    : h.job === "necromancer" ? "magic" : h.job === "fighter" && h.specialism === "defence"
       ? "block"
       : "attack";
 function editableTypes(h) {
   return h.job === "jester"
-    ? EDITABLE_TYPES.filter((t) => !["stimulant", "selfharm", "heavy", "bloodseed"].includes(t))
+    ? EDITABLE_TYPES.filter((t) => !["stimulant", "selfharm", "heavy", "bloodseed", "harvest"].includes(t))
     : [
         ...(CLASS_FACE_TYPES[h.job] ||
           EDITABLE_TYPES.filter((t) => !["selfharm", "trick"].includes(t))),
@@ -139,7 +143,8 @@ function faceDescription(face, h) {
   const area = tier >= 3 ? " every enemy" : " the selected enemy";
   return (
     {
-      bloodseed: `Plant ${tier} Seed power on the selected enemy. First extend Bleeding to 3 turns, then raise its damage, capped at ${bloodProfile(h).cap} at this level. Each extra damage costs ${bloodOfferingBands()}; cannot kill you. Refreshing duration is free. Drains share up to ${Math.round(bloodProfile(h).healing*100)}% of damage as team healing. After 3 ticks or expiry, Clotted cuts healing by ${Math.round(bloodProfile(h).clot*100)}%.`,
+      bloodseed: `Plant ${tier} Seeds on the selected enemy. Each HP of damage from any source consumes one Seed and shares one HP of healing. Stacks never expire or cap. Each rolled Seed face costs ${bloodSeedCost(tier)} caster HP before criticals; cannot kill you. Blood Bloom detonates every Seed for 1 damage and 1 shared healing each.`,
+      harvest: `Deal ${harvestSpellPower(tier)} spell power and gather ${tier*NECROMANCER.harvestSouls} Souls before criticals. Damage also gathers Souls. A full Soul bar summons a Skeleton; with two alive, it restores 10% maximum HP to the team.`,
       attack: `Deal ${markDamage("attack",tier)} physical damage to${area}. Cheaper to improve than a heavy attack.`,
       heavy: `Deal ${markDamage("heavy",tier)} physical damage to${area}. Tank and Berserker only; costs more personal points to inscribe and upgrade.`,
       magic: `Deal ${ATTACK_POWER[tier]} spell damage to${area}, with a chance to leave the target Vulnerable.`,
@@ -422,7 +427,8 @@ function editFace(data, operation, destination = null) {
 
 function workshopAbilitySummary(h) {
   return {
-    bloodbinder: "Drain an HP percentage gap to heal an ally, or strike using the healthiest ally’s advantage. Boss loss capped at 10%; cannot crit.",
+    necromancer: "Gather Souls through Harvest and damage. Raise two Skeletons, then heal the team with full Soul bars.",
+    bloodbinder: "Burst every Seed on all enemies: 1 damage and 1 shared healing per Seed. Plant new Seeds before the burst.",
     fighter: `Gain ${tankSealBlock(h)} block; spend up to ${bashLimit(h)} on a bash (double against enemy block).`,
     rogue: "Roll three extra blade attacks.",
     mage: "Echo the rolled magic, healing, shield or poison marks across the whole team.",

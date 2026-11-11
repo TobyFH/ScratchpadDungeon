@@ -13064,6 +13064,103 @@ body.company-intro-active > :not(#company-intro):not(script) { visibility: hidde
 }
 #company-intro-skip:hover, #company-intro-skip:focus-visible { background: #333; outline: 2px solid #fff; outline-offset: 4px; }
 #company-intro-skip span { margin-left: 10px; }
+
+/* Functional blood/soul effects keep the existing pencil illustrations. */
+.blood-seed-pop {
+  position: fixed;
+  z-index: 4100;
+  pointer-events: none;
+  color: var(--blood-ink);
+  width: 28px;
+  height: 32px;
+  filter: drop-shadow(0 1px 0 var(--paper));
+}
+.blood-seed-pop svg {
+  width: 100%;
+  height: 100%;
+}
+.blood-seed-pop small {
+  position: absolute;
+  left: 75%;
+  top: 70%;
+  font:
+    18px "Patrick Hand",
+    cursive;
+  color: var(--blood-ink);
+}
+.soul-meter {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 14px;
+  max-height: 18px;
+  color: var(--poison-ink, #8253a1);
+  font-size: 14px;
+  line-height: 1;
+}
+.soul-meter > span {
+  flex: 1;
+  border: 1px solid currentColor;
+  height: 7px;
+  background: var(--paper-shade);
+}
+.soul-meter i {
+  display: block;
+  height: 100%;
+  background: currentColor;
+  opacity: 0.75;
+  transition: width 0.12s;
+}
+.hero.skeleton-card .hero-controls {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
+.skeleton-duty {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 20px;
+}
+.skeleton-duty svg {
+  width: 28px;
+  height: 28px;
+}
+.skeleton-card .portrait {
+  pointer-events: auto;
+  cursor: help;
+}
+.skeleton-card small {
+  color: var(--soft);
+}
+.summon-bone-flash {
+  position: fixed;
+  pointer-events: none;
+  z-index: 4000;
+  width: 80px;
+  height: 90px;
+  color: var(--poison-ink, #8253a1);
+}
+.summon-bone-flash svg {
+  width: 100%;
+  height: 100%;
+}
+
+.skeleton-card .hp-bar {
+  height: 10px;
+  min-height: 10px;
+  flex: none;
+}
+.tier-symbol.harvest,
+.combat-callout.soul,
+.rolled-projectile.harvest,
+.symbol-arrival.harvest {
+  color: var(--poison-ink, #8253a1);
+}
+.hero.necromancer .soul-meter {
+  font-size: 14px;
+}
 /* END GENERATED NOTEBOOK CSS */
     </style>
   </head>
@@ -13251,7 +13348,7 @@ body.company-intro-active > :not(#company-intro):not(script) { visibility: hidde
         "<!doctype html>\n" + document.documentElement.outerHTML;
       const $ = (s) => document.querySelector(s),
         SAVE_KEY = "scratchpad-dungeon-v8",
-        SAVE_VERSION = 23,
+        SAVE_VERSION = 24,
         W = 11,
         H = 9;
       // BEGIN GENERATED NOTEBOOK ART
@@ -13464,6 +13561,7 @@ function leverArt() {
   return `<svg class="pencil-art" viewBox="0 0 35 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 78 11-.5.5 13-12 .5Z M14 78l8-56 4 .5-7 57" fill="var(--paper-shade)"/><path d="m15 76 8-53m-15 60 8-.5m-8 5 8-.5M7 95l18-.5" stroke-width=".7"/><path d="M25 2q12 1 11 12-1 10-12 10-10-1-10-12Q15 2 25 2Z" fill="var(--paper)"/><path d="M25 5q9 1 8 9-1 8-9 7-7-1-7-8 0-7 8-8Zm-7 8 6-7m-6 12L30 6m-7 15 10-10" stroke-width=".65"/><path class="pencil-echo" d="m5 79 1 14 14-1M13 77l8-53"/></svg>`;
 }
 const paths = {
+  harvest:"M16 2Q3 4 5 17l5 5v7h12v-7l5-5Q30 4 16 2ZM10 12h2m8 0h2m-9 9 3-4 3 4m-7 3v5m8-5v5",
   bloodseed:"M16 3Q1 21 9 27q7 6 14-1Q31 19 16 3ZM9 23l7-10 5 11m-5-11v15",
   bloodexchange:"M5 12h21l-6-6m6 6-6 6M27 22H6l6 6m-6-6 6-6",
   brokenCrystal:"M4 27 7 18l5 7-2 4Zm11-3 4-15 6 11-2 8Zm-4-8 3-8 3 8M3 30h26",
@@ -13692,8 +13790,10 @@ function portraitArt(kind, entity = { hp: 1, maxHp: 1 }) {
   const marks = `<g class="injury-marks" stroke="#ae493c" stroke-width="${severe ? 3.8 : 2.4}" fill="none" opacity=".95"><path d="m40 35 14 12m-15-7 12 12m19 2 12 5m-13 0 10 4"/>${severe ? '<path d="m34 94 17 13m-17-6 17 13m24-42-3 13m5-10-2 12M45 126l13 3"/><path d="m39 58 16 5" stroke="#f1e5c3" stroke-width="8"/><path d="m40 57 14 7m-9-6-1 5" stroke="#796248" stroke-width="1.2"/>' : ""}</g>`;
   return pencilIllustration(art.replace("</svg>", marks + "</svg>"));
 }
+function necromancerArt(){return `<svg class="pencil-art necromancer-art" viewBox="0 0 120 150" fill="var(--paper-shade)" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 145 24 92 38 72Q22 24 57 5q42 15 30 66l13 23 8 51Z"/><path d="M39 42q17-30 41 0l-4 31-18 11-18-13Z" fill="var(--paper)"/><path d="m43 48 11 2m11 0 10-3M49 51v5m22-6v5m-12 2-3 7h8m-12 9h16m-33 5 23 28 25-29M58 106v38m-32-44 14 17-6 20m55-40-11 24 7 17m-62-6 13 5m46-5 14 5M39 18l-7 19m46-15 6 19m-60 69 14-6m44-1 13 8" fill="none"/><path d="M101 144 99 32m-11-9q0-14 12-14t12 14l-4 9H93Z" fill="var(--paper)"/><path d="m94 19 3 2m8-2 3 2m-8 3-2 4h5m-7 2v5m7-5v5" fill="none"/><path d="m53 97 5-8 5 8-5 9Z" fill="var(--poison-ink,#8253a1)"/></svg>`;}
 function bloodbinderArt(){return `<svg class="pencil-art bloodbinder-art" viewBox="0 0 120 150" fill="var(--paper-shade)" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M14 146 24 96 36 72Q16 20 61 5q45 17 24 66l15 26 9 49Z"/><path d="M36 42q24-30 48 0l-8 31-16 13-17-13Z" fill="var(--paper)"/><path d="m42 47 12-2m12 0 11 2M49 49v5m22-5v5M60 53l-4 10h9m-14 8q10 5 18-1M35 75l25 28 25-29M60 103v41M26 102l19 12-8 26M96 102l-20 13 8 26m-52-8 12-3m35 0 13 3M25 95l12-7m-12 20 12-7m48-13 12 9m-10 5 12 8" fill="none"/><path d="M60 92q-15 17 0 20 15-3 0-20Z" fill="var(--blood-ink,#964958)"/><path d="M31 119q-9-14-15-2t14 18m59-16q10-14 15-2t-14 18" fill="var(--paper)"/><path d="m39 15-8 18m48-14 7 17m-67 93 14 5m62-6-12 7" opacity=".45"/></svg>`;}
 function basePortraitArt(kind, entity = { hp: 1, maxHp: 1 }) {
+  if(kind === "necromancer" && entity.hp>0 && !entity.dead)return necromancerArt();
   if(kind === "bloodbinder" && entity.hp>0 && !entity.dead)return bloodbinderArt();
   if (entity.hp <= 0 || entity.dead) return corpseArt(kind);
   if (
@@ -13912,6 +14012,7 @@ function stairwayArt() {
                   berserker: "bloodprice",
                   jester: "jester",
                   bloodbinder: "bloodexchange",
+                  necromancer: "harvest",
                 }[owner.job] || "class";
           return `<span class="class-face" title="${classAbilityDescription(owner)}">${icon(mark)}</span>`;
         }
@@ -13929,6 +14030,7 @@ function stairwayArt() {
           "magic",
           "poison",
           "bloodseed",
+          "harvest",
           "stimulant",
           "rally",
           "trick",
@@ -13947,6 +14049,7 @@ function stairwayArt() {
           heavy: "heavy",
           magic: "magic",
           bloodseed: "bloodseed",
+          harvest: "harvest",
           poison: "poison",
           stimulant: "flame",
           rally: "rally",
@@ -13966,6 +14069,7 @@ function stairwayArt() {
 // All multipliers are visible in the workshop/guide; a mark has the same base power for every class.
 const POWER = Object.freeze({
   bloodseed: 1,
+  harvest: 1,
   mystery: 0,
   selfharm: 2,
   attack: 1,
@@ -13986,7 +14090,7 @@ const ATTACK_POWER = Object.freeze([0, 1, 2, 3, 4]);
 const markDamage = (type, tier = 1) => ATTACK_POWER[tier] * (type === "heavy" ? POWER.heavy : 1);
 const PHYSICAL_TYPES = Object.freeze(["attack", "heavy"]);
 const DAMAGE_TYPES = Object.freeze([...PHYSICAL_TYPES, "magic"]);
-const OFFENSIVE_TYPES = Object.freeze([...DAMAGE_TYPES, "poison", "bloodseed"]);
+const OFFENSIVE_TYPES = Object.freeze([...DAMAGE_TYPES, "poison", "bloodseed", "harvest"]);
 const FACE_COST = Object.freeze({ 1: 1, 2: 3, 3: 6, 4: 10 });
 const CLASS_BALANCE = Object.freeze({
   fighter: {
@@ -14014,7 +14118,8 @@ const CLASS_BALANCE = Object.freeze({
     critical: [1.75, 2.5, 3, 4],
     path: "Blood Price builds Fury. Balance damage with healing and lifesteal.",
   },
-  bloodbinder: {hp:32,critical:[1.5,2,2.5,3],path:"Spend HP on stronger drains; sustain allies and hinder enemy healing."},
+  bloodbinder: {hp:32,critical:[1.5,2,2.5,3],path:"Plant Seeds, then turn enemy damage into shared healing. Blood Bloom bursts every Seed."},
+  necromancer: {hp:22,critical:[1.5,1.75,2,2.5],path:"Gather Souls to raise Skeletons. Only enemy deaths and Soul surges restore your health."},
   jester: {
     hp: 30,
     critical: [1.5, 2, 3, 4],
@@ -14827,7 +14932,7 @@ const CAMP_UNLOCKS = {
     description:
       "Unlock Jester starts and companions. Trick marks build anticipation for a six-mark Punchline burst.",
   },
-  bloodbinder: {name:"A bloodbinder’s covenant",category:"classes",cost:1200,permanent:true,description:"Unlock Bloodbinder starts and companions. Drain foes, share recovery and hinder enemy healing."},
+  bloodbinder: {name:"A bloodbinder’s covenant",category:"classes",cost:1200,permanent:true,description:"Unlock Bloodbinder starts and companions. Plant Blood Seeds; wounds and Blood Bloom release shared healing."},
   iron: {
     name: "Iron margins",
     category: "challenges",
@@ -15529,7 +15634,7 @@ const fountainRollRate = (depth = state.depth) =>
   Math.min(9, Math.max(0, depth - 1)) * 0.018 +
   lateWellSteps(depth) * SUPPORT_SCALING.wellRollPerFloor;
 function heroDamagePower(h, n) {
-  return n;
+  return h.job === "necromancer" && n > 0 ? Math.max(1,Math.floor(n*NECROMANCER.personalDamage)) : n;
 }
 function heroHealingPower(n) {
   return n;
@@ -15690,6 +15795,7 @@ function normaliseHeroBuild(h) {
   delete h.mageRole;
   normaliseTacticalStatuses(h);
   normaliseBloodStatuses(h);
+  normaliseNecromancer(h);
   h.momentReceipts =
     h.momentReceipts &&
     typeof h.momentReceipts === "object" &&
@@ -15721,7 +15827,14 @@ function normaliseHeroBuild(h) {
   h.charge = Math.min(RANGER_AIM_CAP, Math.max(0, h.charge || 0));
   h.fury = Math.min(furyCapacity(h), Math.max(0, h.fury || 0));
   if (!h.reels) return;
-  for(const face of h.reels.flat())if(face.type==="bloodseed"&&h.job!=="bloodbinder"){face.type="blank";face.tier=1;}
+  for(const face of [...h.reels.flat(),...(h.last||[])]){
+    if(face.type==='harvest'&&h.job!=='necromancer'){face.type='blank';face.tier=1;}
+    if(h.job==='bloodbinder'&&face.type==='attack')face.type='magic';
+    if(h.job==='bloodbinder'&&face.type==='stimulant')face.type='rally';
+    if(h.job==='bloodbinder'&&face.type==='selfheal')face.type='heal';
+    if(['bloodbinder','necromancer'].includes(h.job)&&!['class',...CLASS_FACE_TYPES[h.job]].includes(face.type)){face.type='blank';face.tier=1;}
+    if(face.type==='bloodseed'&&h.job!=='bloodbinder'){face.type='blank';face.tier=1;}
+  }
   if (["fighter", "rogue", "ranger", "berserker"].includes(h.job)) {
     h.reels.forEach((reel) =>
       reel.forEach((f) => {
@@ -15820,7 +15933,8 @@ function classAbilityName(hero) {
       ranger: "EXECUTE",
       berserker: "BLOODRUSH",
       jester: "WILDCARD",
-      bloodbinder: "BLOOD EXCHANGE",
+      bloodbinder: "BLOOD BLOOM",
+      necromancer: "SOUL CALL",
     }[job] || "CLASS"
   );
 }
@@ -15828,7 +15942,8 @@ function classAbilityDescription(hero) {
   const job = typeof hero === "string" ? hero : hero?.job;
   return (
     {
-      bloodbinder: `Blood Exchange: transfer ${Math.round(bloodProfile(typeof hero === 'object' ? hero : null).exchange*100)}% of the HP percentage gap from a healthier enemy to your weakest ally. Otherwise strike using the gap to your healthiest ally. Boss loss capped at 10% of max HP; healing follows the actual percentage lost. Never crits or cleaves.`,
+      bloodbinder: "Blood Bloom: detonate all Blood Seeds on every enemy. Each Seed deals 1 damage and provides 1 shared healing, even on overkill. Never multiplies a Seed twice.",
+      necromancer: `Soul Call: ${necromancerSealPower(typeof hero==='object'?hero:{level:1})} Harvest power. Spell damage and Harvest gather Souls to summon two automatic Skeletons. With both present, a full bar heals the team. Ordinary healing cannot restore you; enemy deaths can.`,
       jester:
         "Wildcard: tricks ink enemy reels, gild allied reels, reverse a foe’s roll, or scatter damage and healing. They usually favour your party.",
       fighter: `Shield Bash: gain ${tankSealBlock(typeof hero === "object" ? hero : null)} team block, then spend up to ${bashLimit(typeof hero === "object" ? hero : null)} block on a bash. Block gained increases every three levels. The bash deals double damage to enemy shields.`,
@@ -15851,7 +15966,8 @@ function temperamentEffects(h, base) {
   return base;
 }
 const CLASS_FACE_TYPES = Object.freeze({
-  bloodbinder: ["attack", "magic", "heal", "bloodseed", "blank"],
+  bloodbinder: ["heal", "bloodseed", "magic", "rally", "blank"],
+  necromancer: ["magic", "poison", "harvest", "blank"],
   fighter: ["attack", "heavy", "block", "selfheal", "stun", "stimulant", "blank"],
   rogue: ["attack", "poison", "stun", "stimulant", "selfheal", "blank"],
   mage: [
@@ -15870,7 +15986,8 @@ const CLASS_FACE_TYPES = Object.freeze({
 function startingFaces(job, temperament) {
   const defensive = temperament === "defence";
   return {
-    bloodbinder: defensive ? [["heal",1],["heal",1],["bloodseed",1],["magic",1],["blank",1]] : [["attack",1],["magic",1],["bloodseed",1],["heal",1],["blank",1]],
+    bloodbinder: defensive ? [["heal",1],["heal",1],["bloodseed",1],["magic",1],["rally",1],["blank",1]] : [["magic",1],["magic",1],["bloodseed",1],["heal",1],["rally",1],["blank",1]],
+    necromancer: defensive ? [["harvest",1],["harvest",1],["magic",1],["poison",1],["blank",1]] : [["magic",1],["magic",1],["harvest",1],["poison",1],["blank",1]],
     fighter: defensive
       ? [
           ["attack", 1],
@@ -16052,10 +16169,12 @@ function makeHero(
   );
   normaliseTacticalStatuses(h);
   normaliseBloodStatuses(h);
+  normaliseNecromancer(h);
   return h;
 }
 // Shared by actual recovery and the fountain's uncapped offered totals.
 function offeredHealing(h, amount) {
+  if(!canReceiveOrdinaryHealing(h))return 0;
   return amount > 0
     ? Math.max(
         1,
@@ -16448,6 +16567,7 @@ function wardActive(e = actingEnemy) {
         sceneFast = false;
         travel = null;
         document.querySelectorAll(".speech-bubble").forEach((e) => e.remove());
+        bloodFeedback=[];
         state = {
           version: SAVE_VERSION,
           runId: newExpeditionId(),
@@ -16482,6 +16602,7 @@ function wardActive(e = actingEnemy) {
                 berserker: "Bram",
                 jester: "Quill",
                 bloodbinder: "Vesper",
+                necromancer: "Silas",
               }[job] || "Alden",
               job,
               {
@@ -16846,10 +16967,13 @@ const WILDCARD_LOG_EVENTS = Object.freeze([
   { name: "PICK A CARD!", description: "Deals spell damage to one enemy and heals a random living ally." },
 ]);
 const EVENT_LOG_TERMS = Object.freeze({
-  "Blood Seed": "First extends Bleeding to three enemy turns. Extra power strengthens its drain, spending increasing caster HP without killing them. Duration refresh is free. Strength is capped by level; excess power is wasted.",
-  "Blood Exchange": "Transfers part of the HP percentage gap to an injured ally, or strikes using the healthiest ally's advantage. Strength improves with level. Boss HP loss is capped at 10%; criticals never multiply it.",
-  "Bleeding": "Deals damage at the start of the enemy's whole turn and shares healing among injured allies. Level improves the drain. Expiry or three ticks applies Clotted, even if Seeds keep refreshing Bleeding.",
-  "Clotted": "Reduces enemy healing by 35–65%, improving with the Bloodbinder's level, for up to three enemy turns. Maintaining Bleeding can refresh it.",
+  "Blood Seed": "Stacks on one enemy without a cap or expiry. Each actual HP of damage consumes one Seed, providing one shared HP of healing. Planting costs the caster a little HP but cannot kill them.",
+  "Blood Seeds": "Stacks on one enemy. Damage consumes one Seed per actual HP lost and shares that amount of healing across injured allies.",
+  "Blood Bloom": "Detonates every Seed on all enemies. Each Seed deals one damage and provides one shared healing; excess damage cannot multiply the healing again.",
+  "Soul Harvest": "Enemy deaths restore 12% of that enemy's maximum HP to the Necromancer, capped at half the Necromancer's maximum HP. Ordinary healing is ineffective.",
+  "Soul Call": "The class mark gathers Harvest power. A full Soul bar raises a Skeleton in an empty companion position. Skeletons attack automatically after your rolls and persist between battles; with two alive, filling the bar heals the team instead.",
+  "Soul Surge": "With two Skeletons alive, a full Soul bar restores 10% maximum HP to the Necromancer and each Skeleton, then empties.",
+  "Bodyguard": "Once per enemy turn, the healthiest living Skeleton intercepts the first eligible single-target attack on its Necromancer. Further attacks, area damage and piercing attacks can hit the master.",
 
   "Cave room": "Revealing one room tile uncovers the connected room and its discoveries. Revealed discoveries are not activated until visited.",
   "Gold": "Carried gold buys shop supplies. Bank it after clearing a floor to keep it between expeditions.",
@@ -17178,7 +17302,7 @@ function relevantLogTile(i) {
             : enemy
               ? "Enemy reels"
               : "Fast-forward this slot machine";
-        return `<div class="machine-shell ${one ? "one-reel" : ""}" id="machine-${id}" data-machine="${id}">${title ? `<div class="machine-title">${title}</div>` : ""}<button class="machine-face" data-roll-area="${id}" aria-label="${label}" ${disabled ? "disabled" : ""}>${last.map((s, k) => `<span class="slot-window ${owner?.blackout?.includes(k) ? "blacked-out" : owner?.crystalLocks?.includes(k) ? "gem-locked" : ""} ${owner?.shadowLocks?.includes(k) ? "shadow-locked" : ""} ${owner?.reelGifts?.some((g) => g.reel === k && g.uses > 0) ? "gifted-reel" : ""}" data-reel="${k}" ${active ? `data-tooltip="${escapeHTML(state.party[hero].blackout?.includes(k) ? "Pencil blackout: this reel does nothing on this roll, then clears." : state.party[hero].crystalLocks?.includes(k) ? "Crystal seal: this reel is empty for one roll. Rolling this hero cracks its blocking gems." : faceDescription(s, state.party[hero]))}"` : ""}><span class="symbol-track single"><span class="slot-symbol">${symbolMarkup(s)}</span></span></span>`).join("")}</button><button class="lever" ${active ? `data-spin="${hero}"` : `data-fast-machine="${id}"`} ${disabled ? "disabled" : ""} aria-label="${active ? "Pull " + state.party[hero].name + "’s slot handle" : "Fast-forward " + (enemy ? "enemy" : "event") + " reels"}">${leverArt()}</button>${active ? reelLockMarkup(owner) : enemy ? enemyReelLockMarkup(owner) : ""}<div class="machine-footnote">${active ? (owner.initiative && state.opening?.firstRoll ? "INITIATIVE · act first for +25%" : ["ranger", "berserker", "jester"].includes(state.party[hero].job) ? rangerAimMarkup(state.party[hero]) : state.enemy ? (state.party[hero].stun ? "Stunned · waiting for recovery" : "Pull handle to spin") : "Waiting for an encounter") : enemy ? "" : "Click during the roll to land it"}</div></div>`;
+        return `<div class="machine-shell ${one ? "one-reel" : ""}" id="machine-${id}" data-machine="${id}">${title ? `<div class="machine-title">${title}</div>` : ""}<button class="machine-face" data-roll-area="${id}" aria-label="${label}" ${disabled ? "disabled" : ""}>${last.map((s, k) => `<span class="slot-window ${owner?.blackout?.includes(k) ? "blacked-out" : owner?.crystalLocks?.includes(k) ? "gem-locked" : ""} ${owner?.shadowLocks?.includes(k) ? "shadow-locked" : ""} ${owner?.reelGifts?.some((g) => g.reel === k && g.uses > 0) ? "gifted-reel" : ""}" data-reel="${k}" ${active ? `data-tooltip="${escapeHTML(state.party[hero].blackout?.includes(k) ? "Pencil blackout: this reel does nothing on this roll, then clears." : state.party[hero].crystalLocks?.includes(k) ? "Crystal seal: this reel is empty for one roll. Rolling this hero cracks its blocking gems." : faceDescription(s, state.party[hero]))}"` : ""}><span class="symbol-track single"><span class="slot-symbol">${symbolMarkup(s)}</span></span></span>`).join("")}</button><button class="lever" ${active ? `data-spin="${hero}"` : `data-fast-machine="${id}"`} ${disabled ? "disabled" : ""} aria-label="${active ? "Pull " + state.party[hero].name + "’s slot handle" : "Fast-forward " + (enemy ? "enemy" : "event") + " reels"}">${leverArt()}</button>${active ? reelLockMarkup(owner) : enemy ? enemyReelLockMarkup(owner) : ""}<div class="machine-footnote">${active ? (owner.initiative && state.opening?.firstRoll ? "INITIATIVE · act first for +25%" : ["ranger", "berserker", "jester"].includes(state.party[hero].job) ? rangerAimMarkup(state.party[hero]) : owner.job === "bloodbinder" ? bloodSeedCaption() : state.enemy ? (state.party[hero].stun ? "Stunned · waiting for recovery" : "Pull handle to spin") : "Waiting for an encounter") : enemy ? "" : "Click during the roll to land it"}</div></div>`;
       }
       function render() {
         statusTooltip.hidden = true;
@@ -17542,14 +17666,14 @@ function paintMapDrawing(id, markup, create) {
           state.party
             .map((h, i) => {
               let status = injury(h);
-              return `<article data-hero-roll="${i}" data-surprised="${!openingEligible(h)}" tabindex="${state.enemy && alive(h) && !state.over ? "0" : "-1"}" role="group" aria-label="${escapeHTML(h.name)} · click card or press Enter to spin; portrait opens upgrades" data-gear-target="${i}" class="hero ${status} ${h.initiative && state.opening?.firstRoll ? "has-initiative" : ""} ${state.target === i ? "selected" : ""}" id="hero-${i}"><div class="hero-dossier"><button class="portrait" id="portrait-${i}" data-hero-stats="${i}" data-edit="${i}" aria-label="Upgrade ${h.name} · ${h.points} points" aria-pressed="${state.target === i}" ${busy || !alive(h) ? "disabled" : ""}>${portraitArt(h.job, h)}${statusMarkup(h)}${traitMarkup(h)}${specialismBadge(h)}</button>${pointsNeedAttention(h) ? `<button class="points-prompt" data-edit="${i}" aria-label="Spend ${h.points} personal points" title="Spend ${h.points} personal points" ${busy ? "disabled" : ""}>✎ ${h.points} pts</button>` : ""}<div class="hero-name">${h.name}<small>${className(h.job)}${h.job === "bloodbinder" ? "" : " · Lv." + h.level}</small></div>${equipmentMarkup(h, i)}</div><div class="hero-controls"><div class="hero-title-line"><span class="hp-info">HP ${h.hp} / ${h.maxHp}</span><span class="injury ${h.stun ? "stun-status" : status}">${h.stun ? "stunned" : status}</span></div>${healthMarkup(h)}${drawMachine("hero-" + i, h.last, { hero: i, disabled: busy || !state.enemy || !h.hp || state.over || heroCannotRoll(h) })}<div class="bars"><div class="healthbar exp" title="Experience"><i style="width:${(h.xp / (h.level * 12)) * 100}%"></i></div></div><div class="edit-line"><span>${h.job === "bloodbinder" ? "Lv."+h.level+" · " : ""}${h.xp}/${h.level * 12} EXP</span><button class="edit-button" data-edit="${i}" ${busy || state.over ? "disabled" : ""} aria-label="Edit ${h.name}'s reels">✎ ${h.points} points</button></div></div></article>`;
+              return `<article data-hero-roll="${i}" data-surprised="${!openingEligible(h)}" tabindex="${state.enemy && alive(h) && !state.over ? "0" : "-1"}" role="group" aria-label="${escapeHTML(h.name)} · click card or press Enter to spin; portrait opens upgrades" data-gear-target="${i}" class="hero ${h.job} ${status} ${h.initiative && state.opening?.firstRoll ? "has-initiative" : ""} ${state.target === i ? "selected" : ""}" id="hero-${i}"><div class="hero-dossier"><button class="portrait" id="portrait-${i}" data-hero-stats="${i}" data-edit="${i}" aria-label="Upgrade ${h.name} · ${h.points} points" aria-pressed="${state.target === i}" ${busy || !alive(h) ? "disabled" : ""}>${portraitArt(h.job, h)}${statusMarkup(h)}${traitMarkup(h)}${specialismBadge(h)}</button>${pointsNeedAttention(h) ? `<button class="points-prompt" data-edit="${i}" aria-label="Spend ${h.points} personal points" title="Spend ${h.points} personal points" ${busy ? "disabled" : ""}>✎ ${h.points} pts</button>` : ""}<div class="hero-name">${h.name}<small>${className(h.job)}${["bloodbinder","necromancer"].includes(h.job) ? "" : " · Lv." + h.level}</small></div>${equipmentMarkup(h, i)}</div><div class="hero-controls"><div class="hero-title-line"><span class="hp-info">HP ${h.hp} / ${h.maxHp}</span><span class="injury ${h.stun ? "stun-status" : status}">${h.stun ? "stunned" : status}</span></div>${healthMarkup(h)}${soulMeterMarkup(h)}${drawMachine("hero-" + i, h.last, { hero: i, disabled: busy || !state.enemy || !h.hp || state.over || heroCannotRoll(h) })}<div class="bars"><div class="healthbar exp" title="Experience"><i style="width:${(h.xp / (h.level * 12)) * 100}%"></i></div></div><div class="edit-line"><span>${["bloodbinder","necromancer"].includes(h.job) ? "Lv."+h.level+" · " : ""}${h.xp}/${h.level * 12} EXP</span><button class="edit-button" data-edit="${i}" ${busy || state.over ? "disabled" : ""} aria-label="Edit ${h.name}'s reels">✎ ${h.points} points</button></div></div></article>`;
             })
             .join("") +
-          Array.from(
+          (necromancerOwner() ? skeletonSlotsMarkup(necromancerOwner()) : Array.from(
             { length: 3 - state.party.length },
             () =>
               `<div class="empty-slot">${icon("recruit")}<span>A name yet to be written.</span><small>Discover companions while exploring.</small></div>`,
-          ).join("");
+          ).join(""));
         restoreHeroNotices();
       }
       function enemyActionText(e) {
@@ -18281,8 +18405,9 @@ async function exploderTurn(e) {
       impact: { type: "attack", critical: true },
     });
   }
+  necromancerAreaDamage(power,e);
   e.selfDestructed = true;
-  damageEnemy(e.hp, e.name + " burns out", e, { piercing: true });
+  damageEnemy(e.hp, e.name + " burns out", e, { piercing: true, selfDestruct:true });
   log(
     `${e.name} · Self-destruct: explodes for ${power} damage toward each hero. Team block protects the party.`,
   );
@@ -19336,6 +19461,7 @@ function encounterTags(enemies) {
           traitMarkup(h) +
           specialismBadge(h);
         syncRangerAim(h);
+        syncNecromancer(h);
         syncStatusFX();
       }
       function syncEnemy(e = null) {
@@ -19390,7 +19516,8 @@ function encounterTags(enemies) {
           levelUpFX(h);
           h.maxHp += 6;
           const healed = Math.min(6, h.maxHp - h.hp);
-          h.hp = Math.min(h.maxHp, h.hp + 6);
+          if(h.job!=="necromancer")h.hp = Math.min(h.maxHp, h.hp + 6);
+          normaliseNecromancer(h);
           spendFuryOnHealing(h, healed);
           h.points += 4;
           log(`${h.name} reaches level ${h.level}: +6 maximum HP, +4 personal points.`);
@@ -19438,9 +19565,9 @@ function encounterTags(enemies) {
             .sort((a, b) => a.h.hp - b.h.hp || a.i - b.i)[0]?.i ?? preferred
         );
       }
-      function healHero(i, n, { exact = false } = {}) {
+      function healHero(i, n, { exact = false, soulRecovery = false } = {}) {
         let h = state.party[i];
-        if (!alive(h)) return 0;
+        if (!alive(h) || (!soulRecovery && !canReceiveOrdinaryHealing(h))) return 0;
         if (n > 0) clearStuns(h, n);
         const offered = exact ? Math.max(0,n) : offeredHealing(h, n);
         let actual = Math.min(offered, h.maxHp - h.hp);
@@ -19567,7 +19694,7 @@ function encounterTags(enemies) {
         n,
         source,
         e = state.enemy,
-        { piercing = false, attacker = null, impact = {}, shieldFactor = 1, bloodPriceTier = 0, bloodTransfer = false } = {},
+        { piercing = false, attacker = null, impact = {}, shieldFactor = 1, bloodPriceTier = 0, bloodTransfer = false, skipBloodSeeds = false, selfDestruct = false } = {},
       ) {
         if (!e || e.hp <= 0) return 0;
         const poisonHit = impact.type === "poison" || /^Poison from /.test(source);
@@ -19596,6 +19723,8 @@ function encounterTags(enemies) {
             });
         }
         e.hp -= actual;
+        if(!skipBloodSeeds)consumeBloodSeeds(e,actual);
+        necromancerDamage(e,actual,{selfInflicted:!!bloodPriceTier||selfDestruct});
         recordCombatHit(actual);
         gainFury(e, actual, 0, { bloodPriceTier });
         GameSound.play(actual ? "hit" : "shield");
@@ -19612,14 +19741,14 @@ function encounterTags(enemies) {
             "Magic",
           );
         if (actual) portraitMotion(enemyArtEl(e), e.hp <= 0 ? "death" : "hurt", true);
-        if (e.hp <= 0) recordBestiaryDefeat(e);
+        if (e.hp <= 0) {recordBestiaryDefeat(e);necromancerEnemyDeath(e);}
         if (e.hp <= 0 && !e.deathCryPlayed) {
           e.deathCryPlayed = true;
           enemyCry(e, "death");
         }
         syncEnemy(e);
         const art = enemyArtEl(e);
-        if (actual) combatNumber(art, actual, bloodTransfer ? (impact.type === "bloodexchange" ? "bloodexchange" : "bleeding") : poisonHit ? "poison" : "attack");
+        if (actual) combatNumber(art, actual, bloodTransfer ? "bloodseed" : poisonHit ? "poison" : "attack");
         else if (blocked || resisted)
           combatNumber(blocked ? enemyShieldEl(e) : art, blocked || resisted, "block");
         if ((blocked || resisted) && !actual) shieldedFX(art);
@@ -19724,6 +19853,7 @@ function encounterTags(enemies) {
       }
 
       function checkDefeat() {
+        if(state.over&&!state.party.some(alive))return true;
         if (state.party.some(alive)) return false;
         GameSound.play("death");
         GameSound.stinger("failure");
@@ -19756,376 +19886,232 @@ function encounterTags(enemies) {
         Math.floor((entity.rage || 0) / 3) +
         stimulantDefenceBonus(entity);
       // BEGIN GENERATED BLOODBINDER
-// Bloodbinder rules: one shared calculation for real rolls, previews and AI.
+// Damage-triggered Seed stacks. One unit is one shared HP of healing.
+// No gameplay cap or expiry; all direct hits, poison and items use damageEnemy.
 const BLOOD_BINDING = Object.freeze({
-  turns: 3,
-  potency: 12,
-  basePotency: 3,
-  potencyPerLevel: 0.75,
-  healingBase: 0.75,
-  healingPerLevel: 0.075,
-  healingStart: 4,
-  healingMax: 1.5,
-  clotBase: 0.35,
-  clotPerLevel: 0.03,
-  clotStart: 3,
-  clotMax: 0.65,
-  exchange: 0.18,
-  exchangePerLevel: 0.01,
-  exchangeStart: 3,
-  exchangeMax: 0.28,
-  bossCap: 0.1,
-  costBand: 4,
+  selfCostRankStep: 2,
+  seedHealing: 1,
+  detonationDamage: 1,
 });
-function bloodProfile(h) {
-  const level = Math.max(1, Math.min(100, Math.floor(Number(h?.level) || 1)));
-  return {
-    level,
-    cap: Math.min(
-      BLOOD_BINDING.potency,
-      BLOOD_BINDING.basePotency +
-        Math.floor((level - 1) * BLOOD_BINDING.potencyPerLevel),
-    ),
-    healing: Math.min(
-      BLOOD_BINDING.healingMax,
-      BLOOD_BINDING.healingBase +
-        Math.max(0, level - BLOOD_BINDING.healingStart) *
-          BLOOD_BINDING.healingPerLevel,
-    ),
-    clot: Math.min(
-      BLOOD_BINDING.clotMax,
-      BLOOD_BINDING.clotBase +
-        Math.max(0, level - BLOOD_BINDING.clotStart) *
-          BLOOD_BINDING.clotPerLevel,
-    ),
-    exchange: Math.min(
-      BLOOD_BINDING.exchangeMax,
-      BLOOD_BINDING.exchange +
-        Math.max(0, level - BLOOD_BINDING.exchangeStart) *
-          BLOOD_BINDING.exchangePerLevel,
-    ),
-  };
-}
-function bloodHealingAmount(b, damage = b.damage) {
-  return damage > 0
-    ? Math.max(1, Math.floor(damage * bloodProfile(b).healing))
-    : 0;
-}
-function normalisedBleeding(raw, h = null) {
-  if (!raw || typeof raw !== "object") return null;
-  const bounded = (n, min, max, fallback) =>
-    Math.min(
-      max,
-      Math.max(
-        min,
-        Math.floor(Number.isFinite(Number(n)) ? Number(n) : fallback),
-      ),
-    );
-  const turns = bounded(raw.turns, 0, BLOOD_BINDING.turns, 0);
-  if (!turns) return null;
-  // Legacy saves acquire the owner's current profile; never charge old wounds.
-  const level = bloodProfile({ level: raw.level ?? h?.level }).level,
-    profile = bloodProfile({ level });
-  const b = {
-    turns,
-    duration: bounded(raw.duration, turns, BLOOD_BINDING.turns, turns),
-    damage: bounded(raw.damage, 1, profile.cap, 1),
-    level,
-    ticks: bounded(raw.ticks, 0, BLOOD_BINDING.turns - 1, 0),
-    sourceId: raw.sourceId,
-  };
-  b.healing = bloodHealingAmount(b);
-  return b;
+function bloodSeedCount(e) {
+  return Math.max(0, Math.floor(Number(e?.bloodSeeds?.count) || 0));
 }
 function normaliseBloodStatuses(e) {
-  const owner = [...(state?.party || []), ...(state?.graveyard || [])].find(
-    (h) => h.id === e.bleeding?.sourceId,
-  );
-  e.bleeding = normalisedBleeding(e.bleeding, owner);
-  const c = e.clotted;
-  e.clotted =
-    c && typeof c === "object" && Math.floor(Number(c.turns)) > 0
-      ? {
-          turns: Math.min(
-            BLOOD_BINDING.turns,
-            Math.floor(Number(c.turns) || 0),
-          ),
-          // Old Clotted receipts keep their original 50% reduction until expiry.
-          reduction: Math.min(
-            BLOOD_BINDING.clotMax,
-            Math.max(
-              BLOOD_BINDING.clotBase,
-              Number.isFinite(Number(c.reduction)) ? Number(c.reduction) : 0.5,
-            ),
-          ),
-        }
-      : null;
+  const old = e.bleeding;
+  const count =
+    e.bloodSeeds?.count ??
+    (old
+      ? Math.max(1, Number(old.damage) || 1) *
+        Math.max(1, Number(old.turns) || 1)
+      : 0);
+  const bounded = Number.isFinite(Number(count))
+    ? Math.min(Number.MAX_SAFE_INTEGER, Math.max(0, Math.floor(Number(count))))
+    : 0;
+  e.bloodSeeds = bounded
+    ? {
+        count: bounded,
+        sourceId: e.bloodSeeds?.sourceId ?? old?.sourceId ?? null,
+      }
+    : null;
+  delete e.bleeding;
+  delete e.clotted;
 }
-function bloodOfferingCost(strength) {
-  const band = Math.ceil(strength / BLOOD_BINDING.costBand);
-  return (band * (band + 1)) / 2; // Strength 1–4 / 5–8 / 9–12: 1 / 3 / 6 HP.
+function bloodSeedCost(power, symbols = null) {
+  const marks = symbols?.filter((f) => f.type === "bloodseed");
+  return marks?.length
+    ? marks.reduce(
+        (n, f) => n + Math.ceil(f.tier / BLOOD_BINDING.selfCostRankStep),
+        0,
+      )
+    : Math.ceil(Math.max(0, power) / BLOOD_BINDING.selfCostRankStep);
 }
-function bloodOfferingBands() {
-  return Array.from(
-    { length: Math.ceil(BLOOD_BINDING.potency / BLOOD_BINDING.costBand) },
-    (_, i) => {
-      const from = i * BLOOD_BINDING.costBand + 1,
-        to = Math.min(BLOOD_BINDING.potency, (i + 1) * BLOOD_BINDING.costBand);
-      return `${bloodOfferingCost(from)} HP at strength ${from}–${to}`;
-    },
-  ).join(", ");
+function bloodSeedPlan(e, power, h, symbols = null) {
+  const added = Number.isFinite(power) ? Math.max(0, Math.ceil(power)) : 0;
+  return {
+    added,
+    count: Math.min(Number.MAX_SAFE_INTEGER, bloodSeedCount(e) + added),
+    hpCost: Math.min(Math.max(0, h.hp - 1), bloodSeedCost(added, symbols)),
+  };
 }
-function bloodSeedPlan(e, power, h) {
-  const profile = bloodProfile(h),
-    previous = normalisedBleeding(e?.bleeding, h);
-  let b = previous
-      ? { ...previous, level: Math.max(previous.level, profile.level) }
-      : null,
-    hpCost = 0;
-  const available = Math.max(0, (Number(h?.hp) || 0) - 1),
-    units = Math.min(
-      BLOOD_BINDING.turns + BLOOD_BINDING.potency,
-      Math.max(0, Math.ceil(Number(power) || 0)),
-    ); // Further units are guaranteed to hit the cap and cannot change the plan.
-  for (let n = 0; n < units; n++) {
-    if (!b)
-      b = {
-        turns: 1,
-        duration: 1,
-        damage: 1,
-        level: profile.level,
-        ticks: 0,
-        sourceId: h.id,
-      };
-    else if (b.turns < BLOOD_BINDING.turns) b.turns++;
-    else {
-      if (b.damage >= bloodProfile(b).cap) break;
-      const cost = bloodOfferingCost(b.damage);
-      if (hpCost + cost > available) break; // Never buy free potency at 1 HP or kill the caster.
-      hpCost += cost;
-      b.damage++;
-    }
-    b.duration = Math.max(b.duration, b.turns);
-    b.sourceId = h.id;
-  }
-  if (b) b.healing = bloodHealingAmount(b);
-  return { bleeding: b, hpCost, previous };
-}
-function bloodSeedForecast(h, power, e = state.enemy) {
-  if (power <= 0) return { damage: 0, heal: 0, cost: 0, antiheal: 0 };
-  const totals = { damage: 0, heal: 0, cost: 0, antiheal: 0 },
-    frequency = Math.max(1, e?.frequency || 3);
-  // Interpolate fractional mean power instead of rounding every forecast up.
-  for (const [n, p] of [
-    [Math.floor(power), 1 - (power % 1)],
-    [Math.ceil(power), power % 1],
-  ]) {
-    if (!p || !n) continue;
-    const { bleeding: b, previous: old, hpCost } = bloodSeedPlan(e, n, h);
-    if (!b) continue;
-    const lifetime = (s, key) => (s ? s[key] * s.turns : 0);
-    totals.damage +=
-      (p * Math.max(0, lifetime(b, "damage") - lifetime(old, "damage"))) /
-      frequency;
-    totals.heal +=
-      (p * Math.max(0, lifetime(b, "healing") - lifetime(old, "healing"))) /
-      frequency;
-    totals.cost += p * hpCost;
-    const recovery = e?.reels ? faceShare(e.reels.flat(), ["heal"]) * 4 : 0;
-    totals.antiheal +=
-      ((p * Math.max(0, b.turns - (old?.turns || 0))) / BLOOD_BINDING.turns) *
-      bloodProfile(b).clot *
-      recovery;
-  }
-  return totals;
-}
-function applyBloodSeed(e, power, h) {
-  if (!alive(e) || !alive(h) || power <= 0) return;
-  const { bleeding: b, hpCost } = bloodSeedPlan(e, power, h);
-  if (!b) return;
-  if (hpCost) {
-    damageHero(state.party.indexOf(h), hpCost, "Blood Seed offering", {
+function applyBloodSeed(e, power, h, { symbols = null } = {}) {
+  if (!alive(e) || !alive(h) || !(power > 0)) return 0;
+  const plan = bloodSeedPlan(e, power, h, symbols);
+  if (plan.hpCost) {
+    damageHero(state.party.indexOf(h), plan.hpCost, "Blood Seed offering", {
       piercing: true,
       selfInflicted: true,
       impact: { type: "bleeding" },
     });
-    h.stats.bloodSpent = (h.stats.bloodSpent || 0) + hpCost;
-    combatCallout(entityArt(h), `BLOOD OFFERING · −${hpCost} HP`, "bleeding");
+    h.stats.bloodSpent = (h.stats.bloodSpent || 0) + plan.hpCost;
+    combatCallout(
+      entityArt(h),
+      `BLOOD OFFERING · −${plan.hpCost} HP`,
+      "bleeding",
+    );
   }
-  e.bleeding = b;
-  combatCallout(
-    enemyArtEl(e),
-    `BLOOD SEED · ${b.damage} × ${b.turns}`,
-    "bleeding",
+  e.bloodSeeds = { count: plan.count, sourceId: h.id };
+  trackBloodFeedback(
+    beam(entityArt(h), enemyArtEl(e), "bloodseed", {
+      fromPortrait: true,
+      symbols: [{ type: "bloodseed", tier: 1 }],
+      kind: "blood-seed-plant",
+    }),
   );
-  beam(entityArt(h), enemyArtEl(e), "bloodseed");
-  burst(enemyArtEl(e), "damage", 20);
+  combatCallout(enemyArtEl(e), `BLOOD SEEDS · ${plan.count}`, "bleeding");
   syncEnemy(e);
   log(
-    `${h.name} plants Blood Seed on ${e.name}: ${b.damage} bleeding damage and up to ${b.healing} shared healing per enemy turn for ${b.turns} turns${hpCost ? `; ${hpCost} HP offered` : ""}.`,
+    `${h.name} plants ${plan.added} Blood Seeds on ${e.name}: ${plan.count} ready${plan.hpCost ? `; ${plan.hpCost} HP offered` : ""}.`,
   );
+  return plan.added;
 }
-function bloodExchangePlan(h, e = state.enemy) {
-  const allies = state.party.filter(alive);
-  if (!alive(e) || !allies.length)
-    return { loss: 0, healing: 0, ally: null, rate: 0 };
-  const lowest = allies.reduce((a, b) =>
-      a.hp / a.maxHp <= b.hp / b.maxHp ? a : b,
-    ),
-    highest = allies.reduce((a, b) =>
-      a.hp / a.maxHp >= b.hp / b.maxHp ? a : b,
-    ),
-    enemyRate = e.hp / e.maxHp,
-    difference = enemyRate - lowest.hp / lowest.maxHp;
-  if (difference > 0) {
-    const rate = Math.min(
-        difference * bloodProfile(h).exchange,
-        e.boss ? BLOOD_BINDING.bossCap : 1,
-      ),
-      loss = Math.min(e.hp, Math.floor(e.maxHp * rate));
-    // Healing uses the percentage actually removed after rounding and boss cap.
-    return {
-      loss,
-      healing: Math.floor((lowest.maxHp * loss) / e.maxHp),
-      ally: lowest,
-      rate: loss / e.maxHp,
-      transfer: true,
-    };
-  }
-  const rate =
-    Math.max(0, highest.hp / highest.maxHp - enemyRate) *
-    bloodProfile(h).exchange;
-  return {
-    loss: Math.min(
-      e.hp,
-      Math.floor(e.maxHp * Math.min(rate, e.boss ? BLOOD_BINDING.bossCap : 1)),
-    ),
-    healing: 0,
-    ally: null,
-    rate,
-    transfer: false,
-  };
-}
-async function bloodExchange(h, e = state.enemy) {
-  const run = state;
-  const plan = bloodExchangePlan(h, e),
-    enemyMax = e?.maxHp;
-  if (!alive(h) || !alive(e)) return;
-  // Percentage loss is a separate fixed transfer: never crits, cleaves, receives
-  // camp/equipment bonuses, or consumes Vulnerable a second time.
-  const n = damageEnemy(plan.loss, "Blood Exchange", e, {
-    piercing: true,
-    bloodTransfer: true,
-    impact: { type: "bloodexchange" },
-  });
-  h.stats.damageDealt += n;
-  if (!e.hp && n) h.stats.kills++;
-  const healed = plan.ally
-    ? healHero(
-        state.party.indexOf(plan.ally),
-        Math.floor((plan.ally.maxHp * n) / enemyMax),
-        { exact: true },
-      )
-    : 0;
-  h.stats.healingDone += healed;
-  combatCallout(enemyArtEl(e), `BLOOD EXCHANGE · −${n}`, "bleeding");
-  const flight = beam(entityArt(h), enemyArtEl(e), "bloodseed");
-  if (flight?.then) await flight;
-  if (state !== run) return;
-  if (healed) beam(enemyArtEl(e), entityArt(plan.ally), "heal");
-  if (state.lastPlayerRoll?.heroId === h.id)
-    state.lastPlayerRoll.actualDamage =
-      (state.lastPlayerRoll.actualDamage || 0) + n;
-  state.lastBloodExchange = {
-    heroId: h.id,
-    targetId: e.id,
-    loss: n,
-    healing: healed,
-    allyId: plan.ally?.id || null,
-    transfer: plan.transfer,
-  };
-  log(
-    `${h.name} · Blood Exchange: ${n} HP taken${healed ? `, ${healed} HP restored to ${plan.ally.name}` : ""}.`,
-  );
-}
-function distributeBloodHealing(amount, h) {
-  let total = 0;
-  // One shared pool, allocated to the most injured health ratios; no per-ally
-  // multiplication and no revival. Shared healHero owns Fury/stun interactions.
+function distributeBloodHealing(amount, h, enemy = null) {
   const allocations = new Map(),
     hp = new Map(state.party.map((a) => [a, a.hp]));
+  // Bound work by actual missing HP, never by an arbitrarily large stack.
+  amount = Math.min(
+    Math.max(0, Math.floor(amount)),
+    state.party
+      .filter((a) => alive(a) && canReceiveOrdinaryHealing(a))
+      .reduce((n, a) => n + a.maxHp - a.hp, 0),
+  );
   while (amount-- > 0) {
     const allies = state.party
-      .filter((a) => alive(a) && hp.get(a) < a.maxHp)
+      .filter(
+        (a) => alive(a) && canReceiveOrdinaryHealing(a) && hp.get(a) < a.maxHp,
+      )
       .sort((a, b) => hp.get(a) / a.maxHp - hp.get(b) / b.maxHp);
     if (!allies.length) break;
-    const ally = allies[0];
-    allocations.set(ally, (allocations.get(ally) || 0) + 1);
-    hp.set(ally, hp.get(ally) + 1);
+    const a = allies[0];
+    allocations.set(a, (allocations.get(a) || 0) + 1);
+    hp.set(a, hp.get(a) + 1);
   }
-  for (const [ally, n] of allocations)
+  let total = 0;
+  for (const [ally, n] of allocations) {
+    if (enemy)
+      trackBloodFeedback(
+        beam(enemyArtEl(enemy), entityArt(ally), "heal", {
+          fromPortrait: true,
+          symbols: [{ type: "heal", tier: 1 }],
+          kind: "blood-seed-heal",
+        }),
+      );
     total += healHero(state.party.indexOf(ally), n, { exact: true });
+  }
   if (h) {
     h.stats.healingDone += total;
     if (h.death) h.death.stats.healingDone += total;
   }
   return total;
 }
-async function tickBleeding(e) {
-  if (!alive(e) || !state.party.some(alive) || !state.enemy || !e.bleeding)
-    return;
-  const b = e.bleeding,
-    owner =
-      state.party.find((h) => h.id === b.sourceId) ||
-      state.graveyard.find((h) => h.id === b.sourceId),
-    n = damageEnemy(b.damage, "Bleeding", e, {
-      piercing: true,
-      bloodTransfer: true,
-    });
-  if (owner) {
-    owner.stats.damageDealt += n;
-    if (!e.hp && n) owner.stats.kills++;
-  }
+function consumeBloodSeeds(e, damage) {
+  const used = Math.min(bloodSeedCount(e), Math.max(0, Math.floor(damage)));
+  if (!used) return 0;
+  const owner =
+    state.party.find((h) => h.id === e.bloodSeeds.sourceId) ||
+    state.graveyard.find((h) => h.id === e.bloodSeeds.sourceId);
+  e.bloodSeeds.count -= used;
+  if (!e.bloodSeeds.count) e.bloodSeeds = null;
+  trackBloodFeedback(bloodSeedBurstFX(e, used));
   const healed = distributeBloodHealing(
-    Math.min(b.healing, bloodHealingAmount(b, n)),
+    used * BLOOD_BINDING.seedHealing,
     owner,
+    e,
   );
-  combatCallout(enemyArtEl(e), `BLEEDING · −${n}`, "bleeding");
-
-  b.turns--;
   log(
-    `${e.name} · Bleeding: ${n} damage; ${healed} HP shared among injured allies.`,
+    `${e.name} · Blood Seeds: ${used} burst; ${healed} HP shared among injured allies.`,
   );
-  b.ticks = (b.ticks || 0) + 1;
-  // Maintaining Bleeding must not indefinitely postpone its anti-heal payoff.
-  if (b.turns <= 0 || b.ticks >= BLOOD_BINDING.turns) {
-    b.ticks = 0;
-    if (alive(e)) {
-      e.clotted = {
-        turns: Math.max(e.clotted?.turns || 0, b.duration),
-        reduction: Math.max(e.clotted?.reduction ?? 0, bloodProfile(b).clot),
-      };
-      combatCallout(
-        enemyArtEl(e),
-        `CLOTTED · −${Math.round(e.clotted.reduction * 100)}% HEALING`,
-        "clotted",
-      );
-    }
-  }
-  if (b.turns <= 0) e.bleeding = null;
-  syncEnemy(e);
-  await feedbackPause(skip ? 70 : 180);
+  return used;
 }
-function finishClottedTurn(e, prior) {
-  if (prior && e.clotted === prior && --prior.turns <= 0) e.clotted = null;
+function bloodDetonationPlan() {
+  return battleEnemies()
+    .filter((e) => alive(e) && bloodSeedCount(e) > 0)
+    .map((e) => ({ enemy: e, seeds: bloodSeedCount(e) }));
+}
+async function detonateBloodSeeds(h) {
+  const run = state,
+    plan = bloodDetonationPlan();
+  let damage = 0,
+    healing = 0,
+    seeds = 0;
+  for (const { enemy: e, seeds: count } of plan) {
+    if (state !== run || !alive(h)) break;
+    e.bloodSeeds = null;
+    seeds += count;
+    trackBloodFeedback(bloodSeedBurstFX(e, count, true));
+    const n = damageEnemy(
+      count * BLOOD_BINDING.detonationDamage,
+      "Blood Bloom",
+      e,
+      {
+        piercing: true,
+        bloodTransfer: true,
+        skipBloodSeeds: true,
+        impact: { type: "bloodseed", critical: true },
+      },
+    );
+    damage += n;
+    h.stats.damageDealt += n;
+    if (!alive(e)) h.stats.kills++;
+    healing += distributeBloodHealing(count * BLOOD_BINDING.seedHealing, h, e);
+    combatCallout(enemyArtEl(e), `BLOOD BLOOM · ${count}`, "bleeding");
+  }
+  state.lastBloodDetonation = { heroId: h.id, seeds, damage, healing };
+  if (state.lastPlayerRoll?.heroId === h.id)
+    state.lastPlayerRoll.actualDamage =
+      (state.lastPlayerRoll.actualDamage || 0) + damage;
+  log(
+    `${h.name} · Blood Bloom: ${seeds} Seeds burst across all enemies, ${damage} damage and ${healing} shared healing.`,
+  );
+  await settleBloodFeedback();
+  return { seeds, damage, healing };
+}
+function bloodSeedForecast(h, power, e = state.enemy) {
+  const cost = Math.min(
+      Math.max(0, h.hp - 1),
+      h.reels.reduce(
+        (n, r) =>
+          n +
+          r.reduce(
+            (v, f) =>
+              v +
+              (f.type === "bloodseed"
+                ? Math.ceil(f.tier / BLOOD_BINDING.selfCostRankStep)
+                : 0),
+            0,
+          ) /
+            r.length,
+        0,
+      ),
+    ),
+    existing = bloodSeedCount(e);
+  const potential = Math.max(0, power),
+    demand = state.party
+      .filter(alive)
+      .reduce((n, a) => n + Math.max(1, expectedDirectMarkPower(a)), 0);
+  return {
+    damage: 0,
+    heal: Math.min(potential, Math.max(0, demand - existing)),
+    cost,
+    antiheal: 0,
+  };
+}
+function expectedDirectMarkPower(h) {
+  return (h.reels || []).reduce(
+    (n, r) =>
+      n +
+      r.reduce(
+        (s, f) =>
+          s + (DAMAGE_TYPES.includes(f.type) ? markDamage(f.type, f.tier) : 0),
+        0,
+      ) /
+        Math.max(1, r.length),
+    0,
+  );
 }
 function enemyRecovery(e, amount) {
   const n = Math.min(
     Math.max(0, e.maxHp - e.hp),
-    Math.floor(
-      Math.max(0, amount) *
-        (1 - (e.clotted?.turns > 0 ? (e.clotted.reduction ?? 0.5) : 0)),
-    ),
+    Math.floor(Math.max(0, amount)),
   );
   if (alive(e)) {
     e.hp += n;
@@ -20135,7 +20121,31 @@ function enemyRecovery(e, amount) {
   return 0;
 }
 function bloodStatusMarkup(e) {
-  return `${e.bleeding ? statusBadge("Bleeding", `${e.bleeding.damage}/${bloodProfile(e.bleeding).cap} damage each enemy turn; up to ${e.bleeding.healing} HP shared among injured allies. ${e.bleeding.turns} turns left. Clotted on expiry or after ${BLOOD_BINDING.turns - (e.bleeding.ticks || 0)} more ticks: −${Math.round(bloodProfile(e.bleeding).clot * 100)}% healing. Strengthening costs the caster increasing HP; refreshing duration is free.`, "bleeding-badge", "bloodseed") : ""}${e.clotted ? statusBadge("Clotted", `Healing received reduced by ${Math.round((e.clotted.reduction ?? 0.5) * 100)}% for ${e.clotted.turns} more enemy turns.`, "clotted-badge", "bloodseed") : ""}`;
+  const n = bloodSeedCount(e);
+  return n
+    ? statusBadge(
+        "Blood Seeds",
+        `${n} Seeds ready. Each actual HP of damage consumes one Seed and shares one HP of healing among injured allies. No expiry or stack cap. Blood Bloom detonates all remaining Seeds for damage and shared healing.`,
+        "bleeding-badge",
+        "bloodseed",
+      )
+    : "";
+}
+
+function bloodSeedCaption() {
+  const total = battleEnemies()
+    .filter(alive)
+    .reduce((n, e) => n + bloodSeedCount(e), 0);
+  return state.enemy
+    ? `Seeds ${bloodSeedCount(state.enemy)} target · ${total} total`
+    : "Plant Seeds; wounds release healing.";
+}
+function syncBloodSeedCounters() {
+  state.party.forEach((h, i) => {
+    if (h.job !== "bloodbinder") return;
+    const node = $("#hero-" + i + " .machine-footnote");
+    if (node) node.textContent = bloodSeedCaption();
+  });
 }
 // END GENERATED BLOODBINDER
       // BEGIN GENERATED CREATURE VOICES
@@ -20221,6 +20231,446 @@ async function crystalEncounter(i) {
   log('Quartz shattered. Its blue field fades; other deposits remain active.');save();return true;
 }
 // END GENERATED CRYSTAL CHOICES
+      // BEGIN GENERATED NECROMANCER
+// One real adventurer; Skeletons are persistent auxiliaries, never party heroes.
+const NECROMANCER = Object.freeze({
+  soulBase: 22,
+  soulPerLevel: 2,
+  damageSouls: 0.3,
+  harvestSouls: 2,
+  harvestDamage: 0.5,
+  personalDamage: 0.9,
+  killHeal: 0.12,
+  killHealCap: 0.5,
+  overflowHeal: 0.1,
+  skeletonHpBase: 8,
+  skeletonHpPerLevel: 3,
+  skeletonAttackPerLevel: 0.45,
+  skeletonDeathSouls: 3,
+  skeletonDeathHeal: 0.03,
+});
+const necromancerOwner = () =>
+  state?.party?.find((h) => h.job === "necromancer") || null;
+const isSkeleton = (s) => !!s?.skeleton;
+const canReceiveOrdinaryHealing = (h) =>
+  h?.job !== "necromancer" && !isSkeleton(h);
+const soulCapacity = (h) =>
+  NECROMANCER.soulBase + NECROMANCER.soulPerLevel * Math.max(1, h.level || 1);
+const skeletonMaxHp = (h) =>
+  NECROMANCER.skeletonHpBase +
+  NECROMANCER.skeletonHpPerLevel * Math.max(1, h.level || 1);
+const skeletonAttack = (h) =>
+  1 +
+  Math.floor(
+    Math.max(0, (h.level || 1) - 1) * NECROMANCER.skeletonAttackPerLevel,
+  );
+const necromancerSealPower = (h) =>
+  2 + Math.floor(Math.max(0, (h.level || 1) - 1) / 4);
+const harvestSpellPower = (power) =>
+  Math.ceil(Math.max(0, power) * NECROMANCER.harvestDamage);
+function normaliseNecromancer(h) {
+  if (h?.job !== "necromancer") return;
+  h.souls = Math.min(
+    soulCapacity(h) - 0.00001,
+    Math.max(0, Number.isFinite(h.souls) ? h.souls : 0),
+  );
+  h.summonSerial = Math.max(0, Math.floor(Number(h.summonSerial) || 0));
+  h.skeletons = (Array.isArray(h.skeletons) ? h.skeletons : [])
+    .filter((s) => s && s.hp > 0)
+    .slice(0, 2)
+    .map((s, i) => ({
+      id: String(s.id || `${h.id}-bones-${i}`),
+      skeleton: true,
+      name: s.name || "Skeleton",
+      hp: Math.min(skeletonMaxHp(h), Math.max(1, Math.floor(s.hp))),
+      maxHp: skeletonMaxHp(h),
+      born: Math.max(0, Math.floor(s.born || i)),
+      stats: { damageDealt: 0, damageTaken: 0, attacks: 0, ...s.stats },
+    }));
+  h.summonSerial = Math.max(h.summonSerial, ...h.skeletons.map((s) => s.born));
+}
+function healNecromancer(h, amount, from = null, label = "SOUL HARVEST") {
+  if (!alive(h)) return 0;
+  const n = healHero(state.party.indexOf(h), Math.max(0, Math.floor(amount)), {
+    exact: true,
+    soulRecovery: true,
+  });
+  h.stats.healingDone += n;
+  if (n) {
+    if (from)
+      trackBloodFeedback(
+        beam(from, entityArt(h), "heal", {
+          fromPortrait: true,
+          symbols: [{ type: "harvest", tier: 1 }],
+          sourceType: "harvest",
+          kind: "soul-harvest",
+        }),
+      );
+    combatCallout(entityArt(h), `${label} · +${n}`, "soul");
+  }
+  return n;
+}
+function grantSouls(h, amount, label = "SOULS") {
+  if (!alive(h) || h.job !== "necromancer" || !(amount > 0) || state.over)
+    return 0;
+  const before = h.souls || 0,
+    cap = soulCapacity(h);
+  // Damage grants fractional Souls. Avoid 23.99999999999999 missing a 24 bar.
+  h.souls = Math.min(cap, Number((before + amount).toFixed(6)));
+  const gained = h.souls - before;
+  if (h.souls >= cap) {
+    h.souls = 0; // One completion per grant; excess never chains free activations.
+    if (h.skeletons.length < 2) {
+      const s = {
+        id: `${h.id}-skeleton-${++h.summonSerial}`,
+        skeleton: true,
+        name: "Skeleton",
+        hp: skeletonMaxHp(h),
+        maxHp: skeletonMaxHp(h),
+        born: h.summonSerial,
+        stats: { damageDealt: 0, damageTaken: 0, attacks: 0 },
+      };
+      h.skeletons.push(s);
+      h.stats.summons = (h.stats.summons || 0) + 1;
+      syncNecromancer(h);
+      summonMomentFX(h, s, "rise");
+      log(
+        `${h.name} · Soul Call: a Skeleton rises (${s.hp} HP, ${skeletonAttack(h)} damage per action).`,
+      );
+    } else {
+      const recovered = healNecromancer(
+        h,
+        Math.ceil(h.maxHp * NECROMANCER.overflowHeal),
+        entityArt(h),
+        "SOUL SURGE",
+      );
+      for (const s of h.skeletons) {
+        const n = Math.min(
+          s.maxHp - s.hp,
+          Math.ceil(s.maxHp * NECROMANCER.overflowHeal),
+        );
+        s.hp += n;
+        if (n) summonMomentFX(h, s, "heal");
+      }
+      log(
+        `${h.name} · Soul Surge: ${recovered} HP restored; both Skeletons recover strength.`,
+      );
+    }
+  }
+  syncNecromancer(h);
+  if (gained >= 1)
+    combatCallout(entityArt(h), `${label} +${Math.floor(gained)}`, "soul");
+  return gained;
+}
+function necromancerDamage(e, damage, { selfInflicted = false } = {}) {
+  const h = necromancerOwner();
+  if (!alive(h) || !damage || selfInflicted) return;
+  grantSouls(h, damage * NECROMANCER.damageSouls);
+}
+function necromancerEnemyDeath(e) {
+  const h = necromancerOwner();
+  if (!alive(h) || e.hp > 0 || e.soulHarvested) return;
+  e.soulHarvested = true;
+  const n = Math.min(
+    Math.ceil(e.maxHp * NECROMANCER.killHeal),
+    Math.floor(h.maxHp * NECROMANCER.killHealCap),
+  );
+  const healed = healNecromancer(h, n, enemyArtEl(e));
+  if (healed)
+    log(`${h.name} · Soul Harvest: ${e.name}'s death restores ${healed} HP.`);
+}
+function necromancerBodyguard(h, e, { area = false, piercing = false } = {}) {
+  if (
+    h?.job !== "necromancer" ||
+    !alive(h) ||
+    e.necroGuardUsed ||
+    area ||
+    piercing ||
+    e.piercing ||
+    e.unblockable
+  )
+    return null;
+  const s = h.skeletons
+    .filter((s) => s.hp > 0)
+    .sort((a, b) => b.hp - a.hp || a.born - b.born)[0];
+  if (!s) return null;
+  e.necroGuardUsed = true;
+  combatCallout(skeletonArtEl(s), "BODYGUARD!", "soul");
+  summonMomentFX(h, s, "guard");
+  log(`${s.name} intercepts ${e.name}'s attack on ${h.name}.`);
+  return s;
+}
+function damageSkeleton(h, s, amount, e, impact = {}) {
+  if (!alive(h) || s.hp <= 0) return 0;
+  const ward = wardActive(e),
+    blocked = ward ? amount : Math.min(state.block, amount);
+  if (!ward) state.block -= blocked;
+  const n = Math.min(s.hp, Math.max(0, amount - blocked));
+  if (blocked) {
+    beam(enemyArtEl(e), $("#block"), "block", impact);
+    armourFX(blocked, "Skeleton protected");
+  }
+  if (n) {
+    beam(enemyArtEl(e), skeletonArtEl(s), impact.type || "attack", impact);
+    s.hp -= n;
+    s.stats.damageTaken += n;
+    combatNumber(skeletonArtEl(s), n, "attack");
+    shakeElement(skeletonArtEl(s), 4, "recoil");
+    GameSound.play("hit");
+  } else if (blocked) shieldedFX(skeletonArtEl(s));
+  if (s.hp <= 0) {
+    summonMomentFX(h, s, "death");
+    h.skeletons = h.skeletons.filter((a) => a !== s);
+    h.stats.skeletonsLost = (h.stats.skeletonsLost || 0) + 1;
+    grantSouls(h, NECROMANCER.skeletonDeathSouls, "BONES");
+    healNecromancer(
+      h,
+      Math.max(1, Math.floor(h.maxHp * NECROMANCER.skeletonDeathHeal)),
+      null,
+      "LAST SOUL",
+    );
+    log(`${s.name} crumbles. A little of its soul returns to ${h.name}.`);
+  }
+  renderBlock();
+  syncNecromancer(h);
+  return n;
+}
+async function skeletonCombatAction(h) {
+  if (h?.job !== "necromancer" || !alive(h) || state.over) return;
+  const run = state;
+  for (const s of [...h.skeletons]) {
+    if (state !== run || !alive(h) || state.over || !livingEnemies().length)
+      break;
+    if (s.hp <= 0 || !h.skeletons.includes(s)) continue;
+    const e = livingEnemies().includes(state.enemy)
+        ? state.enemy
+        : livingEnemies()[0],
+      origin = skeletonArtEl(s);
+    portraitMotion(origin, "attack");
+    await beam(origin, enemyArtEl(e), "attack", {
+      fromPortrait: true,
+      symbols: [{ type: "attack", tier: Math.min(4, skeletonAttack(h)) }],
+      kind: "skeleton-attack",
+    });
+    if (state !== run || !alive(h) || !alive(e)) break;
+    const n = damageEnemy(skeletonAttack(h), `${h.name}'s Skeleton`, e, {
+      impact: { type: "attack" },
+    });
+    s.stats.damageDealt += n;
+    s.stats.attacks++;
+    h.stats.damageDealt += n;
+    if (!alive(e)) h.stats.kills++;
+    await feedbackPause(skip ? 45 : 120);
+  }
+}
+function necromancerFallen(h) {
+  if (h.job !== "necromancer") return;
+  h.skeletons = [];
+  h.souls = 0;
+  if (h.death && !state.graveyard.some((d) => d.id === h.id))
+    state.graveyard.push(h.death);
+  state.pendingDeaths = state.pendingDeaths.filter((d) => d.id !== h.id);
+  if (stageResolver) {
+    stageResolver("cancel");
+    stageResolver = null;
+  }
+  closeSpotlight();
+  syncNecromancer(h);
+  checkDefeat();
+  save();
+}
+function necromancerAreaDamage(amount, e) {
+  const h = necromancerOwner();
+  if (!alive(h)) return;
+  for (const s of [...h.skeletons])
+    if (s.hp > 0)
+      damageSkeleton(h, s, amount, e, {
+        type: "attack",
+        kind: "area",
+        critical: true,
+      });
+}
+// END GENERATED NECROMANCER
+      // BEGIN GENERATED SOUL FEEDBACK
+// Ephemeral presentation only. Offsets use FX randomness, never gameplay RNG.
+let bloodFeedback = [];
+function trackBloodFeedback(p) {
+  if (!p?.then) return;
+  const entry = { run: state, promise: p };
+  bloodFeedback.push(entry);
+  p.catch(() => {}).finally(() => {
+    bloodFeedback = bloodFeedback.filter((x) => x !== entry);
+  });
+}
+async function settleBloodFeedback() {
+  const run = state,
+    entries = bloodFeedback.filter((x) => x.run === run);
+  bloodFeedback = bloodFeedback.filter((x) => x.run !== run);
+  await Promise.allSettled(entries.map((x) => x.promise));
+}
+function bloodSeedBurstFX(e, count, detonation = false) {
+  const host = enemyArtEl(e);
+  if (!host?.isConnected) return Promise.resolve();
+  const rect = host.getBoundingClientRect(),
+    bursts = Math.min(18, count),
+    run = state;
+  const reduced =
+    skip || matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const flights = [];
+  for (let i = 0; i < bursts; i++) {
+    const node = document.createElement("span");
+    node.className = "blood-seed-pop";
+    node.setAttribute("aria-hidden", "true");
+    node.dataset.effect = "blood-seed-burst";
+    node.innerHTML =
+      icon("bloodseed") +
+      (count > bursts ? `<small>×${Math.ceil(count / bursts)}</small>` : "");
+    node.style.left =
+      rect.left + rect.width * (0.18 + fxRandom() * 0.64) + "px";
+    node.style.top = rect.top + rect.height * (0.18 + fxRandom() * 0.64) + "px";
+    document.body.append(node);
+    const anim = node.animate(
+      [
+        { transform: "translate(-50%,-50%) scale(.45)", opacity: 0 },
+        {
+          transform: "translate(-50%,-50%) scale(1.5)",
+          opacity: 1,
+          offset: 0.32,
+        },
+        {
+          transform: `translate(${(fxRandom() - 0.5) * 48 - 50}%,${-95 - fxRandom() * 45}%) scale(2.1)`,
+          opacity: 0,
+        },
+      ],
+      {
+        duration: reduced ? 100 : Math.max(160, 430 / Math.sqrt(pace())),
+        delay: reduced ? 0 : (i * 13) / Math.sqrt(pace()),
+        easing: "ease-out",
+        fill: "forwards",
+      },
+    );
+    anim.juice = true;
+    liveAnimations.add(anim);
+    if (utilityOpen) {
+      anim.pause();
+      anim.utilityPaused = true;
+    }
+    flights.push(
+      anim.finished
+        .catch(() => {})
+        .finally(() => {
+          node.remove();
+          liveAnimations.delete(anim);
+        }),
+    );
+  }
+  burst(host, detonation ? "confetti" : "paper", Math.min(42, 12 + count));
+  shakeElement(host, detonation ? 6 : 2, detonation ? "critical" : "jolt");
+  return Promise.allSettled(flights).then(() => {
+    if (state !== run) return;
+  });
+}
+function skeletonArtEl(s) {
+  return document.getElementById("summon-art-" + s.id);
+}
+function soulMeterMarkup(h) {
+  if (h.job !== "necromancer") return "";
+  return `<div class="soul-meter" data-soul-owner="${h.id}" role="meter" aria-label="Souls" aria-valuemin="0" aria-valuemax="${soulCapacity(h)}" aria-valuenow="${Math.floor(h.souls || 0)}" data-tooltip="Damage and Harvest gather Souls. A full bar raises a Skeleton in an empty companion position. With two Skeletons, it restores 10% maximum HP to the whole team instead. Souls and Skeleton HP survive battles."><b>SOULS ${Math.floor(h.souls || 0)}/${soulCapacity(h)}</b><span><i style="width:${(100 * (h.souls || 0)) / soulCapacity(h)}%"></i></span></div>`;
+}
+function skeletonSlotsMarkup(h) {
+  return [0, 1]
+    .map((i) => {
+      const s = h.skeletons[i];
+      if (!s)
+        return `<div class="empty-slot" data-skeleton-slot="${i}">${icon("skull")}<span>A Skeleton can rise here.</span><small>Fill the Soul bar to summon.</small></div>`;
+      return `<article class="hero skeleton-card ${injury(s)}" data-skeleton-slot="${i}" aria-label="Skeleton · automatically controlled"><div class="hero-dossier"><div class="portrait" id="summon-art-${s.id}" tabindex="0" data-tooltip="Skeleton: ${s.hp}/${s.maxHp} HP. Attacks for ${skeletonAttack(h)} physical damage after each Necromancer action. Can intercept the first single-target attack each enemy turn. Cannot use reels, equipment or ordinary healing.">${portraitArt("skull", s)}</div><div class="hero-name">Skeleton<small>Summon · Automatic</small></div></div><div class="hero-controls"><div class="hero-title-line"><span class="hp-info">HP ${s.hp} / ${s.maxHp}</span><span class="injury">${injury(s)}</span></div>${healthMarkup(s)}<div class="skeleton-duty">${icon("sword")}<b>${skeletonAttack(h)} physical damage</b></div><small>Attacks your target after each roll.<br>Guards the first eligible enemy attack.</small></div></article>`;
+    })
+    .join("");
+}
+function syncNecromancer(h) {
+  if (h?.job !== "necromancer") return;
+  const meter = document.querySelector(`[data-soul-owner="${h.id}"]`);
+  if (meter) {
+    const t = document.createElement("template");
+    t.innerHTML = soulMeterMarkup(h);
+    meter.replaceWith(t.content);
+  }
+  const slots = [...document.querySelectorAll("#party > [data-skeleton-slot]")];
+  if (slots.length) {
+    const t = document.createElement("template");
+    t.innerHTML = skeletonSlotsMarkup(h);
+    for (const n of slots) n.remove();
+    $("#party").append(t.content);
+  }
+}
+function summonMomentFX(h, s, kind) {
+  const host = skeletonArtEl(s) || entityArt(h);
+  if (!host?.isConnected) return;
+  const rect = host.getBoundingClientRect(),
+    node = document.createElement("div");
+  node.className = "summon-bone-flash";
+  node.dataset.effect = "skeleton-" + kind;
+  node.setAttribute("aria-hidden", "true");
+  node.innerHTML =
+    kind === "death"
+      ? skeletonBonesArt()
+      : kind === "heal"
+        ? icon("heal")
+        : kind === "rise"
+          ? skeletonRiseArt()
+          : icon("skull");
+  node.style.left = rect.left + rect.width / 2 - 40 + "px";
+  node.style.top = rect.top + rect.height / 2 - 45 + "px";
+  document.body.append(node);
+  const reduced =
+    skip || matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const anim = node.animate(
+    [
+      {
+        transform: kind === "rise" ? "translateY(26px) scale(.4)" : "scale(.8)",
+        opacity: 0,
+      },
+      { transform: "translateY(-8px) scale(1.35)", opacity: 1, offset: 0.35 },
+      {
+        transform:
+          kind === "death" ? "translateY(24px) scale(.6)" : "scale(1.5)",
+        opacity: 0,
+      },
+    ],
+    { duration: reduced ? 120 : 480 / Math.sqrt(pace()), fill: "forwards" },
+  );
+  anim.juice = true;
+  liveAnimations.add(anim);
+  if (utilityOpen) {
+    anim.pause();
+    anim.utilityPaused = true;
+  }
+  trackBloodFeedback(
+    anim.finished
+      .catch(() => {})
+      .finally(() => {
+        node.remove();
+        liveAnimations.delete(anim);
+      }),
+  );
+  burst(
+    host,
+    kind === "heal" ? "heal" : kind === "death" ? "dust" : "poison",
+    20,
+  );
+  shakeElement(host, kind === "guard" ? 5 : 2);
+  GameSound.play(
+    kind === "rise" ? "poof" : kind === "death" ? "hit" : "shield",
+  );
+}
+
+function skeletonRiseArt() {
+  return `<svg viewBox="0 0 120 140" class="pencil-art" fill="var(--paper)" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 126 23 119l12 8 18-7 14 7 18-10 22 8" fill="none"/><path d="m42 122-7-38-10-15q-5-8 1-10l14 14-4-34q0-8 6-7l9 37-1-42q1-9 7-5l5 44 5-36q1-7 7-3l-1 45 14-16q9-7 11 0L82 89l-9 33Z"/><path d="m47 87 22-3m-20 14 19-3m-17 12 15-3M39 74l8 4m7-9 8 1m2-1 10 3" fill="none"/><path d="m14 102-8-8m91 12 12-9M17 43l-7-5m88-5 11-6" fill="none"/></svg>`;
+}
+function skeletonBonesArt() {
+  return `<svg viewBox="0 0 120 100" class="pencil-art" fill="var(--paper)" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m18 76 66-27m-60 3 68 31m-56 1 51-10M11 72q-7-12 3-10 1-9 8-4m58-13q8-10 11-1 9-2 8 7M21 48q-9-5-9 4-8 5 1 10m76 17q10-8 12 1 7 2 3 8" fill="none"/><path d="M40 41q-10-32 17-34 29 2 18 33l-9 7-2 11H49l-1-12Z"/><path d="m46 23 9 9m0-9-9 9m17-9 8 8m0-8-8 8m-8 7 3-5 3 5m-8 10v10m7-10v10" fill="none"/></svg>`;
+}
+// END GENERATED SOUL FEEDBACK
       function statusBadge(label, description, style, mark, value = "") {
         return `<b class="${style}" role="img" aria-label="${escapeHTML(label + ": " + description)}" title="${escapeHTML(label + ": " + description)}" data-tooltip="${escapeHTML(label + ": " + description)}">${icon(mark)}</b>`;
       }
@@ -20231,6 +20681,7 @@ async function crystalEncounter(i) {
         return `<span class="portrait-conditions">${bloodStatusMarkup(entity)}${entity.crystalLocks?.length ? statusBadge("Crystal seals", `${entity.crystalLocks.length} reels sealed by nearby crystals. Sealed reels are empty for one roll; rolling this hero cracks all their gems.`, "crystal-badge", "crystal") : ""}${entity.reelGifts?.length ? statusBadge("Gilded reel", entity.reelGifts.map((g) => `Reel ${g.reel + 1}: +1 mark tier for ${g.uses} more rolls.`).join(" ") + " Cleared after battle.", "gift-badge", "point") : ""}${poison?.turns ? statusBadge("Poison", `${poison.damage || 1} damage each turn for ${poison.turns} more turns. Further doses stack damage once three turns are loaded. Cleared after battle.`, "poison-badge", "poison", poison.turns) : ""}${entity.rage ? statusBadge("Rage", `+${entity.rage} damage and ${Math.floor(entity.rage / 3)} damage resistance until battle ends.`, "rage-badge", "rage", "+" + entity.rage) : ""}${buff ? statusBadge("Stimulant", `+${stimulantDamageBonus(entity)} damage and ${stimulantDefenceBonus(entity)} damage resistance; ${buff.turns}/3 turns, potency ${buff.power}/${COMBAT_LIMITS.stimulantPower}. Every ${STIMULANT_OVERFLOW} doses beyond full duration add 1 potency (${buff.overflow || 0}/${STIMULANT_OVERFLOW} toward the next increase).`, "buff-badge", "flame", buff.turns) : ""}${entity.shadowRest ? statusBadge("Veiled", "Use a different ally before this hero can act again.", "shadow-badge", "shadow") : ""}${entity.stun ? statusBadge("Stunned", "At most one missed action. Recovery after other rolls: 60%, then guaranteed. Afterwards, two own actions resist stun. Use an available ally while stunned. If nobody is ready, one missed turn advances enemy clocks.", "stun-badge", "stun", "1") : ""}${entity.stunWard ? statusBadge("Steady", `${entity.stunWard} own actions of stun protection. Further stuns may weaken shields or expose Vulnerable, but cannot stop another action.`,"stun-ward-badge","block") : ""}${entity.charge ? statusBadge("Execute", `${entity.charge}/${RANGER_AIM_CAP} patience. Bonus grows with the target’s missing health; consumed on the next damaging roll. Cleared after battle.`, "aim-badge", "bow", entity.charge) : ""}${entity.initiative && state.opening?.firstRoll ? statusBadge("Initiative", "Use this hero for the first roll: +25% to its effects. Lost if another hero acts first.", "initiative-badge", "beacon", "+25%") : ""}${entity.surprised && state.opening?.firstRoll ? statusBadge("Surprised", "Cannot make the first party roll. If everyone is surprised, enemies go first.", "surprised-badge", "question", "!") : ""}${entity.vulnerable ? statusBadge("Vulnerable", "The next damaging hit after this action deals 25% more HP damage.", "vulnerable-badge", "stun", "+25%") : ""}${entity.elite ? statusBadge(entity.boss ? "Boss" : "Elite", `${entity.affix || "Empowered"}. ${entity.affix === "Frenzied" ? `Attacks every ${entity.frequency} spin${entity.frequency === 1 ? "" : "s"}.` : entity.affix === "Venomous" ? "Damaging rolls also add poison." : `Begins battle with ${2 + state.depth} extra block.`}${entity.passive ? " " + (ENEMY_TRAITS[entity.passive.key]?.description || "") : ""}`, "elite-badge", "artefact") : ""}${isExploder(entity) ? statusBadge("Burning fuse", `${entity.fuseLeft ?? 2} enemy turns until ${exploderDamage(entity)} damage per hero. Team block and Unbroken page can protect you.`, "fuse-badge", "explosion") : ""}${entity.passive && !isExploder(entity) ? statusBadge(ENEMY_TRAITS[entity.passive.key]?.name || "Passive", ENEMY_TRAITS[entity.passive.key]?.description || "", "passive-badge passive-" + entity.passive.key, { carapace: "block", secondWind: "heal", summoner: "recruit", split: "flurry", blackout: "eraser", veil: "shadow" }[entity.passive.key] || "artefact") : ""}</span>${entity.stun ? `<span class="stun-portrait-overlay" data-tooltip="Stunned · use a ready ally, or lose one turn if alone.">${icon("stun")}</span>` : ""}${statusAtmosphereMarkup(entity)}`;
       }
       function syncStatusFX() {
+        syncBloodSeedCounters();
         state.party.forEach((h, i) => {
           const root = $("#hero-" + i);
           root?.classList.toggle("powered-up", alive(h) && !!h.stimulant);
@@ -20277,7 +20728,8 @@ async function crystalEncounter(i) {
         base.selfheal = 0;
         let flurryHits = [];
 
-        if (seals && h.job === "bloodbinder") Object.defineProperty(base,"bloodExchange",{value:true});
+        if (seals && h.job === "bloodbinder") Object.defineProperty(base,"bloodDetonation",{value:true});
+        if(h.job === "necromancer"){if(seals)base.harvest+=necromancerSealPower(h);if(base.harvest)base.magic+=harvestSpellPower(base.harvest);}
         if (seals) {
           await classAbilityFX(h);
           if(state!==planRun)return base;
@@ -20399,6 +20851,9 @@ async function crystalEncounter(i) {
           combatCallout(entityArt(h), "INITIATIVE · BONUS ROLL!", "gold");
         }
         if (seals && h.battleMemo) h.battleMemo.seals++;
+        // Spell classes use the same personal-power tuning as physical marks.
+        // Apply before capturing segments so the displayed and landed hit agree.
+        if (base.magic) base.magic = heroDamagePower(h, base.magic);
         const regular =
           (base.attack || 0) + (base.magic || 0) - flurryHits.reduce((n, x) => n + x, 0);
         Object.defineProperty(base, "hitSegments", {
@@ -20521,6 +20976,9 @@ async function crystalEncounter(i) {
             await classSignatureFX(h, selected);
             if(state!==rollRun)return;
           }
+          if(sums.bloodseed && selected.hp>0)applyBloodSeed(selected,sums.bloodseed,h,{symbols});
+          if(base.bloodDetonation){const bloom=await detonateBloodSeeds(h);parts.push(`<span class="healing">Blood Bloom · ${bloom.damage} damage · +${bloom.healing} shared HP</span>`);if(state!==rollRun)return;}
+          if(h.job==='necromancer' && sums.harvest)grantSouls(h,sums.harvest*NECROMANCER.harvestSouls,'HARVEST');
           if (sums.bloodFury > bloodFuryGained)
             gainFury(h, 0, sums.bloodFury - bloodFuryGained);
           if (sums.rage) {
@@ -20614,7 +21072,7 @@ async function crystalEncounter(i) {
               if(n)leechTargets.set(selected.id,{enemy:selected,damage:(previous?.damage||0)+n});
               combatCallout(enemyArtEl(selected),"EXECUTE · "+n,"gold");
             }
-            state.lastPlayerRoll.actualDamage = (state.lastPlayerRoll.bash?.actual || 0) + dealt;
+            state.lastPlayerRoll.actualDamage = (state.lastPlayerRoll.bash?.actual || 0) + (base.bloodDetonation ? state.lastBloodDetonation?.damage || 0 : 0) + dealt;
             parts.push(
               `<span class="damage combat-total">${icon(sums.magic ? "magic" : "sword")} <strong>−${dealt}</strong> HP${area && foes.length > 1 ? " across ALL enemies" : ""}${multiplier > 1 ? " · " + (base.attack && base.magic ? sums.attack + " physical + " + sums.magic + " spell" : (base.attack || 0) + (base.magic || 0) + " × " + multiplier + " = " + damage) : ""}</span>`,
             );
@@ -20624,8 +21082,7 @@ async function crystalEncounter(i) {
               parts.push(`<span class="healing">${icon("heal")}FURY · +${stolen} HP</span>`);
             await pause(380);
           }
-          if(base.bloodExchange && selected.hp>0) await bloodExchange(h,selected);
-          if(sums.bloodseed && selected.hp>0) applyBloodSeed(selected,sums.bloodseed,h);
+
           if (sums.poison) {
             for (const e of (h.job === "mage" &&
             base.resonanceType === "poison" &&
@@ -20703,7 +21160,10 @@ async function crystalEncounter(i) {
           finishOpeningRoll();
           advanceCrystalAura();
           rallyAfterRoll(h);
+          await settleBloodFeedback();
           await tickPoison();
+          await skeletonCombatAction(h);
+          await settleBloodFeedback();
           await showPendingCharacterMoments();
           // Burst or no burst, one ordinary action advances enemy clocks once.
           tickStimulant(h);
@@ -20748,9 +21208,8 @@ async function crystalEncounter(i) {
       }
       async function enemyTurn(e) {
         actingEnemy = e;
-        const stunWardAtStart = e.stunWard || 0, priorClot=e.clotted, bloodTurnRun=state;
-        await tickBleeding(e);
-        if(state!==bloodTurnRun||!alive(e)){actingEnemy=null;return;}
+        const stunWardAtStart = e.stunWard || 0;
+        e.necroGuardUsed=false;
         if (state.invulnerable && !state.invulnerable.enemyId)
           state.invulnerable.enemyId = e.id;
         try {
@@ -20830,11 +21289,13 @@ async function crystalEncounter(i) {
               let n = 0;
               const hits =
                 multiplier > 1 ? [base.attack, totals.attack - base.attack] : [totals.attack];
+              const guard=necromancerBodyguard(victim,e,{area:!!e.areaAttack,piercing:!!e.piercing});
+              if(guard)state.lastEnemyRoll.interceptorId=guard.id;
               state.lastEnemyRoll.hits = [];
               for (const power of hits) {
                 if (!alive(victim) || power <= 0) break;
                 if(!heavyAttack || state.lastEnemyRoll.hits.length)lunge(enemyArtEl(e), true);
-                const actual = damageHero(
+                const actual = guard ? damageSkeleton(victim,guard,power,e,{type:raw.magic?"magic":"attack",critical:multiplier>1}) : damageHero(
                   target,
                   power,
                   `${e.name}${multiplier > 1 ? " (×" + multiplier + " critical)" : ""}`,
@@ -20852,7 +21313,7 @@ async function crystalEncounter(i) {
                   await feedbackPause(skip ? 95 : Math.max(100, 190 / pace()));
               }
               state.lastEnemyRoll.actualDamage = n;
-              notes.push("<strong>−" + n + " HP</strong> to " + victim.name);
+              notes.push("<strong>−" + n + " HP</strong> to " + (guard ? "Skeleton · BODYGUARD" : victim.name));
               await pause(380);
             }
             if (totals.heal) {
@@ -20890,7 +21351,6 @@ async function crystalEncounter(i) {
           advanceStunWard(e, stunWardAtStart);
           setEnemyPhase(e, null);
         } finally {
-          finishClottedTurn(e,priorClot);
           if (state.invulnerable?.enemyId === e.id) state.invulnerable = null;
           renderBlock();
           actingEnemy = null;
@@ -20996,6 +21456,7 @@ async function crystalEncounter(i) {
       }
 
       async function victory(e) {
+        await settleBloodFeedback();
         e = battleEnemies().find((foe) => foe.boss) || e;
         sayEnemy("defeat");
         burst($("#enemy-art"), "paper", 46);
@@ -21982,6 +22443,7 @@ const tierName = (tier) => ["", "I", "II", "III", "IV"][tier];
 const maxFaceTier = (type) =>
   [
     "bloodseed",
+    "harvest",
     "attack",
     "heavy",
     "magic",
@@ -22000,7 +22462,8 @@ const maxFaceTier = (type) =>
       ? 1
       : 3;
 const CLASS_PRICES = {
-  bloodbinder: {attack:1.2,magic:1.1,heal:1,bloodseed:1.25},
+  bloodbinder: {magic:1.1,heal:1,bloodseed:1.25,rally:1},
+  necromancer: {magic:1,poison:1,harvest:1.25},
   berserker: { heavy: 1.75, attack: 0.9, heal: 1, selfharm: 1 },
   ranger: {
     attack: 1,
@@ -22056,6 +22519,7 @@ const CLASS_PRICES = {
 };
 const EDITABLE_TYPES = Object.freeze([
   "bloodseed",
+  "harvest",
   "attack",
   "heavy",
   "magic",
@@ -22072,6 +22536,7 @@ const EDITABLE_TYPES = Object.freeze([
 ]);
 const FACE_LABELS = Object.freeze({
   bloodseed: "Blood Seed",
+  harvest: "Harvest",
   attack: "Physical attack",
   heavy: "Heavy attack",
   magic: "Spell damage",
@@ -22088,16 +22553,16 @@ const FACE_LABELS = Object.freeze({
   mystery: "Mystery ?",
 });
 const primaryFace = (h) =>
-  h.job === "mage"
+  ["mage","bloodbinder"].includes(h.job)
     ? h.specialism === "defence"
       ? "heal"
       : "magic"
-    : h.job === "fighter" && h.specialism === "defence"
+    : h.job === "necromancer" ? "magic" : h.job === "fighter" && h.specialism === "defence"
       ? "block"
       : "attack";
 function editableTypes(h) {
   return h.job === "jester"
-    ? EDITABLE_TYPES.filter((t) => !["stimulant", "selfharm", "heavy", "bloodseed"].includes(t))
+    ? EDITABLE_TYPES.filter((t) => !["stimulant", "selfharm", "heavy", "bloodseed", "harvest"].includes(t))
     : [
         ...(CLASS_FACE_TYPES[h.job] ||
           EDITABLE_TYPES.filter((t) => !["selfharm", "trick"].includes(t))),
@@ -22118,7 +22583,8 @@ function faceDescription(face, h) {
   const area = tier >= 3 ? " every enemy" : " the selected enemy";
   return (
     {
-      bloodseed: `Plant ${tier} Seed power on the selected enemy. First extend Bleeding to 3 turns, then raise its damage, capped at ${bloodProfile(h).cap} at this level. Each extra damage costs ${bloodOfferingBands()}; cannot kill you. Refreshing duration is free. Drains share up to ${Math.round(bloodProfile(h).healing*100)}% of damage as team healing. After 3 ticks or expiry, Clotted cuts healing by ${Math.round(bloodProfile(h).clot*100)}%.`,
+      bloodseed: `Plant ${tier} Seeds on the selected enemy. Each HP of damage from any source consumes one Seed and shares one HP of healing. Stacks never expire or cap. Each rolled Seed face costs ${bloodSeedCost(tier)} caster HP before criticals; cannot kill you. Blood Bloom detonates every Seed for 1 damage and 1 shared healing each.`,
+      harvest: `Deal ${harvestSpellPower(tier)} spell power and gather ${tier*NECROMANCER.harvestSouls} Souls before criticals. Damage also gathers Souls. A full Soul bar summons a Skeleton; with two alive, it restores 10% maximum HP to the team.`,
       attack: `Deal ${markDamage("attack",tier)} physical damage to${area}. Cheaper to improve than a heavy attack.`,
       heavy: `Deal ${markDamage("heavy",tier)} physical damage to${area}. Tank and Berserker only; costs more personal points to inscribe and upgrade.`,
       magic: `Deal ${ATTACK_POWER[tier]} spell damage to${area}, with a chance to leave the target Vulnerable.`,
@@ -22401,7 +22867,8 @@ function editFace(data, operation, destination = null) {
 
 function workshopAbilitySummary(h) {
   return {
-    bloodbinder: "Drain an HP percentage gap to heal an ally, or strike using the healthiest ally’s advantage. Boss loss capped at 10%; cannot crit.",
+    necromancer: "Gather Souls through Harvest and damage. Raise two Skeletons, then heal the team with full Soul bars.",
+    bloodbinder: "Burst every Seed on all enemies: 1 damage and 1 shared healing per Seed. Plant new Seeds before the burst.",
     fighter: `Gain ${tankSealBlock(h)} block; spend up to ${bashLimit(h)} on a bash (double against enemy block).`,
     rogue: "Roll three extra blade attacks.",
     mage: "Echo the rolled magic, healing, shield or poison marks across the whole team.",
@@ -22469,7 +22936,8 @@ function workshopFaceSummary(face, h) {
   const n = face.tier || 1;
   return (
     {
-      bloodseed: `${n} Seed power. Drain cap ${bloodProfile(h).cap}. Strengthening costs rising HP; duration refresh is free. Clotted: −${Math.round(bloodProfile(h).clot*100)}% healing.`,
+      bloodseed: `${n} Seeds; ${bloodSeedCost(n)} HP cost. Damage consumes Seeds for shared healing. No cap or expiry.`,
+      harvest: `${harvestSpellPower(n)} spell power + ${n*NECROMANCER.harvestSouls} Souls. Full bar raises a Skeleton or heals your team.`,
       heavy: `${markDamage("heavy",n)} physical damage${n >= 3 ? " to every enemy" : " to the selected enemy"}. Stronger, more costly; Tank and Berserker only.`,
       attack: `${n} physical damage${n >= 3 ? " to every enemy" : " to the selected enemy"}.`,
       magic: `${n} spell damage${n >= 3 ? " to every enemy" : " to the selected enemy"}; may expose Vulnerable.`,
@@ -22508,6 +22976,7 @@ function iconCriticalOddsMarkup(h) {
 }
 const WORKSHOP_SHORT_LABELS = Object.freeze({
   bloodseed: "Blood Seed",
+  harvest: "Harvest",
   attack: "Physical",
   heavy: "Heavy",
   magic: "Spell",
@@ -22730,7 +23199,8 @@ const FIELD_GUIDE = Object.freeze([
     ['mage','Mage — flexible support.','A flexible spellcaster. Build for damage, healing, shields, or a mix.'],
     ['ranger','Ranger — finishing attacks.','Builds power between attacks, then fires strong shots at wounded foes.'],
     ['berserker','Berserker — risk and recovery.','Grows stronger when hurt. Can drain health by attacking, but needs careful healing.'],
-    ['bloodbinder','Bloodbinder — drain and sustain.','Thrives in long fights: drains heal allies and hinder enemy healing. Stronger Seeds cost HP; mix them with heals and attacks.'],
+    ['bloodbinder','Bloodbinder — shared healing.','Spends HP to plant Seeds. Hits or Blood Bloom burst them to heal allies.'],
+    ['necromancer','Necromancer — undead companions.','Souls raise two Skeletons to attack and guard. Only Souls and deaths heal this starting-only hero.'],
     ['jester','Jester — unpredictable bursts.','Versatile and unpredictable, with sudden bursts of extra effects.'],
   ],true)},
   {id:'biomes',title:'Recognise the terrain',body:guideRows([
@@ -23296,6 +23766,10 @@ function help(topic = "explore") {
             jester: "A little luck, a little trouble. Shall we?",
             bloodbinder: "Let me tend your wounds. They can pay the price.",
           }[job];
+        if(necromancerOwner()){
+          log(`${h.name} recognises the forbidden magic and draws a weapon.`);
+          beginEncounter(false,{count:1,adventurer:h});render();await encounterEntrance();return;
+        }
         recruitOffer = h;
         showSpotlight(
           "A wandering adventurer",
@@ -23501,6 +23975,7 @@ function help(topic = "explore") {
         }
       }
       const HERO_LINES = {
+        necromancer: {attack:["Rise, my friends!","Your soul is not finished."],hurt:["Not yet my time!","Guard your master!"],panic:["Hold the line!"],relief:["A soul returned."],idle:["The bones remember."],block:["Faithful even now."]},
         bloodbinder: {attack:["Your strength, our salvation.","A little blood for a little hope."],hurt:["I can mend this.","Hold the binding!"],panic:["Not my last drop!"],relief:["The pulse returns."],idle:["Let me see those wounds.","Every heartbeat matters."],block:["A moment to breathe."]},
         ranger: {
           attack: ["Hold. Loose!", "A clear shot."],
@@ -24263,6 +24738,7 @@ function musicVoices(scene, index) {
         smudger:["sawtooth",82,[1,.6,1.4,.75,1.8],.75,.14],
         zombie:["triangle",94,[1,.7,.55,1.1],.8,.18],
         bloodbinder: ["sine", 245, [1,.75,1.5,.8],.65,.04],
+        necromancer: ["sine", 155, [1,.5,1.25,.75],.8,.06],
         jester: ["triangle", 385, [1,1.25,.8,1.5,1.1],.55,.02],
         berserker: ["sawtooth", 115, [1, 1.6, .7, 1.2], .66, .12],
         healer: ["sine", 440, [1, 1.25, 1.5, 1.1], 0.58, 0],
@@ -25651,6 +26127,7 @@ function stayedInsideControl(event, control) {
         record.corpseId = leaveCorpse(h.job, h.name);
         log(`${h.name} falls on floor ${state.depth}: ${cause}.`);
         save();
+        necromancerFallen(h);
       }
       function elapsedText(ms) {
         let seconds = Math.max(0, Math.floor(ms / 1000)),
@@ -25804,6 +26281,7 @@ function stayedInsideControl(event, control) {
                 magic: "Spell damage",
                 poison: "Poison potency",
                 bloodseed: "Blood Seed power",
+                harvest: "Harvest power",
                 stimulant: "Self stimulant power",
                 rally: "Ally stimulant power",
                 trick: "Anticipation",
@@ -26208,8 +26686,7 @@ function clearBattleStatuses() {
     entity.surprised = false;
     entity.stunAge = 0;
     entity.blackout = [];
-    entity.bleeding = null;
-    entity.clotted = null;
+    entity.bloodSeeds = null;
     entity.crystalLocks = [];
     entity.reelGifts = [];
   }
@@ -26290,6 +26767,7 @@ async function tickPoison() {
     if (!poison.turns || entity.hp <= 0) entity.poison = null;
     await pause(100);
   }
+  await settleBloodFeedback();
   await processDeaths();
   syncStatusFX();
 }
@@ -29933,6 +30411,7 @@ function autoBuildFor(h) {
         : ["venom", "assault", "enchanter"],
     ranger: ["assault", "balanced", "enchanter"],
     berserker: ["assault", "balanced"],
+    necromancer: ["balanced", "venom", "assault"],
     bloodbinder: h.specialism === "defence" ? ["mender", "balanced"] : ["balanced", "assault"],
     jester: ["trickster", "balanced", "enchanter"],
   }[h.job] || ["balanced"];
@@ -29961,7 +30440,8 @@ function autoBuildUtility(h) {
     selfharm: -0.3,
     fury: 0.2,
   };
-  if(h.job==="bloodbinder")weights.bloodseed=0.8;
+  if(h.job==="bloodbinder"){weights.bloodseed=1.5;weights.rally=1;}
+  if(h.job==="necromancer")weights.harvest=h.autoArchetype==="balanced"?2.4:h.autoArchetype==="venom"?1.2:.8;
   weights.stimulant = Math.min(0.65, weights.stimulant || 0);
   const otherDamage = partyDamagePartners(h);
   if (h.job === "mage" && otherDamage >= 2) {
@@ -30033,14 +30513,21 @@ function autoBuildUtility(h) {
   }
   if(h.job==='bloodbinder'){
     // Keep a sustainable drain, direct healing and a way to finish wounded foes.
-    // A capped, already-established wound does not reward filling every face.
+    // Unused stacks need direct hits or Bloom before they become recovery.
     const seeds=faceShare(h.reels.flat(),['bloodseed']),heals=faceShare(h.reels.flat(),['heal']);
     utility+=Math.min(.2,seeds)*12;
     utility-=Math.max(0,.15-seeds)*100;
-    utility-=Math.max(0,seeds-.35)*90;
+    utility-=Math.max(0,seeds-.42)*75;
     utility-=Math.max(0,.18-heals)*(solo?35:60);
     const attacks=h.reels.reduce((n,r)=>n+faceShare(r,DAMAGE_TYPES),0)/3;
     utility-=Math.max(0,(solo?.25:.18)-attacks)*80;
+  }
+  if(h.job==='necromancer'){
+    const preferred={balanced:'harvest',venom:'poison',assault:'magic'}[h.autoArchetype]||'magic';
+    utility-=Math.max(0,.32-faceShare(h.reels.flat(),[preferred]))*90;
+    const harvest=faceShare(h.reels.flat(),['harvest']);
+    utility-=Math.max(0,.12-harvest)*80;
+    utility-=Math.max(0,harvest-.5)*60;
   }
   const offence = fx.damage + fx.poison * 1.2,
     minDamage = solo
@@ -30146,7 +30633,7 @@ function repairOverbuffBuild(h) {
             : "block"
           : h.job === "mage"
             ? "magic"
-            : "attack";
+            : editableTypes(h).includes("attack") ? "attack" : "magic";
     let cost = faceEditCost(h, r, j, "swap", type);
     while (
       cost > h.points &&
@@ -30176,7 +30663,7 @@ function repairSoloBuild(h) {
         !OFFENSIVE_TYPES.includes(f.type),
     );
     if (j < 0) continue;
-    const type = h.job === "mage" ? "magic" : "attack";
+    const type = ["mage","bloodbinder","necromancer"].includes(h.job) ? "magic" : "attack";
     let cost = faceEditCost(h, r, j, "swap", type);
     while (cost > h.points) {
       const candidate = h.reels
@@ -30717,14 +31204,10 @@ async function advanceEnemyClocks(foes = battleEnemies().slice()) {
     syncEnemy(e);
     if (e.countdown <= 0) {
       if (e.stun) {
-        const priorClot=e.clotted;
-        await tickBleeding(e);
-        if(!alive(e))continue;
         tryBreakStun(e, { missedAction: true });
         log(`${e.name} misses its turn to stun.`);
         combatCallout(enemyArtEl(e), "STUNNED · TURN LOST", "recovery");
         advanceRangerEnemyTurn();
-        finishClottedTurn(e,priorClot);
         await feedbackPause(230);
       } else await enemyTurn(e);
       if (!state.over) {
@@ -30756,6 +31239,8 @@ async function missStunnedTurn(h, foes) {
   tickStimulant(h);
   finishOpeningRoll();
   await tickPoison();
+  await skeletonCombatAction(h);
+  await settleBloodFeedback();
   if (checkDefeat()) return;
   if (!livingEnemies().length) {
     await victory(foes[0]);
@@ -31545,6 +32030,8 @@ async function tunnelTransit(source, destination) {
   layer.remove();
 }
 const STARTER_SUMMARIES = Object.freeze({
+  bloodbinder: "Plant Seeds, turn enemy wounds into shared healing, and detonate them with Blood Bloom.",
+  necromancer: "Gather Souls to raise two Skeletons. Enemy deaths and Soul surges heal you; ordinary healing cannot.",
   fighter: "Physical hits, shields and stun. Shield Bash spends block to strike.",
   rogue: "Quick blades, poison and tricks. Flurry throws three attacks.",
   mage: "Shape magic, healing, wards and poison. Resonance echoes your marks.",
@@ -32841,9 +33328,9 @@ function combatNumber(el, value, type) {
       type === "block"
         ? amount + " BLOCKED"
         : (type === "heal" ? "+" : "−") + amount;
-    if (["bleeding","bloodexchange"].includes(type)) {
+    if (["bleeding","bloodexchange","bloodseed"].includes(type)) {
       node.classList.add("bleeding");
-      const label=document.createElement("small");label.textContent=type==="bloodexchange"?"BLOOD EXCHANGE":"BLEEDING";node.append(label);
+      const label=document.createElement("small");label.textContent=type==="bloodseed"?"BLOOD BLOOM":type==="bloodexchange"?"BLOOD EXCHANGE":"BLEEDING";node.append(label);
     }
     if (type === "poison") {
       const label = document.createElement("small");
@@ -34176,7 +34663,7 @@ function revealCriticalPayoff(region, details, multiplier) {
       // Expected effects use the actual edited, weighted wheels, not class names.
       // These are heuristics only: all actions still use normal rules and RNG.
       function expectedHeroEffects(h) {
-        const exchangeForecast={damage:0,heal:0};
+        const bloodBloomForecast={damage:0,heal:0};
         const out = {
           damage: 0,
           heal: 0,
@@ -34185,6 +34672,7 @@ function revealCriticalPayoff(region, details, multiplier) {
           stun: 0,
           poison: 0,
           bloodseed: 0,
+          harvest: 0,
           stimulant: 0,
           rally: 0,
           trick: 0,
@@ -34206,6 +34694,7 @@ function revealCriticalPayoff(region, details, multiplier) {
               key = t + ":" + face.tier;
             probabilities[key] = (probabilities[key] || 0) + p;
             if (t === "selfheal") out.selfHeal += POWER.selfheal * face.tier * p;
+            else if (t === "harvest"){out.harvest+=face.tier*p;out.damage+=harvestSpellPower(face.tier)*p;}
             else if (DAMAGE_TYPES.includes(t)) out.damage += markDamage(t,face.tier) * p;
             else if (t === "class") {
               if (h.job === "fighter") {
@@ -34225,7 +34714,8 @@ function revealCriticalPayoff(region, details, multiplier) {
                 out.selfHeal += bloodrushHealing(h) * p;
               }
               if (h.job === "ranger") out.damage += rangerSealPower(h) * p;
-              if(h.job==="bloodbinder"){const plan=bloodExchangePlan(h);exchangeForecast.damage+=plan.loss*p;exchangeForecast.heal+=plan.healing*p;}
+              if(h.job==="bloodbinder"){const seeds=bloodDetonationPlan().reduce((n,x)=>n+x.seeds,0);bloodBloomForecast.damage+=bloodDetonationPlan().reduce((n,x)=>n+Math.min(x.enemy.hp,x.seeds),0)*p;bloodBloomForecast.heal+=seeds*p;}
+              if(h.job==="necromancer"){out.harvest+=necromancerSealPower(h)*p;out.damage+=harvestSpellPower(necromancerSealPower(h))*p;}
             } else if (Object.hasOwn(out, t)) out[t] += POWER[t] * face.tier * p;
           }
           return probabilities;
@@ -34336,7 +34826,8 @@ function revealCriticalPayoff(region, details, multiplier) {
           const seed=bloodSeedForecast(h,out.bloodseed*(1+out.crit*(meanCritical(h)-1)));
           out.damage+=seed.damage;out.heal+=seed.heal;out.selfharm+=seed.cost;out.antiheal=seed.antiheal;
         }
-        out.damage+=exchangeForecast.damage;out.heal+=exchangeForecast.heal;
+        out.damage+=bloodBloomForecast.damage;out.heal+=bloodBloomForecast.heal;
+        if(h.job==="necromancer")out.damage+=(h.skeletons||[]).length*skeletonAttack(h);
         return out;
       }
       function autoHealth() {
@@ -34355,6 +34846,7 @@ function revealCriticalPayoff(region, details, multiplier) {
         return { party, weakest, missing, maximum };
       }
       function autoNeedsWell() {
+        if(necromancerOwner())return false;
         const { weakest, missing, maximum } = autoHealth();
         return (
           !!weakest &&
@@ -34524,6 +35016,7 @@ function revealCriticalPayoff(region, details, multiplier) {
       function autoSupplyValue(type) {
         const item = ITEM_DEFS[type];
         if (!item) return 0;
+        if(necromancerOwner()&&["potion","bandage","ration","salve"].includes(item.family||type))return 0;
         if (item.equipment)
           return autoGearTarget(type) >= 0
             ? 18 + (item.attack || item.magic || 1)
@@ -34570,6 +35063,7 @@ function revealCriticalPayoff(region, details, multiplier) {
           const item = ITEM_DEFS[type];
           if (!item) continue;
           const family = item.family || type;
+          if(necromancerOwner()&&["potion","bandage","ration","salve"].includes(family))continue;
           let target = weakest.i,
             score = !battle && family === "horn" && health.party.length < 3 ? 25 : 0;
           if (item.equipment) {
@@ -34714,7 +35208,7 @@ function revealCriticalPayoff(region, details, multiplier) {
           if (!count || state.gold < prices[key]) continue;
           let value = 0;
           if (key === "heal")
-            value =
+            value = necromancerOwner() ? 0 :
               autoNeedsWell() || autoReadiness().wounded ? health.missing * 2 : 0;
           else if (key === "reveal") value = state.exitFound ? 0 : 18;
           else if (ITEM_DEFS[key]) {
@@ -34794,7 +35288,7 @@ function revealCriticalPayoff(region, details, multiplier) {
       // shortcuts; their hidden walls/events must not influence the choice.
       function autoLowRiskEncounter() {
         const health = autoHealth();
-        if (!health.weakest || health.missing > health.maximum * 0.25) return false;
+        if (!health.weakest || (!necromancerOwner() && health.missing > health.maximum * 0.25)) return false;
         const offence = health.party.reduce(
           (n, { h }) => Math.max(n, expectedHeroEffects(h).damage),
           0,
@@ -34803,7 +35297,8 @@ function revealCriticalPayoff(region, details, multiplier) {
         const foe = enemyBalance(state.depth),
           rolls = Math.ceil(foe.maxHp / offence),
           risk = Math.floor(rolls / foe.frequency) * foe.damage;
-        return health.weakest.h.hp > risk * 1.4 + 4;
+        const master=necromancerOwner(),guard=master?(master.skeletons||[]).reduce((n,s)=>n+s.hp,0)*.45:0;
+        return health.weakest.h.hp + guard > risk * 1.4 + 4;
       }
       function autoplayGoal() {
         const leavingWell = state.floorBossDefeated ? autoPendingWell() : null;
@@ -34851,7 +35346,7 @@ function revealCriticalPayoff(region, details, multiplier) {
               priority = 105;
             else if (
               cell.event === "enemy" &&
-              !readiness.wounded &&
+              (!readiness.wounded || necromancerOwner() && autoLowRiskEncounter()) &&
               !state.floorBossDefeated &&
               (readiness.underlevelled || autoLowRiskEncounter())
             )
@@ -34964,7 +35459,7 @@ function revealCriticalPayoff(region, details, multiplier) {
             );
           } else if (kind === "biome-choice") {
             const kind=$("#stage-card").dataset.biomeKind, health=autoHealth();
-            const injured=health.missing>health.maximum*0.12;
+            const injured=!necromancerOwner() && health.missing>health.maximum*0.12;
             button=kind==="nest" ? $("#nest-egg") || $("#nest-loot") : kind==="fairy" ? $(injured?"#biome-heal":"#biome-loot") : kind==="fruit"&&!injured || kind==="shadowduel"&&health.missing>health.maximum*0.2 ? $("#biome-leave") : $("#biome-use");
             button ||= $("#biome-leave");
           } else if (kind === "environment-choice") {
@@ -35416,8 +35911,8 @@ function revealCriticalPayoff(region, details, multiplier) {
           save();
         }
         campInitial = initial;
-        const available = heroJobs(expeditionRules()),
-          startingJobs = ["fighter", "rogue", "mage", "ranger", "berserker", "jester", "bloodbinder"];
+        const available = [...heroJobs(expeditionRules()), "necromancer"],
+          startingJobs = ["fighter", "rogue", "mage", "ranger", "berserker", "jester", "bloodbinder", "necromancer"];
         openModal(
           initial ? "Who opens the notebook?" : "Turn to a fresh page?",
           `<div class="settings-tabs" role="tablist" aria-label="Starting menu"><button role="tab" aria-selected="true">Adventurer</button><button role="tab" aria-selected="false" id="camp-open">Upgrades · ${campProfile().gold} gold</button></div><p>${initial ? "Choose the first name in your story." : "Choose a new adventurer. This replaces the current expedition."}</p><div class="starter-build"><label>Temperament<select id="starter-specialism"><option value="offence" ${starterBuild.specialism === "offence" ? "selected" : ""}>Aggressive</option><option value="defence" ${starterBuild.specialism === "defence" ? "selected" : ""}>Defensive</option></select></label></div><div class="starter-grid ${startingJobs.length > 4 ? "five-classes" : ""}" style="--starter-count:${startingJobs.length}">${startingJobs
@@ -35432,6 +35927,7 @@ function revealCriticalPayoff(region, details, multiplier) {
                   berserker: "Bram",
                   jester: "Quill",
                 bloodbinder: "Vesper",
+                necromancer: "Silas",
                 }[job],
                 job,
                 null,

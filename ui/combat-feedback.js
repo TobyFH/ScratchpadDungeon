@@ -236,9 +236,9 @@ function combatNumber(el, value, type) {
       type === "block"
         ? amount + " BLOCKED"
         : (type === "heal" ? "+" : "−") + amount;
-    if (["bleeding","bloodexchange"].includes(type)) {
+    if (["bleeding","bloodexchange","bloodseed"].includes(type)) {
       node.classList.add("bleeding");
-      const label=document.createElement("small");label.textContent=type==="bloodexchange"?"BLOOD EXCHANGE":"BLEEDING";node.append(label);
+      const label=document.createElement("small");label.textContent=type==="bloodseed"?"BLOOD BLOOM":type==="bloodexchange"?"BLOOD EXCHANGE":"BLEEDING";node.append(label);
     }
     if (type === "poison") {
       const label = document.createElement("small");

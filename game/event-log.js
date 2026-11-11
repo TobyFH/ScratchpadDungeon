@@ -23,10 +23,13 @@ const WILDCARD_LOG_EVENTS = Object.freeze([
   { name: "PICK A CARD!", description: "Deals spell damage to one enemy and heals a random living ally." },
 ]);
 const EVENT_LOG_TERMS = Object.freeze({
-  "Blood Seed": "First extends Bleeding to three enemy turns. Extra power strengthens its drain, spending increasing caster HP without killing them. Duration refresh is free. Strength is capped by level; excess power is wasted.",
-  "Blood Exchange": "Transfers part of the HP percentage gap to an injured ally, or strikes using the healthiest ally's advantage. Strength improves with level. Boss HP loss is capped at 10%; criticals never multiply it.",
-  "Bleeding": "Deals damage at the start of the enemy's whole turn and shares healing among injured allies. Level improves the drain. Expiry or three ticks applies Clotted, even if Seeds keep refreshing Bleeding.",
-  "Clotted": "Reduces enemy healing by 35–65%, improving with the Bloodbinder's level, for up to three enemy turns. Maintaining Bleeding can refresh it.",
+  "Blood Seed": "Stacks on one enemy without a cap or expiry. Each actual HP of damage consumes one Seed, providing one shared HP of healing. Planting costs the caster a little HP but cannot kill them.",
+  "Blood Seeds": "Stacks on one enemy. Damage consumes one Seed per actual HP lost and shares that amount of healing across injured allies.",
+  "Blood Bloom": "Detonates every Seed on all enemies. Each Seed deals one damage and provides one shared healing; excess damage cannot multiply the healing again.",
+  "Soul Harvest": "Enemy deaths restore 12% of that enemy's maximum HP to the Necromancer, capped at half the Necromancer's maximum HP. Ordinary healing is ineffective.",
+  "Soul Call": "The class mark gathers Harvest power. A full Soul bar raises a Skeleton in an empty companion position. Skeletons attack automatically after your rolls and persist between battles; with two alive, filling the bar heals the team instead.",
+  "Soul Surge": "With two Skeletons alive, a full Soul bar restores 10% maximum HP to the Necromancer and each Skeleton, then empties.",
+  "Bodyguard": "Once per enemy turn, the healthiest living Skeleton intercepts the first eligible single-target attack on its Necromancer. Further attacks, area damage and piercing attacks can hit the master.",
 
   "Cave room": "Revealing one room tile uncovers the connected room and its discoveries. Revealed discoveries are not activated until visited.",
   "Gold": "Carried gold buys shop supplies. Bank it after clearing a floor to keep it between expeditions.",

@@ -51,7 +51,7 @@ async function game(t) {
 test("temperament is only selectable at the start, Mages have no role stat or selector, and old edited builds migrate intact", async (t) => {
   const p = await game(t);
   await p.evaluate(() => chooseStartingClass());
-  assert.equal(await p.locator("[data-start-job]").count(), 3);
+  assert.equal(await p.locator("[data-start-job]").count(), 4);
   assert.equal(await p.locator("#starter-role").count(), 0);
   await p.locator("#starter-specialism").selectOption("defence");
   await p.locator('[data-start-job="mage"]').click();
@@ -86,7 +86,7 @@ test("temperament is only selectable at the start, Mages have no role stat or se
   });
   assert.deepEqual(result, {
     loaded: true,
-    version: 23,
+    version: 24,
     hp: 11,
     points: 29,
     tier: 4,

@@ -61,7 +61,7 @@ const fountainRollRate = (depth = state.depth) =>
   Math.min(9, Math.max(0, depth - 1)) * 0.018 +
   lateWellSteps(depth) * SUPPORT_SCALING.wellRollPerFloor;
 function heroDamagePower(h, n) {
-  return n;
+  return h.job === "necromancer" && n > 0 ? Math.max(1,Math.floor(n*NECROMANCER.personalDamage)) : n;
 }
 function heroHealingPower(n) {
   return n;
@@ -222,6 +222,7 @@ function normaliseHeroBuild(h) {
   delete h.mageRole;
   normaliseTacticalStatuses(h);
   normaliseBloodStatuses(h);
+  normaliseNecromancer(h);
   h.momentReceipts =
     h.momentReceipts &&
     typeof h.momentReceipts === "object" &&
@@ -253,7 +254,14 @@ function normaliseHeroBuild(h) {
   h.charge = Math.min(RANGER_AIM_CAP, Math.max(0, h.charge || 0));
   h.fury = Math.min(furyCapacity(h), Math.max(0, h.fury || 0));
   if (!h.reels) return;
-  for(const face of h.reels.flat())if(face.type==="bloodseed"&&h.job!=="bloodbinder"){face.type="blank";face.tier=1;}
+  for(const face of [...h.reels.flat(),...(h.last||[])]){
+    if(face.type==='harvest'&&h.job!=='necromancer'){face.type='blank';face.tier=1;}
+    if(h.job==='bloodbinder'&&face.type==='attack')face.type='magic';
+    if(h.job==='bloodbinder'&&face.type==='stimulant')face.type='rally';
+    if(h.job==='bloodbinder'&&face.type==='selfheal')face.type='heal';
+    if(['bloodbinder','necromancer'].includes(h.job)&&!['class',...CLASS_FACE_TYPES[h.job]].includes(face.type)){face.type='blank';face.tier=1;}
+    if(face.type==='bloodseed'&&h.job!=='bloodbinder'){face.type='blank';face.tier=1;}
+  }
   if (["fighter", "rogue", "ranger", "berserker"].includes(h.job)) {
     h.reels.forEach((reel) =>
       reel.forEach((f) => {
@@ -352,7 +360,8 @@ function classAbilityName(hero) {
       ranger: "EXECUTE",
       berserker: "BLOODRUSH",
       jester: "WILDCARD",
-      bloodbinder: "BLOOD EXCHANGE",
+      bloodbinder: "BLOOD BLOOM",
+      necromancer: "SOUL CALL",
     }[job] || "CLASS"
   );
 }
@@ -360,7 +369,8 @@ function classAbilityDescription(hero) {
   const job = typeof hero === "string" ? hero : hero?.job;
   return (
     {
-      bloodbinder: `Blood Exchange: transfer ${Math.round(bloodProfile(typeof hero === 'object' ? hero : null).exchange*100)}% of the HP percentage gap from a healthier enemy to your weakest ally. Otherwise strike using the gap to your healthiest ally. Boss loss capped at 10% of max HP; healing follows the actual percentage lost. Never crits or cleaves.`,
+      bloodbinder: "Blood Bloom: detonate all Blood Seeds on every enemy. Each Seed deals 1 damage and provides 1 shared healing, even on overkill. Never multiplies a Seed twice.",
+      necromancer: `Soul Call: ${necromancerSealPower(typeof hero==='object'?hero:{level:1})} Harvest power. Spell damage and Harvest gather Souls to summon two automatic Skeletons. With both present, a full bar heals the team. Ordinary healing cannot restore you; enemy deaths can.`,
       jester:
         "Wildcard: tricks ink enemy reels, gild allied reels, reverse a foe’s roll, or scatter damage and healing. They usually favour your party.",
       fighter: `Shield Bash: gain ${tankSealBlock(typeof hero === "object" ? hero : null)} team block, then spend up to ${bashLimit(typeof hero === "object" ? hero : null)} block on a bash. Block gained increases every three levels. The bash deals double damage to enemy shields.`,
@@ -383,7 +393,8 @@ function temperamentEffects(h, base) {
   return base;
 }
 const CLASS_FACE_TYPES = Object.freeze({
-  bloodbinder: ["attack", "magic", "heal", "bloodseed", "blank"],
+  bloodbinder: ["heal", "bloodseed", "magic", "rally", "blank"],
+  necromancer: ["magic", "poison", "harvest", "blank"],
   fighter: ["attack", "heavy", "block", "selfheal", "stun", "stimulant", "blank"],
   rogue: ["attack", "poison", "stun", "stimulant", "selfheal", "blank"],
   mage: [
@@ -402,7 +413,8 @@ const CLASS_FACE_TYPES = Object.freeze({
 function startingFaces(job, temperament) {
   const defensive = temperament === "defence";
   return {
-    bloodbinder: defensive ? [["heal",1],["heal",1],["bloodseed",1],["magic",1],["blank",1]] : [["attack",1],["magic",1],["bloodseed",1],["heal",1],["blank",1]],
+    bloodbinder: defensive ? [["heal",1],["heal",1],["bloodseed",1],["magic",1],["rally",1],["blank",1]] : [["magic",1],["magic",1],["bloodseed",1],["heal",1],["rally",1],["blank",1]],
+    necromancer: defensive ? [["harvest",1],["harvest",1],["magic",1],["poison",1],["blank",1]] : [["magic",1],["magic",1],["harvest",1],["poison",1],["blank",1]],
     fighter: defensive
       ? [
           ["attack", 1],
@@ -584,10 +596,12 @@ function makeHero(
   );
   normaliseTacticalStatuses(h);
   normaliseBloodStatuses(h);
+  normaliseNecromancer(h);
   return h;
 }
 // Shared by actual recovery and the fountain's uncapped offered totals.
 function offeredHealing(h, amount) {
+  if(!canReceiveOrdinaryHealing(h))return 0;
   return amount > 0
     ? Math.max(
         1,

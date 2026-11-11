@@ -65,7 +65,7 @@ async function game(t, { width = 1920, height = 1080 } = {}) {
   return page;
 }
 
-test("five unlocked starting classes, fixed temperaments and naturally built Mages; old healers preserve their build and gain one locked middle seal", async (t) => {
+test("unlocked starting classes include the solo Necromancer, with fixed temperaments and preserved legacy Mage builds", async (t) => {
   const p = await game(t);
   const result = await p.evaluate(() => {
     const profile = emptyProfile();
@@ -107,6 +107,7 @@ test("five unlocked starting classes, fixed temperaments and naturally built Mag
     "mage",
     "ranger",
     "berserker",
+    "necromancer",
   ]);
   assert.equal(result.loaded, true);
   assert.equal(result.job, "mage");

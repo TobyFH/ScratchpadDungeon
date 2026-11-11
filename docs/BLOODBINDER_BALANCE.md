@@ -1,5 +1,9 @@
 # Bloodbinder: establish a wound, then sustain the party
 
+> Historical measurements for the retired Bleeding/Clotted/Exchange design.
+> They do not describe the current class. See [SOUL_CLASSES.md](SOUL_CLASSES.md)
+> for save-24 reservoirs, Blood Bloom, costs and current verification.
+
 This pass follows the player's chosen identity: **win long fights through
 sustained healing and anti-healing**. Mage remains the stronger dedicated raw
 healer; Rogue and Ranger remain stronger dedicated direct attackers. Bloodbinder

@@ -34,7 +34,8 @@ const FIELD_GUIDE = Object.freeze([
     ['mage','Mage — flexible support.','A flexible spellcaster. Build for damage, healing, shields, or a mix.'],
     ['ranger','Ranger — finishing attacks.','Builds power between attacks, then fires strong shots at wounded foes.'],
     ['berserker','Berserker — risk and recovery.','Grows stronger when hurt. Can drain health by attacking, but needs careful healing.'],
-    ['bloodbinder','Bloodbinder — drain and sustain.','Thrives in long fights: drains heal allies and hinder enemy healing. Stronger Seeds cost HP; mix them with heals and attacks.'],
+    ['bloodbinder','Bloodbinder — shared healing.','Spends HP to plant Seeds. Hits or Blood Bloom burst them to heal allies.'],
+    ['necromancer','Necromancer — undead companions.','Souls raise two Skeletons to attack and guard. Only Souls and deaths heal this starting-only hero.'],
     ['jester','Jester — unpredictable bursts.','Versatile and unpredictable, with sudden bursts of extra effects.'],
   ],true)},
   {id:'biomes',title:'Recognise the terrain',body:guideRows([

@@ -1,9 +1,10 @@
-const { test, before, after } = require("node:test");
-const assert = require("node:assert/strict"),
+// Current Seed reservoirs supersede the old Bleeding/Clotted balance checks.
+const { test, before, after } = require("node:test"),
+  assert = require("node:assert/strict"),
   fs = require("node:fs"),
   http = require("node:http"),
-  path = require("node:path");
-const { chromium } = require("playwright");
+  path = require("node:path"),
+  { chromium } = require("playwright");
 let browser, server, url;
 before(async () => {
   const html = fs.readFileSync(path.join(__dirname, "../index.html"));
@@ -20,7 +21,7 @@ before(async () => {
 });
 after(async () => {
   await browser?.close();
-  await new Promise((r) => server.close(r));
+  if (server) await new Promise((r) => server.close(r));
 });
 async function game(t) {
   const p = await browser.newPage(),
@@ -29,29 +30,22 @@ async function game(t) {
   await p.goto(url);
   await p.evaluate(() => CompanyIntro.skip(true));
   await p.evaluate(() => {
-    newRun("fighter");
+    newRun("bloodbinder");
     closeModal();
     closeSpotlight();
     setPace("skip");
-    setPreference("skipCriticals", true);
     setPreference("shake", 0);
-    state.runRules = [];
-    state.party = [
-      makeHero("Vesper", "bloodbinder", null, [], { specialism: "defence" }),
-      makeHero("Ash", "rogue"),
-    ];
+    setPreference("skipCriticals", true);
+    setPreference("combatEffects", "icons");
     characterLuck = () => 0.99999;
-    scheduleStunRecovery = () => {};
-    beginEncounter(false, { count: 1 });
+    state.runRules = [];
+    state.party[0].specialism = "defence";
+    beginEncounter(false, { count: 2 });
     finishOpeningRoll();
     closeSpotlight();
-    Object.assign(state.enemy, {
-      hp: 1000,
-      maxHp: 1000,
-      passive: null,
-      boss: true,
-      countdown: 99,
-    });
+    state.enemies.forEach((e) =>
+      Object.assign(e, { hp: 1000, maxHp: 1000, passive: null, countdown: 99 }),
+    );
     setEnemyBlock(0);
     render();
   });
@@ -61,301 +55,263 @@ async function game(t) {
   });
   return p;
 }
-test("Bloodbinder grows into an attrition specialist without increasing the boss transfer cap", async (t) => {
+test("Seeds grow past the retired cap, do not expire on enemy turns, and cost nonlethal HP per rolled face", async (t) => {
   const p = await game(t),
-    r = await p.evaluate(() =>
-      [1, 4, 7, 10, 13, 30].map((level) => bloodProfile({ level })),
-    );
-  assert.deepEqual(
-    r.map((x) => x.cap),
-    [3, 5, 7, 9, 12, 12],
-  );
-  assert.equal(r[0].exchange, 0.18);
-  assert.equal(r[4].exchange, 0.28);
-  assert.equal(r[0].healing, 0.75);
-  assert.equal(r[5].healing, 1.5);
-  assert.equal(Math.round(r[0].clot * 100), 35);
-  assert.equal(Math.round(r[4].clot * 100), 65);
-  assert.ok(r.every((x) => x.cap <= 12));
+    r = await p.evaluate(async () => {
+      const h = state.party[0],
+        e = state.enemy;
+      h.hp = 1;
+      applyBloodSeed(e, 100000, h, {
+        symbols: [{ type: "bloodseed", tier: 4 }],
+      });
+      e.reels = [0, 1, 2].map(() => [{ type: "blank", tier: 1, weight: 1 }]);
+      for (let i = 0; i < 4; i++) await enemyTurn(e);
+      return { seeds: bloodSeedCount(e), hp: h.hp, dead: h.dead };
+    });
+  assert.deepEqual(r, { seeds: 100000, hp: 1, dead: false });
 });
-test("Seed offerings rise with active potency, bypass block and never trigger Vulnerable or a death", async (t) => {
+test("actual HP damage consumes exactly one Seed per point, with one shared healing pool and no camp multiplier", async (t) => {
   const p = await game(t),
     r = await p.evaluate(() => {
       const h = state.party[0],
-        e = state.enemy;
-      h.level = 13;
-      h.maxHp = h.hp = 200;
-      h.vulnerable = { turns: 1 };
-      gainPartyBlock(20);
-      const costs = [];
-      applyBloodSeed(e, 3, h);
-      for (let n = 0; n < 11; n++) {
-        const before = h.hp;
-        applyBloodSeed(e, 1, h);
-        costs.push(before - h.hp);
-      }
-      const full = {
-        damage: e.bleeding.damage,
-        cost: 200 - h.hp,
-        block: state.block,
-        vulnerable: !!h.vulnerable,
-      };
-      const before = h.hp;
-      applyBloodSeed(e, 999, h);
-      const capped = h.hp === before;
-      e.bleeding = null;
-      h.hp = 2;
-      applyBloodSeed(e, 20, h);
+        a = makeHero("M", "mage"),
+        b = makeHero("R", "rogue");
+      state.party.push(a, b);
+      state.party.forEach((h) => (h.hp = 1));
+      state.runRules = ["recovery5", "power5"];
+      const e = state.enemy;
+      e.bloodSeeds = { count: 50, sourceId: h.id };
+      gainEnemyBlock(5);
+      const before = state.party.reduce((n, a) => n + a.hp, 0);
+      const blocked = damageEnemy(5, "Blocked", e);
+      const first = bloodSeedCount(e);
+      const actual = damageEnemy(9, "Blade", e);
       return {
-        costs,
-        full,
-        capped,
-        limited: { hp: h.hp, damage: e.bleeding.damage, dead: h.dead },
+        blocked,
+        first,
+        actual,
+        seeds: bloodSeedCount(e),
+        healing: state.party.reduce((n, a) => n + a.hp, 0) - before,
+        stats: h.stats.healingDone,
       };
     });
-  assert.deepEqual(r.costs, [1, 1, 1, 1, 3, 3, 3, 3, 6, 6, 6]);
-  assert.deepEqual(r.full, {
-    damage: 12,
-    cost: 34,
-    block: 20,
-    vulnerable: true,
+  assert.deepEqual(r, {
+    blocked: 0,
+    first: 50,
+    actual: 9,
+    seeds: 41,
+    healing: 9,
+    stats: 9,
   });
-  assert.ok(r.capped);
-  assert.deepEqual(r.limited, { hp: 1, damage: 2, dead: false });
 });
-test("duration refresh is free at high potency and unaffordable power cannot create free strength", async (t) => {
+test("poison, item-style piercing damage and overkill consume only actual HP damage", async (t) => {
   const p = await game(t),
     r = await p.evaluate(async () => {
       const h = state.party[0],
         e = state.enemy;
-      h.level = 13;
-      h.maxHp = h.hp = 100;
-      applyBloodSeed(e, 100, h);
-      await tickBleeding(e);
       h.hp = 1;
-      const before = { ...e.bleeding };
-      const plan = bloodSeedPlan(e, 20, h);
-      applyBloodSeed(e, 20, h);
-      return { before, plan, after: e.bleeding, hp: h.hp };
-    });
-  assert.equal(r.before.damage, 12);
-  assert.equal(r.plan.hpCost, 0);
-  assert.equal(r.after.turns, 3);
-  assert.equal(r.after.damage, 12);
-  assert.equal(r.hp, 1);
-});
-test("maintained Bleeding applies Clotted after three real enemy turns without expiring", async (t) => {
-  const p = await game(t),
-    r = await p.evaluate(async () => {
-      const h = state.party[0],
-        e = state.enemy;
-      h.level = 13;
-      applyBloodSeed(e, 3, h);
-      const history = [];
-      for (let i = 0; i < 3; i++) {
-        const old = e.clotted;
-        await tickBleeding(e);
-        finishClottedTurn(e, old);
-        history.push(!!e.clotted);
-        applyBloodSeed(e, 1, h);
-      }
-      e.hp = 100;
-      const recovered = enemyRecovery(e, 100);
-      return { history, b: e.bleeding, c: e.clotted, recovered };
-    });
-  assert.deepEqual(r.history, [false, false, true]);
-  assert.equal(r.b.turns, 3);
-  assert.equal(r.b.damage, 1);
-  assert.equal(r.c.turns, 3);
-  assert.equal(Math.round(r.c.reduction * 100), 65);
-  assert.equal(r.recovered, 35);
-});
-test("late leech is one shared pool scaled from actual damage, not multiplied per ally or by camp healing", async (t) => {
-  const p = await game(t),
-    r = await p.evaluate(async () => {
-      const h = state.party[0],
-        e = state.enemy;
-      h.level = 14;
-      h.maxHp = h.hp = 100;
-      state.party.push(makeHero("Wren", "mage"));
-      applyBloodSeed(e, 99, h);
-      state.party.forEach((a) => (a.hp = 1));
-      state.runRules = ["recovery5"];
-      const first = state.party.reduce((n, h) => n + h.hp, 0);
-      await tickBleeding(e);
-      const pool = state.party.reduce((n, h) => n + h.hp, 0) - first;
+      e.bloodSeeds = { count: 50, sourceId: h.id };
+      e.poison = {
+        turns: 2,
+        damage: 3,
+        sourceId: h.id,
+        sourceName: h.name,
+        appliedAt: -1,
+      };
+      await tickPoison();
+      const poison = bloodSeedCount(e);
       e.hp = 2;
-      const before = state.party.reduce((n, h) => n + h.hp, 0);
-      await tickBleeding(e);
+      const n = damageEnemy(100, "Ink bomb", e, { piercing: true });
+      return { poison, n, seeds: bloodSeedCount(e), heal: h.stats.healingDone };
+    });
+  assert.equal(r.poison, 47);
+  assert.equal(r.n, 2);
+  assert.equal(r.seeds, 45);
+  assert.equal(r.heal, 5);
+});
+test("Blood Bloom bursts all enemies once, including overkill healing, without a critical or recovery multiplier", async (t) => {
+  const p = await game(t),
+    r = await p.evaluate(async () => {
+      const h = state.party[0];
+      h.maxHp = 200;
+      h.hp = 1;
+      state.runRules = ["power5", "recovery5"];
+      state.enemies.forEach((e, i) => {
+        e.hp = 5;
+        e.maxHp = 1000;
+        e.boss = true;
+        e.bloodSeeds = { count: 20 + i * 10, sourceId: h.id };
+      });
+      const receipt = await detonateBloodSeeds(h);
       return {
-        pool,
-        overkill: state.party.reduce((n, h) => n + h.hp, 0) - before,
-        alive: state.party.every(alive),
-        enemy: e.hp,
+        receipt,
+        hp: h.hp,
+        seeds: state.enemies.map(bloodSeedCount),
+        hpEnemies: state.enemies.map((e) => e.hp),
       };
     });
-  assert.equal(r.pool, 18);
-  assert.equal(r.overkill, 3);
-  assert.equal(r.enemy, 0);
-  assert.ok(r.alive);
+  assert.deepEqual(r.receipt, { seeds: 50, damage: 10, healing: 50 });
+  assert.equal(r.hp, 51);
+  assert.deepEqual(r.seeds, [0, 0]);
+  assert.deepEqual(r.hpEnemies, [0, 0]);
 });
-test("critical Seed power pays once up to its cap, while ordinary healing remains available afterward", async (t) => {
+test("a real mixed roll plants Seeds before its own spell damage, and a critical Bloom pays its HP cost only once", async (t) => {
   const p = await game(t);
-  await p.evaluate(() => {
+  const r = await p.evaluate(async () => {
     const h = state.party[0];
-    h.level = 13;
-    h.hp = h.maxHp = 100;
+    h.specialism = "offence";
+    h.hp = 8;
+    h.reels = [
+      [{ type: "bloodseed", tier: 2, weight: 1 }],
+      [{ type: "blank", tier: 1, weight: 1 }],
+      [{ type: "magic", tier: 2, weight: 1 }],
+    ];
+    render();
+    await spin(0);
+    const mixed = {
+      hp: h.hp,
+      seeds: bloodSeedCount(state.enemy),
+      damage: state.lastPlayerRoll.actualDamage,
+    };
+    h.hp = 10;
     h.reels = [
       [{ type: "bloodseed", tier: 4, weight: 1 }],
-      [{ type: "class", tier: 1, weight: 1, job: "bloodbinder" }],
+      [{ type: "class", tier: 1, weight: 1, job: h.job }],
       [{ type: "bloodseed", tier: 4, weight: 1 }],
     ];
-    renderParty();
+    render();
+    const before = h.stats.bloodSpent;
+    await spin(0);
+    return {
+      mixed,
+      cost: h.stats.bloodSpent - before,
+      multi: state.lastPlayerRoll.multiplier,
+      receipt: state.lastBloodDetonation,
+      raw: state.lastPlayerRoll.totals.bloodseed,
+    };
   });
-  await p.evaluate(() => spin(0));
-  const r = await p.evaluate(() => ({
-    b: state.enemy.bleeding,
-    hp: state.party[0].hp,
-    spent: state.party[0].stats.bloodSpent,
-    roll: state.lastPlayerRoll,
-  }));
-  assert.equal(r.b.damage, 12);
-  assert.equal(r.spent, 34);
-  assert.equal(r.hp, 66);
-  assert.ok(r.roll.multiplier > 1);
+  assert.equal(r.mixed.seeds, 0);
+  assert.equal(r.mixed.hp, 9);
+  assert.equal(r.mixed.damage, 3);
+  assert.equal(r.cost, 4);
+  assert.ok(r.multi > 1);
+  assert.equal(r.receipt.seeds, r.raw);
+  assert.equal(r.receipt.damage, r.raw);
 });
-test("AI values capped Seed refresh without pricing a second drain or multiplying leech by lessons", async (t) => {
+test("Bloodbinder permissions, paid save migration and private Harvest faces stay consistent", async (t) => {
   const p = await game(t),
     r = await p.evaluate(() => {
-      const h = state.party[0],
-        e = state.enemy;
-      h.level = 13;
-      h.hp = h.maxHp = 100;
-      applyBloodSeed(e, 99, h);
-      const full = bloodSeedForecast(h, 12, e);
-      e.bleeding.turns = 1;
-      h.hp = 1;
-      const refresh = bloodSeedForecast(h, 3, e);
-      state.runRules = ["power5", "recovery5"];
-      const boosted = bloodSeedForecast(h, 3, e);
-      return { full, refresh, boosted };
-    });
-  assert.equal(r.full.damage, 0);
-  assert.equal(r.full.heal, 0);
-  assert.equal(r.full.cost, 0);
-  assert.ok(r.refresh.damage > 0 && r.refresh.heal > 0);
-  assert.equal(r.refresh.cost, 0);
-  assert.deepEqual(r.refresh, r.boosted);
-});
-test("long fights keep the strongest Clotted when a lower-level caster joins, including save/load", async (t) => {
-  const p = await game(t),
-    r = await p.evaluate(async () => {
-      const h = state.party[0],
-        e = state.enemy;
-      h.level = 13;
-      h.maxHp = h.hp = 100;
-      applyBloodSeed(e, 5, h);
-      await tickBleeding(e);
-      await tickBleeding(e);
-      applyBloodSeed(e, 2, h);
-      await tickBleeding(e);
-      const novice = makeHero("Newcomer", "bloodbinder");
-      state.party.push(novice);
-      applyBloodSeed(e, 1, novice);
+      const h = state.party[0];
+      h.reels[0][0] = {
+        type: "attack",
+        tier: 4,
+        weight: 1,
+        investments: { 2: 5, 3: 8, 4: 12 },
+      };
+      h.reels[0][1] = { type: "stimulant", tier: 2, weight: 1 };
+      const points = h.points;
+      normaliseHeroBuild(h);
       save();
       load();
-      return { b: state.enemy.bleeding, c: state.enemy.clotted };
-    });
-  assert.equal(r.b.level, 13);
-  assert.equal(r.b.damage, 3);
-  assert.equal(r.b.ticks, 0);
-  assert.equal(Math.round(r.c.reduction * 100), 65);
-});
-test("Exchange improves with level, always caps bosses, and never gains camp or critical multipliers", async (t) => {
-  const p = await game(t),
-    r = await p.evaluate(() => {
-      const h = state.party[0],
-        e = state.enemy;
-      h.maxHp = 100;
-      h.hp = 60;
-      state.party[1].hp = state.party[1].maxHp;
-      const early = bloodExchangePlan(h, e);
-      h.level = 13;
-      const late = bloodExchangePlan(h, e);
-      h.hp = 1;
-      state.runRules = ["power5", "recovery5"];
-      const capped = bloodExchangePlan(h, e);
       return {
-        early: early.loss,
-        late: late.loss,
-        capped: capped.loss,
-        heal: capped.healing,
+        types: editableTypes(h),
+        face: state.party[0].reels[0][0],
+        rally: h.reels[0][1],
+        points: state.party[0].points,
+        old: points,
+        primary: primaryFace(h),
+        jester: editableTypes(makeHero("J", "jester")),
       };
     });
-  assert.equal(r.early, 72);
-  assert.equal(r.late, 100);
-  assert.equal(r.capped, 100);
-  assert.equal(r.heal, 10);
+  assert.deepEqual(r.types, ["heal", "bloodseed", "magic", "rally", "blank"]);
+  assert.equal(r.face.type, "magic");
+  assert.equal(r.face.tier, 4);
+  assert.equal(r.face.investments[4], 12);
+  assert.equal(r.rally.type, "rally");
+  assert.equal(r.points, r.old);
+  assert.equal(r.primary, "heal");
+  assert.ok(!r.jester.includes("harvest"));
 });
-test("autoplay preserves a mixed paid build rather than filling every face with Seeds", async (t) => {
+test("legacy wounds become saved reservoirs; battle cleanup removes stacks", async (t) => {
   const p = await game(t),
     r = await p.evaluate(() => {
-      const builds = [];
-      for (const specialism of ["offence", "defence"]) {
-        state.enemy = null;
-        state.enemies = [];
-        state.depth = 10;
-        const h = makeHero("Vesper", "bloodbinder", null, [], { specialism });
-        h.level = 13;
-        h.hp = h.maxHp = 104;
-        h.points = 100;
-        state.party = [
-          h,
-          makeHero("Tank", "fighter"),
-          makeHero("Rogue", "rogue"),
-        ];
-        autoUpgradeHero(h);
-        builds.push({
-          points: h.points,
-          seed: faceShare(h.reels.flat(), ["bloodseed"]),
-          heal: faceShare(h.reels.flat(), ["heal"]),
-          direct: directDamageShare(h),
-          seal: h.reels.flat().filter((f) => f.type === "class").length,
-        });
-      }
-      return builds;
-    });
-  for (const b of r) {
-    assert.ok(b.points >= 0 && b.points < 100);
-    assert.ok(b.seed >= 0.1 && b.seed <= 0.4, JSON.stringify(b));
-    assert.ok(b.heal >= 0.125 && b.direct >= 0.15, JSON.stringify(b));
-    assert.equal(b.seal, 1);
-  }
-});
-test("refreshing a wound never mutates the pure forecast and bad saved status values remain bounded", async (t) => {
-  const p = await game(t),
-    r = await p.evaluate(() => {
-      const h = state.party[0],
-        e = state.enemy;
-      h.level = 13;
-      applyBloodSeed(e, 3, h);
-      const before = JSON.stringify(e.bleeding),
-        hp = h.hp;
-      bloodSeedPlan(e, 20, h);
-      bloodSeedForecast(h, 12, e);
-      const pure = before === JSON.stringify(e.bleeding) && h.hp === hp;
-      e.bleeding = {
-        turns: Infinity,
-        damage: Infinity,
-        healing: Infinity,
-        level: Infinity,
-        ticks: Infinity,
-      };
-      e.clotted = { turns: 0.5, reduction: Infinity };
+      const e = state.enemy,
+        h = state.party[0];
+      e.bleeding = { damage: 5, turns: 3, sourceId: h.id };
+      e.clotted = { turns: 2 };
       normaliseBloodStatuses(e);
-      return { pure, b: e.bleeding, c: e.clotted };
+      save();
+      load();
+      const saved = { ...state.enemy.bloodSeeds };
+      clearBattleStatuses();
+      return {
+        saved,
+        cleared: state.enemy.bloodSeeds,
+        oldClot: state.enemy.clotted,
+      };
     });
-  assert.ok(r.pure);
-  assert.equal(r.b, null);
-  assert.equal(r.c, null);
+  assert.equal(r.saved.count, 15);
+  assert.equal(r.cleared, null);
+  assert.equal(r.oldClot, undefined);
+});
+test("consumed Seeds pop at varied enemy locations and healing flies to the actual wounded ally without gameplay RNG", async (t) => {
+  const p = await game(t);
+  const r = await p.evaluate(async () => {
+    const h = state.party[0];
+    h.hp = 1;
+    const e = state.enemy;
+    e.bloodSeeds = { count: 10, sourceId: h.id };
+    setPace("1");
+    const random = Math.random;
+    Math.random = () => {
+      throw Error("FX used gameplay RNG");
+    };
+    let burst;
+    try {
+      burst = bloodSeedBurstFX(e, 10);
+      const nodes = [...document.querySelectorAll(".blood-seed-pop")];
+      const positions = new Set(
+        nodes.map((n) => n.style.left + ":" + n.style.top),
+      ).size;
+      nodes.forEach((n) => n.getAnimations().forEach((a) => a.finish()));
+      await burst;
+      damageEnemy(3, "A hit", e);
+      const heals = [
+        ...document.querySelectorAll('[data-effect="blood-seed-heal"]'),
+      ].map((n) => n.dataset.target);
+      await settleBloodFeedback();
+      return {
+        positions,
+        heals,
+        remaining: document.querySelectorAll(".blood-seed-pop").length,
+      };
+    } finally {
+      Math.random = random;
+    }
+  });
+  assert.ok(r.positions > 1);
+  assert.ok(r.heals.includes("portrait-0"));
+  assert.equal(r.remaining, 0);
+});
+test("autoplay keeps a sustainable mix of Seeds, legal spell attacks and recovery", async (t) => {
+  const p = await game(t),
+    r = await p.evaluate(() => {
+      state.enemy = null;
+      state.enemies = [];
+      const h = state.party[0];
+      h.level = 10;
+      h.points = 100;
+      state.depth = 8;
+      autoUpgradeHero(h);
+      return {
+        types: [...new Set(h.reels.flat().map((f) => f.type))],
+        seed: faceShare(h.reels.flat(), ["bloodseed"]),
+        spell: faceShare(h.reels.flat(), ["magic"]),
+        points: h.points,
+      };
+    });
+  assert.ok(r.seed > 0 && r.seed < 0.6);
+  assert.ok(r.spell > 0.1);
+  assert.ok(!r.types.includes("attack"));
+  assert.ok(r.points >= 0);
 });

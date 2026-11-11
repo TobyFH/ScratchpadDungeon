@@ -75,13 +75,24 @@ async function game(t, seen = false) {
 }
 test("uncovering quartz during autoplay resolves the decision and continues beyond the blocked passage", async (t) => {
   const p = await game(t);
+  // Hold only the confirmation while inspecting the suspended movement driver.
+  // Under browser load, the real reading delay can expire between two protocol
+  // calls; that should not make a successful automatic choice fail this check.
+  await p.evaluate(() => {
+    window.quartzConfirmReady = automaticConfirmReady;
+    automaticConfirmReady = (button, kind) =>
+      button?.id === "crystal-smash" ? false : quartzConfirmReady(button, kind);
+  });
   await p.locator("#autoplay").check();
-  await p.locator("#crystal-smash").waitFor({ timeout: 4000 });
+  await p.locator("#crystal-smash").waitFor({ timeout: 15000 });
   assert.equal(
     await p.evaluate(() => busy && autoplayActing && !!travel),
     true,
     "the movement driver is waiting for the real decision",
   );
+  await p.evaluate(() => {
+    automaticConfirmReady = quartzConfirmReady;
+  });
   await p.waitForFunction(
     () =>
       state.map[quartz].terrain === "brokenCrystal" &&

@@ -1,13 +1,21 @@
-Read `docs/BLOODBINDER_UPDATE.md` for Blood Seed/Exchange, exact leech healing,
-Clotted recovery, breakable quartz, falling-stone radius and stable prompts.
-`game/bloodbinder.js` owns percentage calculations; never crit or cleave them.
-Read `docs/BLOODBINDER_BALANCE.md` for current level-scaled drain caps, rising
-nonlethal HP offerings, shared healing and maintained-Bleeding Clotted timing.
-Real Seeds and AI share the pure `bloodSeedPlan`; excess power never buys free
-strength at 1 HP or charges beyond the cap. Preserve saved tick progress and
-legacy 50% Clotted; all fixed blood pools bypass camp/gear/crit multiplication.
-All enemy healing uses `enemyRecovery()`. Camp class-page size is shared with
-responsive fitting. Keep both footer contexts reserved and inactive content inert.
+Read `docs/SOUL_CLASSES.md` for current save-24 Bloodbinder and Necromancer rules.
+It supersedes the older timed Bleeding/Clotted/Exchange balance documents.
+`game/bloodbinder.js` owns unlimited per-enemy Seed reservoirs: actual HP damage
+consumes Seeds for one shared healing pool; Blood Bloom detonates all stacks.
+Pay nonlethal HP once per rolled Seed face, before critical multiplication.
+Fixed Seed healing/detonation never multiply through camp, gear or crit again.
+`game/necromancer.js` owns persistent Souls and up to two automatic Skeletons.
+Skeletons live on the owner, never in `state.party`, recruitment, gear or graves.
+A full bar with two Skeletons heals the whole team; it never replaces them.
+Guard the first eligible whole attack per enemy turn, including both crit hits.
+Conventional healing cannot restore the master or Skeletons; master death ends
+the run immediately. Final enemy-death recovery must occur after split checks.
+`ui/soul-feedback.js/.css` owns cancellable Seed bursts, soul meters and bones.
+All offsets use FX randomness. Keep fixed allocations exact and wait for their
+feedback before victory cleanup. All enemy healing uses `enemyRecovery()`.
+The older `docs/BLOODBINDER_UPDATE.md` still documents quartz, falling stone and
+stable prompts. Camp page size is shared with responsive fitting. Keep both
+footer contexts reserved and inactive content inert.
 
 Read `docs/RECORDED_MUSIC.md` for uploaded looping tracks, biome/menu selection,
 bounded media decks, jingle ducking and fallback. Originals stay in

@@ -99,14 +99,10 @@ async function advanceEnemyClocks(foes = battleEnemies().slice()) {
     syncEnemy(e);
     if (e.countdown <= 0) {
       if (e.stun) {
-        const priorClot=e.clotted;
-        await tickBleeding(e);
-        if(!alive(e))continue;
         tryBreakStun(e, { missedAction: true });
         log(`${e.name} misses its turn to stun.`);
         combatCallout(enemyArtEl(e), "STUNNED · TURN LOST", "recovery");
         advanceRangerEnemyTurn();
-        finishClottedTurn(e,priorClot);
         await feedbackPause(230);
       } else await enemyTurn(e);
       if (!state.over) {
@@ -138,6 +134,8 @@ async function missStunnedTurn(h, foes) {
   tickStimulant(h);
   finishOpeningRoll();
   await tickPoison();
+  await skeletonCombatAction(h);
+  await settleBloodFeedback();
   if (checkDefeat()) return;
   if (!livingEnemies().length) {
     await victory(foes[0]);

@@ -207,6 +207,7 @@ function leverArt() {
   return `<svg class="pencil-art" viewBox="0 0 35 100" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 78 11-.5.5 13-12 .5Z M14 78l8-56 4 .5-7 57" fill="var(--paper-shade)"/><path d="m15 76 8-53m-15 60 8-.5m-8 5 8-.5M7 95l18-.5" stroke-width=".7"/><path d="M25 2q12 1 11 12-1 10-12 10-10-1-10-12Q15 2 25 2Z" fill="var(--paper)"/><path d="M25 5q9 1 8 9-1 8-9 7-7-1-7-8 0-7 8-8Zm-7 8 6-7m-6 12L30 6m-7 15 10-10" stroke-width=".65"/><path class="pencil-echo" d="m5 79 1 14 14-1M13 77l8-53"/></svg>`;
 }
 const paths = {
+  harvest:"M16 2Q3 4 5 17l5 5v7h12v-7l5-5Q30 4 16 2ZM10 12h2m8 0h2m-9 9 3-4 3 4m-7 3v5m8-5v5",
   bloodseed:"M16 3Q1 21 9 27q7 6 14-1Q31 19 16 3ZM9 23l7-10 5 11m-5-11v15",
   bloodexchange:"M5 12h21l-6-6m6 6-6 6M27 22H6l6 6m-6-6 6-6",
   brokenCrystal:"M4 27 7 18l5 7-2 4Zm11-3 4-15 6 11-2 8Zm-4-8 3-8 3 8M3 30h26",
@@ -435,8 +436,10 @@ function portraitArt(kind, entity = { hp: 1, maxHp: 1 }) {
   const marks = `<g class="injury-marks" stroke="#ae493c" stroke-width="${severe ? 3.8 : 2.4}" fill="none" opacity=".95"><path d="m40 35 14 12m-15-7 12 12m19 2 12 5m-13 0 10 4"/>${severe ? '<path d="m34 94 17 13m-17-6 17 13m24-42-3 13m5-10-2 12M45 126l13 3"/><path d="m39 58 16 5" stroke="#f1e5c3" stroke-width="8"/><path d="m40 57 14 7m-9-6-1 5" stroke="#796248" stroke-width="1.2"/>' : ""}</g>`;
   return pencilIllustration(art.replace("</svg>", marks + "</svg>"));
 }
+function necromancerArt(){return `<svg class="pencil-art necromancer-art" viewBox="0 0 120 150" fill="var(--paper-shade)" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 145 24 92 38 72Q22 24 57 5q42 15 30 66l13 23 8 51Z"/><path d="M39 42q17-30 41 0l-4 31-18 11-18-13Z" fill="var(--paper)"/><path d="m43 48 11 2m11 0 10-3M49 51v5m22-6v5m-12 2-3 7h8m-12 9h16m-33 5 23 28 25-29M58 106v38m-32-44 14 17-6 20m55-40-11 24 7 17m-62-6 13 5m46-5 14 5M39 18l-7 19m46-15 6 19m-60 69 14-6m44-1 13 8" fill="none"/><path d="M101 144 99 32m-11-9q0-14 12-14t12 14l-4 9H93Z" fill="var(--paper)"/><path d="m94 19 3 2m8-2 3 2m-8 3-2 4h5m-7 2v5m7-5v5" fill="none"/><path d="m53 97 5-8 5 8-5 9Z" fill="var(--poison-ink,#8253a1)"/></svg>`;}
 function bloodbinderArt(){return `<svg class="pencil-art bloodbinder-art" viewBox="0 0 120 150" fill="var(--paper-shade)" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M14 146 24 96 36 72Q16 20 61 5q45 17 24 66l15 26 9 49Z"/><path d="M36 42q24-30 48 0l-8 31-16 13-17-13Z" fill="var(--paper)"/><path d="m42 47 12-2m12 0 11 2M49 49v5m22-5v5M60 53l-4 10h9m-14 8q10 5 18-1M35 75l25 28 25-29M60 103v41M26 102l19 12-8 26M96 102l-20 13 8 26m-52-8 12-3m35 0 13 3M25 95l12-7m-12 20 12-7m48-13 12 9m-10 5 12 8" fill="none"/><path d="M60 92q-15 17 0 20 15-3 0-20Z" fill="var(--blood-ink,#964958)"/><path d="M31 119q-9-14-15-2t14 18m59-16q10-14 15-2t-14 18" fill="var(--paper)"/><path d="m39 15-8 18m48-14 7 17m-67 93 14 5m62-6-12 7" opacity=".45"/></svg>`;}
 function basePortraitArt(kind, entity = { hp: 1, maxHp: 1 }) {
+  if(kind === "necromancer" && entity.hp>0 && !entity.dead)return necromancerArt();
   if(kind === "bloodbinder" && entity.hp>0 && !entity.dead)return bloodbinderArt();
   if (entity.hp <= 0 || entity.dead) return corpseArt(kind);
   if (
