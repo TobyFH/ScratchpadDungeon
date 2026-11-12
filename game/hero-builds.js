@@ -3,12 +3,12 @@ const SPECIALISMS = Object.freeze({
   offence: {
     name: "Aggressive",
     description:
-      "Starts with offensive marks; +1 physical, spell and poison power when those effects land. Fixed temperament; rebuild freely.",
+      "+2 physical, spell and poison power on rolls that use them.",
   },
   defence: {
     name: "Defensive",
     description:
-      "Starts with support marks; +1 healing, block and stun power when those effects land. Fixed temperament; rebuild freely.",
+      "+2 healing, block and stun power on rolls that use them.",
   },
 });
 const MAGE_POWERS = Object.freeze({
@@ -36,6 +36,7 @@ const MAGE_POWERS = Object.freeze({
 });
 const HERO_TUNING = Object.freeze({
   healing: 1,
+  temperament: 2,
 });
 const tankSealBlock = (h) =>
   2 + Math.floor(Math.max(0, (h?.level || 1) - 1) / 3);
@@ -89,7 +90,10 @@ const mageHealingFactor = (h) =>
       )
     : 1;
 const classHealingPower = (h, n) =>
-  n > 0 ? n + Math.round(n * (mageHealingFactor(h) - 1)) : n;
+  n > 0 ? n + Math.round(n * (heroHealingFactor(h) - 1)) : n;
+const heroHealingFactor = (h) => h.job === "bloodbinder"
+  ? 1 + Math.min(.2,Math.max(0,(h.level || 1)-4)*.025)
+  : mageHealingFactor(h);
 // Fury scales with level; every real HP restored spends one charge.
 const BERSERKER_SUSTAIN = Object.freeze({
   bloodrushHeal: 4,
@@ -255,6 +259,7 @@ function normaliseHeroBuild(h) {
   h.fury = Math.min(furyCapacity(h), Math.max(0, h.fury || 0));
   if (!h.reels) return;
   for(const face of [...h.reels.flat(),...(h.last||[])]){
+    if(h.job==='rogue'&&['heal','selfheal'].includes(face.type))face.type='poison';
     if(face.type==='harvest'&&h.job!=='necromancer'){face.type='blank';face.tier=1;}
     if(h.job==='bloodbinder'&&face.type==='attack')face.type='magic';
     if(h.job==='bloodbinder'&&face.type==='stimulant')face.type='rally';
@@ -366,21 +371,18 @@ function classAbilityName(hero) {
   );
 }
 function classAbilityDescription(hero) {
-  const job = typeof hero === "string" ? hero : hero?.job;
-  return (
-    {
-      bloodbinder: "Blood Bloom: detonate all Blood Seeds on every enemy. Each Seed deals 1 damage and provides 1 shared healing, even on overkill. Never multiplies a Seed twice.",
-      necromancer: `Soul Call: ${necromancerSealPower(typeof hero==='object'?hero:{level:1})} Harvest power. Spell damage and Harvest gather Souls to summon two automatic Skeletons. With both present, a full bar heals the team. Ordinary healing cannot restore you; enemy deaths can.`,
-      jester:
-        "Wildcard: tricks ink enemy reels, gild allied reels, reverse a foe’s roll, or scatter damage and healing. They usually favour your party.",
-      fighter: `Shield Bash: gain ${tankSealBlock(typeof hero === "object" ? hero : null)} team block, then spend up to ${bashLimit(typeof hero === "object" ? hero : null)} block on a bash. Block gained increases every three levels. The bash deals double damage to enemy shields.`,
-      rogue: "Flurry: roll three extra attacks; each blade lands separately.",
-      mage: "Resonance echoes the strongest healing, shield, poison or magic marks in this roll across the appropriate whole team. Healing also clears every ally’s stun.",
-      healer: "Resonance echoes your rolled marks across the appropriate team.",
-      ranger: `Execute: fire a ${rangerSealPower(typeof hero === "object" ? hero : { level: 1 })}-power physical shot even with an empty bar. Stored patience adds a separate hit, ×${RANGER_EXECUTE.sealMultiplier} on this seal, stronger against wounded foes. That bonus is capped and never multiplied again by criticals. Other party actions and enemy turns build patience.`,
-      berserker: `Bloodrush: restore ${bloodrushHealing(hero && typeof hero === "object" ? hero : { level: 1 })} HP to yourself, gain +2 physical damage. Wounds build Fury; every HP healed spends Fury. Charged Fury adds damage and lifesteal.`,
-    }[job] || "Your permanent signature mark, alongside the other two results."
-  );
+  const h=typeof hero==='object'?hero:{job:hero,level:1},job=h?.job;
+  return {
+    fighter:`Gain ${tankSealBlock(h)} team block, then spend up to ${bashLimit(h)} on a Shield Bash. Deals double damage to enemy block.`,
+    rogue:"Flurry: three extra blade strikes at your target. Criticals hit all enemies.",
+    mage:"Resonance repeats the roll’s strongest spell, heal, shield or poison across its whole team. Healing clears allied stuns.",
+    healer:"Resonance repeats your strongest rolled power across its whole team.",
+    ranger:`Fire a ${rangerSealPower(h)}-power shot. Spend stored Execute for a separate bonus hit, ×${RANGER_EXECUTE.sealMultiplier} on this mark; wounded foes take more.`,
+    berserker:`Bloodrush: heal yourself for ${bloodrushHealing(h)} HP and add 2 physical damage. Fury strengthens attacks and lifesteal; healing spends it.`,
+    jester:"Wildcard: a random trick, usually in your favour. May alter reels, reverse an enemy roll, or scatter damage and healing.",
+    bloodbinder:"Blood Bloom: burst every enemy’s Seeds. Each deals 1 damage and shares 1 HP of healing among wounded allies.",
+    necromancer:`Gain ${necromancerSealPower(h)} Harvest power. Souls raise up to two Skeletons; with both alive, a full bar heals the team.`,
+  }[job] || "A class ability rolled alongside your other two marks.";
 }
 function temperamentEffects(h, base) {
   const keys =
@@ -389,14 +391,14 @@ function temperamentEffects(h, base) {
       : h.specialism === "defence"
         ? ["heal", "selfHeal", "teamHeal", "block", "stun"]
         : [];
-  for (const key of keys) if (base[key] > 0) base[key] += 1;
+  for (const key of keys) if (base[key] > 0) base[key] += HERO_TUNING.temperament;
   return base;
 }
 const CLASS_FACE_TYPES = Object.freeze({
   bloodbinder: ["heal", "bloodseed", "magic", "rally", "blank"],
   necromancer: ["magic", "poison", "harvest", "blank"],
   fighter: ["attack", "heavy", "block", "selfheal", "stun", "stimulant", "blank"],
-  rogue: ["attack", "poison", "stun", "stimulant", "selfheal", "blank"],
+  rogue: ["attack", "poison", "stun", "stimulant", "blank"],
   mage: [
     "magic",
     "heal",
@@ -615,7 +617,7 @@ function specialismBadge(h) {
 }
 function heroBuildMarkup(h) {
   const s = SPECIALISMS[h.specialism] || SPECIALISMS.offence;
-  return `<span class="hero-specialism ${h.specialism}" data-tooltip="${escapeHTML(s.description)}">${icon(h.specialism === "defence" ? "block" : "sword")}<b>${s.name}</b> · ${h.specialism === "defence" ? "+1 support" : "+1 offence"}<small>Fixed temperament</small></span>`;
+  return `<span class="hero-specialism ${h.specialism}" data-tooltip="${escapeHTML(s.description)}">${icon(h.specialism === "defence" ? "block" : "sword")}<b>${s.name}</b> · +${HERO_TUNING.temperament} ${h.specialism === "defence" ? "support" : "offence"}</span>`;
 }
 function executionBonus(
   h,

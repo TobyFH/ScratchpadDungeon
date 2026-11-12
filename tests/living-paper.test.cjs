@@ -152,7 +152,7 @@ test("a late Mage's actual heal restores the advertised extra HP", async (t) => 
     await spin(0);
     return { hp: h.hp, healing: h.stats.healingDone };
   });
-  assert.deepEqual(r, { hp: 13, healing: 12 });
+  assert.deepEqual(r, { hp: 14, healing: 13 });
 });
 
 test("an empty-bar Ranger seal fires its own shot and is recognised as solo offence", async (t) => {
@@ -176,9 +176,9 @@ test("an empty-bar Ranger seal fires its own shot and is recognised as solo offe
     };
   });
   assert.ok(r.score > 0);
-  assert.equal(r.hp, 997);
+  assert.equal(r.hp, 996);
   assert.equal(r.charge, 0);
-  assert.equal(r.last, 3);
+  assert.equal(r.last, 4);
 });
 
 test("full patience plus Execute pays separate capped damage, with no critical squaring or final-boss one-shot", async (t) => {

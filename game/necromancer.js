@@ -138,7 +138,7 @@ function necromancerEnemyDeath(e) {
   if (!alive(h) || e.hp > 0 || e.soulHarvested) return;
   e.soulHarvested = true;
   const n = Math.min(
-    Math.ceil(e.maxHp * NECROMANCER.killHeal),
+    Math.ceil(e.maxHp * NECROMANCER.killHeal) + equipmentBonus(h,"soulRecovery"),
     Math.floor(h.maxHp * NECROMANCER.killHealCap),
   );
   const healed = healNecromancer(h, n, enemyArtEl(e));

@@ -274,6 +274,25 @@ function combatNumber(el, value, type) {
 }
 
 // Callouts name a real state change; they never capture input or move layout.
+function eventCriticalFX(options,details) {
+  if(!options.context)return;
+  const sheet=$("#stage-card");
+  const machine=sheet?.querySelector('.machine-shell:not(#machine-critical)');
+  if(!machine)return;
+  const danger=['trap','rockfall','mushroom','ruin'].includes(options.context)&&details.some(d=>['trap','damage'].includes(d.icon)&&d.value>0);
+  const kind=danger?'trap':options.context==='well'?'heal':details.some(d=>d.icon==='coin')?'gold':details.some(d=>['heal','blessing'].includes(d.icon))?'heal':'critical';
+  const color=getComputedStyle(document.documentElement).getPropertyValue(kind==='heal'?'--green':danger?'--red':'--gold').trim();
+  machine.dataset.criticalOutcome=kind;
+  animate(machine,[
+    {boxShadow:'0 0 0 0 transparent',filter:'brightness(1)'},
+    {boxShadow:`0 0 0 6px var(--gold),0 0 24px ${color}`,filter:'brightness(1.3)',offset:.22},
+    {boxShadow:`0 0 0 2px var(--gold),0 0 12px ${color}`,filter:'brightness(1.08)',offset:.6},
+    {boxShadow:'0 0 0 0 transparent',filter:'brightness(1)'},
+  ],{duration:750,juice:true});
+  burst(machine,kind==='heal'?'heal':danger?'damage':'gold',52);
+  screenFX(kind,1.25);
+  shakeElement(machine,4,'celebrate');
+}
 function combatCallout(el, text, kind = "gold") {
   if (!el) return;
   kind=feedbackKind(text,kind);

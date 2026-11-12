@@ -17,8 +17,17 @@ then reveals the notebook. Skip with its button, Enter, Space, Escape or a
 controller button. Reduced-motion preferences bypass it. Playback failures
 continue to the game. See [startup film maintenance](docs/COMPANY_INTRO.md).
 
-The notebook opens with a choice of **Tank, Rogue, Mage or Necromancer**, with locked Ranger and Berserker cards that open
-their camp unlocks. A new expedition turns to fresh pages. Start with one hero and no items; keep at most three heroes. Every staircase has an elite guardian. Defeat it to descend when you choose. **Defeating the tenth guardian wins immediately**, with a celebration and a scrollable record of every survivor, fallen companion and retired adventurer.
+The notebook opens with **Tank, Rogue or Mage**. Ranger, Berserker, Jester and
+Bloodbinder unlock at camp; **Necromancer unlocks only after your first floor-ten
+victory** and cannot be purchased. A new expedition turns to fresh pages. Start
+with one hero and no items; keep at most three heroes. Every staircase has an
+elite guardian. Defeat it to descend when you choose. **Defeating the tenth
+guardian wins immediately**, with a celebration and a scrollable record of
+every survivor, fallen companion and retired adventurer.
+
+See [Notebook polish](docs/NOTEBOOK_POLISH.md) for the current class availability,
+balance, equipment, clearer targeting, speech, future-settings previews and
+temple-frequency changes. It supersedes older conflicting tuning examples.
 
 Current additions: [Combat clarity and living floors](docs/CLARITY_UPDATE.md)
 documents permanent Jester mysteries, explicit reel inscription, stun recovery,
@@ -42,7 +51,7 @@ nonlethal HP cost. Actual HP damage consumes Seeds to share healing among wounde
 allies; **Blood Bloom** detonates every remaining Seed for damage and healing.
 Its ordinary marks are healing, Seeds, spell damage and ally stimulant.
 
-The free, starting-only **Necromancer** replaces living companions with up to two
+The earned, starting-only **Necromancer** replaces living companions with up to two
 automatic Skeletons. Harvest, damage and poison fill a persistent Soul bar.
 Skeletons attack after each action and intercept the first eligible attack each
 enemy turn. A full bar with two Skeletons heals the team. Ordinary healing does
@@ -158,27 +167,28 @@ and never crit. Click a portrait to open the reel workshop: choose a reel, a fac
 then upgrade, downgrade for a refund, or explicitly select a new symbol. All faces
 have equal odds. Weighting purchases are retired and old paid weights refund
 personal points once. The workshop lists current face chances and every possible
-critical combination. Compact screens use a face selector and fixed Power and
-Replace pages. Downgrades remove one tier and refund half its paid price (at
+critical combination. Compact screens use a face selector with rank and symbol
+choices. Lowering a rank refunds half its paid price per step (at
 least one point). Class seals cannot be removed or copied. Rank-up prices are
 3 / 6 / 10 before class affinities; a Tank pays 6 to upgrade healing I → II,
 a Mage 3. Every normal power supports tier IV.
 
 Each hero has **Aggressive** or **Defensive** temperament, selecting a different
-level-one mark palette without changing a rolled mark's power. Rebuild either
-way. Choose it for your first hero; wanderers vary. It is separate from class
-and any earned trait.
+level-one mark palette. Aggressive adds 2 to present physical, spell and poison
+effects; Defensive adds 2 to present healing, block and stun effects. These apply
+once per effect category per roll. Choose it for your first hero; wanderers vary.
+It is separate from class and any earned trait.
 
 | Class     | Starting style                                         | Middle-reel ability                                           |
 | --------- | ------------------------------------------------------ | ------------------------------------------------------------- |
 | Tank      | 50 HP; blades and team protection                      | Shield Bash grants block, then spends it on a bounded strike                        |
-| Rogue     | 26 HP; damage and poison                               | Flurry rolls three extra attacks                              |
+| Rogue     | 26 HP; damage and poison; no healing marks              | Flurry rolls three extra attacks                              |
 | Mage      | 28 HP; build healing, shields, poison or spell damage  | Resonance echoes the rolled marks across the appropriate team |
 | Berserker | 38 HP; unlock at camp; blades, healing and Blood Price | Bloodrush heals; charged Fury adds damage and lifesteal       |
 | Jester    | 30 HP; unlock at camp; Trick and mixed marks | Wildcard plays a random trick; anticipation fires a six-mark burst |
 | Ranger    | 30 HP; unlock at camp                                  | Execute rewards patience and finishing wounded enemies        |
 | Bloodbinder | 32 HP; unlock at camp; Seeds, spells and ally support | Blood Bloom detonates all Seeds for damage and shared healing |
-| Necromancer | 22 HP; starting-only; spells, poison and Harvest | Soul Call gathers Souls to raise automatic Skeletons, then heal the undead team |
+| Necromancer | 22 HP; earned by winning floor ten; starting-only | Soul Call gathers Souls to raise automatic Skeletons, then heal the undead team |
 
 Former Healers migrate to Mages with their existing stats and edited wheels.
 There is no Mage role selector: builds follow the marks on their reels. See

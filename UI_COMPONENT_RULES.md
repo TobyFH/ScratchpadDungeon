@@ -380,3 +380,14 @@ for snapshot metadata and grouped-action recording.
   their tile coordinate grid. Individual illustrations can still lean/recoil.
 - Heavy marks use the axe illustration and shared tier grid, with clear power
   and costs. A heavy mark is not a class seal or another physical damage channel.
+
+## Current polish contracts
+
+`ui/ui-polish.css` centralizes the final target-strip, double-battle and workshop
+overrides. See [Notebook polish](docs/NOTEBOOK_POLISH.md) for source ownership.
+Speech and action labels use the feedback layer (2000), below event sheets
+(2800) and utility sheets (3000). Keep these ordered through shared tokens.
+Enemy selection changes classes and readouts in place; never recreate its SVG
+or restart idle motion. Give each paired enemy text field its own reserved row.
+Utility pages use their actual title once, with no generic notebook eyebrow.
+New components inherit paper, ink, type and functional-colour tokens.

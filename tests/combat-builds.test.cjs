@@ -107,7 +107,6 @@ test("unlocked starting classes include the solo Necromancer, with fixed tempera
     "mage",
     "ranger",
     "berserker",
-    "necromancer",
   ]);
   assert.equal(result.loaded, true);
   assert.equal(result.job, "mage");
@@ -257,11 +256,11 @@ test("temperament adds its relevant flat bonuses without editing face powers or 
       same: reels === JSON.stringify(h.reels),
     };
   });
-  assert.equal(r.attack.attack, r.neutral.attack + 1);
+  assert.equal(r.attack.attack, r.neutral.attack + 2);
   assert.equal(r.attack.heal, r.neutral.heal);
   assert.equal(r.guard.attack, r.neutral.attack);
-  assert.equal(r.guard.heal, r.neutral.heal + 1);
-  assert.equal(r.guard.block, r.neutral.block + 1);
+  assert.equal(r.guard.heal, r.neutral.heal + 2);
+  assert.equal(r.guard.block, r.neutral.block + 2);
   assert.equal(r.same, true);
 });
 

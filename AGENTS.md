@@ -1,3 +1,7 @@
+Read `docs/NOTEBOOK_POLISH.md` for the current earned Necromancer unlock, Rogue
+permissions, +2 temperament, Seed maturity, loot and UI-layer contracts. The
+Necromancer is earned by a floor-ten victory, never bought or recruited. Keep
+cosmetic choices out of gameplay RNG and enemy selection free of portrait rebuilds.
 Read `docs/SOUL_CLASSES.md` for current save-24 Bloodbinder and Necromancer rules.
 It supersedes the older timed Bleeding/Clotted/Exchange balance documents.
 `game/bloodbinder.js` owns unlimited per-enemy Seed reservoirs: actual HP damage

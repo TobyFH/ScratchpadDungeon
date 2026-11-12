@@ -276,18 +276,18 @@ test("temperaments add only relevant landed effects and stack with visible trait
       bookish: HERO_TRAITS.bookish.effects.xp,
     };
   });
-  assert.equal(r.off.attack, 3);
-  assert.equal(r.off.magic, 2);
-  assert.equal(r.off.poison, 3);
+  assert.equal(r.off.attack, 4);
+  assert.equal(r.off.magic, 3);
+  assert.equal(r.off.poison, 4);
   assert.equal(r.off.heal, 3);
   assert.equal(r.def.attack, 2);
-  assert.equal(r.def.heal, 4);
-  assert.equal(r.def.block, 5);
-  assert.equal(r.def.stun, 2);
+  assert.equal(r.def.heal, 5);
+  assert.equal(r.def.block, 6);
+  assert.equal(r.def.stun, 3);
   assert.deepEqual(r.empty, { attack: 0, poison: 0 });
   assert.equal(r.trait, 2);
-  assert.equal(r.plan.attack, 4);
-  assert.match(r.help, /\+1/);
+  assert.equal(r.plan.attack, 5);
+  assert.match(r.help, /\+2/);
   assert.equal(r.bookish, 0.08);
 });
 async function nest(p, contents) {

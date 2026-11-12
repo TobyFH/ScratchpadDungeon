@@ -677,7 +677,7 @@ test("tile captions use hyphens and activated, and biome identity survives a run
   assert.equal(r.version, 24);
 });
 
-test("actual Rogue damage and healing retain readable ranks with the visible Aggressive bonus", async (t) => {
+test("actual Rogue damage retains readable ranks with the stronger Aggressive bonus and no healing", async (t) => {
   const p = await game(t);
   const r = await p.evaluate(async () => {
     newRun("rogue", {specialism:"offence"});
@@ -692,24 +692,24 @@ test("actual Rogue damage and healing retain readable ranks with the visible Agg
     runMachine = async () => [
       { type: "attack", tier: 3 },
       { type: "attack", tier: 4 },
-      { type: "heal", tier: 4 },
+      { type: "blank", tier: 1 },
     ];
     await spin(0);
     return {
       damage: state.lastPlayerRoll.actualDamage,
-      heal: state.lastPlayerRoll.actualHealing,
+      heal: state.lastPlayerRoll.actualHealing || 0,
       hp: state.party[0].hp,
       enemy: state.enemy.hp,
       hits: state.lastPlayerRoll.hits.map((h) => h.power),
     };
   });
-  assert.equal(r.damage, 8);
-  assert.equal(r.enemy, 992);
-  assert.equal(r.heal, 8);
-  assert.equal(r.hp, 13);
+  assert.equal(r.damage, 9);
+  assert.equal(r.enemy, 991);
+  assert.equal(r.heal, 0);
+  assert.equal(r.hp, 5);
   assert.equal(
     r.hits.reduce((a, b) => a + b, 0),
-    8,
+    9,
   );
 });
 

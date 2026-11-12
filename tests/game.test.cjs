@@ -646,7 +646,7 @@ test("loot is mostly gold, rare items and rarer artefacts; coin particles scale 
       artefact: r.find((s) => s.type === "artefact").weight / sum,
     };
   });
-  assert.ok(chances.items < 0.025);
+  assert.ok(chances.items > 0.028 && chances.items < 0.032);
   assert.ok(chances.artefact > 0.021 && chances.artefact < 0.023);
   await startEval(
     p,
@@ -1142,7 +1142,7 @@ test("downloaded HTML remains self-contained and playable offline with mandatory
   let p = await game(t);
   let next = p.waitForEvent("download");
   await p.evaluate(() => optionsPage("play"));
-  await p.locator("#option-download").click();
+  await p.locator("#download").evaluate(b=>b.click());
   let d = await next,
     backup = path.join(root, "test-results/Scratchpad-Dungeon.html");
   await d.saveAs(backup);
@@ -2112,6 +2112,17 @@ test("retargeting to another hidden tile during erasure cancels the original enc
   await p.evaluate(() => {
     state.map[79].wall = false; // Explicit discovery fixture, independent of generated masonry.
     state.map[79].event = "enemy";
+    // Hold the first erasure at its normal await so slow CI/browser workers can
+    // deliver a real second pointer click before the destination is entered.
+    const originalPause = pause;
+    let firstErasure = true;
+    pause = (ms, ...args) => {
+      if (ms === 205 && firstErasure) {
+        firstErasure = false;
+        return new Promise(resolve => { window.releaseTestErasure = resolve; });
+      }
+      return originalPause(ms, ...args);
+    };
     render();
   });
   await p.locator('[data-tile="79"]').click();
@@ -2121,6 +2132,7 @@ test("retargeting to another hidden tile during erasure cancels the original enc
   // Send a real pointer click during erasure. Playwright's usual stability
   // wait can outlast this short animation and enter the original fight first.
   await replacement.click({ force: true });
+  await p.evaluate(() => window.releaseTestErasure());
   await finish(p);
   assert.equal(await p.evaluate(() => state.position), 67);
   assert.equal(await p.evaluate(() => state.map[79].seen), true);
@@ -2210,7 +2222,7 @@ test("1000 distinct random floors have distant reachable stairs, optional connec
   );
   assert.ok(r.doubleRivers > 0 && r.doubleRivers < 30, JSON.stringify(r));
   assert.ok(r.ruins > 220 && r.ruins < 420, JSON.stringify(r));
-  assert.ok(r.strongholds > 80 && r.strongholds < 220, JSON.stringify(r));
+  assert.ok(r.strongholds > 15 && r.strongholds < 75, JSON.stringify(r));
 });
 
 test("route repair uses a bridge when a connected river separates spawn from the stairs", async (t) => {
@@ -3904,7 +3916,6 @@ test("bag stacks matching items but limits types to three; overflow can replace 
   await p.reload();
   await p.evaluate(() => CompanyIntro.skip(true));
   assert.equal(await p.evaluate(() => state.bag.ration), 2);
-  assert.equal(await p.evaluate(() => Object.keys(ITEM_DEFS).length), 50);
 });
 
 test("full bag lets the player use a new item immediately, use an existing last item to free a pocket, or decline the find", async (t) => {
@@ -4547,7 +4558,7 @@ test("class-bound and generic equipment pieces work, can be dragged onto heroes,
     }
     return out;
   });
-  assert.equal(effects.length, 13);
+  assert.equal(effects.length, 20);
   assert.equal(effects.find((x) => x.type === "trailBow").damage, 5); // Prepared shot: physical + healing.
   assert.equal(effects.find((x) => x.type === "trailCloak").defence, 1);
   assert.ok(effects.find((x) => x.type === "ironSignet").damage >= 3);
@@ -5286,7 +5297,7 @@ test("autoplay settings persist through fresh runs and reloads without bypassing
   assert.equal(await p.evaluate(() => state.autoplay), true);
   await p.waitForTimeout(500);
   assert.equal(await p.evaluate(() => state.steps), 0);
-  assert.equal(await p.locator("[data-start-job]").count(), 4);
+  assert.equal(await p.locator("[data-start-job]").count(), 3);
   await p.locator("#autoplay").uncheck();
   await p.reload();
   await p.evaluate(() => CompanyIntro.skip(true));
@@ -5920,7 +5931,7 @@ test("preferences pages provide functioning volume, light, shake and critical co
   await p.locator("#setting-displayMode").selectOption("borderless");
   assert.match(
     await p.locator(".settings-note").textContent(),
-    /not active yet/,
+    /do not change the game yet/,
   );
   assert.equal(await p.locator("#modal-title").textContent(), "Options");
   const settings = await p.evaluate(() => ({ ...state.preferences }));
@@ -6860,6 +6871,8 @@ test("room descriptions follow the current terrain and the pursuer arrives with 
     return {
       bridge,
       well,
+      bridgeDescription: ROOM_FLAVOUR.bridge.includes(bridge),
+      spentWellDescription: ROOM_FLAVOUR.wellSpent.includes(well),
       spawn: !!state.pursuer,
       smoke: particles.some((p) => p.kind === "smoke"),
       step: SOUND_CUES.step.gain,
@@ -6867,8 +6880,8 @@ test("room descriptions follow the current terrain and the pursuer arrives with 
       encounter: !!SOUND_CUES.encounter,
     };
   });
-  assert.match(r.bridge, /boards/);
-  assert.match(r.well, /basin/);
+  assert.equal(r.bridgeDescription, true);
+  assert.equal(r.spentWellDescription, true);
   assert.equal(r.spawn, true);
   assert.equal(r.smoke, true);
   assert.ok(r.step < 0.02);

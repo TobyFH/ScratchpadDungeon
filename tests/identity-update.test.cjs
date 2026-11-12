@@ -597,7 +597,7 @@ test("ally healing, consumed tonics and level-up recovery all drain only actual 
       enemyWard: state.enemy.stunWard,
     };
   });
-  assert.deepEqual(r.ally, { hp: 15, fury: 19 });
+  assert.deepEqual(r.ally, { hp: 16, fury: 18 });
   assert.ok(r.tonic.restored > 0);
   assert.equal(r.tonic.restored, r.tonic.spent);
   assert.deepEqual(r.level, { hp: 16, fury: 14 });

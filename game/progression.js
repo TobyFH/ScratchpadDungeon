@@ -52,6 +52,9 @@ const CAMP_LESSONS = Object.freeze({
   },
 });
 const CAMP_CLASS_PAGE_SIZE = 3;
+const CAMP_ACHIEVEMENTS = Object.freeze({
+  necromancer: {name:"The Soul Collector",category:"classes",achievement:true,description:"Defeat the final guardian on floor 10 to unlock Necromancer starts. Cannot be bought or recruited."},
+});
 const CAMP_UNLOCKS = {
   ranger: {
     name: "A ranger's invitation",
@@ -202,6 +205,7 @@ function emptyProfile() {
     enabled: [],
     activeTraining: {},
     deposits: {},
+    dungeonCleared: false,
   };
 }
 function readProfile() {
@@ -266,6 +270,7 @@ function readProfile() {
     activeTraining: {},
     deposits,
     rangerRefunded: p.rangerRefunded === true,
+    dungeonCleared: p.dungeonCleared === true || Object.entries(deposits).some(([id,amount]) => id.endsWith(":10") && amount > 0),
   };
   for (const family of Object.keys(CAMP_LESSONS)) {
     const ownedRank = ownedLessonRank(family, profile),
@@ -299,6 +304,23 @@ function campProfile() {
   } catch (error) {
     console.warn("Camp record:", error.message);
     return { ...emptyProfile(), error: error.message };
+  }
+}
+// Earned achievement, deliberately absent from the purchasable catalogue.
+function necromancerUnlocked(profile = campProfile()) {
+  return profile.dungeonCleared === true;
+}
+function recordDungeonVictory() {
+  if (!state?.won || state.depth !== 10) return false;
+  try {
+    const p=readProfile();
+    if (p.dungeonCleared) return false;
+    p.dungeonCleared=true;
+    localStorage.setItem(PROFILE_KEY,JSON.stringify(p));
+    return true;
+  } catch(error) {
+    console.warn("Victory unlock was not saved:",error.message);
+    return false;
   }
 }
 function expeditionRules() {
@@ -556,7 +578,7 @@ function campPage(category = "classes", leaf = null) {
   if (!Object.hasOwn(tabs, category)) category = "classes";
   if (category !== campCategory) campLeaf = 0;
   campCategory = category;
-  const entries = Object.entries(CAMP_UNLOCKS).filter(
+  const entries = Object.entries({...CAMP_UNLOCKS,...CAMP_ACHIEVEMENTS}).filter(
       ([id, d]) =>
         d.category === category &&
         (!d.family || id === nextTrainingCard(d.family, p)),
@@ -585,7 +607,7 @@ function campPage(category = "classes", leaf = null) {
     <nav class="camp-leaf-nav" aria-label="More camp choices"><button id="camp-previous" ${campLeaf === 0 ? "disabled" : ""}>← Previous</button><span>${tabs[category]} · ${campLeaf + 1} / ${count}</span><button id="camp-next" ${campLeaf === count - 1 ? "disabled" : ""}>Next →</button></nav>
     <div class="camp-grid" data-category="${category}">${visible
       .map(([id, d]) => {
-        const owned = p.owned.includes(id),
+        const owned = d.achievement ? necromancerUnlocked(p) : p.owned.includes(id),
           locked = d.requires && !p.owned.includes(d.requires),
           rank = d.family ? selectedLessonRank(d.family, p) : 0,
           earned = d.family ? ownedLessonRank(d.family, p) : 0;
@@ -594,7 +616,7 @@ function campPage(category = "classes", leaf = null) {
         <h3>${d.name}${d.family ? ` · ${earned}/5` : ""}</h3>
         <p>${d.family ? `${earned === 5 ? "Highest learned" : "Next lesson"}: ${d.description}` : d.description}</p>
         ${d.family ? `<div class="active-lesson" aria-label="Active ${d.name}"><button data-lesson-family="${d.family}" data-lesson-rank="${rank - 1}" aria-label="Decrease ${d.name}" ${!rank ? "disabled" : ""}>−</button><span><b>Active ${rank} / ${earned}</b><small>${rank ? CAMP_UNLOCKS[d.family + rank].description : "No bonus next run"}</small></span><button data-lesson-family="${d.family}" data-lesson-rank="${rank + 1}" aria-label="Increase ${d.name}" ${rank >= earned ? "disabled" : ""}>+</button></div>` : ""}
-        ${owned ? (d.family ? '<strong class="camp-owned">All five lessons learned</strong>' : d.permanent ? '<strong class="camp-owned">Unlocked · always available</strong>' : `<button data-camp-toggle="${id}" aria-pressed="${p.enabled.includes(id)}">${p.enabled.includes(id) ? "Enabled next run ✓" : "Enable next run"}</button>`) : `<button data-camp-buy="${id}" ${p.gold < d.cost || locked || p.error ? "disabled" : ""}>${d.family ? `Learn tier ${d.rank} · ` : "Unlock · "}${d.cost} gold</button>`}
+        ${d.achievement ? `<strong class="camp-owned">${owned ? "Unlocked · final guardian defeated" : "Locked · defeat floor 10"}</strong>` : owned ? (d.family ? '<strong class="camp-owned">All five lessons learned</strong>' : d.permanent ? '<strong class="camp-owned">Unlocked · always available</strong>' : `<button data-camp-toggle="${id}" aria-pressed="${p.enabled.includes(id)}">${p.enabled.includes(id) ? "Enabled next run ✓" : "Enable next run"}</button>`) : `<button data-camp-buy="${id}" ${p.gold < d.cost || locked || p.error ? "disabled" : ""}>${d.family ? `Learn tier ${d.rank} · ` : "Unlock · "}${d.cost} gold</button>`}
       </article>`;
       })
       .join("")}</div>

@@ -197,6 +197,9 @@ function lootFindCarousel(entries) {
   if (!target) return;
   target.dataset.presenting = "false";
   target.innerHTML = `<div class="loot-find-grid" data-count="${entries.length}">${entries.map((entry) => `<div class="loot-find-tile">${entry}</div>`).join("")}</div>`;
+  const run=state,arrivals=[],presentation={};
+  target.lootPresentation=presentation;
+  target.dataset.presenting=entries.length ? "true" : "false";
   target.querySelectorAll(".loot-find-tile").forEach((tile, i) => {
     const name = tile.querySelector("b")?.textContent || "";
     const item = Object.values(ITEM_DEFS).find((d) => name.startsWith(d.name));
@@ -232,20 +235,29 @@ function lootFindCarousel(entries) {
             revive: "Revive once · 75% HP",
           }[artefact.key] || artefactText(artefact);
     }
-    setTimeout(() => {
-      if (!tile.isConnected || $("#spotlight").hidden) return;
-      GameSound.play("itemFind");
-      burst(tile, "gold", 12);
-      animate(
-        tile,
-        [
-          { opacity: 0, transform: "scale(.86)" },
-          { opacity: 1, transform: "scale(1.03)" },
-          { opacity: 1, transform: "none" },
-        ],
-        { duration: 350, juice: true },
-      );
-    }, i * 180);
+    const rare=!!artefact || !!item?.equipment || (item?.quality || 1)>=3;
+    tile.dataset.rarity=rare?'rare':'common';
+    const arrival=new Promise(resolve=>setTimeout(resolve,skip?i*35:i*180/Math.sqrt(pace()))).then(async()=>{
+      await waitForUtility();
+      if(state!==run || !tile.isConnected || $("#spotlight").hidden)return;
+      tile.classList.add('loot-stamping');
+      GameSound.play(rare?'reward':'itemFind');
+      burst(tile,'gold',rare?62:16);
+      if(rare){screenFX('gold',.95);shakeElement($("#stage-card"),3,'settle');}
+      const motion=animate(tile,rare?[
+        {opacity:0,transform:'scale(1.9) rotate(-7deg)'},
+        {opacity:1,transform:'scale(.94) rotate(1deg)',offset:.38},
+        {opacity:1,transform:'scale(1.07) rotate(-.5deg)',offset:.65},
+        {opacity:1,transform:'none'},
+      ]:[{opacity:0,transform:'scale(.86)'},{opacity:1,transform:'scale(1.03)'},{opacity:1,transform:'none'}],{duration:rare?600:350,juice:true});
+      await motion?.finished?.catch(()=>{});
+      tile.classList.remove('loot-stamping');
+    });
+    arrivals.push(arrival);
+
+  });
+  Promise.allSettled(arrivals).then(()=>{
+    if(target.lootPresentation===presentation)target.dataset.presenting="false";
   });
   requestFitUI();
 }

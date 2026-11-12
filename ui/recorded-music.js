@@ -16,6 +16,7 @@ const BIOME_MUSIC = Object.freeze({
   ice: "chill", crystal: "mysterious", maze: "ominous",
   unstable: "ominous", shadow: "ominous", lava: "ominous",
 });
+const MUSIC_FADES=Object.freeze({out:.54,in:.78,first:.42,duck:.078,restore:.36});
 function musicSelection() {
   // A utility sheet preserves the menu beneath it, including its music.
   const kind = utilityOpen ? utilityContext?.kind : modalKind;
@@ -84,17 +85,17 @@ function createRecordedMusic(context, bus) {
     current.gain.gain.cancelScheduledValues(context.currentTime);
     current.gain.gain.value = 0;
     current.id = selection.id; current.key = selection.key;
-    current.fadingIn = true; current.fadeSeconds = previous ? .65 : .35;
+    current.fadingIn = true; current.fadeSeconds = previous ? MUSIC_FADES.in : MUSIC_FADES.first;
     current.audio.src = asset.src;
     current.audio.loop = true;
     current.audio.load();
     start(current);
     if (previous) {
-      ramp(previous.gain.gain, 0, .45);
+      ramp(previous.gain.gain, 0, MUSIC_FADES.out);
       const retiring = previous;
       retiring.retirement = setTimeout(() => {
         if (retiring !== current) retiring.audio.pause();
-      }, 500);
+      }, (MUSIC_FADES.out+.05)*1000);
     }
     return true;
   }
@@ -103,7 +104,7 @@ function createRecordedMusic(context, bus) {
     const old = activeJingle; activeJingle = null;
     old.audio.pause(); old.source.disconnect(); old.gain.disconnect();
     old.audio.removeAttribute("src"); old.audio.load();
-    ramp(duck.gain, 1, .3);
+    ramp(duck.gain, 1, MUSIC_FADES.restore);
   }
   function stinger(id, token) {
     if (!["victory", "failure"].includes(id) || playedJingles.has(token) ||
@@ -118,7 +119,7 @@ function createRecordedMusic(context, bus) {
     source.connect(gain); gain.connect(bus); // Jingles bypass background ducking.
     const cue = { id, audio, source, gain };
     activeJingle = cue;
-    ramp(duck.gain, .14, .065);
+    ramp(duck.gain, .14, MUSIC_FADES.duck);
     const finish = () => { if (activeJingle === cue) stopJingle(); };
     audio.addEventListener("ended", finish, { once: true });
     audio.addEventListener("error", () => { failed(id, audio.error?.message); finish(); }, { once: true });

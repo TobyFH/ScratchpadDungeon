@@ -4,7 +4,12 @@ const BLOOD_BINDING = Object.freeze({
   selfCostRankStep: 2,
   seedHealing: 1,
   detonationDamage: 1,
+  maturityInterval: 4,
+  maturityCap: 2,
 });
+const bloodSeedBonus = (h) => h?.job === "bloodbinder"
+  ? Math.min(BLOOD_BINDING.maturityCap,Math.floor(Math.max(0,(h.level||1)-1)/BLOOD_BINDING.maturityInterval)) + equipmentBonus(h,"seeds")
+  : 0;
 function bloodSeedCount(e) {
   return Math.max(0, Math.floor(Number(e?.bloodSeeds?.count) || 0));
 }
@@ -38,11 +43,12 @@ function bloodSeedCost(power, symbols = null) {
     : Math.ceil(Math.max(0, power) / BLOOD_BINDING.selfCostRankStep);
 }
 function bloodSeedPlan(e, power, h, symbols = null) {
-  const added = Number.isFinite(power) ? Math.max(0, Math.ceil(power)) : 0;
+  const rawPower = Number.isFinite(power) ? Math.max(0, power) : 0;
+  const added = rawPower > 0 ? Math.ceil(rawPower) + bloodSeedBonus(h) : 0;
   return {
     added,
     count: Math.min(Number.MAX_SAFE_INTEGER, bloodSeedCount(e) + added),
-    hpCost: Math.min(Math.max(0, h.hp - 1), bloodSeedCost(added, symbols)),
+    hpCost: added ? Math.min(Math.max(0, h.hp - 1), bloodSeedCost(rawPower, symbols)) : 0,
   };
 }
 function applyBloodSeed(e, power, h, { symbols = null } = {}) {
@@ -196,7 +202,8 @@ function bloodSeedForecast(h, power, e = state.enemy) {
       ),
     ),
     existing = bloodSeedCount(e);
-  const potential = Math.max(0, power),
+  const chance = 1-h.reels.reduce((p,r)=>p*(1-faceShare(r,["bloodseed"])),1);
+  const potential = Math.max(0, power) + bloodSeedBonus(h)*chance,
     demand = state.party
       .filter(alive)
       .reduce((n, a) => n + Math.max(1, expectedDirectMarkPower(a)), 0);

@@ -29,6 +29,7 @@ async function game(t) {
   await p.goto(url);
   await p.evaluate(() => CompanyIntro.skip(true));
   await p.evaluate(() => {
+    const profile=emptyProfile();profile.dungeonCleared=true;localStorage.setItem(PROFILE_KEY,JSON.stringify(profile));
     newRun("necromancer");
     closeModal();
     closeSpotlight();
@@ -420,6 +421,9 @@ test("wandering adventurers become real hostile encounters instead of recruitmen
   await p.locator("#stage-confirm").waitFor();
   assert.equal(await p.locator("#recruit-accept").count(), 0);
   assert.equal(await p.evaluate(() => state.party.length), 1);
+  assert.match(await p.locator("#stage-card").innerText(),/frightened|Fear|recoils/);
+  await p.locator("#stage-confirm").click();
+  await p.waitForFunction(()=>!!state.enemy);
   await p.locator("#stage-confirm").click();
   await p.evaluate(() => recruitTask);
   assert.equal(await p.evaluate(() => !!state.enemy), true);

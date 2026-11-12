@@ -452,11 +452,11 @@ function enemyShieldEl(e = state.enemy) {
   return $("#enemy-team-block");
 }
 function canEquipGear(h, gear) {
-  return !!h && !!gear && (!gear.job || gear.job === h.job);
+  return !!h && !!gear && (gear.jobs ? gear.jobs.includes(h.job) : !gear.job || gear.job === h.job);
 }
 function equipmentScope(item) {
   return item?.equipment
-    ? item.job
+    ? item.jobs ? item.jobs.map(className).join(" / ") + " ONLY" : item.job
       ? className(item.job) + " ONLY"
       : "ALL CLASSES"
     : "";

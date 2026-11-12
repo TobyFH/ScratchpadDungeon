@@ -297,10 +297,9 @@ test("enemy hover descriptions distinguish combined hit strength from a hero mar
       heal: faceDescription({ type: "heal", tier: 3 }, e),
     };
   });
-  assert.match(r.enemy, /Contributes 2 physical power/);
-  assert.match(r.enemy, /one combined enemy hit/);
+  assert.match(r.enemy, /2 physical power toward a combined hit/);
   assert.match(r.hero, /Deal 2 physical damage/);
-  assert.match(r.heal, /Restore 3 enemy HP/);
+  assert.match(r.heal, /3 enemy HP before bonuses/);
 });
 
 test("Defensive Tank and Mage starts retain useful solo damage before spending their first point", async (t) => {

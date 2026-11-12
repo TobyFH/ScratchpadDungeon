@@ -51,7 +51,7 @@ async function game(t) {
 test("temperament is only selectable at the start, Mages have no role stat or selector, and old edited builds migrate intact", async (t) => {
   const p = await game(t);
   await p.evaluate(() => chooseStartingClass());
-  assert.equal(await p.locator("[data-start-job]").count(), 4);
+  assert.equal(await p.locator("[data-start-job]").count(), 3);
   assert.equal(await p.locator("#starter-role").count(), 0);
   await p.locator("#starter-specialism").selectOption("defence");
   await p.locator('[data-start-job="mage"]').click();
@@ -199,7 +199,7 @@ test("Berserker Fury comes from HP wounds and Blood Price, scales damage, has a 
   assert.equal(result.charged.bonus, 2);
   assert.equal(
     result.charged.damage,
-    9,
+    10,
     "rank-II physical + Bloodrush + wound Fury + Blood & steel + Aggressive, before healing spends charge",
   );
   assert.match(result.bar, /FURY 8\/24/);
@@ -341,8 +341,8 @@ test("initiative boosts only the first party roll and is forfeited when a differ
     await spin(0);
     return { bonus, ordinary: state.lastPlayerRoll.totals.attack, expired };
   });
-  assert.equal(r.bonus, 5);
-  assert.equal(r.ordinary, 4);
+  assert.equal(r.bonus, 7);
+  assert.equal(r.ordinary, 5);
   assert.equal(r.expired, true);
 });
 
@@ -567,7 +567,9 @@ test("workshop explains faces and actions, Fury and shared enemy shields fit, an
           face = el.querySelector(".machine-face").getBoundingClientRect(),
           a = el.querySelector(".enemy-action-state").getBoundingClientRect(),
           b = el.querySelector(".enemy-trait").getBoundingClientRect();
-        return title.bottom <= face.top + 1 && a.right <= b.left + 1;
+        const separate = a.right <= b.left + 1 || b.right <= a.left + 1 ||
+          a.bottom <= b.top + 1 || b.bottom <= a.top + 1;
+        return title.bottom <= face.top + 1 && separate;
       });
     assert.equal(
       captionFit,

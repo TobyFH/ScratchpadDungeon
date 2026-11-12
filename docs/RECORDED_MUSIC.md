@@ -23,13 +23,14 @@ Two native looping media decks feed separate per-track gains into one background
 duck gain, then the existing Music bus, master and limiter. They are independent
 of the bounded SFX voice pool. Reuse those two decks; never create a new permanent
 media element on each render or decode all long recordings into AudioBuffers.
-Only scene/floor changes schedule fades. The previous deck fades out over .45s,
-and the next fades up over .65s when actual decoded playback starts (.35s for the
+Only scene/floor changes schedule fades. `MUSIC_FADES` centralizes durations,
+increased by 20% in the notebook polish pass. The previous deck fades out over .54s,
+and the next fades up over .78s when actual decoded playback starts (.42s for the
 first track). Rapid changes cancel obsolete retirement timers and playback work.
 
 `GameSound.stinger('victory'|'failure')` uses a single separate, non-looping media
 voice connected directly to the Music bus. The background continues underneath,
-ducking to 14% over .065s and returning over .3s when the jingle finishes or fails.
+ducking to 14% over .078s and returning over .36s when the jingle finishes or fails.
 This also ducks a floor/battle transition occurring during the jingle. Repeated
 outcome calls are bounded and deduplicated by run/floor/outcome. No ordinary
 enemy kill plays the floor jingle. Floor ten uses the same victory jingle once.

@@ -1,0 +1,320 @@
+/* Component contracts for this pass: stable layers, target controls and paired
+   encounters. Frames, paper, typography and colours come from notebook.css. */
+:root {
+  --ui-z-feedback: 2000;
+  --ui-z-event: 2800;
+  --ui-z-menu: 3000;
+}
+#spotlight {
+  z-index: var(--ui-z-event);
+}
+#overlay,
+body.utility-open #overlay {
+  z-index: var(--ui-z-menu);
+}
+.speech-bubble,
+.combat-callout,
+.action-label,
+.blood-seed-pop,
+.summon-bone-flash {
+  z-index: var(--ui-z-feedback);
+}
+.hero :is(.points-prompt, .edit-button, .portrait):disabled {
+  opacity: 1;
+}
+.icon-workshop .workshop-selected {
+  border: 0;
+  padding: 6px;
+  box-sizing: border-box;
+}
+.icon-workshop .workshop-detail {
+  border: 0;
+}
+.icon-workshop .workshop-faces .permanent-class-face {
+  border: 2px solid var(--gold);
+  box-shadow: inset 0 0 0 1px var(--ink);
+  background: color-mix(in srgb, var(--gold) 12%, var(--paper));
+}
+.workshop-receipt {
+  text-align: center;
+}
+.loot-find-tile {
+  position: relative;
+}
+.loot-find-tile.loot-stamping {
+  z-index: 4;
+}
+.loot-find-tile[data-rarity="rare"] :is(.item-find, .artefact-card) {
+  border-color: var(--gold);
+  background: color-mix(in srgb, var(--gold) 8%, var(--paper));
+}
+.achievement-unlock {
+  color: var(--gold);
+  font-size: 24px;
+  text-align: center;
+}
+.future-group-picker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 6px 0 12px;
+}
+.future-group-picker select {
+  flex: 1;
+  min-width: 0;
+}
+.future-settings {
+  min-height: 240px;
+  align-content: start;
+}
+.future-settings .setting-check {
+  min-height: 45px;
+}
+.future-settings label {
+  min-width: 0;
+}
+
+/* Explicitly choose who receives healing; no animated selection treatment. */
+.battle-target,
+.fit-notebook .battle-target {
+  height: 50px;
+  min-height: 50px;
+  max-height: 50px;
+  margin: 6px 0;
+  gap: 8px;
+  flex-wrap: nowrap;
+  overflow: visible;
+  align-items: center;
+  font-size: 20px;
+}
+.target-heading {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+}
+.target-heading > svg {
+  width: 24px;
+  height: 24px;
+  color: var(--green);
+}
+.battle-target .target-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-height: 42px;
+  min-width: 82px;
+  padding: 3px 7px;
+  font-size: 20px;
+  flex: 1;
+  position: relative;
+}
+.target-button > svg {
+  width: 23px;
+  height: 32px;
+  flex: none;
+}
+.target-button small {
+  display: block;
+  font-size: 13px;
+  line-height: 1;
+}
+.target-button.active {
+  background: color-mix(in srgb, var(--green) 17%, var(--paper));
+  border: 2px solid var(--green);
+  outline: 1px solid var(--ink);
+  outline-offset: 1px;
+}
+.target-check {
+  color: var(--green);
+  font-weight: bold;
+}
+@media (min-width: 1260px) {
+  .fit-notebook .result-ribbon {
+    height: 44px;
+    min-height: 44px;
+    max-height: 44px;
+    margin-bottom: 8px;
+  }
+  #encounter.paired-enemies {
+    display: grid;
+    grid-template-rows: 24px 42px minmax(0, 1fr);
+    gap: 6px;
+    padding: 10px 8px;
+    box-sizing: border-box;
+  }
+  #encounter.paired-enemies > .enemy-label {
+    position: static;
+    font-size: 22px;
+    height: 24px;
+    min-height: 0;
+    line-height: 1;
+    margin: 0;
+    padding: 0 5px;
+    justify-self: start;
+    align-self: start;
+  }
+  #encounter.paired-enemies > .enemy-team-block {
+    margin: 0;
+    min-height: 0;
+    max-height: 42px;
+  }
+  .fit-notebook #encounter.paired-enemies .enemy-roster {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    min-height: 0;
+  }
+  .fit-notebook #encounter.paired-enemies .enemy-box {
+    display: grid;
+    grid-template-columns: 86px minmax(0, 1fr);
+    grid-template-rows: minmax(130px, 1fr) 80px;
+    gap: 4px;
+    padding: 4px;
+    min-height: 0;
+    box-sizing: border-box;
+  }
+  .fit-notebook #encounter.paired-enemies .enemy-presence {
+    height: 130px;
+    min-height: 0;
+  }
+  .fit-notebook #encounter.paired-enemies .enemy-art {
+    height: 112px;
+    width: 100%;
+  }
+}
+/* Names, health, timing and stats each own a row. Long passive labels have their
+   own caption below the intent, rather than colliding with the stats above. */
+.paired-enemies .enemy-info {
+  display: grid;
+  grid-template-rows: 42px 18px 7px 22px 28px;
+  gap: 2px;
+  align-content: start;
+  min-width: 0;
+  padding: 0;
+}
+.paired-enemies .enemy-info h4 {
+  height: 42px;
+  margin: 0;
+  font-size: 21px;
+  line-height: 1;
+  align-content: center;
+  overflow-wrap: anywhere;
+  min-height: 0;
+}
+.paired-enemies .enemy-info .enemy-health-label {
+  height: 18px;
+  font-size: 15px;
+  line-height: 18px;
+  white-space: nowrap;
+}
+.paired-enemies .enemy-info .enemy-hp {
+  height: 7px;
+  margin: 0;
+}
+.paired-enemies .enemy-info .enemy-clock {
+  height: 22px;
+  min-width: 0;
+  margin: 0;
+  padding: 1px 3px;
+  box-sizing: border-box;
+  font-size: 14px;
+  line-height: 18px;
+}
+.paired-enemies .enemy-info .enemy-stats {
+  height: 28px;
+  margin: 0;
+  font-size: 14px;
+  line-height: 14px;
+  overflow: visible;
+}
+.paired-enemies .enemy-box .machine-shell {
+  grid-column: 1/-1;
+  min-width: 0;
+  margin: 0;
+}
+.paired-enemies .enemy-box .machine-title,
+.fit-notebook .paired-enemies .enemy-box .machine-title {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: 16px 14px;
+  gap: 0;
+  height: 30px;
+  min-height: 30px;
+  line-height: 1;
+  margin: 0 0 2px;
+  align-content: start;
+}
+.paired-enemies .enemy-box .enemy-action-state {
+  width: 100%;
+  font-size: 14px;
+  line-height: 16px;
+  white-space: nowrap;
+}
+.paired-enemies .enemy-box .enemy-trait {
+  width: 100%;
+  max-width: none;
+  font-size: 13px;
+  line-height: 14px;
+  white-space: nowrap;
+}
+@media (max-width: 1259px) {
+  .paired-enemies .enemy-box {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 100px 144px 80px;
+    gap: 4px;
+  }
+  .paired-enemies .enemy-presence {
+    height: 110px;
+  }
+  .paired-enemies .enemy-art {
+    height: 105px;
+  }
+  .paired-enemies .enemy-box .machine-shell,
+  .paired-enemies .enemy-box .enemy-info,
+  .paired-enemies .enemy-box .enemy-presence {
+    grid-column: 1;
+    min-width: 0;
+    width: 100%;
+  }
+  .paired-enemies .enemy-info {
+    grid-template-rows: 60px 18px 7px 22px 28px;
+  }
+  .paired-enemies .enemy-info h4 {
+    height: 60px;
+    font-size: 20px;
+  }
+}
+@media (max-width: 760px) {
+  .reel-workshop:not(.icon-workshop) .face-effect {
+    font-size: 23px;
+  }
+  .battle-target {
+    flex-wrap: wrap;
+    height: 84px;
+    min-height: 84px;
+    max-height: 84px;
+    gap: 5px;
+  }
+  .target-heading {
+    flex-basis: 100%;
+    font-size: 21px;
+  }
+  .battle-target .target-button {
+    font-size: 19px;
+    min-width: 0;
+    padding: 3px;
+  }
+  .target-button > svg {
+    width: 18px;
+    height: 28px;
+  }
+  .future-settings {
+    min-height: 310px;
+  }
+  .future-settings label {
+    font-size: 18px;
+  }
+}

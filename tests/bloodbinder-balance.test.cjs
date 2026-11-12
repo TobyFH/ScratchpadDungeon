@@ -192,7 +192,7 @@ test("a real mixed roll plants Seeds before its own spell damage, and a critical
   });
   assert.equal(r.mixed.seeds, 0);
   assert.equal(r.mixed.hp, 9);
-  assert.equal(r.mixed.damage, 3);
+  assert.equal(r.mixed.damage, 4);
   assert.equal(r.cost, 4);
   assert.ok(r.multi > 1);
   assert.equal(r.receipt.seeds, r.raw);

@@ -1457,7 +1457,7 @@ const output = path.join(root, "test-results/ui-review");
     await page.setViewportSize({ width: 1920, height: 1080 });
     await page.evaluate(() => optionsPage("play"));
     const download = page.waitForEvent("download");
-    await page.locator("#option-download").click();
+    await page.locator("#download").evaluate(b=>b.click());
     await (
       await download
     ).saveAs(path.join(output, "ScratchpadDungeon-pencil-notebook.html"));

@@ -3,8 +3,20 @@
 let reelWorkshopLayout = "icons";
 let workshopCritPage = 0;
 let workshopEditReceipt = { heroId: null, text: "" };
+let pendingTravelWorkshop = null;
 function editor(i) {
+  if(travel && alive(state.party[i])) {
+    pendingTravelWorkshop={run:state,heroId:state.party[i].id};
+    travel.workshopStop=true;
+    return;
+  }
   return reelWorkshopLayout === "legacy" ? legacyEditor(i) : iconReelEditor(i);
+}
+function finishTravelWorkshop() {
+  const request=pendingTravelWorkshop;pendingTravelWorkshop=null;
+  if(!request || request.run!==state || state.over || state.enemy || !$("#overlay").hidden || !$("#spotlight").hidden)return;
+  const i=state.party.findIndex(h=>h.id===request.heroId);
+  if(i>=0 && alive(state.party[i]))editor(i);
 }
 function quoteFaceTier(h, reel, index, target) {
   const face = h?.reels[reel]?.[index];
@@ -49,31 +61,7 @@ function setFaceTier(h, reel, index, target) {
 function pointChangeLabel(cost) {
   return cost < 0 ? `+${-cost} pts` : cost > 0 ? `−${cost} pts` : "Current";
 }
-function workshopFaceSummary(face, h) {
-  const n = face.tier || 1;
-  return (
-    {
-      bloodseed: `${n} Seeds; ${bloodSeedCost(n)} HP cost. Damage consumes Seeds for shared healing. No cap or expiry.`,
-      harvest: `${harvestSpellPower(n)} spell power + ${n*NECROMANCER.harvestSouls} Souls. Full bar raises a Skeleton or heals your team.`,
-      heavy: `${markDamage("heavy",n)} physical damage${n >= 3 ? " to every enemy" : " to the selected enemy"}. Stronger, more costly; Tank and Berserker only.`,
-      attack: `${n} physical damage${n >= 3 ? " to every enemy" : " to the selected enemy"}.`,
-      magic: `${n} spell damage${n >= 3 ? " to every enemy" : " to the selected enemy"}; may expose Vulnerable.`,
-      heal: `${POWER.heal * n} HP to the selected ally. Full-health misclicks redirect to a wounded ally.`,
-      selfheal: `${POWER.selfheal * n} HP to yourself only. Surplus is lost; never heals another ally.`,
-      block: `${POWER.block * n} shared block. Spent as it protects; cap 20, or 30 with a Tank.`,
-      stun: `${n} stun power. Stops at most one action, then grants stun protection.`,
-      poison: `${n} poison power. Up to three turns; extra doses strengthen its damage.`,
-      stimulant: `${n} stimulant power to self. Three-turn cap; extra doses raise potency.`,
-      rally: `${n} stimulant power to the ally used most this fight (self when alone). Three-turn cap; extra doses raise potency.`,
-      trick: `${n} anticipation. At six, Punchline fires six ordinary marks from your reels.`,
-      selfharm: `Pay up to ${2 * n} HP without dying. Each HP paid builds ${2 + 0.5 * n} Fury.`,
-      mystery:
-        "Random ordinary power; rank follows this reel. Can complete a normal critical.",
-      blank: "No effect. Choose a symbol below to inscribe it at rank I.",
-      class: workshopAbilitySummary(h),
-    }[face.type] || faceDescription(face, h)
-  );
-}
+function workshopFaceSummary(face,h) {return faceDescription(face,h);}
 function iconCriticalOddsMarkup(h) {
   const rows = heroCriticalOdds(h),
     total = rows.reduce((n, r) => n + r.chance, 0),
@@ -151,7 +139,7 @@ function iconReelEditor(i) {
     .map((f, n) => {
       const chance = (100 / h.reels[k].length).toFixed(1),
         name = f.type === "class" ? classAbilityName(h) : FACE_LABELS[f.type];
-      return `<button data-editor-face="${n}" aria-pressed="${n === j}" title="${escapeHTML(faceDescription(f, h))}">${symbolMarkup(f)}<span>${name}${!["class", "mystery", "blank"].includes(f.type) ? " " + tierName(f.tier) : ""}</span><small>${chance}%</small></button>`;
+      return `<button class="${f.type === "class" ? "permanent-class-face" : ""}" data-editor-face="${n}" aria-pressed="${n === j}" title="${escapeHTML(faceDescription(f, h))}">${symbolMarkup(f)}<span>${name}${!["class", "mystery", "blank"].includes(f.type) ? " " + tierName(f.tier) : ""}</span><small>${chance}%</small></button>`;
     })
     .join("");
   const receipt =
@@ -174,7 +162,7 @@ function iconReelEditor(i) {
       <section class="workshop-page workshop-editpage" ${editorView === "edit" ? "" : 'aria-hidden="true" inert'}>
         <div class="workshop-tabs" role="tablist" aria-label="Choose reel">${h.reels.map((_, r) => `<button role="tab" data-editor-reel="${r}" aria-selected="${r === k}">Reel ${r + 1}${r === 1 ? " · class mark" : ""}</button>`).join("")}</div>
         <div class="reel-workshop icon-workshop" style="--choice-rows:${rows}">
-          <section class="workshop-mark-list"><h3>1 · Choose a face</h3><label class="workshop-face-picker">Face<select id="workshop-face-picker">${h.reels[k].map((f, n) => `<option value="${n}" ${n === j ? "selected" : ""}>${f.type === "class" ? classAbilityName(h) : FACE_LABELS[f.type]} ${!["class", "mystery", "blank"].includes(f.type) ? tierName(f.tier) : ""} · ${(100 / h.reels[k].length).toFixed(1)}%</option>`).join("")}</select></label><div class="workshop-faces">${faces}</div><small class="equal-face-note">Every face has the same chance. Duplicates combine.</small></section>
+          <section class="workshop-mark-list"><h3>1 · Choose a face</h3><label class="workshop-face-picker">Face<select id="workshop-face-picker">${h.reels[k].map((f, n) => `<option value="${n}" ${n === j ? "selected" : ""}>${f.type === "class" ? "★ " + classAbilityName(h) : FACE_LABELS[f.type]} ${!["class", "mystery", "blank"].includes(f.type) ? tierName(f.tier) : ""} · ${(100 / h.reels[k].length).toFixed(1)}%</option>`).join("")}</select></label><div class="workshop-faces">${faces}</div></section>
           <section class="workshop-detail"><div class="workshop-selected"><div class="workshop-preview">${symbolMarkup(face)}</div><h3>${selectedName}${!["class", "mystery", "blank"].includes(face.type) ? " " + tierName(face.tier) : ""}</h3></div>
             <p class="face-effect" tabindex="0" data-tooltip="${escapeHTML(faceDescription(face, h))}"><b>Effect:</b> ${escapeHTML(workshopFaceSummary(face, h))}</p>
             <h3 class="choice-heading">2 · Set rank <small>Pay ↑ · refund ↓</small></h3><div class="tier-choices">${tiers}</div>
@@ -184,7 +172,7 @@ function iconReelEditor(i) {
           </section>
         </div>
       </section>${iconCriticalOddsMarkup(h)}
-    </div><p class="workshop-receipt" role="status">${escapeHTML(receipt || "Edits save immediately. Downward ranks refund paid points.")}</p>
+    </div><p class="workshop-receipt" role="status">${escapeHTML(receipt || "Lower ranks refund half their paid cost.")}</p>
     <div class="modal-actions"><button class="primary" data-close>Done · back to the adventure</button></div>`,
     "editor",
   );

@@ -34,7 +34,7 @@ const CLASS_BALANCE = Object.freeze({
   rogue: {
     hp: 26,
     critical: [2, 3, 4, 5],
-    path: "Physical combos or poison. Strong crits; fragile, little healing.",
+    path: "Physical combos or poison. Strong crits; fragile, no healing marks.",
   },
   mage: {
     hp: 28,
@@ -191,7 +191,8 @@ const floorBalance = (depth) =>
   FLOOR_BALANCE[Math.max(0, Math.min(9, Math.floor(depth) - 1))];
 // Shorter endurance, steadier pressure: support teams get useful damage windows.
 const ENCOUNTER_TUNING = Object.freeze({
-  earlyHitPressure: [1.08, 1.1, 1.1, 1.12, 1.12, 1.12, 1.1, 1, 1, 1],
+  earlyHitPressure: [1.08, 1.18, 1.18, 1.2, 1.2, 1.12, 1.1, 1, 1, 1],
+  earlyHealth: [1,1.04,1.04,1.04,1.04,1,1,1,1,1],
   eliteHealth: 1.18,
   strongholdHealth: 1.25,
   bulkyExcess: 0.7,
@@ -251,6 +252,7 @@ function enemyBalance(
   const stats = {
     maxHp: Math.ceil(
       (boss ? row.bossHp : row.hp * enemyEndurance(identity.hp || 1)) *
+        ENCOUNTER_TUNING.earlyHealth[Math.max(0,Math.min(9,Math.floor(depth)-1))] *
         (boss
           ? 1
           : (elite ? ENCOUNTER_TUNING.eliteHealth : 1) *

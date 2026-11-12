@@ -75,8 +75,26 @@ async function oldTravelEvent(c, kind) {
   return true;
 }
 
+// A temple's enclosure and its open approach must preserve the whole floor.
+// Validate the same geometry generation will commit, without spending RNG.
+function templePlacementSafe(map, center, start, stair) {
+  const trial = map.map(c => ({...c})), gate = center + W;
+  for (const i of neighbors(center, true))
+    Object.assign(trial[i], {wall:i !== gate,terrain:i === gate ? "floor" : "stone"});
+  for (let y=Math.floor(gate/W);y<=H-2;y++) {
+    const i=pos(gate%W,y);
+    if(i !== stair && !trial[i].event)
+      Object.assign(trial[i],{wall:false,terrain:trial[i].terrain === "river" ? "bridge" : "floor"});
+  }
+  if(trial[start].wall)return false;
+  const reachable=mapDistances(trial,start);
+  return reachable.has(center) && reachable.has(stair) && reachable.get(stair)>=8 &&
+    trial.every((c,i)=>c.wall || reachable.has(i));
+}
 const WORLD_BALANCE = Object.freeze({
-  strongholdChance: 0.18,
+  // About one temple in three complete ten-floor map sets.
+  // Safe enclosure rejection leaves about one temple-bearing run in three.
+  strongholdChance: .047,
   shopChance: 0.46,
   marketChance: 0.7,
   riverChance: 0.41,

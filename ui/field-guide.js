@@ -6,7 +6,7 @@ function guideRows(rows, classPage = false) {
 const FIELD_GUIDE = Object.freeze([
   {id:'explore',title:'Explore & descend',body:guideRows([
     ['hero','Reveal nearby tiles.','Click a covered neighbour to explore. Click a revealed tile to walk there automatically.'],
-    ['treasure','Treasure and traps.','Chests offer gold and items. Traps can hurt your party; roll to decide the outcome.'],
+    ['treasure','Treasure, traps and temples.','Chests offer gold and items; traps can hurt your party. Rare temples hold an optional guardian and valuable loot.'],
     ['well','Healing fountains.','Fountains restore health. Decline one to save it, then return when your party is wounded.'],
     ['stairs','Reach the next floor.','Find the stairs and defeat their guardian to descend. Beat floor ten’s guardian to win.'],
     ['tunnel','Find a way through.','Walls, rivers and lava block movement. Bridges cross rivers; paired tunnels teleport between entrances.'],
@@ -30,12 +30,12 @@ const FIELD_GUIDE = Object.freeze([
   ])},
   {id:'classes',title:'Know your party',body:guideRows([
     ['fighter','Tank — protection.','A tough protector. Shields keep allies safe; heavy weapons hit hard.'],
-    ['rogue','Rogue — fast damage.','A fragile damage specialist with poison and bursts of repeated attacks.'],
+    ['rogue','Rogue — fast damage.','Fragile, with strong blade bursts and poison. Cannot use healing marks.'],
     ['mage','Mage — flexible support.','A flexible spellcaster. Build for damage, healing, shields, or a mix.'],
     ['ranger','Ranger — finishing attacks.','Builds power between attacks, then fires strong shots at wounded foes.'],
     ['berserker','Berserker — risk and recovery.','Grows stronger when hurt. Can drain health by attacking, but needs careful healing.'],
     ['bloodbinder','Bloodbinder — shared healing.','Spends HP to plant Seeds. Hits or Blood Bloom burst them to heal allies.'],
-    ['necromancer','Necromancer — undead companions.','Souls raise two Skeletons to attack and guard. Only Souls and deaths heal this starting-only hero.'],
+    ['necromancer','Necromancer — undead companions.','Win floor ten to unlock. Skeletons attack and guard; only Souls and kills heal you.'],
     ['jester','Jester — unpredictable bursts.','Versatile and unpredictable, with sudden bursts of extra effects.'],
   ],true)},
   {id:'biomes',title:'Recognise the terrain',body:guideRows([
@@ -50,7 +50,7 @@ const FIELD_GUIDE = Object.freeze([
   ])},
   {id:'camp',title:'Supplies, camp & controls',body:guideRows([
     ['bag','Use items and equipment.','Carry three item types. Use supplies, drag equipment onto heroes, and equip an artefact for lasting bonuses.'],
-    ['recruit','Recruit companions.','Take up to three heroes. Aggressive or defensive temperaments boost suitable powers.'],
+    ['recruit','Recruit companions.','Take up to three heroes. Temperament stays fixed; you can rebuild their reels freely.'],
     ['coin','Keep gold between runs.','After clearing a floor, choose how much to bank. Banked gold survives failed runs.'],
     ['camp','Buy permanent upgrades.','Open Upgrades on the starting menu. Spend banked gold on stronger heroes, new classes and optional rules.'],
     ['safe','Adjust the game to suit you.','Options control sound and effects. Autofight fights; Autoplay also explores, uses supplies and improves reels.'],

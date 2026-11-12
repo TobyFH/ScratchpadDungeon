@@ -129,36 +129,31 @@ function editableTypes(h) {
       ];
 }
 function faceDescription(face, h) {
-  const tier = face.tier || 1;
-  if(face.type === "selfheal")return `Restore ${POWER.selfheal * tier} HP to yourself only. Never retargets or spills over to allies; surplus healing is wasted. Can clear your stun.`;
-  if (face.type === "class") return classAbilityDescription(h);
-  if (face.type === "mystery") return mysteryDescription(h);
-  if (h && battleEnemies().includes(h)) {
-    if (DAMAGE_TYPES.includes(face.type))
-      return `Contributes ${markDamage(face.type,tier)} ${face.type === "magic" ? "spell" : "physical"} power to one combined enemy hit. Strength ${h.damage}; stronger marks raise that hit before criticals and buffs.`;
-    if (face.type === "heal")
-      return `Restore ${tier} enemy HP before criticals.`;
+  const tier=face.tier||1;
+  if(face.type==='class')return classAbilityDescription(h);
+  if(face.type==='mystery')return mysteryDescription(h);
+  if(h && battleEnemies().includes(h)) {
+    if(DAMAGE_TYPES.includes(face.type))return `${markDamage(face.type,tier)} ${face.type==='magic'?'spell':'physical'} power toward a combined hit. Enemy strength: ${h.damage}.`;
+    if(face.type==='heal')return `${tier} enemy HP before bonuses.`;
   }
-
-  const area = tier >= 3 ? " every enemy" : " the selected enemy";
-  return (
-    {
-      bloodseed: `Plant ${tier} Seeds on the selected enemy. Each HP of damage from any source consumes one Seed and shares one HP of healing. Stacks never expire or cap. Each rolled Seed face costs ${bloodSeedCost(tier)} caster HP before criticals; cannot kill you. Blood Bloom detonates every Seed for 1 damage and 1 shared healing each.`,
-      harvest: `Deal ${harvestSpellPower(tier)} spell power and gather ${tier*NECROMANCER.harvestSouls} Souls before criticals. Damage also gathers Souls. A full Soul bar summons a Skeleton; with two alive, it restores 10% maximum HP to the team.`,
-      attack: `Deal ${markDamage("attack",tier)} physical damage to${area}. Cheaper to improve than a heavy attack.`,
-      heavy: `Deal ${markDamage("heavy",tier)} physical damage to${area}. Tank and Berserker only; costs more personal points to inscribe and upgrade.`,
-      magic: `Deal ${ATTACK_POWER[tier]} spell damage to${area}, with a chance to leave the target Vulnerable.`,
-      heal: `Restore ${POWER.heal * tier} HP to your healing target. Can clear stun; more healing helps and more team block reduces the chance.`,
-      block: `Add ${POWER.block * tier} shared block (cap 20; 30 with a living Tank). It absorbs team damage and is spent as it protects.`,
-      stun: `Apply ${tier} stun power. Stops at most one action, then grants two own actions of protection. Higher power strips more block; it never extends the stun.`,
-      poison: `Apply ${tier} poison power. Lasts up to 3 turns; repeated doses increase tick damage instead of adding a long duration.`,
-      stimulant: `Give yourself ${tier} stimulant power. Lasts up to 3 of your actions; potency caps at 8.`,
-      rally: `Give ${tier} stimulant power to your most-used living ally this fight (or yourself when alone). Lasts up to 3 of their actions; potency caps at 8.`,
-      trick: `Build ${tier} anticipation. At 6, fire six random ordinary marks from your reels. Burst marks cannot charge anticipation or roll criticals.`,
-      selfharm: `Pay up to ${2 * tier} HP, staying above 0. Each HP paid adds ${2 + 0.5 * tier} Fury; all healing spends Fury.`,
-      blank: "No effect. Inscribe a useful mark here with personal points.",
-    }[face.type] || "A mark on this reel."
-  );
+  const target=tier>=3?'all enemies':'your target';
+  return {
+    attack:`Deal ${markDamage('attack',tier)} physical damage to ${target}.`,
+    heavy:`Deal ${markDamage('heavy',tier)} heavy physical damage to ${target}.`,
+    magic:`Deal ${ATTACK_POWER[tier]} spell damage to ${target}. May leave them Vulnerable (+25% next hit).`,
+    heal:`Restore ${POWER.heal*tier} HP to your healing target. May clear stun.`,
+    selfheal:`Restore ${POWER.selfheal*tier} HP to yourself. May clear stun.`,
+    block:`Gain ${POWER.block*tier} team block. Absorbs damage, then is spent. Cap: ${partyBlockCap()}.`,
+    stun:`${tier} stun power: stop one action and weaken shields. The target then resists stun for two actions.`,
+    poison:`${tier} poison power. Lasts up to 3 turns; further doses increase its damage.`,
+    stimulant:`${tier} stimulant power to yourself: more damage and resistance for up to 3 actions. Extra doses strengthen it.`,
+    rally:`${tier} stimulant power to your most-used ally, or yourself alone. Lasts up to 3 actions; extra doses strengthen it.`,
+    trick:`Gain ${tier} anticipation. At 6, Punchline fires six random marks from your reels.`,
+    selfharm:`Spend up to ${2*tier} HP to gain ${2+.5*tier} Fury per HP. Cannot kill you.`,
+    bloodseed:`Plant ${tier} Seeds${bloodSeedBonus(h)?` + ${bloodSeedBonus(h)} bonus per roll`:''}; pay ${bloodSeedCost(tier)} HP. Each HP of damage bursts one Seed for shared healing.`,
+    harvest:`${harvestSpellPower(tier)} spell power and ${tier*NECROMANCER.harvestSouls} Souls. Full bar: summon a Skeleton, or heal the team with two alive.`,
+    blank:"Empty: no effect.",
+  }[face.type] || "A mark on this reel.";
 }
 function classFacePrice(h, type, base) {
   if(type === "selfheal") type = "heal";
@@ -222,7 +217,7 @@ function heroCriticalOdds(h) {
 function criticalOddsMarkup(h) {
   const rows = heroCriticalOdds(h),
     total = rows.reduce((n, r) => n + r.chance, 0);
-  return `<section class="workshop-critpage workshop-page" ${editorView === "crits" ? "" : "hidden inert"}><h3>Three of a kind · ${(total * 100).toFixed(2)}% per roll</h3><p>${className(h.job)} criticals: <b>${criticalRange(h)}</b>. The middle class mark also completes two matching outer marks. Empty faces never crit. Every face has equal odds; duplicates combine. Your edits change the possible matches.</p><div class="crit-odds-grid">${rows.map((row) => `<div class="crit-odds-row">${symbolMarkup(row)}<b>${FACE_LABELS[row.type]} ${tierName(row.tier)}</b><strong>${(row.chance * 100).toFixed(2)}%</strong></div>`).join("") || "<p>No matching combinations yet. Put the same type and rank on both outer reels to start a combo.</p>"}</div></section>`;
+  return `<section class="workshop-critpage workshop-page" ${editorView === "crits" ? "" : "hidden inert"}><h3>Three of a kind · ${(total * 100).toFixed(2)}% per roll</h3><p>${className(h.job)} criticals: <b>${criticalRange(h)}</b>. The middle class mark completes two matching outer marks. Empty faces never crit.</p><div class="crit-odds-grid">${rows.map((row) => `<div class="crit-odds-row">${symbolMarkup(row)}<b>${FACE_LABELS[row.type]} ${tierName(row.tier)}</b><strong>${(row.chance * 100).toFixed(2)}%</strong></div>`).join("") || "<p>No matching combinations yet. Put the same type and rank on both outer reels to start a combo.</p>"}</div></section>`;
 }
 function faceEditCost(h, reel, index, operation, destination = null) {
   const face = h?.reels[reel]?.[index];
@@ -425,17 +420,4 @@ function editFace(data, operation, destination = null) {
   editor(i);
 }
 
-function workshopAbilitySummary(h) {
-  return {
-    necromancer: "Gather Souls through Harvest and damage. Raise two Skeletons, then heal the team with full Soul bars.",
-    bloodbinder: "Burst every Seed on all enemies: 1 damage and 1 shared healing per Seed. Plant new Seeds before the burst.",
-    fighter: `Gain ${tankSealBlock(h)} block; spend up to ${bashLimit(h)} on a bash (double against enemy block).`,
-    rogue: "Roll three extra blade attacks.",
-    mage: "Echo the rolled magic, healing, shield or poison marks across the whole team.",
-    ranger: "Charge patience for a stronger finishing shot.",
-    jester:
-      "Wildcard plays a random trick. Anticipation fires six marks in a Punchline.",
-    berserker:
-      "Heal yourself and gain +2 physical damage. Wounds build Fury; all healing spends it.",
-  }[h.job];
-}
+function workshopAbilitySummary(h) {return classAbilityDescription(h);}

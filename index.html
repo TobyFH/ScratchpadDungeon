@@ -13161,6 +13161,327 @@ body.company-intro-active > :not(#company-intro):not(script) { visibility: hidde
 .hero.necromancer .soul-meter {
   font-size: 14px;
 }
+
+/* Component contracts for this pass: stable layers, target controls and paired
+   encounters. Frames, paper, typography and colours come from notebook.css. */
+:root {
+  --ui-z-feedback: 2000;
+  --ui-z-event: 2800;
+  --ui-z-menu: 3000;
+}
+#spotlight {
+  z-index: var(--ui-z-event);
+}
+#overlay,
+body.utility-open #overlay {
+  z-index: var(--ui-z-menu);
+}
+.speech-bubble,
+.combat-callout,
+.action-label,
+.blood-seed-pop,
+.summon-bone-flash {
+  z-index: var(--ui-z-feedback);
+}
+.hero :is(.points-prompt, .edit-button, .portrait):disabled {
+  opacity: 1;
+}
+.icon-workshop .workshop-selected {
+  border: 0;
+  padding: 6px;
+  box-sizing: border-box;
+}
+.icon-workshop .workshop-detail {
+  border: 0;
+}
+.icon-workshop .workshop-faces .permanent-class-face {
+  border: 2px solid var(--gold);
+  box-shadow: inset 0 0 0 1px var(--ink);
+  background: color-mix(in srgb, var(--gold) 12%, var(--paper));
+}
+.workshop-receipt {
+  text-align: center;
+}
+.loot-find-tile {
+  position: relative;
+}
+.loot-find-tile.loot-stamping {
+  z-index: 4;
+}
+.loot-find-tile[data-rarity="rare"] :is(.item-find, .artefact-card) {
+  border-color: var(--gold);
+  background: color-mix(in srgb, var(--gold) 8%, var(--paper));
+}
+.achievement-unlock {
+  color: var(--gold);
+  font-size: 24px;
+  text-align: center;
+}
+.future-group-picker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 6px 0 12px;
+}
+.future-group-picker select {
+  flex: 1;
+  min-width: 0;
+}
+.future-settings {
+  min-height: 240px;
+  align-content: start;
+}
+.future-settings .setting-check {
+  min-height: 45px;
+}
+.future-settings label {
+  min-width: 0;
+}
+
+/* Explicitly choose who receives healing; no animated selection treatment. */
+.battle-target,
+.fit-notebook .battle-target {
+  height: 50px;
+  min-height: 50px;
+  max-height: 50px;
+  margin: 6px 0;
+  gap: 8px;
+  flex-wrap: nowrap;
+  overflow: visible;
+  align-items: center;
+  font-size: 20px;
+}
+.target-heading {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+}
+.target-heading > svg {
+  width: 24px;
+  height: 24px;
+  color: var(--green);
+}
+.battle-target .target-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-height: 42px;
+  min-width: 82px;
+  padding: 3px 7px;
+  font-size: 20px;
+  flex: 1;
+  position: relative;
+}
+.target-button > svg {
+  width: 23px;
+  height: 32px;
+  flex: none;
+}
+.target-button small {
+  display: block;
+  font-size: 13px;
+  line-height: 1;
+}
+.target-button.active {
+  background: color-mix(in srgb, var(--green) 17%, var(--paper));
+  border: 2px solid var(--green);
+  outline: 1px solid var(--ink);
+  outline-offset: 1px;
+}
+.target-check {
+  color: var(--green);
+  font-weight: bold;
+}
+@media (min-width: 1260px) {
+  .fit-notebook .result-ribbon {
+    height: 44px;
+    min-height: 44px;
+    max-height: 44px;
+    margin-bottom: 8px;
+  }
+  #encounter.paired-enemies {
+    display: grid;
+    grid-template-rows: 24px 42px minmax(0, 1fr);
+    gap: 6px;
+    padding: 10px 8px;
+    box-sizing: border-box;
+  }
+  #encounter.paired-enemies > .enemy-label {
+    position: static;
+    font-size: 22px;
+    height: 24px;
+    min-height: 0;
+    line-height: 1;
+    margin: 0;
+    padding: 0 5px;
+    justify-self: start;
+    align-self: start;
+  }
+  #encounter.paired-enemies > .enemy-team-block {
+    margin: 0;
+    min-height: 0;
+    max-height: 42px;
+  }
+  .fit-notebook #encounter.paired-enemies .enemy-roster {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    min-height: 0;
+  }
+  .fit-notebook #encounter.paired-enemies .enemy-box {
+    display: grid;
+    grid-template-columns: 86px minmax(0, 1fr);
+    grid-template-rows: minmax(130px, 1fr) 80px;
+    gap: 4px;
+    padding: 4px;
+    min-height: 0;
+    box-sizing: border-box;
+  }
+  .fit-notebook #encounter.paired-enemies .enemy-presence {
+    height: 130px;
+    min-height: 0;
+  }
+  .fit-notebook #encounter.paired-enemies .enemy-art {
+    height: 112px;
+    width: 100%;
+  }
+}
+/* Names, health, timing and stats each own a row. Long passive labels have their
+   own caption below the intent, rather than colliding with the stats above. */
+.paired-enemies .enemy-info {
+  display: grid;
+  grid-template-rows: 42px 18px 7px 22px 28px;
+  gap: 2px;
+  align-content: start;
+  min-width: 0;
+  padding: 0;
+}
+.paired-enemies .enemy-info h4 {
+  height: 42px;
+  margin: 0;
+  font-size: 21px;
+  line-height: 1;
+  align-content: center;
+  overflow-wrap: anywhere;
+  min-height: 0;
+}
+.paired-enemies .enemy-info .enemy-health-label {
+  height: 18px;
+  font-size: 15px;
+  line-height: 18px;
+  white-space: nowrap;
+}
+.paired-enemies .enemy-info .enemy-hp {
+  height: 7px;
+  margin: 0;
+}
+.paired-enemies .enemy-info .enemy-clock {
+  height: 22px;
+  min-width: 0;
+  margin: 0;
+  padding: 1px 3px;
+  box-sizing: border-box;
+  font-size: 14px;
+  line-height: 18px;
+}
+.paired-enemies .enemy-info .enemy-stats {
+  height: 28px;
+  margin: 0;
+  font-size: 14px;
+  line-height: 14px;
+  overflow: visible;
+}
+.paired-enemies .enemy-box .machine-shell {
+  grid-column: 1/-1;
+  min-width: 0;
+  margin: 0;
+}
+.paired-enemies .enemy-box .machine-title,
+.fit-notebook .paired-enemies .enemy-box .machine-title {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: 16px 14px;
+  gap: 0;
+  height: 30px;
+  min-height: 30px;
+  line-height: 1;
+  margin: 0 0 2px;
+  align-content: start;
+}
+.paired-enemies .enemy-box .enemy-action-state {
+  width: 100%;
+  font-size: 14px;
+  line-height: 16px;
+  white-space: nowrap;
+}
+.paired-enemies .enemy-box .enemy-trait {
+  width: 100%;
+  max-width: none;
+  font-size: 13px;
+  line-height: 14px;
+  white-space: nowrap;
+}
+@media (max-width: 1259px) {
+  .paired-enemies .enemy-box {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 100px 144px 80px;
+    gap: 4px;
+  }
+  .paired-enemies .enemy-presence {
+    height: 110px;
+  }
+  .paired-enemies .enemy-art {
+    height: 105px;
+  }
+  .paired-enemies .enemy-box .machine-shell,
+  .paired-enemies .enemy-box .enemy-info,
+  .paired-enemies .enemy-box .enemy-presence {
+    grid-column: 1;
+    min-width: 0;
+    width: 100%;
+  }
+  .paired-enemies .enemy-info {
+    grid-template-rows: 60px 18px 7px 22px 28px;
+  }
+  .paired-enemies .enemy-info h4 {
+    height: 60px;
+    font-size: 20px;
+  }
+}
+@media (max-width: 760px) {
+  .reel-workshop:not(.icon-workshop) .face-effect {
+    font-size: 23px;
+  }
+  .battle-target {
+    flex-wrap: wrap;
+    height: 84px;
+    min-height: 84px;
+    max-height: 84px;
+    gap: 5px;
+  }
+  .target-heading {
+    flex-basis: 100%;
+    font-size: 21px;
+  }
+  .battle-target .target-button {
+    font-size: 19px;
+    min-width: 0;
+    padding: 3px;
+  }
+  .target-button > svg {
+    width: 18px;
+    height: 28px;
+  }
+  .future-settings {
+    min-height: 310px;
+  }
+  .future-settings label {
+    font-size: 18px;
+  }
+}
 /* END GENERATED NOTEBOOK CSS */
     </style>
   </head>
@@ -14101,7 +14422,7 @@ const CLASS_BALANCE = Object.freeze({
   rogue: {
     hp: 26,
     critical: [2, 3, 4, 5],
-    path: "Physical combos or poison. Strong crits; fragile, little healing.",
+    path: "Physical combos or poison. Strong crits; fragile, no healing marks.",
   },
   mage: {
     hp: 28,
@@ -14258,7 +14579,8 @@ const floorBalance = (depth) =>
   FLOOR_BALANCE[Math.max(0, Math.min(9, Math.floor(depth) - 1))];
 // Shorter endurance, steadier pressure: support teams get useful damage windows.
 const ENCOUNTER_TUNING = Object.freeze({
-  earlyHitPressure: [1.08, 1.1, 1.1, 1.12, 1.12, 1.12, 1.1, 1, 1, 1],
+  earlyHitPressure: [1.08, 1.18, 1.18, 1.2, 1.2, 1.12, 1.1, 1, 1, 1],
+  earlyHealth: [1,1.04,1.04,1.04,1.04,1,1,1,1,1],
   eliteHealth: 1.18,
   strongholdHealth: 1.25,
   bulkyExcess: 0.7,
@@ -14318,6 +14640,7 @@ function enemyBalance(
   const stats = {
     maxHp: Math.ceil(
       (boss ? row.bossHp : row.hp * enemyEndurance(identity.hp || 1)) *
+        ENCOUNTER_TUNING.earlyHealth[Math.max(0,Math.min(9,Math.floor(depth)-1))] *
         (boss
           ? 1
           : (elite ? ENCOUNTER_TUNING.eliteHealth : 1) *
@@ -14907,6 +15230,9 @@ const CAMP_LESSONS = Object.freeze({
   },
 });
 const CAMP_CLASS_PAGE_SIZE = 3;
+const CAMP_ACHIEVEMENTS = Object.freeze({
+  necromancer: {name:"The Soul Collector",category:"classes",achievement:true,description:"Defeat the final guardian on floor 10 to unlock Necromancer starts. Cannot be bought or recruited."},
+});
 const CAMP_UNLOCKS = {
   ranger: {
     name: "A ranger's invitation",
@@ -15057,6 +15383,7 @@ function emptyProfile() {
     enabled: [],
     activeTraining: {},
     deposits: {},
+    dungeonCleared: false,
   };
 }
 function readProfile() {
@@ -15121,6 +15448,7 @@ function readProfile() {
     activeTraining: {},
     deposits,
     rangerRefunded: p.rangerRefunded === true,
+    dungeonCleared: p.dungeonCleared === true || Object.entries(deposits).some(([id,amount]) => id.endsWith(":10") && amount > 0),
   };
   for (const family of Object.keys(CAMP_LESSONS)) {
     const ownedRank = ownedLessonRank(family, profile),
@@ -15154,6 +15482,23 @@ function campProfile() {
   } catch (error) {
     console.warn("Camp record:", error.message);
     return { ...emptyProfile(), error: error.message };
+  }
+}
+// Earned achievement, deliberately absent from the purchasable catalogue.
+function necromancerUnlocked(profile = campProfile()) {
+  return profile.dungeonCleared === true;
+}
+function recordDungeonVictory() {
+  if (!state?.won || state.depth !== 10) return false;
+  try {
+    const p=readProfile();
+    if (p.dungeonCleared) return false;
+    p.dungeonCleared=true;
+    localStorage.setItem(PROFILE_KEY,JSON.stringify(p));
+    return true;
+  } catch(error) {
+    console.warn("Victory unlock was not saved:",error.message);
+    return false;
   }
 }
 function expeditionRules() {
@@ -15411,7 +15756,7 @@ function campPage(category = "classes", leaf = null) {
   if (!Object.hasOwn(tabs, category)) category = "classes";
   if (category !== campCategory) campLeaf = 0;
   campCategory = category;
-  const entries = Object.entries(CAMP_UNLOCKS).filter(
+  const entries = Object.entries({...CAMP_UNLOCKS,...CAMP_ACHIEVEMENTS}).filter(
       ([id, d]) =>
         d.category === category &&
         (!d.family || id === nextTrainingCard(d.family, p)),
@@ -15440,7 +15785,7 @@ function campPage(category = "classes", leaf = null) {
     <nav class="camp-leaf-nav" aria-label="More camp choices"><button id="camp-previous" ${campLeaf === 0 ? "disabled" : ""}>← Previous</button><span>${tabs[category]} · ${campLeaf + 1} / ${count}</span><button id="camp-next" ${campLeaf === count - 1 ? "disabled" : ""}>Next →</button></nav>
     <div class="camp-grid" data-category="${category}">${visible
       .map(([id, d]) => {
-        const owned = p.owned.includes(id),
+        const owned = d.achievement ? necromancerUnlocked(p) : p.owned.includes(id),
           locked = d.requires && !p.owned.includes(d.requires),
           rank = d.family ? selectedLessonRank(d.family, p) : 0,
           earned = d.family ? ownedLessonRank(d.family, p) : 0;
@@ -15449,7 +15794,7 @@ function campPage(category = "classes", leaf = null) {
         <h3>${d.name}${d.family ? ` · ${earned}/5` : ""}</h3>
         <p>${d.family ? `${earned === 5 ? "Highest learned" : "Next lesson"}: ${d.description}` : d.description}</p>
         ${d.family ? `<div class="active-lesson" aria-label="Active ${d.name}"><button data-lesson-family="${d.family}" data-lesson-rank="${rank - 1}" aria-label="Decrease ${d.name}" ${!rank ? "disabled" : ""}>−</button><span><b>Active ${rank} / ${earned}</b><small>${rank ? CAMP_UNLOCKS[d.family + rank].description : "No bonus next run"}</small></span><button data-lesson-family="${d.family}" data-lesson-rank="${rank + 1}" aria-label="Increase ${d.name}" ${rank >= earned ? "disabled" : ""}>+</button></div>` : ""}
-        ${owned ? (d.family ? '<strong class="camp-owned">All five lessons learned</strong>' : d.permanent ? '<strong class="camp-owned">Unlocked · always available</strong>' : `<button data-camp-toggle="${id}" aria-pressed="${p.enabled.includes(id)}">${p.enabled.includes(id) ? "Enabled next run ✓" : "Enable next run"}</button>`) : `<button data-camp-buy="${id}" ${p.gold < d.cost || locked || p.error ? "disabled" : ""}>${d.family ? `Learn tier ${d.rank} · ` : "Unlock · "}${d.cost} gold</button>`}
+        ${d.achievement ? `<strong class="camp-owned">${owned ? "Unlocked · final guardian defeated" : "Locked · defeat floor 10"}</strong>` : owned ? (d.family ? '<strong class="camp-owned">All five lessons learned</strong>' : d.permanent ? '<strong class="camp-owned">Unlocked · always available</strong>' : `<button data-camp-toggle="${id}" aria-pressed="${p.enabled.includes(id)}">${p.enabled.includes(id) ? "Enabled next run ✓" : "Enable next run"}</button>`) : `<button data-camp-buy="${id}" ${p.gold < d.cost || locked || p.error ? "disabled" : ""}>${d.family ? `Learn tier ${d.rank} · ` : "Unlock · "}${d.cost} gold</button>`}
       </article>`;
       })
       .join("")}</div>
@@ -15576,12 +15921,12 @@ const SPECIALISMS = Object.freeze({
   offence: {
     name: "Aggressive",
     description:
-      "Starts with offensive marks; +1 physical, spell and poison power when those effects land. Fixed temperament; rebuild freely.",
+      "+2 physical, spell and poison power on rolls that use them.",
   },
   defence: {
     name: "Defensive",
     description:
-      "Starts with support marks; +1 healing, block and stun power when those effects land. Fixed temperament; rebuild freely.",
+      "+2 healing, block and stun power on rolls that use them.",
   },
 });
 const MAGE_POWERS = Object.freeze({
@@ -15609,6 +15954,7 @@ const MAGE_POWERS = Object.freeze({
 });
 const HERO_TUNING = Object.freeze({
   healing: 1,
+  temperament: 2,
 });
 const tankSealBlock = (h) =>
   2 + Math.floor(Math.max(0, (h?.level || 1) - 1) / 3);
@@ -15662,7 +16008,10 @@ const mageHealingFactor = (h) =>
       )
     : 1;
 const classHealingPower = (h, n) =>
-  n > 0 ? n + Math.round(n * (mageHealingFactor(h) - 1)) : n;
+  n > 0 ? n + Math.round(n * (heroHealingFactor(h) - 1)) : n;
+const heroHealingFactor = (h) => h.job === "bloodbinder"
+  ? 1 + Math.min(.2,Math.max(0,(h.level || 1)-4)*.025)
+  : mageHealingFactor(h);
 // Fury scales with level; every real HP restored spends one charge.
 const BERSERKER_SUSTAIN = Object.freeze({
   bloodrushHeal: 4,
@@ -15828,6 +16177,7 @@ function normaliseHeroBuild(h) {
   h.fury = Math.min(furyCapacity(h), Math.max(0, h.fury || 0));
   if (!h.reels) return;
   for(const face of [...h.reels.flat(),...(h.last||[])]){
+    if(h.job==='rogue'&&['heal','selfheal'].includes(face.type))face.type='poison';
     if(face.type==='harvest'&&h.job!=='necromancer'){face.type='blank';face.tier=1;}
     if(h.job==='bloodbinder'&&face.type==='attack')face.type='magic';
     if(h.job==='bloodbinder'&&face.type==='stimulant')face.type='rally';
@@ -15939,21 +16289,18 @@ function classAbilityName(hero) {
   );
 }
 function classAbilityDescription(hero) {
-  const job = typeof hero === "string" ? hero : hero?.job;
-  return (
-    {
-      bloodbinder: "Blood Bloom: detonate all Blood Seeds on every enemy. Each Seed deals 1 damage and provides 1 shared healing, even on overkill. Never multiplies a Seed twice.",
-      necromancer: `Soul Call: ${necromancerSealPower(typeof hero==='object'?hero:{level:1})} Harvest power. Spell damage and Harvest gather Souls to summon two automatic Skeletons. With both present, a full bar heals the team. Ordinary healing cannot restore you; enemy deaths can.`,
-      jester:
-        "Wildcard: tricks ink enemy reels, gild allied reels, reverse a foe’s roll, or scatter damage and healing. They usually favour your party.",
-      fighter: `Shield Bash: gain ${tankSealBlock(typeof hero === "object" ? hero : null)} team block, then spend up to ${bashLimit(typeof hero === "object" ? hero : null)} block on a bash. Block gained increases every three levels. The bash deals double damage to enemy shields.`,
-      rogue: "Flurry: roll three extra attacks; each blade lands separately.",
-      mage: "Resonance echoes the strongest healing, shield, poison or magic marks in this roll across the appropriate whole team. Healing also clears every ally’s stun.",
-      healer: "Resonance echoes your rolled marks across the appropriate team.",
-      ranger: `Execute: fire a ${rangerSealPower(typeof hero === "object" ? hero : { level: 1 })}-power physical shot even with an empty bar. Stored patience adds a separate hit, ×${RANGER_EXECUTE.sealMultiplier} on this seal, stronger against wounded foes. That bonus is capped and never multiplied again by criticals. Other party actions and enemy turns build patience.`,
-      berserker: `Bloodrush: restore ${bloodrushHealing(hero && typeof hero === "object" ? hero : { level: 1 })} HP to yourself, gain +2 physical damage. Wounds build Fury; every HP healed spends Fury. Charged Fury adds damage and lifesteal.`,
-    }[job] || "Your permanent signature mark, alongside the other two results."
-  );
+  const h=typeof hero==='object'?hero:{job:hero,level:1},job=h?.job;
+  return {
+    fighter:`Gain ${tankSealBlock(h)} team block, then spend up to ${bashLimit(h)} on a Shield Bash. Deals double damage to enemy block.`,
+    rogue:"Flurry: three extra blade strikes at your target. Criticals hit all enemies.",
+    mage:"Resonance repeats the roll’s strongest spell, heal, shield or poison across its whole team. Healing clears allied stuns.",
+    healer:"Resonance repeats your strongest rolled power across its whole team.",
+    ranger:`Fire a ${rangerSealPower(h)}-power shot. Spend stored Execute for a separate bonus hit, ×${RANGER_EXECUTE.sealMultiplier} on this mark; wounded foes take more.`,
+    berserker:`Bloodrush: heal yourself for ${bloodrushHealing(h)} HP and add 2 physical damage. Fury strengthens attacks and lifesteal; healing spends it.`,
+    jester:"Wildcard: a random trick, usually in your favour. May alter reels, reverse an enemy roll, or scatter damage and healing.",
+    bloodbinder:"Blood Bloom: burst every enemy’s Seeds. Each deals 1 damage and shares 1 HP of healing among wounded allies.",
+    necromancer:`Gain ${necromancerSealPower(h)} Harvest power. Souls raise up to two Skeletons; with both alive, a full bar heals the team.`,
+  }[job] || "A class ability rolled alongside your other two marks.";
 }
 function temperamentEffects(h, base) {
   const keys =
@@ -15962,14 +16309,14 @@ function temperamentEffects(h, base) {
       : h.specialism === "defence"
         ? ["heal", "selfHeal", "teamHeal", "block", "stun"]
         : [];
-  for (const key of keys) if (base[key] > 0) base[key] += 1;
+  for (const key of keys) if (base[key] > 0) base[key] += HERO_TUNING.temperament;
   return base;
 }
 const CLASS_FACE_TYPES = Object.freeze({
   bloodbinder: ["heal", "bloodseed", "magic", "rally", "blank"],
   necromancer: ["magic", "poison", "harvest", "blank"],
   fighter: ["attack", "heavy", "block", "selfheal", "stun", "stimulant", "blank"],
-  rogue: ["attack", "poison", "stun", "stimulant", "selfheal", "blank"],
+  rogue: ["attack", "poison", "stun", "stimulant", "blank"],
   mage: [
     "magic",
     "heal",
@@ -16188,7 +16535,7 @@ function specialismBadge(h) {
 }
 function heroBuildMarkup(h) {
   const s = SPECIALISMS[h.specialism] || SPECIALISMS.offence;
-  return `<span class="hero-specialism ${h.specialism}" data-tooltip="${escapeHTML(s.description)}">${icon(h.specialism === "defence" ? "block" : "sword")}<b>${s.name}</b> · ${h.specialism === "defence" ? "+1 support" : "+1 offence"}<small>Fixed temperament</small></span>`;
+  return `<span class="hero-specialism ${h.specialism}" data-tooltip="${escapeHTML(s.description)}">${icon(h.specialism === "defence" ? "block" : "sword")}<b>${s.name}</b> · +${HERO_TUNING.temperament} ${h.specialism === "defence" ? "support" : "offence"}</span>`;
 }
 function executionBonus(
   h,
@@ -16421,7 +16768,7 @@ function wardActive(e = actingEnemy) {
         const reachable = mapDistances(map);
         map[stair].bossDefeated = false;
         if (Math.random() < WORLD_BALANCE.strongholdChance) {
-          const centers = [pos(4, 3), pos(6, 3), pos(7, 4)].filter(
+          const centers = Array.from({length:W*H},(_,i)=>i).filter(i=>i%W>=2&&i%W<W-2&&Math.floor(i/W)>=2&&Math.floor(i/W)<H-2).filter(
             (i) =>
               !map[i].event &&
               i !== stair &&
@@ -16430,10 +16777,12 @@ function wardActive(e = actingEnemy) {
               neighbors(i, true).every(
                 (j) =>
                   !map[j].event && map[j].terrain !== "river" && map[j].terrain !== "bridge",
-              ),
+              ) && templePlacementSafe(map,i,start,stair),
           );
           if (centers.length) {
-            const center = pick(centers),
+            const routeCost=i=>Math.abs(i%W-start%W)+Math.abs(Math.floor(i/W)-Math.floor(start/W))+Math.abs(i%W-stair%W)+Math.abs(Math.floor(i/W)-Math.floor(stair/W));
+            centers.sort((a,b)=>routeCost(a)-routeCost(b));
+            const center = pick(centers.slice(0,Math.min(3,centers.length))),
               gate = center + W;
             neighbors(center, true).forEach((i) =>
               Object.assign(map[i], {
@@ -16444,7 +16793,6 @@ function wardActive(e = actingEnemy) {
             );
             place(center, "stronghold");
             map[center].structure = true;
-            ensureStairsPath(map);
             // The gate itself must connect to the rest of the floor.
             for (let y = Math.floor(gate / W); y <= 7; y++) {
               let i = pos(gate % W, y);
@@ -16454,6 +16802,7 @@ function wardActive(e = actingEnemy) {
                   terrain: map[i].terrain === "river" ? "bridge" : "floor",
                 });
             }
+            ensureStairsPath(map);
             ensureStairsPath(map, center);
           }
         }
@@ -16712,6 +17061,7 @@ function wardActive(e = actingEnemy) {
           const oldHeroTuning = s.version < 21;
           state = s;
           state.version = SAVE_VERSION;
+          if(state.won && state.depth===10) recordDungeonVictory();
           normaliseBiome();
           guaranteeEarlyRecruit(state.map,state.depth);
           normaliseLivingFloor();
@@ -17378,100 +17728,7 @@ function relevantLogTile(i) {
         requestFitUI();
         scheduleStunRecovery();
       }
-      function roomDescription() {
-        const c = state.map[state.position];
-        if (state.enemy)
-          return "Boots scrape the stone. The torchlight catches drawn weapons.";
-        if (c.terrain === "hole") return "Open hole - impassable";
-        if (c.terrain === "mudslide") return "Wet stone gives way to a one-way slide. The mud will close behind you.";
-        if (c.terrain === "stalactite") return "Loose stone hangs above. Watch the countdown before your next footstep.";
-        if (c.corpses?.length)
-          return "The party lowers its voices beside the fallen.";
-        if (["ice", "mushroom", "overgrown"].includes(c.terrain))
-          return BIOMES[floorBiome()].note;
-        if (c.terrain === "bridge")
-          return "The boards creak above dark, running water.";
-        const descriptions = {
-          well: c.event
-            ? "Cool water gathers in a shallow stone basin."
-            : "The basin is quiet; only a few drops remain.",
-          treasure: c.event
-            ? "A metal clasp catches the torchlight."
-            : "An open chest rests against the wall.",
-          shop: "Warm lamplight falls across the merchant's little counter.",
-          stairs: state.floorBossDefeated
-            ? "A cold draught climbs the unguarded stairwell."
-            : "Heavy footsteps echo from the stairwell.",
-          beacon: "A pale glow hangs over the beacon's carved stone.",
-          ruin: "Broken pillars cast long shadows over worn carvings.",
-          trap: "Scratches and old mechanisms mark the flagstones.",
-          recruit: "Another set of footprints joins the dusty floor.",
-          stronghold: "Thick masonry closes around a narrow gate.",
-        };
-        if (descriptions[c.event || c.feature])
-          return descriptions[c.event || c.feature];
-        if (c.room)
-          return "The passage opens into a low cave. Each footstep carries.";
-        if (
-          neighbors(state.position).some(
-            (i) => state.map[i].seen && state.map[i].terrain === "river",
-          )
-        )
-          return "Water murmurs somewhere beyond the torch's reach.";
-        if (floorBiome() !== "cave") return BIOMES[floorBiome()].note;
-        return [
-          [
-            "Roots press between the cellar stones.",
-            "Dry leaves crunch softly underfoot.",
-            "Dust hangs in the warm torchlight.",
-          ],
-          [
-            "Shelves lean into the narrow passage.",
-            "A draught stirs loose scraps of paper.",
-            "The air smells of old bindings.",
-          ],
-          [
-            "Damp stone glistens at the edge of the light.",
-            "A distant drip breaks the silence.",
-            "The party's shadows stretch along the wall.",
-          ],
-          [
-            "Pale fragments lie between the flagstones.",
-            "The passage carries a faint, hollow echo.",
-            "Cold air slips past the party's boots.",
-          ],
-          [
-            "Iron brackets rust against the stone.",
-            "The torch picks out old tool marks.",
-            "A low passage swallows the light ahead.",
-          ],
-          [
-            "Empty alcoves line the gallery.",
-            "Footsteps echo through the long hall.",
-            "Fine dust drifts from the ceiling.",
-          ],
-          [
-            "Dark water stains the lower walls.",
-            "The air is cool and heavy with damp.",
-            "Loose pages cling to wet stone.",
-          ],
-          [
-            "Ash gathers in the corners of the vault.",
-            "The torch gutters in a warm draught.",
-            "Soot softens the carvings overhead.",
-          ],
-          [
-            "The walls crowd close around the torch.",
-            "The party treads carefully through the silence.",
-            "Old ink darkens the stone.",
-          ],
-          [
-            "The last corridor seems to hold its breath.",
-            "Each footstep echoes a little too far.",
-            "The torch burns small against the dark.",
-          ],
-        ][Math.min(9, state.depth - 1)][state.position % 3];
-      }
+      function roomDescription() { return roomFlavour(); }
       function tileName(c) {
         if (!c.seen)
           return c.hint
@@ -17500,7 +17757,7 @@ function relevantLogTile(i) {
         if (!c.event && !c.feature && ["ice","mushroom","overgrown"].includes(c.terrain)) return {ice:"Ice - slides forward",mushroom:"Mushrooms - spreading light",overgrown:"Overgrowth - concealed approaches"}[c.terrain];
         let names = {
           ruin: "Ancient ruins",
-          stronghold: "Walled stronghold",
+          stronghold: "Challenge temple",
           treasure: "Treasure",
           trap: "Trap",
           well: "Healing well",
@@ -17666,7 +17923,7 @@ function paintMapDrawing(id, markup, create) {
           state.party
             .map((h, i) => {
               let status = injury(h);
-              return `<article data-hero-roll="${i}" data-surprised="${!openingEligible(h)}" tabindex="${state.enemy && alive(h) && !state.over ? "0" : "-1"}" role="group" aria-label="${escapeHTML(h.name)} · click card or press Enter to spin; portrait opens upgrades" data-gear-target="${i}" class="hero ${h.job} ${status} ${h.initiative && state.opening?.firstRoll ? "has-initiative" : ""} ${state.target === i ? "selected" : ""}" id="hero-${i}"><div class="hero-dossier"><button class="portrait" id="portrait-${i}" data-hero-stats="${i}" data-edit="${i}" aria-label="Upgrade ${h.name} · ${h.points} points" aria-pressed="${state.target === i}" ${busy || !alive(h) ? "disabled" : ""}>${portraitArt(h.job, h)}${statusMarkup(h)}${traitMarkup(h)}${specialismBadge(h)}</button>${pointsNeedAttention(h) ? `<button class="points-prompt" data-edit="${i}" aria-label="Spend ${h.points} personal points" title="Spend ${h.points} personal points" ${busy ? "disabled" : ""}>✎ ${h.points} pts</button>` : ""}<div class="hero-name">${h.name}<small>${className(h.job)}${["bloodbinder","necromancer"].includes(h.job) ? "" : " · Lv." + h.level}</small></div>${equipmentMarkup(h, i)}</div><div class="hero-controls"><div class="hero-title-line"><span class="hp-info">HP ${h.hp} / ${h.maxHp}</span><span class="injury ${h.stun ? "stun-status" : status}">${h.stun ? "stunned" : status}</span></div>${healthMarkup(h)}${soulMeterMarkup(h)}${drawMachine("hero-" + i, h.last, { hero: i, disabled: busy || !state.enemy || !h.hp || state.over || heroCannotRoll(h) })}<div class="bars"><div class="healthbar exp" title="Experience"><i style="width:${(h.xp / (h.level * 12)) * 100}%"></i></div></div><div class="edit-line"><span>${["bloodbinder","necromancer"].includes(h.job) ? "Lv."+h.level+" · " : ""}${h.xp}/${h.level * 12} EXP</span><button class="edit-button" data-edit="${i}" ${busy || state.over ? "disabled" : ""} aria-label="Edit ${h.name}'s reels">✎ ${h.points} points</button></div></div></article>`;
+              return `<article data-hero-roll="${i}" data-surprised="${!openingEligible(h)}" tabindex="${state.enemy && alive(h) && !state.over ? "0" : "-1"}" role="group" aria-label="${escapeHTML(h.name)} · click card or press Enter to spin; portrait opens upgrades" data-gear-target="${i}" class="hero ${h.job} ${status} ${h.initiative && state.opening?.firstRoll ? "has-initiative" : ""} ${state.target === i ? "selected" : ""}" id="hero-${i}"><div class="hero-dossier"><button class="portrait" id="portrait-${i}" data-hero-stats="${i}" data-edit="${i}" aria-label="Upgrade ${h.name} · ${h.points} points" aria-pressed="${state.target === i}" ${(busy && !travel) || !alive(h) ? "disabled" : ""}>${portraitArt(h.job, h)}${statusMarkup(h)}${traitMarkup(h)}${specialismBadge(h)}</button>${pointsNeedAttention(h) ? `<button class="points-prompt" data-edit="${i}" aria-label="Spend ${h.points} personal points" title="Spend ${h.points} personal points" ${busy && !travel ? "disabled" : ""}>✎ ${h.points} pts</button>` : ""}<div class="hero-name">${h.name}<small>${className(h.job)}${["bloodbinder","necromancer"].includes(h.job) ? "" : " · Lv." + h.level}</small></div>${equipmentMarkup(h, i)}</div><div class="hero-controls"><div class="hero-title-line"><span class="hp-info">HP ${h.hp} / ${h.maxHp}</span><span class="injury ${h.stun ? "stun-status" : status}">${h.stun ? "stunned" : status}</span></div>${healthMarkup(h)}${soulMeterMarkup(h)}${drawMachine("hero-" + i, h.last, { hero: i, disabled: busy || !state.enemy || !h.hp || state.over || heroCannotRoll(h) })}<div class="bars"><div class="healthbar exp" title="Experience"><i style="width:${(h.xp / (h.level * 12)) * 100}%"></i></div></div><div class="edit-line"><span>${["bloodbinder","necromancer"].includes(h.job) ? "Lv."+h.level+" · " : ""}${h.xp}/${h.level * 12} EXP</span><button class="edit-button" data-edit="${i}" ${(busy && !travel) || state.over ? "disabled" : ""} aria-label="Edit ${h.name}'s reels">✎ ${h.points} points</button></div></div></article>`;
             })
             .join("") +
           (necromancerOwner() ? skeletonSlotsMarkup(necromancerOwner()) : Array.from(
@@ -17718,11 +17975,11 @@ function paintMapDrawing(id, markup, create) {
 
       function renderTargets() {
         $("#targets").innerHTML =
-          "<span>Healing / tonic target:</span>" +
+          '<span class="target-heading">' + icon("heal") + '<b>Heal / tonic target</b></span>' +
           state.party
             .map(
               (h, i) =>
-                `<button class="target-button ${state.target === i ? "active" : ""}" data-target="${i}" aria-pressed="${state.target === i}" ${busy || !alive(h) ? "disabled" : ""}>${h.name}${!alive(h) ? " (dead)" : ""}</button>`,
+                `<button class="target-button ${state.target === i ? "active" : ""}" data-target="${i}" aria-pressed="${state.target === i}" ${busy || !alive(h) ? "disabled" : ""}>${state.target === i ? '<span class="target-check" aria-hidden="true">✓</span>' : ""}${portraitArt(h.job,h)}<span>${h.name}<small>${!alive(h) ? "Fallen" : h.hp + "/" + h.maxHp + " HP"}</small></span></button>`,
             )
             .join("");
       }
@@ -17893,6 +18150,7 @@ function paintMapDrawing(id, markup, create) {
         render();
         try {
           while (travel && (travel.forced?.length || state.position !== travel.goal)) {
+            if(travel.workshopStop && !travel.forced?.length)break;
             if (
               travel.autonomous &&
               (!state.autoplay || !$("#overlay").hidden || !$("#spotlight").hidden)
@@ -18036,6 +18294,7 @@ function paintMapDrawing(id, markup, create) {
             stairs();
             save();
           }
+          finishTravelWorkshop();
         }
       }
       async function resolveTile(c, { fresh = false } = {}) {
@@ -19384,7 +19643,7 @@ function encounterTags(enemies) {
         GameSound.play("critical");
         playCriticalTheme(options, details);
         screenFX("critical", enemy ? 1 : 1.25);
-        if (preferences().skipCriticals) { options.onLocked?.(rolled.value); return rolled.value; }
+        if (preferences().skipCriticals) { eventCriticalFX(options,details); options.onLocked?.(rolled.value); return rolled.value; }
         let region;
         if (inline) {
           region = $("#event-critical");
@@ -19410,6 +19669,7 @@ function encounterTags(enemies) {
         }
         await runMachine("critical", [pool], { results: [rolled] });
         revealCriticalPayoff(region, details, rolled.value);
+        eventCriticalFX(options,details);
         options.onLocked?.(rolled.value);
         region.classList.add("critical-locked");
         const skipButton = $("#stage-skip");
@@ -19892,7 +20152,12 @@ const BLOOD_BINDING = Object.freeze({
   selfCostRankStep: 2,
   seedHealing: 1,
   detonationDamage: 1,
+  maturityInterval: 4,
+  maturityCap: 2,
 });
+const bloodSeedBonus = (h) => h?.job === "bloodbinder"
+  ? Math.min(BLOOD_BINDING.maturityCap,Math.floor(Math.max(0,(h.level||1)-1)/BLOOD_BINDING.maturityInterval)) + equipmentBonus(h,"seeds")
+  : 0;
 function bloodSeedCount(e) {
   return Math.max(0, Math.floor(Number(e?.bloodSeeds?.count) || 0));
 }
@@ -19926,11 +20191,12 @@ function bloodSeedCost(power, symbols = null) {
     : Math.ceil(Math.max(0, power) / BLOOD_BINDING.selfCostRankStep);
 }
 function bloodSeedPlan(e, power, h, symbols = null) {
-  const added = Number.isFinite(power) ? Math.max(0, Math.ceil(power)) : 0;
+  const rawPower = Number.isFinite(power) ? Math.max(0, power) : 0;
+  const added = rawPower > 0 ? Math.ceil(rawPower) + bloodSeedBonus(h) : 0;
   return {
     added,
     count: Math.min(Number.MAX_SAFE_INTEGER, bloodSeedCount(e) + added),
-    hpCost: Math.min(Math.max(0, h.hp - 1), bloodSeedCost(added, symbols)),
+    hpCost: added ? Math.min(Math.max(0, h.hp - 1), bloodSeedCost(rawPower, symbols)) : 0,
   };
 }
 function applyBloodSeed(e, power, h, { symbols = null } = {}) {
@@ -20084,7 +20350,8 @@ function bloodSeedForecast(h, power, e = state.enemy) {
       ),
     ),
     existing = bloodSeedCount(e);
-  const potential = Math.max(0, power),
+  const chance = 1-h.reels.reduce((p,r)=>p*(1-faceShare(r,["bloodseed"])),1);
+  const potential = Math.max(0, power) + bloodSeedBonus(h)*chance,
     demand = state.party
       .filter(alive)
       .reduce((n, a) => n + Math.max(1, expectedDirectMarkPower(a)), 0);
@@ -20149,61 +20416,1196 @@ function syncBloodSeedCounters() {
 }
 // END GENERATED BLOODBINDER
       // BEGIN GENERATED CREATURE VOICES
-// Cosmetic words never use gameplay RNG. Each species gets a voice, including
-// biome creatures and declined/reanimated adventurers; no ellipsis fallback.
-const CREATURE_VOICES=Object.freeze({
-  smudger:['I know that name.','Your story ends here!','Ink runs thin!','A name forgotten.'],
-  gnawer:['Mind my flame.','Scorch and gnaw!','My wick!','Pffft…'],
-  bellkeeper:['The bell tolls for you.','DONG!','A cracked note!','The bell falls silent.'],
-  revenant:['I have unfinished business.','Remember this blade!','Not again!','Let me rest.'],
-  capstalker:['Soft steps in the spores.','Stalk. Strike!','My cap is torn!','Spores to soil.'],
-  myconarch:['Bow before the crown of caps.','My spores command you!','The crown cracks!','The colony remains.'],
-  cinderhopper:['Krik! Warm feet!','Hot hop!','Sss!','Cold ash…'],
-  basaltwyrm:['Stone cannot hold my hunger.','CRUNCH!','Broken scales!','Back to the deep.'],
-  rimewarden:['None pass the frozen gate.','Winter takes you!','The ice fractures!','The thaw has come.'],
-  rat:['Squeak-squeak!','Teeth first!','Skkree!','Squeee…'],
-  slime:['Blorp? Intruder!','GLORP!','Blip?!','Plip… plop.'],
-  skull:['Clack. Clack.','RATTLE!','My bones!','Clatter…'],
-  skeleton:['Clack. Clack.','RATTLE!','My bones!','Clatter…'],
-  ghost:['I remember your footsteps.','Fade with me!','You tear my shroud!','At last… quiet.'],
-  goblin:['That purse looks heavy.','Hand it over!','No fair!','Keep your coins…'],
-  mimic:['Just a harmless chest…','SURPRISE!','My hinges!','Empty at last.'],
-  candle:['Mind the flame.','Burn bright!','My wick!','Fffft…'],
-  moth:['Frrr… the light.','Flutter! Snap!','Frrrk!','Wings… still.'],
-  rustmite:['Chrrr… iron.','Crunch!','Krik!','Scrrr…'],
-  sporepilgrim:['Breathe deeply.','A gift of spores!','My cap!','Back to the roots.'],
-  mirrorhound:['Grrr… two of you.','SNARL!','Yelp!','The reflection breaks.'],
-  ashcolossus:['The ash remembers.','CRUMBLE!','Stone can bleed!','Dust to dust.'],
-  veilweaver:['Let the dark embrace you.','Eyes closed!','My veil tears!','Nothing left to hide.'],
-  shalecrab:['Click-clack.','Claws out!','My shell!','Clack…'],
-  powderimp:['Tick. Tick. Heehee!','Here comes the bang!','Careful with the fuse!','Fizzle…'],
-  rootling:['Who tramples my moss?','Roots, take them!','My bark!','I return to soil.'],
-  thornhulk:['Small feet. Loud hearts.','THORNS RISE!','Splinters!','The old wood rests.'],
-  sporeling:['Puff?','Puff-puff!','My spores!','Pffff…'],
-  frostmite:['Krrr… cold feet.','Snap-freeze!','Crick!','Thawing…'],
-  bees:['Bzzzz! Our hive!','BZZZT!','Bzz?!','The swarm scatters.'],
-  demon:['Another little flame.','Kneel in the ash!','You dare?!','The fire gutters.'],
-  lich:['Your name is already dust.','Wither!','My binding cracks!','The spell… ends.'],
-  abomination:['Hungry…','MORE!','It hurts!','No more hunger.'],
-  pursuer:['I found your footprints.','Nothing stays written!','You marked me!','Erased…'],
-  ogre:['Something smells alive.','SMASH!','Ow! Little blade!','Too… tired.'],
-  widow:['A guest for my web.','Hold still!','My silk!','Threads undone.'],
-  oracle:['I have seen this meeting.','Your next breath is mine.','That was not foretold!','A different ending…'],
-  pageeater:['Fresh pages…','CHOMP!','Bitter ink!','No more pages.'],
+// Short, cosmetic speech banks. Selection never consumes gameplay randomness.
+const HERO_LINES=Object.freeze({
+  "fighter": {
+    "attack": [
+      "Behind me!",
+      "Hold the line!",
+      "Shields up!",
+      "Stand your ground!",
+      "I have this!"
+    ],
+    "hurt": [
+      "Still standing.",
+      "Just a scratch.",
+      "That got through!",
+      "Armour held. Mostly."
+    ],
+    "panic": [
+      "Need some help!",
+      "Shield is slipping!",
+      "Stay with me!",
+      "I can hold a little longer!"
+    ],
+    "block": [
+      "Not getting past!",
+      "Safe behind me!",
+      "Caught it!",
+      "Hold that shield!"
+    ],
+    "relief": [
+      "Back on my feet.",
+      "Much better.",
+      "Ready for another.",
+      "You have my thanks."
+    ],
+    "idle": [
+      "Check your straps.",
+      "Watch the doorway.",
+      "Keep close.",
+      "Rest when we are clear."
+    ]
+  },
+  "rogue": {
+    "attack": [
+      "Too slow.",
+      "You never saw me.",
+      "Quick and quiet.",
+      "Found an opening.",
+      "Right behind you."
+    ],
+    "hurt": [
+      "They saw that one.",
+      "That stings.",
+      "Careless of me.",
+      "Caught my sleeve!"
+    ],
+    "panic": [
+      "A little help!",
+      "Time to move!",
+      "Too close!",
+      "Cover me!"
+    ],
+    "block": [
+      "Missed me.",
+      "Try again.",
+      "Just out of reach.",
+      "Not today."
+    ],
+    "relief": [
+      "Good as new.",
+      "I owe you one.",
+      "Better. Much better.",
+      "Back to work."
+    ],
+    "idle": [
+      "Keep your voice down.",
+      "Let me check that lock.",
+      "Fresh tracks here.",
+      "Something moved ahead."
+    ]
+  },
+  "mage": {
+    "attack": [
+      "Stand clear!",
+      "One more spell!",
+      "This should do it.",
+      "Keep them busy!",
+      "I have a clear shot."
+    ],
+    "hurt": [
+      "Lost my focus!",
+      "Keep them off me!",
+      "That burned!",
+      "I felt that."
+    ],
+    "panic": [
+      "I need cover!",
+      "My hands are shaking!",
+      "Someone, help!",
+      "Cannot hold much longer!"
+    ],
+    "block": [
+      "The ward held!",
+      "Stay inside the ward!",
+      "That bought us time.",
+      "Spell still holding."
+    ],
+    "relief": [
+      "Steady again.",
+      "My thanks.",
+      "I can focus now.",
+      "That helped."
+    ],
+    "idle": [
+      "Let me catch my breath.",
+      "Save your strength.",
+      "The air feels strange.",
+      "Stay within the light."
+    ]
+  },
+  "ranger": {
+    "attack": [
+      "Hold. Loose!",
+      "A clear shot.",
+      "Right on target.",
+      "There is my opening!",
+      "Take the shot!"
+    ],
+    "hurt": [
+      "Keep steady.",
+      "Too close for comfort.",
+      "My shooting arm!",
+      "I need some room."
+    ],
+    "panic": [
+      "Keep it back!",
+      "Give me a clear path!",
+      "Need cover!",
+      "I am cornered!"
+    ],
+    "block": [
+      "A narrow miss.",
+      "Safe for now.",
+      "Good cover!",
+      "Arrow still nocked."
+    ],
+    "relief": [
+      "Steady hands again.",
+      "Ready to draw.",
+      "That is better.",
+      "Thanks for the cover."
+    ],
+    "idle": [
+      "Watch the far passage.",
+      "Count your arrows.",
+      "Tracks lead this way.",
+      "Listen before we move."
+    ]
+  },
+  "berserker": {
+    "attack": [
+      "Come closer!",
+      "Hit harder!",
+      "My turn!",
+      "You will feel this!",
+      "Again!"
+    ],
+    "hurt": [
+      "Now I am angry.",
+      "That all you have?",
+      "You will pay for that.",
+      "I felt that one!"
+    ],
+    "panic": [
+      "Not finished yet!",
+      "Still got one swing!",
+      "Keep me standing!",
+      "One more hit!"
+    ],
+    "block": [
+      "Try harder!",
+      "Barely felt it.",
+      "Still here!",
+      "Bring another!"
+    ],
+    "relief": [
+      "Ready for more!",
+      "That cooled me down.",
+      "Back in the fight.",
+      "Good. Now move!"
+    ],
+    "idle": [
+      "Which way is the fight?",
+      "Keep those weapons ready.",
+      "I hear something.",
+      "Do not slow down."
+    ]
+  },
+  "jester": {
+    "attack": [
+      "Watch closely!",
+      "Surprise!",
+      "Pick a card!",
+      "Here comes trouble!",
+      "My best trick yet!"
+    ],
+    "hurt": [
+      "Ouch! Tough crowd.",
+      "That was not rehearsed!",
+      "Mind the hat!",
+      "I meant to dodge that."
+    ],
+    "panic": [
+      "A little help backstage!",
+      "Time for my escape!",
+      "This joke needs a rescue!",
+      "Not the face!"
+    ],
+    "block": [
+      "Ta-da! Still alive.",
+      "Missed the punchline!",
+      "Lucky me!",
+      "All part of the show."
+    ],
+    "relief": [
+      "Encore!",
+      "I needed that.",
+      "The show goes on!",
+      "Back by popular demand!"
+    ],
+    "idle": [
+      "Keep an eye on my hands.",
+      "Anyone know a good trick?",
+      "No applause. Too loud.",
+      "I hear our next audience."
+    ]
+  },
+  "bloodbinder": {
+    "attack": [
+      "Their strength is ours.",
+      "Hold still.",
+      "A drop is enough.",
+      "This will mend us.",
+      "Let the Seeds take hold."
+    ],
+    "hurt": [
+      "I can stop the bleeding.",
+      "Keep the wound covered.",
+      "Hold the binding!",
+      "Not too deep."
+    ],
+    "panic": [
+      "I need a moment!",
+      "Do not let me fall!",
+      "Too much blood!",
+      "Keep them back!"
+    ],
+    "block": [
+      "A moment to breathe.",
+      "The binding held.",
+      "We are safe for now.",
+      "Keep your guard."
+    ],
+    "relief": [
+      "My pulse is steady.",
+      "That will hold.",
+      "We can keep going.",
+      "Strength returning."
+    ],
+    "idle": [
+      "Let me check your wounds.",
+      "Keep that bandage tight.",
+      "Tell me if it hurts.",
+      "Take a slow breath."
+    ]
+  },
+  "necromancer": {
+    "attack": [
+      "Rise, my servants!",
+      "Your soul is mine.",
+      "Guard your master!",
+      "Return to me.",
+      "Let the dead through."
+    ],
+    "hurt": [
+      "Not my time yet.",
+      "Protect me!",
+      "That was too close.",
+      "Hold them back."
+    ],
+    "panic": [
+      "To my side!",
+      "Do not fail me now!",
+      "Guard me!",
+      "I need another soul!"
+    ],
+    "block": [
+      "Faithful servants.",
+      "The dead stand firm.",
+      "Well done.",
+      "Hold your ground."
+    ],
+    "relief": [
+      "A soul returned.",
+      "Strength from the fallen.",
+      "Life returns.",
+      "That will sustain me."
+    ],
+    "idle": [
+      "Keep the bones together.",
+      "We are not alone here.",
+      "Something stirs ahead.",
+      "The dead are listening."
+    ]
+  }
 });
-const CREATURE_REPLIES=Object.freeze({
-  entrance:['Stay where I can see you.','You took a wrong turn.'],
-  attack:['No further!','Your guard is slipping!'],
-  hurt:['That left a mark!','Not finished yet!'],
-  defeat:['The passage is yours.','My last stand…'],
+const CREATURE_VOICES=Object.freeze({
+  "rat": [
+    [
+      "Squeak?",
+      "Sniff-sniff…"
+    ],
+    [
+      "Skree!",
+      "Squeak-squeak!"
+    ],
+    [
+      "Eek!",
+      "Skkree!"
+    ],
+    [
+      "Squeee…",
+      "A faint squeak."
+    ]
+  ],
+  "slime": [
+    [
+      "Blorp?",
+      "Glup…"
+    ],
+    [
+      "GLOOP!",
+      "Splort!"
+    ],
+    [
+      "Blip!",
+      "Plip?!"
+    ],
+    [
+      "Splosh…",
+      "Plop."
+    ]
+  ],
+  "skull": [
+    [
+      "Clack… clack.",
+      "Dry bones rattle."
+    ],
+    [
+      "RATTLE!",
+      "Clack-clack!"
+    ],
+    [
+      "Crack!",
+      "A brittle snap."
+    ],
+    [
+      "Clatter…",
+      "Bones tumble."
+    ]
+  ],
+  "ghost": [
+    [
+      "Who walks there?",
+      "Leave me be."
+    ],
+    [
+      "Join me!",
+      "Your warmth… mine!"
+    ],
+    [
+      "No!",
+      "My shroud!"
+    ],
+    [
+      "At last…",
+      "Peace…"
+    ]
+  ],
+  "goblin": [
+    [
+      "That purse is mine.",
+      "You picked the wrong cave!"
+    ],
+    [
+      "Hand it over!",
+      "Get them!"
+    ],
+    [
+      "No fair!",
+      "That hurt!"
+    ],
+    [
+      "Keep your coins…",
+      "I give… up."
+    ]
+  ],
+  "mimic": [
+    [
+      "A quiet wooden creak.",
+      "The latch twitches."
+    ],
+    [
+      "SNAP!",
+      "CHOMP!"
+    ],
+    [
+      "Krrrk!",
+      "Splinter!"
+    ],
+    [
+      "A final creak.",
+      "The lid falls shut."
+    ]
+  ],
+  "gnawer": [
+    [
+      "Snff… warm!",
+      "A hungry hiss."
+    ],
+    [
+      "GNAASH!",
+      "Fsssh!"
+    ],
+    [
+      "My wick!",
+      "Sss! Hot!"
+    ],
+    [
+      "Pffft…",
+      "The flame gutters."
+    ]
+  ],
+  "bellkeeper": [
+    [
+      "The bell tolls for you.",
+      "No passage."
+    ],
+    [
+      "DONG!",
+      "Hear your doom!"
+    ],
+    [
+      "A cracked note!",
+      "My bell!"
+    ],
+    [
+      "One last toll…",
+      "The bell falls silent."
+    ]
+  ],
+  "revenant": [
+    [
+      "You will not pass.",
+      "I remember this blade."
+    ],
+    [
+      "Stand and fight!",
+      "This ends now!"
+    ],
+    [
+      "Not again!",
+      "Still standing!"
+    ],
+    [
+      "Let me rest.",
+      "My watch is ended."
+    ]
+  ],
+  "capstalker": [
+    [
+      "A soft rustle.",
+      "A cap tilts toward you."
+    ],
+    [
+      "Pfff!",
+      "A sharp hiss."
+    ],
+    [
+      "Krrk!",
+      "A burst of spores."
+    ],
+    [
+      "Fffff…",
+      "The stalk folds."
+    ]
+  ],
+  "myconarch": [
+    [
+      "Leave my colony.",
+      "You tread on my kin."
+    ],
+    [
+      "Breathe my spores!",
+      "The colony rises!"
+    ],
+    [
+      "My crown!",
+      "You will pay!"
+    ],
+    [
+      "The colony remains…",
+      "Back to the soil."
+    ]
+  ],
+  "cinderhopper": [
+    [
+      "Krik-krik!",
+      "A hot, dry click."
+    ],
+    [
+      "KRIIK!",
+      "Sssnap!"
+    ],
+    [
+      "Sss!",
+      "Krik?!"
+    ],
+    [
+      "A dying hiss.",
+      "Krrr…"
+    ]
+  ],
+  "basaltwyrm": [
+    [
+      "Grrrr…",
+      "Stone grinds below."
+    ],
+    [
+      "ROAR!",
+      "CRUNCH!"
+    ],
+    [
+      "Rrragh!",
+      "Scales crack."
+    ],
+    [
+      "A deep rumble.",
+      "The jaws fall still."
+    ]
+  ],
+  "rimewarden": [
+    [
+      "None pass this gate.",
+      "Turn back."
+    ],
+    [
+      "Winter takes you!",
+      "Freeze where you stand!"
+    ],
+    [
+      "The ice cracks!",
+      "You will not pass!"
+    ],
+    [
+      "The thaw…",
+      "My watch ends."
+    ]
+  ],
+  "moth": [
+    [
+      "Frrrr…",
+      "Wings scrape the stone."
+    ],
+    [
+      "Frr-CHIK!",
+      "A sudden wingbeat."
+    ],
+    [
+      "Frrrk!",
+      "A dry flutter."
+    ],
+    [
+      "Wings fall still.",
+      "A fading rustle."
+    ]
+  ],
+  "rustmite": [
+    [
+      "Chrrr…",
+      "Metal scrapes."
+    ],
+    [
+      "KRIK!",
+      "Crunch-crunch!"
+    ],
+    [
+      "Tik?!",
+      "A harsh click."
+    ],
+    [
+      "Scrrr…",
+      "A last scrape."
+    ]
+  ],
+  "sporepilgrim": [
+    [
+      "Breathe deeply.",
+      "You look tired."
+    ],
+    [
+      "A gift for you!",
+      "Sleep among the spores."
+    ],
+    [
+      "My cap!",
+      "Too rough!"
+    ],
+    [
+      "Back to the roots.",
+      "The spores drift on."
+    ]
+  ],
+  "mirrorhound": [
+    [
+      "Grrrr…",
+      "A low growl."
+    ],
+    [
+      "SNARL!",
+      "RRAFF!"
+    ],
+    [
+      "Yelp!",
+      "Rrgh!"
+    ],
+    [
+      "A faint whine.",
+      "The reflection fades."
+    ]
+  ],
+  "ashcolossus": [
+    [
+      "Who wakes me?",
+      "Leave this place."
+    ],
+    [
+      "CRUMBLE!",
+      "I will crush you!"
+    ],
+    [
+      "The stone cracks!",
+      "You dare!"
+    ],
+    [
+      "Dust…",
+      "A long collapse."
+    ]
+  ],
+  "veilweaver": [
+    [
+      "Come into the dark.",
+      "You cannot see me."
+    ],
+    [
+      "Eyes closed!",
+      "Lost already?"
+    ],
+    [
+      "My veil!",
+      "How did you see?"
+    ],
+    [
+      "Nothing… left.",
+      "The veil falls."
+    ]
+  ],
+  "shalecrab": [
+    [
+      "Click-clack.",
+      "A scrape of claws."
+    ],
+    [
+      "CLACK!",
+      "Snap-snap!"
+    ],
+    [
+      "Krrik!",
+      "A hollow crack."
+    ],
+    [
+      "Clack…",
+      "Its claws go slack."
+    ]
+  ],
+  "powderimp": [
+    [
+      "Tick, tick… heehee!",
+      "Mind the fuse!"
+    ],
+    [
+      "Here comes the bang!",
+      "Too late to run!"
+    ],
+    [
+      "Careful!",
+      "My fuse!"
+    ],
+    [
+      "Fizzle…",
+      "A last spark."
+    ]
+  ],
+  "rootling": [
+    [
+      "Who tramples here?",
+      "Mind the roots."
+    ],
+    [
+      "Stay still!",
+      "Roots, hold them!"
+    ],
+    [
+      "My bark!",
+      "Splinters!"
+    ],
+    [
+      "Back to the soil.",
+      "The roots loosen."
+    ]
+  ],
+  "thornhulk": [
+    [
+      "Who breaks my branches?",
+      "Leave my grove."
+    ],
+    [
+      "THORNS RISE!",
+      "I will root you here!"
+    ],
+    [
+      "My bark!",
+      "Cracking wood."
+    ],
+    [
+      "The old wood rests.",
+      "A long, wooden creak."
+    ]
+  ],
+  "sporeling": [
+    [
+      "Puff?",
+      "A tiny rustle."
+    ],
+    [
+      "Puff-puff!",
+      "PFF!"
+    ],
+    [
+      "Pip?!",
+      "A startled puff."
+    ],
+    [
+      "Pffff…",
+      "The cap droops."
+    ]
+  ],
+  "frostmite": [
+    [
+      "Krrr…",
+      "Ice clicks softly."
+    ],
+    [
+      "KRIK!",
+      "Snap!"
+    ],
+    [
+      "Crick!",
+      "A brittle squeal."
+    ],
+    [
+      "A faint crackle.",
+      "The frost melts."
+    ]
+  ],
+  "bees": [
+    [
+      "Bzzzz…",
+      "A warning buzz."
+    ],
+    [
+      "BZZZT!",
+      "A furious drone."
+    ],
+    [
+      "Bzz?!",
+      "A ragged buzz."
+    ],
+    [
+      "The buzzing fades.",
+      "The swarm scatters."
+    ]
+  ],
+  "demon": [
+    [
+      "Another intruder.",
+      "You smell afraid."
+    ],
+    [
+      "Kneel!",
+      "Burn!"
+    ],
+    [
+      "You dare?!",
+      "I will break you!"
+    ],
+    [
+      "The fire fades…",
+      "Not… yet."
+    ]
+  ],
+  "lich": [
+    [
+      "Your life is forfeit.",
+      "I have waited long enough."
+    ],
+    [
+      "Wither!",
+      "Your strength is mine!"
+    ],
+    [
+      "My binding!",
+      "Impossible!"
+    ],
+    [
+      "The spell… ends.",
+      "At last, silence."
+    ]
+  ],
+  "abomination": [
+    [
+      "Hungry…",
+      "Closer…"
+    ],
+    [
+      "MORE!",
+      "MINE!"
+    ],
+    [
+      "It hurts!",
+      "GRAAH!"
+    ],
+    [
+      "No more hunger.",
+      "A fading groan."
+    ]
+  ],
+  "pursuer": [
+    [
+      "I found you.",
+      "There you are."
+    ],
+    [
+      "NOWHERE TO RUN!",
+      "You cannot hide!"
+    ],
+    [
+      "You cannot stop me!",
+      "Rrraah!"
+    ],
+    [
+      "Gone…",
+      "A hollow sigh."
+    ]
+  ],
+  "ogre": [
+    [
+      "Something smells alive.",
+      "Little intruders!"
+    ],
+    [
+      "SMASH!",
+      "Stay still!"
+    ],
+    [
+      "OW!",
+      "Little blade hurts!"
+    ],
+    [
+      "Too… tired.",
+      "The club drops."
+    ]
+  ],
+  "widow": [
+    [
+      "A faint hiss.",
+      "Silk tightens."
+    ],
+    [
+      "HSSSS!",
+      "Fangs click."
+    ],
+    [
+      "Skrrr!",
+      "A sharp hiss."
+    ],
+    [
+      "Threads fall loose.",
+      "A last twitch."
+    ]
+  ],
+  "oracle": [
+    [
+      "I saw you coming.",
+      "This meeting was foretold."
+    ],
+    [
+      "Your time is here!",
+      "I know your weakness!"
+    ],
+    [
+      "Not as I saw it!",
+      "That cannot be!"
+    ],
+    [
+      "I was… wrong.",
+      "The vision fades."
+    ]
+  ],
+  "pageeater": [
+    [
+      "Snff… paper.",
+      "A wet, hungry snort."
+    ],
+    [
+      "CHOMP!",
+      "GRAUNCH!"
+    ],
+    [
+      "Bitter!",
+      "Hrrk!"
+    ],
+    [
+      "A final gulp.",
+      "The jaws fall open."
+    ]
+  ],
+  "smudger": [
+    [
+      "You should not be here.",
+      "I know your name."
+    ],
+    [
+      "Your story ends here!",
+      "No way past me!"
+    ],
+    [
+      "Not finished!",
+      "That left a mark!"
+    ],
+    [
+      "A name forgotten.",
+      "I am fading…"
+    ]
+  ],
+  "skeleton": [
+    [
+      "Clack… clack.",
+      "Dry bones rattle."
+    ],
+    [
+      "RATTLE!",
+      "Clack-clack!"
+    ],
+    [
+      "Crack!",
+      "A brittle snap."
+    ],
+    [
+      "Clatter…",
+      "Bones tumble."
+    ]
+  ],
+  "candle": [
+    [
+      "Snff… warm!",
+      "A hungry hiss."
+    ],
+    [
+      "GNAASH!",
+      "Fsssh!"
+    ],
+    [
+      "My wick!",
+      "Sss! Hot!"
+    ],
+    [
+      "Pffft…",
+      "The flame gutters."
+    ]
+  ],
+  "fighter": [
+    [
+      "Stay back!",
+      "You will not take me!"
+    ],
+    [
+      "Behind me!",
+      "Hold the line!",
+      "Shields up!",
+      "Stand your ground!",
+      "I have this!"
+    ],
+    [
+      "Still standing.",
+      "Just a scratch.",
+      "That got through!",
+      "Armour held. Mostly."
+    ],
+    [
+      "I cannot…",
+      "My last fight…"
+    ]
+  ],
+  "rogue": [
+    [
+      "Stay back!",
+      "You will not take me!"
+    ],
+    [
+      "Too slow.",
+      "You never saw me.",
+      "Quick and quiet.",
+      "Found an opening.",
+      "Right behind you."
+    ],
+    [
+      "They saw that one.",
+      "That stings.",
+      "Careless of me.",
+      "Caught my sleeve!"
+    ],
+    [
+      "I cannot…",
+      "My last fight…"
+    ]
+  ],
+  "mage": [
+    [
+      "Stay back!",
+      "You will not take me!"
+    ],
+    [
+      "Stand clear!",
+      "One more spell!",
+      "This should do it.",
+      "Keep them busy!",
+      "I have a clear shot."
+    ],
+    [
+      "Lost my focus!",
+      "Keep them off me!",
+      "That burned!",
+      "I felt that."
+    ],
+    [
+      "I cannot…",
+      "My last fight…"
+    ]
+  ],
+  "ranger": [
+    [
+      "Stay back!",
+      "You will not take me!"
+    ],
+    [
+      "Hold. Loose!",
+      "A clear shot.",
+      "Right on target.",
+      "There is my opening!",
+      "Take the shot!"
+    ],
+    [
+      "Keep steady.",
+      "Too close for comfort.",
+      "My shooting arm!",
+      "I need some room."
+    ],
+    [
+      "I cannot…",
+      "My last fight…"
+    ]
+  ],
+  "berserker": [
+    [
+      "Stay back!",
+      "You will not take me!"
+    ],
+    [
+      "Come closer!",
+      "Hit harder!",
+      "My turn!",
+      "You will feel this!",
+      "Again!"
+    ],
+    [
+      "Now I am angry.",
+      "That all you have?",
+      "You will pay for that.",
+      "I felt that one!"
+    ],
+    [
+      "I cannot…",
+      "My last fight…"
+    ]
+  ],
+  "jester": [
+    [
+      "Stay back!",
+      "You will not take me!"
+    ],
+    [
+      "Watch closely!",
+      "Surprise!",
+      "Pick a card!",
+      "Here comes trouble!",
+      "My best trick yet!"
+    ],
+    [
+      "Ouch! Tough crowd.",
+      "That was not rehearsed!",
+      "Mind the hat!",
+      "I meant to dodge that."
+    ],
+    [
+      "I cannot…",
+      "My last fight…"
+    ]
+  ],
+  "bloodbinder": [
+    [
+      "Stay back!",
+      "You will not take me!"
+    ],
+    [
+      "Their strength is ours.",
+      "Hold still.",
+      "A drop is enough.",
+      "This will mend us.",
+      "Let the Seeds take hold."
+    ],
+    [
+      "I can stop the bleeding.",
+      "Keep the wound covered.",
+      "Hold the binding!",
+      "Not too deep."
+    ],
+    [
+      "I cannot…",
+      "My last fight…"
+    ]
+  ],
+  "necromancer": [
+    [
+      "Stay back!",
+      "You will not take me!"
+    ],
+    [
+      "Rise, my servants!",
+      "Your soul is mine.",
+      "Guard your master!",
+      "Return to me.",
+      "Let the dead through."
+    ],
+    [
+      "Not my time yet.",
+      "Protect me!",
+      "That was too close.",
+      "Hold them back."
+    ],
+    [
+      "I cannot…",
+      "My last fight…"
+    ]
+  ]
 });
 function creatureSpeech(e,mood) {
   const phase={entrance:0,attack:1,hurt:2,defeat:3}[mood]??0;
   const key=e.baseArt||e.species||e.art||e.job;
-  const voice=CREATURE_VOICES[key];
-  const line=voice?.[phase]||`${e.name||className(e.job||'enemy')}: ${CREATURE_REPLIES[mood]?.[0]||'You found me.'}`;
-  // Species identity remains dominant; another line avoids a single repeated cry.
-  return visualPick([line,line,...(CREATURE_REPLIES[mood]||CREATURE_REPLIES.attack)]);
+  const bank=CREATURE_VOICES[key]?.[phase] || ["A low growl.","A harsh cry."];
+  return visualPick(Array.isArray(bank)?bank:[bank]);
 }
 function paintEncounterMarkup(markup) {
   const root=$('#encounter'),template=document.createElement('template');template.innerHTML=markup;
@@ -20215,6 +21617,506 @@ function paintEncounterMarkup(markup) {
   }else root.replaceChildren(template.content);
 }
 // END GENERATED CREATURE VOICES
+// BEGIN GENERATED FIELD COPY
+// Functional UI copy and saved previews only; no gameplay randomness.
+const ROOM_FLAVOUR = Object.freeze({
+  combat: [
+    "Steel rings against stone.",
+    "Shadows leap as weapons are raised.",
+    "The party closes ranks around the torch.",
+  ],
+  empty: [
+    "Dust lifts beneath your boots.",
+    "The passage is quiet for a moment.",
+    "A faint draught cools the stone.",
+    "Your footsteps carry through the cave.",
+    "Small stones shift underfoot.",
+    "Torchlight reaches into empty alcoves.",
+  ],
+  well: [
+    "Cool water gathers in a stone basin.",
+    "Clear drops ripple across the pool.",
+    "The air is cooler beside the fountain.",
+  ],
+  wellSpent: [
+    "Only a few drops remain in the basin.",
+    "The dry fountain smells of wet stone.",
+    "An empty basin rests beneath the wall.",
+  ],
+  treasure: [
+    "A metal clasp catches the torchlight.",
+    "Dust gathers around a locked chest.",
+    "A few bright coins show through a broken seam.",
+  ],
+  treasureSpent: [
+    "An open chest rests against the wall.",
+    "The empty coffer creaks in the draught.",
+    "Only dust remains beneath the open lid.",
+  ],
+  shop: [
+    "A lamp burns over the merchant’s counter.",
+    "Bottles and bundles crowd a little stall.",
+    "The merchant checks a carefully packed satchel.",
+  ],
+  stairs: [
+    "Heavy footsteps echo from the stairwell.",
+    "Cold air rises past the guarded steps.",
+    "A broad shadow waits at the head of the stairs.",
+  ],
+  stairsClear: [
+    "A cold draught climbs the unguarded stairs.",
+    "The steps lead down beyond the light.",
+    "The passage below is quiet.",
+  ],
+  beacon: [
+    "A pale glow surrounds the carved stone.",
+    "The beacon hums softly in the dark.",
+    "Light spills from a narrow stone lantern.",
+  ],
+  beaconSpent: [
+    "The stone lantern has gone dark.",
+    "A little warmth remains in the beacon.",
+    "The beacon’s grooves are cold again.",
+  ],
+  ruin: [
+    "Broken pillars surround worn carvings.",
+    "Dust settles in the cracks of an old shrine.",
+    "The roof has fallen across a ruined arch.",
+  ],
+  ruinSpent: [
+    "Disturbed dust marks the searched ruins.",
+    "The broken shrine has nothing left to offer.",
+    "Old carvings disappear into the rubble.",
+  ],
+  trap: [
+    "Deep scratches score the flagstones.",
+    "A rusty mechanism sits beneath the stone.",
+    "Fine wires glint close to the floor.",
+  ],
+  trapSpent: [
+    "The sprung mechanism lies still.",
+    "Bent spikes protrude from a broken plate.",
+    "The passage bears the marks of an old trap.",
+  ],
+  recruit: [
+    "Fresh footprints cross the dust.",
+    "Someone has sheltered beside the wall.",
+    "A small campfire has only just gone out.",
+  ],
+  recruitSpent: [
+    "Another set of tracks leads away.",
+    "A few embers remain beside the wall.",
+    "An abandoned bedroll lies in the dust.",
+  ],
+  stronghold: [
+    "Thick walls enclose a challenge temple.",
+    "An iron gate guards a weathered shrine.",
+    "A guardian waits inside the walled temple.",
+  ],
+  strongholdSpent: [
+    "The temple gate stands open and silent.",
+    "Broken weapons lie inside the shrine.",
+    "Dust settles around the fallen guardian.",
+  ],
+  tunnel: [
+    "Cold air passes through a narrow opening.",
+    "The tunnel curves beyond sight.",
+    "A faint echo answers from the far end.",
+  ],
+  bridge: [
+    "The boards creak over running water.",
+    "Water rushes beneath the bridge.",
+    "The handrail is worn smooth by old travellers.",
+  ],
+  lavaBridge: [
+    "Heat rises through gaps in the bridge.",
+    "Molten rock flows beneath the planks.",
+    "The crossing trembles above the lava.",
+  ],
+  river: [
+    "Water murmurs along the stone channel.",
+    "A current pulls through the dark.",
+    "Torchlight breaks across running water.",
+  ],
+  lava: [
+    "Heat shimmers over the molten rock.",
+    "Embers drift up from the lava.",
+    "A low bubbling rises from the orange glow.",
+  ],
+  crystal: [
+    "Blue light gathers inside the quartz.",
+    "The crystal gives a soft, clear hum.",
+    "A cold glow runs along the crystal’s edges.",
+  ],
+  brokenCrystal: [
+    "Blue fragments crunch beneath your boots.",
+    "Shattered quartz lies dark on the floor.",
+    "The crystal’s hum has fallen silent.",
+  ],
+  ice: [
+    "Frost sparkles across slick stone.",
+    "Your breath clouds in the frozen passage.",
+    "Ice creaks somewhere beneath the floor.",
+  ],
+  brittleIce: [
+    "Cracks branch across the thin ice.",
+    "The ice groans under the party’s weight.",
+    "Dark water shows beneath the brittle crust.",
+  ],
+  hole: [
+    "Broken ice rims a deep, empty hole.",
+    "Loose stone falls into the opening.",
+    "The hole drops away beyond the light.",
+  ],
+  mushroom: [
+    "Pale caps grow between the stones.",
+    "Soft fungal light fills the passage.",
+    "Mushroom stalks brush against your boots.",
+  ],
+  poisonMushroom: [
+    "Purple spores cling to the damp stone.",
+    "A bitter smell rises from the violet caps.",
+    "Purple mushrooms crowd the path.",
+  ],
+  explodingMushroom: [
+    "Red caps swell with trapped spores.",
+    "The swollen mushrooms quiver nearby.",
+    "A red cap hisses at the edge of the path.",
+  ],
+  overgrown: [
+    "Roots press between the old stones.",
+    "Leaves brush the torch as you pass.",
+    "Vines hang low across the passage.",
+  ],
+  mudslide: [
+    "Water trickles over sloping mud.",
+    "Loose earth shifts along the slope.",
+    "A slick trail drops into the dark.",
+  ],
+  mudwall: [
+    "Collapsed mud fills the old passage.",
+    "Wet earth presses against broken stone.",
+    "The slide has sealed this way shut.",
+  ],
+  stalactite: [
+    "Loose grit falls from the ceiling.",
+    "A long crack runs through the hanging stone.",
+    "The roof creaks above the party.",
+  ],
+  corpse: [
+    "The party falls quiet beside the dead.",
+    "Old weapons lie beside the fallen.",
+    "Footsteps slow around the remains.",
+  ],
+  room: [
+    "The passage opens into a low cave.",
+    "Each footstep echoes around the chamber.",
+    "The ceiling rises beyond the torchlight.",
+  ],
+  fruit: [
+    "Ripe fruit hangs among the roots.",
+    "A few bright berries grow beside the path.",
+    "Leaves shelter a small patch of fruit.",
+  ],
+  fairy: [
+    "A ring of pale caps glows in the dark.",
+    "The air is still inside the mushroom ring.",
+    "Tiny lights drift above the fairy ring.",
+  ],
+  geode: [
+    "A split geode glows from within.",
+    "Light catches in a hollow crystal shell.",
+    "The stone rings softly when touched.",
+  ],
+  prism: [
+    "A thin band of light crosses the stone.",
+    "The prism scatters the torchlight.",
+    "Coloured reflections reach along the passage.",
+  ],
+  rubble: [
+    "Broken stone is piled against the wall.",
+    "Something glints beneath the rubble.",
+    "Old debris fills a shallow recess.",
+  ],
+  shadowDuel: [
+    "A second shadow waits across the floor.",
+    "Your reflection moves a moment too late.",
+    "A dark figure stands perfectly still.",
+  ],
+  door: [
+    "A narrow seam cuts through the wall.",
+    "An old doorway has been bricked over.",
+    "The mortar is loose around a hidden door.",
+  ],
+  plate: [
+    "A worn plate rests between the stones.",
+    "Deep grooves lead away from the pressure plate.",
+    "The plate shifts slightly underfoot.",
+  ],
+  nest: [
+    "Feathers and old cloth line a broad nest.",
+    "Claw marks surround the nesting hollow.",
+    "The nest smells of warm straw and fur.",
+  ],
+  gate: [
+    "A heavy gate blocks the passage.",
+    "Iron bars catch the torchlight.",
+    "A chain runs from the gate into the wall.",
+  ],
+  openGate: [
+    "The raised gate leaves a clear passage.",
+    "Iron bars hang above the open way.",
+    "The old gate’s chains have fallen slack.",
+  ],
+  shadow: [
+    "The torchlight seems to stop at the walls.",
+    "Long shadows fill the side passages.",
+    "A faint whisper carries through the dark.",
+  ],
+  maze: [
+    "Similar passages branch in every direction.",
+    "The walls turn sharply beyond the light.",
+    "Old corridors double back on themselves.",
+  ],
+  unstable: [
+    "Fine dust falls from the cracked ceiling.",
+    "A deep creak travels through the rock.",
+    "Loose stones rattle beneath the party’s feet.",
+  ],
+});
+function roomFlavour() {
+  const c = state.map[state.position];
+  let key = state.enemy ? "combat" : c.event || c.feature;
+  if (!c.event && c.feature && ROOM_FLAVOUR[c.feature + "Spent"])
+    key = c.feature + "Spent";
+  if (key === "stairs" && state.floorBossDefeated) key = "stairsClear";
+  if (!key || !ROOM_FLAVOUR[key])
+    key = c.corpses?.length
+      ? "corpse"
+      : c.lavaRiver && c.terrain === "bridge"
+        ? "lavaBridge"
+        : ROOM_FLAVOUR[c.terrain]
+          ? c.terrain
+          : c.room
+            ? "room"
+            : floorBiome();
+  if (!ROOM_FLAVOUR[key]) key = "empty";
+  const bank = ROOM_FLAVOUR[key],
+    variant =
+      (c.doodle || 0) + state.depth + Math.floor((c.lastVisitedStep || 0) / 3);
+  return bank[Math.abs(variant) % bank.length];
+}
+const FUTURE_OPTIONS = Object.freeze([
+  {
+    id: "video",
+    name: "Display & language",
+    fields: [
+      {
+        key: "resolution",
+        label: "Resolution",
+        default: "auto",
+        choices: [
+          ["auto", "Fit window"],
+          ["1920x1080", "1920 × 1080"],
+          ["1280x800", "1280 × 800"],
+          ["1280x720", "1280 × 720"],
+        ],
+      },
+      {
+        key: "language",
+        label: "Language",
+        default: "en",
+        choices: [
+          ["en", "English"],
+          ["fr", "Français"],
+          ["de", "Deutsch"],
+          ["es", "Español"],
+          ["ja", "日本語"],
+        ],
+      },
+      {
+        key: "displayMode",
+        label: "Display mode",
+        default: "windowed",
+        choices: [
+          ["windowed", "Windowed"],
+          ["borderless", "Borderless"],
+          ["fullscreen", "Fullscreen"],
+        ],
+      },
+      {
+        key: "quality",
+        label: "Graphics quality",
+        default: "standard",
+        choices: [
+          ["low", "Low"],
+          ["standard", "Standard"],
+          ["high", "High"],
+        ],
+      },
+      {
+        key: "frameLimit",
+        label: "Frame limit",
+        default: "60",
+        choices: [
+          ["30", "30 FPS"],
+          ["60", "60 FPS"],
+          ["120", "120 FPS"],
+          ["unlimited", "Unlimited"],
+        ],
+      },
+      {
+        key: "vSync",
+        label: "V-sync",
+        default: true,
+        choices: null,
+      },
+    ],
+  },
+  {
+    id: "controls",
+    name: "Controls",
+    fields: [
+      {
+        key: "controllerGlyphs",
+        label: "Controller prompts",
+        default: "auto",
+        choices: [
+          ["auto", "Automatic"],
+          ["xbox", "Xbox"],
+          ["playstation", "PlayStation"],
+          ["nintendo", "Nintendo"],
+        ],
+      },
+      {
+        key: "buttonLayout",
+        label: "Controller layout",
+        default: "standard",
+        choices: [
+          ["standard", "Standard"],
+          ["southpaw", "Southpaw"],
+          ["custom", "Custom bindings"],
+        ],
+      },
+      {
+        key: "keyboardLayout",
+        label: "Keyboard bindings",
+        default: "wasd",
+        choices: [
+          ["wasd", "WASD"],
+          ["arrows", "Arrow keys"],
+          ["custom", "Custom bindings"],
+        ],
+      },
+      {
+        key: "controllerDeadzone",
+        label: "Stick deadzone",
+        default: "15",
+        choices: [
+          ["10", "10%"],
+          ["15", "15%"],
+          ["20", "20%"],
+          ["25", "25%"],
+        ],
+      },
+      {
+        key: "controllerVibration",
+        label: "Controller vibration",
+        default: true,
+        choices: null,
+      },
+      {
+        key: "pauseUnfocused",
+        label: "Pause when unfocused",
+        default: true,
+        choices: null,
+      },
+    ],
+  },
+  {
+    id: "access",
+    name: "Accessibility & saves",
+    fields: [
+      {
+        key: "textScale",
+        label: "Text size",
+        default: "100",
+        choices: [
+          ["100", "100%"],
+          ["115", "115%"],
+          ["130", "130%"],
+        ],
+      },
+      {
+        key: "colourAssist",
+        label: "Colour assistance",
+        default: "none",
+        choices: [
+          ["none", "None"],
+          ["protan", "Protanopia"],
+          ["deutan", "Deuteranopia"],
+          ["tritan", "Tritanopia"],
+        ],
+      },
+      {
+        key: "numberStyle",
+        label: "Damage numbers",
+        default: "standard",
+        choices: [
+          ["standard", "Standard"],
+          ["large", "Large"],
+          ["compact", "Compact"],
+        ],
+      },
+      {
+        key: "saveSlot",
+        label: "Save slot",
+        default: "1",
+        choices: [
+          ["1", "Slot 1"],
+          ["2", "Slot 2"],
+          ["3", "Slot 3"],
+        ],
+      },
+      {
+        key: "cloudSaves",
+        label: "Cloud saves",
+        default: true,
+        choices: null,
+      },
+      {
+        key: "holdConfirm",
+        label: "Hold to confirm purchases",
+        default: false,
+        choices: null,
+      },
+    ],
+  },
+]);
+const FUTURE_OPTION_DEFAULTS = Object.freeze(
+  Object.fromEntries(
+    FUTURE_OPTIONS.flatMap((g) => g.fields.map((f) => [f.key, f.default])),
+  ),
+);
+let futureOptionsGroup = "video";
+function normaliseFuturePreferences(out, input) {
+  for (const field of FUTURE_OPTIONS.flatMap((g) => g.fields)) {
+    const v = input[field.key];
+    if (
+      field.choices
+        ? field.choices.some(([key]) => key === v)
+        : typeof v === "boolean"
+    )
+      out[field.key] = v;
+  }
+}
+function futureOptionsMarkup(p) {
+  const group =
+    FUTURE_OPTIONS.find((g) => g.id === futureOptionsGroup) ||
+    FUTURE_OPTIONS[0];
+  return `<p class="settings-note">Coming later: these choices are saved previews. They do not change the game yet.</p><label class="future-group-picker">Category<select id="future-group">${FUTURE_OPTIONS.map((g) => `<option value="${g.id}" ${g.id === group.id ? "selected" : ""}>${g.name}</option>`).join("")}</select></label><div class="settings-grid future-settings">${group.fields.map((f) => (f.choices ? `<label>${f.label}<select id="setting-${f.key}" data-setting="${f.key}">${f.choices.map(([key, label]) => `<option value="${key}" ${p[f.key] === key ? "selected" : ""}>${label}</option>`).join("")}</select></label>` : `<label class="setting-check"><input type="checkbox" id="setting-${f.key}" data-setting="${f.key}" ${p[f.key] ? "checked" : ""}><span>${f.label}</span></label>`)).join("")}</div>`;
+}
+// END GENERATED FIELD COPY
       // BEGIN GENERATED CRYSTAL CHOICES
 // Optional destruction changes only this deposit; overlapping fields remain.
 async function crystalEncounter(i) {
@@ -20372,7 +22274,7 @@ function necromancerEnemyDeath(e) {
   if (!alive(h) || e.hp > 0 || e.soulHarvested) return;
   e.soulHarvested = true;
   const n = Math.min(
-    Math.ceil(e.maxHp * NECROMANCER.killHeal),
+    Math.ceil(e.maxHp * NECROMANCER.killHeal) + equipmentBonus(h,"soulRecovery"),
     Math.floor(h.maxHp * NECROMANCER.killHealCap),
   );
   const healed = healNecromancer(h, n, enemyArtEl(e));
@@ -20819,6 +22721,7 @@ function skeletonBonesArt() {
           base.magic += equipmentBonus(h, "magic");
           base.poison += equipmentBonus(h, "poison");
         }
+        if(base.trick)base.trick+=equipmentBonus(h,"trick");
         if (base.heal) base.heal += passive("heal") + equipmentBonus(h, "heal");
         if (base.selfHeal)
           base.selfHeal = Math.max(
@@ -20978,7 +22881,7 @@ function skeletonBonesArt() {
           }
           if(sums.bloodseed && selected.hp>0)applyBloodSeed(selected,sums.bloodseed,h,{symbols});
           if(base.bloodDetonation){const bloom=await detonateBloodSeeds(h);parts.push(`<span class="healing">Blood Bloom · ${bloom.damage} damage · +${bloom.healing} shared HP</span>`);if(state!==rollRun)return;}
-          if(h.job==='necromancer' && sums.harvest)grantSouls(h,sums.harvest*NECROMANCER.harvestSouls,'HARVEST');
+          if(h.job==='necromancer' && sums.harvest)grantSouls(h,sums.harvest*NECROMANCER.harvestSouls+equipmentBonus(h,'souls'),'HARVEST');
           if (sums.bloodFury > bloodFuryGained)
             gainFury(h, 0, sums.bloodFury - bloodFuryGained);
           if (sums.rage) {
@@ -21822,7 +23725,197 @@ function skeletonBonesArt() {
           save();
         };
       }
+// BEGIN GENERATED LOOT ADDITIONS
+// Stable item IDs. Old stacks keep their recorded grade and stats.
+const SUPPLY_GRADES = Object.freeze([
+  {
+    id: "field",
+    quality: 1.25,
+    minDepth: 2,
+    factor: 1.2,
+    label: "Field",
+    bomb: 1,
+    poison: 1,
+  },
+  {
+    id: "2",
+    quality: 2,
+    minDepth: 4,
+    factor: 1.5,
+    label: "Fortified",
+    bomb: 3,
+    poison: 1,
+  },
+  {
+    id: "tempered",
+    quality: 2.5,
+    minDepth: 5,
+    factor: 1.85,
+    label: "Tempered",
+    bomb: 4,
+    poison: 1,
+  },
+  {
+    id: "3",
+    quality: 3,
+    minDepth: 7,
+    factor: 2.25,
+    label: "Potent",
+    bomb: 6,
+    poison: 2,
+  },
+  {
+    id: "veteran",
+    quality: 3.5,
+    minDepth: 8,
+    factor: 2.6,
+    label: "Veteran",
+    bomb: 8,
+    poison: 2,
+  },
+  {
+    id: "4",
+    quality: 4,
+    minDepth: 10,
+    factor: 3,
+    label: "Masterwork",
+    bomb: 10,
+    poison: 3,
+  },
+]);
+const EXTRA_SUPPLIES = Object.freeze({
+  clearingSalts: {
+    name: "Clearing salts",
+    icon: "antidote",
+    family: "antidote",
+    cleanseStun: true,
+    brief: "Clear poison & stun",
+    description: "Remove poison and stun from one ally.",
+    minDepth: 2,
+  },
+  bitterDraught: {
+    name: "Bitter draught",
+    icon: "flame",
+    family: "ember",
+    stimulant: 3,
+    combat: true,
+    brief: "3 stimulant power",
+    description: "Give one ally 3 stimulant power.",
+    minDepth: 3,
+  },
+  winterDust: {
+    name: "Winter dust",
+    icon: "frost",
+    family: "frost",
+    stun: 3,
+    combat: true,
+    brief: "3 stun power",
+    description: "Attempt a strength-3 stun on one enemy.",
+    minDepth: 4,
+  },
+  sootBomb: {
+    name: "Soot bomb",
+    icon: "bomb",
+    family: "bomb",
+    damageBonus: 2,
+    poisonDamage: 1,
+    combat: true,
+    brief: "Roll damage + poison",
+    description: "Roll damage and poison with 2 bonus damage.",
+    minDepth: 2,
+  },
+  travelBroth: {
+    name: "Travel broth",
+    icon: "ration",
+    family: "ration",
+    healFraction: 0.4,
+    brief: "40% maximum HP",
+    description: "Restore 40% of one ally’s maximum HP.",
+    minDepth: 3,
+  },
+});
+const EXTRA_EQUIPMENT = Object.freeze({
+  bloodNeedle: {
+    name: "Blood Needle",
+    icon: "bloodseed",
+    job: "bloodbinder",
+    seeds: 2,
+    brief: "+2 Seeds per Seed roll",
+    description: "Plant 2 extra Seeds whenever a roll plants Seeds.",
+    minDepth: 3,
+  },
+  crimsonPhial: {
+    name: "Crimson Phial",
+    icon: "potion",
+    jobs: ["bloodbinder", "mage"],
+    heal: 2,
+    magic: 1,
+    brief: "+2 healing · +1 spell",
+    description: "Healing rolls gain 2 HP; damaging rolls gain 1 spell damage.",
+    minDepth: 4,
+  },
+  boneWhistle: {
+    name: "Bone Whistle",
+    icon: "harvest",
+    job: "necromancer",
+    souls: 2,
+    brief: "+2 Souls per Harvest roll",
+    description: "Gain 2 extra Souls whenever a roll includes Harvest.",
+    minDepth: 2,
+  },
+  ossuaryCharm: {
+    name: "Ossuary Charm",
+    icon: "skull",
+    job: "necromancer",
+    defence: 1,
+    soulRecovery: 2,
+    brief: "Resist 1 · +2 death recovery",
+    description:
+      "Resist 1 damage per hit. Enemy deaths offer 2 extra HP, within the Soul Harvest cap.",
+    minDepth: 4,
+  },
+  foolsCoin: {
+    name: "Fool’s Coin",
+    icon: "trick",
+    job: "jester",
+    trick: 1,
+    brief: "+1 anticipation on Trick",
+    description: "Trick rolls gain 1 extra anticipation.",
+    minDepth: 3,
+  },
+  huntersToken: {
+    name: "Hunter’s Token",
+    icon: "bow",
+    jobs: ["rogue", "ranger"],
+    attack: 1,
+    stunEvery: 5,
+    brief: "+1 damage · fifth roll stuns",
+    description:
+      "Damaging rolls gain 1 damage. Every fifth roll adds stun power.",
+    minDepth: 3,
+  },
+  wardingThread: {
+    name: "Warding Thread",
+    icon: "ward",
+    jobs: ["fighter", "mage", "bloodbinder"],
+    block: 1,
+    heal: 1,
+    brief: "+1 block · +1 healing",
+    description: "Each roll grants 1 team block. Healing rolls gain 1 HP.",
+    minDepth: 3,
+  },
+});
+function equipmentLootEligible(item) {
+  const available = heroJobs(state.runRules);
+  // This earned class cannot join another class's party.
+  if (state.party.some((h) => h.job === "necromancer"))
+    available.push("necromancer");
+  const jobs = item.jobs || (item.job ? [item.job] : null);
+  return !jobs || jobs.some((job) => available.includes(job));
+}
+// END GENERATED LOOT ADDITIONS
       const ITEM_DEFS = {
+        ...EXTRA_SUPPLIES,
         companionHorn: { name: "Companion’s Horn", icon: "horn", outside: true, family: "horn", brief: "Call an adventurer", description: "Sound the horn outside combat to immediately meet a wandering adventurer. Invite, replace or decline as usual." },
         nestEgg: { name: "Broodmother’s Egg", icon: "egg", family: "ration", nestOnly: true, healFraction: 0.65, brief: "65% maximum HP", description: "Restore 65% of the selected living hero’s maximum HP. Found only in a nest." },
         potion: {
@@ -21938,7 +24031,7 @@ function skeletonBonesArt() {
       for (const [type, item] of Object.entries(ITEM_DEFS)) {
         Object.assign(
           item,
-          { family: item.family || type, quality: 1, minDepth: 1 },
+          { family: item.family || type, quality: 1, minDepth: item.minDepth || 1 },
           ITEM_POWER[type],
         );
       }
@@ -21993,11 +24086,7 @@ function skeletonBonesArt() {
       for (const family of SUPPLY_FAMILIES) {
         const base = ITEM_DEFS[family];
         base.description = supplyDescription(base);
-        for (const [quality, minDepth, factor, label] of [
-          [2, 4, 1.5, "Fortified"],
-          [3, 7, 2.25, "Potent"],
-          [4, 10, 3, "Masterwork"],
-        ]) {
+        for (const {id, quality, minDepth, factor, label, bomb, poison} of SUPPLY_GRADES) {
           const item = {
             ...base,
             family,
@@ -22020,31 +24109,32 @@ function skeletonBonesArt() {
           for (const stat of ["heal", "block", "damage"])
             if (base[stat]) item[stat] = Math.ceil(base[stat] * factor);
           if (family === "bomb") {
-            item.damageBonus = [0, 0, 3, 6, 10][quality];
+            item.damageBonus = bomb;
             item.poisonDamage = quality >= 3 ? 2 : 1;
           }
           if (family === "venom") {
-            item.poisonTurns = Math.min(8, 4 + quality);
-            item.poisonDamage = quality - 1;
+            item.poisonTurns = Math.min(8, Math.floor(4 + quality));
+            item.poisonDamage = poison;
           }
           item.description = supplyDescription(item);
           item.brief = supplyBrief(item);
-          ITEM_DEFS[family + "_" + quality] = item;
+          ITEM_DEFS[family + "_" + id] = item;
         }
       }
 
       function lootItemForDepth(type, depth = state.depth) {
+        if(Object.hasOwn(EXTRA_SUPPLIES,type))return type;
         const family = ITEM_DEFS[type]?.family || type;
         if (!SUPPLY_FAMILIES.includes(family)) return type;
-        const quality = depth >= 10 ? 4 : depth >= 7 ? 3 : depth >= 4 ? 2 : 1;
-        return quality === 1 ? family : family + "_" + quality;
+        const grade=SUPPLY_GRADES.filter(g=>depth>=g.minDepth).at(-1);
+        return grade ? family+"_"+grade.id : family;
       }
       function availableLootTypes() {
         return Object.keys(ITEM_DEFS)
           .filter(
             (type) =>
               !ITEM_DEFS[type].nestOnly && (!ITEM_DEFS[type].quality || ITEM_DEFS[type].quality === 1) &&
-              (ITEM_DEFS[type].job !== "ranger" || ruleEnabled("ranger")),
+              (ITEM_DEFS[type].minDepth || 1) <= state.depth && equipmentLootEligible(ITEM_DEFS[type]),
           )
           .map((type) => lootItemForDepth(type));
       }
@@ -22103,7 +24193,7 @@ function skeletonBonesArt() {
         if (item.family === "salve")
           return state.party.some((h) => alive(h) && (h.hp < h.maxHp || h.stun));
         if (item.family === "aegis") return !state.invulnerable;
-        if (type === "antidote") return !!h.poison;
+        if (item.family === "antidote") return !!h.poison || !!(item.cleanseStun && h.stun);
         return true;
       }
       function bagCards(overflow = false) {
@@ -22236,8 +24326,9 @@ function skeletonBonesArt() {
           }
           if (family === "antidote") {
             h.poison = null;
+            if(item.cleanseStun)clearStuns(h,1,{all:true});
             healingFX($("#portrait-" + target));
-            result(icon("antidote") + h.name + " is free of poison.");
+            result(icon("antidote") + h.name + (item.cleanseStun ? " recovers from poison and stun." : " is free of poison."));
           }
           if (family === "aegis") {
             state.invulnerable = { enemyId: null };
@@ -22392,7 +24483,7 @@ function skeletonBonesArt() {
         if (reuseTitle) $("#modal .modal-flow").innerHTML = body;
         else
           $("#modal").innerHTML =
-            `<button class="quiet close" data-close aria-label="Close dialog">✕</button><div class="eyebrow">Scratchpad / field notes</div><h2 id="modal-title">${title}</h2><div class="modal-body"><div class="modal-flow">${body}</div></div>`;
+            `<button class="quiet close" data-close aria-label="Close dialog">✕</button><h2 id="modal-title">${title}</h2><div class="modal-body"><div class="modal-flow">${body}</div></div>`;
         $("#overlay").hidden = false;
         $("#modal").focus();
         if (!reuseTitle) popTitle($("#modal-title"));
@@ -22569,36 +24660,31 @@ function editableTypes(h) {
       ];
 }
 function faceDescription(face, h) {
-  const tier = face.tier || 1;
-  if(face.type === "selfheal")return `Restore ${POWER.selfheal * tier} HP to yourself only. Never retargets or spills over to allies; surplus healing is wasted. Can clear your stun.`;
-  if (face.type === "class") return classAbilityDescription(h);
-  if (face.type === "mystery") return mysteryDescription(h);
-  if (h && battleEnemies().includes(h)) {
-    if (DAMAGE_TYPES.includes(face.type))
-      return `Contributes ${markDamage(face.type,tier)} ${face.type === "magic" ? "spell" : "physical"} power to one combined enemy hit. Strength ${h.damage}; stronger marks raise that hit before criticals and buffs.`;
-    if (face.type === "heal")
-      return `Restore ${tier} enemy HP before criticals.`;
+  const tier=face.tier||1;
+  if(face.type==='class')return classAbilityDescription(h);
+  if(face.type==='mystery')return mysteryDescription(h);
+  if(h && battleEnemies().includes(h)) {
+    if(DAMAGE_TYPES.includes(face.type))return `${markDamage(face.type,tier)} ${face.type==='magic'?'spell':'physical'} power toward a combined hit. Enemy strength: ${h.damage}.`;
+    if(face.type==='heal')return `${tier} enemy HP before bonuses.`;
   }
-
-  const area = tier >= 3 ? " every enemy" : " the selected enemy";
-  return (
-    {
-      bloodseed: `Plant ${tier} Seeds on the selected enemy. Each HP of damage from any source consumes one Seed and shares one HP of healing. Stacks never expire or cap. Each rolled Seed face costs ${bloodSeedCost(tier)} caster HP before criticals; cannot kill you. Blood Bloom detonates every Seed for 1 damage and 1 shared healing each.`,
-      harvest: `Deal ${harvestSpellPower(tier)} spell power and gather ${tier*NECROMANCER.harvestSouls} Souls before criticals. Damage also gathers Souls. A full Soul bar summons a Skeleton; with two alive, it restores 10% maximum HP to the team.`,
-      attack: `Deal ${markDamage("attack",tier)} physical damage to${area}. Cheaper to improve than a heavy attack.`,
-      heavy: `Deal ${markDamage("heavy",tier)} physical damage to${area}. Tank and Berserker only; costs more personal points to inscribe and upgrade.`,
-      magic: `Deal ${ATTACK_POWER[tier]} spell damage to${area}, with a chance to leave the target Vulnerable.`,
-      heal: `Restore ${POWER.heal * tier} HP to your healing target. Can clear stun; more healing helps and more team block reduces the chance.`,
-      block: `Add ${POWER.block * tier} shared block (cap 20; 30 with a living Tank). It absorbs team damage and is spent as it protects.`,
-      stun: `Apply ${tier} stun power. Stops at most one action, then grants two own actions of protection. Higher power strips more block; it never extends the stun.`,
-      poison: `Apply ${tier} poison power. Lasts up to 3 turns; repeated doses increase tick damage instead of adding a long duration.`,
-      stimulant: `Give yourself ${tier} stimulant power. Lasts up to 3 of your actions; potency caps at 8.`,
-      rally: `Give ${tier} stimulant power to your most-used living ally this fight (or yourself when alone). Lasts up to 3 of their actions; potency caps at 8.`,
-      trick: `Build ${tier} anticipation. At 6, fire six random ordinary marks from your reels. Burst marks cannot charge anticipation or roll criticals.`,
-      selfharm: `Pay up to ${2 * tier} HP, staying above 0. Each HP paid adds ${2 + 0.5 * tier} Fury; all healing spends Fury.`,
-      blank: "No effect. Inscribe a useful mark here with personal points.",
-    }[face.type] || "A mark on this reel."
-  );
+  const target=tier>=3?'all enemies':'your target';
+  return {
+    attack:`Deal ${markDamage('attack',tier)} physical damage to ${target}.`,
+    heavy:`Deal ${markDamage('heavy',tier)} heavy physical damage to ${target}.`,
+    magic:`Deal ${ATTACK_POWER[tier]} spell damage to ${target}. May leave them Vulnerable (+25% next hit).`,
+    heal:`Restore ${POWER.heal*tier} HP to your healing target. May clear stun.`,
+    selfheal:`Restore ${POWER.selfheal*tier} HP to yourself. May clear stun.`,
+    block:`Gain ${POWER.block*tier} team block. Absorbs damage, then is spent. Cap: ${partyBlockCap()}.`,
+    stun:`${tier} stun power: stop one action and weaken shields. The target then resists stun for two actions.`,
+    poison:`${tier} poison power. Lasts up to 3 turns; further doses increase its damage.`,
+    stimulant:`${tier} stimulant power to yourself: more damage and resistance for up to 3 actions. Extra doses strengthen it.`,
+    rally:`${tier} stimulant power to your most-used ally, or yourself alone. Lasts up to 3 actions; extra doses strengthen it.`,
+    trick:`Gain ${tier} anticipation. At 6, Punchline fires six random marks from your reels.`,
+    selfharm:`Spend up to ${2*tier} HP to gain ${2+.5*tier} Fury per HP. Cannot kill you.`,
+    bloodseed:`Plant ${tier} Seeds${bloodSeedBonus(h)?` + ${bloodSeedBonus(h)} bonus per roll`:''}; pay ${bloodSeedCost(tier)} HP. Each HP of damage bursts one Seed for shared healing.`,
+    harvest:`${harvestSpellPower(tier)} spell power and ${tier*NECROMANCER.harvestSouls} Souls. Full bar: summon a Skeleton, or heal the team with two alive.`,
+    blank:"Empty: no effect.",
+  }[face.type] || "A mark on this reel.";
 }
 function classFacePrice(h, type, base) {
   if(type === "selfheal") type = "heal";
@@ -22662,7 +24748,7 @@ function heroCriticalOdds(h) {
 function criticalOddsMarkup(h) {
   const rows = heroCriticalOdds(h),
     total = rows.reduce((n, r) => n + r.chance, 0);
-  return `<section class="workshop-critpage workshop-page" ${editorView === "crits" ? "" : "hidden inert"}><h3>Three of a kind · ${(total * 100).toFixed(2)}% per roll</h3><p>${className(h.job)} criticals: <b>${criticalRange(h)}</b>. The middle class mark also completes two matching outer marks. Empty faces never crit. Every face has equal odds; duplicates combine. Your edits change the possible matches.</p><div class="crit-odds-grid">${rows.map((row) => `<div class="crit-odds-row">${symbolMarkup(row)}<b>${FACE_LABELS[row.type]} ${tierName(row.tier)}</b><strong>${(row.chance * 100).toFixed(2)}%</strong></div>`).join("") || "<p>No matching combinations yet. Put the same type and rank on both outer reels to start a combo.</p>"}</div></section>`;
+  return `<section class="workshop-critpage workshop-page" ${editorView === "crits" ? "" : "hidden inert"}><h3>Three of a kind · ${(total * 100).toFixed(2)}% per roll</h3><p>${className(h.job)} criticals: <b>${criticalRange(h)}</b>. The middle class mark completes two matching outer marks. Empty faces never crit.</p><div class="crit-odds-grid">${rows.map((row) => `<div class="crit-odds-row">${symbolMarkup(row)}<b>${FACE_LABELS[row.type]} ${tierName(row.tier)}</b><strong>${(row.chance * 100).toFixed(2)}%</strong></div>`).join("") || "<p>No matching combinations yet. Put the same type and rank on both outer reels to start a combo.</p>"}</div></section>`;
 }
 function faceEditCost(h, reel, index, operation, destination = null) {
   const face = h?.reels[reel]?.[index];
@@ -22865,20 +24951,7 @@ function editFace(data, operation, destination = null) {
   editor(i);
 }
 
-function workshopAbilitySummary(h) {
-  return {
-    necromancer: "Gather Souls through Harvest and damage. Raise two Skeletons, then heal the team with full Soul bars.",
-    bloodbinder: "Burst every Seed on all enemies: 1 damage and 1 shared healing per Seed. Plant new Seeds before the burst.",
-    fighter: `Gain ${tankSealBlock(h)} block; spend up to ${bashLimit(h)} on a bash (double against enemy block).`,
-    rogue: "Roll three extra blade attacks.",
-    mage: "Echo the rolled magic, healing, shield or poison marks across the whole team.",
-    ranger: "Charge patience for a stronger finishing shot.",
-    jester:
-      "Wildcard plays a random trick. Anticipation fires six marks in a Punchline.",
-    berserker:
-      "Heal yourself and gain +2 physical damage. Wounds build Fury; all healing spends it.",
-  }[h.job];
-}
+function workshopAbilitySummary(h) {return classAbilityDescription(h);}
 // END GENERATED REEL UPGRADES
 // BEGIN GENERATED ICON REEL WORKSHOP
 // Presentation switch: change to "legacy" and rebuild to restore the previous
@@ -22886,8 +24959,20 @@ function workshopAbilitySummary(h) {
 let reelWorkshopLayout = "icons";
 let workshopCritPage = 0;
 let workshopEditReceipt = { heroId: null, text: "" };
+let pendingTravelWorkshop = null;
 function editor(i) {
+  if(travel && alive(state.party[i])) {
+    pendingTravelWorkshop={run:state,heroId:state.party[i].id};
+    travel.workshopStop=true;
+    return;
+  }
   return reelWorkshopLayout === "legacy" ? legacyEditor(i) : iconReelEditor(i);
+}
+function finishTravelWorkshop() {
+  const request=pendingTravelWorkshop;pendingTravelWorkshop=null;
+  if(!request || request.run!==state || state.over || state.enemy || !$("#overlay").hidden || !$("#spotlight").hidden)return;
+  const i=state.party.findIndex(h=>h.id===request.heroId);
+  if(i>=0 && alive(state.party[i]))editor(i);
 }
 function quoteFaceTier(h, reel, index, target) {
   const face = h?.reels[reel]?.[index];
@@ -22932,31 +25017,7 @@ function setFaceTier(h, reel, index, target) {
 function pointChangeLabel(cost) {
   return cost < 0 ? `+${-cost} pts` : cost > 0 ? `−${cost} pts` : "Current";
 }
-function workshopFaceSummary(face, h) {
-  const n = face.tier || 1;
-  return (
-    {
-      bloodseed: `${n} Seeds; ${bloodSeedCost(n)} HP cost. Damage consumes Seeds for shared healing. No cap or expiry.`,
-      harvest: `${harvestSpellPower(n)} spell power + ${n*NECROMANCER.harvestSouls} Souls. Full bar raises a Skeleton or heals your team.`,
-      heavy: `${markDamage("heavy",n)} physical damage${n >= 3 ? " to every enemy" : " to the selected enemy"}. Stronger, more costly; Tank and Berserker only.`,
-      attack: `${n} physical damage${n >= 3 ? " to every enemy" : " to the selected enemy"}.`,
-      magic: `${n} spell damage${n >= 3 ? " to every enemy" : " to the selected enemy"}; may expose Vulnerable.`,
-      heal: `${POWER.heal * n} HP to the selected ally. Full-health misclicks redirect to a wounded ally.`,
-      selfheal: `${POWER.selfheal * n} HP to yourself only. Surplus is lost; never heals another ally.`,
-      block: `${POWER.block * n} shared block. Spent as it protects; cap 20, or 30 with a Tank.`,
-      stun: `${n} stun power. Stops at most one action, then grants stun protection.`,
-      poison: `${n} poison power. Up to three turns; extra doses strengthen its damage.`,
-      stimulant: `${n} stimulant power to self. Three-turn cap; extra doses raise potency.`,
-      rally: `${n} stimulant power to the ally used most this fight (self when alone). Three-turn cap; extra doses raise potency.`,
-      trick: `${n} anticipation. At six, Punchline fires six ordinary marks from your reels.`,
-      selfharm: `Pay up to ${2 * n} HP without dying. Each HP paid builds ${2 + 0.5 * n} Fury.`,
-      mystery:
-        "Random ordinary power; rank follows this reel. Can complete a normal critical.",
-      blank: "No effect. Choose a symbol below to inscribe it at rank I.",
-      class: workshopAbilitySummary(h),
-    }[face.type] || faceDescription(face, h)
-  );
-}
+function workshopFaceSummary(face,h) {return faceDescription(face,h);}
 function iconCriticalOddsMarkup(h) {
   const rows = heroCriticalOdds(h),
     total = rows.reduce((n, r) => n + r.chance, 0),
@@ -23034,7 +25095,7 @@ function iconReelEditor(i) {
     .map((f, n) => {
       const chance = (100 / h.reels[k].length).toFixed(1),
         name = f.type === "class" ? classAbilityName(h) : FACE_LABELS[f.type];
-      return `<button data-editor-face="${n}" aria-pressed="${n === j}" title="${escapeHTML(faceDescription(f, h))}">${symbolMarkup(f)}<span>${name}${!["class", "mystery", "blank"].includes(f.type) ? " " + tierName(f.tier) : ""}</span><small>${chance}%</small></button>`;
+      return `<button class="${f.type === "class" ? "permanent-class-face" : ""}" data-editor-face="${n}" aria-pressed="${n === j}" title="${escapeHTML(faceDescription(f, h))}">${symbolMarkup(f)}<span>${name}${!["class", "mystery", "blank"].includes(f.type) ? " " + tierName(f.tier) : ""}</span><small>${chance}%</small></button>`;
     })
     .join("");
   const receipt =
@@ -23057,7 +25118,7 @@ function iconReelEditor(i) {
       <section class="workshop-page workshop-editpage" ${editorView === "edit" ? "" : 'aria-hidden="true" inert'}>
         <div class="workshop-tabs" role="tablist" aria-label="Choose reel">${h.reels.map((_, r) => `<button role="tab" data-editor-reel="${r}" aria-selected="${r === k}">Reel ${r + 1}${r === 1 ? " · class mark" : ""}</button>`).join("")}</div>
         <div class="reel-workshop icon-workshop" style="--choice-rows:${rows}">
-          <section class="workshop-mark-list"><h3>1 · Choose a face</h3><label class="workshop-face-picker">Face<select id="workshop-face-picker">${h.reels[k].map((f, n) => `<option value="${n}" ${n === j ? "selected" : ""}>${f.type === "class" ? classAbilityName(h) : FACE_LABELS[f.type]} ${!["class", "mystery", "blank"].includes(f.type) ? tierName(f.tier) : ""} · ${(100 / h.reels[k].length).toFixed(1)}%</option>`).join("")}</select></label><div class="workshop-faces">${faces}</div><small class="equal-face-note">Every face has the same chance. Duplicates combine.</small></section>
+          <section class="workshop-mark-list"><h3>1 · Choose a face</h3><label class="workshop-face-picker">Face<select id="workshop-face-picker">${h.reels[k].map((f, n) => `<option value="${n}" ${n === j ? "selected" : ""}>${f.type === "class" ? "★ " + classAbilityName(h) : FACE_LABELS[f.type]} ${!["class", "mystery", "blank"].includes(f.type) ? tierName(f.tier) : ""} · ${(100 / h.reels[k].length).toFixed(1)}%</option>`).join("")}</select></label><div class="workshop-faces">${faces}</div></section>
           <section class="workshop-detail"><div class="workshop-selected"><div class="workshop-preview">${symbolMarkup(face)}</div><h3>${selectedName}${!["class", "mystery", "blank"].includes(face.type) ? " " + tierName(face.tier) : ""}</h3></div>
             <p class="face-effect" tabindex="0" data-tooltip="${escapeHTML(faceDescription(face, h))}"><b>Effect:</b> ${escapeHTML(workshopFaceSummary(face, h))}</p>
             <h3 class="choice-heading">2 · Set rank <small>Pay ↑ · refund ↓</small></h3><div class="tier-choices">${tiers}</div>
@@ -23067,7 +25128,7 @@ function iconReelEditor(i) {
           </section>
         </div>
       </section>${iconCriticalOddsMarkup(h)}
-    </div><p class="workshop-receipt" role="status">${escapeHTML(receipt || "Edits save immediately. Downward ranks refund paid points.")}</p>
+    </div><p class="workshop-receipt" role="status">${escapeHTML(receipt || "Lower ranks refund half their paid cost.")}</p>
     <div class="modal-actions"><button class="primary" data-close>Done · back to the adventure</button></div>`,
     "editor",
   );
@@ -23171,7 +25232,7 @@ function guideRows(rows, classPage = false) {
 const FIELD_GUIDE = Object.freeze([
   {id:'explore',title:'Explore & descend',body:guideRows([
     ['hero','Reveal nearby tiles.','Click a covered neighbour to explore. Click a revealed tile to walk there automatically.'],
-    ['treasure','Treasure and traps.','Chests offer gold and items. Traps can hurt your party; roll to decide the outcome.'],
+    ['treasure','Treasure, traps and temples.','Chests offer gold and items; traps can hurt your party. Rare temples hold an optional guardian and valuable loot.'],
     ['well','Healing fountains.','Fountains restore health. Decline one to save it, then return when your party is wounded.'],
     ['stairs','Reach the next floor.','Find the stairs and defeat their guardian to descend. Beat floor ten’s guardian to win.'],
     ['tunnel','Find a way through.','Walls, rivers and lava block movement. Bridges cross rivers; paired tunnels teleport between entrances.'],
@@ -23195,12 +25256,12 @@ const FIELD_GUIDE = Object.freeze([
   ])},
   {id:'classes',title:'Know your party',body:guideRows([
     ['fighter','Tank — protection.','A tough protector. Shields keep allies safe; heavy weapons hit hard.'],
-    ['rogue','Rogue — fast damage.','A fragile damage specialist with poison and bursts of repeated attacks.'],
+    ['rogue','Rogue — fast damage.','Fragile, with strong blade bursts and poison. Cannot use healing marks.'],
     ['mage','Mage — flexible support.','A flexible spellcaster. Build for damage, healing, shields, or a mix.'],
     ['ranger','Ranger — finishing attacks.','Builds power between attacks, then fires strong shots at wounded foes.'],
     ['berserker','Berserker — risk and recovery.','Grows stronger when hurt. Can drain health by attacking, but needs careful healing.'],
     ['bloodbinder','Bloodbinder — shared healing.','Spends HP to plant Seeds. Hits or Blood Bloom burst them to heal allies.'],
-    ['necromancer','Necromancer — undead companions.','Souls raise two Skeletons to attack and guard. Only Souls and deaths heal this starting-only hero.'],
+    ['necromancer','Necromancer — undead companions.','Win floor ten to unlock. Skeletons attack and guard; only Souls and kills heal you.'],
     ['jester','Jester — unpredictable bursts.','Versatile and unpredictable, with sudden bursts of extra effects.'],
   ],true)},
   {id:'biomes',title:'Recognise the terrain',body:guideRows([
@@ -23215,7 +25276,7 @@ const FIELD_GUIDE = Object.freeze([
   ])},
   {id:'camp',title:'Supplies, camp & controls',body:guideRows([
     ['bag','Use items and equipment.','Carry three item types. Use supplies, drag equipment onto heroes, and equip an artefact for lasting bonuses.'],
-    ['recruit','Recruit companions.','Take up to three heroes. Aggressive or defensive temperaments boost suitable powers.'],
+    ['recruit','Recruit companions.','Take up to three heroes. Temperament stays fixed; you can rebuild their reels freely.'],
     ['coin','Keep gold between runs.','After clearing a floor, choose how much to bank. Banked gold survives failed runs.'],
     ['camp','Buy permanent upgrades.','Open Upgrades on the starting menu. Spend banked gold on stronger heroes, new classes and optional rules.'],
     ['safe','Adjust the game to suit you.','Options control sound and effects. Autofight fights; Autoplay also explores, uses supplies and improves reels.'],
@@ -23719,7 +25780,11 @@ function help(topic = "explore") {
         );
       }
       function lootFaces(source="chest") {
-        const types=availableLootTypes().map(t=>source==="unwritten"&&state.depth>=4 ? lootItemForDepth(t,state.depth+3) : t);
+        const types=availableLootTypes().map(type=>{
+          if(source!=="unwritten" || state.depth<4)return type;
+          const family=ITEM_DEFS[type]?.family || type;
+          return lootItemForDepth(SUPPLY_FAMILIES.includes(family) ? family : type,state.depth+3);
+        });
         if(source==="nest")return [{type:"coin",tier:1,weight:6},{type:"coin",tier:2,weight:3},{type:"coin",tier:3,weight:1}];
         return [
           { type: "coin", tier: 1, weight: 536 },
@@ -23729,7 +25794,7 @@ function help(topic = "explore") {
           ...types.map((type) => ({
             type,
             tier: 1,
-            weight: (source === "unwritten" ? 80 : 21) / types.length,
+            weight: (source === "unwritten" ? 90 : 30) / types.length,
           })),
           { type: "artefact", tier: 1, weight: WORLD_BALANCE.relicWeight },
         ];
@@ -23757,17 +25822,23 @@ function help(topic = "explore") {
           h = prepareRecruit(makeHero(name, job, null, state.runRules)),
           full = state.party.length >= 3,
           quote = {
-            fighter: "I’ll take the first hit. You keep the light.",
-            healer: "I can mend more than torn pages.",
-            rogue: "You look like you could use a quieter blade.",
-            mage: "There is still a spark in these old pages.",
+            fighter: "Stay close. I’ll hold them off.",
+            healer: "I can help with those wounds.",
+            rogue: "Keep quiet. I’ll clear the way.",
+            mage: "I know a few spells. Need a hand?",
             ranger: "One good shot. Give me a moment.",
             berserker: "Every scar is another reason to swing.",
             jester: "A little luck, a little trouble. Shall we?",
-            bloodbinder: "Let me tend your wounds. They can pay the price.",
+            bloodbinder: "Their blood can mend your wounds.",
           }[job];
         if(necromancerOwner()){
-          log(`${h.name} recognises the forbidden magic and draws a weapon.`);
+          const run=state;
+          showSpotlight("A frightened adventurer",`${h.name} · ${className(h.job)}`,
+            `<div class="stage-art">${portraitArt(h.job,h)}</div><p class="encounter-quote">“Necromancer! Stay back!”</p><div class="stage-result">${h.name} recoils at your dark magic and draws a weapon. Fear has left no room to talk.</div>`,"recruit-hostile");
+          await eventChoice([{id:"stage-confirm",label:"Defend yourself",value:true}]);
+          if(state!==run)return;
+          closeSpotlight();
+          log(`${h.name} is terrified by the Necromancer and attacks.`);
           beginEncounter(false,{count:1,adventurer:h});render();await encounterEntrance();return;
         }
         recruitOffer = h;
@@ -23974,62 +26045,6 @@ function help(topic = "explore") {
           setTimeout(() => n.remove(), 1100);
         }
       }
-      const HERO_LINES = {
-        necromancer: {attack:["Rise, my friends!","Your soul is not finished."],hurt:["Not yet my time!","Guard your master!"],panic:["Hold the line!"],relief:["A soul returned."],idle:["The bones remember."],block:["Faithful even now."]},
-        bloodbinder: {attack:["Your strength, our salvation.","A little blood for a little hope."],hurt:["I can mend this.","Hold the binding!"],panic:["Not my last drop!"],relief:["The pulse returns."],idle:["Let me see those wounds.","Every heartbeat matters."],block:["A moment to breathe."]},
-        ranger: {
-          attack: ["Hold. Loose!", "A clear shot."],
-          hurt: ["Keep steady."],
-          panic: ["Too close!"],
-          block: ["A narrow miss."],
-          relief: ["Steady hands again."],
-          idle: ["Watch the far passage.", "One arrow at a time."],
-        },
-        mage: {
-          attack: ["Light the margins.", "A spark will do."],
-          hurt: ["Mind the robes!"],
-          panic: ["The spark is fading!"],
-          block: ["Still a little fire."],
-          relief: ["Warmth again."],
-          idle: ["One spark left.", "The ink remembers spells."],
-        },
-        fighter: {
-          attack: ["Behind me!", "Steel first!", "Hold the line!"],
-          hurt: ["Just a dent.", "Armour, hold!"],
-          panic: ["That one got through!", "A healer, perhaps?!"],
-          block: ["Not one of you gets past.", "Stay behind the shield!"],
-          relief: ["Still standing.", "Much better."],
-          idle: [
-            "Anyone else hear that?",
-            "I miss chairs.",
-            "This map needs a bigger sword.",
-          ],
-        },
-        healer: {
-          attack: ["Forgive the mess.", "A sharp lesson."],
-          hurt: ["I could use a hand!", "Careful with the hands!"],
-          panic: ["I cannot mend that twice!", "Someone, please!"],
-          block: ["A little protection."],
-          relief: ["Breathe. We’re alright."],
-          idle: [
-            "Hold still. You’re bleeding.",
-            "Even the dark needs tending.",
-            "I packed bandages. Not optimism.",
-          ],
-        },
-        rogue: {
-          attack: ["Never saw me.", "Your margin’s showing.", "Quick and quiet."],
-          hurt: ["Rude.", "That was my good side."],
-          panic: ["I vote we move!", "A little help here?!"],
-          block: ["Missed me."],
-          relief: ["Nearly like new."],
-          idle: [
-            "That chest is looking at me.",
-            "I hear a very expensive silence.",
-            "Quiet feet. Loud thoughts.",
-          ],
-        },
-      };
       function enemyLine(e, mood) {
         return creatureSpeech(e,mood);
       }
@@ -24292,18 +26307,17 @@ function help(topic = "explore") {
       }
 
       function selectEnemy(id) {
-        if (busy || !state.enemy) return;
-        const e = battleEnemies().find(
-          (e) => String(e.id) === String(id) && e.hp > 0,
-        );
-        if (e) {
-          state.enemy = e;
-          renderEncounter();
-          renderTargets();
-          save();
-        }
+        if(busy || !state.enemy)return;
+        const e=battleEnemies().find(e=>String(e.id)===String(id)&&alive(e));
+        if(!e || state.enemy===e)return;
+        state.enemy=e;
+        document.querySelectorAll("#encounter [data-enemy-id]").forEach(node=>{
+          const selected=String(node.dataset.enemyId)===String(e.id);
+          node.classList.toggle("selected-enemy",selected);
+          node.querySelector("[data-enemy-target]")?.setAttribute("aria-pressed",String(selected));
+        });
+        state.party.forEach(syncRangerAim);syncBloodSeedCounters();save();
       }
-
       function readSettings() {
         try {
           return (
@@ -24328,12 +26342,9 @@ function help(topic = "explore") {
         tileMotion: true,
         fullScreenEffects: true,
         skipCriticals: false,
-        combatEffects: "icons",
+        combatEffects: "both",
         punMode: false,
-        resolution: "auto",
-        language: "en",
-        displayMode: "windowed",
-        quality: "standard",
+        ...FUTURE_OPTION_DEFAULTS,
       });
       function normalisePreferences(input = {}) {
         input = input && typeof input === "object" ? input : {};
@@ -24370,6 +26381,7 @@ function help(topic = "explore") {
           combatEffects: ["icons", "beams", "both"],
         }))
           if (values.includes(input[key])) out[key] = input[key];
+        normaliseFuturePreferences(out,input);
         return out;
       }
       function preferences() {
@@ -24785,6 +26797,7 @@ const BIOME_MUSIC = Object.freeze({
   ice: "chill", crystal: "mysterious", maze: "ominous",
   unstable: "ominous", shadow: "ominous", lava: "ominous",
 });
+const MUSIC_FADES=Object.freeze({out:.54,in:.78,first:.42,duck:.078,restore:.36});
 function musicSelection() {
   // A utility sheet preserves the menu beneath it, including its music.
   const kind = utilityOpen ? utilityContext?.kind : modalKind;
@@ -24853,17 +26866,17 @@ function createRecordedMusic(context, bus) {
     current.gain.gain.cancelScheduledValues(context.currentTime);
     current.gain.gain.value = 0;
     current.id = selection.id; current.key = selection.key;
-    current.fadingIn = true; current.fadeSeconds = previous ? .65 : .35;
+    current.fadingIn = true; current.fadeSeconds = previous ? MUSIC_FADES.in : MUSIC_FADES.first;
     current.audio.src = asset.src;
     current.audio.loop = true;
     current.audio.load();
     start(current);
     if (previous) {
-      ramp(previous.gain.gain, 0, .45);
+      ramp(previous.gain.gain, 0, MUSIC_FADES.out);
       const retiring = previous;
       retiring.retirement = setTimeout(() => {
         if (retiring !== current) retiring.audio.pause();
-      }, 500);
+      }, (MUSIC_FADES.out+.05)*1000);
     }
     return true;
   }
@@ -24872,7 +26885,7 @@ function createRecordedMusic(context, bus) {
     const old = activeJingle; activeJingle = null;
     old.audio.pause(); old.source.disconnect(); old.gain.disconnect();
     old.audio.removeAttribute("src"); old.audio.load();
-    ramp(duck.gain, 1, .3);
+    ramp(duck.gain, 1, MUSIC_FADES.restore);
   }
   function stinger(id, token) {
     if (!["victory", "failure"].includes(id) || playedJingles.has(token) ||
@@ -24887,7 +26900,7 @@ function createRecordedMusic(context, bus) {
     source.connect(gain); gain.connect(bus); // Jingles bypass background ducking.
     const cue = { id, audio, source, gain };
     activeJingle = cue;
-    ramp(duck.gain, .14, .065);
+    ramp(duck.gain, .14, MUSIC_FADES.duck);
     const finish = () => { if (activeJingle === cue) stopJingle(); };
     audio.addEventListener("ended", finish, { once: true });
     audio.addEventListener("error", () => { failed(id, audio.error?.message); finish(); }, { once: true });
@@ -26875,11 +28888,11 @@ function enemyShieldEl(e = state.enemy) {
   return $("#enemy-team-block");
 }
 function canEquipGear(h, gear) {
-  return !!h && !!gear && (!gear.job || gear.job === h.job);
+  return !!h && !!gear && (gear.jobs ? gear.jobs.includes(h.job) : !gear.job || gear.job === h.job);
 }
 function equipmentScope(item) {
   return item?.equipment
-    ? item.job
+    ? item.jobs ? item.jobs.map(className).join(" / ") + " ONLY" : item.job
       ? className(item.job) + " ONLY"
       : "ALL CLASSES"
     : "";
@@ -29557,8 +31570,26 @@ async function oldTravelEvent(c, kind) {
   return true;
 }
 
+// A temple's enclosure and its open approach must preserve the whole floor.
+// Validate the same geometry generation will commit, without spending RNG.
+function templePlacementSafe(map, center, start, stair) {
+  const trial = map.map(c => ({...c})), gate = center + W;
+  for (const i of neighbors(center, true))
+    Object.assign(trial[i], {wall:i !== gate,terrain:i === gate ? "floor" : "stone"});
+  for (let y=Math.floor(gate/W);y<=H-2;y++) {
+    const i=pos(gate%W,y);
+    if(i !== stair && !trial[i].event)
+      Object.assign(trial[i],{wall:false,terrain:trial[i].terrain === "river" ? "bridge" : "floor"});
+  }
+  if(trial[start].wall)return false;
+  const reachable=mapDistances(trial,start);
+  return reachable.has(center) && reachable.has(stair) && reachable.get(stair)>=8 &&
+    trial.every((c,i)=>c.wall || reachable.has(i));
+}
 const WORLD_BALANCE = Object.freeze({
-  strongholdChance: 0.18,
+  // About one temple in three complete ten-floor map sets.
+  // Safe enclosure rejection leaves about one temple-bearing run in three.
+  strongholdChance: .047,
   shopChance: 0.46,
   marketChance: 0.7,
   riverChance: 0.41,
@@ -32960,6 +34991,9 @@ function lootFindCarousel(entries) {
   if (!target) return;
   target.dataset.presenting = "false";
   target.innerHTML = `<div class="loot-find-grid" data-count="${entries.length}">${entries.map((entry) => `<div class="loot-find-tile">${entry}</div>`).join("")}</div>`;
+  const run=state,arrivals=[],presentation={};
+  target.lootPresentation=presentation;
+  target.dataset.presenting=entries.length ? "true" : "false";
   target.querySelectorAll(".loot-find-tile").forEach((tile, i) => {
     const name = tile.querySelector("b")?.textContent || "";
     const item = Object.values(ITEM_DEFS).find((d) => name.startsWith(d.name));
@@ -32995,20 +35029,29 @@ function lootFindCarousel(entries) {
             revive: "Revive once · 75% HP",
           }[artefact.key] || artefactText(artefact);
     }
-    setTimeout(() => {
-      if (!tile.isConnected || $("#spotlight").hidden) return;
-      GameSound.play("itemFind");
-      burst(tile, "gold", 12);
-      animate(
-        tile,
-        [
-          { opacity: 0, transform: "scale(.86)" },
-          { opacity: 1, transform: "scale(1.03)" },
-          { opacity: 1, transform: "none" },
-        ],
-        { duration: 350, juice: true },
-      );
-    }, i * 180);
+    const rare=!!artefact || !!item?.equipment || (item?.quality || 1)>=3;
+    tile.dataset.rarity=rare?'rare':'common';
+    const arrival=new Promise(resolve=>setTimeout(resolve,skip?i*35:i*180/Math.sqrt(pace()))).then(async()=>{
+      await waitForUtility();
+      if(state!==run || !tile.isConnected || $("#spotlight").hidden)return;
+      tile.classList.add('loot-stamping');
+      GameSound.play(rare?'reward':'itemFind');
+      burst(tile,'gold',rare?62:16);
+      if(rare){screenFX('gold',.95);shakeElement($("#stage-card"),3,'settle');}
+      const motion=animate(tile,rare?[
+        {opacity:0,transform:'scale(1.9) rotate(-7deg)'},
+        {opacity:1,transform:'scale(.94) rotate(1deg)',offset:.38},
+        {opacity:1,transform:'scale(1.07) rotate(-.5deg)',offset:.65},
+        {opacity:1,transform:'none'},
+      ]:[{opacity:0,transform:'scale(.86)'},{opacity:1,transform:'scale(1.03)'},{opacity:1,transform:'none'}],{duration:rare?600:350,juice:true});
+      await motion?.finished?.catch(()=>{});
+      tile.classList.remove('loot-stamping');
+    });
+    arrivals.push(arrival);
+
+  });
+  Promise.allSettled(arrivals).then(()=>{
+    if(target.lootPresentation===presentation)target.dataset.presenting="false";
   });
   requestFitUI();
 }
@@ -33366,6 +35409,25 @@ function combatNumber(el, value, type) {
 }
 
 // Callouts name a real state change; they never capture input or move layout.
+function eventCriticalFX(options,details) {
+  if(!options.context)return;
+  const sheet=$("#stage-card");
+  const machine=sheet?.querySelector('.machine-shell:not(#machine-critical)');
+  if(!machine)return;
+  const danger=['trap','rockfall','mushroom','ruin'].includes(options.context)&&details.some(d=>['trap','damage'].includes(d.icon)&&d.value>0);
+  const kind=danger?'trap':options.context==='well'?'heal':details.some(d=>d.icon==='coin')?'gold':details.some(d=>['heal','blessing'].includes(d.icon))?'heal':'critical';
+  const color=getComputedStyle(document.documentElement).getPropertyValue(kind==='heal'?'--green':danger?'--red':'--gold').trim();
+  machine.dataset.criticalOutcome=kind;
+  animate(machine,[
+    {boxShadow:'0 0 0 0 transparent',filter:'brightness(1)'},
+    {boxShadow:`0 0 0 6px var(--gold),0 0 24px ${color}`,filter:'brightness(1.3)',offset:.22},
+    {boxShadow:`0 0 0 2px var(--gold),0 0 12px ${color}`,filter:'brightness(1.08)',offset:.6},
+    {boxShadow:'0 0 0 0 transparent',filter:'brightness(1)'},
+  ],{duration:750,juice:true});
+  burst(machine,kind==='heal'?'heal':danger?'damage':'gold',52);
+  screenFX(kind,1.25);
+  shakeElement(machine,4,'celebrate');
+}
 function combatCallout(el, text, kind = "gold") {
   if (!el) return;
   kind=feedbackKind(text,kind);
@@ -34197,7 +36259,7 @@ function revealCriticalPayoff(region, details, multiplier) {
         ["tunnel","Tunnel"],
         ["lava", "Lava"],
         ["ruin", "Ruins"],
-        ["stronghold", "Stronghold"],
+        ["stronghold", "Temple"],
       ]
         .map(([i, t]) => `<span>${icon(i)}${t}</span>`)
         .join("") + '<span id="biome-key" hidden></span>';
@@ -34440,6 +36502,7 @@ function revealCriticalPayoff(region, details, multiplier) {
         state.enemyBlock = 0;
         state.invulnerable = null;
         state.finishedAt = Date.now();
+        const unlockedNecromancer = recordDungeonVictory();
         state.gold += 100 + state.depth * 20;
         log("The Last Redaction falls. All ten pages belong to your party.");
         closeSpotlight();
@@ -34449,7 +36512,7 @@ function revealCriticalPayoff(region, details, multiplier) {
         const bankedNow = bankVictoryGold();
         openModal(
           "THE FINAL GUARDIAN FALLS!",
-          `<div class="victory-heading">TEN FLOORS CONQUERED</div>${runSummaryMarkup(true, finalFloorSummary)}${victoryBankingMarkup()}<div class="modal-actions"><button class="primary" data-restart>A fresh page</button><button data-close>Keep this story</button></div>`,
+          `<div class="victory-heading">TEN FLOORS CONQUERED</div>${runSummaryMarkup(true, finalFloorSummary)}${victoryBankingMarkup()}${unlockedNecromancer ? '<p class="achievement-unlock">Necromancer unlocked · available for your next expedition</p>' : ""}<div class="modal-actions"><button class="primary" data-restart>A fresh page</button><button data-close>Keep this story</button></div>`,
           "end",
         );
         popTitle($("#modal-title"));
@@ -34470,6 +36533,7 @@ function revealCriticalPayoff(region, details, multiplier) {
         }, 4200);
       }
       const EQUIPMENT_DEFS = {
+        ...EXTRA_EQUIPMENT,
         whetstoneCharm:{name:"Whetstone Charm",icon:"sword",job:null,brief:"+1 damage",description:"All classes. Damaging rolls gain 1 physical damage.",attack:1},
         mendingThread:{name:"Mending Thread",icon:"heal",job:null,brief:"+1 healing",description:"All classes. Healing rolls restore 1 extra HP.",heal:1},
         leatherWraps:{name:"Leather Wraps",icon:"block",job:null,brief:"Resist 1 damage",description:"All classes. Resist 1 damage per incoming hit.",defence:1},
@@ -34565,13 +36629,13 @@ function revealCriticalPayoff(region, details, multiplier) {
         },
       };
       for (const [type, def] of Object.entries(EQUIPMENT_DEFS))
-        ITEM_DEFS[type] = { ...def, equipment: true, brief: (def.job ? className(def.job)+" only · " : "All classes · ")+def.brief };
+        ITEM_DEFS[type] = { ...def, equipment: true, brief: (def.jobs ? def.jobs.map(className).join(" / ")+" only · " : def.job ? className(def.job)+" only · " : "All classes · ")+def.brief };
       function equipmentBonus(entity, key) {
         return EQUIPMENT_DEFS[entity?.equipment]?.[key] || 0;
       }
       function equipmentMarkup(h, i) {
         const e = EQUIPMENT_DEFS[h.equipment];
-        return `<button class="equipment-slot ${e ? "equipped" : ""}" data-gear-hero="${i}" title="${e ? (e.job?className(e.job)+" only · ":"All classes · ")+e.description : "Drag compatible equipment here, or select it in your satchel."}" aria-label="${h.name}'s equipment: ${e ? e.name : "empty"}">${icon(e?.icon || "bag")}<span>${e ? e.name : "Equipment"}</span></button>`;
+        return `<button class="equipment-slot ${e ? "equipped" : ""}" data-gear-hero="${i}" title="${e ? equipmentScope({...e,equipment:true})+" · "+e.description : "Drag compatible equipment here, or select it in your satchel."}" aria-label="${h.name}'s equipment: ${e ? e.name : "empty"}">${icon(e?.icon || "bag")}<span>${e ? e.name : "Equipment"}</span></button>`;
       }
       async function equipCharacter(
         type,
@@ -34624,7 +36688,7 @@ function revealCriticalPayoff(region, details, multiplier) {
         return new Promise((resolve) => {
           openModal(
             gear.name,
-            `<p data-equipment-type="${type}"><b class="equipment-scope">${gear.job?className(gear.job)+" ONLY":"ALL CLASSES"}</b> ${gear.description}</p><div class="equipment-choices">${state.party.map((h, i) => `<button data-gear-choice="${i}" ${alive(h) && canEquipGear(h,gear) ? "" : "disabled"}>${portraitArt(h.job, h)}<b>${h.name} · ${className(h.job)}</b><small>${h.equipment ? "Replace " + EQUIPMENT_DEFS[h.equipment].name : "Empty equipment slot"}</small></button>`).join("")}</div><div class="modal-actions"><button id="gear-cancel">Keep it in the bag</button></div>`,
+            `<p data-equipment-type="${type}"><b class="equipment-scope">${equipmentScope({...gear,equipment:true})}</b> ${gear.description}</p><div class="equipment-choices">${state.party.map((h, i) => `<button data-gear-choice="${i}" ${alive(h) && canEquipGear(h,gear) ? "" : "disabled"}>${portraitArt(h.job, h)}<b>${h.name} · ${className(h.job)}</b><small>${h.equipment ? "Replace " + EQUIPMENT_DEFS[h.equipment].name : "Empty equipment slot"}</small></button>`).join("")}</div><div class="modal-actions"><button id="gear-cancel">Keep it in the bag</button></div>`,
             "equipment",
           );
           let done = false;
@@ -34806,7 +36870,7 @@ function revealCriticalPayoff(region, details, multiplier) {
           const sealChance=faceShare(h.reels[1],["class"]), hitChance=1-h.reels.reduce((p,r)=>p*(1-faceShare(r,DAMAGE_TYPES)),1);
           out.damage+=sealChance*executionBonus(h,state.enemy,h.charge||0,true)+(1-sealChance)*hitChance*executionBonus(h);
         }
-        for(const key of ["heal","teamHeal","selfHeal"])out[key]*=mageHealingFactor(h);
+        for(const key of ["heal","teamHeal","selfHeal"])out[key]*=heroHealingFactor(h);
         out.damage = heroDamagePower(h, out.damage);
         for (const key of ["heal", "teamHeal", "selfHeal"]) out[key] *= HERO_TUNING.healing;
         // Score the active lessons too: AI must recognise the healing and
@@ -34971,7 +37035,7 @@ function revealCriticalPayoff(region, details, multiplier) {
           (g.block || 0) +
           (g.poison || 0) * 1.5 +
           (g.stunEvery ? 2 : 0) +
-          (g.stimEvery ? 2 : 0)
+          (g.stimEvery ? 2 : 0) + (g.seeds||0)*1.5 + (g.souls||0) + (g.trick||0)*2 + (g.soulRecovery||0)
         );
       }
       function autoGearTarget(type) {
@@ -35090,11 +37154,11 @@ function revealCriticalPayoff(region, details, multiplier) {
               score = actual * (ratio < 0.32 ? 4 : 1);
           } else if (family === "antidote") {
             const poison = health.party
-              .filter(({ h }) => h.poison?.turns > 1)
+              .filter(({ h }) => h.poison?.turns > 1 || item.cleanseStun && h.stun)
               .sort((a, b) => a.h.hp - b.h.hp)[0];
             if (poison) {
               target = poison.i;
-              score = poison.h.poison.turns * poison.h.poison.damage * 2;
+              score = (poison.h.poison?.turns || 0) * (poison.h.poison?.damage || 0) * 2 + (item.cleanseStun && poison.h.stun ? 8 : 0);
             }
           } else if (battle) {
             if(family==="aegis" && due && !state.invulnerable && (ratio<.55 || foe.strikes>1))score=foe.damage*foe.strikes*2;
@@ -35784,30 +37848,7 @@ function revealCriticalPayoff(region, details, multiplier) {
           )}<label>Animation speed<select id="option-speed">${["1", "2", "3", "5", "skip"].map((v) => `<option value="${v}" ${v === state.speed ? "selected" : ""}>${v === "skip" ? "Skip cinematics" : v + "×"}</option>`).join("")}</select></label>${check("skipCriticals", "Skip critical roll visuals", "Multipliers still roll and apply. Combat hits and event results remain visible.")}<label class="setting-check"><input type="checkbox" id="option-auto" ${state.autoresolve ? "checked" : ""}><span>Autoresolve battles<small>Choose heroes, targets and supplies automatically.</small></span></label><label class="setting-check"><input type="checkbox" id="option-autoplay" ${state.autoplay ? "checked" : ""}><span>Autoplay exploration<small>Explore, collect, upgrade and descend. Pair with Autofight for a hands-free run.</small></span></label><button id="option-reset-save" class="danger-button" ${busy ? 'disabled title="Finish the current journey or event first"' : ""}>Reset progress</button></div>`,
           audio: `<p class="settings-note">Sound starts after a click or key press. Audio pauses while this tab is hidden.</p><div class="settings-grid">${range("masterVolume", "Master volume", 0, 100)}${range("sfxVolume", "Sound effects", 0, 100)}${range("musicVolume", "Music", 0, 100)}${range("ambienceVolume", "Ambient sound", 0, 100)}${check("battleMusic", "Battle music", "Turn off to keep the biome music during fights.")}${check("muted", "Mute all audio")}<button id="sound-preview">Test sound</button></div>`,
           display: `<div class="settings-columns"><div class="settings-column">${range("brightness", "Brightness", 50, 150)}${range("shake", "Shake magnitude", 0, 300)}${range("portraitMotion", "Character motion", 0, 300)}<label>Paper & ink<select id="option-palette">${["default", "dark", "warm"].map((v) => `<option value="${v}" ${v === state.palette ? "selected" : ""}>${v[0].toUpperCase() + v.slice(1)}</option>`).join("")}</select></label></div><div class="settings-column">${check("ambientEffects", "Torchlight", "Ambient light at the page edges.")}${check("tileMotion", "Animated terrain", "River flow and lava bubbles.")}${check("fullScreenEffects", "Full screen effects", "Edge flashes for damage, healing, gold and criticals.")}<div class="setting-actions"><button id="setting-fullscreen">${document.fullscreenElement ? "Leave fullscreen" : "Enter fullscreen"}</button><button id="shake-preview">Test shake</button></div></div></div>`,
-          future: `<p class="settings-note">Preview settings: selections are saved, but resolution, translation and desktop display controls are not active yet.</p><div class="settings-grid">${select(
-            "resolution",
-            "Resolution (preview)",
-            [
-              ["auto", "Fit window"],
-              ["1920x1080", "1920 × 1080"],
-              ["1280x800", "1280 × 800"],
-              ["1280x720", "1280 × 720"],
-            ],
-          )}${select("language", "Language (preview)", [
-            ["en", "English"],
-            ["fr", "Français"],
-            ["de", "Deutsch"],
-            ["es", "Español"],
-            ["ja", "日本語"],
-          ])}${select("displayMode", "Display mode (preview)", [
-            ["windowed", "Windowed"],
-            ["borderless", "Borderless"],
-            ["fullscreen", "Fullscreen"],
-          ])}${select("quality", "Graphics quality (preview)", [
-            ["low", "Low"],
-            ["standard", "Standard"],
-            ["high", "High"],
-          ])}</div>`,
+          future: futureOptionsMarkup(p),
         };
         openModal(
           "Options",
@@ -35823,7 +37864,7 @@ function revealCriticalPayoff(region, details, multiplier) {
             )
             .join(
               "",
-            )}</div><section class="settings-panel" role="tabpanel" id="settings-panel" aria-labelledby="tab-${tab}">${panes[tab]}</section><div class="modal-actions"><button id="option-guide">Field guide</button><button id="option-download">Save HTML</button><button id="option-reset">Reset settings</button><button class="primary" data-close>Back to game</button></div>`,
+            )}</div><section class="settings-panel" role="tabpanel" id="settings-panel" aria-labelledby="tab-${tab}">${panes[tab]}</section><div class="modal-actions"><button id="option-guide">Field guide</button><button id="option-reset">Reset settings</button><button class="primary" data-close>Back to game</button></div>`,
           "options",
         );
         document.querySelectorAll("[data-settings-tab]").forEach(
@@ -35833,6 +37874,7 @@ function revealCriticalPayoff(region, details, multiplier) {
               $("#tab-" + optionsTab).focus();
             }),
         );
+        if($("#future-group"))$("#future-group").onchange=e=>{futureOptionsGroup=e.target.value;optionsPage("future");$("#future-group").focus();};
         $(".settings-tabs").onkeydown = (e) => {
           if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(e.key)) return;
           e.preventDefault();
@@ -35887,7 +37929,6 @@ function revealCriticalPayoff(region, details, multiplier) {
             }
           };
         $("#option-guide").onclick = () => help();
-        $("#option-download").onclick = () => $("#download").click();
         if ($("#option-reset-save")) $("#option-reset-save").onclick = confirmProgressReset;
         $("#option-reset").onclick = () => {
           state.preferences = { ...DEFAULT_PREFERENCES };
@@ -35911,7 +37952,7 @@ function revealCriticalPayoff(region, details, multiplier) {
           save();
         }
         campInitial = initial;
-        const available = [...heroJobs(expeditionRules()), "necromancer"],
+        const available = [...heroJobs(expeditionRules()), ...(necromancerUnlocked() ? ["necromancer"] : [])],
           startingJobs = ["fighter", "rogue", "mage", "ranger", "berserker", "jester", "bloodbinder", "necromancer"];
         openModal(
           initial ? "Who opens the notebook?" : "Turn to a fresh page?",
@@ -35934,7 +37975,7 @@ function revealCriticalPayoff(region, details, multiplier) {
                 expeditionRules(),
                 starterBuild,
               );
-              return `<button ${available.includes(job) ? `data-start-job="${job}"` : `data-unlock-class="${job}" class="locked-class" aria-label="Unlock ${className(job)} for ${CAMP_UNLOCKS[job].cost} banked gold"`}>${portraitArt(job, h)}<b>${className(job)}${available.includes(job) ? "" : " · Locked"}</b>${available.includes(job) ? `<strong class="starter-availability">Ready to explore</strong>` : `<strong>Click to unlock · ${CAMP_UNLOCKS[job].cost} gold</strong>`}<small>${h.maxHp} HP · ${classAbilityName(job)}</small><span>${STARTER_SUMMARIES[job]}</span></button>`;
+              return `<button ${available.includes(job) ? `data-start-job="${job}"` : job === "necromancer" ? 'data-achievement-class="necromancer" class="locked-class" disabled aria-label="Necromancer: defeat the final guardian to unlock"' : `data-unlock-class="${job}" class="locked-class" aria-label="Unlock ${className(job)} for ${CAMP_UNLOCKS[job].cost} banked gold"`}>${portraitArt(job, h)}<b>${className(job)}${available.includes(job) ? "" : " · Locked"}</b>${available.includes(job) ? `<strong class="starter-availability">Ready to explore</strong>` : job === "necromancer" ? "<strong>Defeat floor 10 to unlock</strong>" : `<strong>Click to unlock · ${CAMP_UNLOCKS[job].cost} gold</strong>`}<small>${h.maxHp} HP · ${classAbilityName(job)}</small><span>${STARTER_SUMMARIES[job]}</span></button>`;
             })
             .join(
               "",
@@ -35989,6 +38030,7 @@ function revealCriticalPayoff(region, details, multiplier) {
         burst(book, "paper", 32);
       }
       function startNewBook(job) {
+        if(job === "necromancer" && !necromancerUnlocked()) return;
         newRun(job,starterBuild);
         openBook(false);
       }

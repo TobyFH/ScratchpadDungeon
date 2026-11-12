@@ -1,8 +1,10 @@
 # Blood Seeds and the Soul Collector
 
 These are the current save-24 rules. They replace the Bloodbinder's former
-timed Bleeding, Clotted and percentage Blood Exchange. No other class's reel
-permissions, enemy floor budgets, camp purchases or artwork have been retuned.
+timed Bleeding, Clotted and percentage Blood Exchange. The later
+[notebook polish pass](NOTEBOOK_POLISH.md) adds earned Necromancer availability,
+Seed maturity and normal-healing bonuses; it also documents the current Rogue,
+temperament, enemy-budget and loot changes. Artwork is unchanged.
 
 ## Bloodbinder
 
@@ -13,6 +15,10 @@ Bloom**; it cannot be removed or copied.
 
 - A Seed face adds its tier's worth of Seeds to the selected enemy. Criticals
   increase the number planted using the ordinary class multiplier.
+- From level 5, planting adds one extra Seed per roll; from level 9, two. This
+  bonus applies once after critical multiplication, without an extra HP fee.
+  Normal Bloodbinder healing gains 2.5% per level after level 4, capped at 20%;
+  the fixed one-HP Seed pool is never multiplied by this bonus.
 - Each rolled Seed face costs **ceil(tier / 2) caster HP**, paid once before
   critical multiplication: ranks I/II cost 1 HP; III/IV cost 2 HP. This bypasses
   block but stops at 1 HP. A caster already at 1 HP may still plant Seeds.
@@ -45,10 +51,12 @@ an allied way to consume it.
 
 ## Necromancer: Soul Collector
 
-A free **starting-only** class with **22 base HP**, using ordinary levels,
-personal points, paid edits, targeting and action clocks. It is never in the
-wandering recruit pool. A Necromancer cannot recruit living adventurers;
-encountering one starts the existing hostile-adventurer battle.
+An **earned, starting-only** class with **22 base HP**, unlocked by defeating
+floor ten for the first time. It cannot be purchased early or appear in the
+wandering recruit pool. It uses ordinary levels, personal points, paid edits,
+targeting and action clocks. Living adventurers still appear, but a frightened
+introduction always leads to the hostile-adventurer battle instead of recruitment.
+Legacy winning saves and legitimate floor-ten deposit receipts recover the unlock.
 
 The master is the sole real hero in `state.party`. Up to two Skeleton auxiliaries
 occupy the existing companion rows visually. They have HP and automatic damage,

@@ -248,9 +248,9 @@ test("class and temperament choose legal starting palettes with visible effect b
     assert.equal(hero.different, true, hero.job);
     assert.equal(hero.legal, true, hero.job);
     assert.equal(hero.other.attack, 2);
-    assert.equal(hero.other.heal, 5);
-    assert.equal(hero.other.block, 5);
-    assert.equal(hero.base.attack, 3);
+    assert.equal(hero.other.heal, 6);
+    assert.equal(hero.other.block, 6);
+    assert.equal(hero.base.attack, 4);
     assert.equal(hero.base.heal, 4);
     assert.equal(hero.base.block, 4);
   }
@@ -809,7 +809,7 @@ test("guide topics are scannable lists, toolbar actions are moved to Options and
   assert.equal(r.combatRound, true);
   assert.ok(r.offset >= 0 && r.offset < 35, JSON.stringify(r));
   assert.equal(r.sameLine, true);
-  assert.equal(r.save, true);
+  assert.equal(r.save, false);
   assert.equal(r.reset, true);
 });
 
