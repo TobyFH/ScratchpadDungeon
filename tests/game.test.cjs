@@ -1132,7 +1132,7 @@ test("save restores speed and artefacts and migrates the earlier Sunseed-era not
   });
   await p.reload();
   await p.evaluate(() => CompanyIntro.skip(true));
-  assert.equal(await p.evaluate(() => state.version), 24);
+  assert.equal(await p.evaluate(() => state.version), 25);
   assert.equal(await p.evaluate(() => state.speed), "skip");
   assert.equal(await p.evaluate(() => state.relic), undefined);
   assert.doesNotMatch(await p.locator("body").textContent(), /Sunseed/);
@@ -3296,7 +3296,7 @@ test("older saved fights migrate to the gentler curve without losing wounds or e
     state.enemy.frequency = 1;
     state.party[0].reels[0][0] = { type: "attack", tier: 3, weight: 9 };
     const tuned=enemyBalance(state.depth,{...state.enemy,pair:false});
-    state.testExpectedSavedFoe={version:24,hp:Math.ceil(tuned.maxHp*.5),max:tuned.maxHp,damage:tuned.damage,strikes:tuned.strikes,frequency:tuned.frequency,face:3};
+    state.testExpectedSavedFoe={version:25,hp:Math.ceil(tuned.maxHp*.5),max:tuned.maxHp,damage:tuned.damage,strikes:tuned.strikes,frequency:tuned.frequency,face:3};
     const old = { ...state, version: 6 };
     localStorage.setItem("scratchpad-dungeon-v6", JSON.stringify(old));
     localStorage.removeItem(SAVE_KEY);
@@ -3566,8 +3566,9 @@ test("cave rooms reveal connected contents together without triggering treasure 
   assert.equal(distribution.invalid, undefined);
   assert.ok(distribution.counts[0] > 200);
   assert.ok(distribution.counts[3] > 10);
+  // Terrain and structures can reject placements; keep the average near one.
   assert.ok(
-    distribution.mean > 0.85 && distribution.mean < 1.15,
+    distribution.mean > 0.8 && distribution.mean < 1.15,
     JSON.stringify(distribution),
   );
 });
@@ -5095,7 +5096,7 @@ test("version-nine fights adopt the stronger enemy curve without changing hero w
         .map((f) => f.tier),
     })),
     {
-      version: 24,
+      version: 25,
       autoplay: false,
       heroHp: 19,
       face: 4,

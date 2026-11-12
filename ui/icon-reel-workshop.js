@@ -5,6 +5,7 @@ let workshopCritPage = 0;
 let workshopEditReceipt = { heroId: null, text: "" };
 let pendingTravelWorkshop = null;
 function editor(i) {
+  if(isSummon(state.party[i])){toast("Bound summons have fixed reels.");return;}
   if(travel && alive(state.party[i])) {
     pendingTravelWorkshop={run:state,heroId:state.party[i].id};
     travel.workshopStop=true;

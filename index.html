@@ -13482,6 +13482,167 @@ body.utility-open #overlay {
     font-size: 18px;
   }
 }
+
+/* Three reserved portrait hitboxes; absent companions leave quiet blank space. */
+.battle-target,
+.fit-notebook .battle-target {
+  height: 40px;
+  min-height: 40px;
+  max-height: 40px;
+  gap: 8px;
+  flex-wrap: nowrap;
+  font-size: 17px;
+}
+.target-heading {
+  flex-basis: auto;
+  font-size: 17px;
+  white-space: nowrap;
+}
+.target-heading > svg {
+  width: 20px;
+  height: 20px;
+}
+.target-picks {
+  display: grid;
+  grid-template-columns: repeat(3, 36px);
+  gap: 6px;
+  flex: none;
+}
+.battle-target .target-button,
+.target-space {
+  width: 36px;
+  min-width: 36px;
+  height: 36px;
+  min-height: 36px;
+  padding: 1px;
+  box-sizing: border-box;
+}
+.battle-target .target-button {
+  position: relative;
+}
+.target-button > svg {
+  width: 24px;
+  height: 30px;
+}
+.target-check {
+  position: absolute;
+  bottom: -2px;
+  right: 0;
+  font-size: 13px;
+  background: var(--paper);
+  line-height: 1;
+}
+.current-heal-target {
+  min-width: 0;
+  line-height: 1.05;
+}
+.current-heal-target b {
+  display: block;
+  font-size: 16px;
+  overflow-wrap: anywhere;
+}
+.current-heal-target small {
+  display: block;
+  font-size: 13px;
+  color: var(--soft);
+}
+@media (min-width: 1260px) {
+  .fit-notebook .result-ribbon {
+    height: 54px;
+    min-height: 54px;
+    max-height: 54px;
+  }
+}
+@media (max-width: 760px) {
+  .battle-target,
+  .fit-notebook .battle-target {
+    height: 42px;
+    min-height: 42px;
+    max-height: 42px;
+    gap: 5px;
+  }
+  .target-heading {
+    font-size: 16px;
+    gap: 3px;
+  }
+  .target-heading > svg {
+    width: 16px;
+    height: 16px;
+  }
+  .target-picks {
+    grid-template-columns: repeat(3, 32px);
+    gap: 4px;
+  }
+  .battle-target .target-button,
+  .target-space {
+    width: 32px;
+    min-width: 32px;
+    height: 34px;
+    min-height: 34px;
+  }
+  .current-heal-target b {
+    font-size: 14px;
+  }
+  .current-heal-target small {
+    font-size: 12px;
+  }
+}
+.summon-card .summon-details {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5px;
+  min-height: 22px;
+  font-size: 14px;
+}
+.summon-card .summon-details .summon-passive {
+  color: var(--poison-ink);
+  text-decoration: underline dotted;
+  cursor: help;
+}
+.summon-card .consume-summon {
+  min-height: 25px;
+  padding: 2px 5px;
+  font-size: 14px;
+  white-space: nowrap;
+  color: var(--blood-ink);
+}
+.summon-card .hero-name small {
+  font-size: 14px;
+}
+.summon-card .summon-bound-note {
+  color: var(--soft);
+  font-size: 13px;
+}
+.summon-card .equipment-button {
+  display: none;
+}
+.summon-card .portrait {
+  cursor: pointer;
+}
+@media (max-width: 760px) {
+  .summon-card .consume-summon {
+    font-size: 16px;
+    min-height: 28px;
+  }
+}
+
+.summon-passive > svg {
+  display: none;
+}
+@media (max-width: 760px) {
+  .summon-passive {
+    flex: 0 0 20px;
+  }
+  .summon-passive > svg {
+    display: block;
+    width: 20px;
+    height: 24px;
+  }
+  .summon-passive-name {
+    display: none;
+  }
+}
 /* END GENERATED NOTEBOOK CSS */
     </style>
   </head>
@@ -13669,7 +13830,7 @@ body.utility-open #overlay {
         "<!doctype html>\n" + document.documentElement.outerHTML;
       const $ = (s) => document.querySelector(s),
         SAVE_KEY = "scratchpad-dungeon-v8",
-        SAVE_VERSION = 24,
+        SAVE_VERSION = 25,
         W = 11,
         H = 9;
       // BEGIN GENERATED NOTEBOOK ART
@@ -14101,7 +14262,7 @@ function portraitArt(kind, entity = { hp: 1, maxHp: 1 }) {
     preferences().punMode
   )
     kind = "pun-" + punIdentity(entity);
-  let art =
+  let art = entity.summonKind ? summonPortraitArt(entity) :
     entity.hp > 0 && !entity.dead
       ? specialEnemyArt(kind, entity) || basePortraitArt(kind, entity)
       : corpseArt(kind, entity);
@@ -14114,6 +14275,7 @@ function portraitArt(kind, entity = { hp: 1, maxHp: 1 }) {
 function necromancerArt(){return `<svg class="pencil-art necromancer-art" viewBox="0 0 120 150" fill="var(--paper-shade)" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 145 24 92 38 72Q22 24 57 5q42 15 30 66l13 23 8 51Z"/><path d="M39 42q17-30 41 0l-4 31-18 11-18-13Z" fill="var(--paper)"/><path d="m43 48 11 2m11 0 10-3M49 51v5m22-6v5m-12 2-3 7h8m-12 9h16m-33 5 23 28 25-29M58 106v38m-32-44 14 17-6 20m55-40-11 24 7 17m-62-6 13 5m46-5 14 5M39 18l-7 19m46-15 6 19m-60 69 14-6m44-1 13 8" fill="none"/><path d="M101 144 99 32m-11-9q0-14 12-14t12 14l-4 9H93Z" fill="var(--paper)"/><path d="m94 19 3 2m8-2 3 2m-8 3-2 4h5m-7 2v5m7-5v5" fill="none"/><path d="m53 97 5-8 5 8-5 9Z" fill="var(--poison-ink,#8253a1)"/></svg>`;}
 function bloodbinderArt(){return `<svg class="pencil-art bloodbinder-art" viewBox="0 0 120 150" fill="var(--paper-shade)" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M14 146 24 96 36 72Q16 20 61 5q45 17 24 66l15 26 9 49Z"/><path d="M36 42q24-30 48 0l-8 31-16 13-17-13Z" fill="var(--paper)"/><path d="m42 47 12-2m12 0 11 2M49 49v5m22-5v5M60 53l-4 10h9m-14 8q10 5 18-1M35 75l25 28 25-29M60 103v41M26 102l19 12-8 26M96 102l-20 13 8 26m-52-8 12-3m35 0 13 3M25 95l12-7m-12 20 12-7m48-13 12 9m-10 5 12 8" fill="none"/><path d="M60 92q-15 17 0 20 15-3 0-20Z" fill="var(--blood-ink,#964958)"/><path d="M31 119q-9-14-15-2t14 18m59-16q10-14 15-2t-14 18" fill="var(--paper)"/><path d="m39 15-8 18m48-14 7 17m-67 93 14 5m62-6-12 7" opacity=".45"/></svg>`;}
 function basePortraitArt(kind, entity = { hp: 1, maxHp: 1 }) {
+  if(entity.summonKind)return summonPortraitArt(entity);
   if(kind === "necromancer" && entity.hp>0 && !entity.dead)return necromancerArt();
   if(kind === "bloodbinder" && entity.hp>0 && !entity.dead)return bloodbinderArt();
   if (entity.hp <= 0 || entity.dead) return corpseArt(kind);
@@ -14322,7 +14484,7 @@ function stairwayArt() {
 // END GENERATED NOTEBOOK ART
       function symbolMarkup(s) {
         if (s.type === "class") {
-          const owner = { job: s.job || "fighter" };
+          const owner = { job: s.job || "fighter", summonKind:s.summonKind };
           const mark =
             owner.job === "mage"
               ? "magic"
@@ -14335,7 +14497,7 @@ function stairwayArt() {
                   bloodbinder: "bloodexchange",
                   necromancer: "harvest",
                 }[owner.job] || "class";
-          return `<span class="class-face" title="${classAbilityDescription(owner)}">${icon(mark)}</span>`;
+          return `<span class="class-face" title="${classAbilityDescription(owner)}">${icon(SUMMON_TYPES[s.summonKind]?.icon || mark)}</span>`;
         }
         if (s.type === "mystery") return `<span class="mystery-face" title="Permanent mystery mark">${icon("question")}</span>`;
         if (s.type === "blank")
@@ -14440,7 +14602,7 @@ const CLASS_BALANCE = Object.freeze({
     path: "Blood Price builds Fury. Balance damage with healing and lifesteal.",
   },
   bloodbinder: {hp:32,critical:[1.5,2,2.5,3],path:"Plant Seeds, then turn enemy damage into shared healing. Blood Bloom bursts every Seed."},
-  necromancer: {hp:22,critical:[1.5,1.75,2,2.5],path:"Gather Souls to raise Skeletons. Only enemy deaths and Soul surges restore your health."},
+  necromancer: {hp:22,critical:[1.5,1.75,2,2.5],path:"Gather Souls to raise allies with fixed reels. Roll their turns or consume them to heal."},
   jester: {
     hp: 30,
     critical: [1.5, 2, 3, 4],
@@ -14455,6 +14617,7 @@ const CRITICAL_BALANCE = Object.freeze({
 function criticalPool(hero, { enemy = false, context = null } = {}) {
   if (context === "well") return CRITICAL_BALANCE.well;
   if (enemy) return CRITICAL_BALANCE.enemy;
+  if(isSummon(hero))return CLASS_BALANCE.necromancer.critical;
   return hero
     ? CLASS_BALANCE[hero.job]?.critical || CLASS_BALANCE.mage.critical
     : CRITICAL_BALANCE.loot;
@@ -15980,7 +16143,8 @@ const fountainRollRate = (depth = state.depth) =>
   Math.min(9, Math.max(0, depth - 1)) * 0.018 +
   lateWellSteps(depth) * SUPPORT_SCALING.wellRollPerFloor;
 function heroDamagePower(h, n) {
-  return h.job === "necromancer" && n > 0 ? Math.max(1,Math.floor(n*NECROMANCER.personalDamage)) : n;
+  const factor=isSummon(h)?NECROMANCER.summonDamage:h.job==="necromancer"?NECROMANCER.personalDamage:1;
+  return n>0?Math.max(1,Math.floor(n*factor)):n;
 }
 function heroHealingPower(n) {
   return n;
@@ -16140,6 +16304,7 @@ function mageResonance(h, symbols = null) {
 const mageRole = (h) => mageResonance(h);
 function normaliseHeroBuild(h) {
   if (!h) return;
+  if(isSummon(h)){normaliseSummon(h);return;}
   if (h.job === "healer") h.job = "mage";
   delete h.mageRole;
   normaliseTacticalStatuses(h);
@@ -16273,6 +16438,7 @@ function normaliseHeroBuild(h) {
   normaliseMysteryReels(h);
 }
 function classAbilityName(hero) {
+  if(hero?.summonKind && hero.summonKind!=="zombie")return summonAbilityName(hero);
   const job = typeof hero === "string" ? hero : hero?.job;
   return (
     {
@@ -16289,6 +16455,7 @@ function classAbilityName(hero) {
   );
 }
 function classAbilityDescription(hero) {
+  if(hero?.summonKind && hero.summonKind!=="zombie")return summonAbilityDescription(hero);
   const h=typeof hero==='object'?hero:{job:hero,level:1},job=h?.job;
   return {
     fighter:`Gain ${tankSealBlock(h)} team block, then spend up to ${bashLimit(h)} on a Shield Bash. Deals double damage to enemy block.`,
@@ -16299,7 +16466,7 @@ function classAbilityDescription(hero) {
     berserker:`Bloodrush: heal yourself for ${bloodrushHealing(h)} HP and add 2 physical damage. Fury strengthens attacks and lifesteal; healing spends it.`,
     jester:"Wildcard: a random trick, usually in your favour. May alter reels, reverse an enemy roll, or scatter damage and healing.",
     bloodbinder:"Blood Bloom: burst every enemy’s Seeds. Each deals 1 damage and shares 1 HP of healing among wounded allies.",
-    necromancer:`Gain ${necromancerSealPower(h)} Harvest power. Souls raise up to two Skeletons; with both alive, a full bar heals the team.`,
+    necromancer:`Gain ${necromancerSealPower(h)} Harvest power. Souls raise up to two allies with their own reels. Consume them to heal yourself; a full team gains Soul Surge.`,
   }[job] || "A class ability rolled alongside your other two marks.";
 }
 function temperamentEffects(h, base) {
@@ -16577,6 +16744,7 @@ function advanceRangerEnemyTurn() {
 
 function pointsNeedAttention(h) {
   return (
+    !isSummon(h) &&
     !state.over &&
     !state.awaitingStarter &&
     alive(h) &&
@@ -17154,6 +17322,7 @@ function wardActive(e = actingEnemy) {
             if (oldHeroTuning && h.job === "fighter" && alive(h)) { const bonus = Math.round(2 * (1 + lessonBonus("vitality", state.runRules)/100) * (ruleEnabled("glass") ? .85 : 1)); h.maxHp += bonus; h.hp += bonus; }
             normaliseHeroBuild(h);
           });
+          migrateNecromancerParty();
           state.map.forEach((c, i) => {
             c.feature ??= c.event;
             c.doodle ??= i % 5;
@@ -17321,8 +17490,9 @@ const EVENT_LOG_TERMS = Object.freeze({
   "Blood Seeds": "Stacks on one enemy. Damage consumes one Seed per actual HP lost and shares that amount of healing across injured allies.",
   "Blood Bloom": "Detonates every Seed on all enemies. Each Seed deals one damage and provides one shared healing; excess damage cannot multiply the healing again.",
   "Soul Harvest": "Enemy deaths restore 12% of that enemy's maximum HP to the Necromancer, capped at half the Necromancer's maximum HP. Ordinary healing is ineffective.",
-  "Soul Call": "The class mark gathers Harvest power. A full Soul bar raises a Skeleton in an empty companion position. Skeletons attack automatically after your rolls and persist between battles; with two alive, filling the bar heals the team instead.",
-  "Soul Surge": "With two Skeletons alive, a full Soul bar restores 10% maximum HP to the Necromancer and each Skeleton, then empties.",
+  "Soul Call": "A full Soul bar raises a random ally with fixed reels. Choose which party member rolls. With both summon slots full, filling the bar heals the team instead.",
+  "Consume": "Sacrifice a bound summon to restore the Necromancer’s HP. Costs one action during combat. Summon deaths do not trigger burial or resurrection prompts.",
+  "Soul Surge": "With both summon slots full, a full Soul bar restores 10% maximum HP to the Necromancer and each living summon, then empties.",
   "Bodyguard": "Once per enemy turn, the healthiest living Skeleton intercepts the first eligible single-target attack on its Necromancer. Further attacks, area damage and piercing attacks can hit the master.",
 
   "Cave room": "Revealing one room tile uncovers the connected room and its discoveries. Revealed discoveries are not activated until visited.",
@@ -17919,10 +18089,12 @@ function paintMapDrawing(id, markup, create) {
         p.style.transform = `translate(${(state.position % W) * 100}%,${Math.floor(state.position / W) * 100}%)`;
       }
       function renderParty() {
+        if(!busy && state.currentHero == null && !actingEnemy)pruneSummons();
         $("#party").innerHTML =
           state.party
             .map((h, i) => {
               let status = injury(h);
+              if(isSummon(h))return summonCardMarkup(h,i);
               return `<article data-hero-roll="${i}" data-surprised="${!openingEligible(h)}" tabindex="${state.enemy && alive(h) && !state.over ? "0" : "-1"}" role="group" aria-label="${escapeHTML(h.name)} · click card or press Enter to spin; portrait opens upgrades" data-gear-target="${i}" class="hero ${h.job} ${status} ${h.initiative && state.opening?.firstRoll ? "has-initiative" : ""} ${state.target === i ? "selected" : ""}" id="hero-${i}"><div class="hero-dossier"><button class="portrait" id="portrait-${i}" data-hero-stats="${i}" data-edit="${i}" aria-label="Upgrade ${h.name} · ${h.points} points" aria-pressed="${state.target === i}" ${(busy && !travel) || !alive(h) ? "disabled" : ""}>${portraitArt(h.job, h)}${statusMarkup(h)}${traitMarkup(h)}${specialismBadge(h)}</button>${pointsNeedAttention(h) ? `<button class="points-prompt" data-edit="${i}" aria-label="Spend ${h.points} personal points" title="Spend ${h.points} personal points" ${busy && !travel ? "disabled" : ""}>✎ ${h.points} pts</button>` : ""}<div class="hero-name">${h.name}<small>${className(h.job)}${["bloodbinder","necromancer"].includes(h.job) ? "" : " · Lv." + h.level}</small></div>${equipmentMarkup(h, i)}</div><div class="hero-controls"><div class="hero-title-line"><span class="hp-info">HP ${h.hp} / ${h.maxHp}</span><span class="injury ${h.stun ? "stun-status" : status}">${h.stun ? "stunned" : status}</span></div>${healthMarkup(h)}${soulMeterMarkup(h)}${drawMachine("hero-" + i, h.last, { hero: i, disabled: busy || !state.enemy || !h.hp || state.over || heroCannotRoll(h) })}<div class="bars"><div class="healthbar exp" title="Experience"><i style="width:${(h.xp / (h.level * 12)) * 100}%"></i></div></div><div class="edit-line"><span>${["bloodbinder","necromancer"].includes(h.job) ? "Lv."+h.level+" · " : ""}${h.xp}/${h.level * 12} EXP</span><button class="edit-button" data-edit="${i}" ${(busy && !travel) || state.over ? "disabled" : ""} aria-label="Edit ${h.name}'s reels">✎ ${h.points} points</button></div></div></article>`;
             })
             .join("") +
@@ -17974,14 +18146,14 @@ function paintMapDrawing(id, markup, create) {
       }
 
       function renderTargets() {
-        $("#targets").innerHTML =
-          '<span class="target-heading">' + icon("heal") + '<b>Heal / tonic target</b></span>' +
-          state.party
-            .map(
-              (h, i) =>
-                `<button class="target-button ${state.target === i ? "active" : ""}" data-target="${i}" aria-pressed="${state.target === i}" ${busy || !alive(h) ? "disabled" : ""}>${state.target === i ? '<span class="target-check" aria-hidden="true">✓</span>' : ""}${portraitArt(h.job,h)}<span>${h.name}<small>${!alive(h) ? "Fallen" : h.hp + "/" + h.maxHp + " HP"}</small></span></button>`,
-            )
-            .join("");
+        const current = state.party[state.target];
+        $("#targets").innerHTML = '<span class="target-heading">'+icon("heal")+'<b>Heal / tonic</b></span><div class="target-picks" role="group" aria-label="Healing target">'+
+          Array.from({length:3},(_,i)=>{
+            const h=state.party[i];
+            if(!h)return '<span class="target-space" aria-hidden="true"></span>';
+            const label=h.name+' · '+h.hp+'/'+h.maxHp+' HP'+(!canReceiveOrdinaryHealing(h)?' · cannot receive ordinary healing':'');
+            return `<button class="target-button ${state.target===i?'active':''}" data-target="${i}" aria-label="Heal target: ${escapeHTML(label)}" data-tooltip="${escapeHTML(label)}" aria-pressed="${state.target===i}" ${busy||!alive(h)?'disabled':''}>${portraitArt(h.job,h)}${state.target===i?'<span class="target-check" aria-hidden="true">✓</span>':''}</button>`;
+          }).join('')+'</div><span class="current-heal-target"><b>'+(current?escapeHTML(current.originalName||current.name):'Choose an ally')+'</b><small>'+(current?current.hp+'/'+current.maxHp+' HP':'')+'</small></span>';
       }
       function renderInventory() {
         const slots = Object.entries(state.bag || {}).filter(([, n]) => n > 0),
@@ -18664,7 +18836,6 @@ async function exploderTurn(e) {
       impact: { type: "attack", critical: true },
     });
   }
-  necromancerAreaDamage(power,e);
   e.selfDestructed = true;
   damageEnemy(e.hp, e.name + " burns out", e, { piercing: true, selfDestruct:true });
   log(
@@ -19132,6 +19303,7 @@ function bestiaryPage(index = bestiaryPageIndex) {
         state.enemies.forEach((e) => {
           if (options.adventurer) {
             e.hostileRecruit = true;
+            if(!isSummon(options.adventurer) && !options.environment)e.adventurerRecord = {id:options.adventurer.id,name:options.adventurer.name,job:options.adventurer.job,specialism:options.adventurer.specialism,reels:options.adventurer.reels.map(r=>r.map(f=>({...f})))};
             if (options.adventurer.job === "berserker") {
               e.job = "berserker";
               e.fury = 0;
@@ -19753,7 +19925,7 @@ function encounterTags(enemies) {
       }
 
       function addXP(h, n) {
-        if (!alive(h)) return;
+        if (!alive(h) || isSummon(h)) return;
         if (traitBonus(h, "xp")) {
           const extra = n * traitBonus(h, "xp") + (h.traitXpRemainder || 0);
           const bonus = Math.floor(extra + 1e-9);
@@ -19817,11 +19989,11 @@ function encounterTags(enemies) {
       // deliberately call healHero directly, preserving their per-hero amounts.
       function healingTarget(preferred = state.target) {
         const selected = state.party[preferred];
-        if (alive(selected) && (selected.hp < selected.maxHp || selected.stun)) return preferred;
+        if (alive(selected) && canReceiveOrdinaryHealing(selected) && (selected.hp < selected.maxHp || selected.stun)) return preferred;
         return (
           state.party
             .map((h, i) => ({ h, i }))
-            .filter(({ h }) => alive(h) && h.hp < h.maxHp)
+            .filter(({ h }) => alive(h) && canReceiveOrdinaryHealing(h) && h.hp < h.maxHp)
             .sort((a, b) => a.h.hp - b.h.hp || a.i - b.i)[0]?.i ?? preferred
         );
       }
@@ -19947,6 +20119,7 @@ function encounterTags(enemies) {
             "Magic",
           );
         if (actual) portraitMotion($("#portrait-" + i), h.hp <= 0 ? "death" : "hurt");
+        summonDamageRecovery(h);
         if (h.hp === 0) recordDeath(h, source);
         return actual;
       }
@@ -20143,6 +20316,7 @@ function encounterTags(enemies) {
         enemyArmour(entity) +
         traitBonus(entity, "defence") +
         equipmentBonus(entity, "defence") +
+        (isSummon(entity) && entity.summonPassive === "carapace" ? 1 : 0) +
         Math.floor((entity.rage || 0) / 3) +
         stimulantDefenceBonus(entity);
       // BEGIN GENERATED BLOODBINDER
@@ -20274,7 +20448,8 @@ function consumeBloodSeeds(e, damage) {
   if (!used) return 0;
   const owner =
     state.party.find((h) => h.id === e.bloodSeeds.sourceId) ||
-    state.graveyard.find((h) => h.id === e.bloodSeeds.sourceId);
+    state.graveyard.find((h) => h.id === e.bloodSeeds.sourceId) ||
+    state.summonArchive?.find(h=>h.id===e.bloodSeeds.sourceId);
   e.bloodSeeds.count -= used;
   if (!e.bloodSeeds.count) e.bloodSeeds = null;
   trackBloodFeedback(bloodSeedBurstFX(e, used));
@@ -22134,7 +22309,8 @@ async function crystalEncounter(i) {
 }
 // END GENERATED CRYSTAL CHOICES
       // BEGIN GENERATED NECROMANCER
-// One real adventurer; Skeletons are persistent auxiliaries, never party heroes.
+// Bound summons are ordinary combat actors in state.party. Their seeded reels
+// are fixed, and their strength tracks their master's level with a saved offset.
 const NECROMANCER = Object.freeze({
   soulBase: 22,
   soulPerLevel: 2,
@@ -22145,51 +22321,366 @@ const NECROMANCER = Object.freeze({
   killHeal: 0.12,
   killHealCap: 0.5,
   overflowHeal: 0.1,
-  skeletonHpBase: 8,
-  skeletonHpPerLevel: 3,
-  skeletonAttackPerLevel: 0.45,
-  skeletonDeathSouls: 3,
-  skeletonDeathHeal: 0.03,
+  summonDamage: 0.8,
+  zombieChance: 0.25,
+  consumeBase: 0.12,
+  consumeCurrentHp: 0.5,
+  consumeCap: 0.5,
+});
+const SUMMON_TYPES = Object.freeze({
+  blade: {
+    name: "Boneblade",
+    job: "rogue",
+    role: "Damage",
+    hp: 15,
+    specialism: "offence",
+    seal: "REND",
+    icon: "sword",
+    pool: [
+      "attack",
+      "attack",
+      "attack",
+      "poison",
+      "stun",
+      "stimulant",
+      "blank",
+    ],
+    passives: ["venom", "ambusher"],
+  },
+  guard: {
+    name: "Graveguard",
+    job: "fighter",
+    role: "Tank",
+    hp: 25,
+    specialism: "defence",
+    seal: "GRAVE WARD",
+    icon: "block",
+    pool: ["block", "block", "attack", "heavy", "stun", "selfheal", "blank"],
+    passives: ["carapace", "ward"],
+  },
+  wisp: {
+    name: "Hexwisp",
+    job: "mage",
+    role: "Spell damage",
+    hp: 13,
+    specialism: "offence",
+    seal: "COLD FLAME",
+    icon: "magic",
+    pool: ["magic", "magic", "magic", "poison", "stun", "rally", "blank"],
+    passives: ["arcane", "ward"],
+  },
+  cantor: {
+    name: "Bonecantor",
+    job: "mage",
+    role: "Support",
+    hp: 17,
+    specialism: "defence",
+    seal: "MENDING CHANT",
+    icon: "heal",
+    pool: ["heal", "heal", "block", "rally", "magic", "selfheal", "blank"],
+    passives: ["mender", "secondWind"],
+  },
+  bomber: {
+    name: "Powderghoul",
+    job: "berserker",
+    role: "Explosive damage",
+    hp: 18,
+    specialism: "offence",
+    seal: "BONEBURST",
+    icon: "bomb",
+    pool: [
+      "attack",
+      "heavy",
+      "attack",
+      "selfheal",
+      "stimulant",
+      "blank",
+      "blank",
+    ],
+    passives: ["volatile", "carapace"],
+  },
+});
+const SUMMON_PASSIVES = Object.freeze({
+  venom: {
+    name: "Venom bones",
+    text: "Every third damaging roll adds 1 poison power.",
+  },
+  ambusher: {
+    name: "First cut",
+    text: "The first damaging roll each battle gains 2 physical damage.",
+  },
+  carapace: {
+    name: "Thick bones",
+    text: "Resists 1 damage from each ordinary hit.",
+  },
+  ward: { name: "Soul ward", text: "Every third roll adds 2 team block." },
+  arcane: { name: "Cold spark", text: "Spell rolls gain 1 spell damage." },
+  mender: {
+    name: "Grave medicine",
+    text: "Healing rolls restore 2 extra HP. Cannot heal the Necromancer.",
+  },
+  secondWind: {
+    name: "Second wind",
+    text: "Once per battle, surviving below 30% HP restores 20% maximum HP.",
+  },
+  volatile: { name: "Overpacked", text: "Boneburst deals 3 extra damage." },
 });
 const necromancerOwner = () =>
-  state?.party?.find((h) => h.job === "necromancer") || null;
-const isSkeleton = (s) => !!s?.skeleton;
-const canReceiveOrdinaryHealing = (h) =>
-  h?.job !== "necromancer" && !isSkeleton(h);
+  state?.party?.find((h) => h.job === "necromancer" && !isSummon(h)) || null;
+const isSummon = (h) => !!h?.summonOwnerId && !!h.summonKind;
+const summonsOf = (h) =>
+  (state?.party || []).filter(
+    (s) => isSummon(s) && String(s.summonOwnerId) === String(h?.id),
+  );
+const canReceiveOrdinaryHealing = (h) => h?.job !== "necromancer";
 const soulCapacity = (h) =>
   NECROMANCER.soulBase + NECROMANCER.soulPerLevel * Math.max(1, h.level || 1);
-const skeletonMaxHp = (h) =>
-  NECROMANCER.skeletonHpBase +
-  NECROMANCER.skeletonHpPerLevel * Math.max(1, h.level || 1);
-const skeletonAttack = (h) =>
-  1 +
-  Math.floor(
-    Math.max(0, (h.level || 1) - 1) * NECROMANCER.skeletonAttackPerLevel,
-  );
 const necromancerSealPower = (h) =>
   2 + Math.floor(Math.max(0, (h.level || 1) - 1) / 4);
 const harvestSpellPower = (power) =>
   Math.ceil(Math.max(0, power) * NECROMANCER.harvestDamage);
+function summonRandom(seed) {
+  let value = Number(seed) >>> 0 || 1;
+  return () => {
+    value = (Math.imul(value, 1664525) + 1013904223) >>> 0;
+    return value / 4294967296;
+  };
+}
+function summonSeed(value) {
+  let hash = 2166136261;
+  for (const c of String(value))
+    hash = Math.imul(hash ^ c.charCodeAt(0), 16777619);
+  return hash >>> 0 || 1;
+}
 function normaliseNecromancer(h) {
-  if (h?.job !== "necromancer") return;
+  if (h?.job !== "necromancer" || isSummon(h)) return;
   h.souls = Math.min(
     soulCapacity(h) - 0.00001,
     Math.max(0, Number.isFinite(h.souls) ? h.souls : 0),
   );
   h.summonSerial = Math.max(0, Math.floor(Number(h.summonSerial) || 0));
-  h.skeletons = (Array.isArray(h.skeletons) ? h.skeletons : [])
-    .filter((s) => s && s.hp > 0)
-    .slice(0, 2)
-    .map((s, i) => ({
-      id: String(s.id || `${h.id}-bones-${i}`),
-      skeleton: true,
-      name: s.name || "Skeleton",
-      hp: Math.min(skeletonMaxHp(h), Math.max(1, Math.floor(s.hp))),
-      maxHp: skeletonMaxHp(h),
-      born: Math.max(0, Math.floor(s.born || i)),
-      stats: { damageDealt: 0, damageTaken: 0, attacks: 0, ...s.stats },
+  h.pendingRaises = Math.min(
+    2,
+    Math.max(0, Math.floor(Number(h.pendingRaises) || 0)),
+  );
+  for (const s of summonsOf(h)) normaliseSummon(s, h);
+}
+function summonDefinition(s) {
+  return SUMMON_TYPES[s.summonKind] || null;
+}
+function summonLevel(s, h = necromancerOwner()) {
+  return Math.max(
+    1,
+    (h?.level || s.level || 1) +
+      Math.max(-1, Math.min(1, Math.floor(s.levelOffset || 0))),
+  );
+}
+function summonFacePool(s) {
+  if (s.summonKind !== "zombie") return summonDefinition(s).pool;
+  const legal = CLASS_FACE_TYPES[s.job] || CLASS_FACE_TYPES.fighter;
+  const pool = (s.originalFaces || []).filter(
+    (t) => legal.includes(t) && !["class", "blank"].includes(t),
+  );
+  return pool.length
+    ? [...pool.slice(0, 12), "blank"]
+    : startingFaces(s.job, s.specialism).map((f) => f[0]);
+}
+function summonReels(s) {
+  const random = summonRandom(s.buildSeed),
+    pool = summonFacePool(s),
+    base = 1 + Math.floor((s.level - 1) / 6);
+  return [0, 1, 2].map((k) => {
+    const faces = Array.from({ length: 6 }, (_, j) => {
+      const type = pool[Math.floor(random() * pool.length)],
+        rank = random();
+      const tier =
+        type === "blank"
+          ? 1
+          : Math.max(
+              1,
+              Math.min(
+                4,
+                base + (s.level >= 3 && rank < 0.2 ? 1 : rank > 0.82 ? -1 : 0),
+              ),
+            );
+      return { type, tier, weight: 1 };
+    });
+    // Keep every build usable alone without making its focus uniform.
+    if (!faces.some((f) => DAMAGE_TYPES.includes(f.type)))
+      faces[0] = {
+        type:
+          ["wisp", "cantor"].includes(s.summonKind) ||
+          ["mage", "bloodbinder"].includes(s.job)
+            ? "magic"
+            : "attack",
+        tier: Math.min(4, base),
+        weight: 1,
+      };
+    const focus =
+      {
+        blade: "attack",
+        guard: "block",
+        wisp: "magic",
+        cantor: "heal",
+        bomber: "attack",
+      }[s.summonKind] || primaryFace(s);
+    faces[1] = { type: focus, tier: Math.min(4, base), weight: 1 };
+    if (k === 1)
+      faces.push({
+        type: "class",
+        tier: 1,
+        weight: 1,
+        job: s.job,
+        summonKind: s.summonKind,
+      });
+    return faces;
+  });
+}
+function normaliseSummon(s, h = necromancerOwner()) {
+  if (!isSummon(s) || !h) return;
+  if (!SUMMON_TYPES[s.summonKind] && s.summonKind !== "zombie")
+    s.summonKind = "blade";
+  const def = summonDefinition(s),
+    before = s.level;
+  s.job =
+    def?.job ||
+    (CLASS_FACE_TYPES[s.job] && s.job !== "necromancer" ? s.job : "fighter");
+  s.buildSeed = Number.isFinite(s.buildSeed)
+    ? s.buildSeed >>> 0
+    : summonSeed(s.id);
+  s.levelOffset = Math.max(-1, Math.min(1, Math.floor(s.levelOffset || 0)));
+  s.level = summonLevel(s, h);
+  s.xp = 0;
+  s.points = 0;
+  s.equipment = null;
+  s.trait = null;
+  s.stats = { ...emptyStats(), ...s.stats };
+  s.specialism =
+    def?.specialism || (s.specialism === "defence" ? "defence" : "offence");
+  s.summonPassive = Object.hasOwn(SUMMON_PASSIVES, s.summonPassive)
+    ? s.summonPassive
+    : def?.passives[0] || null;
+  const baseHp = def?.hp || Math.round((CLASS_BALANCE[s.job]?.hp || 30) * 0.6);
+  s.maxHp = Math.round(
+    (baseHp + 4 * (s.level - 1)) * (1 + lessonBonus("vitality") / 100),
+  );
+  s.hp = Math.min(
+    s.maxHp,
+    Math.max(0, Number.isFinite(s.hp) ? Math.floor(s.hp) : s.maxHp),
+  );
+  s.dead = s.hp <= 0;
+  if (!s.reels || before !== s.level || s.summonBuildVersion !== 1) {
+    s.reels = summonReels(s);
+    s.summonBuildVersion = 1;
+  }
+  if (!Array.isArray(s.last) || s.last.length !== 3)
+    s.last = [s.reels[0][0], s.reels[1][1], s.reels[2][0]].map((f) => ({
+      ...f,
     }));
-  h.summonSerial = Math.max(h.summonSerial, ...h.skeletons.map((s) => s.born));
+  normaliseTacticalStatuses(s);
+}
+function defeatedSummonCandidates() {
+  const victims = [
+    ...(state.necromancerVictims || []),
+    ...(state.graveyard || []).filter((v) => !isSummon(v)),
+  ];
+  return victims.filter(
+    (v) =>
+      !v.raised &&
+      v.job !== "necromancer" &&
+      Object.hasOwn(CLASS_FACE_TYPES, v.job),
+  );
+}
+function createSummon(
+  h,
+  { kind = null, seed = null, corpse = null, legacy = null } = {},
+) {
+  seed = seed ?? rand(0x7fffffff);
+  const random = summonRandom(seed),
+    kinds = Object.keys(SUMMON_TYPES);
+  if (!kind && !corpse) {
+    const candidates = defeatedSummonCandidates();
+    if (candidates.length && Math.random() < NECROMANCER.zombieChance)
+      corpse = pick(candidates);
+  }
+  if (corpse) {
+    kind = "zombie";
+    corpse.raised = true;
+  }
+  kind = kind || kinds[Math.floor(random() * kinds.length)];
+  const def = SUMMON_TYPES[kind] || SUMMON_TYPES.blade;
+  const s = {
+    id: `${h.id}-summon-${++h.summonSerial}`,
+    summonOwnerId: h.id,
+    summonKind: kind,
+    buildSeed: seed,
+    name: corpse ? `${corpse.name}, returned` : def.name,
+    job: corpse?.job || def.job,
+    specialism: corpse?.specialism || def.specialism,
+    levelOffset: legacy ? 0 : Math.floor(random() * 3) - 1,
+    level: 0,
+    hp: legacy?.hp,
+    stats: legacy?.stats || emptyStats(),
+    dead: false,
+    originalFaces: corpse?.reels?.flat().map((f) => f.type),
+    originalName: corpse?.name || null,
+    summonPassive: corpse
+      ? null
+      : def.passives[Math.floor(random() * def.passives.length)],
+    joinedAt: Date.now(),
+    joinedSteps: state.steps,
+    origin: {
+      depth: state.depth,
+      tile: state.position,
+      description: corpse
+        ? "Raised from " + corpse.name
+        : "Raised by " + h.name,
+    },
+    stun: 0,
+    poison: null,
+    stimulant: null,
+    blackout: [],
+    reelGifts: [],
+    momentReceipts: {},
+    traitProgress: {},
+  };
+  normaliseSummon(s, h);
+  if (!legacy) s.hp = s.maxHp;
+  return s;
+}
+function migrateNecromancerParty() {
+  const h = necromancerOwner();
+  state.necromancerVictims = Array.isArray(state.necromancerVictims)
+    ? state.necromancerVictims
+        .filter((v) => v && typeof v === "object" && CLASS_FACE_TYPES[v.job])
+        .slice(-20)
+    : [];
+  state.summonArchive = Array.isArray(state.summonArchive)
+    ? state.summonArchive.filter((v) => v && typeof v === "object").slice(-100)
+    : [];
+  if (!h) {
+    state.party = state.party.filter((s) => !isSummon(s));
+    return;
+  }
+  if (!alive(h)) {
+    delete h.skeletons;
+    necromancerFallen(h);
+    return;
+  }
+  const legacy = Array.isArray(h.skeletons)
+    ? h.skeletons.filter((s) => s?.hp > 0).slice(0, 2)
+    : [];
+  delete h.skeletons;
+  state.party = state.party
+    .filter((s) => !isSummon(s) || String(s.summonOwnerId) === String(h.id))
+    .slice(0, 3);
+  for (const old of legacy) {
+    if (state.party.length >= 3) break;
+    state.party.push(
+      createSummon(h, { kind: "blade", seed: summonSeed(old.id), legacy: old }),
+    );
+  }
+  normaliseNecromancer(h);
 }
 function healNecromancer(h, amount, from = null, label = "SOUL HARVEST") {
   if (!alive(h)) return 0;
@@ -22212,33 +22703,39 @@ function healNecromancer(h, amount, from = null, label = "SOUL HARVEST") {
   }
   return n;
 }
+function raiseBoundAlly(h, refresh = true) {
+  const s = createSummon(h),
+    run = state;
+  state.party.push(s);
+  h.stats.summons = (h.stats.summons || 0) + 1;
+  if (refresh) {
+    renderParty();
+    renderTargets();
+    summonMomentFX(h, s, "rise");
+  } else
+    requestAnimationFrame(() => {
+      if (state === run && alive(s) && state.party.includes(s))
+        summonMomentFX(h, s, "rise");
+    });
+  log(
+    `${h.name} · Soul Call: ${s.name} rises — level ${s.level} ${summonRole(s)}. Choose its reels to act.`,
+  );
+  return s;
+}
 function grantSouls(h, amount, label = "SOULS") {
   if (!alive(h) || h.job !== "necromancer" || !(amount > 0) || state.over)
     return 0;
   const before = h.souls || 0,
     cap = soulCapacity(h);
-  // Damage grants fractional Souls. Avoid 23.99999999999999 missing a 24 bar.
   h.souls = Math.min(cap, Number((before + amount).toFixed(6)));
   const gained = h.souls - before;
   if (h.souls >= cap) {
-    h.souls = 0; // One completion per grant; excess never chains free activations.
-    if (h.skeletons.length < 2) {
-      const s = {
-        id: `${h.id}-skeleton-${++h.summonSerial}`,
-        skeleton: true,
-        name: "Skeleton",
-        hp: skeletonMaxHp(h),
-        maxHp: skeletonMaxHp(h),
-        born: h.summonSerial,
-        stats: { damageDealt: 0, damageTaken: 0, attacks: 0 },
-      };
-      h.skeletons.push(s);
-      h.stats.summons = (h.stats.summons || 0) + 1;
-      syncNecromancer(h);
-      summonMomentFX(h, s, "rise");
-      log(
-        `${h.name} · Soul Call: a Skeleton rises (${s.hp} HP, ${skeletonAttack(h)} damage per action).`,
-      );
+    h.souls = 0;
+    if (state.party.length < 3) {
+      raiseBoundAlly(h);
+    } else if (3 - state.party.filter(alive).length > (h.pendingRaises || 0)) {
+      // Keep indices stable until the current multi-hit action is complete.
+      h.pendingRaises = (h.pendingRaises || 0) + 1;
     } else {
       const recovered = healNecromancer(
         h,
@@ -22246,16 +22743,16 @@ function grantSouls(h, amount, label = "SOULS") {
         entityArt(h),
         "SOUL SURGE",
       );
-      for (const s of h.skeletons) {
-        const n = Math.min(
-          s.maxHp - s.hp,
+      for (const s of summonsOf(h).filter(alive)) {
+        const n = healHero(
+          state.party.indexOf(s),
           Math.ceil(s.maxHp * NECROMANCER.overflowHeal),
+          { exact: true, soulRecovery: true },
         );
-        s.hp += n;
         if (n) summonMomentFX(h, s, "heal");
       }
       log(
-        `${h.name} · Soul Surge: ${recovered} HP restored; both Skeletons recover strength.`,
+        `${h.name} · Soul Surge: ${recovered} HP restored; bound allies recover strength.`,
       );
     }
   }
@@ -22266,109 +22763,252 @@ function grantSouls(h, amount, label = "SOULS") {
 }
 function necromancerDamage(e, damage, { selfInflicted = false } = {}) {
   const h = necromancerOwner();
-  if (!alive(h) || !damage || selfInflicted) return;
-  grantSouls(h, damage * NECROMANCER.damageSouls);
+  if (alive(h) && damage && !selfInflicted)
+    grantSouls(h, damage * NECROMANCER.damageSouls);
 }
 function necromancerEnemyDeath(e) {
   const h = necromancerOwner();
   if (!alive(h) || e.hp > 0 || e.soulHarvested) return;
   e.soulHarvested = true;
+  if (e.hostileRecruit && e.adventurerRecord) {
+    state.necromancerVictims ??= [];
+    if (!state.necromancerVictims.some((v) => v.id === e.adventurerRecord.id))
+      state.necromancerVictims.push({ ...e.adventurerRecord, raised: false });
+    state.necromancerVictims = state.necromancerVictims.slice(-20);
+  }
   const n = Math.min(
-    Math.ceil(e.maxHp * NECROMANCER.killHeal) + equipmentBonus(h,"soulRecovery"),
+    Math.ceil(e.maxHp * NECROMANCER.killHeal) +
+      equipmentBonus(h, "soulRecovery"),
     Math.floor(h.maxHp * NECROMANCER.killHealCap),
   );
   const healed = healNecromancer(h, n, enemyArtEl(e));
   if (healed)
     log(`${h.name} · Soul Harvest: ${e.name}'s death restores ${healed} HP.`);
 }
-function necromancerBodyguard(h, e, { area = false, piercing = false } = {}) {
-  if (
-    h?.job !== "necromancer" ||
-    !alive(h) ||
-    e.necroGuardUsed ||
-    area ||
-    piercing ||
-    e.piercing ||
-    e.unblockable
-  )
-    return null;
-  const s = h.skeletons
-    .filter((s) => s.hp > 0)
-    .sort((a, b) => b.hp - a.hp || a.born - b.born)[0];
-  if (!s) return null;
-  e.necroGuardUsed = true;
-  combatCallout(skeletonArtEl(s), "BODYGUARD!", "soul");
-  summonMomentFX(h, s, "guard");
-  log(`${s.name} intercepts ${e.name}'s attack on ${h.name}.`);
-  return s;
+function summonRole(s) {
+  return summonDefinition(s)?.role || `${className(s.job)} zombie`;
 }
-function damageSkeleton(h, s, amount, e, impact = {}) {
-  if (!alive(h) || s.hp <= 0) return 0;
-  const ward = wardActive(e),
-    blocked = ward ? amount : Math.min(state.block, amount);
-  if (!ward) state.block -= blocked;
-  const n = Math.min(s.hp, Math.max(0, amount - blocked));
-  if (blocked) {
-    beam(enemyArtEl(e), $("#block"), "block", impact);
-    armourFX(blocked, "Skeleton protected");
-  }
-  if (n) {
-    beam(enemyArtEl(e), skeletonArtEl(s), impact.type || "attack", impact);
-    s.hp -= n;
-    s.stats.damageTaken += n;
-    combatNumber(skeletonArtEl(s), n, "attack");
-    shakeElement(skeletonArtEl(s), 4, "recoil");
-    GameSound.play("hit");
-  } else if (blocked) shieldedFX(skeletonArtEl(s));
-  if (s.hp <= 0) {
-    summonMomentFX(h, s, "death");
-    h.skeletons = h.skeletons.filter((a) => a !== s);
-    h.stats.skeletonsLost = (h.stats.skeletonsLost || 0) + 1;
-    grantSouls(h, NECROMANCER.skeletonDeathSouls, "BONES");
-    healNecromancer(
-      h,
-      Math.max(1, Math.floor(h.maxHp * NECROMANCER.skeletonDeathHeal)),
-      null,
-      "LAST SOUL",
-    );
-    log(`${s.name} crumbles. A little of its soul returns to ${h.name}.`);
-  }
-  renderBlock();
-  syncNecromancer(h);
-  return n;
+function summonAbilityName(s) {
+  return summonDefinition(s)?.seal || classAbilityName(s.job);
 }
-async function skeletonCombatAction(h) {
-  if (h?.job !== "necromancer" || !alive(h) || state.over) return;
-  const run = state;
-  for (const s of [...h.skeletons]) {
-    if (state !== run || !alive(h) || state.over || !livingEnemies().length)
+function summonAbilityDescription(s) {
+  return (
+    {
+      blade: "Rend: extra physical damage and poison on your target.",
+      guard: "Grave Ward: strike your target and raise a large team shield.",
+      wisp: "Cold Flame: spell damage and stun power against your target.",
+      cantor:
+        "Mending Chant: heal bound allies and grant team block. Cannot heal the Necromancer.",
+      bomber:
+        "Boneburst: explode against every enemy. This summon dies after the roll.",
+    }[s.summonKind] || classAbilityDescription(s.job)
+  );
+}
+function summonSealEffects(s, base) {
+  const rank = Math.floor((s.level - 1) / 4);
+  switch (s.summonKind) {
+    case "blade":
+      base.attack += 2 + rank;
+      base.poison += 1;
       break;
-    if (s.hp <= 0 || !h.skeletons.includes(s)) continue;
-    const e = livingEnemies().includes(state.enemy)
-        ? state.enemy
-        : livingEnemies()[0],
-      origin = skeletonArtEl(s);
-    portraitMotion(origin, "attack");
-    await beam(origin, enemyArtEl(e), "attack", {
+    case "guard":
+      base.attack += 1 + rank;
+      base.block += 4 + rank * 2;
+      break;
+    case "wisp":
+      base.magic += 2 + rank;
+      base.stun += 1;
+      break;
+    case "cantor":
+      base.teamHeal = (base.teamHeal || 0) + 2 + rank;
+      base.block += 2 + rank;
+      break;
+    case "bomber":
+      base.attack +=
+        6 +
+        Math.floor(s.level * 0.8) +
+        (s.summonPassive === "volatile" ? 3 : 0);
+      Object.defineProperty(base, "summonBlast", { value: true });
+      break;
+  }
+}
+function summonPassiveEffects(s, base) {
+  if (!isSummon(s)) return;
+  const turns = Math.max(
+    0,
+    (s.stats.spins || 0) - (s.battleMemo?.stats?.spins || 0),
+  );
+  if (s.summonPassive === "venom" && turns % 3 === 0 && base.attack > 0)
+    base.poison += 1;
+  if (s.summonPassive === "ward" && turns % 3 === 0) base.block += 2;
+  if (s.summonPassive === "arcane" && base.magic > 0) base.magic++;
+  if (s.summonPassive === "mender" && base.heal > 0) base.heal += 2;
+  if (
+    s.summonPassive === "ambusher" &&
+    base.attack > 0 &&
+    s.summonFirstCutBattle !== state.encounterSerial
+  ) {
+    base.attack += 2;
+    s.summonFirstCutBattle = state.encounterSerial;
+  }
+}
+function summonDamageRecovery(s) {
+  if (
+    !isSummon(s) ||
+    !alive(s) ||
+    s.summonPassive !== "secondWind" ||
+    s.hp / s.maxHp > 0.3 ||
+    s.summonSecondWindBattle === state.encounterSerial
+  )
+    return;
+  s.summonSecondWindBattle = state.encounterSerial;
+  const n = healHero(state.party.indexOf(s), Math.ceil(s.maxHp * 0.2), {
+    exact: true,
+  });
+  combatCallout(entityArt(s), `SECOND WIND · +${n}`, "recovery");
+  summonMomentFX(necromancerOwner(), s, "heal");
+}
+function recordSummonDeath(
+  s,
+  cause,
+  { consumed = false, persist = true } = {},
+) {
+  if (!isSummon(s) || s.dead) return;
+  const h = necromancerOwner();
+  s.hp = 0;
+  s.dead = true;
+  s.stun = 0;
+  summonMomentFX(h, s, consumed ? "consume" : "death");
+  state.summonArchive ??= [];
+  state.summonArchive.push({
+    id: s.id,
+    name: s.name,
+    job: s.job,
+    summonKind: s.summonKind,
+    level: s.level,
+    stats: { ...s.stats },
+    cause,
+    depth: state.depth,
+  });
+  state.summonArchive = state.summonArchive.slice(-100);
+  if (h) {
+    h.stats.summonsLost = (h.stats.summonsLost || 0) + 1;
+    if (consumed) h.stats.summonsConsumed = (h.stats.summonsConsumed || 0) + 1;
+  }
+  log(
+    `${s.name} ${consumed ? "is consumed by " + h.name : "crumbles"}: ${cause}.`,
+  );
+  if (persist) save();
+}
+function pruneSummons() {
+  const master = necromancerOwner();
+  if (
+    !state.party.some((s) => isSummon(s) && !alive(s)) &&
+    !(master?.pendingRaises > 0)
+  )
+    return;
+  const selected = state.party[state.target];
+  state.party = state.party.filter((h) => !isSummon(h) || alive(h));
+  const h = necromancerOwner();
+  while (
+    alive(h) &&
+    h.pendingRaises > 0 &&
+    state.party.length < 3 &&
+    !state.over
+  ) {
+    h.pendingRaises--;
+    raiseBoundAlly(h, false);
+  }
+  state.target = Math.max(
+    0,
+    state.party.findIndex((h) => h === selected),
+  );
+}
+function consumeSummonHealing(s, h = necromancerOwner()) {
+  return h && alive(s)
+    ? Math.min(
+        Math.ceil(h.maxHp * NECROMANCER.consumeCap),
+        Math.ceil(
+          h.maxHp * NECROMANCER.consumeBase +
+            s.hp * NECROMANCER.consumeCurrentHp,
+        ),
+      )
+    : 0;
+}
+async function consumeSummon(id) {
+  const h = necromancerOwner(),
+    s = summonsOf(h).find((s) => String(s.id) === String(id));
+  if (
+    busy ||
+    state.over ||
+    !alive(h) ||
+    !alive(s) ||
+    !$("#overlay").hidden ||
+    !$("#spotlight").hidden
+  )
+    return false;
+  if (state.enemy && (h.stun || heroCannotRoll(h) || !openingEligible(h))) {
+    toast("The Necromancer must be ready to consume a summon.");
+    return false;
+  }
+  const run = state,
+    inCombat = !!state.enemy,
+    foes = battleEnemies().slice(),
+    offered = consumeSummonHealing(s, h),
+    ward = h.stunWard || 0;
+  busy = true;
+  sceneFast = false;
+  if (inCombat) {
+    state.currentHero = state.party.indexOf(h);
+    state.actionSerial++;
+  }
+  try {
+    render();
+    const from = entityArt(s);
+    recordSummonDeath(s, "Sacrificed for healing", {
+      consumed: true,
+      persist: false,
+    });
+    // Commit the sacrifice and its healing together before yielding to effects.
+    const n = healNecromancer(h, offered, null, "CONSUME");
+    await beam(from, entityArt(h), "harvest", {
       fromPortrait: true,
-      symbols: [{ type: "attack", tier: Math.min(4, skeletonAttack(h)) }],
-      kind: "skeleton-attack",
+      symbols: [{ type: "harvest", tier: 1 }],
+      kind: "consume-summon",
     });
-    if (state !== run || !alive(h) || !alive(e)) break;
-    const n = damageEnemy(skeletonAttack(h), `${h.name}'s Skeleton`, e, {
-      impact: { type: "attack" },
-    });
-    s.stats.damageDealt += n;
-    s.stats.attacks++;
-    h.stats.damageDealt += n;
-    if (!alive(e)) h.stats.kills++;
-    await feedbackPause(skip ? 45 : 120);
+    if (state !== run) return false;
+    log(`${h.name} · Consume: ${s.name} restores ${n} HP.`);
+    result(icon("harvest") + `${h.name} consumes ${s.name} · +${n} HP`);
+    if (inCombat) {
+      finishOpeningRoll();
+      advanceCrystalAura();
+      await tickPoison();
+      tickStimulant(h);
+      advanceStunWard(h, ward);
+      if (!checkDefeat() && livingEnemies().length)
+        await advanceEnemyClocks(foes);
+      if (!state.over && !livingEnemies().length) await victory(foes[0]);
+    }
+    return true;
+  } finally {
+    if (state === run) {
+      state.currentHero = null;
+      actingEnemy = null;
+      busy = false;
+      sceneFast = false;
+      pruneSummons();
+      render();
+      save();
+    }
   }
 }
 function necromancerFallen(h) {
-  if (h.job !== "necromancer") return;
-  h.skeletons = [];
+  if (h.job !== "necromancer" || isSummon(h)) return;
+  for (const s of summonsOf(h).filter(alive))
+    recordSummonDeath(s, "The binding ends");
+  state.party = state.party.filter((a) => !isSummon(a));
   h.souls = 0;
+  h.pendingRaises = 0;
   if (h.death && !state.graveyard.some((d) => d.id === h.id))
     state.graveyard.push(h.death);
   state.pendingDeaths = state.pendingDeaths.filter((d) => d.id !== h.id);
@@ -22377,20 +23017,33 @@ function necromancerFallen(h) {
     stageResolver = null;
   }
   closeSpotlight();
-  syncNecromancer(h);
   checkDefeat();
   save();
 }
-function necromancerAreaDamage(amount, e) {
+function autoConsumeCandidate() {
   const h = necromancerOwner();
-  if (!alive(h)) return;
-  for (const s of [...h.skeletons])
-    if (s.hp > 0)
-      damageSkeleton(h, s, amount, e, {
-        type: "attack",
-        kind: "area",
-        critical: true,
-      });
+  if (
+    !alive(h) ||
+    h.hp / h.maxHp > 0.45 ||
+    h.stun ||
+    (state.enemy && (heroCannotRoll(h) || !openingEligible(h)))
+  )
+    return null;
+  return (
+    summonsOf(h)
+      .filter(
+        (s) =>
+          alive(s) &&
+          consumeSummonHealing(s, h) >=
+            Math.min(h.maxHp - h.hp, Math.ceil(h.maxHp * 0.15)),
+      )
+      .sort(
+        (a, b) =>
+          a.hp / a.maxHp +
+          expectedHeroEffects(a).damage * 0.04 -
+          (b.hp / b.maxHp + expectedHeroEffects(b).damage * 0.04),
+      )[0] || null
+  );
 }
 // END GENERATED NECROMANCER
       // BEGIN GENERATED SOUL FEEDBACK
@@ -22472,38 +23125,22 @@ function bloodSeedBurstFX(e, count, detonation = false) {
     if (state !== run) return;
   });
 }
-function skeletonArtEl(s) {
-  return document.getElementById("summon-art-" + s.id);
-}
+function skeletonArtEl(s) { return entityArt(s); }
 function soulMeterMarkup(h) {
-  if (h.job !== "necromancer") return "";
-  return `<div class="soul-meter" data-soul-owner="${h.id}" role="meter" aria-label="Souls" aria-valuemin="0" aria-valuemax="${soulCapacity(h)}" aria-valuenow="${Math.floor(h.souls || 0)}" data-tooltip="Damage and Harvest gather Souls. A full bar raises a Skeleton in an empty companion position. With two Skeletons, it restores 10% maximum HP to the whole team instead. Souls and Skeleton HP survive battles."><b>SOULS ${Math.floor(h.souls || 0)}/${soulCapacity(h)}</b><span><i style="width:${(100 * (h.souls || 0)) / soulCapacity(h)}%"></i></span></div>`;
+  if(h.job!=="necromancer"||isSummon(h))return "";
+  return `<div class="soul-meter" data-soul-owner="${h.id}" role="meter" aria-label="Souls" aria-valuemin="0" aria-valuemax="${soulCapacity(h)}" aria-valuenow="${Math.floor(h.souls||0)}" data-tooltip="Damage and Harvest gather Souls. A full bar raises a random ally in an empty party slot. With two summons, it heals the team instead. Consume a summon to heal yourself."><b>SOULS ${Math.floor(h.souls||0)}/${soulCapacity(h)}</b><span><i style="width:${100*(h.souls||0)/soulCapacity(h)}%"></i></span></div>`;
 }
 function skeletonSlotsMarkup(h) {
-  return [0, 1]
-    .map((i) => {
-      const s = h.skeletons[i];
-      if (!s)
-        return `<div class="empty-slot" data-skeleton-slot="${i}">${icon("skull")}<span>A Skeleton can rise here.</span><small>Fill the Soul bar to summon.</small></div>`;
-      return `<article class="hero skeleton-card ${injury(s)}" data-skeleton-slot="${i}" aria-label="Skeleton · automatically controlled"><div class="hero-dossier"><div class="portrait" id="summon-art-${s.id}" tabindex="0" data-tooltip="Skeleton: ${s.hp}/${s.maxHp} HP. Attacks for ${skeletonAttack(h)} physical damage after each Necromancer action. Can intercept the first single-target attack each enemy turn. Cannot use reels, equipment or ordinary healing.">${portraitArt("skull", s)}</div><div class="hero-name">Skeleton<small>Summon · Automatic</small></div></div><div class="hero-controls"><div class="hero-title-line"><span class="hp-info">HP ${s.hp} / ${s.maxHp}</span><span class="injury">${injury(s)}</span></div>${healthMarkup(s)}<div class="skeleton-duty">${icon("sword")}<b>${skeletonAttack(h)} physical damage</b></div><small>Attacks your target after each roll.<br>Guards the first eligible enemy attack.</small></div></article>`;
-    })
-    .join("");
+ return Array.from({length:Math.max(0,3-state.party.length)},(_,i)=>`<div class="empty-slot" data-skeleton-slot="${i}">${icon("skull")}<span>An undead ally can rise here.</span><small>Fill the Soul bar to summon.</small></div>`).join("");
+}
+function summonCardMarkup(s,i) {
+ const h=necromancerOwner(),passive=SUMMON_PASSIVES[s.summonPassive],offer=consumeSummonHealing(s,h),disabled=busy||state.over||!alive(s);
+ return `<article class="hero summon-card ${s.job} ${injury(s)} ${state.target===i?'selected':''}" id="hero-${i}" data-hero-roll="${i}" tabindex="${state.enemy&&alive(s)?0:-1}" role="group" aria-label="${escapeHTML(s.name)} · click to roll"><div class="hero-dossier"><button class="portrait" id="portrait-${i}" data-hero-stats="${i}" data-spin="${i}" aria-label="Roll ${escapeHTML(s.name)}" ${disabled?'disabled':''}>${portraitArt(s.job,s)}${statusMarkup(s)}${specialismBadge(s)}</button><div class="hero-name">${escapeHTML(s.name)}<small>${summonRole(s)} · Lv.${s.level}</small></div><span class="summon-bound-note">Bound summon</span></div><div class="hero-controls"><div class="hero-title-line"><span class="hp-info">HP ${s.hp} / ${s.maxHp}</span><span class="injury">${s.stun?'stunned':injury(s)}</span></div>${healthMarkup(s)}${drawMachine('hero-'+i,s.last,{hero:i,disabled:disabled||!state.enemy||heroCannotRoll(s)})}<div class="summon-details"><span class="summon-passive" tabindex="0" aria-label="${passive?.name||'Returned'}" data-tooltip="${escapeHTML(passive?passive.name+': '+passive.text:'Returned with the marks of their former class.')}">${icon({venom:"poison",ambusher:"sword",carapace:"block",ward:"ward",arcane:"magic",mender:"heal",secondWind:"heal",volatile:"bomb"}[s.summonPassive]||"skull")}<span class="summon-passive-name">${passive?.name||'Returned'}</span></span><button class="consume-summon" data-consume-summon="${s.id}" aria-label="Consume ${escapeHTML(s.name)} to restore up to ${offer} Necromancer HP" data-tooltip="Sacrifice this summon to restore up to ${offer} HP to ${h?.name||'the Necromancer'}. Uses one action during battle. Reels cannot be edited." ${disabled||!alive(h)||(state.enemy&&(h.stun||heroCannotRoll(h)||!openingEligible(h)))?'disabled':''}>Consume · +${offer} HP</button></div></div></article>`;
 }
 function syncNecromancer(h) {
-  if (h?.job !== "necromancer") return;
-  const meter = document.querySelector(`[data-soul-owner="${h.id}"]`);
-  if (meter) {
-    const t = document.createElement("template");
-    t.innerHTML = soulMeterMarkup(h);
-    meter.replaceWith(t.content);
-  }
-  const slots = [...document.querySelectorAll("#party > [data-skeleton-slot]")];
-  if (slots.length) {
-    const t = document.createElement("template");
-    t.innerHTML = skeletonSlotsMarkup(h);
-    for (const n of slots) n.remove();
-    $("#party").append(t.content);
-  }
+ if(h?.job!=="necromancer"||isSummon(h))return;
+ const meter=document.querySelector(`[data-soul-owner="${h.id}"]`);
+ if(meter){const t=document.createElement('template');t.innerHTML=soulMeterMarkup(h);meter.replaceWith(t.content);}
 }
 function summonMomentFX(h, s, kind) {
   const host = skeletonArtEl(s) || entityArt(h);
@@ -22561,6 +23198,7 @@ function summonMomentFX(h, s, kind) {
     20,
   );
   shakeElement(host, kind === "guard" ? 5 : 2);
+  if(kind==="rise"||kind==="death"||kind==="consume")GameSound.cry(s.summonKind==="zombie"?s.job:({blade:"skull",guard:"golem",wisp:"ghost",cantor:"lich",bomber:"slime"}[s.summonKind]||"skull"),kind==="rise"?"enter":"death");
   GameSound.play(
     kind === "rise" ? "poof" : kind === "death" ? "hit" : "shield",
   );
@@ -22573,6 +23211,54 @@ function skeletonBonesArt() {
   return `<svg viewBox="0 0 120 100" class="pencil-art" fill="var(--paper)" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m18 76 66-27m-60 3 68 31m-56 1 51-10M11 72q-7-12 3-10 1-9 8-4m58-13q8-10 11-1 9-2 8 7M21 48q-9-5-9 4-8 5 1 10m76 17q10-8 12 1 7 2 3 8" fill="none"/><path d="M40 41q-10-32 17-34 29 2 18 33l-9 7-2 11H49l-1-12Z"/><path d="m46 23 9 9m0-9-9 9m17-9 8 8m0-8-8 8m-8 7 3-5 3 5m-8 10v10m7-10v10" fill="none"/></svg>`;
 }
 // END GENERATED SOUL FEEDBACK
+      // BEGIN GENERATED SUMMON ART
+// Original pencil silhouettes. No gameplay state mutation or randomness.
+function summonPortraitArt(s) {
+  if (s.summonKind === "zombie") {
+    const art =
+      s.hp <= 0
+        ? corpseArt(s.job)
+        : basePortraitArt(s.job, { ...s, summonKind: null });
+    return art
+      .replace(/<svg\b/, '<svg data-summon-art="zombie"')
+      .replace(
+        "</svg>",
+        '<g fill="none" stroke="var(--poison-ink,#8253a1)" stroke-width="2"><path d="m40 48 14 7m-12-8-3 5m9-2-3 5m23 10 8-2m-5-3 1 7M44 120l18 5m-12-8-2 11m10-9-1 10"/></g></svg>',
+      );
+  }
+  const skull =
+    '<path d="M43 33q-5-24 17-25 26 1 18 27L70 47H51Z"/><path d="m47 25 9 3-2 7h-7m18-8 9-3-1 10-8 2m-5 0-4 5h8m-12 1v8m7-8v9m7-10v8" fill="none"/>';
+  const drawings = {
+    blade: `<path d="M25 138 33 85 46 58l14 6 18-12 11 38 9 45-24 6-15-24-12 27Z" fill="var(--paper-shade)"/>${skull}<path d="m48 53 12 13 13-15M60 69l-5 37m-11-29 32-3m-35 12 35-2m-37 13 35-3m-37 16 9 22m25-24 8 24M34 78 20 96m62-21 18 18"/><path d="m18 96-8-32-5-9-2 14 11 29m84-7 14-27 6-8-2 17-13 24m-92 4 15-5m65 0 16 6" fill="var(--paper)"/>`,
+    guard: `<path d="M31 142 38 73l-9-20 20-13h25l18 18-8 20 10 64Z" fill="var(--paper-shade)"/>${skull}<path d="M37 22 43 6h37l7 17-20-7-29 6m7 29 30-3M46 75l28-1m-28 9 28-1m-17-13 2 39m-14 18-8 17m37-21 12 22"/><path d="M29 63 64 75l-5 42-25 24-22-27 1-43Z" fill="var(--paper)"/><path d="m20 77 12-6 23 9-4 31-16 17-15-19Zm14 0v45m-12-26 29 1"/><path d="m90 87 14-49 4-5 3 10-16 46m-9-4 14 6"/>`,
+    wisp: `<path d="M18 139q25-19 10-42-9-18 9-35-6-25 12-44 25-23 39 5 14 19-1 39 24 22 2 42-13 18 10 31l-26-5-13 16-12-14Z" fill="var(--paper-shade)"/><path d="M43 43q5-26 24-22 22 8 11 30L64 71 46 61Z"/><path d="m46 46 11-4-1 12-9-1m18-9 11-3-4 14-8 4m-6 8 7-1M43 79l15 18-7 19m22-38-8 20 12 14M21 86 8 79m81 10 18-7m-74 30-8 11m66-14 11 9" fill="none"/><path d="m11 66 7-16 10 13-9 17ZM94 45l6-15 11 13-9 16Z" fill="var(--poison-ink,#8253a1)"/>`,
+    cantor: `<path d="M21 145 29 86 41 61q-13-40 17-54 35 9 25 54l12 29 6 56Z" fill="var(--paper-shade)"/>${skull}<path d="M35 47q-4-30 23-36 27 7 27 33M40 53l20 16 20-16m-21 18 1 68m-29-42 14 14m45-14-14 14"/><path d="M26 88q18-8 32 3 17-13 35-6l-2 40q-19-7-33 5-14-9-33-4Z" fill="var(--paper)"/><path d="m58 94 1 31M34 100l15 3m-15 8 14 2m21-15 15-2m-15 13 14-3"/><path d="M100 137V40m-10-5 10-12 10 12v16H90Zm7 17 3 7 3-7"/>`,
+    bomber: `<path d="M26 131q-17-15-9-48l18-18 14 5 17-7 26 16q22 38-4 57Z" fill="var(--paper-shade)"/>${skull}<path d="m36 56 10 22m31-22-6 22M29 79q34 15 63-1m-68 15q33 15 74-1m-76 17q36 15 75-2m-65-24 3 44m17-40 1 45m20-45-2 43m-34 5-8 13m45-14 12 12"/><path d="M45 105q-4-17 13-20 18 2 17 19-2 17-15 18-14-2-15-17Zm8-21 2-7h13l-2 8" fill="var(--paper)"/><path d="m62 77 4-14-6-8 10-8m-1-5 2-7m3 10 8-4m-16 2-5-6" fill="none" stroke="var(--gold)"/><path d="m12 77 9 6m73-10 12-6m-8 30 12 2"/>`,
+  };
+  let body = drawings[s.summonKind] || drawings.blade;
+  if (s.hp <= 0 || s.dead)
+    body = `<g transform="translate(-16 58) rotate(-68 60 90) scale(.8)">${body}</g><path d="M9 141 32 138l17 4 18-3 31 3" fill="none"/>`;
+  else if (s.hp / s.maxHp < 0.35)
+    body +=
+      '<path d="m38 47 12 7m25 1 9-8m-38 65 9 6" stroke="var(--red)" fill="none"/>';
+  return `<svg class="pencil-art summon-art" data-summon-art="${s.summonKind}" viewBox="0 0 120 150" fill="var(--paper)" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${body}</svg>`;
+}
+function summonSpeech(s, mood) {
+  const banks = {
+    attack: ["Rrraaah!", "Krrk!", "Hissss!"],
+    hurt: ["Khh!", "Rrrgh!", "Crack!"],
+    panic: ["K-k-k!", "Hssss!"],
+    relief: ["Hhh…", "Rattle…"],
+    block: ["Clack!", "Krrk!"],
+    idle: ["Rattle…", "Hhh…", "Click…"],
+  };
+  return s.summonKind === "wisp"
+    ? mood === "attack"
+      ? ["Fsssh!", "Sssaaah!"]
+      : ["Wooo…", "Hiss…"]
+    : banks[mood] || banks.idle;
+}
+// END GENERATED SUMMON ART
       function statusBadge(label, description, style, mark, value = "") {
         return `<b class="${style}" role="img" aria-label="${escapeHTML(label + ": " + description)}" title="${escapeHTML(label + ": " + description)}" data-tooltip="${escapeHTML(label + ": " + description)}">${icon(mark)}</b>`;
       }
@@ -22635,6 +23321,8 @@ function skeletonBonesArt() {
         if (seals) {
           await classAbilityFX(h);
           if(state!==planRun)return base;
+          if(isSummon(h) && h.summonKind !== "zombie")summonSealEffects(h,base);
+          else {
           if (h.job === "jester") await jesterWildcard(h);
           if (h.job === "fighter") {
             base.block += tankSealBlock(h);
@@ -22685,6 +23373,7 @@ function skeletonBonesArt() {
               multiplier: multi,
               damage: Math.ceil(damage * multi) * seals,
             };
+          }
           }
         }
         if (base.attack)
@@ -22745,6 +23434,7 @@ function skeletonBonesArt() {
         if (base.teamHeal) base.teamHeal = Math.max(1, base.teamHeal + traitBonus(h, "heal"));
         if (base.stun) base.stun += traitBonus(h, "stun");
         if (base.bash) base.bash = Math.min(bashLimit(h), Math.max(0, state.block) + base.block);
+        summonPassiveEffects(h,base);
         applyComplementaryEffects(h, symbols, base);
         temperamentEffects(h, base);
         if (h.initiative && state.opening?.firstRoll) {
@@ -22847,7 +23537,7 @@ function skeletonBonesArt() {
             sums = scaleEffects(base, multiplier),
             criticalImpact = multiplier > 1 || base.flurryMultiplier > 1,
             area =
-              criticalImpact ||
+              criticalImpact || base.summonBlast ||
               symbols.some((s) => DAMAGE_TYPES.includes(s.type) && s.tier >= 3) ||
               (h.job === "mage" &&
                 base.resonanceType === "magic" &&
@@ -22855,9 +23545,9 @@ function skeletonBonesArt() {
             targets = area ? foes.filter((e) => e.hp > 0) : selected.hp > 0 ? [selected] : [],
             parts = [];
           if(state!==rollRun)return;
-          if (["mage", "rogue"].includes(h.job) && symbols.some((s) => s.type === "class"))
+          if ((isSummon(h)||["mage", "rogue"].includes(h.job)) && symbols.some((s) => s.type === "class"))
             parts.push(
-              `<span>${icon(h.job === "mage" ? "magic" : "flurry")}${classAbilityName(h.job)}</span>`,
+              `<span>${icon(h.job === "mage" ? "magic" : "flurry")}${classAbilityName(h)}</span>`,
             );
           if (base.executionBonus)
             parts.push(`<span>${icon("bow")}EXECUTE · +${base.executionBonus} damage</span>`);
@@ -23065,7 +23755,10 @@ function skeletonBonesArt() {
           rallyAfterRoll(h);
           await settleBloodFeedback();
           await tickPoison();
-          await skeletonCombatAction(h);
+          if(base.summonBlast && alive(h)){
+            combatCallout(entityArt(h),"BONEBURST!","danger");burst(entityArt(h),"damage",60);shakeBook(7,"critical");
+            recordSummonDeath(h,"Boneburst");
+          }
           await settleBloodFeedback();
           await showPendingCharacterMoments();
           // Burst or no burst, one ordinary action advances enemy clocks once.
@@ -23112,7 +23805,7 @@ function skeletonBonesArt() {
       async function enemyTurn(e) {
         actingEnemy = e;
         const stunWardAtStart = e.stunWard || 0;
-        e.necroGuardUsed=false;
+
         if (state.invulnerable && !state.invulnerable.enemyId)
           state.invulnerable.enemyId = e.id;
         try {
@@ -23192,13 +23885,12 @@ function skeletonBonesArt() {
               let n = 0;
               const hits =
                 multiplier > 1 ? [base.attack, totals.attack - base.attack] : [totals.attack];
-              const guard=necromancerBodyguard(victim,e,{area:!!e.areaAttack,piercing:!!e.piercing});
-              if(guard)state.lastEnemyRoll.interceptorId=guard.id;
+
               state.lastEnemyRoll.hits = [];
               for (const power of hits) {
                 if (!alive(victim) || power <= 0) break;
                 if(!heavyAttack || state.lastEnemyRoll.hits.length)lunge(enemyArtEl(e), true);
-                const actual = guard ? damageSkeleton(victim,guard,power,e,{type:raw.magic?"magic":"attack",critical:multiplier>1}) : damageHero(
+                const actual = damageHero(
                   target,
                   power,
                   `${e.name}${multiplier > 1 ? " (×" + multiplier + " critical)" : ""}`,
@@ -23216,7 +23908,7 @@ function skeletonBonesArt() {
                   await feedbackPause(skip ? 95 : Math.max(100, 190 / pace()));
               }
               state.lastEnemyRoll.actualDamage = n;
-              notes.push("<strong>−" + n + " HP</strong> to " + (guard ? "Skeleton · BODYGUARD" : victim.name));
+              notes.push("<strong>−" + n + " HP</strong> to " + victim.name);
               await pause(380);
             }
             if (totals.heal) {
@@ -23906,10 +24598,8 @@ const EXTRA_EQUIPMENT = Object.freeze({
   },
 });
 function equipmentLootEligible(item) {
-  const available = heroJobs(state.runRules);
+  const available = necromancerOwner() ? ["necromancer"] : heroJobs(state.runRules);
   // This earned class cannot join another class's party.
-  if (state.party.some((h) => h.job === "necromancer"))
-    available.push("necromancer");
   const jobs = item.jobs || (item.job ? [item.job] : null);
   return !jobs || jobs.some((job) => available.includes(job));
 }
@@ -24474,13 +25164,13 @@ function equipmentLootEligible(item) {
       }
       function openModal(title, body, kind) {
         const reuseTitle =
-          ["options", "camp", "help", "bestiary", "editor"].includes(kind) &&
+          ["options", "camp", "help", "bestiary", "editor", "shop"].includes(kind) &&
           modalKind === kind &&
           !$("#overlay").hidden;
         if ($("#overlay").hidden) modalPrevious = document.activeElement;
         modalKind = kind;
         $("#modal").dataset.kind = kind;
-        if (reuseTitle) $("#modal .modal-flow").innerHTML = body;
+        if (reuseTitle) { $("#modal .modal-flow").innerHTML = body; $("#modal-title").textContent = title; }
         else
           $("#modal").innerHTML =
             `<button class="quiet close" data-close aria-label="Close dialog">✕</button><h2 id="modal-title">${title}</h2><div class="modal-body"><div class="modal-flow">${body}</div></div>`;
@@ -24682,7 +25372,7 @@ function faceDescription(face, h) {
     trick:`Gain ${tier} anticipation. At 6, Punchline fires six random marks from your reels.`,
     selfharm:`Spend up to ${2*tier} HP to gain ${2+.5*tier} Fury per HP. Cannot kill you.`,
     bloodseed:`Plant ${tier} Seeds${bloodSeedBonus(h)?` + ${bloodSeedBonus(h)} bonus per roll`:''}; pay ${bloodSeedCost(tier)} HP. Each HP of damage bursts one Seed for shared healing.`,
-    harvest:`${harvestSpellPower(tier)} spell power and ${tier*NECROMANCER.harvestSouls} Souls. Full bar: summon a Skeleton, or heal the team with two alive.`,
+    harvest:`${harvestSpellPower(tier)} spell power and ${tier*NECROMANCER.harvestSouls} Souls. Full bar: raise an ally, or heal the team when both summon slots are full.`,
     blank:"Empty: no effect.",
   }[face.type] || "A mark on this reel.";
 }
@@ -24752,7 +25442,7 @@ function criticalOddsMarkup(h) {
 }
 function faceEditCost(h, reel, index, operation, destination = null) {
   const face = h?.reels[reel]?.[index];
-  if (!face) return undefined;
+  if (!face || isSummon(h)) return undefined;
   if (operation === "weight") return undefined;
   if (["class", "mystery"].includes(face.type)) return undefined;
   if (operation === "upgrade") return faceUpgradeCost(face, h);
@@ -24961,6 +25651,7 @@ let workshopCritPage = 0;
 let workshopEditReceipt = { heroId: null, text: "" };
 let pendingTravelWorkshop = null;
 function editor(i) {
+  if(isSummon(state.party[i])){toast("Bound summons have fixed reels.");return;}
   if(travel && alive(state.party[i])) {
     pendingTravelWorkshop={run:state,heroId:state.party[i].id};
     travel.workshopStop=true;
@@ -25261,7 +25952,7 @@ const FIELD_GUIDE = Object.freeze([
     ['ranger','Ranger — finishing attacks.','Builds power between attacks, then fires strong shots at wounded foes.'],
     ['berserker','Berserker — risk and recovery.','Grows stronger when hurt. Can drain health by attacking, but needs careful healing.'],
     ['bloodbinder','Bloodbinder — shared healing.','Spends HP to plant Seeds. Hits or Blood Bloom burst them to heal allies.'],
-    ['necromancer','Necromancer — undead companions.','Win floor ten to unlock. Skeletons attack and guard; only Souls and kills heal you.'],
+    ['necromancer','Necromancer — undead companions.','Win floor ten to unlock. Raise allies, choose their rolls, and consume them to heal yourself.'],
     ['jester','Jester — unpredictable bursts.','Versatile and unpredictable, with sudden bursts of extra effects.'],
   ],true)},
   {id:'biomes',title:'Recognise the terrain',body:guideRows([
@@ -26085,7 +26776,7 @@ function help(topic = "explore") {
         lastPartySpeechAt = now;
         speech(
           $("#portrait-" + i),
-          visualPick(HERO_LINES[h.job]?.[mood] || ["Keep going."]),
+          visualPick(isSummon(h) ? summonSpeech(h,mood) : HERO_LINES[h.job]?.[mood] || ["Keep going."]),
         );
       }
       function sayEnemy(mood) {
@@ -27423,6 +28114,7 @@ function createRecordedMusic(context, bus) {
         return `<span class="trait-badge trait-${t.kind}" tabindex="0" role="img" data-tooltip="${escapeHTML(text)}" aria-label="${escapeHTML(text)}" title="${escapeHTML(text)}">${icon(t.icon)}</span>`;
       }
       function grantTrait(h, id, reason) {
+        if(isSummon(h))return false;
         if (!alive(h) || !Object.hasOwn(HERO_TRAITS, id) || h.trait?.id === id)
           return false;
         if (
@@ -27470,7 +28162,7 @@ function createRecordedMusic(context, bus) {
           };
       }
       function traitCandidate(h, event, data = {}) {
-        if (!alive(h)) return false;
+        if (!alive(h) || isSummon(h)) return false;
         let id = null,
           reason = "";
         if (event === "victory") {
@@ -28005,6 +28697,7 @@ function stayedInsideControl(event, control) {
         levelsGained: "Levels gained",
       };
       function heroStatsMarkup(h) {
+        if(isSummon(h))return `<b>${escapeHTML(h.name)}</b> · ${summonRole(h)}<p>HP ${h.hp}/${h.maxHp} · level ${h.level} · ${SPECIALISMS[h.specialism]?.name||""} · ${h.stun?"Stunned":injury(h)}</p><p>${classAbilityName(h)}: ${classAbilityDescription(h)}</p><p>${SUMMON_PASSIVES[h.summonPassive]?.text||"Returned with their former class’s marks."}</p><small>Consume: up to ${consumeSummonHealing(h)} Necromancer HP. Fixed reels.</small>`;
         if (state.enemy) {
           const fx = expectedHeroEffects(h),
             statuses =
@@ -28087,6 +28780,7 @@ function stayedInsideControl(event, control) {
       }
       function initLife(h) {
         h.stats = { ...emptyStats(), ...h.stats };
+        if(isSummon(h)){h.dead=h.hp<=0;return;}
         h.joinedAt ??= Date.now();
         h.joinedSteps ??= state.steps;
         h.origin ??= {
@@ -28102,6 +28796,7 @@ function stayedInsideControl(event, control) {
         }
       }
       function recordDeath(h, cause) {
+        if(isSummon(h)){recordSummonDeath(h,cause);return;}
         if (h.dead && h.death) return;
         GameSound.play("death");
         GameSound.cry(h.job, "death");
@@ -28410,7 +29105,7 @@ function stayedInsideControl(event, control) {
         const living = state.party.filter(alive),
           retired = state.retired || [],
           roster = all ? [...living, ...retired, ...fallen] : fallen;
-        const totals = [...living, ...retired, ...fallen].reduce((out, h) => {
+        const totals = [...living, ...retired, ...fallen,...(state.summonArchive||[])].reduce((out, h) => {
           for (const key of Object.keys(emptyStats()))
             out[key] += h.stats?.[key] || 0;
           return out;
@@ -28753,7 +29448,8 @@ async function tickPoison() {
     const hero = state.party.indexOf(entity),
       source =
         state.party.find((h) => h.id === poison.sourceId) ||
-        state.graveyard.find((h) => h.id === poison.sourceId);
+        state.graveyard.find((h) => h.id === poison.sourceId) ||
+        state.summonArchive?.find(h=>h.id===poison.sourceId);
     if (hero >= 0)
       damageHero(hero, poison.damage, "Poison from " + poison.sourceName, {
         piercing: true,
@@ -28888,7 +29584,7 @@ function enemyShieldEl(e = state.enemy) {
   return $("#enemy-team-block");
 }
 function canEquipGear(h, gear) {
-  return !!h && !!gear && (gear.jobs ? gear.jobs.includes(h.job) : !gear.job || gear.job === h.job);
+  return !!h && !isSummon(h) && !!gear && (gear.jobs ? gear.jobs.includes(h.job) : !gear.job || gear.job === h.job);
 }
 function equipmentScope(item) {
   return item?.equipment
@@ -32203,7 +32899,7 @@ function characterLuck() {
 }
 function characterMoment(id, h) {
   const def = CHARACTER_EVENTS[id];
-  if (!def || !alive(h) || state.over) return false;
+  if (!def || !alive(h) || isSummon(h) || state.over) return false;
   state.characterEventMemo ??= { combat: 0, lastTravel: -20 };
   const memo = state.characterEventMemo,
     combat = def.context === "combat";
@@ -33270,7 +33966,6 @@ async function missStunnedTurn(h, foes) {
   tickStimulant(h);
   finishOpeningRoll();
   await tickPoison();
-  await skeletonCombatAction(h);
   await settleBloodFeedback();
   if (checkDefeat()) return;
   if (!livingEnemies().length) {
@@ -34062,7 +34757,7 @@ async function tunnelTransit(source, destination) {
 }
 const STARTER_SUMMARIES = Object.freeze({
   bloodbinder: "Plant Seeds, turn enemy wounds into shared healing, and detonate them with Blood Bloom.",
-  necromancer: "Gather Souls to raise two Skeletons. Enemy deaths and Soul surges heal you; ordinary healing cannot.",
+  necromancer: "Gather Souls to raise two allies with their own reels. Consume a summon to heal yourself; ordinary healing cannot.",
   fighter: "Physical hits, shields and stun. Shield Bash spends block to strike.",
   rogue: "Quick blades, poison and tricks. Flurry throws three attacks.",
   mage: "Shape magic, healing, wards and poison. Resonance echoes your marks.",
@@ -35510,7 +36205,7 @@ async function classAbilityFX(h) {
     machine = $("#machine-hero-" + i);
   const text =
     classAbilityName(h) +
-    (h.job === "mage"
+    (h.job === "mage" && !isSummon(h)
       ? " · " + MAGE_POWERS[mageResonance(h, h.last)].name.toUpperCase()
       : "");
   state.lastClassAbility = { heroId: h.id, name: text, at: Date.now() };
@@ -35978,6 +36673,7 @@ function revealCriticalPayoff(region, details, multiplier) {
           return;
         }
         if (b.disabled) return;
+        if(b.hasAttribute("data-consume-summon")){consumeSummon(b.dataset.consumeSummon);return;}
         if (b.hasAttribute("data-enemy-target")) selectEnemy(b.dataset.enemyTarget);
         if (b.hasAttribute("data-spin")) startHero(Number(b.dataset.spin));
         if (b.hasAttribute("data-roll-area")) {
@@ -36634,6 +37330,7 @@ function revealCriticalPayoff(region, details, multiplier) {
         return EQUIPMENT_DEFS[entity?.equipment]?.[key] || 0;
       }
       function equipmentMarkup(h, i) {
+        if(isSummon(h))return "";
         const e = EQUIPMENT_DEFS[h.equipment];
         return `<button class="equipment-slot ${e ? "equipped" : ""}" data-gear-hero="${i}" title="${e ? equipmentScope({...e,equipment:true})+" · "+e.description : "Drag compatible equipment here, or select it in your satchel."}" aria-label="${h.name}'s equipment: ${e ? e.name : "empty"}">${icon(e?.icon || "bag")}<span>${e ? e.name : "Equipment"}</span></button>`;
       }
@@ -36761,6 +37458,12 @@ function revealCriticalPayoff(region, details, multiplier) {
             else if (t === "harvest"){out.harvest+=face.tier*p;out.damage+=harvestSpellPower(face.tier)*p;}
             else if (DAMAGE_TYPES.includes(t)) out.damage += markDamage(t,face.tier) * p;
             else if (t === "class") {
+              if(isSummon(h) && h.summonKind!=="zombie"){
+                const effects=calculate([]);summonSealEffects(h,effects);
+                out.damage+=(effects.attack+effects.magic)*p;
+                for(const key of ["heal","teamHeal","block","stun","poison"])out[key]+=(effects[key]||0)*p;
+                continue;
+              }
               if (h.job === "fighter") {
                 out.block += tankSealBlock(h) * p;
                 out.damage += Math.min(bashLimit(h), tankSealBlock(h) + Math.min(12, state.enemy ? state.block : 2)) * p;
@@ -36891,7 +37594,7 @@ function revealCriticalPayoff(region, details, multiplier) {
           out.damage+=seed.damage;out.heal+=seed.heal;out.selfharm+=seed.cost;out.antiheal=seed.antiheal;
         }
         out.damage+=bloodBloomForecast.damage;out.heal+=bloodBloomForecast.heal;
-        if(h.job==="necromancer")out.damage+=(h.skeletons||[]).length*skeletonAttack(h);
+
         return out;
       }
       function autoHealth() {
@@ -36910,7 +37613,7 @@ function revealCriticalPayoff(region, details, multiplier) {
         return { party, weakest, missing, maximum };
       }
       function autoNeedsWell() {
-        if(necromancerOwner())return false;
+        if(necromancerOwner()){const allies=state.party.filter(h=>alive(h)&&canReceiveOrdinaryHealing(h));return allies.length>0 && allies.reduce((n,h)=>n+h.maxHp-h.hp,0)>allies.reduce((n,h)=>n+h.maxHp,0)*.2;}
         const { weakest, missing, maximum } = autoHealth();
         return (
           !!weakest &&
@@ -36987,6 +37690,7 @@ function revealCriticalPayoff(region, details, multiplier) {
         return autoBuildUtility(h);
       }
       function autoUpgradeHero(h) {
+        if(isSummon(h))return 0;
         autoBuildFor(h);
         let changed = repairSoloBuild(h) + repairOverbuffBuild(h) + repairClassIdentity(h);
         while (changed < 40 && h.points > 0) {
@@ -37080,7 +37784,7 @@ function revealCriticalPayoff(region, details, multiplier) {
       function autoSupplyValue(type) {
         const item = ITEM_DEFS[type];
         if (!item) return 0;
-        if(necromancerOwner()&&["potion","bandage","ration","salve"].includes(item.family||type))return 0;
+        if(necromancerOwner()&&["potion","bandage","ration","salve"].includes(item.family||type)&&!state.party.some(h=>alive(h)&&canReceiveOrdinaryHealing(h)))return 0;
         if (item.equipment)
           return autoGearTarget(type) >= 0
             ? 18 + (item.attack || item.magic || 1)
@@ -37127,7 +37831,7 @@ function revealCriticalPayoff(region, details, multiplier) {
           const item = ITEM_DEFS[type];
           if (!item) continue;
           const family = item.family || type;
-          if(necromancerOwner()&&["potion","bandage","ration","salve"].includes(family))continue;
+          if(necromancerOwner()&&["potion","bandage","ration","salve"].includes(family)&&!state.party.some(h=>alive(h)&&canReceiveOrdinaryHealing(h)&&h.hp<h.maxHp))continue;
           let target = weakest.i,
             score = !battle && family === "horn" && health.party.length < 3 ? 25 : 0;
           if (item.equipment) {
@@ -37216,6 +37920,7 @@ function revealCriticalPayoff(region, details, multiplier) {
         return best;
       }
       async function autoMaintainParty() {
+        const sacrifice=autoConsumeCandidate();if(sacrifice){await consumeSummon(sacrifice.id);return true;}
         let upgrades = 0;
         for (const h of state.party.filter(alive)) upgrades += autoUpgradeHero(h);
         if (upgrades) {
@@ -37361,7 +38066,7 @@ function revealCriticalPayoff(region, details, multiplier) {
         const foe = enemyBalance(state.depth),
           rolls = Math.ceil(foe.maxHp / offence),
           risk = Math.floor(rolls / foe.frequency) * foe.damage;
-        const master=necromancerOwner(),guard=master?(master.skeletons||[]).reduce((n,s)=>n+s.hp,0)*.45:0;
+        const master=necromancerOwner(),guard=0;
         return health.weakest.h.hp + guard > risk * 1.4 + 4;
       }
       function autoplayGoal() {
@@ -37752,6 +38457,7 @@ function revealCriticalPayoff(region, details, multiplier) {
                 (b.hp + (b.block || 0) + defenceBonus(b) * 3),
             )[0];
           if (foe) state.enemy = foe;
+          if(autoConsumeCandidate()){await consumeSummon(autoConsumeCandidate().id);return;}
           const item = autoItemPlan();
           const emergency = health.weakest.h.hp / health.weakest.h.maxHp < 0.3;
           if (

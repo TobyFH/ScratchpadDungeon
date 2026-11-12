@@ -51,13 +51,14 @@ nonlethal HP cost. Actual HP damage consumes Seeds to share healing among wounde
 allies; **Blood Bloom** detonates every remaining Seed for damage and healing.
 Its ordinary marks are healing, Seeds, spell damage and ally stimulant.
 
-The earned, starting-only **Necromancer** replaces living companions with up to two
-automatic Skeletons. Harvest, damage and poison fill a persistent Soul bar.
-Skeletons attack after each action and intercept the first eligible attack each
-enemy turn. A full bar with two Skeletons heals the team. Ordinary healing does
-not work; enemy deaths restore health. Losing the Necromancer ends the run.
-See [Soul classes](docs/SOUL_CLASSES.md) for precise rules, tuning and save
-migration. `npm run audit:bloodbinder` provides controlled Seed-build comparisons.
+The earned, starting-only **Necromancer** raises up to two **player-controlled
+summons**, randomly selected from five distinct builds. Each has fixed reels,
+passives and a level within one of its master. Choose their rolls like other
+party members, or consume one to heal the Necromancer. Summons receive ordinary
+healing; the master relies on consumption, Souls and kills. Defeated adventurers
+can occasionally return as zombies. Losing the master ends the run. See
+[Summoned party](docs/SUMMONED_PARTY.md) for save-25 rules and migration, and
+[Soul classes](docs/SOUL_CLASSES.md) for Blood Seeds.
 
 ## Camp and banked gold
 
@@ -188,7 +189,7 @@ It is separate from class and any earned trait.
 | Jester    | 30 HP; unlock at camp; Trick and mixed marks | Wildcard plays a random trick; anticipation fires a six-mark burst |
 | Ranger    | 30 HP; unlock at camp                                  | Execute rewards patience and finishing wounded enemies        |
 | Bloodbinder | 32 HP; unlock at camp; Seeds, spells and ally support | Blood Bloom detonates all Seeds for damage and shared healing |
-| Necromancer | 22 HP; earned by winning floor ten; starting-only | Soul Call gathers Souls to raise automatic Skeletons, then heal the undead team |
+| Necromancer | 22 HP; earned by winning floor ten; starting-only | Soul Call raises selectable bound allies; Consume trades one for master healing |
 
 Former Healers migrate to Mages with their existing stats and edited wheels.
 There is no Mage role selector: builds follow the marks on their reels. See

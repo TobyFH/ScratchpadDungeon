@@ -35,7 +35,7 @@ const FIELD_GUIDE = Object.freeze([
     ['ranger','Ranger — finishing attacks.','Builds power between attacks, then fires strong shots at wounded foes.'],
     ['berserker','Berserker — risk and recovery.','Grows stronger when hurt. Can drain health by attacking, but needs careful healing.'],
     ['bloodbinder','Bloodbinder — shared healing.','Spends HP to plant Seeds. Hits or Blood Bloom burst them to heal allies.'],
-    ['necromancer','Necromancer — undead companions.','Win floor ten to unlock. Skeletons attack and guard; only Souls and kills heal you.'],
+    ['necromancer','Necromancer — undead companions.','Win floor ten to unlock. Raise allies, choose their rolls, and consume them to heal yourself.'],
     ['jester','Jester — unpredictable bursts.','Versatile and unpredictable, with sudden bursts of extra effects.'],
   ],true)},
   {id:'biomes',title:'Recognise the terrain',body:guideRows([

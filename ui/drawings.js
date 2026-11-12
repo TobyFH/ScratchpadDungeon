@@ -426,7 +426,7 @@ function portraitArt(kind, entity = { hp: 1, maxHp: 1 }) {
     preferences().punMode
   )
     kind = "pun-" + punIdentity(entity);
-  let art =
+  let art = entity.summonKind ? summonPortraitArt(entity) :
     entity.hp > 0 && !entity.dead
       ? specialEnemyArt(kind, entity) || basePortraitArt(kind, entity)
       : corpseArt(kind, entity);
@@ -439,6 +439,7 @@ function portraitArt(kind, entity = { hp: 1, maxHp: 1 }) {
 function necromancerArt(){return `<svg class="pencil-art necromancer-art" viewBox="0 0 120 150" fill="var(--paper-shade)" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 145 24 92 38 72Q22 24 57 5q42 15 30 66l13 23 8 51Z"/><path d="M39 42q17-30 41 0l-4 31-18 11-18-13Z" fill="var(--paper)"/><path d="m43 48 11 2m11 0 10-3M49 51v5m22-6v5m-12 2-3 7h8m-12 9h16m-33 5 23 28 25-29M58 106v38m-32-44 14 17-6 20m55-40-11 24 7 17m-62-6 13 5m46-5 14 5M39 18l-7 19m46-15 6 19m-60 69 14-6m44-1 13 8" fill="none"/><path d="M101 144 99 32m-11-9q0-14 12-14t12 14l-4 9H93Z" fill="var(--paper)"/><path d="m94 19 3 2m8-2 3 2m-8 3-2 4h5m-7 2v5m7-5v5" fill="none"/><path d="m53 97 5-8 5 8-5 9Z" fill="var(--poison-ink,#8253a1)"/></svg>`;}
 function bloodbinderArt(){return `<svg class="pencil-art bloodbinder-art" viewBox="0 0 120 150" fill="var(--paper-shade)" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M14 146 24 96 36 72Q16 20 61 5q45 17 24 66l15 26 9 49Z"/><path d="M36 42q24-30 48 0l-8 31-16 13-17-13Z" fill="var(--paper)"/><path d="m42 47 12-2m12 0 11 2M49 49v5m22-5v5M60 53l-4 10h9m-14 8q10 5 18-1M35 75l25 28 25-29M60 103v41M26 102l19 12-8 26M96 102l-20 13 8 26m-52-8 12-3m35 0 13 3M25 95l12-7m-12 20 12-7m48-13 12 9m-10 5 12 8" fill="none"/><path d="M60 92q-15 17 0 20 15-3 0-20Z" fill="var(--blood-ink,#964958)"/><path d="M31 119q-9-14-15-2t14 18m59-16q10-14 15-2t-14 18" fill="var(--paper)"/><path d="m39 15-8 18m48-14 7 17m-67 93 14 5m62-6-12 7" opacity=".45"/></svg>`;}
 function basePortraitArt(kind, entity = { hp: 1, maxHp: 1 }) {
+  if(entity.summonKind)return summonPortraitArt(entity);
   if(kind === "necromancer" && entity.hp>0 && !entity.dead)return necromancerArt();
   if(kind === "bloodbinder" && entity.hp>0 && !entity.dead)return bloodbinderArt();
   if (entity.hp <= 0 || entity.dead) return corpseArt(kind);

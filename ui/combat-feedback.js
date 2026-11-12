@@ -375,7 +375,7 @@ async function classAbilityFX(h) {
     machine = $("#machine-hero-" + i);
   const text =
     classAbilityName(h) +
-    (h.job === "mage"
+    (h.job === "mage" && !isSummon(h)
       ? " · " + MAGE_POWERS[mageResonance(h, h.last)].name.toUpperCase()
       : "");
   state.lastClassAbility = { heroId: h.id, name: text, at: Date.now() };

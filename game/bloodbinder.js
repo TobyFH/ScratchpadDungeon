@@ -126,7 +126,8 @@ function consumeBloodSeeds(e, damage) {
   if (!used) return 0;
   const owner =
     state.party.find((h) => h.id === e.bloodSeeds.sourceId) ||
-    state.graveyard.find((h) => h.id === e.bloodSeeds.sourceId);
+    state.graveyard.find((h) => h.id === e.bloodSeeds.sourceId) ||
+    state.summonArchive?.find(h=>h.id===e.bloodSeeds.sourceId);
   e.bloodSeeds.count -= used;
   if (!e.bloodSeeds.count) e.bloodSeeds = null;
   trackBloodFeedback(bloodSeedBurstFX(e, used));

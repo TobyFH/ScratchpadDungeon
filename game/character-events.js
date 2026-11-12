@@ -108,7 +108,7 @@ function characterLuck() {
 }
 function characterMoment(id, h) {
   const def = CHARACTER_EVENTS[id];
-  if (!def || !alive(h) || state.over) return false;
+  if (!def || !alive(h) || isSummon(h) || state.over) return false;
   state.characterEventMemo ??= { combat: 0, lastTravel: -20 };
   const memo = state.characterEventMemo,
     combat = def.context === "combat";

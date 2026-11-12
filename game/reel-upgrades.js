@@ -151,7 +151,7 @@ function faceDescription(face, h) {
     trick:`Gain ${tier} anticipation. At 6, Punchline fires six random marks from your reels.`,
     selfharm:`Spend up to ${2*tier} HP to gain ${2+.5*tier} Fury per HP. Cannot kill you.`,
     bloodseed:`Plant ${tier} Seeds${bloodSeedBonus(h)?` + ${bloodSeedBonus(h)} bonus per roll`:''}; pay ${bloodSeedCost(tier)} HP. Each HP of damage bursts one Seed for shared healing.`,
-    harvest:`${harvestSpellPower(tier)} spell power and ${tier*NECROMANCER.harvestSouls} Souls. Full bar: summon a Skeleton, or heal the team with two alive.`,
+    harvest:`${harvestSpellPower(tier)} spell power and ${tier*NECROMANCER.harvestSouls} Souls. Full bar: raise an ally, or heal the team when both summon slots are full.`,
     blank:"Empty: no effect.",
   }[face.type] || "A mark on this reel.";
 }
@@ -221,7 +221,7 @@ function criticalOddsMarkup(h) {
 }
 function faceEditCost(h, reel, index, operation, destination = null) {
   const face = h?.reels[reel]?.[index];
-  if (!face) return undefined;
+  if (!face || isSummon(h)) return undefined;
   if (operation === "weight") return undefined;
   if (["class", "mystery"].includes(face.type)) return undefined;
   if (operation === "upgrade") return faceUpgradeCost(face, h);

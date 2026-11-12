@@ -317,7 +317,8 @@ async function tickPoison() {
     const hero = state.party.indexOf(entity),
       source =
         state.party.find((h) => h.id === poison.sourceId) ||
-        state.graveyard.find((h) => h.id === poison.sourceId);
+        state.graveyard.find((h) => h.id === poison.sourceId) ||
+        state.summonArchive?.find(h=>h.id===poison.sourceId);
     if (hero >= 0)
       damageHero(hero, poison.damage, "Poison from " + poison.sourceName, {
         piercing: true,
@@ -452,7 +453,7 @@ function enemyShieldEl(e = state.enemy) {
   return $("#enemy-team-block");
 }
 function canEquipGear(h, gear) {
-  return !!h && !!gear && (gear.jobs ? gear.jobs.includes(h.job) : !gear.job || gear.job === h.job);
+  return !!h && !isSummon(h) && !!gear && (gear.jobs ? gear.jobs.includes(h.job) : !gear.job || gear.job === h.job);
 }
 function equipmentScope(item) {
   return item?.equipment

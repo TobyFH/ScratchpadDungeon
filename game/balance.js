@@ -52,7 +52,7 @@ const CLASS_BALANCE = Object.freeze({
     path: "Blood Price builds Fury. Balance damage with healing and lifesteal.",
   },
   bloodbinder: {hp:32,critical:[1.5,2,2.5,3],path:"Plant Seeds, then turn enemy damage into shared healing. Blood Bloom bursts every Seed."},
-  necromancer: {hp:22,critical:[1.5,1.75,2,2.5],path:"Gather Souls to raise Skeletons. Only enemy deaths and Soul surges restore your health."},
+  necromancer: {hp:22,critical:[1.5,1.75,2,2.5],path:"Gather Souls to raise allies with fixed reels. Roll their turns or consume them to heal."},
   jester: {
     hp: 30,
     critical: [1.5, 2, 3, 4],
@@ -67,6 +67,7 @@ const CRITICAL_BALANCE = Object.freeze({
 function criticalPool(hero, { enemy = false, context = null } = {}) {
   if (context === "well") return CRITICAL_BALANCE.well;
   if (enemy) return CRITICAL_BALANCE.enemy;
+  if(isSummon(hero))return CLASS_BALANCE.necromancer.critical;
   return hero
     ? CLASS_BALANCE[hero.job]?.critical || CLASS_BALANCE.mage.critical
     : CRITICAL_BALANCE.loot;

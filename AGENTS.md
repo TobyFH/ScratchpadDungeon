@@ -1,19 +1,24 @@
+Read `docs/SUMMONED_PARTY.md` first for current save-25 Necromancer rules.
+Bound summons now live in `state.party`, use manually chosen ordinary rolls,
+have fixed seeded reels and track the master's level ±1. Never restore automatic
+follow-up attacks, bodyguard interception, summon editing or a second live
+`master.skeletons` collection. Consume is a master action during combat. Defer
+removing dead summons until the action boundary so actor indices remain stable.
+
 Read `docs/NOTEBOOK_POLISH.md` for the current earned Necromancer unlock, Rogue
 permissions, +2 temperament, Seed maturity, loot and UI-layer contracts. The
 Necromancer is earned by a floor-ten victory, never bought or recruited. Keep
 cosmetic choices out of gameplay RNG and enemy selection free of portrait rebuilds.
-Read `docs/SOUL_CLASSES.md` for current save-24 Bloodbinder and Necromancer rules.
+Read `docs/SOUL_CLASSES.md` for Bloodbinder rules and Soul-class migration notes.
 It supersedes the older timed Bleeding/Clotted/Exchange balance documents.
 `game/bloodbinder.js` owns unlimited per-enemy Seed reservoirs: actual HP damage
 consumes Seeds for one shared healing pool; Blood Bloom detonates all stacks.
 Pay nonlethal HP once per rolled Seed face, before critical multiplication.
 Fixed Seed healing/detonation never multiply through camp, gear or crit again.
-`game/necromancer.js` owns persistent Souls and up to two automatic Skeletons.
-Skeletons live on the owner, never in `state.party`, recruitment, gear or graves.
-A full bar with two Skeletons heals the whole team; it never replaces them.
-Guard the first eligible whole attack per enemy turn, including both crit hits.
-Conventional healing cannot restore the master or Skeletons; master death ends
-the run immediately. Final enemy-death recovery must occur after split checks.
+`game/necromancer.js` owns persistent Souls and up to two bound party actors.
+A full bar with both summon slots occupied heals the team; it never replaces it.
+Ordinary healing works on summons, but not on the master. Master death ends the
+run immediately. Final enemy-death recovery must occur after split checks.
 `ui/soul-feedback.js/.css` owns cancellable Seed bursts, soul meters and bones.
 All offsets use FX randomness. Keep fixed allocations exact and wait for their
 feedback before victory cleanup. All enemy healing uses `enemyRecovery()`.

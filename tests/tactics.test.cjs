@@ -86,7 +86,7 @@ test("temperament is only selectable at the start, Mages have no role stat or se
   });
   assert.deepEqual(result, {
     loaded: true,
-    version: 24,
+    version: 25,
     hp: 11,
     points: 29,
     tier: 4,

@@ -259,7 +259,6 @@ async function exploderTurn(e) {
       impact: { type: "attack", critical: true },
     });
   }
-  necromancerAreaDamage(power,e);
   e.selfDestructed = true;
   damageEnemy(e.hp, e.name + " burns out", e, { piercing: true, selfDestruct:true });
   log(

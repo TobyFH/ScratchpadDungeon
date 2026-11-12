@@ -178,10 +178,8 @@ const EXTRA_EQUIPMENT = Object.freeze({
   },
 });
 function equipmentLootEligible(item) {
-  const available = heroJobs(state.runRules);
+  const available = necromancerOwner() ? ["necromancer"] : heroJobs(state.runRules);
   // This earned class cannot join another class's party.
-  if (state.party.some((h) => h.job === "necromancer"))
-    available.push("necromancer");
   const jobs = item.jobs || (item.job ? [item.job] : null);
   return !jobs || jobs.some((job) => available.includes(job));
 }

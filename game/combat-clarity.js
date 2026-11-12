@@ -134,7 +134,6 @@ async function missStunnedTurn(h, foes) {
   tickStimulant(h);
   finishOpeningRoll();
   await tickPoison();
-  await skeletonCombatAction(h);
   await settleBloodFeedback();
   if (checkDefeat()) return;
   if (!livingEnemies().length) {

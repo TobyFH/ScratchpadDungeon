@@ -27,8 +27,9 @@ const EVENT_LOG_TERMS = Object.freeze({
   "Blood Seeds": "Stacks on one enemy. Damage consumes one Seed per actual HP lost and shares that amount of healing across injured allies.",
   "Blood Bloom": "Detonates every Seed on all enemies. Each Seed deals one damage and provides one shared healing; excess damage cannot multiply the healing again.",
   "Soul Harvest": "Enemy deaths restore 12% of that enemy's maximum HP to the Necromancer, capped at half the Necromancer's maximum HP. Ordinary healing is ineffective.",
-  "Soul Call": "The class mark gathers Harvest power. A full Soul bar raises a Skeleton in an empty companion position. Skeletons attack automatically after your rolls and persist between battles; with two alive, filling the bar heals the team instead.",
-  "Soul Surge": "With two Skeletons alive, a full Soul bar restores 10% maximum HP to the Necromancer and each Skeleton, then empties.",
+  "Soul Call": "A full Soul bar raises a random ally with fixed reels. Choose which party member rolls. With both summon slots full, filling the bar heals the team instead.",
+  "Consume": "Sacrifice a bound summon to restore the Necromancer’s HP. Costs one action during combat. Summon deaths do not trigger burial or resurrection prompts.",
+  "Soul Surge": "With both summon slots full, a full Soul bar restores 10% maximum HP to the Necromancer and each living summon, then empties.",
   "Bodyguard": "Once per enemy turn, the healthiest living Skeleton intercepts the first eligible single-target attack on its Necromancer. Further attacks, area damage and piercing attacks can hit the master.",
 
   "Cave room": "Revealing one room tile uncovers the connected room and its discoveries. Revealed discoveries are not activated until visited.",

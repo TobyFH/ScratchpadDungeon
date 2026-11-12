@@ -62,7 +62,8 @@ const fountainRollRate = (depth = state.depth) =>
   Math.min(9, Math.max(0, depth - 1)) * 0.018 +
   lateWellSteps(depth) * SUPPORT_SCALING.wellRollPerFloor;
 function heroDamagePower(h, n) {
-  return h.job === "necromancer" && n > 0 ? Math.max(1,Math.floor(n*NECROMANCER.personalDamage)) : n;
+  const factor=isSummon(h)?NECROMANCER.summonDamage:h.job==="necromancer"?NECROMANCER.personalDamage:1;
+  return n>0?Math.max(1,Math.floor(n*factor)):n;
 }
 function heroHealingPower(n) {
   return n;
@@ -222,6 +223,7 @@ function mageResonance(h, symbols = null) {
 const mageRole = (h) => mageResonance(h);
 function normaliseHeroBuild(h) {
   if (!h) return;
+  if(isSummon(h)){normaliseSummon(h);return;}
   if (h.job === "healer") h.job = "mage";
   delete h.mageRole;
   normaliseTacticalStatuses(h);
@@ -355,6 +357,7 @@ function normaliseHeroBuild(h) {
   normaliseMysteryReels(h);
 }
 function classAbilityName(hero) {
+  if(hero?.summonKind && hero.summonKind!=="zombie")return summonAbilityName(hero);
   const job = typeof hero === "string" ? hero : hero?.job;
   return (
     {
@@ -371,6 +374,7 @@ function classAbilityName(hero) {
   );
 }
 function classAbilityDescription(hero) {
+  if(hero?.summonKind && hero.summonKind!=="zombie")return summonAbilityDescription(hero);
   const h=typeof hero==='object'?hero:{job:hero,level:1},job=h?.job;
   return {
     fighter:`Gain ${tankSealBlock(h)} team block, then spend up to ${bashLimit(h)} on a Shield Bash. Deals double damage to enemy block.`,
@@ -381,7 +385,7 @@ function classAbilityDescription(hero) {
     berserker:`Bloodrush: heal yourself for ${bloodrushHealing(h)} HP and add 2 physical damage. Fury strengthens attacks and lifesteal; healing spends it.`,
     jester:"Wildcard: a random trick, usually in your favour. May alter reels, reverse an enemy roll, or scatter damage and healing.",
     bloodbinder:"Blood Bloom: burst every enemy’s Seeds. Each deals 1 damage and shares 1 HP of healing among wounded allies.",
-    necromancer:`Gain ${necromancerSealPower(h)} Harvest power. Souls raise up to two Skeletons; with both alive, a full bar heals the team.`,
+    necromancer:`Gain ${necromancerSealPower(h)} Harvest power. Souls raise up to two allies with their own reels. Consume them to heal yourself; a full team gains Soul Surge.`,
   }[job] || "A class ability rolled alongside your other two marks.";
 }
 function temperamentEffects(h, base) {
@@ -659,6 +663,7 @@ function advanceRangerEnemyTurn() {
 
 function pointsNeedAttention(h) {
   return (
+    !isSummon(h) &&
     !state.over &&
     !state.awaitingStarter &&
     alive(h) &&

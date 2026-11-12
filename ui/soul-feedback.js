@@ -76,38 +76,22 @@ function bloodSeedBurstFX(e, count, detonation = false) {
     if (state !== run) return;
   });
 }
-function skeletonArtEl(s) {
-  return document.getElementById("summon-art-" + s.id);
-}
+function skeletonArtEl(s) { return entityArt(s); }
 function soulMeterMarkup(h) {
-  if (h.job !== "necromancer") return "";
-  return `<div class="soul-meter" data-soul-owner="${h.id}" role="meter" aria-label="Souls" aria-valuemin="0" aria-valuemax="${soulCapacity(h)}" aria-valuenow="${Math.floor(h.souls || 0)}" data-tooltip="Damage and Harvest gather Souls. A full bar raises a Skeleton in an empty companion position. With two Skeletons, it restores 10% maximum HP to the whole team instead. Souls and Skeleton HP survive battles."><b>SOULS ${Math.floor(h.souls || 0)}/${soulCapacity(h)}</b><span><i style="width:${(100 * (h.souls || 0)) / soulCapacity(h)}%"></i></span></div>`;
+  if(h.job!=="necromancer"||isSummon(h))return "";
+  return `<div class="soul-meter" data-soul-owner="${h.id}" role="meter" aria-label="Souls" aria-valuemin="0" aria-valuemax="${soulCapacity(h)}" aria-valuenow="${Math.floor(h.souls||0)}" data-tooltip="Damage and Harvest gather Souls. A full bar raises a random ally in an empty party slot. With two summons, it heals the team instead. Consume a summon to heal yourself."><b>SOULS ${Math.floor(h.souls||0)}/${soulCapacity(h)}</b><span><i style="width:${100*(h.souls||0)/soulCapacity(h)}%"></i></span></div>`;
 }
 function skeletonSlotsMarkup(h) {
-  return [0, 1]
-    .map((i) => {
-      const s = h.skeletons[i];
-      if (!s)
-        return `<div class="empty-slot" data-skeleton-slot="${i}">${icon("skull")}<span>A Skeleton can rise here.</span><small>Fill the Soul bar to summon.</small></div>`;
-      return `<article class="hero skeleton-card ${injury(s)}" data-skeleton-slot="${i}" aria-label="Skeleton · automatically controlled"><div class="hero-dossier"><div class="portrait" id="summon-art-${s.id}" tabindex="0" data-tooltip="Skeleton: ${s.hp}/${s.maxHp} HP. Attacks for ${skeletonAttack(h)} physical damage after each Necromancer action. Can intercept the first single-target attack each enemy turn. Cannot use reels, equipment or ordinary healing.">${portraitArt("skull", s)}</div><div class="hero-name">Skeleton<small>Summon · Automatic</small></div></div><div class="hero-controls"><div class="hero-title-line"><span class="hp-info">HP ${s.hp} / ${s.maxHp}</span><span class="injury">${injury(s)}</span></div>${healthMarkup(s)}<div class="skeleton-duty">${icon("sword")}<b>${skeletonAttack(h)} physical damage</b></div><small>Attacks your target after each roll.<br>Guards the first eligible enemy attack.</small></div></article>`;
-    })
-    .join("");
+ return Array.from({length:Math.max(0,3-state.party.length)},(_,i)=>`<div class="empty-slot" data-skeleton-slot="${i}">${icon("skull")}<span>An undead ally can rise here.</span><small>Fill the Soul bar to summon.</small></div>`).join("");
+}
+function summonCardMarkup(s,i) {
+ const h=necromancerOwner(),passive=SUMMON_PASSIVES[s.summonPassive],offer=consumeSummonHealing(s,h),disabled=busy||state.over||!alive(s);
+ return `<article class="hero summon-card ${s.job} ${injury(s)} ${state.target===i?'selected':''}" id="hero-${i}" data-hero-roll="${i}" tabindex="${state.enemy&&alive(s)?0:-1}" role="group" aria-label="${escapeHTML(s.name)} · click to roll"><div class="hero-dossier"><button class="portrait" id="portrait-${i}" data-hero-stats="${i}" data-spin="${i}" aria-label="Roll ${escapeHTML(s.name)}" ${disabled?'disabled':''}>${portraitArt(s.job,s)}${statusMarkup(s)}${specialismBadge(s)}</button><div class="hero-name">${escapeHTML(s.name)}<small>${summonRole(s)} · Lv.${s.level}</small></div><span class="summon-bound-note">Bound summon</span></div><div class="hero-controls"><div class="hero-title-line"><span class="hp-info">HP ${s.hp} / ${s.maxHp}</span><span class="injury">${s.stun?'stunned':injury(s)}</span></div>${healthMarkup(s)}${drawMachine('hero-'+i,s.last,{hero:i,disabled:disabled||!state.enemy||heroCannotRoll(s)})}<div class="summon-details"><span class="summon-passive" tabindex="0" aria-label="${passive?.name||'Returned'}" data-tooltip="${escapeHTML(passive?passive.name+': '+passive.text:'Returned with the marks of their former class.')}">${icon({venom:"poison",ambusher:"sword",carapace:"block",ward:"ward",arcane:"magic",mender:"heal",secondWind:"heal",volatile:"bomb"}[s.summonPassive]||"skull")}<span class="summon-passive-name">${passive?.name||'Returned'}</span></span><button class="consume-summon" data-consume-summon="${s.id}" aria-label="Consume ${escapeHTML(s.name)} to restore up to ${offer} Necromancer HP" data-tooltip="Sacrifice this summon to restore up to ${offer} HP to ${h?.name||'the Necromancer'}. Uses one action during battle. Reels cannot be edited." ${disabled||!alive(h)||(state.enemy&&(h.stun||heroCannotRoll(h)||!openingEligible(h)))?'disabled':''}>Consume · +${offer} HP</button></div></div></article>`;
 }
 function syncNecromancer(h) {
-  if (h?.job !== "necromancer") return;
-  const meter = document.querySelector(`[data-soul-owner="${h.id}"]`);
-  if (meter) {
-    const t = document.createElement("template");
-    t.innerHTML = soulMeterMarkup(h);
-    meter.replaceWith(t.content);
-  }
-  const slots = [...document.querySelectorAll("#party > [data-skeleton-slot]")];
-  if (slots.length) {
-    const t = document.createElement("template");
-    t.innerHTML = skeletonSlotsMarkup(h);
-    for (const n of slots) n.remove();
-    $("#party").append(t.content);
-  }
+ if(h?.job!=="necromancer"||isSummon(h))return;
+ const meter=document.querySelector(`[data-soul-owner="${h.id}"]`);
+ if(meter){const t=document.createElement('template');t.innerHTML=soulMeterMarkup(h);meter.replaceWith(t.content);}
 }
 function summonMomentFX(h, s, kind) {
   const host = skeletonArtEl(s) || entityArt(h);
@@ -165,6 +149,7 @@ function summonMomentFX(h, s, kind) {
     20,
   );
   shakeElement(host, kind === "guard" ? 5 : 2);
+  if(kind==="rise"||kind==="death"||kind==="consume")GameSound.cry(s.summonKind==="zombie"?s.job:({blade:"skull",guard:"golem",wisp:"ghost",cantor:"lich",bomber:"slime"}[s.summonKind]||"skull"),kind==="rise"?"enter":"death");
   GameSound.play(
     kind === "rise" ? "poof" : kind === "death" ? "hit" : "shield",
   );

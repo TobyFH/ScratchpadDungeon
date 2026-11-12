@@ -1,0 +1,160 @@
+/* Three reserved portrait hitboxes; absent companions leave quiet blank space. */
+.battle-target,
+.fit-notebook .battle-target {
+  height: 40px;
+  min-height: 40px;
+  max-height: 40px;
+  gap: 8px;
+  flex-wrap: nowrap;
+  font-size: 17px;
+}
+.target-heading {
+  flex-basis: auto;
+  font-size: 17px;
+  white-space: nowrap;
+}
+.target-heading > svg {
+  width: 20px;
+  height: 20px;
+}
+.target-picks {
+  display: grid;
+  grid-template-columns: repeat(3, 36px);
+  gap: 6px;
+  flex: none;
+}
+.battle-target .target-button,
+.target-space {
+  width: 36px;
+  min-width: 36px;
+  height: 36px;
+  min-height: 36px;
+  padding: 1px;
+  box-sizing: border-box;
+}
+.battle-target .target-button {
+  position: relative;
+}
+.target-button > svg {
+  width: 24px;
+  height: 30px;
+}
+.target-check {
+  position: absolute;
+  bottom: -2px;
+  right: 0;
+  font-size: 13px;
+  background: var(--paper);
+  line-height: 1;
+}
+.current-heal-target {
+  min-width: 0;
+  line-height: 1.05;
+}
+.current-heal-target b {
+  display: block;
+  font-size: 16px;
+  overflow-wrap: anywhere;
+}
+.current-heal-target small {
+  display: block;
+  font-size: 13px;
+  color: var(--soft);
+}
+@media (min-width: 1260px) {
+  .fit-notebook .result-ribbon {
+    height: 54px;
+    min-height: 54px;
+    max-height: 54px;
+  }
+}
+@media (max-width: 760px) {
+  .battle-target,
+  .fit-notebook .battle-target {
+    height: 42px;
+    min-height: 42px;
+    max-height: 42px;
+    gap: 5px;
+  }
+  .target-heading {
+    font-size: 16px;
+    gap: 3px;
+  }
+  .target-heading > svg {
+    width: 16px;
+    height: 16px;
+  }
+  .target-picks {
+    grid-template-columns: repeat(3, 32px);
+    gap: 4px;
+  }
+  .battle-target .target-button,
+  .target-space {
+    width: 32px;
+    min-width: 32px;
+    height: 34px;
+    min-height: 34px;
+  }
+  .current-heal-target b {
+    font-size: 14px;
+  }
+  .current-heal-target small {
+    font-size: 12px;
+  }
+}
+.summon-card .summon-details {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5px;
+  min-height: 22px;
+  font-size: 14px;
+}
+.summon-card .summon-details .summon-passive {
+  color: var(--poison-ink);
+  text-decoration: underline dotted;
+  cursor: help;
+}
+.summon-card .consume-summon {
+  min-height: 25px;
+  padding: 2px 5px;
+  font-size: 14px;
+  white-space: nowrap;
+  color: var(--blood-ink);
+}
+.summon-card .hero-name small {
+  font-size: 14px;
+}
+.summon-card .summon-bound-note {
+  color: var(--soft);
+  font-size: 13px;
+}
+.summon-card .equipment-button {
+  display: none;
+}
+.summon-card .portrait {
+  cursor: pointer;
+}
+@media (max-width: 760px) {
+  .summon-card .consume-summon {
+    font-size: 16px;
+    min-height: 28px;
+  }
+}
+
+.summon-passive > svg {
+  display: none;
+}
+@media (max-width: 760px) {
+  .summon-passive {
+    flex: 0 0 20px;
+  }
+  .summon-passive > svg {
+    display: block;
+    width: 20px;
+    height: 24px;
+  }
+  .summon-passive-name {
+    display: none;
+  }
+}

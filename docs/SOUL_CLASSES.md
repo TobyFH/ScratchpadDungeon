@@ -1,6 +1,7 @@
 # Blood Seeds and the Soul Collector
 
-These are the current save-24 rules. They replace the Bloodbinder's former
+Blood Seeds retain their save-24 mechanics; Necromancer uses the later
+[save-25 bound-party rules](SUMMONED_PARTY.md). These replace the Bloodbinder's former
 timed Bleeding, Clotted and percentage Blood Exchange. The later
 [notebook polish pass](NOTEBOOK_POLISH.md) adds earned Necromancer availability,
 Seed maturity and normal-healing bonuses; it also documents the current Rogue,
@@ -49,97 +50,29 @@ Autoplay retains legal spell damage and recovery alongside Seeds, rather than
 treating an unused reservoir as automatic damage or endlessly planting without
 an allied way to consume it.
 
-## Necromancer: Soul Collector
+## Necromancer: current bound-party rules
 
-An **earned, starting-only** class with **22 base HP**, unlocked by defeating
-floor ten for the first time. It cannot be purchased early or appear in the
-wandering recruit pool. It uses ordinary levels, personal points, paid edits,
-targeting and action clocks. Living adventurers still appear, but a frightened
-introduction always leads to the hostile-adventurer battle instead of recruitment.
-Legacy winning saves and legitimate floor-ten deposit receipts recover the unlock.
+The [save-25 summoned party rework](SUMMONED_PARTY.md) is the current authority.
+The earned Necromancer raises up to two **player-controlled** bound allies in
+`state.party`. Boneblade, Graveguard, Hexwisp, Bonecantor and Powderghoul have
+fixed generated reels, distinct art, passives and roles. Their level tracks the
+master at a saved offset of −1, 0 or +1. They take ordinary chosen actions;
+there are no automatic attacks or bodyguard interception.
 
-The master is the sole real hero in `state.party`. Up to two Skeleton auxiliaries
-occupy the existing companion rows visually. They have HP and automatic damage,
-but no clickable reels, personal points, equipment, independent XP/levels or
-normal death records. Normal keyboard/portrait targeting still applies to the
-master and selected enemy.
-
-### Reels and Souls
-
-Ordinary faces are **spell damage, poison, Harvest and Empty**. All three ability
-families have ranks I–IV: twelve rankable choices using existing prices, refunds,
-equal-face probabilities and critical rules. Harvest is class-private. The
-permanent middle **Soul Call** seal contributes Harvest power, rather than
-introducing a second reel framework.
-
-| Parameter | Current value |
-| --- | --- |
-| Soul capacity | 22 + 2 × master level |
-| Souls from actual enemy HP damage | 0.3 per HP, including poison and Skeletons |
-| Harvest | 2 Souls per power and ceil(power × 0.5) spell power |
-| Soul Call Harvest power | 2 + floor((level − 1) / 4) |
-| Personal damage adjustment | 90%, rounded down, minimum 1 for positive damage |
-| Critical pool | ×1.5, ×1.75, ×2, ×2.5 |
-| Skeleton maximum HP | 8 + 3 × master level |
-| Each Skeleton's physical attack | 1 + floor((level − 1) × 0.45) |
-| Full-bar healing with both Skeletons | ceil(10% of each member's maximum HP) |
-| Skeleton-death Soul return | 3 |
-| Skeleton-death master recovery | max(1, floor(3% of master's maximum HP)) |
-| Enemy-death master recovery | ceil(12% enemy max HP), capped at floor(50% master max HP) |
-
-Filling the bar creates a Skeleton immediately if there is an empty position.
-**With two alive, keep their identities and heal the entire team**, following the
-player's explicit choice where the attachment conflicted. Every completion
-empties the bar; excess from that one grant does not chain further completions.
-Damage Souls exclude enemy self-harm and self-destruction. Enemy deaths still
-provide recovery regardless of who killed them, including enemy summons.
-
-Soul Commander builds favour Harvest, Plague Lord favours poison with some
-Harvest, and Death Sorcerer favours spells. These are editing preferences, not
-new selectable roles or progression tracks. Autoplay uses paid validators and
-retains both a source of personal damage and Harvest.
-
-### Automatic actions and protection
-
-After each completed master action, including a missed stunned action, surviving
-Skeletons each hit the selected living enemy once before enemy clocks advance.
-They do not spend actions or advance clocks themselves. If the selected enemy
-died, they use another living foe. A Skeleton raised by another Skeleton's hit
-waits until the next action; the current action uses a snapshot of auxiliaries.
-
-For each whole enemy turn, the **first eligible single-target attack** aimed at
-the master is intercepted by the healthiest Skeleton; equal HP chooses the
-oldest. A critical's original and bonus hit count as that one intercepted attack,
-even if its first segment kills the Skeleton. Later multi-strikes can hit the
-master. Area, piercing and unblockable attacks bypass interception. Shared team
-block and the existing full-turn ward can protect the intercepted attack.
-
-Killed Skeletons leave their position immediately with a brief pile-of-bones
-effect and return their small Soul/recovery reward. They never open burial or
-revival prompts. **Master death immediately ends the run**, discards summons and
-records only the adventurer. Revive Stones cannot bypass this class rule.
-
-### Recovery, persistence and presentation
-
-Ordinary healing cannot restore the master or Skeletons, including wells,
-supplies, exact healing, gear and level-up recovery. Healing rewards remain in
-the dungeon; they have not been replaced for this class. Soul Harvest, a full
-bar with two Skeletons and Skeleton deaths are its recovery sources. Autoplay
-avoids wasting healing supplies/wells and may seek manageable fights to recover.
-
-Souls and remaining Skeleton HP persist across combat, floors and saves.
-Skeleton maximum HP/attack scale with the master; level growth does not restore
-missing HP. A purple Soul meter sits immediately below the master's health bar,
-above its reels. Pencil hands rising through paper, purple bursts, bodyguard
-callouts, bone piles and enemy-to-master Soul flights reuse the existing effect,
-speed, skip, reduced-motion and utility-pause systems.
+Consume sacrifices an ally to heal the master, spending one action in combat.
+Ordinary healing works on summons but not the master. Full-bar Soul Surge still
+heals an occupied team, and enemy deaths still offer capped master recovery.
+Defeated adventurers can return once as named zombies. The old `h.skeletons`
+collection migrates without spending RNG or losing wounds/Souls. Master death
+still ends the run. See the linked document for generation, balance and safety
+contracts.
 
 ## Ownership and migration
 
 - `game/bloodbinder.js`: reservoir counts, costs, allocation, detonation and AI
   forecast. All enemy HP losses enter through shared `damageEnemy()`.
 - `game/necromancer.js`: Soul tuning/lifecycle, Skeletons, interception and
-  restricted recovery. Skeletons are `hero.skeletons`, never extra party heroes.
+  restricted recovery. Summons are bound actors in `state.party`, with fixed seeded builds.
 - `game/hero-builds.js`, `game/reel-upgrades.js`, `game/auto-builds.js`: shared
   permissions, faces, paid editing and AI preferences.
 - `ui/soul-feedback.js/.css`: meters, auxiliary rows and ephemeral effects;
@@ -158,12 +91,10 @@ without adding refunds or losing paid receipts. There is no save reset.
 `tests/bloodbinder-balance.test.cjs`, `tests/bloodbinder-update.test.cjs` and
 `tests/necromancer.test.cjs` exercise real browser rolls, costs, shared pools,
 critical/overkill/shield handling, private faces, paid edits, enemy-death hooks,
-interception, healing restrictions, immediate defeat, recruitment, persistence
+manual summon turns, consumption, targeting, healing restrictions, immediate defeat, recruitment, persistence
 and desktop/compact layouts. New class captures are in ignored
 `test-results/soul-classes/`. Run `npm test`, `npm run review:ui` and rebuild
 `index.html` after source edits.
 
-The Skeleton curve starts at two combined damage per master action and reaches
-twelve at level 13. This is the conservative initial target from the confirmed
-design, not a measured campaign win-rate claim. Controlled balance probes and
-playtesting can tune `NECROMANCER` without changing its action economy.
+Summon tuning and the current browser coverage are documented in
+[Summoned party](SUMMONED_PARTY.md).
