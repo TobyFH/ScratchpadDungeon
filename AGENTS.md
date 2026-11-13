@@ -1,3 +1,11 @@
+Read `docs/REEL_QUEUE.md` for planned personal-point edits and Seed death bursts.
+`game/reel-queue.js` shares all prices/paid receipts with immediate edits. Buy
+cheapest affordable plans, randomize actual equal-cost ties only, defer in-flight
+rolls/travel, and let user plans reserve autoplay points. Disabling the saved
+toggle clears every plan. Final enemy death detonates all its Seeds for existing
+2-base shared healing; resolve split passives first and never invent extra
+damage, Souls or rewards. Bloom already clears its Seeds before dealing damage.
+
 Read `docs/PAPER_INTERACTIONS.md` first for save-26 rules. Blood Bloom plants
 level-scaled Seeds on every foe, then detonates for 2 damage/2 base healing.
 Seed healing scales once per caster-owned shared pool; FIFO `sources` receipts

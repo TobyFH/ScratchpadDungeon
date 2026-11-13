@@ -227,6 +227,28 @@ function consumeBloodSeeds(e, damage) {
   );
   return used;
 }
+function detonateDefeatedBloodSeeds(e) {
+  const count = bloodSeedCount(e);
+  if (!e || e.hp > 0 || !count) return 0;
+  const sources = bloodSeedSources(e);
+  // Clear first: death, poison, loot and repeated cleanup cannot pay twice.
+  // The foe is already dead, so this is recovery, never extra damage or Souls.
+  e.bloodSeeds = null;
+  trackBloodFeedback(bloodSeedBurstFX(e, count, true));
+  let healing = 0;
+  for (const part of sources)
+    healing += distributeBloodHealing(
+      part.count * BLOOD_BINDING.detonationHealing,
+      bloodSeedOwner(part.sourceId),
+      e,
+    );
+  combatCallout(enemyArtEl(e), `BLOOD SEEDS BURST · ${count}`, "bleeding");
+  log(
+    `${e.name} falls: all ${count} Blood Seeds detonate; ${healing} HP shared among injured allies.`,
+    { important: true },
+  );
+  return count;
+}
 function bloodDetonationPlan(h = null) {
   return battleEnemies()
     .filter((e) => alive(e) && (h || bloodSeedCount(e) > 0))

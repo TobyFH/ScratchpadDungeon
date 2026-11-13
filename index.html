@@ -12898,6 +12898,98 @@ body.tile-motion-enabled .tile.terrain-explodingMushroom .biome-cover > svg {ani
   display: none;
 }
 
+/* Saved plans are dashed pencil outlines; solid outlines still mean the actual
+   equipped face. The action always says Queue, never a misleading spend label. */
+.workshop-queue-controls,
+.workshop-queue-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 27px;
+  font-family: var(--hand);
+  font-size: 18px;
+  line-height: 1.1;
+}
+.workshop-queue-controls label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+}
+.workshop-queue-controls input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--ink);
+}
+.workshop-queue-controls > span {
+  white-space: nowrap;
+}
+.workshop-queue-status {
+  font-size: 16px;
+}
+.workshop-queue-status button {
+  font-size: 16px;
+  min-height: 25px;
+  padding: 1px 6px;
+  white-space: nowrap;
+}
+#modal .queued-face,
+#modal .queued-choice {
+  outline: 2px dashed var(--ui-focus, #ad873c);
+  outline-offset: -3px;
+  background-color: var(--ui-label);
+}
+#modal .queued-face small,
+#modal .queued-choice small {
+  font-weight: bold;
+}
+#modal .queue-choice:not(:disabled) {
+  border-style: dashed;
+  background-color: transparent;
+}
+#modal .queue-choice:not(:disabled) small {
+  opacity: 0.8;
+}
+@media (max-width: 760px) {
+  .workshop-queue-controls {
+    font-size: 18px;
+  }
+  .workshop-queue-status {
+    font-size: 15px;
+    min-height: 30px;
+  }
+  .icon-workshop .tier-choices .queue-choice small,
+  .icon-workshop .tier-choices .queued-choice small,
+  .icon-workshop .symbol-choice.queue-choice > small,
+  .icon-workshop .symbol-choice.queued-choice > small {
+    font-size: 17px;
+  }
+}
+@media (max-width: 760px) {
+  .icon-workshop .symbol-choices {
+    grid-template-rows: repeat(var(--compact-choice-rows), 52px);
+  }
+  .icon-workshop .symbol-choice {
+    grid-template-rows: 22px 22px;
+  }
+  .icon-workshop .workshop-detail .face-effect {
+    height: 60px;
+    min-height: 60px;
+  }
+}
+.workshop-tabs [data-editor-reel] {
+  position: relative;
+}
+.reel-queue-flag {
+  position: absolute;
+  top: 0;
+  right: 4px;
+  font-size: 12px;
+  line-height: 1;
+}
+
 /* Environmental information overlays room art; it never changes tile geometry. */
 .environment-overlay {
   position: absolute;
@@ -17860,6 +17952,7 @@ function wardActive(e = actingEnemy) {
         }
       }
       function save() {
+        if (processAllReelQueues()) renderParty();
         try {
           localStorage.setItem(SAVE_KEY, JSON.stringify(state));
           localStorage.setItem(
@@ -18243,6 +18336,7 @@ function relevantLogTile(i) {
         return `<div class="machine-shell ${one ? "one-reel" : ""}" id="machine-${id}" data-machine="${id}">${title ? `<div class="machine-title">${title}</div>` : ""}<button class="machine-face" data-roll-area="${id}" aria-label="${label}" ${disabled ? "disabled" : ""}>${last.map((s, k) => `<span class="slot-window ${owner?.blackout?.includes(k) ? "blacked-out" : owner?.crystalLocks?.includes(k) ? "gem-locked" : ""} ${owner?.shadowLocks?.includes(k) ? "shadow-locked" : ""} ${owner?.reelGifts?.some((g) => g.reel === k && g.uses > 0) ? "gifted-reel" : ""}" data-reel="${k}" ${active ? `data-tooltip="${escapeHTML(state.party[hero].blackout?.includes(k) ? "Pencil blackout: this reel does nothing on this roll, then clears." : state.party[hero].crystalLocks?.includes(k) ? "Crystal seal: this reel is empty for one roll. Rolling this hero cracks its blocking gems." : faceDescription(s, state.party[hero]))}"` : ""}><span class="symbol-track single"><span class="slot-symbol">${symbolMarkup(s)}</span></span></span>`).join("")}</button><button class="lever" ${active ? `data-spin="${hero}"` : `data-fast-machine="${id}"`} ${disabled ? "disabled" : ""} aria-label="${active ? "Pull " + state.party[hero].name + "’s slot handle" : "Fast-forward " + (enemy ? "enemy" : "event") + " reels"}">${leverArt()}</button>${active ? reelLockMarkup(owner) : enemy ? enemyReelLockMarkup(owner) : ""}<div class="machine-footnote">${active ? (owner.initiative && state.opening?.firstRoll ? "INITIATIVE · act first for +25%" : ["ranger", "berserker", "jester"].includes(state.party[hero].job) ? rangerAimMarkup(state.party[hero]) : owner.job === "bloodbinder" ? bloodSeedCaption() : state.enemy ? (state.party[hero].stun ? "Stunned · waiting for recovery" : "Pull handle to spin") : "Waiting for an encounter") : enemy ? "" : "Click during the roll to land it"}</div></div>`;
       }
       function render() {
+        processAllReelQueues();
         statusTooltip.hidden = true;
         applyPreferences();
         document.body.dataset.palette = state.palette || "warm";
@@ -20668,7 +20762,6 @@ function encounterTags(enemies) {
             });
         }
         e.hp -= actual;
-        if(!skipBloodSeeds)consumeBloodSeeds(e,actual);
         necromancerDamage(e,actual,{selfInflicted:!!bloodPriceTier||selfDestruct});
         recordCombatHit(actual);
         gainFury(e, actual, 0, { bloodPriceTier });
@@ -20678,6 +20771,10 @@ function encounterTags(enemies) {
           leaveCorpse(e.art, e.name, true, e.environmentTile ?? state.position);
         }
         resolveEnemyWoundTrait(e);
+        if (!skipBloodSeeds) {
+          if (e.hp <= 0) detonateDefeatedBloodSeeds(e);
+          else consumeBloodSeeds(e, actual);
+        }
         if (actual && e.hp > 0 && impact.type === "magic")
           maybeVulnerable(
             e,
@@ -21060,6 +21157,28 @@ function consumeBloodSeeds(e, damage) {
     `${e.name} · Blood Seeds: ${used} burst; ${healed} HP shared among injured allies.`,
   );
   return used;
+}
+function detonateDefeatedBloodSeeds(e) {
+  const count = bloodSeedCount(e);
+  if (!e || e.hp > 0 || !count) return 0;
+  const sources = bloodSeedSources(e);
+  // Clear first: death, poison, loot and repeated cleanup cannot pay twice.
+  // The foe is already dead, so this is recovery, never extra damage or Souls.
+  e.bloodSeeds = null;
+  trackBloodFeedback(bloodSeedBurstFX(e, count, true));
+  let healing = 0;
+  for (const part of sources)
+    healing += distributeBloodHealing(
+      part.count * BLOOD_BINDING.detonationHealing,
+      bloodSeedOwner(part.sourceId),
+      e,
+    );
+  combatCallout(enemyArtEl(e), `BLOOD SEEDS BURST · ${count}`, "bleeding");
+  log(
+    `${e.name} falls: all ${count} Blood Seeds detonate; ${healing} HP shared among injured allies.`,
+    { important: true },
+  );
+  return count;
 }
 function bloodDetonationPlan(h = null) {
   return battleEnemies()
@@ -26534,7 +26653,7 @@ function faceDescription(face, h) {
       rally: `${tier} doses to your selected heal target. Fills up to 3 actions; every 2 surplus doses raise potency, boosting damage and resistance.`,
       trick: `Gain ${tier} anticipation. At 6, Punchline fires six random marks from your reels.`,
       selfharm: `Spend up to ${2 * tier} HP to gain ${2 + 0.5 * tier} Fury per HP. Cannot kill you.`,
-      bloodseed: `Plant ${tier} Seeds${bloodSeedBonus(h) ? ` + ${bloodSeedBonus(h)} bonus per roll` : ""}; pay ${bloodSeedCost(tier)} HP. Planted after this roll’s damage. Later wounds burst Seeds for shared healing.`,
+      bloodseed: `Plant ${tier} Seeds${bloodSeedBonus(h) ? ` + ${bloodSeedBonus(h)} bonus per roll` : ""}; pay ${bloodSeedCost(tier)} HP. Planted after damage. Wounds consume Seeds to heal allies; defeat bursts them all.`,
       harvest: `${harvestSpellPower(tier)} spell power and ${tier * NECROMANCER.harvestSouls} Souls. Full bar: raise an ally, or heal the team when both summon slots are full.`,
       blank: "Empty: no effect.",
     }[face.type] || "A mark on this reel."
@@ -26653,7 +26772,45 @@ function applyFaceEdit(h, reel, index, operation, destination = null) {
   }
   h.points -= cost;
   h.last[reel] = { type: face.type, tier: face.tier, job: h.job };
+  cancelQueuedFace(h, reel, index);
   return true;
+}
+function quoteFaceTier(h, reel, index, target) {
+  const face = h?.reels[reel]?.[index];
+  if (
+    !face ||
+    ["class", "mystery", "blank"].includes(face.type) ||
+    !Number.isInteger(target) ||
+    target < 1 ||
+    target > maxFaceTier(face.type)
+  )
+    return null;
+  const budget = 1000000,
+    copy = {
+      ...h,
+      points: budget,
+      reels: h.reels.map((r) =>
+        r.map((f) => ({ ...f, investments: { ...f.investments } })),
+      ),
+      last: h.last.map((f) => ({ ...f })),
+    };
+  const operation = target > face.tier ? "upgrade" : "weaken";
+  while (copy.reels[reel][index].tier !== target)
+    if (!applyFaceEdit(copy, reel, index, operation)) return null;
+  return { cost: budget - copy.points, face: copy.reels[reel][index], target };
+}
+function setFaceTier(h, reel, index, target) {
+  if (busy || state.over || !alive(h)) return false;
+  const quote = quoteFaceTier(h, reel, index, target);
+  if (
+    !quote ||
+    !Number.isFinite(h.points) ||
+    h.points < Math.max(0, quote.cost)
+  )
+    return false;
+  // A quote is a full transaction simulated through the same validators. Commit
+  // the face and its receipts together; no partial multi-rank payment is possible.
+  return commitFaceChange(h, reel, index, quote);
 }
 let editorView = "edit";
 let editorOperation = "power";
@@ -26667,6 +26824,7 @@ function legacyEditor(i) {
     editorView = "edit";
     editorOperation = "power";
   }
+  normaliseReelQueue(h);
   const k = editorSelection.reel,
     j = Math.min(editorSelection.face, h.reels[k].length - 1),
     face = h.reels[k][j],
@@ -26682,17 +26840,17 @@ function legacyEditor(i) {
   openModal(
     `${h.name}’s reel workshop`,
     `<div class="workshop-summary"><strong data-tooltip="${escapeHTML(classAffinityHint(h))}">${h.points} personal points</strong>${heroBuildMarkup(h)}</div>
-    <p class="workshop-ability">Middle class mark: <b>${classAbilityName(h)}</b> · ${workshopAbilitySummary(h)}</p>
+    ${reelQueueControls(h, k, j)}<p class="workshop-ability">Middle class mark: <b>${classAbilityName(h)}</b> · ${workshopAbilitySummary(h)}</p>
     <nav class="workshop-nav" aria-label="Workshop pages"><button data-workshop-view="edit" aria-pressed="${editorView === "edit"}">Edit reels</button><button data-workshop-view="crits" aria-pressed="${editorView === "crits"}">Critical odds · ${(heroCriticalOdds(h).reduce((n, r) => n + r.chance, 0) * 100).toFixed(1)}%</button><button data-workshop-view="prices" aria-pressed="${editorView === "prices"}">Class prices</button></nav><div class="workshop-pages"><div class="workshop-editpage workshop-page" ${editorView === "edit" ? "" : "hidden inert"}>
     <div class="workshop-step-label"><b>1. Choose a reel</b><span>Each reel rolls one mark. Each face has an equal chance.</span></div>
     <div class="workshop-tabs" role="tablist" aria-label="Choose reel">${h.reels.map((_, r) => `<button role="tab" aria-selected="${r === k}" data-editor-reel="${r}">Reel ${r + 1}${r === 1 ? " · permanent class mark" : ""}</button>`).join("")}</div>
-    <div class="reel-workshop"><div class="workshop-mark-list"><b class="workshop-step-label">2. Choose a mark to edit</b><label class="workshop-face-picker">Mark<select id="workshop-face-picker">${h.reels[k].map((f, n) => `<option value="${n}" ${n === j ? "selected" : ""}>${f.type === "class" ? classAbilityName(h) : FACE_LABELS[f.type] + (!["blank", "mystery"].includes(f.type) ? " " + tierName(f.tier) : "")} · ${((100 * (f.weight || 1)) / h.reels[k].reduce((sum, x) => sum + (x.weight || 1), 0)).toFixed(1)}%</option>`).join("")}</select></label><div class="workshop-faces" style="--face-rows:${h.reels[k].length}" role="group" aria-label="Faces on reel ${k + 1}">${h.reels[k].map((f, n) => `<button data-editor-face="${n}" aria-pressed="${n === j}" title="${escapeHTML(faceDescription(f, h))}">${symbolMarkup(f)}<span>${f.type === "class" ? classAbilityName(h) : FACE_LABELS[f.type]}${!["class", "blank", "mystery"].includes(f.type) ? " " + tierName(f.tier) : ""}</span><small>${((100 * (f.weight || 1)) / h.reels[k].reduce((sum, x) => sum + (x.weight || 1), 0)).toFixed(1)}% chance</small></button>`).join("")}</div></div>
+    <div class="reel-workshop"><div class="workshop-mark-list"><b class="workshop-step-label">2. Choose a mark to edit</b><label class="workshop-face-picker">Mark<select id="workshop-face-picker">${h.reels[k].map((f, n) => `<option value="${n}" ${n === j ? "selected" : ""}>${f.type === "class" ? classAbilityName(h) : FACE_LABELS[f.type] + (!["blank", "mystery"].includes(f.type) ? " " + tierName(f.tier) : "")} · ${((100 * (f.weight || 1)) / h.reels[k].reduce((sum, x) => sum + (x.weight || 1), 0)).toFixed(1)}%</option>`).join("")}</select></label><div class="workshop-faces" style="--face-rows:${h.reels[k].length}" role="group" aria-label="Faces on reel ${k + 1}">${h.reels[k].map((f, n) => `<button class="${queuedFaceChange(h, k, n) ? "queued-face" : ""}" data-editor-face="${n}" aria-pressed="${n === j}" title="${escapeHTML(faceDescription(f, h))}">${symbolMarkup(f)}<span>${f.type === "class" ? classAbilityName(h) : FACE_LABELS[f.type]}${!["class", "blank", "mystery"].includes(f.type) ? " " + tierName(f.tier) : ""}</span><small>${((100 * (f.weight || 1)) / h.reels[k].reduce((sum, x) => sum + (x.weight || 1), 0)).toFixed(1)}% chance</small></button>`).join("")}</div></div>
     <section class="workshop-detail" aria-label="Selected face" data-operation="${editorOperation}"><b class="workshop-step-label">3. Change this mark</b><div class="workshop-selected"><div class="workshop-preview">${symbolMarkup(face)}</div><h3>${locked ? (face.type === "mystery" ? "Mystery mark ?" : classAbilityName(h)) : FACE_LABELS[face.type] + (face.type !== "blank" ? " " + tierName(face.tier) : "")}</h3></div><p class="face-effect"><b>When it lands:</b> ${faceDescription(face, h)}</p>
     <nav class="face-operation-tabs" aria-label="Choose edit operation">${["power", "replace"].map((mode) => `<button data-editor-operation="${mode}" ${locked && mode === "replace" ? "disabled" : ""} aria-pressed="${mode === editorOperation}">${{ power: "Power ↑ ↓", replace: "Replace" }[mode]}</button>`).join("")}</nav>
     ${
       locked
         ? `<div class="workshop-actions power-panel" data-class-seal="true"><button disabled>${face.type === "mystery" ? "Permanent ?" : "Permanent mark"}<small>${face.type === "mystery" ? "Rank follows this reel" : "Grows with your class"}</small></button><button disabled>Cannot edit<small>${face.type === "mystery" ? "One on every Jester reel" : "Unique middle-reel ability"}</small></button></div>`
-        : `<div class="workshop-actions power-panel">${face.type === "blank" ? `<button id="blank-choose" class="primary">Choose a power ↓<small>Select its type, then inscribe</small></button>` : `<button class="primary" data-upgrade="${data}" ${!upgrade || h.points < upgrade ? "disabled" : ""}>Upgrade ↑<small>${upgrade ? `Rank ${tierName(face.tier)} → ${tierName(face.tier + 1)} · spend ${upgrade} pts` : "Already at maximum rank"}</small></button>`}<button data-weaken="${data}" ${!refund ? "disabled" : ""}>Downgrade ↓<small>${refund ? `Rank ${tierName(face.tier)} → ${tierName(face.tier - 1)} · get ${refund} pts back` : "Already at lowest rank"}</small></button></div><div class="replace-panel"><label class="swap-choice"><b>Or replace this symbol</b><select id="face-destination">${editableTypes(
+        : `<div class="workshop-actions power-panel">${face.type === "blank" ? `<button id="blank-choose" class="primary">Choose a power ↓<small>Select its type, then inscribe</small></button>` : `<button class="primary" data-upgrade="${data}" ${!upgrade || (h.points < upgrade && !preferences().queueReelChanges) ? "disabled" : ""}>${queuedFaceChange(h, k, j)?.kind === "tier" ? "Queued ↑" : h.points < upgrade && preferences().queueReelChanges ? "Queue upgrade ↑" : "Upgrade ↑"}<small>${upgrade ? `Rank ${tierName(face.tier)} → ${tierName(face.tier + 1)} · ${h.points < upgrade && preferences().queueReelChanges ? "queue for" : "spend"} ${upgrade} pts` : "Already at maximum rank"}</small></button>`}<button data-weaken="${data}" ${!refund ? "disabled" : ""}>Downgrade ↓<small>${refund ? `Rank ${tierName(face.tier)} → ${tierName(face.tier - 1)} · get ${refund} pts back` : "Already at lowest rank"}</small></button></div><div class="replace-panel"><label class="swap-choice"><b>Or replace this symbol</b><select id="face-destination">${editableTypes(
             h,
           )
             .filter((t) => t !== face.type)
@@ -26704,9 +26862,15 @@ function legacyEditor(i) {
               "",
             )}</select></label><p class="swap-effect" id="swap-effect"></p><button class="swap-face" id="face-swap">Replace symbol <small id="swap-price"></small></button></div>`
     }
-</section></div></div>${criticalOddsMarkup(h)}${classPricesMarkup(h)}</div><p class="workshop-note">${className(h.job)} crit ${criticalRange(h)}. ${CLASS_COMBOS[h.job]?.hint || ""}</p><div class="modal-actions"><button class="primary" data-close>Done · back to the adventure</button></div>`,
+</section></div></div>${criticalOddsMarkup(h)}${classPricesMarkup(h)}</div><p class="workshop-note">${reelQueueStatus(h, k, j)}</p><div class="modal-actions"><button class="primary" data-close>Done · back to the adventure</button></div>`,
     "editor",
   );
+  bindReelQueueControls(i, (selector) => {
+    renderParty();
+    save();
+    editor(i);
+    $(selector)?.focus();
+  });
   document.querySelectorAll("[data-workshop-view]").forEach(
     (button) =>
       (button.onclick = () => {
@@ -26785,7 +26949,14 @@ function legacyEditor(i) {
         { type: select.value, tier: face.tier },
         h,
       );
-      swap.disabled = h.points < cost;
+      swap.disabled = h.points < cost && !preferences().queueReelChanges;
+      const q = queuedFaceChange(h, k, j);
+      $("#swap-price").textContent =
+        q?.kind === "swap" && q.target === select.value
+          ? "Queued · click to cancel"
+          : h.points < cost && preferences().queueReelChanges
+            ? `Queue for ${cost} points · no purchase now`
+            : `Spend ${cost} points`;
     };
     select.onchange = update;
     update();
@@ -26798,8 +26969,20 @@ function editFace(data, operation, destination = null) {
     h = state.party[i];
   const op =
     operation === true ? "upgrade" : operation === false ? "cycle" : operation;
-  if (!applyFaceEdit(h, r, f, op, destination)) return;
+  const face = h?.reels[r]?.[f];
+  if (!face || !Number.isFinite(faceEditCost(h, r, f, op, destination))) return;
+  const kind =
+    ["upgrade", "weaken"].includes(op) && face.type !== "blank"
+      ? "tier"
+      : "swap";
+  const target =
+    kind === "tier"
+      ? face.tier + (op === "upgrade" ? 1 : -1)
+      : destination ||
+        (op === "upgrade" ? primaryFace(h) : nextFaceType(h, r, f));
+  if (!requestFaceChange(h, r, f, kind, target)) return;
   editorSelection = { heroId: h.id, reel: r, face: f };
+  processAllReelQueues();
   renderParty();
   save();
   editor(i);
@@ -26809,6 +26992,161 @@ function workshopAbilitySummary(h) {
   return classAbilityDescription(h);
 }
 // END GENERATED REEL UPGRADES
+      // BEGIN GENERATED REEL QUEUE
+// Personal-point plans use the same quotes and paid receipts as immediate edits.
+// One plan per face; different faces are independent. Rendering never rolls a tie.
+function facePlanStamp(face) {
+  return JSON.stringify([
+    face.type,
+    face.tier,
+    ...Object.entries(face.investments || {}).sort(([a], [b]) =>
+      a.localeCompare(b),
+    ),
+  ]);
+}
+function quoteFaceChange(h, reel, index, kind, target) {
+  if (!h || isSummon(h)) return null;
+  if (kind === "tier") return quoteFaceTier(h, reel, index, target);
+  if (kind !== "swap") return null;
+  const cost = faceEditCost(h, reel, index, "swap", target);
+  if (!Number.isFinite(cost)) return null;
+  const copy = {
+    ...h,
+    points: 1000000,
+    reels: h.reels.map((r) =>
+      r.map((f) => ({ ...f, investments: { ...f.investments } })),
+    ),
+    last: h.last.map((f) => ({ ...f })),
+  };
+  if (!applyFaceEdit(copy, reel, index, "swap", target)) return null;
+  return { cost, face: copy.reels[reel][index], target };
+}
+function normaliseReelQueue(h) {
+  const pending = Array.isArray(h?.reelQueue) ? h.reelQueue : [];
+  if (!h) return [];
+  if (!preferences().queueReelChanges || !alive(h) || isSummon(h)) {
+    h.reelQueue = [];
+    return h.reelQueue;
+  }
+  const seen = new Set();
+  h.reelQueue = pending
+    .filter((q) => {
+      if (!q || !Number.isInteger(q.reel) || !Number.isInteger(q.index))
+        return false;
+      const face = h.reels[q.reel]?.[q.index],
+        key = `${q.reel}:${q.index}`;
+      if (!face || ["class", "mystery"].includes(face.type) || seen.has(key))
+        return false;
+      if (q.expected !== facePlanStamp(face)) return false;
+      const quote = quoteFaceChange(h, q.reel, q.index, q.kind, q.target);
+      if (!quote || !(quote.cost > 0)) return false;
+      seen.add(key);
+      return true;
+    })
+    .map(({ reel, index, kind, target, expected }) => ({
+      reel,
+      index,
+      kind,
+      target,
+      expected,
+    }));
+  return h.reelQueue;
+}
+function queuedFaceChange(h, reel, index) {
+  return Array.isArray(h.reelQueue)
+    ? h.reelQueue.find((q) => q?.reel === reel && q.index === index) || null
+    : null;
+}
+function cancelQueuedFace(h, reel, index) {
+  h.reelQueue = (Array.isArray(h.reelQueue) ? h.reelQueue : []).filter(
+    (q) => q && (q.reel !== reel || q.index !== index),
+  );
+}
+function clearQueuedReelChanges() {
+  for (const h of [
+    ...(state.party || []),
+    ...(state.graveyard || []),
+    ...(state.summonArchive || []),
+  ])
+    h.reelQueue = [];
+}
+function faceChangeName(q) {
+  return q.kind === "tier"
+    ? `rank ${tierName(q.target)}`
+    : FACE_LABELS[q.target];
+}
+function commitFaceChange(h, reel, index, quote) {
+  if (
+    !quote ||
+    !Number.isFinite(h.points) ||
+    h.points < Math.max(0, quote.cost)
+  )
+    return false;
+  h.reels[reel][index] = quote.face;
+  h.points -= quote.cost;
+  h.last[reel] = { type: quote.face.type, tier: quote.face.tier, job: h.job };
+  cancelQueuedFace(h, reel, index);
+  return true;
+}
+function requestFaceChange(h, reel, index, kind, target) {
+  if (busy || state.over || !alive(h) || !state.party.includes(h)) return null;
+  normaliseReelQueue(h);
+  const quote = quoteFaceChange(h, reel, index, kind, target);
+  if (!quote || !Number.isFinite(h.points)) return null;
+  const old = queuedFaceChange(h, reel, index);
+  if (old?.kind === kind && old.target === target) {
+    cancelQueuedFace(h, reel, index);
+    return { status: "cancelled", cost: quote.cost };
+  }
+  if (h.points >= Math.max(0, quote.cost)) {
+    if (!commitFaceChange(h, reel, index, quote)) return null;
+    return { status: "bought", cost: quote.cost };
+  }
+  if (!preferences().queueReelChanges) return null;
+  cancelQueuedFace(h, reel, index);
+  h.reelQueue.push({
+    reel,
+    index,
+    kind,
+    target,
+    expected: facePlanStamp(h.reels[reel][index]),
+  });
+  return { status: "queued", cost: quote.cost };
+}
+function processQueuedReelChanges(h) {
+  // In-flight rolls retain their original faces. Awards settle at the next safe
+  // render/save boundary, not midway through a reel spin or walking animation.
+  if (busy || currentRoll || travel || state.over || !state.party.includes(h))
+    return 0;
+  normaliseReelQueue(h);
+  let bought = 0;
+  while (h.reelQueue.length) {
+    const affordable = h.reelQueue
+      .map((q) => ({
+        q,
+        quote: quoteFaceChange(h, q.reel, q.index, q.kind, q.target),
+      }))
+      .filter(({ quote }) => quote && quote.cost <= h.points);
+    if (!affordable.length) break;
+    const cost = Math.min(...affordable.map(({ quote }) => quote.cost));
+    const ties = affordable.filter(({ quote }) => quote.cost === cost);
+    const { q, quote } = ties.length === 1 ? ties[0] : pick(ties);
+    if (!commitFaceChange(h, q.reel, q.index, quote)) break;
+    bought++;
+    log(
+      `${h.name} buys queued ${faceChangeName(q)} on reel ${q.reel + 1}, face ${q.index + 1}: ${cost} personal points.`,
+      { important: true },
+    );
+  }
+  return bought;
+}
+function processAllReelQueues() {
+  let bought = 0;
+  for (const h of state.party || [])
+    if (h.reelQueue?.length) bought += processQueuedReelChanges(h);
+  return bought;
+}
+// END GENERATED REEL QUEUE
 // BEGIN GENERATED ICON REEL WORKSHOP
 // Presentation switch: change to "legacy" and rebuild to restore the previous
 // editor. Prices, saved faces, manual/autoplay validators and balance stay shared.
@@ -26817,64 +27155,61 @@ let workshopCritPage = 0;
 let workshopEditReceipt = { heroId: null, text: "" };
 let pendingTravelWorkshop = null;
 function editor(i) {
-  if(isSummon(state.party[i])){toast("Bound summons have fixed reels.");return;}
-  if(travel && alive(state.party[i])) {
-    pendingTravelWorkshop={run:state,heroId:state.party[i].id};
-    travel.workshopStop=true;
+  if (isSummon(state.party[i])) {
+    toast("Bound summons have fixed reels.");
+    return;
+  }
+  if (travel && alive(state.party[i])) {
+    pendingTravelWorkshop = { run: state, heroId: state.party[i].id };
+    travel.workshopStop = true;
     return;
   }
   return reelWorkshopLayout === "legacy" ? legacyEditor(i) : iconReelEditor(i);
 }
 function finishTravelWorkshop() {
-  const request=pendingTravelWorkshop;pendingTravelWorkshop=null;
-  if(!request || request.run!==state || state.over || state.enemy || !$("#overlay").hidden || !$("#spotlight").hidden)return;
-  const i=state.party.findIndex(h=>h.id===request.heroId);
-  if(i>=0 && alive(state.party[i]))editor(i);
-}
-function quoteFaceTier(h, reel, index, target) {
-  const face = h?.reels[reel]?.[index];
+  const request = pendingTravelWorkshop;
+  pendingTravelWorkshop = null;
   if (
-    !face ||
-    ["class", "mystery", "blank"].includes(face.type) ||
-    !Number.isInteger(target) ||
-    target < 1 ||
-    target > maxFaceTier(face.type)
+    !request ||
+    request.run !== state ||
+    state.over ||
+    state.enemy ||
+    !$("#overlay").hidden ||
+    !$("#spotlight").hidden
   )
-    return null;
-  const budget = 1000000,
-    copy = {
-      ...h,
-      points: budget,
-      reels: h.reels.map((r) =>
-        r.map((f) => ({ ...f, investments: { ...f.investments } })),
-      ),
-      last: h.last.map((f) => ({ ...f })),
+    return;
+  const i = state.party.findIndex((h) => h.id === request.heroId);
+  if (i >= 0 && alive(state.party[i])) editor(i);
+}
+function reelQueueControls(h) {
+  return `<div class="workshop-queue-controls"><label title="Save unaffordable changes without spending points. Turning this off clears every queued change."><input type="checkbox" id="queue-reel-changes" ${preferences().queueReelChanges ? "checked" : ""}><span>Queue unaffordable changes</span></label><span>${h.reelQueue?.length || 0} queued</span></div>`;
+}
+function reelQueueStatus(h, reel, index, fallback = "") {
+  const q = queuedFaceChange(h, reel, index),
+    quote = q && quoteFaceChange(h, reel, index, q.kind, q.target);
+  return `<span class="workshop-queue-status">${q ? `<span>Queued: <b>${escapeHTML(faceChangeName(q))}</b> · ${quote.cost} pts · unpaid</span><button id="cancel-face-queue">Cancel plan</button>` : `<span>${escapeHTML(fallback || (preferences().queueReelChanges ? "Queue buys cheapest first; equal costs break ties at random." : "Queuing is off. Unaffordable changes are disabled."))}</span>`}</span>`;
+}
+function bindReelQueueControls(i, redraw) {
+  $("#queue-reel-changes").onchange = (event) => {
+    setPreference("queueReelChanges", event.target.checked);
+    redraw("#queue-reel-changes");
+  };
+  if ($("#cancel-face-queue"))
+    $("#cancel-face-queue").onclick = () => {
+      cancelQueuedFace(
+        state.party[i],
+        editorSelection.reel,
+        editorSelection.face,
+      );
+      redraw("#queue-reel-changes");
     };
-  const operation = target > face.tier ? "upgrade" : "weaken";
-  while (copy.reels[reel][index].tier !== target)
-    if (!applyFaceEdit(copy, reel, index, operation)) return null;
-  return { cost: budget - copy.points, face: copy.reels[reel][index], target };
-}
-function setFaceTier(h, reel, index, target) {
-  if (busy || state.over || !alive(h)) return false;
-  const quote = quoteFaceTier(h, reel, index, target);
-  if (
-    !quote ||
-    !Number.isFinite(h.points) ||
-    h.points < Math.max(0, quote.cost)
-  )
-    return false;
-  // A quote is a full transaction simulated through the same validators. Commit
-  // the face and its receipts together; no partial multi-rank payment is possible.
-  h.reels[reel][index] = quote.face;
-  h.points -= quote.cost;
-  h.last[reel] = { type: quote.face.type, tier: quote.face.tier, job: h.job };
-  return true;
 }
 function pointChangeLabel(cost) {
   return cost < 0 ? `+${-cost} pts` : cost > 0 ? `−${cost} pts` : "Current";
 }
-function workshopFaceSummary(face,h) {return faceDescription(face,h);}
+function workshopFaceSummary(face, h) {
+  return faceDescription(face, h);
+}
 function iconCriticalOddsMarkup(h) {
   const rows = heroCriticalOdds(h),
     total = rows.reduce((n, r) => n + r.chance, 0),
@@ -26919,6 +27254,7 @@ function iconReelEditor(i) {
     workshopEditReceipt = { heroId: h.id, text: "" };
   }
   if (!["edit", "crits"].includes(editorView)) editorView = "edit";
+  normaliseReelQueue(h);
   const k = editorSelection.reel,
     j = Math.min(editorSelection.face, h.reels[k].length - 1),
     face = h.reels[k][j];
@@ -26935,8 +27271,17 @@ function iconReelEditor(i) {
       const quote =
         locked || face.type === "blank" ? null : quoteFaceTier(h, k, j, tier);
       const current = !locked && face.type !== "blank" && tier === face.tier;
-      const disabled = !quote || current || h.points < Math.max(0, quote.cost);
-      return `<button data-set-face-tier="${tier}" aria-pressed="${current}" ${disabled ? "disabled" : ""} title="${escapeHTML(locked ? "Permanent marks cannot change rank" : face.type === "blank" ? "Choose a symbol before setting its rank" : faceDescription({ type: face.type, tier }, h))}"><strong>${tierName(tier)}</strong><small>${current ? "Current" : quote ? pointChangeLabel(quote.cost) : "—"}</small></button>`;
+      const queued = queuedFaceChange(h, k, j),
+        selected = queued?.kind === "tier" && queued.target === tier,
+        waiting = quote && h.points < Math.max(0, quote.cost),
+        disabled =
+          !quote || current || (waiting && !preferences().queueReelChanges);
+      const action = selected
+        ? "Queued"
+        : waiting && preferences().queueReelChanges
+          ? "Queue"
+          : "";
+      return `<button class="${selected ? "queued-choice" : waiting ? "queue-choice" : ""}" data-queued="${selected}" data-set-face-tier="${tier}" aria-pressed="${current}" ${disabled ? "disabled" : ""} title="${escapeHTML(locked ? "Permanent marks cannot change rank" : face.type === "blank" ? "Choose a symbol before setting its rank" : faceDescription({ type: face.type, tier }, h))}"><strong>${tierName(tier)}</strong><small>${current ? "Current" : quote ? (action ? `${action} · ${quote.cost}` : pointChangeLabel(quote.cost)) : "—"}</small></button>`;
     })
     .join("");
   const symbols = types
@@ -26944,15 +27289,24 @@ function iconReelEditor(i) {
       const current = type === face.type,
         cost = faceEditCost(h, k, j, "swap", type),
         tier = type === "blank" ? 1 : Math.min(face.tier, maxFaceTier(type));
-      const description = faceDescription({ type, tier }, h);
-      return `<button class="symbol-choice" data-set-face-type="${type}" aria-pressed="${current}" data-tooltip="${escapeHTML(description)}" title="${escapeHTML(description)}" ${locked || current || !Number.isFinite(cost) || h.points < Math.max(0, cost) ? "disabled" : ""}><span class="choice-icon">${symbolMarkup({ type, tier: 1 })}</span><span class="choice-name">${WORKSHOP_SHORT_LABELS[type]}</span><small>${current ? "Current" : locked ? "Locked" : pointChangeLabel(cost)}</small></button>`;
+      const description = faceDescription({ type, tier }, h),
+        queued = queuedFaceChange(h, k, j),
+        selected = queued?.kind === "swap" && queued.target === type,
+        waiting = Number.isFinite(cost) && h.points < Math.max(0, cost),
+        action = selected
+          ? "Queued"
+          : waiting && preferences().queueReelChanges
+            ? "Queue"
+            : "";
+      return `<button class="symbol-choice ${selected ? "queued-choice" : waiting ? "queue-choice" : ""}" data-queued="${selected}" data-set-face-type="${type}" aria-pressed="${current}" data-tooltip="${escapeHTML(description)}" title="${escapeHTML(description)}" ${locked || current || !Number.isFinite(cost) || (waiting && !preferences().queueReelChanges) ? "disabled" : ""}><span class="choice-icon">${symbolMarkup({ type, tier: 1 })}</span><span class="choice-name">${WORKSHOP_SHORT_LABELS[type]}</span><small>${current ? "Current" : locked ? "Locked" : action ? `${action} · ${cost}` : pointChangeLabel(cost)}</small></button>`;
     })
     .join("");
   const faces = h.reels[k]
     .map((f, n) => {
-      const chance = (100 / h.reels[k].length).toFixed(1),
+      const queued = queuedFaceChange(h, k, n),
+        chance = (100 / h.reels[k].length).toFixed(1),
         name = f.type === "class" ? classAbilityName(h) : FACE_LABELS[f.type];
-      return `<button class="${f.type === "class" ? "permanent-class-face" : ""}" data-editor-face="${n}" aria-pressed="${n === j}" title="${escapeHTML(faceDescription(f, h))}">${symbolMarkup(f)}<span>${name}${!["class", "mystery", "blank"].includes(f.type) ? " " + tierName(f.tier) : ""}</span><small>${chance}%</small></button>`;
+      return `<button class="${f.type === "class" ? "permanent-class-face" : ""} ${queued ? "queued-face" : ""}" data-editor-face="${n}" aria-pressed="${n === j}" title="${escapeHTML(faceDescription(f, h))}">${symbolMarkup(f)}<span>${name}${!["class", "mystery", "blank"].includes(f.type) ? " " + tierName(f.tier) : ""}</span><small>${queued ? "Queued" : `${chance}%`}</small></button>`;
     })
     .join("");
   const receipt =
@@ -26961,6 +27315,7 @@ function iconReelEditor(i) {
     `${h.name}’s reel workshop`,
     `
     <div class="workshop-summary"><strong>${h.points} personal points</strong>${heroBuildMarkup(h)}</div>
+    ${reelQueueControls(h, k, j)}
     <p class="workshop-ability">Middle mark: <b>${classAbilityName(h)}</b> · ${workshopAbilitySummary(h)}</p>
     <nav class="workshop-nav" aria-label="Workshop pages">${[
       ["edit", "Edit reels"],
@@ -26973,28 +27328,30 @@ function iconReelEditor(i) {
       .join("")}</nav>
     <div class="workshop-pages icon-workshop-pages">
       <section class="workshop-page workshop-editpage" ${editorView === "edit" ? "" : 'aria-hidden="true" inert'}>
-        <div class="workshop-tabs" role="tablist" aria-label="Choose reel">${h.reels.map((_, r) => `<button role="tab" data-editor-reel="${r}" aria-selected="${r === k}">Reel ${r + 1}${r === 1 ? " · class mark" : ""}</button>`).join("")}</div>
+        <div class="workshop-tabs" role="tablist" aria-label="Choose reel">${h.reels.map((_, r) => `<button role="tab" data-editor-reel="${r}" aria-selected="${r === k}">Reel ${r + 1}${r === 1 ? " · class mark" : ""}${h.reelQueue?.some((q) => q.reel === r) ? '<span class="reel-queue-flag" aria-label="Queued changes">●</span>' : ""}</button>`).join("")}</div>
         <div class="reel-workshop icon-workshop" style="--choice-rows:${rows}">
-          <section class="workshop-mark-list"><h3>1 · Choose a face</h3><label class="workshop-face-picker">Face<select id="workshop-face-picker">${h.reels[k].map((f, n) => `<option value="${n}" ${n === j ? "selected" : ""}>${f.type === "class" ? "★ " + classAbilityName(h) : FACE_LABELS[f.type]} ${!["class", "mystery", "blank"].includes(f.type) ? tierName(f.tier) : ""} · ${(100 / h.reels[k].length).toFixed(1)}%</option>`).join("")}</select></label><div class="workshop-faces">${faces}</div></section>
+          <section class="workshop-mark-list"><h3>1 · Choose a face</h3><label class="workshop-face-picker">Face<select id="workshop-face-picker">${h.reels[k].map((f, n) => `<option value="${n}" ${n === j ? "selected" : ""}>${f.type === "class" ? "★ " + classAbilityName(h) : FACE_LABELS[f.type]} ${!["class", "mystery", "blank"].includes(f.type) ? tierName(f.tier) : ""}${queuedFaceChange(h, k, n) ? " · queued" : ""} · ${(100 / h.reels[k].length).toFixed(1)}%</option>`).join("")}</select></label><div class="workshop-faces">${faces}</div></section>
           <section class="workshop-detail"><div class="workshop-selected"><div class="workshop-preview">${symbolMarkup(face)}</div><h3>${selectedName}${!["class", "mystery", "blank"].includes(face.type) ? " " + tierName(face.tier) : ""}</h3></div>
             <p class="face-effect" tabindex="0" data-tooltip="${escapeHTML(faceDescription(face, h))}"><b>Effect:</b> ${escapeHTML(workshopFaceSummary(face, h))}</p>
             <h3 class="choice-heading">2 · Set rank <small>Pay ↑ · refund ↓</small></h3><div class="tier-choices">${tiers}</div>
             <h3 class="choice-heading">3 · ${face.type === "blank" ? "Inscribe a symbol" : "Change symbol"} <small>${locked ? "Permanent mark" : face.type === "blank" ? "Starts at rank I" : "Keeps rank " + tierName(face.tier)}</small></h3>
             <div class="symbol-choices" style="--compact-choice-rows:${Math.ceil(types.length / 3)}">${symbols}</div>
-            <p class="workshop-lock-note">${locked ? (face.type === "class" ? "This unique middle-reel mark cannot be replaced or copied." : "This Jester mystery is permanent. Its rank follows its reel.") : "Click a rank or symbol to apply its shown point change."}</p>
+            <p class="workshop-lock-note">${locked ? (face.type === "class" ? "Permanent class mark; cannot replace or copy." : "Permanent mystery; rank follows its reel.") : "Queue saves an unpaid plan. Click it again to cancel."}</p>
           </section>
         </div>
       </section>${iconCriticalOddsMarkup(h)}
-    </div><p class="workshop-receipt" role="status">${escapeHTML(receipt || "Lower ranks refund half their paid cost.")}</p>
+    </div><p class="workshop-receipt" role="status">${reelQueueStatus(h, k, j, receipt)}</p>
     <div class="modal-actions"><button class="primary" data-close>Done · back to the adventure</button></div>`,
     "editor",
   );
   function redraw(selector) {
+    processAllReelQueues();
     renderParty();
     save();
     iconReelEditor(i);
     if (selector) $(selector)?.focus();
   }
+  bindReelQueueControls(i, redraw);
   document.querySelectorAll("[data-crit-page]").forEach(
     (b) =>
       (b.onclick = () => {
@@ -27037,10 +27394,16 @@ function iconReelEditor(i) {
       (b.onclick = () => {
         const type = b.dataset.setFaceType,
           cost = faceEditCost(h, k, j, "swap", type);
-        if (!applyFaceEdit(h, k, j, "swap", type)) return;
+        const result = requestFaceChange(h, k, j, "swap", type);
+        if (!result) return;
         workshopEditReceipt = {
           heroId: h.id,
-          text: `${FACE_LABELS[type]} inscribed · ${pointChangeLabel(cost)}.`,
+          text:
+            result.status === "bought"
+              ? `${FACE_LABELS[type]} inscribed · ${pointChangeLabel(cost)}.`
+              : result.status === "queued"
+                ? `${FACE_LABELS[type]} queued for ${cost} points. No points spent.`
+                : "Plan cancelled. No points spent.",
         };
         redraw(`[data-set-face-type="${type}"]`);
       }),
@@ -27050,10 +27413,16 @@ function iconReelEditor(i) {
       (b.onclick = () => {
         const target = Number(b.dataset.setFaceTier),
           quote = quoteFaceTier(h, k, j, target);
-        if (!quote || !setFaceTier(h, k, j, target)) return;
+        const result = requestFaceChange(h, k, j, "tier", target);
+        if (!quote || !result) return;
         workshopEditReceipt = {
           heroId: h.id,
-          text: `Rank ${tierName(target)} · ${pointChangeLabel(quote.cost)}.`,
+          text:
+            result.status === "bought"
+              ? `Rank ${tierName(target)} · ${pointChangeLabel(quote.cost)}.`
+              : result.status === "queued"
+                ? `Rank ${tierName(target)} queued for ${quote.cost} points. No points spent.`
+                : "Plan cancelled. No points spent.",
         };
         redraw(`[data-set-face-tier="${target}"]`);
       }),
@@ -28403,6 +28772,7 @@ function help(topic = "explore") {
         combatEffects: "both",
         punMode: false,
         navigationMode: false,
+        queueReelChanges: true,
         ...FUTURE_OPTION_DEFAULTS,
       });
       function normalisePreferences(input = {}) {
@@ -28431,6 +28801,7 @@ function help(topic = "explore") {
           "skipCriticals",
           "punMode",
           "navigationMode",
+          "queueReelChanges",
         ])
           if (typeof input[key] === "boolean") out[key] = input[key];
         for (const [key, values] of Object.entries({
@@ -28531,6 +28902,7 @@ function help(topic = "explore") {
         state.preferences = normalisePreferences({ ...preferences(), [key]: value });
         applyPreferences();
         if (key === "punMode") refreshEnemyPresentation();
+        if (key === "queueReelChanges" && !value) clearQueuedReelChanges();
         save();
       }
       // Small, replaceable synthesis cues. Web Audio is unlocked only by a real
@@ -39410,6 +39782,8 @@ function revealCriticalPayoff(region, details, multiplier) {
       }
       function autoUpgradeHero(h) {
         if(isSummon(h))return 0;
+        const queuedBought = processQueuedReelChanges(h);
+        if (h.reelQueue?.length || queuedBought) return queuedBought;
         autoBuildFor(h);
         let changed = repairSoloBuild(h) + repairOverbuffBuild(h) + repairClassIdentity(h);
         while (changed < 40 && h.points > 0) {

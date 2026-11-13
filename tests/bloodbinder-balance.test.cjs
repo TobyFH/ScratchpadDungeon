@@ -104,7 +104,7 @@ test("actual HP damage consumes exactly one Seed per point, with one caster-bonu
     stats: 21,
   });
 });
-test("poison, item-style piercing damage and overkill consume only actual HP damage", async (t) => {
+test("poison consumes actual damage; a fatal item hit detonates every remaining Seed without extra overkill damage", async (t) => {
   const p = await game(t),
     r = await p.evaluate(async () => {
       const h = state.party[0],
@@ -122,12 +122,18 @@ test("poison, item-style piercing damage and overkill consume only actual HP dam
       const poison = bloodSeedCount(e);
       e.hp = 2;
       const n = damageEnemy(100, "Ink bomb", e, { piercing: true });
-      return { poison, n, seeds: bloodSeedCount(e), heal: h.stats.healingDone };
+      return {
+        poison,
+        n,
+        seeds: bloodSeedCount(e),
+        heal: h.stats.healingDone,
+        maxHp: h.maxHp,
+      };
     });
   assert.equal(r.poison, 47);
   assert.equal(r.n, 2);
-  assert.equal(r.seeds, 45);
-  assert.equal(r.heal, 9);
+  assert.equal(r.seeds, 0);
+  assert.equal(r.heal, r.maxHp - 1);
 });
 test("Blood Bloom bursts all enemies once, including overkill healing, with doubled base healing and one caster recovery bonus", async (t) => {
   const p = await game(t),
@@ -315,4 +321,180 @@ test("autoplay keeps a sustainable mix of Seeds, legal spell attacks and recover
   assert.ok(r.spell > 0.1);
   assert.ok(!r.types.includes("attack"));
   assert.ok(r.points >= 0);
+});
+
+test("fatal physical, poison and explosive hits detonate every Seed, credit owners once, and never invent overkill damage", async (t) => {
+  const p = await game(t),
+    rows = await p.evaluate(async () => {
+      const h = state.party[0],
+        e = state.enemy,
+        rows = [];
+      h.maxHp = 1000;
+      for (const type of ["attack", "poison", "explosion"]) {
+        e.hp = 3;
+        e.maxHp = 1000;
+        e.passive = null;
+        e.deathCryPlayed = false;
+        e.corpseRecorded = false;
+        e.bloodSeeds = { count: 50, sourceId: h.id };
+        h.hp = 1;
+        h.stats.healingDone = 0;
+        const expected = seedHealingOffered(
+          50 * BLOOD_BINDING.detonationHealing,
+          h,
+        );
+        let recorded = 0;
+        const old = necromancerDamage;
+        necromancerDamage = (enemy, n, options) => {
+          recorded += n;
+          return old(enemy, n, options);
+        };
+        let actual;
+        try {
+          actual = damageEnemy(999, "Test finishing hit", e, {
+            piercing: true,
+            selfDestruct: type === "explosion",
+            impact: { type },
+          });
+        } finally {
+          necromancerDamage = old;
+        }
+        const once = detonateDefeatedBloodSeeds(e),
+          again = damageEnemy(99, "Repeated finishing hit", e, {
+            piercing: true,
+          });
+        await settleBloodFeedback();
+        rows.push({
+          type,
+          actual,
+          recorded,
+          expected,
+          healing: h.stats.healingDone,
+          hp: h.hp,
+          seeds: bloodSeedCount(e),
+          once,
+          again,
+        });
+      }
+      return rows;
+    });
+  for (const r of rows) {
+    assert.equal(r.actual, 3);
+    assert.equal(r.recorded, 3);
+    assert.equal(r.seeds, 0);
+    assert.equal(r.once, 0);
+    assert.equal(r.again, 0);
+    assert.equal(r.healing, r.expected);
+    assert.equal(r.hp, 1 + r.expected);
+  }
+});
+test("death detonation keeps multiple Bloodbinders' Seed ownership and applies each source's recovery bonus only once", async (t) => {
+  const p = await game(t),
+    r = await p.evaluate(async () => {
+      const first = state.party[0],
+        second = makeHero("Second", "bloodbinder");
+      second.specialism = "offence";
+      second.level = 8;
+      state.party.push(second);
+      for (const h of state.party) {
+        h.maxHp = 1000;
+        h.hp = 1;
+        h.stats.healingDone = 0;
+      }
+      const e = state.enemy;
+      e.hp = 1;
+      e.bloodSeeds = null;
+      appendBloodSeeds(e, 3, first);
+      appendBloodSeeds(e, 7, second);
+      const expected = [
+        seedHealingOffered(6, first),
+        seedHealingOffered(14, second),
+      ];
+      damageEnemy(100, "An ally's finishing blow", e, { piercing: true });
+      await settleBloodFeedback();
+      return {
+        expected,
+        credits: [first.stats.healingDone, second.stats.healingDone],
+        restored: state.party.reduce((n, h) => n + h.hp - 1, 0),
+        remaining: bloodSeedCount(e),
+      };
+    });
+  assert.deepEqual(r.credits, r.expected);
+  assert.equal(
+    r.restored,
+    r.expected.reduce((a, b) => a + b, 0),
+  );
+  assert.equal(r.remaining, 0);
+});
+test("a splitting enemy keeps unconsumed Seeds for its fragment; only its final death detonates the rest", async (t) => {
+  const p = await game(t),
+    r = await p.evaluate(async () => {
+      const h = state.party[0],
+        e = state.enemy;
+      h.maxHp = 1000;
+      h.hp = 1;
+      e.hp = 2;
+      e.maxHp = 100;
+      e.passive = { key: "split", used: false };
+      e.bloodSeeds = { count: 10, sourceId: h.id };
+      damageEnemy(2, "Split", e, { piercing: true });
+      const fragment = {
+        hp: e.hp,
+        seeds: bloodSeedCount(e),
+        healing: h.stats.healingDone,
+      };
+      damageEnemy(1000, "Finish", e, { piercing: true });
+      await settleBloodFeedback();
+      return {
+        fragment,
+        hp: e.hp,
+        seeds: bloodSeedCount(e),
+        healing: h.stats.healingDone,
+        expected: seedHealingOffered(2, h) + seedHealingOffered(16, h),
+      };
+    });
+  assert.ok(r.fragment.hp > 0);
+  assert.equal(r.fragment.seeds, 8);
+  assert.equal(r.hp, 0);
+  assert.equal(r.seeds, 0);
+  assert.equal(r.healing, r.expected);
+});
+test("death Seed bursts use scattered red impacts and return heals, and settle without gameplay RNG", async (t) => {
+  const p = await game(t),
+    r = await p.evaluate(async () => {
+      const h = state.party[0],
+        e = state.enemy;
+      h.maxHp = 1000;
+      h.hp = 1;
+      e.hp = 1;
+      e.bloodSeeds = { count: 20, sourceId: h.id };
+      renderEncounter();
+      setPace("1");
+      const random = Math.random;
+      Math.random = () => {
+        throw Error("Death feedback consumed gameplay RNG");
+      };
+      try {
+        damageEnemy(1, "Final blow", e, { piercing: true });
+        const pops = [...document.querySelectorAll(".blood-seed-pop")],
+          positions = new Set(pops.map((n) => n.style.left + ":" + n.style.top))
+            .size;
+        const heals = [
+          ...document.querySelectorAll('[data-effect="blood-seed-heal"]'),
+        ].map((n) => n.dataset.target);
+        await settleBloodFeedback();
+        return {
+          positions,
+          heals,
+          remaining: document.querySelectorAll(".blood-seed-pop").length,
+          seeds: bloodSeedCount(e),
+        };
+      } finally {
+        Math.random = random;
+      }
+    });
+  assert.ok(r.positions > 1);
+  assert.ok(r.heals.includes("portrait-0"));
+  assert.equal(r.remaining, 0);
+  assert.equal(r.seeds, 0);
 });

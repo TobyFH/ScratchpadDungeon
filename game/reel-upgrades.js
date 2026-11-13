@@ -159,7 +159,7 @@ function faceDescription(face, h) {
       rally: `${tier} doses to your selected heal target. Fills up to 3 actions; every 2 surplus doses raise potency, boosting damage and resistance.`,
       trick: `Gain ${tier} anticipation. At 6, Punchline fires six random marks from your reels.`,
       selfharm: `Spend up to ${2 * tier} HP to gain ${2 + 0.5 * tier} Fury per HP. Cannot kill you.`,
-      bloodseed: `Plant ${tier} Seeds${bloodSeedBonus(h) ? ` + ${bloodSeedBonus(h)} bonus per roll` : ""}; pay ${bloodSeedCost(tier)} HP. Planted after this roll’s damage. Later wounds burst Seeds for shared healing.`,
+      bloodseed: `Plant ${tier} Seeds${bloodSeedBonus(h) ? ` + ${bloodSeedBonus(h)} bonus per roll` : ""}; pay ${bloodSeedCost(tier)} HP. Planted after damage. Wounds consume Seeds to heal allies; defeat bursts them all.`,
       harvest: `${harvestSpellPower(tier)} spell power and ${tier * NECROMANCER.harvestSouls} Souls. Full bar: raise an ally, or heal the team when both summon slots are full.`,
       blank: "Empty: no effect.",
     }[face.type] || "A mark on this reel."
@@ -278,7 +278,45 @@ function applyFaceEdit(h, reel, index, operation, destination = null) {
   }
   h.points -= cost;
   h.last[reel] = { type: face.type, tier: face.tier, job: h.job };
+  cancelQueuedFace(h, reel, index);
   return true;
+}
+function quoteFaceTier(h, reel, index, target) {
+  const face = h?.reels[reel]?.[index];
+  if (
+    !face ||
+    ["class", "mystery", "blank"].includes(face.type) ||
+    !Number.isInteger(target) ||
+    target < 1 ||
+    target > maxFaceTier(face.type)
+  )
+    return null;
+  const budget = 1000000,
+    copy = {
+      ...h,
+      points: budget,
+      reels: h.reels.map((r) =>
+        r.map((f) => ({ ...f, investments: { ...f.investments } })),
+      ),
+      last: h.last.map((f) => ({ ...f })),
+    };
+  const operation = target > face.tier ? "upgrade" : "weaken";
+  while (copy.reels[reel][index].tier !== target)
+    if (!applyFaceEdit(copy, reel, index, operation)) return null;
+  return { cost: budget - copy.points, face: copy.reels[reel][index], target };
+}
+function setFaceTier(h, reel, index, target) {
+  if (busy || state.over || !alive(h)) return false;
+  const quote = quoteFaceTier(h, reel, index, target);
+  if (
+    !quote ||
+    !Number.isFinite(h.points) ||
+    h.points < Math.max(0, quote.cost)
+  )
+    return false;
+  // A quote is a full transaction simulated through the same validators. Commit
+  // the face and its receipts together; no partial multi-rank payment is possible.
+  return commitFaceChange(h, reel, index, quote);
 }
 let editorView = "edit";
 let editorOperation = "power";
@@ -292,6 +330,7 @@ function legacyEditor(i) {
     editorView = "edit";
     editorOperation = "power";
   }
+  normaliseReelQueue(h);
   const k = editorSelection.reel,
     j = Math.min(editorSelection.face, h.reels[k].length - 1),
     face = h.reels[k][j],
@@ -307,17 +346,17 @@ function legacyEditor(i) {
   openModal(
     `${h.name}’s reel workshop`,
     `<div class="workshop-summary"><strong data-tooltip="${escapeHTML(classAffinityHint(h))}">${h.points} personal points</strong>${heroBuildMarkup(h)}</div>
-    <p class="workshop-ability">Middle class mark: <b>${classAbilityName(h)}</b> · ${workshopAbilitySummary(h)}</p>
+    ${reelQueueControls(h, k, j)}<p class="workshop-ability">Middle class mark: <b>${classAbilityName(h)}</b> · ${workshopAbilitySummary(h)}</p>
     <nav class="workshop-nav" aria-label="Workshop pages"><button data-workshop-view="edit" aria-pressed="${editorView === "edit"}">Edit reels</button><button data-workshop-view="crits" aria-pressed="${editorView === "crits"}">Critical odds · ${(heroCriticalOdds(h).reduce((n, r) => n + r.chance, 0) * 100).toFixed(1)}%</button><button data-workshop-view="prices" aria-pressed="${editorView === "prices"}">Class prices</button></nav><div class="workshop-pages"><div class="workshop-editpage workshop-page" ${editorView === "edit" ? "" : "hidden inert"}>
     <div class="workshop-step-label"><b>1. Choose a reel</b><span>Each reel rolls one mark. Each face has an equal chance.</span></div>
     <div class="workshop-tabs" role="tablist" aria-label="Choose reel">${h.reels.map((_, r) => `<button role="tab" aria-selected="${r === k}" data-editor-reel="${r}">Reel ${r + 1}${r === 1 ? " · permanent class mark" : ""}</button>`).join("")}</div>
-    <div class="reel-workshop"><div class="workshop-mark-list"><b class="workshop-step-label">2. Choose a mark to edit</b><label class="workshop-face-picker">Mark<select id="workshop-face-picker">${h.reels[k].map((f, n) => `<option value="${n}" ${n === j ? "selected" : ""}>${f.type === "class" ? classAbilityName(h) : FACE_LABELS[f.type] + (!["blank", "mystery"].includes(f.type) ? " " + tierName(f.tier) : "")} · ${((100 * (f.weight || 1)) / h.reels[k].reduce((sum, x) => sum + (x.weight || 1), 0)).toFixed(1)}%</option>`).join("")}</select></label><div class="workshop-faces" style="--face-rows:${h.reels[k].length}" role="group" aria-label="Faces on reel ${k + 1}">${h.reels[k].map((f, n) => `<button data-editor-face="${n}" aria-pressed="${n === j}" title="${escapeHTML(faceDescription(f, h))}">${symbolMarkup(f)}<span>${f.type === "class" ? classAbilityName(h) : FACE_LABELS[f.type]}${!["class", "blank", "mystery"].includes(f.type) ? " " + tierName(f.tier) : ""}</span><small>${((100 * (f.weight || 1)) / h.reels[k].reduce((sum, x) => sum + (x.weight || 1), 0)).toFixed(1)}% chance</small></button>`).join("")}</div></div>
+    <div class="reel-workshop"><div class="workshop-mark-list"><b class="workshop-step-label">2. Choose a mark to edit</b><label class="workshop-face-picker">Mark<select id="workshop-face-picker">${h.reels[k].map((f, n) => `<option value="${n}" ${n === j ? "selected" : ""}>${f.type === "class" ? classAbilityName(h) : FACE_LABELS[f.type] + (!["blank", "mystery"].includes(f.type) ? " " + tierName(f.tier) : "")} · ${((100 * (f.weight || 1)) / h.reels[k].reduce((sum, x) => sum + (x.weight || 1), 0)).toFixed(1)}%</option>`).join("")}</select></label><div class="workshop-faces" style="--face-rows:${h.reels[k].length}" role="group" aria-label="Faces on reel ${k + 1}">${h.reels[k].map((f, n) => `<button class="${queuedFaceChange(h, k, n) ? "queued-face" : ""}" data-editor-face="${n}" aria-pressed="${n === j}" title="${escapeHTML(faceDescription(f, h))}">${symbolMarkup(f)}<span>${f.type === "class" ? classAbilityName(h) : FACE_LABELS[f.type]}${!["class", "blank", "mystery"].includes(f.type) ? " " + tierName(f.tier) : ""}</span><small>${((100 * (f.weight || 1)) / h.reels[k].reduce((sum, x) => sum + (x.weight || 1), 0)).toFixed(1)}% chance</small></button>`).join("")}</div></div>
     <section class="workshop-detail" aria-label="Selected face" data-operation="${editorOperation}"><b class="workshop-step-label">3. Change this mark</b><div class="workshop-selected"><div class="workshop-preview">${symbolMarkup(face)}</div><h3>${locked ? (face.type === "mystery" ? "Mystery mark ?" : classAbilityName(h)) : FACE_LABELS[face.type] + (face.type !== "blank" ? " " + tierName(face.tier) : "")}</h3></div><p class="face-effect"><b>When it lands:</b> ${faceDescription(face, h)}</p>
     <nav class="face-operation-tabs" aria-label="Choose edit operation">${["power", "replace"].map((mode) => `<button data-editor-operation="${mode}" ${locked && mode === "replace" ? "disabled" : ""} aria-pressed="${mode === editorOperation}">${{ power: "Power ↑ ↓", replace: "Replace" }[mode]}</button>`).join("")}</nav>
     ${
       locked
         ? `<div class="workshop-actions power-panel" data-class-seal="true"><button disabled>${face.type === "mystery" ? "Permanent ?" : "Permanent mark"}<small>${face.type === "mystery" ? "Rank follows this reel" : "Grows with your class"}</small></button><button disabled>Cannot edit<small>${face.type === "mystery" ? "One on every Jester reel" : "Unique middle-reel ability"}</small></button></div>`
-        : `<div class="workshop-actions power-panel">${face.type === "blank" ? `<button id="blank-choose" class="primary">Choose a power ↓<small>Select its type, then inscribe</small></button>` : `<button class="primary" data-upgrade="${data}" ${!upgrade || h.points < upgrade ? "disabled" : ""}>Upgrade ↑<small>${upgrade ? `Rank ${tierName(face.tier)} → ${tierName(face.tier + 1)} · spend ${upgrade} pts` : "Already at maximum rank"}</small></button>`}<button data-weaken="${data}" ${!refund ? "disabled" : ""}>Downgrade ↓<small>${refund ? `Rank ${tierName(face.tier)} → ${tierName(face.tier - 1)} · get ${refund} pts back` : "Already at lowest rank"}</small></button></div><div class="replace-panel"><label class="swap-choice"><b>Or replace this symbol</b><select id="face-destination">${editableTypes(
+        : `<div class="workshop-actions power-panel">${face.type === "blank" ? `<button id="blank-choose" class="primary">Choose a power ↓<small>Select its type, then inscribe</small></button>` : `<button class="primary" data-upgrade="${data}" ${!upgrade || (h.points < upgrade && !preferences().queueReelChanges) ? "disabled" : ""}>${queuedFaceChange(h, k, j)?.kind === "tier" ? "Queued ↑" : h.points < upgrade && preferences().queueReelChanges ? "Queue upgrade ↑" : "Upgrade ↑"}<small>${upgrade ? `Rank ${tierName(face.tier)} → ${tierName(face.tier + 1)} · ${h.points < upgrade && preferences().queueReelChanges ? "queue for" : "spend"} ${upgrade} pts` : "Already at maximum rank"}</small></button>`}<button data-weaken="${data}" ${!refund ? "disabled" : ""}>Downgrade ↓<small>${refund ? `Rank ${tierName(face.tier)} → ${tierName(face.tier - 1)} · get ${refund} pts back` : "Already at lowest rank"}</small></button></div><div class="replace-panel"><label class="swap-choice"><b>Or replace this symbol</b><select id="face-destination">${editableTypes(
             h,
           )
             .filter((t) => t !== face.type)
@@ -329,9 +368,15 @@ function legacyEditor(i) {
               "",
             )}</select></label><p class="swap-effect" id="swap-effect"></p><button class="swap-face" id="face-swap">Replace symbol <small id="swap-price"></small></button></div>`
     }
-</section></div></div>${criticalOddsMarkup(h)}${classPricesMarkup(h)}</div><p class="workshop-note">${className(h.job)} crit ${criticalRange(h)}. ${CLASS_COMBOS[h.job]?.hint || ""}</p><div class="modal-actions"><button class="primary" data-close>Done · back to the adventure</button></div>`,
+</section></div></div>${criticalOddsMarkup(h)}${classPricesMarkup(h)}</div><p class="workshop-note">${reelQueueStatus(h, k, j)}</p><div class="modal-actions"><button class="primary" data-close>Done · back to the adventure</button></div>`,
     "editor",
   );
+  bindReelQueueControls(i, (selector) => {
+    renderParty();
+    save();
+    editor(i);
+    $(selector)?.focus();
+  });
   document.querySelectorAll("[data-workshop-view]").forEach(
     (button) =>
       (button.onclick = () => {
@@ -410,7 +455,14 @@ function legacyEditor(i) {
         { type: select.value, tier: face.tier },
         h,
       );
-      swap.disabled = h.points < cost;
+      swap.disabled = h.points < cost && !preferences().queueReelChanges;
+      const q = queuedFaceChange(h, k, j);
+      $("#swap-price").textContent =
+        q?.kind === "swap" && q.target === select.value
+          ? "Queued · click to cancel"
+          : h.points < cost && preferences().queueReelChanges
+            ? `Queue for ${cost} points · no purchase now`
+            : `Spend ${cost} points`;
     };
     select.onchange = update;
     update();
@@ -423,8 +475,20 @@ function editFace(data, operation, destination = null) {
     h = state.party[i];
   const op =
     operation === true ? "upgrade" : operation === false ? "cycle" : operation;
-  if (!applyFaceEdit(h, r, f, op, destination)) return;
+  const face = h?.reels[r]?.[f];
+  if (!face || !Number.isFinite(faceEditCost(h, r, f, op, destination))) return;
+  const kind =
+    ["upgrade", "weaken"].includes(op) && face.type !== "blank"
+      ? "tier"
+      : "swap";
+  const target =
+    kind === "tier"
+      ? face.tier + (op === "upgrade" ? 1 : -1)
+      : destination ||
+        (op === "upgrade" ? primaryFace(h) : nextFaceType(h, r, f));
+  if (!requestFaceChange(h, r, f, kind, target)) return;
   editorSelection = { heroId: h.id, reel: r, face: f };
+  processAllReelQueues();
   renderParty();
   save();
   editor(i);

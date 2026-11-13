@@ -40,7 +40,11 @@ works. `ui/paper-interactions.css` contains the new reusable sheet/feedback rule
 1. Resolve all non-Seed effects on the three marks first, then plant ordinary
    Seeds. That roll’s spell hits cannot immediately consume its fresh planting.
    Nonlethal offering costs remain once per actual Seed face, before criticals.
-2. One actual HP of enemy damage consumes one Seed. Seeds keep FIFO source
+2. One actual HP of nonfatal enemy damage consumes one Seed. On final death,
+   every remaining Seed detonates for 2 base shared healing, without additional
+   damage or kill rewards. Split forms retain Seeds until their final death.
+   See [planned edits and death bursts](REEL_QUEUE.md) for current details.
+   Seeds keep FIFO source
    receipts so one Bloodbinder cannot take another’s existing healing credit.
    Legacy `{count, sourceId}` reservoirs normalize without losing their count.
 3. Scale each owner’s **one shared healing pool** by their level healing factor,

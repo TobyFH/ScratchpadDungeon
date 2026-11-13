@@ -446,3 +446,95 @@
 #modal .icon-workshop .workshop-preview .blank-face small {
   display: none;
 }
+
+/* Saved plans are dashed pencil outlines; solid outlines still mean the actual
+   equipped face. The action always says Queue, never a misleading spend label. */
+.workshop-queue-controls,
+.workshop-queue-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 27px;
+  font-family: var(--hand);
+  font-size: 18px;
+  line-height: 1.1;
+}
+.workshop-queue-controls label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+}
+.workshop-queue-controls input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--ink);
+}
+.workshop-queue-controls > span {
+  white-space: nowrap;
+}
+.workshop-queue-status {
+  font-size: 16px;
+}
+.workshop-queue-status button {
+  font-size: 16px;
+  min-height: 25px;
+  padding: 1px 6px;
+  white-space: nowrap;
+}
+#modal .queued-face,
+#modal .queued-choice {
+  outline: 2px dashed var(--ui-focus, #ad873c);
+  outline-offset: -3px;
+  background-color: var(--ui-label);
+}
+#modal .queued-face small,
+#modal .queued-choice small {
+  font-weight: bold;
+}
+#modal .queue-choice:not(:disabled) {
+  border-style: dashed;
+  background-color: transparent;
+}
+#modal .queue-choice:not(:disabled) small {
+  opacity: 0.8;
+}
+@media (max-width: 760px) {
+  .workshop-queue-controls {
+    font-size: 18px;
+  }
+  .workshop-queue-status {
+    font-size: 15px;
+    min-height: 30px;
+  }
+  .icon-workshop .tier-choices .queue-choice small,
+  .icon-workshop .tier-choices .queued-choice small,
+  .icon-workshop .symbol-choice.queue-choice > small,
+  .icon-workshop .symbol-choice.queued-choice > small {
+    font-size: 17px;
+  }
+}
+@media (max-width: 760px) {
+  .icon-workshop .symbol-choices {
+    grid-template-rows: repeat(var(--compact-choice-rows), 52px);
+  }
+  .icon-workshop .symbol-choice {
+    grid-template-rows: 22px 22px;
+  }
+  .icon-workshop .workshop-detail .face-effect {
+    height: 60px;
+    min-height: 60px;
+  }
+}
+.workshop-tabs [data-editor-reel] {
+  position: relative;
+}
+.reel-queue-flag {
+  position: absolute;
+  top: 0;
+  right: 4px;
+  font-size: 12px;
+  line-height: 1;
+}

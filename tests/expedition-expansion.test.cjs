@@ -142,7 +142,7 @@ test('a resonant geode is saved for the next battle and prism sight-lines stop a
  const p=await game(t);await discovery(p,'geode');await confirmDiscovery(p,'#biome-use');
  const gift=await p.evaluate(()=>state.party[0].geodeGift);assert.equal(gift.uses,2);
  const battle=await p.evaluate(()=>{beginEncounter(false,{count:1});return {gift:state.party[0].geodeGift,reels:state.party[0].reelGifts}});assert.equal(battle.gift,undefined);assert.ok(battle.reels.some(g=>g.reel===gift.reel&&g.uses===2));
- await p.evaluate(()=>{closeSpotlight();state.enemy=null;state.enemies=[];busy=false;state.position=pos(3,3);state.map.forEach(c=>Object.assign(c,{wall:false,seen:false,event:null,terrain:'floor'}));state.map[pos(5,3)].wall=true;state.map[pos(5,3)].terrain='stone';state.map[pos(4,3)].event='treasure';render()});
+ await p.evaluate(()=>{closeSpotlight();state.enemy=null;state.enemies=[];busy=false;state.position=pos(3,3);/* Isolate prism sight-lines from generated cave-room reveals. */state.map.forEach(c=>Object.assign(c,{wall:false,seen:false,event:null,terrain:'floor',room:null}));state.map[pos(5,3)].wall=true;state.map[pos(5,3)].terrain='stone';state.map[pos(4,3)].event='treasure';render()});
  await discovery(p,'prism');await confirmDiscovery(p,'#biome-use');
  const sight=await p.evaluate(()=>({chest:state.map[pos(4,3)].seen,event:state.map[pos(4,3)].event,wall:state.map[pos(5,3)].seen,behind:state.map[pos(6,3)].seen}));assert.deepEqual(sight,{chest:true,event:'treasure',wall:true,behind:false});
 });

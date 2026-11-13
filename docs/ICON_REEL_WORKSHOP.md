@@ -9,6 +9,11 @@ Blank faces require an explicit symbol before ranking; no guessed inscription.
 Class and mystery marks remain permanent and use the same reserved geometry.
 The current-face preview is larger than the smaller replacement-button glyphs.
 
+Unaffordable choices can now be queued with the workshop's saved toggle. Plans
+are dashed and labelled **Queued**; turning the toggle off clears every plan
+and disables unaffordable buttons. See [queue rules](REEL_QUEUE.md) for purchase
+order, personal budgets, cancellation, persistence and automation priority.
+
 ## Revert only this redesign
 
 In `ui/icon-reel-workshop.js`, change:
@@ -26,15 +31,17 @@ The redesign is also committed independently of the main biome/combat expansion.
 
 ## Ownership and transactions
 
-- `ui/icon-reel-workshop.js`: default renderer, navigation, full-rank quotes and
-  the layout switch. `quoteFaceTier()` copies the hero's faces and investment
-  receipts, then runs each rank change through the existing `applyFaceEdit()`.
+- `ui/icon-reel-workshop.js`: default renderer, navigation, shared queue controls
+  and the layout switch.
 - `ui/icon-reel-workshop.css`: scoped notebook layout, icon/card rows and desktop/
   compact sizing. Five symbol columns on desktop, three on phones; classes have
   different legal palettes, with reserved rows based on their actual count.
-- `game/reel-upgrades.js`: unchanged shared price/refund, inscription, swap and
-  class/mystery validation, plus the retained renderer. Automation uses those
-  same validators; it gains no cheaper or free edit path.
+- `game/reel-upgrades.js`: shared price/refund, inscription, swap and
+  class/mystery validation, full-rank quotes and the retained renderer.
+  `quoteFaceTier()` copies faces and investment receipts, then runs each rank
+  change through `applyFaceEdit()`. Automation uses those same validators.
+- `game/reel-queue.js`: saved plans, validation, shared atomic commits and paid
+  purchases. Queueing never changes a face or spends points early.
 
 A direct rank change is quoted first. An unaffordable target cannot apply a
 partial change. The selected face, its paid investment receipts, points and last

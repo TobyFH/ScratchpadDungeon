@@ -41,6 +41,12 @@ decays per tile walked. [The icon reel workshop](docs/ICON_REEL_WORKSHOP.md)
 shows clickable replacement symbols and complete rank costs/refunds, with a
 one-switch fallback to the previous editor.
 
+The workshop can **queue unaffordable changes** for automatic purchase with
+that hero's future personal points. Dashed choices say **Queue**; pending faces
+say **Queued**. Cheapest affordable plans buy first, with random equal-cost
+ties. Turning off the workshop toggle clears all pending plans and disables
+unaffordable choices. See [queue and death-burst rules](docs/REEL_QUEUE.md).
+
 Current [curve and recovery tuning](docs/CURVE_TUNING.md) makes eligible biomes
 equally likely after the Cavern opening, guarantees an early recruit opportunity,
 shortens defensive boss fights and strengthens Mage recovery, stimulant stacks
@@ -49,6 +55,7 @@ and temperament bonuses.
 The unlockable **Bloodbinder** plants unlimited Blood Seeds on enemies at a
 nonlethal HP cost. Actual HP damage consumes Seeds to share healing among wounded
 allies; **Blood Bloom** detonates every remaining Seed for damage and healing.
+Defeating an enemy also detonates all its remaining Seeds for shared healing.
 Its ordinary marks are healing, Seeds, spell damage and ally stimulant.
 
 The earned, starting-only **Necromancer** raises up to two **player-controlled

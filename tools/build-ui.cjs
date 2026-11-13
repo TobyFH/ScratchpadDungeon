@@ -106,6 +106,7 @@ for (const [label, file] of [
   ["EXPEDITION EXPANSION", "game/expedition-expansion.js"],
   ["LIVING DUNGEON", "game/living-dungeon.js"],
   ["REEL UPGRADES", "game/reel-upgrades.js"],
+  ["REEL QUEUE", "game/reel-queue.js"],
   ["ICON REEL WORKSHOP", "ui/icon-reel-workshop.js"],
   ["ENCOUNTER PRESENTATION", "game/encounter-presentation.js"],
   ["COMBAT FEEDBACK", "ui/combat-feedback.js"],
