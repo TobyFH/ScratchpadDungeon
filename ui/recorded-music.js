@@ -20,7 +20,7 @@ const MUSIC_FADES=Object.freeze({out:.54,in:.78,first:.42,duck:.078,restore:.36}
 function musicSelection() {
   // A utility sheet preserves the menu beneath it, including its music.
   const kind = utilityOpen ? utilityContext?.kind : modalKind;
-  if (!state || state.awaitingStarter || ["starter", "camp"].includes(kind))
+  if (MainMenu.visible || !state || state.awaitingStarter || ["starter", "camp"].includes(kind))
     return { id: "title", key: "title", scene: "title" };
   if (state.enemy && !state.over && preferences().battleMusic !== false)
     return { id: "battle", key: "battle", scene: "battle" };

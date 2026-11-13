@@ -1,3 +1,4 @@
+const { resumeSavedRun } = require("./helpers/resume-run.cjs");
 const { test, before, after } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
@@ -50,7 +51,7 @@ test('personal travel moments, gold and traits have named explanations that surv
   await assert.doesNotReject(() => p.locator('#status-tooltip').waitFor({ state: 'visible' }));
   assert.match(await p.locator('#status-tooltip').innerText(), /Earned: Kept calm/);
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   assert.deepEqual(await p.evaluate(() => state.logDetails), before.details);
   assert.equal(await p.locator('#log .log-term').filter({ hasText: 'A KEEN EYE' }).count(), 1);
 });

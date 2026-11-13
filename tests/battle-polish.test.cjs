@@ -1,3 +1,4 @@
+const { resumeSavedRun } = require("./helpers/resume-run.cjs");
 const { test, before, after } = require("node:test");
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
@@ -130,7 +131,7 @@ test("rearranged Display settings still update actual preferences and persist ac
   await p.locator("#tab-audio").click();
   await p.locator("#tab-display").click();
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   const r = await p.evaluate(() => ({ p: preferences(), terrain: document.body.classList.contains("tile-motion-enabled") }));
   assert.equal(r.p.brightness, 1.2);
   assert.equal(r.p.shake, .7);

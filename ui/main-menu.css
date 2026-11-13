@@ -1,0 +1,285 @@
+/* A single pencilled title sheet. Geometry is independent of the fitted book. */
+body.main-menu-active {
+  overflow: hidden;
+}
+body.main-menu-active
+  :is(
+    .desk,
+    #keyboard-bar,
+    #toast,
+    .speech-bubble,
+    .combat-callout,
+    .discovery-whisper
+  ) {
+  visibility: hidden;
+}
+.title-page {
+  position: fixed;
+  inset: 0;
+  z-index: 2500;
+  color: var(--ink);
+  background: var(--paper);
+  isolation: isolate;
+}
+.title-page[hidden] {
+  display: none;
+}
+.title-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.55;
+  background-image: url("@asset(menu-paper.svg)");
+  background-size: 256px 256px;
+  mix-blend-mode: multiply;
+}
+.title-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.title-content {
+  width: min(1280px, 86vw);
+  height: 100%;
+  margin: auto;
+  padding: clamp(44px, 6vh, 80px) 0;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-rows: auto minmax(74px, 106px) minmax(52px, 76px) minmax(
+      90px,
+      180px
+    );
+  align-content: center;
+  justify-items: center;
+  gap: clamp(16px, 3vh, 32px);
+}
+.title-heading {
+  width: 100%;
+  text-align: center;
+}
+.title-rule {
+  display: block;
+  width: min(480px, 50vw);
+  height: clamp(16px, 2.5vh, 28px);
+  margin: 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.1;
+  stroke-linecap: round;
+}
+#main-menu-title {
+  font-family: var(--display);
+  font-size: clamp(58px, min(9vw, 15vh), 152px);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+  color: inherit;
+  margin: 20px 0;
+}
+#main-menu-title span {
+  display: block;
+}
+#main-menu-title span:first-child {
+  transform: rotate(-1deg);
+}
+#main-menu-title span:last-child {
+  transform: rotate(0.6deg);
+}
+.title-continue-space {
+  width: min(590px, 62vw);
+  height: 100%;
+}
+.title-button {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  min-height: 48px;
+  padding: 4px 14px;
+  border: 5px solid transparent;
+  border-image: url("@asset(menu-button.svg)") 15 / 12px / 0 stretch;
+  border-radius: 5px 9px 7px 6px;
+  background: transparent;
+  color: inherit;
+  box-shadow: none;
+  font: 700 clamp(25px, 3.2vw, 44px) / 1.05 var(--hand-display);
+  cursor: pointer;
+  transform: none;
+  transition:
+    background-color 140ms ease,
+    box-shadow 140ms ease;
+}
+.title-button > span {
+  display: block;
+  transition: transform 140ms ease;
+}
+.title-button:hover,
+.title-button:focus-visible,
+.title-button.controller-focus {
+  background: var(--paper-raised);
+  box-shadow: 0 3px 0 var(--pencil-mid);
+  outline: 2px dashed var(--focus);
+  outline-offset: 5px;
+}
+.title-button:hover > span,
+.title-button:focus-visible > span {
+  transform: translateY(-2px) scale(1.035);
+}
+.title-button:active > span {
+  transform: translateY(1px) scale(0.98);
+}
+body[data-palette="dark"] .title-button {
+  border-image: var(--frame) 12 / 6px / 0 stretch;
+}
+.title-continue {
+  font-size: clamp(36px, 4.8vw, 65px);
+}
+.title-continue::before,
+.title-continue::after {
+  content: "";
+  position: absolute;
+  top: 19%;
+  bottom: 19%;
+  width: 30px;
+  background:
+    linear-gradient(
+        34deg,
+        transparent 43%,
+        currentColor 44% 49%,
+        transparent 50%
+      )
+      0 0/100% 33% no-repeat,
+    linear-gradient(
+        5deg,
+        transparent 43%,
+        currentColor 44% 49%,
+        transparent 50%
+      )
+      0 50%/100% 33% no-repeat,
+    linear-gradient(
+        -30deg,
+        transparent 43%,
+        currentColor 44% 49%,
+        transparent 50%
+      )
+      0 100%/100% 33% no-repeat;
+}
+.title-continue::before {
+  left: -48px;
+}
+.title-continue::after {
+  right: -48px;
+  transform: scaleX(-1);
+}
+.title-actions {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(14px, 2.2vw, 34px);
+  width: min(1120px, 100%);
+}
+.title-cave {
+  width: min(1000px, 90%);
+  height: 100%;
+}
+.title-cave > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+@media (max-width: 760px) {
+  .title-content {
+    width: 80vw;
+    padding: 40px 0;
+    grid-template-rows: auto 70px 120px minmax(80px, 140px);
+    gap: 25px;
+  }
+  #main-menu-title {
+    font-size: clamp(45px, 10vw, 75px);
+    margin: 16px 0;
+  }
+  .title-rule {
+    width: 65vw;
+  }
+  .title-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .title-button {
+    font-size: clamp(25px, 5.8vw, 36px);
+    padding: 3px 6px;
+  }
+  .title-continue-space {
+    width: 68vw;
+  }
+  .title-continue {
+    font-size: 40px;
+  }
+  .title-continue::before {
+    left: -25px;
+    width: 17px;
+  }
+  .title-continue::after {
+    right: -25px;
+    width: 17px;
+  }
+  .title-cave {
+    width: 100%;
+  }
+}
+@media (max-height: 600px) {
+  .title-content {
+    padding: 28px 0;
+    grid-template-rows: auto 52px 48px 70px;
+    gap: 12px;
+  }
+  #main-menu-title {
+    font-size: clamp(40px, 11vh, 68px);
+    margin: 9px 0;
+  }
+  .title-rule {
+    height: 14px;
+  }
+  .title-button {
+    font-size: 27px;
+  }
+  .title-continue {
+    font-size: 36px;
+  }
+  .title-actions {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .title-button,
+  .title-button > span {
+    transition: none;
+  }
+  .title-button:hover > span,
+  .title-button:focus-visible > span,
+  .title-button:active > span {
+    transform: none;
+  }
+}
+.title-page[inert] {
+  pointer-events: none;
+}
+.title-page:not(.has-saved-run) .title-content {
+  grid-template-rows: auto minmax(52px, 76px) minmax(90px, 180px);
+}
+@media (max-width: 760px) {
+  .title-page:not(.has-saved-run) .title-content {
+    grid-template-rows: auto 120px minmax(80px, 140px);
+  }
+}
+@media (max-height: 600px) {
+  .title-page:not(.has-saved-run) .title-content {
+    grid-template-rows: auto 48px 70px;
+  }
+}

@@ -1,3 +1,4 @@
+const { resumeSavedRun } = require("./helpers/resume-run.cjs");
 const { test, before, after } = require("node:test"),
   assert = require("node:assert/strict"),
   fs = require("node:fs"),
@@ -223,7 +224,7 @@ test("queue settings and unpaid plans survive a real reload, then buy on a later
     save();
   });
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   const r = await p.evaluate(() => {
     closeModal();
     const h = state.party[0],

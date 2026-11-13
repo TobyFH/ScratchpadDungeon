@@ -77,6 +77,11 @@ and all artwork; caches must never become gameplay or saved state.
 
 Startup uses the user-supplied offline film in `ui/company-intro.html/.css/.js`.
 Read `docs/COMPANY_INTRO.md` before changing boot, media or HTML downloads.
+Read `docs/MAIN_MENU.md` for the pencil title sheet after the film. Keep saved
+runs and pending confirmations suspended until Continue; browsing title utility
+pages saves settings separately and must never replace the expedition. Menu
+sources are `ui/main-menu.html/.css/.js`; regression fixtures explicitly resume
+through `tests/helpers/resume-run.cjs`. Preserve its stable hover hitboxes.
 Keep the real load/new-run callback behind `CompanyIntro.run`, input and auto
 drivers gated during it, and the saved HTML's original startup markup intact.
 Gameplay fixtures explicitly await `CompanyIntro.skip(true)` after navigation;

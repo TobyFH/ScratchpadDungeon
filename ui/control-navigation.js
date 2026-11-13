@@ -12,7 +12,7 @@ const controlNavigation = (() => {
       ? $("#stage-card")
       : !$("#overlay").hidden
         ? $("#modal")
-        : $(".desk");
+        : MainMenu.visible ? $("#main-menu") : $(".desk");
   }
   function candidates() {
     return [...scope().querySelectorAll(selector)].filter(
@@ -99,7 +99,7 @@ const controlNavigation = (() => {
         equipmentCancel?.();
         return;
       }
-      if (["starter", "camp"].includes(modalKind) && state.awaitingStarter)
+      if (["starter", "camp"].includes(modalKind) && state.awaitingStarter && !MainMenu.visible)
         return;
       closeModal();
       return;

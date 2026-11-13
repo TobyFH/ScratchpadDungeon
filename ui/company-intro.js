@@ -29,7 +29,7 @@ const CompanyIntro = (() => {
     try {
       startGame();
     } finally {
-      // Initialize behind black, then expose the notebook's existing opening.
+      // Prepare the title sheet behind black, then reveal it after the film.
       document.body.classList.remove("company-intro-active");
       await fade(layer, 1, 0, instant ? 0 : 420);
       layer.remove();
@@ -39,10 +39,11 @@ const CompanyIntro = (() => {
       document.removeEventListener("click", click, true);
       document.removeEventListener("visibilitychange", visibility);
       active = false;
+      MainMenu.syncInert();
       // Don't steal focus from a restored death/item confirmation.
       if (!document.activeElement || document.activeElement === document.body) {
         const dialog = document.querySelector('#spotlight:not([hidden]), #overlay:not([hidden])');
-        const target = dialog?.querySelector('button:not([hidden]):not(:disabled)') || document.getElementById("new-game");
+        const target = MainMenu.visible ? document.querySelector("#main-menu button:not([hidden])") : dialog?.querySelector('button:not([hidden]):not(:disabled)') || document.getElementById("new-game");
         target?.focus({ preventScroll: true });
       }
       resolveReady();

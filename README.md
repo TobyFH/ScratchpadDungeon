@@ -13,9 +13,14 @@ python3 -m http.server 8000
 Open `http://localhost:8000`. **Save HTML** downloads a complete offline copy of the game. Progress stays in this browser's local storage; the HTML download does not export a saved expedition. Older saves preserve edited faces and migrate to one middle-reel class seal. Surplus inventory types wait for explicit keep, use or discard decisions.
 
 The supplied five-second **Iacta Games intro** plays on page load, fades to black,
-then reveals the notebook. Skip with its button, Enter, Space, Escape or a
+then reveals a pencil-drawn **main menu**. Skip with its button, Enter, Space, Escape or a
 controller button. Reduced-motion preferences bypass it. Playback failures
-continue to the game. See [startup film maintenance](docs/COMPANY_INTRO.md).
+continue to the menu. **Continue** appears only for an active saved expedition;
+it remains paused until selected. **New Run** opens character selection and its
+camp upgrade tab. **Options**, **Field Guide** and **Bestiary** can be browsed
+without replacing a saved run. Buttons provide mouse hover and keyboard focus
+feedback. See [main menu maintenance](docs/MAIN_MENU.md) and
+[startup film maintenance](docs/COMPANY_INTRO.md).
 
 The notebook opens with **Tank, Rogue or Mage**. Ranger, Berserker, Jester and
 Bloodbinder unlock at camp; **Necromancer unlocks only after your first floor-ten

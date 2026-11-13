@@ -1,3 +1,4 @@
+const { resumeSavedRun } = require("./helpers/resume-run.cjs");
 const { test, before, after } = require("node:test");
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
@@ -204,7 +205,7 @@ test("Animated terrain is a real saved display option, independent of portrait m
   });
   assert.equal(await p.evaluate(() => state.preferences.tileMotion), false);
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   assert.equal(await p.evaluate(() => state.preferences.tileMotion), false);
   await p.evaluate(() => {
     setPreference("tileMotion", true);

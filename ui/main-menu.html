@@ -1,0 +1,65 @@
+<main
+  id="main-menu"
+  class="title-page"
+  hidden
+  inert
+  aria-labelledby="main-menu-title"
+>
+  <svg
+    class="title-frame"
+    viewBox="0 0 1000 650"
+    preserveAspectRatio="none"
+    aria-hidden="true"
+  >
+    <g
+      fill="none"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path
+        stroke-width="1.5"
+        d="M46 16 954 17Q956 43 983 45L984 605Q956 607 954 633L46 634Q44 607 17 605L16 45Q44 43 46 16Z"
+      />
+      <path
+        stroke-width="1"
+        d="m51 23 896 1q4 24 29 27l1 547q-25 4-29 28L52 627q-4-25-28-28L23 52q25-5 28-29Z"
+      />
+      <path
+        stroke-width="1.3"
+        d="m16 16 12 1-1 12-12-1Zm957 1 12-1-1 12-12 1ZM16 622l12-1-1 12-12 1Zm956-1 12 1 1 12-12-1Z"
+      />
+    </g>
+  </svg>
+  <div class="title-content">
+    <header class="title-heading">
+      <svg class="title-rule" viewBox="0 0 480 28" aria-hidden="true">
+        <path d="m4 14 202-1m68 1 202-1m-236-11 12 12-12 12-12-12Z" />
+      </svg>
+      <h1 id="main-menu-title"><span>Scratchpad</span><span>Dungeon</span></h1>
+      <svg class="title-rule" viewBox="0 0 480 28" aria-hidden="true">
+        <path d="m4 14 202-1m68 1 202-1m-236-11 12 12-12 12-12-12Z" />
+      </svg>
+    </header>
+    <div class="title-continue-space">
+      <button id="menu-continue" class="title-button title-continue" hidden>
+        <span>Continue</span>
+      </button>
+    </div>
+    <nav class="title-actions" aria-label="Main menu">
+      <button id="menu-new-run" class="title-button">
+        <span>New Run</span>
+      </button>
+      <button id="menu-options" class="title-button">
+        <span>Options</span>
+      </button>
+      <button id="menu-guide" class="title-button">
+        <span>Field Guide</span>
+      </button>
+      <button id="menu-bestiary" class="title-button">
+        <span>Bestiary</span>
+      </button>
+    </nav>
+    <div class="title-cave" aria-hidden="true">@menu-cave</div>
+  </div>
+</main>

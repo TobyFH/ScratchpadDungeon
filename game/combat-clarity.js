@@ -62,6 +62,7 @@ let soloStunTimer = null;
 function scheduleStunRecovery() {
   if (
     soloStunTimer ||
+    MainMenu.visible ||
     busy ||
     !state?.enemy ||
     state.over ||

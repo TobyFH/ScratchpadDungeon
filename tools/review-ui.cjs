@@ -63,8 +63,10 @@ const output = path.join(root, "test-results/ui-review");
       shots.push(name);
     }
     await page.waitForTimeout(1300);
+    await shot("00-main-menu");
     if (process.env.UI_REVIEW_SCOPE !== "identity") {
     if (process.env.UI_REVIEW_SCOPE !== "biomes") {
+    await page.locator("#menu-new-run").click();
     await shot("01-starting-class");
     await page.locator('[data-start-job="rogue"]').click();
     await page.evaluate(() => {

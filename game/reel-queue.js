@@ -121,7 +121,7 @@ function requestFaceChange(h, reel, index, kind, target) {
 function processQueuedReelChanges(h) {
   // In-flight rolls retain their original faces. Awards settle at the next safe
   // render/save boundary, not midway through a reel spin or walking animation.
-  if (busy || currentRoll || travel || state.over || !state.party.includes(h))
+  if (MainMenu.visible || busy || currentRoll || travel || state.over || !state.party.includes(h))
     return 0;
   normaliseReelQueue(h);
   let bought = 0;

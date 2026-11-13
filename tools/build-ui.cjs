@@ -25,7 +25,7 @@ const assets = (name) => {
   if (!mime) throw Error(`Unsupported UI asset: ${name}`);
   return `data:${mime};base64,${fs.readFileSync(file).toString("base64")}`;
 };
-const css = ["layout.css", "notebook.css", "combat-life.css", "terrain-motion.css", "expedition-presentation.css", "class-moments.css", "icon-reel-workshop.css", "environment.css", "company-intro.css", "soul-feedback.css", "ui-polish.css", "summoned-party.css", "paper-interactions.css"]
+const css = ["layout.css", "notebook.css", "combat-life.css", "terrain-motion.css", "expedition-presentation.css", "class-moments.css", "icon-reel-workshop.css", "environment.css", "company-intro.css", "soul-feedback.css", "ui-polish.css", "summoned-party.css", "paper-interactions.css", "main-menu.css"]
   .map((name) => {
     const content = read("ui/" + name).replace(
       /@asset\(([^)]+)\)/g,
@@ -62,6 +62,11 @@ embed(
   read("ui/company-intro.html").replace(/@asset\(([^)]+)\)/g, (_, asset) => assets(asset)),
 );
 embed(
+  "<!-- BEGIN GENERATED MAIN MENU -->",
+  "<!-- END GENERATED MAIN MENU -->",
+  read("ui/main-menu.html").replace("@menu-cave", read("ui/assets/menu-cave.svg")),
+);
+embed(
   "// BEGIN GENERATED NOTEBOOK ART",
   "// END GENERATED NOTEBOOK ART",
   read("ui/drawings.js").replace(/@asset\(([^)]+)\)/g, (_, asset) =>
@@ -82,6 +87,7 @@ embed(
 );
 for (const [label, file] of [
   ["COMPANY STARTUP", "ui/company-intro.js"],
+  ["MAIN MENU LOGIC", "ui/main-menu.js"],
   ["BALANCE", "game/balance.js"],
   ["BIOME ENEMIES", "game/biome-enemies.js"],
   ["ENCOUNTER JOURNAL", "game/encounter-journal.js"],

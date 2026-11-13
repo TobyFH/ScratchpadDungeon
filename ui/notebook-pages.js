@@ -310,10 +310,13 @@ function resetSaveProgress() {
   document
     .querySelectorAll(".speech-bubble,.discovery-whisper,.rolled-projectile")
     .forEach((el) => el.remove());
-  newRun();
-  state.awaitingStarter = true;
-  chooseStartingClass(true);
-  save();
+  if (MainMenu.visible) MainMenu.boot();
+  else {
+    newRun();
+    state.awaitingStarter = true;
+    chooseStartingClass(true);
+    save();
+  }
   toast("A clean notebook. Your options have been kept.");
   return true;
 }

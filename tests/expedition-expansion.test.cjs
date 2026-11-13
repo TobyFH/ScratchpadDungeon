@@ -1,3 +1,4 @@
+const { resumeSavedRun } = require("./helpers/resume-run.cjs");
 const {test,before,after}=require('node:test');
 const assert=require('node:assert/strict'),fs=require('node:fs'),http=require('node:http'),path=require('node:path');
 const {chromium}=require('playwright');
@@ -65,7 +66,7 @@ test('Fury survives battle cleanup and reload, loses charge per walked tile, and
   const hp=healHero(0,3),afterHeal=h.fury;save();return {afterFight,travel,hp,afterHeal};
  });assert.deepEqual(r,{afterFight:20,travel:18,hp:3,afterHeal:15});
  await p.reload();
- await p.evaluate(() => CompanyIntro.skip(true));
+ await resumeSavedRun(p);
  assert.equal(await p.evaluate(()=>state.party[0].fury),15);
 });
 test('stimulant has three timed stacks and further doses build bounded potency with poison-style overflow',async t=>{

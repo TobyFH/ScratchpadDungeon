@@ -1,3 +1,4 @@
+const { resumeSavedRun } = require("./helpers/resume-run.cjs");
 const { test, before, after } = require("node:test"),
   assert = require("node:assert/strict"),
   fs = require("node:fs"),
@@ -902,10 +903,10 @@ test("older ongoing guardian encounters fill the correct bestiary page once and 
     save();
   });
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   assert.equal(await p.evaluate(() => readBestiary()["boss-6"].seen), 1);
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   assert.equal(await p.evaluate(() => readBestiary()["boss-6"].seen), 1);
   await p.evaluate(() => {
     setPreference("punMode", true);

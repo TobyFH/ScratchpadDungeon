@@ -1,3 +1,4 @@
+const { resumeSavedRun } = require("./helpers/resume-run.cjs");
 const { test, before, after } = require("node:test"),
   assert = require("node:assert/strict"),
   fs = require("node:fs"),
@@ -543,7 +544,7 @@ test("summons, their exact builds, wounds, passives and victim receipts survive 
     };
   });
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   const after = await p.evaluate(() => {
     const h = state.party[0],
       s = state.party[1],
@@ -967,7 +968,7 @@ test("an interrupted death save cannot leave a dead master playable through surv
     save();
   });
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   const r = await p.evaluate(() => ({
     over: state.over,
     summons: state.party.filter(isSummon).length,
@@ -995,7 +996,7 @@ test("saving during consume effects keeps the paid sacrifice and its healing tog
     return { hp: state.party[0].hp, archive: state.summonArchive.length };
   });
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   const after = await p.evaluate(() => ({
     hp: state.party[0].hp,
     archive: state.summonArchive.length,

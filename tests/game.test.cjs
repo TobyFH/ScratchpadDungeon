@@ -1,3 +1,4 @@
+const { resumeSavedRun } = require("./helpers/resume-run.cjs");
 const { test, before, after } = require("node:test");
 const assert = require("node:assert/strict");
 const { chromium } = require("playwright");
@@ -1105,7 +1106,7 @@ test("save restores speed and artefacts and migrates the earlier Sunseed-era not
     artefacts: JSON.stringify(state.artefacts),
   }));
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   assert.deepEqual(
     await p.evaluate(() => ({
       depth: state.depth,
@@ -1132,7 +1133,7 @@ test("save restores speed and artefacts and migrates the earlier Sunseed-era not
     localStorage.setItem("scratchpad-dungeon-v2", JSON.stringify(old));
   });
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   assert.equal(await p.evaluate(() => state.version), 26);
   assert.equal(await p.evaluate(() => state.speed), "skip");
   assert.equal(await p.evaluate(() => state.relic), undefined);
@@ -1159,6 +1160,8 @@ test("downloaded HTML remains self-contained and playable offline with mandatory
   offline.on("pageerror", (e) => errors.push(e.message));
   await p.context().setOffline(true);
   await offline.setContent(html);
+  await offline.evaluate(() => CompanyIntro.skip(true));
+  await offline.locator("#menu-new-run").click();
   await offline.locator('[data-start-job="fighter"]').click();
   assert.equal(await offline.locator(".tile").count(), 99);
   await fast(offline);
@@ -1486,7 +1489,7 @@ test("a fatal hit is saved immediately and reload resumes acknowledgement withou
     damageHero(1, 100, "An arrow trap");
   });
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   await p.waitForSelector("#death-confirm");
   assert.equal(await p.evaluate(() => state.party[1].hp), 0);
   assert.equal(await p.evaluate(() => state.party[1].dead), true);
@@ -1497,7 +1500,7 @@ test("a fatal hit is saved immediately and reload resumes acknowledgement withou
   assert.equal(await p.evaluate(() => state.party.length), 1);
   assert.equal(await p.evaluate(() => state.graveyard.length), 1);
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   assert.equal(await p.evaluate(() => state.party.length), 1);
   assert.equal(await p.evaluate(() => state.graveyard.length), 1);
 });
@@ -1848,7 +1851,7 @@ test("starting blanks are actual editable reel faces with an icon; inscription r
     false,
   );
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   assert.equal(
     await p.evaluate(() =>
       state.party[0].reels.some((r) => r.some((s) => s.type === "blank")),
@@ -1887,7 +1890,7 @@ test("fatal enemy and hero damage immediately draws collapsed corpses and leaves
     2,
   );
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   assert.equal(
     await p.evaluate(() => state.map[state.position].corpses.length),
     2,
@@ -2078,7 +2081,7 @@ test("resolving a quiet room can hint at an adjacent enemy or treasure while lea
   });
   assert.equal(await p.evaluate(() => state.map[68].hint.kind), "glimmer");
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   assert.equal(
     await p.locator('[data-tile="68"].fog .tile-whisper').count(),
     1,
@@ -2447,7 +2450,7 @@ test("paired encounters use portrait targeting; tier III damage and critical att
   await p.evaluate(() => save());
   const selected = await p.evaluate(() => state.enemy.id);
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   assert.equal(await p.evaluate(() => state.enemies.length), 2);
   assert.equal(await p.evaluate(() => state.enemy.id), selected);
   assert.equal(
@@ -2795,7 +2798,7 @@ test("pace and palette survive a new run and reload; the full UI can be reached 
   assert.equal(await p.evaluate(() => state.speed), "5");
   assert.equal(await p.evaluate(() => state.palette), "warm");
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   assert.equal(await p.locator("#animation-speed").inputValue(), "5");
   assert.equal(await p.locator("#palette").inputValue(), "warm");
   await p.evaluate(() => {
@@ -2906,7 +2909,7 @@ test("tier IV attacks can be bought, saved and used as area damage with clear pe
   assert.equal(await p.locator(".workshop-preview .tier-4 svg").count(), 4);
   await p.locator("#modal [data-close]").first().click();
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   assert.equal(await p.evaluate(() => state.party[0].reels[0][0].tier), 4);
   await p.evaluate(() => {
     state.depth = 5;
@@ -3080,7 +3083,7 @@ test("Revive Stone is held without an equipment slot, revives at 75%, consumes o
     damageHero(0, 999, "The hungry chest");
   });
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   await p.waitForSelector("#revive-use");
   assert.match(await p.locator("#stage-card").textContent(), /38 \/ 50 HP/);
   await p.locator("#revive-use").click();
@@ -3108,7 +3111,7 @@ test("Revive Stone is held without an equipment slot, revives at 75%, consumes o
     },
   );
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   assert.equal(await p.evaluate(() => state.party[0].hp), 38);
   await startEval(
     p,
@@ -3303,7 +3306,7 @@ test("older saved fights migrate to the gentler curve without losing wounds or e
     localStorage.removeItem(SAVE_KEY);
   });
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   assert.deepEqual(
     await p.evaluate(() => ({
       version: state.version,
@@ -3414,7 +3417,7 @@ test("ambush readiness uses commands since proximity, resets before spawning, pe
   assert.equal(r.spawned, true);
   assert.equal(r.nearby, true);
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   assert.equal(
     await p.evaluate((index) => state.map[index].fogged, r.index),
     true,
@@ -3603,7 +3606,7 @@ test("player token stays centred on its actual tile through desktop zoom, resizi
     assert.ok(r.dx < 1 && r.dy < 1, JSON.stringify({ viewport, ...r }));
   }
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   await p.waitForTimeout(120);
   assert.ok(
     await p.evaluate(() => {
@@ -3782,7 +3785,7 @@ test("ally stimulant targets an ally, boosts damage and defence with visible fir
   assert.equal(await p.evaluate(() => damageHero(1, 5, "A jab")), 4);
   await p.evaluate(() => save());
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   assert.equal(await p.locator("#hero-1.powered-up").count(), 1);
   await autoEvents(p);
   await p.evaluate(() => {
@@ -3901,7 +3904,7 @@ test("bag stacks matching items but limits types to three; overflow can replace 
     save();
   });
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   await p.waitForSelector("#item-leave");
   assert.equal(await p.locator(".bag-card").count(), 3);
   await p.locator('[data-stage-choice="swap:antidote"]').click();
@@ -3916,7 +3919,7 @@ test("bag stacks matching items but limits types to three; overflow can replace 
     { types: 3, antidote: 0, ration: 2, pending: 0 },
   );
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   assert.equal(await p.evaluate(() => state.bag.ration), 2);
 });
 
@@ -4103,7 +4106,7 @@ test("older saves gain one middle class seal and migrate consumables into the th
     localStorage.removeItem(SAVE_KEY);
   });
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   assert.deepEqual(await p.evaluate(() => state.bag), {
     potion: 2,
     bomb: 3,
@@ -4120,7 +4123,7 @@ test("older saves gain one middle class seal and migrate consumables into the th
   );
   await p.evaluate(() => save());
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   assert.equal(await p.evaluate(() => state.party[0].reels[0].length), 6);
 });
 
@@ -4226,7 +4229,7 @@ test("mixed blade and magic criticals show correct rounded components and tier I
   assert.equal(await p.evaluate(() => state.party[0].points), 11);
   await p.locator("#modal [data-close]").first().click();
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   assert.equal(await p.evaluate(() => state.party[0].reels[0][0].tier), 4);
   assert.equal(
     await p.evaluate(() => state.party[0].reels[0][0].type),
@@ -4272,7 +4275,8 @@ test("first opening offers base classes and locked invitations, opens the cover,
   const p = await game(t);
   await p.evaluate(() => localStorage.clear());
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
+  await p.locator("#menu-new-run").click();
   await p.waitForSelector('[data-start-job="mage"]');
   assert.equal(await p.locator(".starter-grid button").count(), 8);
   assert.equal(
@@ -4301,7 +4305,7 @@ test("options tabs are functional and autoresolve, palette and pace persist acro
   assert.equal(await p.locator("#autoresolve").isChecked(), true);
   await p.evaluate(() => newRun("rogue"));
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   assert.deepEqual(
     await p.evaluate(() => [state.speed, state.palette, state.autoresolve]),
     ["3", "warm", true],
@@ -4529,7 +4533,7 @@ test("class-bound and generic equipment pieces work, can be dragged onto heroes,
   await p.evaluate(() => equipCharacter("bulwarkBadge", 0));
   assert.equal(await p.evaluate(() => state.bag.ironSignet), 1);
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   assert.equal(
     await p.evaluate(() => state.party[0].equipment),
     "bulwarkBadge",
@@ -4781,7 +4785,7 @@ test("version-eight saves preserve edited faces while moving the class seal to t
     localStorage.setItem(SAVE_KEY, JSON.stringify(old));
   });
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   await p.waitForSelector("#item-leave");
   assert.deepEqual(
     await p.evaluate(() =>
@@ -4929,14 +4933,16 @@ test("reloading before the starting class choice keeps the choice pending", asyn
     localStorage.clear();
   });
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
+  await p.locator("#menu-new-run").click();
   await p.waitForSelector('[data-start-job="rogue"]');
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
+  await p.locator("#menu-new-run").click();
   assert.equal(await p.locator(".starter-grid button").count(), 8);
   await p.locator('[data-start-job="rogue"]').click();
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   assert.equal(await p.evaluate(() => state.party[0].job), "rogue");
   assert.equal(await p.locator("#overlay").isVisible(), false);
 });
@@ -5080,7 +5086,7 @@ test("version-nine fights adopt the stronger enemy curve without changing hero w
     save();
   });
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   assert.deepEqual(
     await p.evaluate(() => ({
       version: state.version,
@@ -5294,15 +5300,17 @@ test("autoplay settings persist through fresh runs and reloads without bypassing
     save();
   });
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
-  assert.equal(await p.locator("#autoplay").isChecked(), true);
+  await resumeSavedRun(p);
+  assert.equal(await p.locator("#menu-continue").isVisible(), false);
+  await p.locator("#menu-options").click();
+  assert.equal(await p.locator("#option-autoplay").isChecked(), true);
   assert.equal(await p.evaluate(() => state.autoplay), true);
   await p.waitForTimeout(500);
   assert.equal(await p.evaluate(() => state.steps), 0);
-  assert.equal(await p.locator("[data-start-job]").count(), 3);
-  await p.locator("#autoplay").uncheck();
+  assert.equal(await p.locator("[data-start-job]").count(), 0);
+  await p.locator("#option-autoplay").uncheck();
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   assert.equal(await p.evaluate(() => state.autoplay), false);
 });
 
@@ -5942,7 +5950,7 @@ test("preferences pages provide functioning volume, light, shake and critical co
     newRun("mage");
   });
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   assert.deepEqual(await p.evaluate(() => state.preferences), settings);
   const safe = await p.evaluate(() =>
     normalisePreferences({
@@ -6114,7 +6122,7 @@ test("all seven slot powers can upgrade to tier IV and reload with class prices 
   assert.equal(r.power.block, 8);
   assert.equal(r.power.stun, 4);
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   assert.deepEqual(
     await p.evaluate(() => state.party[0].reels[0].map((f) => f.tier)),
     r.tiers,
@@ -6213,7 +6221,7 @@ test("fifteen event-earned traits replace automatically, show one explained badg
   assert.match(r.title, /Bookish.*EXP.*beacons/);
   assert.equal(r.closed, true);
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   assert.equal(await p.evaluate(() => state.party[0].trait.id), "bookish");
 });
 
@@ -6433,7 +6441,7 @@ test("floor banking transfers each percentage once, survives reload/new runs, an
     { amount: 103, carried: 0, again: false },
   ]);
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   assert.equal(await p.evaluate(() => campProfile().gold), 256);
   await p.evaluate(() => newRun());
   assert.equal(await p.evaluate(() => campProfile().gold), 256);
@@ -6448,7 +6456,7 @@ test("floor banking transfers each percentage once, survives reload/new runs, an
     localStorage.setItem(SAVE_KEY, before);
   });
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   assert.deepEqual(
     await p.evaluate(() => ({
       gold: state.gold,
@@ -6459,7 +6467,7 @@ test("floor banking transfers each percentage once, survives reload/new runs, an
   );
   await p.evaluate(() => save());
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   assert.equal(await p.evaluate(() => state.gold), 40);
 });
 
@@ -6541,7 +6549,7 @@ test("camp purchases persist and class invitations remain separate from tiered t
     { gold: 150, ranger: true, pool: 1500 },
   );
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   assert.equal(await p.evaluate(() => campProfile().gold), 1500);
 });
 
@@ -6843,7 +6851,7 @@ test("final victory automatically banks all carried gold and its reward without 
   await p.evaluate(() => finishVictory());
   assert.equal(await p.evaluate(() => campProfile().gold), 400);
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   assert.equal(await p.evaluate(() => campProfile().gold), 400);
 });
 
@@ -7175,7 +7183,7 @@ test("removed Ranger enhancements refund their costs once and unlock Ranger star
     removed: false,
   });
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   assert.equal(await p.evaluate(() => readProfile().gold), 350);
 });
 
@@ -7372,7 +7380,7 @@ test("full screen effects cover wounds, healing, traps, gold and crits and the p
   await p.evaluate(() => newRun());
   assert.equal(await p.evaluate(() => preferences().fullScreenEffects), false);
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   assert.equal(await p.evaluate(() => preferences().fullScreenEffects), false);
 });
 

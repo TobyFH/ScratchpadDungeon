@@ -1,3 +1,4 @@
+const { resumeSavedRun } = require("./helpers/resume-run.cjs");
 const {test,before,after}=require('node:test');
 const assert=require('node:assert/strict'),fs=require('node:fs'),http=require('node:http'),path=require('node:path');
 const {chromium}=require('playwright');
@@ -134,7 +135,7 @@ test('motion defaults equal the old maximum, new sliders reach 300%, and saved p
   });
   assert.equal(r.defaults.shake,1.5);assert.equal(r.defaults.portraitMotion,1.5);assert.equal(r.cap.shake,3);assert.equal(r.cap.portraitMotion,3);assert.equal(r.cap.brightness,1.5);assert.equal(r.saved.shake,2.25);assert.equal(r.saved.portraitMotion,2.75);
   assert.equal(r.max.filter(([,max])=>max==='300').length,2);
-  await p.reload();await p.evaluate(()=>CompanyIntro.skip(true));assert.equal(await p.evaluate(()=>preferences().portraitMotion),2.75);
+  await p.reload();await resumeSavedRun(p);assert.equal(await p.evaluate(()=>preferences().portraitMotion),2.75);
 });
 test('quartz zones are a steady union with one boundary, no expansion, matching occlusion and reduced-motion support',async t=>{
   const p=await game(t);const r=await p.evaluate(()=>{

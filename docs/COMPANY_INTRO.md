@@ -17,18 +17,20 @@ The intro runs once per page load, including when resuming a save. It does not
 repeat for New run, a floor change, or utility-page navigation. There is no new
 save flag, balance change, sound effect, or gameplay random draw.
 
-The startup callback creates or loads the expedition only after the video has
-finished (or been skipped). While it is playing, the notebook is hidden and
+The startup callback opens the title menu only after the video has finished
+(or been skipped). It validates a saved expedition or creates an unsaved preview;
+the player explicitly chooses Continue or New Run. While it is playing, the notebook is hidden and
 inert, input is captured, and exploration, environmental updates and both auto
 drivers are gated. Backgrounding the tab pauses the video; returning resumes it.
 
 On completion, the last frame fades to black over 320ms. Startup then runs
-behind the black layer, which dissolves over 420ms into the existing notebook
-opening. Restored confirmations retain their normal callbacks and focus.
+behind the black layer, which dissolves over 420ms into the pencil title sheet.
+Restored confirmations wait for Continue, then retain their callbacks and focus.
+See `MAIN_MENU.md` for the menu's independent persistence and input contracts.
 
 The visible Skip intro button, Enter, Space, Escape or any controller button can
 skip. A single guarded completion promise prevents repeated input from creating
-multiple runs or clicking the newly exposed class choice. Reduced-motion users
+multiple previews or clicking the newly exposed menu. Reduced-motion users
 bypass the cinematic and fades. Unsupported codecs, rejected playback and media
 errors continue to the game; a ten-second watchdog also prevents a stalled
 player from trapping startup. The original has no sound, so playback is muted
@@ -43,8 +45,9 @@ Deck/phone dimensions. It produces screenshots under
 `test-results/company-intro/`. The managed browser blocks file:// navigation;
 offline checks load the exact HTML bytes with browser networking disabled.
 Other game tests and visual fixtures explicitly
-await `CompanyIntro.skip(true)` after navigation; this only bypasses cinematic
-timing, then uses the same real startup callback. It is not a runtime URL flag
+await `CompanyIntro.skip(true)` after navigation; persistence fixtures then
+explicitly choose Continue through `tests/helpers/resume-run.cjs`. Skipping only
+bypasses cinematic timing, then uses the same real startup callback. It is not a runtime URL flag
 or an alternative game initialization path.
 
 Run `npm test`, `npm run check:ui` and `npm run review:ui` before shipping.

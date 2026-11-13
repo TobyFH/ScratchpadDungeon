@@ -25,7 +25,7 @@ async function pageFor(t, options = {}, setup) {
   return p;
 }
 
-test("uploaded film really decodes and plays before run creation, then fades into the notebook", async (t) => {
+test("uploaded film really decodes and plays before run creation, then fades into the main menu", async (t) => {
   const p = await pageFor(t);
   await p.goto(url);
   await p.waitForFunction(() => document.querySelector("video").currentTime > 2);
@@ -38,8 +38,9 @@ test("uploaded film really decodes and plays before run creation, then fades int
   await p.screenshot({ path: path.join(root, "test-results/company-intro/01-logo-1920.png") });
   await p.evaluate(() => CompanyIntro.ready);
   assert.equal(await p.locator("#company-intro").count(), 0);
-  assert.equal(await p.evaluate(() => !!state.awaitingStarter && !document.querySelector(".desk").inert && !CompanyIntro.active), true);
-  assert.equal(await p.evaluate(() => !!document.activeElement.closest("#modal")), true, "keyboard focus starts inside the class choice");
+  assert.equal(await p.evaluate(() => !!state.awaitingStarter && document.querySelector(".desk").inert && MainMenu.visible && !CompanyIntro.active), true);
+  assert.equal(await p.evaluate(() => !!document.activeElement.closest("#main-menu")), true, "keyboard focus starts inside the main menu");
+  assert.equal(await p.evaluate(() => localStorage.getItem(SAVE_KEY)), null, "browsing a fresh menu does not save its preview");
   await p.screenshot({ path: path.join(root, "test-results/company-intro/02-game-1920.png") });
 });
 

@@ -727,16 +727,20 @@ test("a paid Flurry action groups its impacts and healing in one log with correc
 test("Heroic survival keeps a large notice through rendering and waits for explicit confirmation", async (t) => {
   const p = await game(t);
   await fight(p);
-  await p.evaluate(() => {
+  const noticeRestored = await p.evaluate(() => {
     characterLuck = () => 0;
     damageHero(0, 999, "Test foe", { piercing: true });
     render();
+    // At Skip speed this transient card notice expires after about one second.
+    // Check restoration in the render's task, independently of runner latency.
+    const restored = !!document.querySelector("#machine-hero-0 .hero-notice");
     window.moment = showPendingCharacterMoments();
+    return restored;
   });
   await p.waitForSelector("#stage-confirm");
   assert.equal(await p.evaluate(() => state.party[0].hp), 1);
   assert.match(await p.locator("#stage-title").innerText(), /HEROIC/);
-  assert.equal(await p.locator("#machine-hero-0 .hero-notice").count(), 1);
+  assert.equal(noticeRestored, true);
   await p.waitForTimeout(250);
   assert.equal(await p.locator("#spotlight").isVisible(), true);
   await p.locator("#stage-confirm").click();

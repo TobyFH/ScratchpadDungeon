@@ -1,3 +1,4 @@
+const { resumeSavedRun } = require("./helpers/resume-run.cjs");
 const { test, before, after } = require("node:test"),
   assert = require("node:assert/strict");
 const fs = require("node:fs"),
@@ -791,7 +792,7 @@ test("a pending surprise opening resumes after reload without rerolling its rest
     save();
   });
   await p.reload();
-  await p.evaluate(() => CompanyIntro.skip(true));
+  await resumeSavedRun(p);
   await p.waitForSelector("#stage-confirm");
   assert.equal(await p.evaluate(() => state.party[0].surprised), true);
   await p.locator("#stage-confirm").click();
