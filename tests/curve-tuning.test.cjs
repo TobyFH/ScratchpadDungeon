@@ -200,7 +200,7 @@ test("stimulant overflow advances every two extra doses, retains three turns and
   assert.equal(r.stacked.power, 4);
   assert.equal(r.cap.power, 8);
   assert.equal(r.cap.turns, 3);
-  assert.equal(r.damage, 5);
+  assert.equal(r.damage, 11);
   assert.equal(r.defence, 2);
   assert.equal(r.migrated.power, 5);
   assert.equal(r.migrated.overflow, 0);

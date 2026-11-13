@@ -674,7 +674,7 @@ test("tile captions use hyphens and activated, and biome identity survives a run
   assert.equal(r.loaded, true);
   assert.equal(r.theme, "fungal");
   assert.equal(r.name, "The violet grotto");
-  assert.equal(r.version, 25);
+  assert.equal(r.version, 26);
 });
 
 test("actual Rogue damage retains readable ranks with the stronger Aggressive bonus and no healing", async (t) => {
@@ -832,5 +832,5 @@ test("version-20 migration buffs living Tanks without reviving corpses or changi
   assert.equal(r.a.points, 39); // 12 points refunded for retired weight III.
   assert.deepEqual(r.a.face, { type: "block", tier: 4, weight: 1 });
   assert.equal(r.dead, 0);
-  assert.equal(r.version, 25);
+  assert.equal(r.version, 26);
 });

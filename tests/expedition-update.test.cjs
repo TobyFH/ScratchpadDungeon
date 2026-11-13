@@ -80,7 +80,7 @@ test("hero faces remain equally likely; old authored weights vanish without a re
   });
   assert.equal(r.loaded, true);
   assert.ok(r.fresh.flat().every((w) => w === 1));
-  assert.equal(r.migrated.version, 25);
+  assert.equal(r.migrated.version, 26);
   assert.equal(r.migrated.tier, 4);
   assert.equal(r.migrated.points, 50);
   assert.ok(r.migrated.weights.every((w) => w === 1));
@@ -357,7 +357,7 @@ test("paired foes share one large protection control and portrait badges are ico
     render();
   });
   assert.equal(await p.locator(".enemy-team-block").count(), 1);
-  assert.equal(await p.locator(".enemy-team-block strong").textContent(), "20");
+  assert.equal(await p.locator(".enemy-team-block strong").textContent(), "24");
   assert.equal(await p.locator(".specialism-badge").innerText(), "");
   assert.equal(await p.locator(".portrait-conditions").first().innerText(), "");
   assert.ok(

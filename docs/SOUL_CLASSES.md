@@ -1,5 +1,8 @@
 # Blood Seeds and the Soul Collector
 
+> Current save-26 Seed, shield, stimulant, temple, UI and update rules are in
+> [PAPER_INTERACTIONS.md](PAPER_INTERACTIONS.md), which supersedes conflicting examples below.
+
 Blood Seeds retain their save-24 mechanics; Necromancer uses the later
 [save-25 bound-party rules](SUMMONED_PARTY.md). These replace the Bloodbinder's former
 timed Bleeding, Clotted and percentage Blood Exchange. The later

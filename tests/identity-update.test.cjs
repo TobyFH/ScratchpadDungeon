@@ -150,7 +150,7 @@ test("lifesteal spends Fury through the shared healing path exactly once and wai
   assert.ok(r.ordered);
 });
 
-test("team protection caps at 20 or 30 with a Tank; enemy protection uses one bounded shared pool", async (t) => {
+test("team protection caps at 24 or 36 with a Tank; enemy protection uses one bounded shared pool", async (t) => {
   const p = await game(t);
   const r = await p.evaluate(() => {
     state.party = [makeHero("Sage", "mage",null,[],{specialism:"defence"})];
@@ -183,9 +183,9 @@ test("team protection caps at 20 or 30 with a Tank; enemy protection uses one bo
   });
   assert.deepEqual(
     [r.a, r.solo, r.b, r.tank, r.enemy, r.boss, r.after],
-    [20, 20, 10, 30, 20, 30, 20],
+    [24, 24, 12, 36, 24, 36, 24],
   );
-  assert.match(r.label, /cap 20/);
+  assert.match(r.label, /cap 24/);
 });
 
 test("Shield Bash consumes its bounded protection budget and cannot turn a critical into an 80-block attack", async (t) => {
@@ -214,7 +214,7 @@ test("Shield Bash consumes its bounded protection budget and cannot turn a criti
   });
   assert.ok(r.bash.power <= r.limit);
   assert.ok(r.bash.power <= 30);
-  assert.equal(r.block, 30 - r.bash.power);
+  assert.equal(r.block, 36 - r.bash.power);
   assert.equal(r.hp, 1000 - r.bash.actual);
 });
 
@@ -509,7 +509,7 @@ test("stimulants stop growing at eight potency and legacy overflows normalise to
   assert.equal(r.fresh.turns, 3);
   assert.equal(r.old.power, 8);
   assert.equal(r.old.turns, 3);
-  assert.equal(r.attack, 5);
+  assert.equal(r.attack, 11);
   assert.equal(r.defence, 2);
 });
 

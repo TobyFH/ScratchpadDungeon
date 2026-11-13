@@ -63,7 +63,7 @@ test('self stimulant stays on its caster; ordinary ally stimulant follows the se
     state.party=[state.party[1]];
     return {self,ally,target,solo:supportStimulantTarget(state.party[0])===state.party[0]};
   });
-  assert.deepEqual(r.self,[true,false,false]); assert.deepEqual(r.ally,[false,false,true]); assert.equal(r.target,'Rogue'); assert.equal(r.solo,true);
+  assert.deepEqual(r.self,[true,false,false]); assert.deepEqual(r.ally,[false,false,true]); assert.equal(r.target,'Tank'); assert.equal(r.solo,true);
 });
 
 test('buff and Trick edit palettes, inherited support marks, saves and workshop descriptions share legal types',async t=>{

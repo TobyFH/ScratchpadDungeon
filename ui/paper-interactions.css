@@ -1,0 +1,319 @@
+/* Shared notebook interaction patterns: fixed hitboxes, legible collection pages. */
+.target-button.healing-immune {
+  border-color: var(--soft);
+  outline: 1px dotted var(--soft);
+  outline-offset: 1px;
+}
+.immune-skulls {
+  position: absolute;
+  left: 1px;
+  right: 1px;
+  bottom: 0;
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: 4px;
+  background: var(--paper);
+  color: var(--ink);
+  pointer-events: none;
+}
+.healing-immune .target-check {
+  bottom: auto;
+  top: -2px;
+}
+.rejected-heal {
+  position: fixed;
+  z-index: var(--z-feedback, 2000);
+  pointer-events: none;
+  color: #77746f;
+  width: 30px;
+  text-align: center;
+}
+.rejected-heal > svg {
+  width: 28px;
+  height: 28px;
+  filter: grayscale(1);
+}
+.rejected-heal small {
+  display: block;
+  white-space: nowrap;
+  font: 700 12px var(--font-body);
+  transform: translateX(-25%);
+}
+#modal[data-kind="artefacts"] {
+  width: min(900px, 94vw) !important;
+  height: min(690px, 78vh) !important;
+  max-height: calc(100dvh - var(--keyboard-bar-height, 70px) - 100px);
+  box-sizing: border-box;
+}
+#modal[data-kind="artefacts"] .modal-body,
+#modal[data-kind="artefacts"] .modal-flow {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  zoom: 1 !important;
+}
+#modal[data-kind="artefacts"] .modal-flow {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 10px;
+}
+.artefact-library {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  align-content: start;
+  overflow-y: auto;
+  min-height: 0;
+  padding: 6px;
+  overscroll-behavior: contain;
+}
+.artefact-library .artefact-card {
+  min-width: 0;
+  margin: 0;
+  padding: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.artefact-library .artefact-card > svg {
+  flex: 0 0 36px;
+  width: 36px;
+  height: 40px;
+}
+.artefact-library .artefact-card > div {
+  min-width: 0;
+}
+.artefact-library b {
+  font-size: 23px;
+  overflow-wrap: anywhere;
+}
+.artefact-library p {
+  font-size: 20px;
+  line-height: 1.2;
+  margin: 6px 0;
+}
+.artefact-library button {
+  font-size: 20px;
+  min-height: 34px;
+}
+.artefact-intro {
+  font-size: 22px !important;
+  margin: 0 !important;
+}
+.premium-label {
+  display: block;
+  color: var(--gold);
+  font-size: 15px;
+  letter-spacing: 0.04em;
+}
+.bandit-preview {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  align-items: center;
+  height: 200px;
+}
+.bandit-preview figure {
+  margin: 0;
+  text-align: center;
+  width: 140px;
+}
+.bandit-preview svg {
+  height: 135px;
+  max-width: 110px;
+}
+.bandit-preview figcaption {
+  font-size: 22px;
+  line-height: 1.1;
+}
+.bandit-preview small {
+  display: block;
+  font-size: 17px;
+}
+.fairy-prank-result p {
+  margin: 8px 0;
+}
+.quartz-flow {
+  stroke: #4e91be;
+  stroke-width: 0.04;
+  stroke-linecap: round;
+  stroke-dasharray: 0.08 0.92;
+  fill: none;
+  opacity: 0.55;
+  animation: quartz-flow 2s linear infinite;
+}
+.quartz-source {
+  fill: none;
+  stroke: #5b90af;
+  stroke-width: 0.035;
+  opacity: 0.5;
+}
+@keyframes quartz-flow {
+  to {
+    stroke-dashoffset: -1;
+  }
+}
+body:not(.tile-motion-enabled) .quartz-flow {
+  animation: none;
+  stroke-dasharray: 0.04 0.12;
+  opacity: 0.3;
+}
+.stim-projectile {
+  color: #af7b22 !important;
+  filter: drop-shadow(0 0 4px #daa948) !important;
+}
+.stim-impact {
+  box-shadow: 0 0 18px #c5973d99;
+}
+.blood-bloom-signature {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: var(--z-feedback, 2000);
+  overflow: visible;
+}
+.blood-bloom-ray {
+  stroke: #9c3347;
+  stroke-width: 13;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 7px #b9436388);
+  fill: none;
+}
+.seed-impact {
+  position: fixed;
+  pointer-events: none;
+  width: 38px;
+  height: 38px;
+  color: var(--blood-ink);
+  z-index: var(--z-feedback, 2000);
+}
+.seed-impact > svg {
+  width: 100%;
+  height: 100%;
+}
+.input-mode-toggle {
+  font-size: 14px !important;
+  padding: 1px 5px !important;
+  line-height: 1.1;
+  white-space: nowrap;
+  min-height: 23px;
+}
+body[data-input-modality="navigation"] .controller-focus {
+  outline: 3px solid var(--blue, #527b94) !important;
+  outline-offset: 3px;
+  box-shadow:
+    0 0 0 5px var(--paper),
+    0 0 0 6px #527b9488 !important;
+}
+body[data-input-modality="mouse"] :focus:not(:focus-visible) {
+  outline: none;
+}
+/* Mouse use suppresses stale controller focus; it never disables real hover. */
+@media (max-width: 760px) {
+  .artefact-library {
+    gap: 6px;
+    padding: 3px;
+  }
+  .artefact-library .artefact-card {
+    display: block;
+    padding: 7px;
+  }
+  .artefact-library .artefact-card > svg {
+    width: 28px;
+    height: 28px;
+  }
+  .artefact-library b {
+    font-size: 19px;
+  }
+  .artefact-library p,
+  .artefact-library button {
+    font-size: 16px;
+  }
+  #modal[data-kind="artefacts"] {
+    height: 70vh !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .quartz-flow {
+    animation: none;
+  }
+}
+/* The legacy modal body centres intrinsically sized flows. The archive owns its
+   width: never let long descriptions make an off-screen intrinsic grid. */
+#modal[data-kind="artefacts"] .modal-flow {
+  width: 100% !important;
+  max-width: 100%;
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr);
+  box-sizing: border-box;
+}
+.artefact-library {
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+.rejected-heal small {
+  font-family: var(--hand);
+  font-size: 12px;
+  font-weight: 700;
+}
+.landmark-aura-flow {
+  fill: none;
+  stroke: var(--aura-ink);
+  stroke-width: 0.035;
+  stroke-linecap: round;
+  stroke-dasharray: 0.06 0.94;
+  opacity: 0.4;
+  animation: quartz-flow 2.8s linear infinite;
+}
+.landmark-aura-source {
+  fill: none;
+  stroke: var(--aura-ink);
+  stroke-width: 0.025;
+  opacity: 0.35;
+}
+body:not(.tile-motion-enabled) .landmark-aura-flow {
+  animation: none;
+  stroke-dasharray: 0.03 0.12;
+  opacity: 0.25;
+}
+@media (prefers-reduced-motion: reduce) {
+  .landmark-aura-flow {
+    animation: none;
+  }
+}
+.healing-penalty-badge {
+  color: var(--soft);
+}
+@media (max-width: 400px) {
+  .field-guide .illustrated-guide {
+    gap: 4px;
+  }
+  .field-guide .guide-grid {
+    margin: 3px 0;
+  }
+}
+#modal[data-kind="artefacts"] > h2 {
+  flex: 0 0 auto;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  font-size: 34px;
+  line-height: 1.1;
+  margin: 0 22px 10px 0;
+}
+#modal[data-kind="artefacts"] .modal-body {
+  height: auto;
+  flex: 1;
+}
+@media (max-width: 760px) {
+  #modal[data-kind="artefacts"] {
+    padding: 18px 14px;
+  }
+  #modal[data-kind="artefacts"] > h2 {
+    font-size: 26px;
+  }
+  .artefact-intro {
+    font-size: 18px !important;
+    line-height: 1.15;
+  }
+}

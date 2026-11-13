@@ -13643,6 +13643,326 @@ body.utility-open #overlay {
     display: none;
   }
 }
+
+/* Shared notebook interaction patterns: fixed hitboxes, legible collection pages. */
+.target-button.healing-immune {
+  border-color: var(--soft);
+  outline: 1px dotted var(--soft);
+  outline-offset: 1px;
+}
+.immune-skulls {
+  position: absolute;
+  left: 1px;
+  right: 1px;
+  bottom: 0;
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: 4px;
+  background: var(--paper);
+  color: var(--ink);
+  pointer-events: none;
+}
+.healing-immune .target-check {
+  bottom: auto;
+  top: -2px;
+}
+.rejected-heal {
+  position: fixed;
+  z-index: var(--z-feedback, 2000);
+  pointer-events: none;
+  color: #77746f;
+  width: 30px;
+  text-align: center;
+}
+.rejected-heal > svg {
+  width: 28px;
+  height: 28px;
+  filter: grayscale(1);
+}
+.rejected-heal small {
+  display: block;
+  white-space: nowrap;
+  font: 700 12px var(--font-body);
+  transform: translateX(-25%);
+}
+#modal[data-kind="artefacts"] {
+  width: min(900px, 94vw) !important;
+  height: min(690px, 78vh) !important;
+  max-height: calc(100dvh - var(--keyboard-bar-height, 70px) - 100px);
+  box-sizing: border-box;
+}
+#modal[data-kind="artefacts"] .modal-body,
+#modal[data-kind="artefacts"] .modal-flow {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  zoom: 1 !important;
+}
+#modal[data-kind="artefacts"] .modal-flow {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 10px;
+}
+.artefact-library {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  align-content: start;
+  overflow-y: auto;
+  min-height: 0;
+  padding: 6px;
+  overscroll-behavior: contain;
+}
+.artefact-library .artefact-card {
+  min-width: 0;
+  margin: 0;
+  padding: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.artefact-library .artefact-card > svg {
+  flex: 0 0 36px;
+  width: 36px;
+  height: 40px;
+}
+.artefact-library .artefact-card > div {
+  min-width: 0;
+}
+.artefact-library b {
+  font-size: 23px;
+  overflow-wrap: anywhere;
+}
+.artefact-library p {
+  font-size: 20px;
+  line-height: 1.2;
+  margin: 6px 0;
+}
+.artefact-library button {
+  font-size: 20px;
+  min-height: 34px;
+}
+.artefact-intro {
+  font-size: 22px !important;
+  margin: 0 !important;
+}
+.premium-label {
+  display: block;
+  color: var(--gold);
+  font-size: 15px;
+  letter-spacing: 0.04em;
+}
+.bandit-preview {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  align-items: center;
+  height: 200px;
+}
+.bandit-preview figure {
+  margin: 0;
+  text-align: center;
+  width: 140px;
+}
+.bandit-preview svg {
+  height: 135px;
+  max-width: 110px;
+}
+.bandit-preview figcaption {
+  font-size: 22px;
+  line-height: 1.1;
+}
+.bandit-preview small {
+  display: block;
+  font-size: 17px;
+}
+.fairy-prank-result p {
+  margin: 8px 0;
+}
+.quartz-flow {
+  stroke: #4e91be;
+  stroke-width: 0.04;
+  stroke-linecap: round;
+  stroke-dasharray: 0.08 0.92;
+  fill: none;
+  opacity: 0.55;
+  animation: quartz-flow 2s linear infinite;
+}
+.quartz-source {
+  fill: none;
+  stroke: #5b90af;
+  stroke-width: 0.035;
+  opacity: 0.5;
+}
+@keyframes quartz-flow {
+  to {
+    stroke-dashoffset: -1;
+  }
+}
+body:not(.tile-motion-enabled) .quartz-flow {
+  animation: none;
+  stroke-dasharray: 0.04 0.12;
+  opacity: 0.3;
+}
+.stim-projectile {
+  color: #af7b22 !important;
+  filter: drop-shadow(0 0 4px #daa948) !important;
+}
+.stim-impact {
+  box-shadow: 0 0 18px #c5973d99;
+}
+.blood-bloom-signature {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: var(--z-feedback, 2000);
+  overflow: visible;
+}
+.blood-bloom-ray {
+  stroke: #9c3347;
+  stroke-width: 13;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 7px #b9436388);
+  fill: none;
+}
+.seed-impact {
+  position: fixed;
+  pointer-events: none;
+  width: 38px;
+  height: 38px;
+  color: var(--blood-ink);
+  z-index: var(--z-feedback, 2000);
+}
+.seed-impact > svg {
+  width: 100%;
+  height: 100%;
+}
+.input-mode-toggle {
+  font-size: 14px !important;
+  padding: 1px 5px !important;
+  line-height: 1.1;
+  white-space: nowrap;
+  min-height: 23px;
+}
+body[data-input-modality="navigation"] .controller-focus {
+  outline: 3px solid var(--blue, #527b94) !important;
+  outline-offset: 3px;
+  box-shadow:
+    0 0 0 5px var(--paper),
+    0 0 0 6px #527b9488 !important;
+}
+body[data-input-modality="mouse"] :focus:not(:focus-visible) {
+  outline: none;
+}
+/* Mouse use suppresses stale controller focus; it never disables real hover. */
+@media (max-width: 760px) {
+  .artefact-library {
+    gap: 6px;
+    padding: 3px;
+  }
+  .artefact-library .artefact-card {
+    display: block;
+    padding: 7px;
+  }
+  .artefact-library .artefact-card > svg {
+    width: 28px;
+    height: 28px;
+  }
+  .artefact-library b {
+    font-size: 19px;
+  }
+  .artefact-library p,
+  .artefact-library button {
+    font-size: 16px;
+  }
+  #modal[data-kind="artefacts"] {
+    height: 70vh !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .quartz-flow {
+    animation: none;
+  }
+}
+/* The legacy modal body centres intrinsically sized flows. The archive owns its
+   width: never let long descriptions make an off-screen intrinsic grid. */
+#modal[data-kind="artefacts"] .modal-flow {
+  width: 100% !important;
+  max-width: 100%;
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr);
+  box-sizing: border-box;
+}
+.artefact-library {
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+.rejected-heal small {
+  font-family: var(--hand);
+  font-size: 12px;
+  font-weight: 700;
+}
+.landmark-aura-flow {
+  fill: none;
+  stroke: var(--aura-ink);
+  stroke-width: 0.035;
+  stroke-linecap: round;
+  stroke-dasharray: 0.06 0.94;
+  opacity: 0.4;
+  animation: quartz-flow 2.8s linear infinite;
+}
+.landmark-aura-source {
+  fill: none;
+  stroke: var(--aura-ink);
+  stroke-width: 0.025;
+  opacity: 0.35;
+}
+body:not(.tile-motion-enabled) .landmark-aura-flow {
+  animation: none;
+  stroke-dasharray: 0.03 0.12;
+  opacity: 0.25;
+}
+@media (prefers-reduced-motion: reduce) {
+  .landmark-aura-flow {
+    animation: none;
+  }
+}
+.healing-penalty-badge {
+  color: var(--soft);
+}
+@media (max-width: 400px) {
+  .field-guide .illustrated-guide {
+    gap: 4px;
+  }
+  .field-guide .guide-grid {
+    margin: 3px 0;
+  }
+}
+#modal[data-kind="artefacts"] > h2 {
+  flex: 0 0 auto;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  font-size: 34px;
+  line-height: 1.1;
+  margin: 0 22px 10px 0;
+}
+#modal[data-kind="artefacts"] .modal-body {
+  height: auto;
+  flex: 1;
+}
+@media (max-width: 760px) {
+  #modal[data-kind="artefacts"] {
+    padding: 18px 14px;
+  }
+  #modal[data-kind="artefacts"] > h2 {
+    font-size: 26px;
+  }
+  .artefact-intro {
+    font-size: 18px !important;
+    line-height: 1.15;
+  }
+}
 /* END GENERATED NOTEBOOK CSS */
     </style>
   </head>
@@ -13830,7 +14150,7 @@ body.utility-open #overlay {
         "<!doctype html>\n" + document.documentElement.outerHTML;
       const $ = (s) => document.querySelector(s),
         SAVE_KEY = "scratchpad-dungeon-v8",
-        SAVE_VERSION = 25,
+        SAVE_VERSION = 26,
         W = 11,
         H = 9;
       // BEGIN GENERATED NOTEBOOK ART
@@ -14409,7 +14729,7 @@ function punEnemyArt(id) {
     protractor:
       "M10 105q1-91 99-12l-9 16ZM29 96q17-39 55 0ZM21 87l8 4m-1-23 9 7m5-20 4 10m11-15v11m13-8-4 9m18 2-7 9m18 8-9 4M46 107l-8 22m43-22 6 22M22 72 5 63m91 7 17-15",
     postit:
-      "M29 28l65-1-2 79-19 16-49-5ZM74 121l-1-22 18 7M33 37h51M34 45h36M35 94l15-2m17 2h15",
+      "M25 25l70 3-3 76-18 17-51-7ZM74 120l-1-20 19 4M25 49l69 3-2 20-68-4ZM36 58l11 2m20-1 12 1M45 83q15 12 30-1M24 65 8 79l9 10m76-24 17 13-8 12M36 116l-7 15m49-11 10 11",
     stego:
       "M12 93l23-28 37-7 25 16 14 37-27-13-38 6-15 17-6-19ZM30 65l5-21 16 15 10-24 14 24 16-13 4 24M33 101l-4 28m22-26 1 26m26-29 6 30M16 87 6 72m12 12-4 9M93 82l8 1",
     spelleton:
@@ -14570,10 +14890,16 @@ const POWER = Object.freeze({
   blank: 0,
 });
 const ATTACK_POWER = Object.freeze([0, 1, 2, 3, 4]);
-const markDamage = (type, tier = 1) => ATTACK_POWER[tier] * (type === "heavy" ? POWER.heavy : 1);
+const markDamage = (type, tier = 1) =>
+  ATTACK_POWER[tier] * (type === "heavy" ? POWER.heavy : 1);
 const PHYSICAL_TYPES = Object.freeze(["attack", "heavy"]);
 const DAMAGE_TYPES = Object.freeze([...PHYSICAL_TYPES, "magic"]);
-const OFFENSIVE_TYPES = Object.freeze([...DAMAGE_TYPES, "poison", "bloodseed", "harvest"]);
+const OFFENSIVE_TYPES = Object.freeze([
+  ...DAMAGE_TYPES,
+  "poison",
+  "bloodseed",
+  "harvest",
+]);
 const FACE_COST = Object.freeze({ 1: 1, 2: 3, 3: 6, 4: 10 });
 const CLASS_BALANCE = Object.freeze({
   fighter: {
@@ -14601,8 +14927,16 @@ const CLASS_BALANCE = Object.freeze({
     critical: [1.75, 2.5, 3, 4],
     path: "Blood Price builds Fury. Balance damage with healing and lifesteal.",
   },
-  bloodbinder: {hp:32,critical:[1.5,2,2.5,3],path:"Plant Seeds, then turn enemy damage into shared healing. Blood Bloom bursts every Seed."},
-  necromancer: {hp:22,critical:[1.5,1.75,2,2.5],path:"Gather Souls to raise allies with fixed reels. Roll their turns or consume them to heal."},
+  bloodbinder: {
+    hp: 32,
+    critical: [1.5, 2, 2.5, 3],
+    path: "Plant Seeds, then turn enemy damage into shared healing. Blood Bloom bursts every Seed.",
+  },
+  necromancer: {
+    hp: 22,
+    critical: [1.5, 1.75, 2, 2.5],
+    path: "Gather Souls to raise allies with fixed reels. Roll their turns or consume them to heal.",
+  },
   jester: {
     hp: 30,
     critical: [1.5, 2, 3, 4],
@@ -14617,7 +14951,7 @@ const CRITICAL_BALANCE = Object.freeze({
 function criticalPool(hero, { enemy = false, context = null } = {}) {
   if (context === "well") return CRITICAL_BALANCE.well;
   if (enemy) return CRITICAL_BALANCE.enemy;
-  if(isSummon(hero))return CLASS_BALANCE.necromancer.critical;
+  if (isSummon(hero)) return CLASS_BALANCE.necromancer.critical;
   return hero
     ? CLASS_BALANCE[hero.job]?.critical || CLASS_BALANCE.mage.critical
     : CRITICAL_BALANCE.loot;
@@ -14743,7 +15077,7 @@ const floorBalance = (depth) =>
 // Shorter endurance, steadier pressure: support teams get useful damage windows.
 const ENCOUNTER_TUNING = Object.freeze({
   earlyHitPressure: [1.08, 1.18, 1.18, 1.2, 1.2, 1.12, 1.1, 1, 1, 1],
-  earlyHealth: [1,1.04,1.04,1.04,1.04,1,1,1,1,1],
+  earlyHealth: [1, 1.04, 1.04, 1.04, 1.04, 1, 1, 1, 1, 1],
   eliteHealth: 1.18,
   strongholdHealth: 1.25,
   bulkyExcess: 0.7,
@@ -14803,7 +15137,9 @@ function enemyBalance(
   const stats = {
     maxHp: Math.ceil(
       (boss ? row.bossHp : row.hp * enemyEndurance(identity.hp || 1)) *
-        ENCOUNTER_TUNING.earlyHealth[Math.max(0,Math.min(9,Math.floor(depth)-1))] *
+        ENCOUNTER_TUNING.earlyHealth[
+          Math.max(0, Math.min(9, Math.floor(depth) - 1))
+        ] *
         (boss
           ? 1
           : (elite ? ENCOUNTER_TUNING.eliteHealth : 1) *
@@ -14952,6 +15288,7 @@ const ENEMY_PROFILES = {
     trait: "secondWind",
   },
   revenant: {
+    shieldBreaker: true,
     damage: 1.05,
     hp: 1.25,
     faces: [
@@ -15080,6 +15417,7 @@ const ENEMY_PROFILES = {
     trait: "split",
   },
   ashcolossus: {
+    shieldBreaker: true,
     name: "Ash colossus",
     minDepth: 8,
     maxDepth: 10,
@@ -15134,14 +15472,21 @@ function encounterXP(depth, enemy, count = 1) {
 
 // Bounded resources and complementary marks, shared by manual play and AI.
 const COMBAT_LIMITS = Object.freeze({
-  block: 20,
-  tankBlock: 30,
-  enemyBlock: 20,
-  bossBlock: 30,
+  block: 24,
+  tankBlock: 36,
+  enemyBlock: 24,
+  bossBlock: 36,
   stunWard: 2,
   stimulantPower: 8,
   punchlineShots: 6,
 });
+// Shield criticals improve defence without immediately saturating the cap.
+const criticalBlockGain = (power, multiplier) =>
+  Math.ceil(power * (1 + Math.max(0, multiplier - 1) * 0.4));
+const criticalEffectValue = (effect, multiplier) =>
+  effect.criticalRule === "block"
+    ? criticalBlockGain(effect.value, multiplier)
+    : Math.ceil(effect.value * multiplier);
 const partyBlockCap = () =>
   state.party.some((h) => alive(h) && h.job === "fighter")
     ? COMBAT_LIMITS.tankBlock
@@ -15189,7 +15534,10 @@ const CLASS_COMBOS = Object.freeze({
   },
 });
 function complementaryEffects(h, symbols) {
-  const has = (t) => symbols.some((f) => f.type === t || t === "attack" && f.type === "heavy"),
+  const has = (t) =>
+      symbols.some(
+        (f) => f.type === t || (t === "attack" && f.type === "heavy"),
+      ),
     fx = {};
   if (h.job === "fighter" && has("attack") && has("block")) fx.block = 2;
   if (h.job === "rogue" && has("attack") && (has("poison") || has("stun")))
@@ -15275,7 +15623,8 @@ function expectedComplementaryEffects(h) {
         a.reduce((p, x, k) => p * (1 - x - b[k]), 1),
     );
   };
-  if (h.job === "fighter") return { block: 2 * both(PHYSICAL_TYPES, ["block"]) };
+  if (h.job === "fighter")
+    return { block: 2 * both(PHYSICAL_TYPES, ["block"]) };
   if (h.job === "rogue")
     return { damage: both(PHYSICAL_TYPES, ["poison", "stun"]) };
   if (h.job === "ranger")
@@ -15651,8 +16000,8 @@ function campProfile() {
 function necromancerUnlocked(profile = campProfile()) {
   return profile.dungeonCleared === true;
 }
-function recordDungeonVictory() {
-  if (!state?.won || state.depth !== 10) return false;
+function recordDungeonVictory(expedition = state) {
+  if (!expedition?.won || expedition.depth !== 10) return false;
   try {
     const p=readProfile();
     if (p.dungeonCleared) return false;
@@ -16039,13 +16388,14 @@ const ECONOMY = Object.freeze({
   mapDepth: 16,
   startingPurse: 150,
 });
-function shopPrices() {
+function shopPrices(cell = null) {
   return {
     ...Object.fromEntries(
       Object.entries(ITEM_DEFS).map(([type, item]) => [
         type,
         item.equipment
-          ? ECONOMY.equipmentBase + state.depth * ECONOMY.equipmentDepth
+          ? (ECONOMY.equipmentBase + state.depth * ECONOMY.equipmentDepth) *
+            (cell?.premium === type ? 2 : 1)
           : ECONOMY.supplyBase +
             (SUPPLY_PRICE_PREMIUM[item.family || type] || 0) +
             state.depth * ECONOMY.supplyDepth +
@@ -16083,13 +16433,11 @@ function campRollBonus(base) {
 const SPECIALISMS = Object.freeze({
   offence: {
     name: "Aggressive",
-    description:
-      "+2 physical, spell and poison power on rolls that use them.",
+    description: "+2 physical, spell and poison power on rolls that use them.",
   },
   defence: {
     name: "Defensive",
-    description:
-      "+2 healing, block and stun power on rolls that use them.",
+    description: "+2 healing, block and stun power on rolls that use them.",
   },
 });
 const MAGE_POWERS = Object.freeze({
@@ -16143,8 +16491,12 @@ const fountainRollRate = (depth = state.depth) =>
   Math.min(9, Math.max(0, depth - 1)) * 0.018 +
   lateWellSteps(depth) * SUPPORT_SCALING.wellRollPerFloor;
 function heroDamagePower(h, n) {
-  const factor=isSummon(h)?NECROMANCER.summonDamage:h.job==="necromancer"?NECROMANCER.personalDamage:1;
-  return n>0?Math.max(1,Math.floor(n*factor)):n;
+  const factor = isSummon(h)
+    ? NECROMANCER.summonDamage
+    : h.job === "necromancer"
+      ? NECROMANCER.personalDamage
+      : 1;
+  return n > 0 ? Math.max(1, Math.floor(n * factor)) : n;
 }
 function heroHealingPower(n) {
   return n;
@@ -16173,9 +16525,10 @@ const mageHealingFactor = (h) =>
     : 1;
 const classHealingPower = (h, n) =>
   n > 0 ? n + Math.round(n * (heroHealingFactor(h) - 1)) : n;
-const heroHealingFactor = (h) => h.job === "bloodbinder"
-  ? 1 + Math.min(.2,Math.max(0,(h.level || 1)-4)*.025)
-  : mageHealingFactor(h);
+const heroHealingFactor = (h) =>
+  h.job === "bloodbinder"
+    ? 1 + Math.min(0.2, Math.max(0, (h.level || 1) - 4) * 0.025)
+    : mageHealingFactor(h);
 // Fury scales with level; every real HP restored spends one charge.
 const BERSERKER_SUSTAIN = Object.freeze({
   bloodrushHeal: 4,
@@ -16304,7 +16657,10 @@ function mageResonance(h, symbols = null) {
 const mageRole = (h) => mageResonance(h);
 function normaliseHeroBuild(h) {
   if (!h) return;
-  if(isSummon(h)){normaliseSummon(h);return;}
+  if (isSummon(h)) {
+    normaliseSummon(h);
+    return;
+  }
   if (h.job === "healer") h.job = "mage";
   delete h.mageRole;
   normaliseTacticalStatuses(h);
@@ -16341,14 +16697,28 @@ function normaliseHeroBuild(h) {
   h.charge = Math.min(RANGER_AIM_CAP, Math.max(0, h.charge || 0));
   h.fury = Math.min(furyCapacity(h), Math.max(0, h.fury || 0));
   if (!h.reels) return;
-  for(const face of [...h.reels.flat(),...(h.last||[])]){
-    if(h.job==='rogue'&&['heal','selfheal'].includes(face.type))face.type='poison';
-    if(face.type==='harvest'&&h.job!=='necromancer'){face.type='blank';face.tier=1;}
-    if(h.job==='bloodbinder'&&face.type==='attack')face.type='magic';
-    if(h.job==='bloodbinder'&&face.type==='stimulant')face.type='rally';
-    if(h.job==='bloodbinder'&&face.type==='selfheal')face.type='heal';
-    if(['bloodbinder','necromancer'].includes(h.job)&&!['class',...CLASS_FACE_TYPES[h.job]].includes(face.type)){face.type='blank';face.tier=1;}
-    if(face.type==='bloodseed'&&h.job!=='bloodbinder'){face.type='blank';face.tier=1;}
+  for (const face of [...h.reels.flat(), ...(h.last || [])]) {
+    if (h.job === "rogue" && ["heal", "selfheal"].includes(face.type))
+      face.type = "poison";
+    if (face.type === "harvest" && h.job !== "necromancer") {
+      face.type = "blank";
+      face.tier = 1;
+    }
+    if (h.job === "bloodbinder" && face.type === "attack") face.type = "magic";
+    if (h.job === "bloodbinder" && face.type === "stimulant")
+      face.type = "rally";
+    if (h.job === "bloodbinder" && face.type === "selfheal") face.type = "heal";
+    if (
+      ["bloodbinder", "necromancer"].includes(h.job) &&
+      !["class", ...CLASS_FACE_TYPES[h.job]].includes(face.type)
+    ) {
+      face.type = "blank";
+      face.tier = 1;
+    }
+    if (face.type === "bloodseed" && h.job !== "bloodbinder") {
+      face.type = "blank";
+      face.tier = 1;
+    }
   }
   if (["fighter", "rogue", "ranger", "berserker"].includes(h.job)) {
     h.reels.forEach((reel) =>
@@ -16438,7 +16808,8 @@ function normaliseHeroBuild(h) {
   normaliseMysteryReels(h);
 }
 function classAbilityName(hero) {
-  if(hero?.summonKind && hero.summonKind!=="zombie")return summonAbilityName(hero);
+  if (hero?.summonKind && hero.summonKind !== "zombie")
+    return summonAbilityName(hero);
   const job = typeof hero === "string" ? hero : hero?.job;
   return (
     {
@@ -16455,19 +16826,26 @@ function classAbilityName(hero) {
   );
 }
 function classAbilityDescription(hero) {
-  if(hero?.summonKind && hero.summonKind!=="zombie")return summonAbilityDescription(hero);
-  const h=typeof hero==='object'?hero:{job:hero,level:1},job=h?.job;
-  return {
-    fighter:`Gain ${tankSealBlock(h)} team block, then spend up to ${bashLimit(h)} on a Shield Bash. Deals double damage to enemy block.`,
-    rogue:"Flurry: three extra blade strikes at your target. Criticals hit all enemies.",
-    mage:"Resonance repeats the roll’s strongest spell, heal, shield or poison across its whole team. Healing clears allied stuns.",
-    healer:"Resonance repeats your strongest rolled power across its whole team.",
-    ranger:`Fire a ${rangerSealPower(h)}-power shot. Spend stored Execute for a separate bonus hit, ×${RANGER_EXECUTE.sealMultiplier} on this mark; wounded foes take more.`,
-    berserker:`Bloodrush: heal yourself for ${bloodrushHealing(h)} HP and add 2 physical damage. Fury strengthens attacks and lifesteal; healing spends it.`,
-    jester:"Wildcard: a random trick, usually in your favour. May alter reels, reverse an enemy roll, or scatter damage and healing.",
-    bloodbinder:"Blood Bloom: burst every enemy’s Seeds. Each deals 1 damage and shares 1 HP of healing among wounded allies.",
-    necromancer:`Gain ${necromancerSealPower(h)} Harvest power. Souls raise up to two allies with their own reels. Consume them to heal yourself; a full team gains Soul Surge.`,
-  }[job] || "A class ability rolled alongside your other two marks.";
+  if (hero?.summonKind && hero.summonKind !== "zombie")
+    return summonAbilityDescription(hero);
+  const h = typeof hero === "object" ? hero : { job: hero, level: 1 },
+    job = h?.job;
+  return (
+    {
+      fighter: `Gain ${tankSealBlock(h)} team block, then spend up to ${bashLimit(h)} on a Shield Bash. Deals double damage to enemy block.`,
+      rogue:
+        "Flurry: three extra blade strikes at your target. Criticals hit all enemies.",
+      mage: "Resonance repeats the roll’s strongest spell, heal, shield or poison across its whole team. Healing clears allied stuns.",
+      healer:
+        "Resonance repeats your strongest rolled power across its whole team.",
+      ranger: `Fire a ${rangerSealPower(h)}-power shot. Spend stored Execute for a separate bonus hit, ×${RANGER_EXECUTE.sealMultiplier} on this mark; wounded foes take more.`,
+      berserker: `Bloodrush: heal yourself for ${bloodrushHealing(h)} HP and add 2 physical damage. Fury strengthens attacks and lifesteal; healing spends it.`,
+      jester:
+        "Wildcard: a random trick, usually in your favour. May alter reels, reverse an enemy roll, or scatter damage and healing.",
+      bloodbinder: `Blood Bloom: add ${bloomSeedsAdded(h)} Seeds to every enemy, then detonate all. Each deals 2 damage and releases 2 base shared healing, boosted by your healing bonuses.`,
+      necromancer: `Gain ${necromancerSealPower(h)} Harvest power. Souls raise up to two allies with their own reels. Consume them to heal yourself; a full team gains Soul Surge.`,
+    }[job] || "A class ability rolled alongside your other two marks."
+  );
 }
 function temperamentEffects(h, base) {
   const keys =
@@ -16476,13 +16854,22 @@ function temperamentEffects(h, base) {
       : h.specialism === "defence"
         ? ["heal", "selfHeal", "teamHeal", "block", "stun"]
         : [];
-  for (const key of keys) if (base[key] > 0) base[key] += HERO_TUNING.temperament;
+  for (const key of keys)
+    if (base[key] > 0) base[key] += HERO_TUNING.temperament;
   return base;
 }
 const CLASS_FACE_TYPES = Object.freeze({
   bloodbinder: ["heal", "bloodseed", "magic", "rally", "blank"],
   necromancer: ["magic", "poison", "harvest", "blank"],
-  fighter: ["attack", "heavy", "block", "selfheal", "stun", "stimulant", "blank"],
+  fighter: [
+    "attack",
+    "heavy",
+    "block",
+    "selfheal",
+    "stun",
+    "stimulant",
+    "blank",
+  ],
   rogue: ["attack", "poison", "stun", "stimulant", "blank"],
   mage: [
     "magic",
@@ -16500,8 +16887,38 @@ const CLASS_FACE_TYPES = Object.freeze({
 function startingFaces(job, temperament) {
   const defensive = temperament === "defence";
   return {
-    bloodbinder: defensive ? [["heal",1],["heal",1],["bloodseed",1],["magic",1],["rally",1],["blank",1]] : [["magic",1],["magic",1],["bloodseed",1],["heal",1],["rally",1],["blank",1]],
-    necromancer: defensive ? [["harvest",1],["harvest",1],["magic",1],["poison",1],["blank",1]] : [["magic",1],["magic",1],["harvest",1],["poison",1],["blank",1]],
+    bloodbinder: defensive
+      ? [
+          ["heal", 1],
+          ["heal", 1],
+          ["bloodseed", 1],
+          ["magic", 1],
+          ["rally", 1],
+          ["blank", 1],
+        ]
+      : [
+          ["magic", 1],
+          ["magic", 1],
+          ["bloodseed", 1],
+          ["heal", 1],
+          ["rally", 1],
+          ["blank", 1],
+        ],
+    necromancer: defensive
+      ? [
+          ["harvest", 1],
+          ["harvest", 1],
+          ["magic", 1],
+          ["poison", 1],
+          ["blank", 1],
+        ]
+      : [
+          ["magic", 1],
+          ["magic", 1],
+          ["harvest", 1],
+          ["poison", 1],
+          ["blank", 1],
+        ],
     fighter: defensive
       ? [
           ["attack", 1],
@@ -16688,7 +17105,7 @@ function makeHero(
 }
 // Shared by actual recovery and the fountain's uncapped offered totals.
 function offeredHealing(h, amount) {
-  if(!canReceiveOrdinaryHealing(h))return 0;
+  if (!canReceiveOrdinaryHealing(h)) return 0;
   return amount > 0
     ? Math.max(
         1,
@@ -17087,6 +17504,7 @@ function wardActive(e = actingEnemy) {
         bloodFeedback=[];
         state = {
           version: SAVE_VERSION,
+          release: EXPEDITION_RELEASE,
           runId: newExpeditionId(),
           bankedFloors: {},
           runRules: rules,
@@ -17488,7 +17906,7 @@ const WILDCARD_LOG_EVENTS = Object.freeze([
 const EVENT_LOG_TERMS = Object.freeze({
   "Blood Seed": "Stacks on one enemy without a cap or expiry. Each actual HP of damage consumes one Seed, providing one shared HP of healing. Planting costs the caster a little HP but cannot kill them.",
   "Blood Seeds": "Stacks on one enemy. Damage consumes one Seed per actual HP lost and shares that amount of healing across injured allies.",
-  "Blood Bloom": "Detonates every Seed on all enemies. Each Seed deals one damage and provides one shared healing; excess damage cannot multiply the healing again.",
+  "Blood Bloom": "Adds level-scaled Seeds to every enemy, then bursts all for 2 damage and 2 base shared healing each. The Bloodbinder’s healing bonuses strengthen the shared pool.",
   "Soul Harvest": "Enemy deaths restore 12% of that enemy's maximum HP to the Necromancer, capped at half the Necromancer's maximum HP. Ordinary healing is ineffective.",
   "Soul Call": "A full Soul bar raises a random ally with fixed reels. Choose which party member rolls. With both summon slots full, filling the bar heals the team instead.",
   "Consume": "Sacrifice a bound summon to restore the Necromancer’s HP. Costs one action during combat. Summon deaths do not trigger burial or resurrection prompts.",
@@ -17524,7 +17942,7 @@ const EVENT_LOG_TERMS = Object.freeze({
   "Stunned": "Cannot act until recovery. Other rolls help recovery: 60%, then guaranteed. If nobody can act, one missed turn advances enemy clocks.",
   "Stun": "Stops an action until recovery; shields can resist it. Recovery grants two own actions of stun protection.",
   "Steady": "Protected from stun for two own completed actions after recovering. Further stuns cannot immediately lock this character again.",
-  "Stimulant": "A short damage and resistance buff. Lasts at most three actions; extra doses strengthen it instead. Clears after battle.",
+  "Stimulant": "Boosts damage and resistance for up to three recipient actions. Every two doses beyond that duration raise potency. Clears after battle.",
   "Ally stimulant": "Applies stimulant to the selected living ally, even at full health; falls back to the caster if needed.",
   "Team block": "Shared protection absorbs incoming damage and is consumed as it protects. It has a party-size cap and clears after battle.",
   "Critical": "Three matching marks trigger a multiplier roll. The increased effects are applied to the original roll.",
@@ -17955,21 +18373,36 @@ function relevantLogTile(i) {
 const mapTileFrames = new WeakMap();
 const mapDrawingFrames = new WeakMap();
 let renderedMapSource = null;
-let mapTileBoard = null, mapTileObserver = null;
+let mapTileBoard = null,
+  mapTileObserver = null;
 function dirtyTileContents(records) {
   for (const record of records) {
-    const element = record.target.nodeType === Node.ELEMENT_NODE ? record.target : record.target.parentElement;
+    const element =
+      record.target.nodeType === Node.ELEMENT_NODE
+        ? record.target
+        : record.target.parentElement;
     const tile = element?.closest("[data-tile]");
     // Button attributes are always synchronised separately below.
-    if (!tile || (record.type === "attributes" && record.target === tile)) continue;
+    if (!tile || (record.type === "attributes" && record.target === tile))
+      continue;
     const frame = mapTileFrames.get(tile);
     if (frame) frame.dirty = true;
   }
 }
 function tileFrame(node, source) {
-  const attributes = [...node.attributes].map(({ name, value }) => [name, value]);
-  return { source, attributes, names: new Set(attributes.map(([name]) => name)),
-    body: node.innerHTML, first: node.firstChild, last: node.lastChild, count: node.childNodes.length };
+  const attributes = [...node.attributes].map(({ name, value }) => [
+    name,
+    value,
+  ]);
+  return {
+    source,
+    attributes,
+    names: new Set(attributes.map(([name]) => name)),
+    body: node.innerHTML,
+    first: node.firstChild,
+    last: node.lastChild,
+    count: node.childNodes.length,
+  };
 }
 function paintMapTiles(tiles) {
   const board = document.getElementById("map");
@@ -17977,14 +18410,26 @@ function paintMapTiles(tiles) {
     mapTileObserver?.disconnect();
     mapTileBoard = board;
     mapTileObserver = new MutationObserver(dirtyTileContents);
-    mapTileObserver.observe(board, { subtree: true, childList: true, characterData: true, attributes: true });
+    mapTileObserver.observe(board, {
+      subtree: true,
+      childList: true,
+      characterData: true,
+      attributes: true,
+    });
   }
   dirtyTileContents(mapTileObserver.takeRecords());
-  if (renderedMapSource !== state.map || board.children.length !== tiles.length ||
-      Array.from(board.children).some((node, i) => node.dataset.tile !== String(i))) {
+  if (
+    renderedMapSource !== state.map ||
+    board.children.length !== tiles.length ||
+    Array.from(board.children).some(
+      (node, i) => node.dataset.tile !== String(i),
+    )
+  ) {
     board.innerHTML = tiles.join("");
     renderedMapSource = state.map;
-    Array.from(board.children).forEach((node, i) => mapTileFrames.set(node, tileFrame(node, tiles[i])));
+    Array.from(board.children).forEach((node, i) =>
+      mapTileFrames.set(node, tileFrame(node, tiles[i])),
+    );
     mapTileObserver.takeRecords();
     return;
   }
@@ -17997,20 +18442,42 @@ function paintMapTiles(tiles) {
       const next = template.content.firstElementChild;
       const desired = tileFrame(next, source);
       // Metadata changes (visited/player/locked/etc.) don't invalidate the art.
-      if (!frame || frame.dirty || frame.body !== desired.body || node.firstChild !== frame.first ||
-          node.lastChild !== frame.last || node.childNodes.length !== frame.count)
+      if (
+        !frame ||
+        frame.dirty ||
+        frame.body !== desired.body ||
+        node.firstChild !== frame.first ||
+        node.lastChild !== frame.last ||
+        node.childNodes.length !== frame.count
+      )
         node.innerHTML = desired.body;
-      frame = { ...desired, first: node.firstChild, last: node.lastChild, count: node.childNodes.length };
+      frame = {
+        ...desired,
+        first: node.firstChild,
+        last: node.lastChild,
+        count: node.childNodes.length,
+      };
       mapTileFrames.set(node, frame);
-    } else if (frame.dirty || node.firstChild !== frame.first || node.lastChild !== frame.last || node.childNodes.length !== frame.count) {
+    } else if (
+      frame.dirty ||
+      node.firstChild !== frame.first ||
+      node.lastChild !== frame.last ||
+      node.childNodes.length !== frame.count
+    ) {
       // revealTile intentionally writes children directly during the eraser FX.
       node.innerHTML = frame.body;
-      Object.assign(frame, { dirty: false, first: node.firstChild, last: node.lastChild, count: node.childNodes.length });
+      Object.assign(frame, {
+        dirty: false,
+        first: node.firstChild,
+        last: node.lastChild,
+        count: node.childNodes.length,
+      });
     }
     // Restore the same authored attributes as a full redraw, including removing
     // transient route/reveal classes and synchronising keyboard/disabled state.
     for (let a = node.attributes.length - 1; a >= 0; a--)
-      if (!frame.names.has(node.attributes[a].name)) node.removeAttribute(node.attributes[a].name);
+      if (!frame.names.has(node.attributes[a].name))
+        node.removeAttribute(node.attributes[a].name);
     for (const [name, value] of frame.attributes)
       if (node.getAttribute(name) !== value) node.setAttribute(name, value);
   });
@@ -18019,7 +18486,10 @@ function paintMapTiles(tiles) {
 }
 function paintMapDrawing(id, markup, create) {
   const old = document.getElementById(id);
-  if (!markup) { old?.remove(); return; }
+  if (!markup) {
+    old?.remove();
+    return;
+  }
   const frame = old && mapDrawingFrames.get(old);
   if (frame?.source === state.map && frame.markup === markup) return old;
   const node = create();
@@ -18028,6 +18498,40 @@ function paintMapDrawing(id, markup, create) {
   if (old) old.replaceWith(node);
   else document.getElementById("map-board").append(node);
   return node;
+}
+
+// Unchanged party/inventory subtrees should not be reparsed on every map step.
+// Direct status/roll writes invalidate this cache through the observer.
+const stablePanelFrames = new WeakMap();
+function paintStablePanel(host, markup) {
+  let memo = stablePanelFrames.get(host);
+  if (!memo) {
+    memo = { markup: null, dirty: true };
+    const changed = (rows) =>
+      rows.some(
+        (r) =>
+          r.type !== "attributes" ||
+          r.oldValue !== r.target.getAttribute(r.attributeName),
+      );
+    memo.changed = changed;
+    memo.observer = new MutationObserver((rows) => {
+      if (changed(rows)) memo.dirty = true;
+    });
+    memo.observer.observe(host, {
+      subtree: true,
+      childList: true,
+      characterData: true,
+      attributes: true,
+      attributeOldValue: true,
+    });
+    stablePanelFrames.set(host, memo);
+  }
+  if (memo.changed(memo.observer.takeRecords())) memo.dirty = true;
+  if (memo.markup === markup && !memo.dirty) return;
+  host.innerHTML = markup;
+  memo.markup = markup;
+  memo.dirty = false;
+  memo.observer.takeRecords();
 }
 // END GENERATED OVERWORLD RENDERING
       let mapHoverRevision = 0;
@@ -18064,6 +18568,7 @@ function paintMapDrawing(id, markup, create) {
         updateMapInspection(hovered ? Number(hovered.dataset.tile) : null);
         renderCrystalPulses();
         renderEnvironmentEdges();
+        renderEnvironmentAuras();
         renderEnvironmentStatus();
         let leader = state.party.find(alive) || state.party[0];
         $("#map-player").innerHTML =
@@ -18081,8 +18586,8 @@ function paintMapDrawing(id, markup, create) {
           p = $("#map-player");
         if (!cell) return;
         let rate = moveRate() * (travel?.boost || 1);
-        p.style.setProperty("--move-ms", animate ? 180 / rate + "ms" : "0ms");
-        p.style.setProperty("--walk-ms", 200 / rate + "ms");
+        p.style.setProperty("--move-ms", animate ? (180 * classMotionTempo(state.party.find(alive))) / rate + "ms" : "0ms");
+        p.style.setProperty("--walk-ms", (200 * classMotionTempo(state.party.find(alive))) / rate + "ms");
         // Percentage coordinates stay in the board's coordinate system at every CSS zoom.
         p.style.width = 100 / W + "%";
         p.style.height = 100 / H + "%";
@@ -18090,7 +18595,7 @@ function paintMapDrawing(id, markup, create) {
       }
       function renderParty() {
         if(!busy && state.currentHero == null && !actingEnemy)pruneSummons();
-        $("#party").innerHTML =
+        paintStablePanel($("#party"),
           state.party
             .map((h, i) => {
               let status = injury(h);
@@ -18102,7 +18607,7 @@ function paintMapDrawing(id, markup, create) {
             { length: 3 - state.party.length },
             () =>
               `<div class="empty-slot">${icon("recruit")}<span>A name yet to be written.</span><small>Discover companions while exploring.</small></div>`,
-          ).join(""));
+          ).join("")));
         restoreHeroNotices();
       }
       function enemyActionText(e) {
@@ -18145,20 +18650,22 @@ function paintMapDrawing(id, markup, create) {
           : `<h3 class="enemy-label">The margins</h3><div class="peace">${portraitArt("fighter", state.party.find(alive) || state.party[0])}<p>${state.over ? (state.won ? "Ten floors, one very stubborn party. You wrote the ending." : "Every expedition leaves a story. A fresh page is waiting.") : "A moment between monsters.<br>Gather your nerve. The next floor is waiting."}</p></div>`);
       }
 
+      // Retain target hitboxes while walking; only real target/health changes repaint.
       function renderTargets() {
-        const current = state.party[state.target];
-        $("#targets").innerHTML = '<span class="target-heading">'+icon("heal")+'<b>Heal / tonic</b></span><div class="target-picks" role="group" aria-label="Healing target">'+
+        const current = state.party[state.target], host = $("#targets");
+        const markup = '<span class="target-heading">'+icon("heal")+'<b>Heal / tonic</b></span><div class="target-picks" role="group" aria-label="Healing target">'+
           Array.from({length:3},(_,i)=>{
             const h=state.party[i];
             if(!h)return '<span class="target-space" aria-hidden="true"></span>';
-            const label=h.name+' · '+h.hp+'/'+h.maxHp+' HP'+(!canReceiveOrdinaryHealing(h)?' · cannot receive ordinary healing':'');
-            return `<button class="target-button ${state.target===i?'active':''}" data-target="${i}" aria-label="Heal target: ${escapeHTML(label)}" data-tooltip="${escapeHTML(label)}" aria-pressed="${state.target===i}" ${busy||!alive(h)?'disabled':''}>${portraitArt(h.job,h)}${state.target===i?'<span class="target-check" aria-hidden="true">✓</span>':''}</button>`;
-          }).join('')+'</div><span class="current-heal-target"><b>'+(current?escapeHTML(current.originalName||current.name):'Choose an ally')+'</b><small>'+(current?current.hp+'/'+current.maxHp+' HP':'')+'</small></span>';
+            const immune=!canReceiveOrdinaryHealing(h),label=h.name+' · '+h.hp+'/'+h.maxHp+' HP'+(immune?' · ordinary healing has no effect':'');
+            return `<button class="target-button ${state.target===i?'active':''} ${immune?'healing-immune':''}" data-target="${i}" aria-label="Heal target: ${escapeHTML(label)}" data-tooltip="${escapeHTML(label)}" aria-pressed="${state.target===i}" ${!alive(h)?'disabled':''}>${portraitArt(h.job,h)}${immune?'<span class="immune-skulls" aria-hidden="true">☠ ☠</span>':''}${state.target===i?'<span class="target-check" aria-hidden="true">✓</span>':''}</button>`;
+          }).join('')+'</div><span class="current-heal-target"><b>'+(current?escapeHTML(current.originalName||current.name):'Choose an ally')+'</b><small>'+(current?(!canReceiveOrdinaryHealing(current)?'☠ Ordinary heals fail':current.hp+'/'+current.maxHp+' HP'):'')+'</small></span>';
+        if(host.targetMarkup!==markup){host.innerHTML=markup;host.targetMarkup=markup;}
       }
       function renderInventory() {
         const slots = Object.entries(state.bag || {}).filter(([, n]) => n > 0),
           ids = { potion: "potion", bomb: "bomb", ward: "ward" };
-        $(".inventory-items").innerHTML =
+        paintStablePanel($(".inventory-items"),
           slots
             .map(
               ([type, count]) =>
@@ -18171,7 +18678,7 @@ function paintMapDrawing(id, markup, create) {
               '<button class="empty-pocket" disabled>' +
               icon("bag") +
               "<span>Empty pocket</span><small>One item type per pocket</small></button>",
-          ).join("");
+          ).join(""));
         $("#bag-count").textContent = slots.length + " / 3 types";
         $("#manage-bag").disabled = busy || state.over || !slots.length;
       }
@@ -18396,7 +18903,7 @@ function paintMapDrawing(id, markup, create) {
             c.visited = true;
             $("#map-player").classList.add("walking");
             positionPlayer(true);
-            await waitMovement(fresh ? 205 : 180, travel.boost);
+            await waitMovement((fresh ? 205 : 180) * classMotionTempo(state.party.find(alive)), travel.boost);
             $("#map-player").classList.remove("walking");
             refreshStaleMap();
             if (await biomeStep(i)) {travel=null;break;}
@@ -19122,6 +19629,7 @@ function bestiaryPage(index = bestiaryPageIndex) {
         },
       };
       function assignEnemyTrait(e, depth, { force = false } = {}) {
+        e.shieldBreaker = !!ENEMY_PROFILES[e.art]?.shieldBreaker;
         if (ENEMY_PROFILES[e.art]?.trait === "veil") e.passive ??= {key:"veil",used:false,turns:0};
         if (
           !e.passive &&
@@ -19171,7 +19679,7 @@ function bestiaryPage(index = bestiaryPageIndex) {
       function beginEncounter(boss = false, options = {}) {
         const returned =
           options.zombie ||
-          (!boss && !options.elite && !options.pursuer && !options.mimic && !options.adventurer && !options.environment && !options.swarm
+          (!boss && !options.elite && !options.pursuer && !options.mimic && !options.adventurer && !options.adventurers && !options.environment && !options.swarm
             ? chooseReturnedHero(state.depth)
             : null);
         const depth = state.depth,
@@ -19227,8 +19735,8 @@ function bestiaryPage(index = bestiaryPageIndex) {
                         art: options.environment.kind === "heartwood" ? "thornhulk" : "rootling" }
                   : options.broodmother
                     ? {name:"Cave broodmother",art:"widow"}
-                  : options.adventurer
-                    ? { name: options.adventurer.name, art: options.adventurer.job }
+                  : (options.adventurer || options.adventurers?.[index])
+                    ? { name: (options.adventurers?.[index] || options.adventurer).name, art: (options.adventurers?.[index] || options.adventurer).job }
                     : options.pursuer
                       ? { name: "The Unwritten", art: "pursuer" }
                       : options.mimic
@@ -19300,19 +19808,20 @@ function bestiaryPage(index = bestiaryPageIndex) {
         state.enemy = state.enemies[0];
         beginBattleLog();
         setEnemyBlock(state.enemies.reduce((n, e) => n + (e.block || 0), 0));
-        state.enemies.forEach((e) => {
-          if (options.adventurer) {
+        state.enemies.forEach((e, index) => {
+          const adventurer = options.adventurers?.[index] || options.adventurer;
+          if (adventurer) {
             e.hostileRecruit = true;
-            if(!isSummon(options.adventurer) && !options.environment)e.adventurerRecord = {id:options.adventurer.id,name:options.adventurer.name,job:options.adventurer.job,specialism:options.adventurer.specialism,reels:options.adventurer.reels.map(r=>r.map(f=>({...f})))};
-            if (options.adventurer.job === "berserker") {
+            if(!isSummon(adventurer) && !options.environment)e.adventurerRecord = {id:adventurer.id,name:adventurer.name,job:adventurer.job,specialism:adventurer.specialism,reels:adventurer.reels.map(r=>r.map(f=>({...f})))};
+            if (adventurer.job === "berserker") {
               e.job = "berserker";
               e.fury = 0;
             }
-            e.reels = options.adventurer.reels.map((r) =>
+            e.reels = adventurer.reels.map((r) =>
               r.map((f) =>
                 f.type === "class"
                   ? {
-                      type: primaryFace(options.adventurer),
+                      type: primaryFace(adventurer),
                       tier: 1,
                       weight: f.weight,
                     }
@@ -19375,7 +19884,7 @@ const PUN_ENEMIES = Object.freeze({
   crook: "Notecrook",
   inkuisitor: "The Inkuisitor",
   protractor: "Velociprotractor",
-  postit: "Post-itler",
+  postit: "Sticky Bandit",
   stego: "Stegothesaurus",
   spelleton: "Spelleton",
   police: "Grammar Police",
@@ -19789,7 +20298,7 @@ function encounterTags(enemies) {
           })),
           final = details.map((d) => ({
             ...d,
-            value: Math.ceil(d.value * rolled.value),
+            value: criticalEffectValue(d, rolled.value),
           })),
           body =
             drawMachine("critical", [{ type: "multiplier", value: "?", tier: 1 }], {
@@ -19989,7 +20498,7 @@ function encounterTags(enemies) {
       // deliberately call healHero directly, preserving their per-hero amounts.
       function healingTarget(preferred = state.target) {
         const selected = state.party[preferred];
-        if (alive(selected) && canReceiveOrdinaryHealing(selected) && (selected.hp < selected.maxHp || selected.stun)) return preferred;
+        if (alive(selected) && (!canReceiveOrdinaryHealing(selected) || selected.hp < selected.maxHp || selected.stun)) return preferred;
         return (
           state.party
             .map((h, i) => ({ h, i }))
@@ -19999,10 +20508,13 @@ function encounterTags(enemies) {
       }
       function healHero(i, n, { exact = false, soulRecovery = false } = {}) {
         let h = state.party[i];
-        if (!alive(h) || (!soulRecovery && !canReceiveOrdinaryHealing(h))) return 0;
+        if (!alive(h)) return 0;
+        if (!soulRecovery && !canReceiveOrdinaryHealing(h)) { rejectHealing(h, n, "immune"); return 0; }
         if (n > 0) clearStuns(h, n);
         const offered = exact ? Math.max(0,n) : offeredHealing(h, n);
-        let actual = Math.min(offered, h.maxHp - h.hp);
+        const accepted = soulRecovery ? offered : Math.floor(offered * healingAcceptance(h));
+        if (accepted < offered) rejectHealing(h, offered - accepted, "reduced");
+        let actual = Math.min(accepted, h.maxHp - h.hp);
         h.hp += actual;
         spendFuryOnHealing(h, actual);
         syncHero(i);
@@ -20025,7 +20537,7 @@ function encounterTags(enemies) {
         i,
         n,
         source,
-        { piercing = false, attacker = null, impact = {}, selfInflicted = false, bloodPriceTier = 0 } = {},
+        { piercing = false, attacker = null, impact = {}, selfInflicted = false, bloodPriceTier = 0, shieldFactor = 1 } = {},
       ) {
         let h = state.party[i];
         const poisonHit = impact.type === "poison" || /^Poison from /.test(source);
@@ -20035,8 +20547,8 @@ function encounterTags(enemies) {
         const resisted = piercing ? 0 : Math.min(n, defenceBonus(h));
         n -= resisted;
         const invulnerable = !!attacker && wardActive(attacker);
-        let blocked = invulnerable ? n : piercing ? 0 : Math.min(state.block, n);
-        if (!invulnerable) state.block -= blocked;
+        let blocked = invulnerable ? n : piercing ? 0 : Math.min(n, Math.ceil(state.block / shieldFactor));
+        if (!invulnerable) state.block -= Math.min(state.block, blocked * shieldFactor);
         let actual = Math.min(
           h.hp,
           selfInflicted || poisonHit ? n - blocked : vulnerableDamage(h, n - blocked),
@@ -20320,38 +20832,93 @@ function encounterTags(enemies) {
         Math.floor((entity.rage || 0) / 3) +
         stimulantDefenceBonus(entity);
       // BEGIN GENERATED BLOODBINDER
-// Damage-triggered Seed stacks. One unit is one shared HP of healing.
+// Damage-triggered Seeds. Caster bonuses scale one shared healing pool per burst.
 // No gameplay cap or expiry; all direct hits, poison and items use damageEnemy.
 const BLOOD_BINDING = Object.freeze({
   selfCostRankStep: 2,
   seedHealing: 1,
-  detonationDamage: 1,
+  detonationDamage: 2,
+  detonationHealing: 2,
+  bloomBaseSeeds: 2,
+  bloomLevelStep: 2,
   maturityInterval: 4,
   maturityCap: 2,
 });
-const bloodSeedBonus = (h) => h?.job === "bloodbinder"
-  ? Math.min(BLOOD_BINDING.maturityCap,Math.floor(Math.max(0,(h.level||1)-1)/BLOOD_BINDING.maturityInterval)) + equipmentBonus(h,"seeds")
-  : 0;
+const bloodSeedBonus = (h) =>
+  h?.job === "bloodbinder"
+    ? Math.min(
+        BLOOD_BINDING.maturityCap,
+        Math.floor(
+          Math.max(0, (h.level || 1) - 1) / BLOOD_BINDING.maturityInterval,
+        ),
+      ) + equipmentBonus(h, "seeds")
+    : 0;
 function bloodSeedCount(e) {
   return Math.max(0, Math.floor(Number(e?.bloodSeeds?.count) || 0));
 }
+function bloodSeedOwner(id) {
+  return (
+    state.party.find((h) => h.id === id) ||
+    state.graveyard.find((h) => h.id === id) ||
+    state.summonArchive?.find((h) => h.id === id)
+  );
+}
+// FIFO source receipts prevent a second caster from taking credit for old Seeds.
+function bloodSeedSources(e) {
+  const count = bloodSeedCount(e),
+    sources = [],
+    record = e?.bloodSeeds;
+  let remaining = count;
+  for (const part of Array.isArray(record?.sources) ? record.sources : []) {
+    const n = Math.min(
+      remaining,
+      Math.max(0, Math.floor(Number(part.count) || 0)),
+    );
+    if (n) {
+      sources.push({
+        sourceId: part.sourceId ?? record.sourceId ?? null,
+        count: n,
+      });
+      remaining -= n;
+    }
+    if (!remaining) break;
+  }
+  if (remaining)
+    sources.push({ sourceId: record?.sourceId ?? null, count: remaining });
+  return sources;
+}
+function appendBloodSeeds(e, count, h) {
+  count = Math.min(
+    Number.MAX_SAFE_INTEGER - bloodSeedCount(e),
+    Math.max(0, Math.floor(count)),
+  );
+  if (!count) return;
+  const sources = bloodSeedSources(e),
+    last = sources.at(-1),
+    sourceId = h?.id ?? null;
+  if (last?.sourceId === sourceId) last.count += count;
+  else sources.push({ sourceId, count });
+  e.bloodSeeds = { count: bloodSeedCount(e) + count, sourceId, sources };
+}
 function normaliseBloodStatuses(e) {
-  const old = e.bleeding;
-  const count =
-    e.bloodSeeds?.count ??
-    (old
-      ? Math.max(1, Number(old.damage) || 1) *
-        Math.max(1, Number(old.turns) || 1)
-      : 0);
+  const old = e.bleeding,
+    count =
+      e.bloodSeeds?.count ??
+      (old
+        ? Math.max(1, Number(old.damage) || 1) *
+          Math.max(1, Number(old.turns) || 1)
+        : 0);
   const bounded = Number.isFinite(Number(count))
     ? Math.min(Number.MAX_SAFE_INTEGER, Math.max(0, Math.floor(Number(count))))
     : 0;
-  e.bloodSeeds = bounded
-    ? {
-        count: bounded,
-        sourceId: e.bloodSeeds?.sourceId ?? old?.sourceId ?? null,
-      }
-    : null;
+  if (bounded) {
+    e.bloodSeeds = {
+      ...e.bloodSeeds,
+      count: bounded,
+      sourceId: e.bloodSeeds?.sourceId ?? old?.sourceId ?? null,
+    };
+    e.bloodSeeds.sources = bloodSeedSources(e);
+  } else e.bloodSeeds = null;
   delete e.bleeding;
   delete e.clotted;
 }
@@ -20370,7 +20937,9 @@ function bloodSeedPlan(e, power, h, symbols = null) {
   return {
     added,
     count: Math.min(Number.MAX_SAFE_INTEGER, bloodSeedCount(e) + added),
-    hpCost: added ? Math.min(Math.max(0, h.hp - 1), bloodSeedCost(rawPower, symbols)) : 0,
+    hpCost: added
+      ? Math.min(Math.max(0, h.hp - 1), bloodSeedCost(rawPower, symbols))
+      : 0,
   };
 }
 function applyBloodSeed(e, power, h, { symbols = null } = {}) {
@@ -20389,7 +20958,7 @@ function applyBloodSeed(e, power, h, { symbols = null } = {}) {
       "bleeding",
     );
   }
-  e.bloodSeeds = { count: plan.count, sourceId: h.id };
+  appendBloodSeeds(e, plan.added, h);
   trackBloodFeedback(
     beam(entityArt(h), enemyArtEl(e), "bloodseed", {
       fromPortrait: true,
@@ -20404,7 +20973,24 @@ function applyBloodSeed(e, power, h, { symbols = null } = {}) {
   );
   return plan.added;
 }
+const bloomSeedsAdded = (h) =>
+  BLOOD_BINDING.bloomBaseSeeds +
+  Math.floor(Math.max(0, (h?.level || 1) - 1) / BLOOD_BINDING.bloomLevelStep);
+function seedHealingOffered(amount, h) {
+  if (!(amount > 0)) return 0;
+  if (!h) return Math.floor(amount);
+  return Math.max(
+    0,
+    classHealingPower(h, amount) +
+      passive("heal") +
+      equipmentBonus(h, "heal") +
+      traitBonus(h, "heal") +
+      lessonBonus("recovery") +
+      (h.specialism === "defence" ? HERO_TUNING.temperament : 0),
+  );
+}
 function distributeBloodHealing(amount, h, enemy = null) {
+  amount = seedHealingOffered(amount, h);
   const allocations = new Map(),
     hp = new Map(state.party.map((a) => [a, a.hp]));
   // Bound work by actual missing HP, never by an arbitrarily large stack.
@@ -20446,36 +21032,60 @@ function distributeBloodHealing(amount, h, enemy = null) {
 function consumeBloodSeeds(e, damage) {
   const used = Math.min(bloodSeedCount(e), Math.max(0, Math.floor(damage)));
   if (!used) return 0;
-  const owner =
-    state.party.find((h) => h.id === e.bloodSeeds.sourceId) ||
-    state.graveyard.find((h) => h.id === e.bloodSeeds.sourceId) ||
-    state.summonArchive?.find(h=>h.id===e.bloodSeeds.sourceId);
-  e.bloodSeeds.count -= used;
-  if (!e.bloodSeeds.count) e.bloodSeeds = null;
+  const sources = bloodSeedSources(e),
+    remaining = [];
+  let spend = used,
+    healed = 0;
+  for (const part of sources) {
+    const n = Math.min(spend, part.count);
+    spend -= n;
+    if (n)
+      healed += distributeBloodHealing(
+        n * BLOOD_BINDING.seedHealing,
+        bloodSeedOwner(part.sourceId),
+        e,
+      );
+    if (part.count > n) remaining.push({ ...part, count: part.count - n });
+  }
+  const left = bloodSeedCount(e) - used;
+  e.bloodSeeds = left
+    ? {
+        count: left,
+        sourceId: remaining.at(-1)?.sourceId ?? null,
+        sources: remaining,
+      }
+    : null;
   trackBloodFeedback(bloodSeedBurstFX(e, used));
-  const healed = distributeBloodHealing(
-    used * BLOOD_BINDING.seedHealing,
-    owner,
-    e,
-  );
   log(
     `${e.name} · Blood Seeds: ${used} burst; ${healed} HP shared among injured allies.`,
   );
   return used;
 }
-function bloodDetonationPlan() {
+function bloodDetonationPlan(h = null) {
   return battleEnemies()
-    .filter((e) => alive(e) && bloodSeedCount(e) > 0)
-    .map((e) => ({ enemy: e, seeds: bloodSeedCount(e) }));
+    .filter((e) => alive(e) && (h || bloodSeedCount(e) > 0))
+    .map((e) => ({
+      enemy: e,
+      seeds: bloodSeedCount(e) + (h ? bloomSeedsAdded(h) : 0),
+    }));
 }
 async function detonateBloodSeeds(h) {
   const run = state,
-    plan = bloodDetonationPlan();
+    plan = bloodDetonationPlan(h);
+  // Bloom plants free level-scaled marks first, without another HP offering.
+  for (const { enemy: e, seeds: count } of plan) {
+    appendBloodSeeds(e, count - bloodSeedCount(e), h);
+    syncEnemy(e);
+  }
+  if (plan.reduce((n, p) => n + p.seeds, 0) > 5)
+    await bloodBloomSignatureFX(h, plan);
+  if (state !== run) return { seeds: 0, damage: 0, healing: 0 };
   let damage = 0,
     healing = 0,
     seeds = 0;
   for (const { enemy: e, seeds: count } of plan) {
     if (state !== run || !alive(h)) break;
+    const sources = bloodSeedSources(e);
     e.bloodSeeds = null;
     seeds += count;
     trackBloodFeedback(bloodSeedBurstFX(e, count, true));
@@ -20493,7 +21103,12 @@ async function detonateBloodSeeds(h) {
     damage += n;
     h.stats.damageDealt += n;
     if (!alive(e)) h.stats.kills++;
-    healing += distributeBloodHealing(count * BLOOD_BINDING.seedHealing, h, e);
+    for (const part of sources)
+      healing += distributeBloodHealing(
+        part.count * BLOOD_BINDING.detonationHealing,
+        bloodSeedOwner(part.sourceId) || h,
+        e,
+      );
     combatCallout(enemyArtEl(e), `BLOOD BLOOM · ${count}`, "bleeding");
   }
   state.lastBloodDetonation = { heroId: h.id, seeds, damage, healing };
@@ -20525,14 +21140,18 @@ function bloodSeedForecast(h, power, e = state.enemy) {
       ),
     ),
     existing = bloodSeedCount(e);
-  const chance = 1-h.reels.reduce((p,r)=>p*(1-faceShare(r,["bloodseed"])),1);
-  const potential = Math.max(0, power) + bloodSeedBonus(h)*chance,
+  const chance =
+    1 - h.reels.reduce((p, r) => p * (1 - faceShare(r, ["bloodseed"])), 1);
+  const potential = Math.max(0, power) + bloodSeedBonus(h) * chance,
     demand = state.party
       .filter(alive)
       .reduce((n, a) => n + Math.max(1, expectedDirectMarkPower(a)), 0);
   return {
     damage: 0,
-    heal: Math.min(potential, Math.max(0, demand - existing)),
+    heal: seedHealingOffered(
+      Math.min(potential, Math.max(0, demand - existing)),
+      h,
+    ),
     cost,
     antiheal: 0,
   };
@@ -20567,7 +21186,7 @@ function bloodStatusMarkup(e) {
   return n
     ? statusBadge(
         "Blood Seeds",
-        `${n} Seeds ready. Each actual HP of damage consumes one Seed and shares one HP of healing among injured allies. No expiry or stack cap. Blood Bloom detonates all remaining Seeds for damage and shared healing.`,
+        `${n} Seeds ready. Each HP of enemy damage bursts one Seed, releasing shared healing strengthened by its Bloodbinder. Blood Bloom adds Seeds to every foe, then bursts all for 2 damage and 2 base healing each. No expiry or stack cap.`,
         "bleeding-badge",
         "bloodseed",
       )
@@ -20586,7 +21205,8 @@ function syncBloodSeedCounters() {
   state.party.forEach((h, i) => {
     if (h.job !== "bloodbinder") return;
     const node = $("#hero-" + i + " .machine-footnote");
-    if (node) node.textContent = bloodSeedCaption();
+    if (node && node.textContent !== bloodSeedCaption())
+      node.textContent = bloodSeedCaption();
   });
 }
 // END GENERATED BLOODBINDER
@@ -23046,6 +23666,410 @@ function autoConsumeCandidate() {
   );
 }
 // END GENERATED NECROMANCER
+      // BEGIN GENERATED PAPER INTERACTIONS
+// Release and shared interaction rules. Cosmetic effects never consume world RNG.
+const EXPEDITION_RELEASE = "2026-11-paper-interactions-1";
+function prepareUpdatedNotebook() {
+  try {
+    const save = JSON.parse(localStorage.getItem(SAVE_KEY) || "null");
+    if (!save || save.release === EXPEDITION_RELEASE) return false;
+    // Profile/banking and settings have independent storage. Never erase them.
+    if (save.won && save.depth === 10) recordDungeonVictory(save);
+    localStorage.removeItem(SAVE_KEY);
+    for (let v = 1; v <= 7; v++)
+      localStorage.removeItem("scratchpad-dungeon-v" + v);
+    return true;
+  } catch {
+    return false;
+  }
+}
+const classMotionTempo = (h) =>
+  ({
+    rogue: 0.82,
+    ranger: 0.94,
+    fighter: 1.12,
+    mage: 1.04,
+    berserker: 0.95,
+    jester: 0.88,
+    bloodbinder: 1.06,
+    necromancer: 1.14,
+  })[h?.job] || 1;
+function biomeSummary(kind) {
+  return (
+    {
+      cave: "Open stone passages, underground rivers and forgotten rooms.",
+      overgrown:
+        "Thick roots, healing fruit and restless swarms. Watch the undergrowth.",
+      fungal:
+        "Glowing mushrooms spread light; purple caps poison, swollen caps explode.",
+      ice: "Slippery paths and fragile crossings. Plan where your slide will end.",
+      lava: "Molten channels and crumbling crust. Lava is impassable; bridges and tunnels cross it.",
+      crystal:
+        "Blue quartz fields can seal reels in nearby fights. Smash a deposit to silence it.",
+      unstable:
+        "Shifting stone and falling rocks. Keep an escape route in sight.",
+      shadow:
+        "Old passages darken again; something may be waiting when you return.",
+      maze: "Winding corridors, secret doors and linked pressure gates.",
+    }[kind] ||
+    BIOMES[kind]?.note ||
+    "A quiet stretch of dungeon."
+  );
+}
+// Rejection is queued by the actual healing operation, then paid off on arrival.
+const rejectedHeals = new WeakMap();
+const healingAcceptance = (h) => (h?.clotted || h?.healingPenalty ? 0.5 : 1);
+function rejectHealing(h, amount, reason) {
+  if (!(amount > 0)) return;
+  const prior = rejectedHeals.get(h);
+  rejectedHeals.set(h, {
+    amount: (prior?.amount || 0) + amount,
+    reason,
+    at: performance.now(),
+    run: state,
+  });
+}
+function rejectedHealingFX(h) {
+  const pending = rejectedHeals.get(h);
+  if (
+    !pending ||
+    pending.run !== state ||
+    performance.now() - pending.at > 2500
+  )
+    return;
+  rejectedHeals.delete(h);
+  const host = entityArt(h);
+  if (!host?.isConnected) return;
+  const r = host.getBoundingClientRect(),
+    node = document.createElement("span");
+  node.className = "rejected-heal";
+  node.dataset.effect = "rejected-heal";
+  node.innerHTML =
+    icon("heal") +
+    `<small>${pending.reason === "immune" ? "NO EFFECT" : "REDUCED"}</small>`;
+  node.style.left = r.left + r.width * 0.5 + "px";
+  node.style.top = r.top + r.height * 0.45 + "px";
+  document.body.append(node);
+  const anim = node.animate(
+    [
+      { transform: "translate(-50%,-50%) scale(1.1)", opacity: 1 },
+      {
+        transform: "translate(-10%,-110%) rotate(24deg) scale(.85)",
+        opacity: 1,
+        offset: 0.35,
+      },
+      { transform: "translate(45%,15%) rotate(65deg) scale(.6)", opacity: 0 },
+    ],
+    { duration: skip ? 180 : 650 / Math.sqrt(pace()), fill: "forwards" },
+  );
+  anim.juice = true;
+  liveAnimations.add(anim);
+  if (utilityOpen) {
+    anim.pause();
+    anim.utilityPaused = true;
+  }
+  return anim.finished
+    .catch(() => {})
+    .finally(() => {
+      node.remove();
+      liveAnimations.delete(anim);
+    });
+}
+function shopItemForDepth(family, depth = state.depth) {
+  return lootItemForDepth(family, depth + (depth >= 3 ? 1 : 0));
+}
+function addPremiumShopStock(c) {
+  c.premiumRolled = true;
+  if (Math.random() >= 0.38) return;
+  const family = pick(["potion", "bomb", "ward", "firebomb", "salve"]),
+    type = lootItemForDepth(family, state.depth + 3);
+  if (ITEM_DEFS[type]) {
+    c.shop[type] = 1;
+    c.premium = type;
+  }
+}
+// Contextual reactions stay infrequent and use only the separate visual stream.
+function reactToAllyAction(actor, roll) {
+  if (!roll || Date.now() - lastPartySpeechAt < 6500 || fxRandom() > 0.23)
+    return;
+  const others = state.party.filter(
+    (h) => h !== actor && alive(h) && Date.now() - (h.lastQuipAt || 0) > 12000,
+  );
+  if (!others.length) return;
+  const lines =
+    roll.actualDamage > 0 && actor.job === "ranger"
+      ? ["Nice shot!", "Right on target.", "That’s our opening!"]
+      : roll.actualHealing > 0
+        ? ["Just in time.", "I needed that.", "Much better!"]
+        : roll.actualDamage > 0 && roll.multiplier > 1
+          ? ["What a hit!", "Keep it up!", "They felt that!"]
+          : roll.totals?.block
+            ? ["Behind your shield!", "That’ll help."]
+            : null;
+  if (!lines) return;
+  const ally = visualPick(others);
+  ally.lastQuipAt = lastPartySpeechAt = Date.now();
+  speech(entityArt(ally), visualPick(lines));
+}
+const FAIRY_PRANKS = Object.freeze([
+  {
+    id: "rusty",
+    name: "Rusty fingers",
+    text: "One adventurer loses 1 level (never below level 1). Purchased reel marks stay intact.",
+  },
+  {
+    id: "nap",
+    name: "Forty winks",
+    text: "One adventurer cannot roll for the first 2 party actions next battle. A solo adventurer sleeps for 1 action.",
+  },
+  {
+    id: "dizzy",
+    name: "Dizzy spell",
+    text: "The party starts its next battle stunned.",
+  },
+  {
+    id: "pep",
+    name: "Wrong tonic",
+    text: "Both enemies gain 4 stimulant doses at the start of the next battle.",
+  },
+  {
+    id: "pockets",
+    name: "Leaky purse",
+    text: "The fairy takes 10% of your carried gold. Banked gold is safe.",
+  },
+  {
+    id: "thorns",
+    name: "Thorny welcome",
+    text: "One adventurer starts the next battle with 3 turns of weak poison.",
+  },
+  {
+    id: "chalk",
+    name: "Chalk fingers",
+    text: "One random reel per adventurer is blanked for their first roll next battle.",
+  },
+  {
+    id: "brittle",
+    name: "Glass slippers",
+    text: "All adventurers start the next battle Vulnerable to the first damaging hit.",
+  },
+  {
+    id: "ward",
+    name: "Borrowed armour",
+    text: "The enemies begin the next battle with 6 shared block.",
+  },
+  {
+    id: "cotton",
+    name: "Cotton stitches",
+    text: "One adventurer receives half ordinary healing during the next battle.",
+  },
+]);
+async function fairyPrank(forced = null) {
+  const run = state,
+    prank = forced
+      ? FAIRY_PRANKS.find((p) => p.id === forced)
+      : pick(FAIRY_PRANKS),
+    heroes = state.party.filter((h) => alive(h) && !isSummon(h));
+  if (!prank || !heroes.length) return;
+  const hero = pick(heroes),
+    receipt = { id: prank.id, heroId: hero.id };
+  if (prank.id === "pockets") {
+    const loss = Math.ceil(state.gold * 0.1);
+    state.gold -= loss;
+    receipt.gold = loss;
+  } else if (prank.id === "rusty") {
+    if (hero.level > 1) {
+      hero.level--;
+      hero.maxHp = Math.max(1, hero.maxHp - 6);
+      hero.hp = Math.min(hero.hp, hero.maxHp);
+      hero.xp = Math.min(hero.xp, hero.level * 12 - 1);
+      if (hero.job === "necromancer")
+        summonsOf(hero).forEach((s) => normaliseSummon(s, hero));
+    }
+  } else {
+    state.fairyPranks ??= [];
+    state.fairyPranks.push(receipt);
+  }
+  log(`Fairy prank — ${prank.name}: ${prank.text}`, {
+    category: "exploration",
+    important: true,
+    terms: [{ name: prank.name, description: prank.text }],
+  });
+  showSpotlight(
+    "A fairy’s prank!",
+    prank.name,
+    `<div class="stage-art">${icon("fairy")}</div><div class="stage-result fairy-prank-result"><b>${prank.name}</b><p>${prank.text}</p>${["nap", "thorns", "cotton", "rusty"].includes(prank.id) ? `<small>${escapeHTML(hero.name)} is the unlucky one.</small>` : ""}</div>`,
+    "fairy-prank",
+  );
+  burst($("#stage-card"), "confetti", 45);
+  GameSound.play("trait");
+  await eventChoice([
+    { id: "stage-confirm", label: "You little trickster…", value: true },
+  ]);
+  if (state === run) {
+    closeSpotlight();
+    save();
+  }
+}
+function applyPendingFairyPranks() {
+  const pranks = state.fairyPranks || [];
+  state.fairyPranks = [];
+  for (const p of pranks) {
+    const hero =
+      state.party.find((h) => h.id === p.heroId && alive(h)) ||
+      state.party.find(alive);
+    if (!hero) continue;
+    switch (p.id) {
+      case "nap":
+        hero.fairySleep = state.party.filter(alive).length === 1 ? 1 : 2;
+        break;
+      case "dizzy":
+        state.party.filter(alive).forEach((h) => {
+          h.stun = 1;
+          h.stunAge = 0;
+        });
+        break;
+      case "pep":
+        livingEnemies().forEach((e) => applyStimulant(e, 4));
+        break;
+      case "thorns":
+        applyPoison(hero, 2, null);
+        break;
+      case "chalk":
+        state.party.filter(alive).forEach((h) => {
+          h.blackout = [rand(3)];
+        });
+        break;
+      case "brittle":
+        state.party.filter(alive).forEach((h) => {
+          h.vulnerable = { createdAction: -1 };
+        });
+        break;
+      case "ward":
+        gainEnemyBlock(6);
+        break;
+      case "cotton":
+        hero.healingPenalty = 0.5;
+        break;
+    }
+    const d = FAIRY_PRANKS.find((x) => x.id === p.id);
+    combatCallout(entityArt(hero), d.name.toUpperCase(), "event");
+    log(`Fairy prank — ${d.name}: ${d.text}`, {
+      category: "combat",
+      important: true,
+    });
+  }
+}
+function advanceFairySleep() {
+  state.party.forEach((h) => {
+    if (h.fairySleep) h.fairySleep = Math.max(0, h.fairySleep - 1);
+  });
+}
+// The two rolls are normal hostile class builds, with ordinary enemy budgets.
+async function banditEncounter() {
+  const run = state,
+    primary = pick(["fighter", "rogue", "ranger", "berserker"]),
+    secondary = pick(["fighter", "rogue", "ranger", "mage", "bloodbinder"]),
+    jobs = [primary, secondary];
+  const bandits = jobs.map((job, i) => {
+    const h = makeHero(i ? "Rook the Tollkeeper" : "Ash the Cutpurse", job);
+    h.level = Math.max(
+      1,
+      Math.round(
+        state.party.filter(alive).reduce((n, h) => n + h.level, 0) /
+          state.party.filter(alive).length,
+      ),
+    );
+    return h;
+  });
+  const toll = 35 + state.depth * 22;
+  state.banditEncounters = (state.banditEncounters || 0) + 1;
+  state.lastBanditFloor = state.depth;
+  showSpotlight(
+    "Two bandits block the way",
+    `${className(primary)} & ${className(secondary)} · pay or fight`,
+    `<div class="bandit-preview">${bandits.map((h) => `<figure>${portraitArt(h.job, h)}<figcaption>${escapeHTML(h.name)}<small>${className(h.job)}</small></figcaption></figure>`).join("")}</div><div class="stage-result">“Your gold, or your blood.”<br>They demand <b>${toll} gold</b>.`,
+    "bandits",
+  );
+  const choice = await eventChoice([
+    { id: "bandit-fight", label: "Fight both bandits", value: "fight" },
+    {
+      id: "bandit-pay",
+      label: `Pay ${toll} gold${state.gold < toll ? " · not enough gold" : ""}`,
+      value: "pay",
+      disabled: state.gold < toll,
+    },
+  ]);
+  if (state !== run) return true;
+  closeSpotlight();
+  if (choice === "pay" && state.gold >= toll) {
+    state.gold -= toll;
+    log(`Paid two bandits ${toll} gold. They clear the passage.`, {
+      category: "exploration",
+    });
+  } else {
+    beginEncounter(false, { count: 2, adventurers: bandits });
+    renderEncounter();
+    log("Two bandits attack the party.", { category: "combat" });
+    await encounterEntrance();
+  }
+  save();
+  return true;
+}
+function maybeBandits() {
+  if (state.depth < 2) return false;
+  if (!state.banditSchedule)
+    state.banditSchedule = [
+      2 + rand(4),
+      ...(Math.random() < 0.65 ? [6 + rand(5)] : []),
+    ];
+  if (
+    (state.banditEncounters || 0) >= 2 ||
+    state.depth === state.lastBanditFloor ||
+    !state.banditSchedule.includes(state.depth)
+  )
+    return false;
+  return state.steps - (state.floorStart?.steps || 0) >= 3;
+}
+
+function fitArtefactLibrary() {
+  if (modalKind !== "artefacts" || $("#overlay").hidden) return false;
+  const modal = $("#modal"),
+    flow = modal.querySelector(".modal-flow"),
+    layer = $("#overlay"),
+    toolbar = $(".desk-top").getBoundingClientRect();
+  const top =
+    toolbar.top >= 0 && toolbar.top < innerHeight / 3
+      ? Math.max(10, toolbar.bottom + 10)
+      : 10;
+  const bottom =
+    $("#keyboard-bar").offsetHeight +
+    14 +
+    (innerWidth <= 760 ? $(".notebook-tabs").offsetHeight + 12 : 0);
+  layer.style.paddingTop = top + "px";
+  layer.style.paddingBottom = bottom + "px";
+  modal.style.setProperty(
+    "height",
+    Math.min(690, Math.max(180, innerHeight - top - bottom)) + "px",
+    "important",
+  );
+  modal.style.zoom = "1";
+  if (flow) {
+    flow.style.zoom = "1";
+    flow.style.width = "100%";
+  }
+  return true;
+}
+
+function autoHealingRecipient(health = autoHealth()) {
+  return (
+    health.party
+      .filter(({ h }) => canReceiveOrdinaryHealing(h) && h.hp < h.maxHp)
+      .sort(
+        (a, b) => a.h.hp / a.h.maxHp - b.h.hp / b.h.maxHp || a.h.hp - b.h.hp,
+      )[0] || null
+  );
+}
+// END GENERATED PAPER INTERACTIONS
       // BEGIN GENERATED SOUL FEEDBACK
 // Ephemeral presentation only. Offsets use FX randomness, never gameplay RNG.
 let bloodFeedback = [];
@@ -23066,7 +24090,11 @@ async function settleBloodFeedback() {
 function bloodSeedBurstFX(e, count, detonation = false) {
   const host = enemyArtEl(e);
   if (!host?.isConnected) return Promise.resolve();
-  const rect = host.getBoundingClientRect(),
+  const seedIcon =
+    host.querySelector(".bleeding-badge svg") ||
+    host.querySelector(".bleeding-badge") ||
+    host;
+  const rect = seedIcon.getBoundingClientRect(),
     bursts = Math.min(18, count),
     run = state;
   const reduced =
@@ -23078,11 +24106,12 @@ function bloodSeedBurstFX(e, count, detonation = false) {
     node.setAttribute("aria-hidden", "true");
     node.dataset.effect = "blood-seed-burst";
     node.innerHTML =
-      icon("bloodseed") +
+      `<svg viewBox="0 0 40 40" fill="currentColor"><path d="m20 1 3 12 9-7-5 12 12 3-12 3 6 11-11-7-3 11-3-12-11 5 7-10-11-4 13-2-5-11 10 6Z"/></svg>` +
       (count > bursts ? `<small>×${Math.ceil(count / bursts)}</small>` : "");
     node.style.left =
-      rect.left + rect.width * (0.18 + fxRandom() * 0.64) + "px";
-    node.style.top = rect.top + rect.height * (0.18 + fxRandom() * 0.64) + "px";
+      rect.left + rect.width / 2 + (fxRandom() - 0.5) * 24 + "px";
+    node.style.top =
+      rect.top + rect.height / 2 + (fxRandom() - 0.5) * 24 + "px";
     document.body.append(node);
     const anim = node.animate(
       [
@@ -23125,27 +24154,44 @@ function bloodSeedBurstFX(e, count, detonation = false) {
     if (state !== run) return;
   });
 }
-function skeletonArtEl(s) { return entityArt(s); }
+function skeletonArtEl(s) {
+  return entityArt(s);
+}
 function soulMeterMarkup(h) {
-  if(h.job!=="necromancer"||isSummon(h))return "";
-  return `<div class="soul-meter" data-soul-owner="${h.id}" role="meter" aria-label="Souls" aria-valuemin="0" aria-valuemax="${soulCapacity(h)}" aria-valuenow="${Math.floor(h.souls||0)}" data-tooltip="Damage and Harvest gather Souls. A full bar raises a random ally in an empty party slot. With two summons, it heals the team instead. Consume a summon to heal yourself."><b>SOULS ${Math.floor(h.souls||0)}/${soulCapacity(h)}</b><span><i style="width:${100*(h.souls||0)/soulCapacity(h)}%"></i></span></div>`;
+  if (h.job !== "necromancer" || isSummon(h)) return "";
+  return `<div class="soul-meter" data-soul-owner="${h.id}" role="meter" aria-label="Souls" aria-valuemin="0" aria-valuemax="${soulCapacity(h)}" aria-valuenow="${Math.floor(h.souls || 0)}" data-tooltip="Damage and Harvest gather Souls. A full bar raises a random ally in an empty party slot. With two summons, it heals the team instead. Consume a summon to heal yourself."><b>SOULS ${Math.floor(h.souls || 0)}/${soulCapacity(h)}</b><span><i style="width:${(100 * (h.souls || 0)) / soulCapacity(h)}%"></i></span></div>`;
 }
 function skeletonSlotsMarkup(h) {
- return Array.from({length:Math.max(0,3-state.party.length)},(_,i)=>`<div class="empty-slot" data-skeleton-slot="${i}">${icon("skull")}<span>An undead ally can rise here.</span><small>Fill the Soul bar to summon.</small></div>`).join("");
+  return Array.from(
+    { length: Math.max(0, 3 - state.party.length) },
+    (_, i) =>
+      `<div class="empty-slot" data-skeleton-slot="${i}">${icon("skull")}<span>An undead ally can rise here.</span><small>Fill the Soul bar to summon.</small></div>`,
+  ).join("");
 }
-function summonCardMarkup(s,i) {
- const h=necromancerOwner(),passive=SUMMON_PASSIVES[s.summonPassive],offer=consumeSummonHealing(s,h),disabled=busy||state.over||!alive(s);
- return `<article class="hero summon-card ${s.job} ${injury(s)} ${state.target===i?'selected':''}" id="hero-${i}" data-hero-roll="${i}" tabindex="${state.enemy&&alive(s)?0:-1}" role="group" aria-label="${escapeHTML(s.name)} · click to roll"><div class="hero-dossier"><button class="portrait" id="portrait-${i}" data-hero-stats="${i}" data-spin="${i}" aria-label="Roll ${escapeHTML(s.name)}" ${disabled?'disabled':''}>${portraitArt(s.job,s)}${statusMarkup(s)}${specialismBadge(s)}</button><div class="hero-name">${escapeHTML(s.name)}<small>${summonRole(s)} · Lv.${s.level}</small></div><span class="summon-bound-note">Bound summon</span></div><div class="hero-controls"><div class="hero-title-line"><span class="hp-info">HP ${s.hp} / ${s.maxHp}</span><span class="injury">${s.stun?'stunned':injury(s)}</span></div>${healthMarkup(s)}${drawMachine('hero-'+i,s.last,{hero:i,disabled:disabled||!state.enemy||heroCannotRoll(s)})}<div class="summon-details"><span class="summon-passive" tabindex="0" aria-label="${passive?.name||'Returned'}" data-tooltip="${escapeHTML(passive?passive.name+': '+passive.text:'Returned with the marks of their former class.')}">${icon({venom:"poison",ambusher:"sword",carapace:"block",ward:"ward",arcane:"magic",mender:"heal",secondWind:"heal",volatile:"bomb"}[s.summonPassive]||"skull")}<span class="summon-passive-name">${passive?.name||'Returned'}</span></span><button class="consume-summon" data-consume-summon="${s.id}" aria-label="Consume ${escapeHTML(s.name)} to restore up to ${offer} Necromancer HP" data-tooltip="Sacrifice this summon to restore up to ${offer} HP to ${h?.name||'the Necromancer'}. Uses one action during battle. Reels cannot be edited." ${disabled||!alive(h)||(state.enemy&&(h.stun||heroCannotRoll(h)||!openingEligible(h)))?'disabled':''}>Consume · +${offer} HP</button></div></div></article>`;
+function summonCardMarkup(s, i) {
+  const h = necromancerOwner(),
+    passive = SUMMON_PASSIVES[s.summonPassive],
+    offer = consumeSummonHealing(s, h),
+    disabled = busy || state.over || !alive(s);
+  return `<article class="hero summon-card ${s.job} ${injury(s)} ${state.target === i ? "selected" : ""}" id="hero-${i}" data-hero-roll="${i}" tabindex="${state.enemy && alive(s) ? 0 : -1}" role="group" aria-label="${escapeHTML(s.name)} · click to roll"><div class="hero-dossier"><button class="portrait" id="portrait-${i}" data-hero-stats="${i}" data-spin="${i}" aria-label="Roll ${escapeHTML(s.name)}" ${disabled ? "disabled" : ""}>${portraitArt(s.job, s)}${statusMarkup(s)}${specialismBadge(s)}</button><div class="hero-name">${escapeHTML(s.name)}<small>${summonRole(s)} · Lv.${s.level}</small></div><span class="summon-bound-note">Bound summon</span></div><div class="hero-controls"><div class="hero-title-line"><span class="hp-info">HP ${s.hp} / ${s.maxHp}</span><span class="injury">${s.stun ? "stunned" : injury(s)}</span></div>${healthMarkup(s)}${drawMachine("hero-" + i, s.last, { hero: i, disabled: disabled || !state.enemy || heroCannotRoll(s) })}<div class="summon-details"><span class="summon-passive" tabindex="0" aria-label="${passive?.name || "Returned"}" data-tooltip="${escapeHTML(passive ? passive.name + ": " + passive.text : "Returned with the marks of their former class.")}">${icon({ venom: "poison", ambusher: "sword", carapace: "block", ward: "ward", arcane: "magic", mender: "heal", secondWind: "heal", volatile: "bomb" }[s.summonPassive] || "skull")}<span class="summon-passive-name">${passive?.name || "Returned"}</span></span><button class="consume-summon" data-consume-summon="${s.id}" aria-label="Consume ${escapeHTML(s.name)} to restore up to ${offer} Necromancer HP" data-tooltip="Sacrifice this summon to restore up to ${offer} HP to ${h?.name || "the Necromancer"}. Uses one action during battle. Reels cannot be edited." ${disabled || !alive(h) || (state.enemy && (h.stun || heroCannotRoll(h) || !openingEligible(h))) ? "disabled" : ""}>Consume · +${offer} HP</button></div></div></article>`;
 }
 function syncNecromancer(h) {
- if(h?.job!=="necromancer"||isSummon(h))return;
- const meter=document.querySelector(`[data-soul-owner="${h.id}"]`);
- if(meter){const t=document.createElement('template');t.innerHTML=soulMeterMarkup(h);meter.replaceWith(t.content);}
+  if (h?.job !== "necromancer" || isSummon(h)) return;
+  const meter = document.querySelector(`[data-soul-owner="${h.id}"]`);
+  if (meter) {
+    const t = document.createElement("template");
+    t.innerHTML = soulMeterMarkup(h);
+    meter.replaceWith(t.content);
+  }
 }
 function summonMomentFX(h, s, kind) {
   const host = skeletonArtEl(s) || entityArt(h);
   if (!host?.isConnected) return;
-  const rect = host.getBoundingClientRect(),
+  const seedIcon =
+    host.querySelector(".bleeding-badge svg") ||
+    host.querySelector(".bleeding-badge") ||
+    host;
+  const rect = seedIcon.getBoundingClientRect(),
     node = document.createElement("div");
   node.className = "summon-bone-flash";
   node.dataset.effect = "skeleton-" + kind;
@@ -23198,7 +24244,19 @@ function summonMomentFX(h, s, kind) {
     20,
   );
   shakeElement(host, kind === "guard" ? 5 : 2);
-  if(kind==="rise"||kind==="death"||kind==="consume")GameSound.cry(s.summonKind==="zombie"?s.job:({blade:"skull",guard:"golem",wisp:"ghost",cantor:"lich",bomber:"slime"}[s.summonKind]||"skull"),kind==="rise"?"enter":"death");
+  if (kind === "rise" || kind === "death" || kind === "consume")
+    GameSound.cry(
+      s.summonKind === "zombie"
+        ? s.job
+        : {
+            blade: "skull",
+            guard: "golem",
+            wisp: "ghost",
+            cantor: "lich",
+            bomber: "slime",
+          }[s.summonKind] || "skull",
+      kind === "rise" ? "enter" : "death",
+    );
   GameSound.play(
     kind === "rise" ? "poof" : kind === "death" ? "hit" : "shield",
   );
@@ -23209,6 +24267,73 @@ function skeletonRiseArt() {
 }
 function skeletonBonesArt() {
   return `<svg viewBox="0 0 120 100" class="pencil-art" fill="var(--paper)" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m18 76 66-27m-60 3 68 31m-56 1 51-10M11 72q-7-12 3-10 1-9 8-4m58-13q8-10 11-1 9-2 8 7M21 48q-9-5-9 4-8 5 1 10m76 17q10-8 12 1 7 2 3 8" fill="none"/><path d="M40 41q-10-32 17-34 29 2 18 33l-9 7-2 11H49l-1-12Z"/><path d="m46 23 9 9m0-9-9 9m17-9 8 8m0-8-8 8m-8 7 3-5 3 5m-8 10v10m7-10v10" fill="none"/></svg>`;
+}
+
+// Big blooms send blood outward before the existing Seed heals return to allies.
+async function bloodBloomSignatureFX(h, plan) {
+  const source = entityArt(h);
+  if (!source?.isConnected) return;
+  const run = state,
+    version = animationVersion,
+    stage = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  stage.classList.add("blood-bloom-signature");
+  stage.dataset.effect = "blood-bloom-signature";
+  stage.setAttribute("viewBox", `0 0 ${innerWidth} ${innerHeight}`);
+  stage.setAttribute("aria-hidden", "true");
+  const r = source.getBoundingClientRect(),
+    x = r.left + r.width / 2,
+    y = r.top + r.height / 2;
+  for (const { enemy: e } of plan) {
+    const to = enemyArtEl(e);
+    if (!to) continue;
+    const b = to.getBoundingClientRect(),
+      path = document.createElementNS(stage.namespaceURI, "path");
+    path.classList.add("blood-bloom-ray");
+    path.setAttribute(
+      "d",
+      `M${x} ${y}Q${(x + b.left + b.width / 2) / 2} ${Math.min(y, b.top) - 90} ${b.left + b.width / 2} ${b.top + b.height / 2}`,
+    );
+    path.setAttribute("pathLength", "1");
+    path.style.strokeDasharray = "1";
+    stage.append(path);
+  }
+  document.body.append(stage);
+  combatCallout(source, "BLOOD BLOOM!", "bloodseed");
+  screenFX("damage", 1.25);
+  GameSound.play("criticalBlood");
+  const duration =
+    skip || sceneFast || matchMedia("(prefers-reduced-motion: reduce)").matches
+      ? 110
+      : Math.max(200, 600 / Math.sqrt(pace()));
+  const motions = [...stage.children].map((path) => {
+    const a = path.animate(
+      [
+        { strokeDashoffset: 1, strokeWidth: 3, opacity: 0 },
+        { strokeDashoffset: 0.9, strokeWidth: 19, opacity: 1, offset: 0.2 },
+        { strokeDashoffset: 0, strokeWidth: 25, opacity: 1, offset: 0.6 },
+        { strokeDashoffset: -1, strokeWidth: 4, opacity: 0 },
+      ],
+      { duration, fill: "forwards" },
+    );
+    a.juice = true;
+    liveAnimations.add(a);
+    if (utilityOpen) {
+      a.pause();
+      a.utilityPaused = true;
+    }
+    return a.finished.catch(() => {}).finally(() => liveAnimations.delete(a));
+  });
+  try {
+    await Promise.all(motions);
+    if (state !== run || animationVersion !== version) return;
+    for (const { enemy: e } of plan) {
+      burst(enemyArtEl(e), "damage", 65);
+      shakeElement(enemyArtEl(e), 7, "critical");
+    }
+    shakeBook(5, "critical");
+  } finally {
+    stage.remove();
+  }
 }
 // END GENERATED SOUL FEEDBACK
       // BEGIN GENERATED SUMMON ART
@@ -23266,7 +24391,7 @@ function summonSpeech(s, mood) {
         if (entity.hp <= 0 || entity.dead) return "";
         const poison = entity.poison,
           buff = entity.stimulant;
-        return `<span class="portrait-conditions">${bloodStatusMarkup(entity)}${entity.crystalLocks?.length ? statusBadge("Crystal seals", `${entity.crystalLocks.length} reels sealed by nearby crystals. Sealed reels are empty for one roll; rolling this hero cracks all their gems.`, "crystal-badge", "crystal") : ""}${entity.reelGifts?.length ? statusBadge("Gilded reel", entity.reelGifts.map((g) => `Reel ${g.reel + 1}: +1 mark tier for ${g.uses} more rolls.`).join(" ") + " Cleared after battle.", "gift-badge", "point") : ""}${poison?.turns ? statusBadge("Poison", `${poison.damage || 1} damage each turn for ${poison.turns} more turns. Further doses stack damage once three turns are loaded. Cleared after battle.`, "poison-badge", "poison", poison.turns) : ""}${entity.rage ? statusBadge("Rage", `+${entity.rage} damage and ${Math.floor(entity.rage / 3)} damage resistance until battle ends.`, "rage-badge", "rage", "+" + entity.rage) : ""}${buff ? statusBadge("Stimulant", `+${stimulantDamageBonus(entity)} damage and ${stimulantDefenceBonus(entity)} damage resistance; ${buff.turns}/3 turns, potency ${buff.power}/${COMBAT_LIMITS.stimulantPower}. Every ${STIMULANT_OVERFLOW} doses beyond full duration add 1 potency (${buff.overflow || 0}/${STIMULANT_OVERFLOW} toward the next increase).`, "buff-badge", "flame", buff.turns) : ""}${entity.shadowRest ? statusBadge("Veiled", "Use a different ally before this hero can act again.", "shadow-badge", "shadow") : ""}${entity.stun ? statusBadge("Stunned", "At most one missed action. Recovery after other rolls: 60%, then guaranteed. Afterwards, two own actions resist stun. Use an available ally while stunned. If nobody is ready, one missed turn advances enemy clocks.", "stun-badge", "stun", "1") : ""}${entity.stunWard ? statusBadge("Steady", `${entity.stunWard} own actions of stun protection. Further stuns may weaken shields or expose Vulnerable, but cannot stop another action.`,"stun-ward-badge","block") : ""}${entity.charge ? statusBadge("Execute", `${entity.charge}/${RANGER_AIM_CAP} patience. Bonus grows with the target’s missing health; consumed on the next damaging roll. Cleared after battle.`, "aim-badge", "bow", entity.charge) : ""}${entity.initiative && state.opening?.firstRoll ? statusBadge("Initiative", "Use this hero for the first roll: +25% to its effects. Lost if another hero acts first.", "initiative-badge", "beacon", "+25%") : ""}${entity.surprised && state.opening?.firstRoll ? statusBadge("Surprised", "Cannot make the first party roll. If everyone is surprised, enemies go first.", "surprised-badge", "question", "!") : ""}${entity.vulnerable ? statusBadge("Vulnerable", "The next damaging hit after this action deals 25% more HP damage.", "vulnerable-badge", "stun", "+25%") : ""}${entity.elite ? statusBadge(entity.boss ? "Boss" : "Elite", `${entity.affix || "Empowered"}. ${entity.affix === "Frenzied" ? `Attacks every ${entity.frequency} spin${entity.frequency === 1 ? "" : "s"}.` : entity.affix === "Venomous" ? "Damaging rolls also add poison." : `Begins battle with ${2 + state.depth} extra block.`}${entity.passive ? " " + (ENEMY_TRAITS[entity.passive.key]?.description || "") : ""}`, "elite-badge", "artefact") : ""}${isExploder(entity) ? statusBadge("Burning fuse", `${entity.fuseLeft ?? 2} enemy turns until ${exploderDamage(entity)} damage per hero. Team block and Unbroken page can protect you.`, "fuse-badge", "explosion") : ""}${entity.passive && !isExploder(entity) ? statusBadge(ENEMY_TRAITS[entity.passive.key]?.name || "Passive", ENEMY_TRAITS[entity.passive.key]?.description || "", "passive-badge passive-" + entity.passive.key, { carapace: "block", secondWind: "heal", summoner: "recruit", split: "flurry", blackout: "eraser", veil: "shadow" }[entity.passive.key] || "artefact") : ""}</span>${entity.stun ? `<span class="stun-portrait-overlay" data-tooltip="Stunned · use a ready ally, or lose one turn if alone.">${icon("stun")}</span>` : ""}${statusAtmosphereMarkup(entity)}`;
+        return `<span class="portrait-conditions">${bloodStatusMarkup(entity)}${entity.fairySleep ? statusBadge("Fairy sleep",`${entity.fairySleep} party actions until this adventurer wakes.`,"stun-badge","stun") : ""}${entity.healingPenalty ? statusBadge("Cotton stitches","Ordinary healing is halved until this battle ends.","healing-penalty-badge","heal") : ""}${entity.shieldBreaker ? statusBadge("Shield breaker","Deals double damage to shared block; HP damage is unchanged.","passive-badge","heavy") : ""}${entity.crystalLocks?.length ? statusBadge("Crystal seals", `${entity.crystalLocks.length} reels sealed by nearby crystals. Sealed reels are empty for one roll; rolling this hero cracks all their gems.`, "crystal-badge", "crystal") : ""}${entity.reelGifts?.length ? statusBadge("Gilded reel", entity.reelGifts.map((g) => `Reel ${g.reel + 1}: +1 mark tier for ${g.uses} more rolls.`).join(" ") + " Cleared after battle.", "gift-badge", "point") : ""}${poison?.turns ? statusBadge("Poison", `${poison.damage || 1} damage each turn for ${poison.turns} more turns. Further doses stack damage once three turns are loaded. Cleared after battle.`, "poison-badge", "poison", poison.turns) : ""}${entity.rage ? statusBadge("Rage", `+${entity.rage} damage and ${Math.floor(entity.rage / 3)} damage resistance until battle ends.`, "rage-badge", "rage", "+" + entity.rage) : ""}${buff ? statusBadge("Stimulant", `+${stimulantDamageBonus(entity)} damage and ${stimulantDefenceBonus(entity)} damage resistance; ${buff.turns}/3 turns, potency ${buff.power}/${COMBAT_LIMITS.stimulantPower}. Every ${STIMULANT_OVERFLOW} doses beyond full duration add 1 potency (${buff.overflow || 0}/${STIMULANT_OVERFLOW} toward the next increase).`, "buff-badge", "flame", buff.turns) : ""}${entity.shadowRest ? statusBadge("Veiled", "Use a different ally before this hero can act again.", "shadow-badge", "shadow") : ""}${entity.stun ? statusBadge("Stunned", "At most one missed action. Recovery after other rolls: 60%, then guaranteed. Afterwards, two own actions resist stun. Use an available ally while stunned. If nobody is ready, one missed turn advances enemy clocks.", "stun-badge", "stun", "1") : ""}${entity.stunWard ? statusBadge("Steady", `${entity.stunWard} own actions of stun protection. Further stuns may weaken shields or expose Vulnerable, but cannot stop another action.`,"stun-ward-badge","block") : ""}${entity.charge ? statusBadge("Execute", `${entity.charge}/${RANGER_AIM_CAP} patience. Bonus grows with the target’s missing health; consumed on the next damaging roll. Cleared after battle.`, "aim-badge", "bow", entity.charge) : ""}${entity.initiative && state.opening?.firstRoll ? statusBadge("Initiative", "Use this hero for the first roll: +25% to its effects. Lost if another hero acts first.", "initiative-badge", "beacon", "+25%") : ""}${entity.surprised && state.opening?.firstRoll ? statusBadge("Surprised", "Cannot make the first party roll. If everyone is surprised, enemies go first.", "surprised-badge", "question", "!") : ""}${entity.vulnerable ? statusBadge("Vulnerable", "The next damaging hit after this action deals 25% more HP damage.", "vulnerable-badge", "stun", "+25%") : ""}${entity.elite ? statusBadge(entity.boss ? "Boss" : "Elite", `${entity.affix || "Empowered"}. ${entity.affix === "Frenzied" ? `Attacks every ${entity.frequency} spin${entity.frequency === 1 ? "" : "s"}.` : entity.affix === "Venomous" ? "Damaging rolls also add poison." : `Begins battle with ${2 + state.depth} extra block.`}${entity.passive ? " " + (ENEMY_TRAITS[entity.passive.key]?.description || "") : ""}`, "elite-badge", "artefact") : ""}${isExploder(entity) ? statusBadge("Burning fuse", `${entity.fuseLeft ?? 2} enemy turns until ${exploderDamage(entity)} damage per hero. Team block and Unbroken page can protect you.`, "fuse-badge", "explosion") : ""}${entity.passive && !isExploder(entity) ? statusBadge(ENEMY_TRAITS[entity.passive.key]?.name || "Passive", ENEMY_TRAITS[entity.passive.key]?.description || "", "passive-badge passive-" + entity.passive.key, { carapace: "block", secondWind: "heal", summoner: "recruit", split: "flurry", blackout: "eraser", veil: "shadow" }[entity.passive.key] || "artefact") : ""}</span>${entity.stun ? `<span class="stun-portrait-overlay" data-tooltip="Stunned · use a ready ally, or lose one turn if alone.">${icon("stun")}</span>` : ""}${statusAtmosphereMarkup(entity)}`;
       }
       function syncStatusFX() {
         syncBloodSeedCounters();
@@ -23502,7 +24627,7 @@ function summonSpeech(s, mood) {
         render();
         try {
           h.stats ??= emptyStats();
-          if (h.stun) {await missStunnedTurn(h, foes);return;}
+          if (h.stun || h.fairySleep) {await missStunnedTurn(h, foes);return;}
           if (heroCannotRoll(h)) return;
 
           state.actionSerial++;
@@ -23569,7 +24694,6 @@ function summonSpeech(s, mood) {
             await classSignatureFX(h, selected);
             if(state!==rollRun)return;
           }
-          if(sums.bloodseed && selected.hp>0)applyBloodSeed(selected,sums.bloodseed,h,{symbols});
           if(base.bloodDetonation){const bloom=await detonateBloodSeeds(h);parts.push(`<span class="healing">Blood Bloom · ${bloom.damage} damage · +${bloom.healing} shared HP</span>`);if(state!==rollRun)return;}
           if(h.job==='necromancer' && sums.harvest)grantSouls(h,sums.harvest*NECROMANCER.harvestSouls+equipmentBonus(h,'souls'),'HARVEST');
           if (sums.bloodFury > bloodFuryGained)
@@ -23580,7 +24704,7 @@ function summonSpeech(s, mood) {
             burst($("#portrait-" + i), "gold", 24);
             beam($("#portrait-" + i), $("#portrait-" + i), "rage");
           }
-          for (const [kind, ally] of [["stimulant", h], ["rally", alive(state.party[state.target]) ? state.party[state.target] : h]]) {
+          for (const [kind, ally] of [["stimulant", h], ["rally", supportStimulantTarget(h)]]) {
             if (!sums[kind]) continue;
             applyStimulant(ally, sums[kind]);
             beam(entityArt(h), entityArt(ally), kind);
@@ -23625,9 +24749,10 @@ function summonSpeech(s, mood) {
                   h.name + (multiplier > 1 ? " (×" + multiplier + " critical)" : ""),
                   e,
                   {
-                    attacker: h,
+                    attacker: h, shieldFactor: equipmentBonus(h,"shieldBreak") ? 2 : 1,
                     impact: {
                       type: sums.magic ? "magic" : "attack",
+                      stimulant: stimulantDamageBonus(h),
                       critical: criticalImpact,
                       flights: damageFlights,
                     },
@@ -23735,6 +24860,8 @@ function summonSpeech(s, mood) {
           if (sums.stun)
             for (const e of (multiplier > 1 ? foes : [selected]).filter((e) => e.hp > 0))
               parts.push(`<span>${icon("stun")}${stunEnemy(sums.stun, e)}</span>`);
+          // Plant after all damage/support from this roll: new Seeds survive it.
+          if(sums.bloodseed && alive(selected))applyBloodSeed(selected,sums.bloodseed,h,{symbols});
           result(
             `<span>${h.name}${multiplier > 1 ? " · ×" + multiplier + " critical" : ""}:</span>` +
               (parts.join("") || "<span>Empty reels · no effect</span>"),
@@ -23746,11 +24873,13 @@ function summonSpeech(s, mood) {
             await jesterMarkBurst(h);
             if (state !== rollRun) return;
           }
+          reactToAllyAction(h, state.lastPlayerRoll);
           finishHeroRollLog(rollLogGroup,h);
           rollLogGroup=null;
           advanceRangerPatience(h, !!(sums.attack || sums.magic), symbols[1]?.type === "class");
           finishShadowAction(h);
           finishOpeningRoll();
+          advanceFairySleep();
           advanceCrystalAura();
           rallyAfterRoll(h);
           await settleBloodFeedback();
@@ -23895,7 +25024,7 @@ function summonSpeech(s, mood) {
                   power,
                   `${e.name}${multiplier > 1 ? " (×" + multiplier + " critical)" : ""}`,
                   {
-                    attacker: e,
+                    attacker: e, shieldFactor: e.shieldBreaker ? 2 : 1,
                     impact: {
                       type: raw.magic ? "magic" : "attack",
                       critical: multiplier > 1,
@@ -24476,6 +25605,18 @@ const SUPPLY_GRADES = Object.freeze([
   },
 ]);
 const EXTRA_SUPPLIES = Object.freeze({
+  sunderBomb: {
+    name: "Sundering ink",
+    icon: "bomb",
+    family: "bomb",
+    damageBonus: 1,
+    shieldBreak: true,
+    combat: true,
+    brief: "Damage + double shield damage",
+    description:
+      "Roll damage and poison with 1 bonus damage. Deals double damage to enemy block.",
+    minDepth: 3,
+  },
   clearingSalts: {
     name: "Clearing salts",
     icon: "antidote",
@@ -24527,6 +25668,16 @@ const EXTRA_SUPPLIES = Object.freeze({
   },
 });
 const EXTRA_EQUIPMENT = Object.freeze({
+  sunderingMaul: {
+    name: "Sundering maul",
+    icon: "heavy",
+    shieldBreak: 1,
+    jobs: ["fighter", "berserker", "ranger", "rogue"],
+    brief: "Double damage to shields",
+    description:
+      "Your direct attacks deal double damage to enemy block. HP damage is unchanged.",
+    minDepth: 3,
+  },
   bloodNeedle: {
     name: "Blood Needle",
     icon: "bloodseed",
@@ -24598,7 +25749,9 @@ const EXTRA_EQUIPMENT = Object.freeze({
   },
 });
 function equipmentLootEligible(item) {
-  const available = necromancerOwner() ? ["necromancer"] : heroJobs(state.runRules);
+  const available = necromancerOwner()
+    ? ["necromancer"]
+    : heroJobs(state.runRules);
   // This earned class cannot join another class's party.
   const jobs = item.jobs || (item.job ? [item.job] : null);
   return !jobs || jobs.some((job) => available.includes(job));
@@ -25007,11 +26160,12 @@ function equipmentLootEligible(item) {
           if (["potion", "bandage", "ration"].includes(family)) {
             const amount = item.heal || Math.ceil(h.maxHp * item.healFraction);
             const n = healHero(target, amount);
+            beam($("#inventory-title"), entityArt(h), "heal", {fromPortrait:true});
             result(icon(item.icon) + " " + h.name + " · +" + n + " HP");
           }
           if (family === "salve") {
             let total = 0;
-            state.party.forEach((h, i) => (total += healHero(i, item.heal)));
+            state.party.forEach((h, i) => {total += healHero(i, item.heal);if(alive(h))beam($("#inventory-title"),entityArt(h),"heal",{fromPortrait:true});});
             result(icon(item.icon) + " +" + total + " party HP");
           }
           if (family === "antidote") {
@@ -25138,7 +26292,7 @@ function equipmentLootEligible(item) {
             critical: multiplier > 1,
             lethal: totals.attack >= e.hp + (e.block || 0),
           });
-          const n = damageEnemy(totals.attack, "Ink bomb", e);
+          const n = damageEnemy(totals.attack, "Ink bomb", e, {shieldFactor:item.shieldBreak ? 2 : 1});
           h.stats.damageDealt += n;
           if (!e.hp) h.stats.kills++;
         }
@@ -25243,8 +26397,8 @@ const maxFaceTier = (type) =>
       ? 1
       : 3;
 const CLASS_PRICES = {
-  bloodbinder: {magic:1.1,heal:1,bloodseed:1.25,rally:1},
-  necromancer: {magic:1,poison:1,harvest:1.25},
+  bloodbinder: { magic: 1.1, heal: 1, bloodseed: 1.25, rally: 1 },
+  necromancer: { magic: 1, poison: 1, harvest: 1.25 },
   berserker: { heavy: 1.75, attack: 0.9, heal: 1, selfharm: 1 },
   ranger: {
     attack: 1,
@@ -25334,50 +26488,60 @@ const FACE_LABELS = Object.freeze({
   mystery: "Mystery ?",
 });
 const primaryFace = (h) =>
-  ["mage","bloodbinder"].includes(h.job)
+  ["mage", "bloodbinder"].includes(h.job)
     ? h.specialism === "defence"
       ? "heal"
       : "magic"
-    : h.job === "necromancer" ? "magic" : h.job === "fighter" && h.specialism === "defence"
-      ? "block"
-      : "attack";
+    : h.job === "necromancer"
+      ? "magic"
+      : h.job === "fighter" && h.specialism === "defence"
+        ? "block"
+        : "attack";
 function editableTypes(h) {
   return h.job === "jester"
-    ? EDITABLE_TYPES.filter((t) => !["stimulant", "selfharm", "heavy", "bloodseed", "harvest"].includes(t))
+    ? EDITABLE_TYPES.filter(
+        (t) =>
+          !["stimulant", "selfharm", "heavy", "bloodseed", "harvest"].includes(
+            t,
+          ),
+      )
     : [
         ...(CLASS_FACE_TYPES[h.job] ||
           EDITABLE_TYPES.filter((t) => !["selfharm", "trick"].includes(t))),
       ];
 }
 function faceDescription(face, h) {
-  const tier=face.tier||1;
-  if(face.type==='class')return classAbilityDescription(h);
-  if(face.type==='mystery')return mysteryDescription(h);
-  if(h && battleEnemies().includes(h)) {
-    if(DAMAGE_TYPES.includes(face.type))return `${markDamage(face.type,tier)} ${face.type==='magic'?'spell':'physical'} power toward a combined hit. Enemy strength: ${h.damage}.`;
-    if(face.type==='heal')return `${tier} enemy HP before bonuses.`;
+  const tier = face.tier || 1;
+  if (face.type === "class") return classAbilityDescription(h);
+  if (face.type === "mystery") return mysteryDescription(h);
+  if (h && battleEnemies().includes(h)) {
+    if (DAMAGE_TYPES.includes(face.type))
+      return `${markDamage(face.type, tier)} ${face.type === "magic" ? "spell" : "physical"} power toward a combined hit. Enemy strength: ${h.damage}.`;
+    if (face.type === "heal") return `${tier} enemy HP before bonuses.`;
   }
-  const target=tier>=3?'all enemies':'your target';
-  return {
-    attack:`Deal ${markDamage('attack',tier)} physical damage to ${target}.`,
-    heavy:`Deal ${markDamage('heavy',tier)} heavy physical damage to ${target}.`,
-    magic:`Deal ${ATTACK_POWER[tier]} spell damage to ${target}. May leave them Vulnerable (+25% next hit).`,
-    heal:`Restore ${POWER.heal*tier} HP to your healing target. May clear stun.`,
-    selfheal:`Restore ${POWER.selfheal*tier} HP to yourself. May clear stun.`,
-    block:`Gain ${POWER.block*tier} team block. Absorbs damage, then is spent. Cap: ${partyBlockCap()}.`,
-    stun:`${tier} stun power: stop one action and weaken shields. The target then resists stun for two actions.`,
-    poison:`${tier} poison power. Lasts up to 3 turns; further doses increase its damage.`,
-    stimulant:`${tier} stimulant power to yourself: more damage and resistance for up to 3 actions. Extra doses strengthen it.`,
-    rally:`${tier} stimulant power to your most-used ally, or yourself alone. Lasts up to 3 actions; extra doses strengthen it.`,
-    trick:`Gain ${tier} anticipation. At 6, Punchline fires six random marks from your reels.`,
-    selfharm:`Spend up to ${2*tier} HP to gain ${2+.5*tier} Fury per HP. Cannot kill you.`,
-    bloodseed:`Plant ${tier} Seeds${bloodSeedBonus(h)?` + ${bloodSeedBonus(h)} bonus per roll`:''}; pay ${bloodSeedCost(tier)} HP. Each HP of damage bursts one Seed for shared healing.`,
-    harvest:`${harvestSpellPower(tier)} spell power and ${tier*NECROMANCER.harvestSouls} Souls. Full bar: raise an ally, or heal the team when both summon slots are full.`,
-    blank:"Empty: no effect.",
-  }[face.type] || "A mark on this reel.";
+  const target = tier >= 3 ? "all enemies" : "your target";
+  return (
+    {
+      attack: `Deal ${markDamage("attack", tier)} physical damage to ${target}.`,
+      heavy: `Deal ${markDamage("heavy", tier)} heavy physical damage to ${target}.`,
+      magic: `Deal ${ATTACK_POWER[tier]} spell damage to ${target}. May leave them Vulnerable (+25% next hit).`,
+      heal: `Restore ${POWER.heal * tier} HP to your healing target. May clear stun.`,
+      selfheal: `Restore ${POWER.selfheal * tier} HP to yourself. May clear stun.`,
+      block: `Gain ${POWER.block * tier} team block. Absorbs damage, then is spent. Cap: ${partyBlockCap()}.`,
+      stun: `${tier} stun power: stop one action and weaken shields. The target then resists stun for two actions.`,
+      poison: `${tier} poison power. Lasts up to 3 turns; further doses increase its damage.`,
+      stimulant: `${tier} doses to yourself. Fills up to 3 actions; every 2 surplus doses raise potency, boosting damage and resistance.`,
+      rally: `${tier} doses to your selected heal target. Fills up to 3 actions; every 2 surplus doses raise potency, boosting damage and resistance.`,
+      trick: `Gain ${tier} anticipation. At 6, Punchline fires six random marks from your reels.`,
+      selfharm: `Spend up to ${2 * tier} HP to gain ${2 + 0.5 * tier} Fury per HP. Cannot kill you.`,
+      bloodseed: `Plant ${tier} Seeds${bloodSeedBonus(h) ? ` + ${bloodSeedBonus(h)} bonus per roll` : ""}; pay ${bloodSeedCost(tier)} HP. Planted after this roll’s damage. Later wounds burst Seeds for shared healing.`,
+      harvest: `${harvestSpellPower(tier)} spell power and ${tier * NECROMANCER.harvestSouls} Souls. Full bar: raise an ally, or heal the team when both summon slots are full.`,
+      blank: "Empty: no effect.",
+    }[face.type] || "A mark on this reel."
+  );
 }
 function classFacePrice(h, type, base) {
-  if(type === "selfheal") type = "heal";
+  if (type === "selfheal") type = "heal";
   return base
     ? Math.ceil(base * (CLASS_PRICES[h?.job]?.[type] || 1))
     : undefined;
@@ -25641,7 +26805,9 @@ function editFace(data, operation, destination = null) {
   editor(i);
 }
 
-function workshopAbilitySummary(h) {return classAbilityDescription(h);}
+function workshopAbilitySummary(h) {
+  return classAbilityDescription(h);
+}
 // END GENERATED REEL UPGRADES
 // BEGIN GENERATED ICON REEL WORKSHOP
 // Presentation switch: change to "legacy" and rebuild to restore the previous
@@ -25914,6 +27080,206 @@ function iconReelEditor(i) {
   requestFitUI();
 }
 // END GENERATED ICON REEL WORKSHOP
+      // BEGIN GENERATED CONTROL NAVIGATION
+// Keyboard controller rehearsal. Mouse and original shortcuts stay independent.
+// Native selects/ranges keep native keys; this mode rehearses focus/confirm/back.
+const controlNavigation = (() => {
+  let modality = "mouse",
+    focused = null,
+    lastScope = null;
+  const selector =
+    'button:not(:disabled),select:not(:disabled),input:not(:disabled),[tabindex="0"]';
+  const enabled = () => !!state?.preferences?.navigationMode;
+  function scope() {
+    return !$("#spotlight").hidden
+      ? $("#stage-card")
+      : !$("#overlay").hidden
+        ? $("#modal")
+        : $(".desk");
+  }
+  function candidates() {
+    return [...scope().querySelectorAll(selector)].filter(
+      (n) =>
+        !n.closest('[hidden],[inert],[aria-hidden="true"]') &&
+        getComputedStyle(n).visibility !== "hidden" &&
+        n.getClientRects().length,
+    );
+  }
+  function clear() {
+    document
+      .querySelectorAll(".controller-focus")
+      .forEach((n) => n.classList.remove("controller-focus"));
+  }
+  function choose(n) {
+    if (!n) return;
+    clear();
+    modality = "navigation";
+    document.body.dataset.inputModality = modality;
+    focused = n;
+    n.classList.add("controller-focus");
+    n.focus({ preventScroll: true });
+    n.scrollIntoView({ block: "nearest", inline: "nearest" });
+  }
+  function anchor() {
+    const s = scope(),
+      list = candidates();
+    if (s !== lastScope) {
+      lastScope = s;
+      focused = null;
+    }
+    return focused?.isConnected && list.includes(focused)
+      ? focused
+      : list.includes(document.activeElement)
+        ? document.activeElement
+        : list.find(
+            (n) =>
+              n.hasAttribute("data-tile") &&
+              Number(n.dataset.tile) === state.position,
+          ) ||
+          list.find((n) => n.classList.contains("primary")) ||
+          list[0];
+  }
+  function move(dx, dy) {
+    const from = anchor();
+    if (!from) return;
+    if (modality !== "navigation") {
+      choose(from);
+      return;
+    }
+    const r = from.getBoundingClientRect(),
+      x = r.left + r.width / 2,
+      y = r.top + r.height / 2;
+    let best = null,
+      score = Infinity;
+    for (const n of candidates()) {
+      if (n === from) continue;
+      const b = n.getBoundingClientRect(),
+        vx = b.left + b.width / 2 - x,
+        vy = b.top + b.height / 2 - y,
+        forward = vx * dx + vy * dy;
+      if (forward <= 2) continue;
+      const side = Math.abs(vx * dy - vy * dx),
+        rank = forward + side * 3 + Math.hypot(vx, vy) * 0.1;
+      if (rank < score) {
+        score = rank;
+        best = n;
+      }
+    }
+    if (best) choose(best);
+  }
+  function back() {
+    if (!$("#spotlight").hidden) {
+      const buttons = candidates(),
+        cancel = buttons.find((n) =>
+          /leave|decline|ignore|cancel|back|not now/i.test(n.textContent),
+        );
+      if (cancel) cancel.click();
+      else fastForward();
+      return;
+    }
+    if (!$("#overlay").hidden) {
+      if (modalKind === "equipment") {
+        equipmentCancel?.();
+        return;
+      }
+      if (["starter", "camp"].includes(modalKind) && state.awaitingStarter)
+        return;
+      closeModal();
+      return;
+    }
+    openUtilityPage("options");
+  }
+  function key(e) {
+    if (!enabled() || CompanyIntro.active || e.ctrlKey || e.altKey || e.metaKey)
+      return;
+    const native = ["SELECT", "INPUT", "TEXTAREA"].includes(e.target.tagName),
+      k = e.key.toLowerCase();
+    // Tab leaves native controls and restores controller highlighting.
+    if (native && k !== "escape" && k !== "tab") return;
+    const dirs = {
+      arrowup: [0, -1],
+      w: [0, -1],
+      arrowdown: [0, 1],
+      s: [0, 1],
+      arrowleft: [-1, 0],
+      a: [-1, 0],
+      arrowright: [1, 0],
+      d: [1, 0],
+    };
+    if (dirs[k]) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      move(...dirs[k]);
+      return;
+    }
+    if (["enter", " "].includes(k)) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      const n = anchor();
+      choose(n);
+      if (n?.tagName === "SELECT") {
+        n.focus();
+        n.showPicker?.();
+      } else n?.click();
+      return;
+    }
+    if (k === "escape" || k === "backspace") {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      back();
+      return;
+    }
+    if (k === "tab") {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      const list = candidates(),
+        at = list.indexOf(anchor());
+      choose(list[(at + (e.shiftKey ? list.length - 1 : 1)) % list.length]);
+      return;
+    }
+    // Direct gameplay shortcuts are suspended in rehearsal mode.
+    if (!native) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+    }
+  }
+  document.addEventListener("keydown", key, true);
+  function mouse(e) {
+    if (e.type === "pointermove" && !e.movementX && !e.movementY) return;
+    if (modality === "mouse") return;
+    modality = "mouse";
+    document.body.dataset.inputModality = modality;
+    clear();
+    if (
+      focused === document.activeElement &&
+      !["INPUT", "SELECT", "TEXTAREA"].includes(focused?.tagName)
+    )
+      focused.blur();
+    if (statusTooltipSource === focused) statusTooltip.hidden = true;
+  }
+  document.addEventListener("pointermove", mouse, { passive: true });
+  document.addEventListener("pointerdown", mouse, {
+    passive: true,
+    capture: true,
+  });
+  document.addEventListener("click", (e) => {
+    if (e.target.closest("[data-input-mode]")) {
+      setPreference("navigationMode", !enabled());
+      clear();
+      focused = null;
+      updateKeyboardBar();
+      if (enabled()) choose(anchor());
+    }
+  });
+  return { enabled, move, back, clear, choose };
+})();
+function navigationBarToggle() {
+  return `<button class="input-mode-toggle" data-input-mode aria-pressed="${!!preferences().navigationMode}" data-tooltip="Switch keyboard controls: direct hotkeys, or directional focus with Confirm/Back to rehearse a controller.">${preferences().navigationMode ? "Focus controls" : "Hotkey controls"} ⇄</button>`;
+}
+function navigationBarPrompts() {
+  return "<span><kbd>↑↓←→</kbd> / <kbd>WASD</kbd> focus</span><span><kbd>Enter</kbd> / <kbd>Space</kbd> confirm (A)</span><span><kbd>Esc</kbd> back (B)</span><span><kbd>Tab</kbd> next · <kbd>Shift Tab</kbd> previous</span><span>Mouse: point & click anytime</span>";
+}
+// END GENERATED CONTROL NAVIGATION
       // BEGIN GENERATED FIELD GUIDE
 // Six illustrated quick-reference pages. Detailed live rules belong in the
 // existing hover tooltips and reel workshop, not an encyclopaedia here.
@@ -25933,7 +27299,7 @@ const FIELD_GUIDE = Object.freeze([
     ['sword','Choose who acts.','Click a hero’s card or handle to roll. Repeat freely; enemy countdowns show when they attack.'],
     ['heal','Choose your targets.','Click an enemy to target attacks; choose an ally for healing. Self-healing stays with its caster.'],
     ['class','Three matches make a critical.','Match symbol and tier across three reels. A middle class symbol completes matching outer symbols.'],
-    ['block','Block protects everyone.','Everyone shares block, spent when it absorbs damage. The cap is 20, or 30 with a Tank.'],
+    ['block','Block protects everyone.','Everyone shares block, spent when it absorbs damage. The cap is 24, or 36 with a Tank.'],
     ['stun','Check status icons.','Stun stops actions; poison hurts over time; stimulants strengthen heroes. Hover icons for details.'],
     ['magic','Hit groups with strong rolls.','Critical attacks and tier III–IV attacks hit every enemy. Other powers follow their own targets.'],
   ])},
@@ -25971,7 +27337,7 @@ const FIELD_GUIDE = Object.freeze([
     ['coin','Keep gold between runs.','After clearing a floor, choose how much to bank. Banked gold survives failed runs.'],
     ['camp','Buy permanent upgrades.','Open Upgrades on the starting menu. Spend banked gold on stronger heroes, new classes and optional rules.'],
     ['safe','Adjust the game to suit you.','Options control sound and effects. Autofight fights; Autoplay also explores, uses supplies and improves reels.'],
-    ['sound','Read the Event log.','Hover underlined names for explanations. Reopen older battles. Keyboard shortcuts appear along the bottom.'],
+    ['sound','Read the Event log.','Hover underlined names for explanations. Reopen old battles. Use the bottom controls toggle to try directional focus with Confirm and Back.'],
   ])},
 ]);
 const GUIDE_ALIASES = Object.freeze({floors:'explore',statuses:'combat',buffs:'combat',openings:'combat',combos:'heroes',jester:'classes',mystery:'classes',companions:'classes',controls:'camp','event-log':'camp',roots:'biomes',crust:'biomes',faults:'biomes',landmarks:'biomes',ice:'biomes',crystal:'biomes',living:'biomes',shadow:'biomes',maze:'biomes','wild-finds':'explore'});
@@ -26367,7 +27733,7 @@ function help(topic = "explore") {
         $("#stage-actions").innerHTML = choices
           .map(
             (c) =>
-              `<button class="${c.value ? "primary" : ""}" id="${c.id}" data-stage-choice="${String(c.value)}">${escapeHTML(c.label)}</button>`,
+              `<button class="${c.value ? "primary" : ""}" id="${c.id}" data-stage-choice="${String(c.value)}" ${c.disabled ? "disabled" : ""}>${escapeHTML(c.label)}</button>`,
           )
           .join("");
         fitDialogs();
@@ -26435,7 +27801,7 @@ function help(topic = "explore") {
             "Keep in your pack. Consume once to bring a fallen companion back at 75% health.",
           attack: `+${a.power} damage when a hero rolls attack.`,
           heal: `+${a.power} healing when a hero rolls heal.`,
-          block: `Once per roll, +${a.power} team block if a shield lands. Added after criticals.`,
+          block: `Once per roll, +${a.power} team block when the roll includes block. Added after criticals.`,
           gold: `+${a.power}% gold from chests and battle spoils.`,
           guard: `Start every battle with ${a.power} shared team block.`,
         }[a.key];
@@ -26466,7 +27832,7 @@ function help(topic = "explore") {
         if (busy || state.over) return;
         openModal(
           "A little power in the paper",
-          `<p>Only one artefact is active at a time. Swapping is free; its bonus applies to future rolls. The power of a find scales with the floor where it was discovered.</p>${state.artefacts.length ? state.artefacts.map((a) => `<div class="artefact-card">${icon("artefact")}<div><b>${escapeHTML(a.name)}</b><p>Found on floor ${a.depth}. ${artefactText(a)}</p>${artefactButton(a)}</div></div>`).join("") : "<p>The slot is empty. Artefacts appear very rarely in chests and the spoils of defeated enemies.</p>"}<div class="modal-actions"><button class="primary" data-close>Keep walking</button></div>`,
+          `<p class="artefact-intro">One active artefact. Swapping is free.</p><div class="artefact-library" tabindex="0" role="region" aria-label="Your artefacts">${state.artefacts.length ? state.artefacts.map((a) => `<article class="artefact-card">${icon("artefact")}<div><b>${escapeHTML(a.name)}</b><p>Floor ${a.depth} · ${artefactText(a)}</p>${artefactButton(a)}</div></article>`).join("") : "<p>No artefacts yet. Search chests and battle spoils.</p>"}</div><div class="modal-actions"><button class="primary" data-close>Keep walking</button></div>`,
           "artefacts",
         );
       }
@@ -26597,9 +27963,9 @@ function help(topic = "explore") {
       async function shopEncounter(c) {
         if (!c.shop) {
           c.shop = {
-            [lootItemForDepth("potion")]: 1,
-            [lootItemForDepth("bomb")]: 1,
-            [lootItemForDepth("ward")]: 1,
+            [shopItemForDepth("potion")]: 1,
+            [shopItemForDepth("bomb")]: 1,
+            [shopItemForDepth("ward")]: 1,
             heal: 1,
             reveal: 1,
           };
@@ -26609,6 +27975,7 @@ function help(topic = "explore") {
           for (let i = 0; i < 2; i++)
             c.shop[extra.splice(rand(extra.length), 1)[0]] = 1;
         }
+        if (!c.premiumRolled) addPremiumShopStock(c);
         shopCell = c;
         drawShop();
         await new Promise((resolve) => (shopResolver = resolve));
@@ -26617,7 +27984,7 @@ function help(topic = "explore") {
       let shopCell = null;
 
       function drawShop() {
-        let prices = shopPrices(),
+        let prices = shopPrices(shopCell),
           labels = {
             ...Object.fromEntries(
               Object.entries(ITEM_DEFS).map(([key, item]) => [
@@ -26639,7 +28006,7 @@ function help(topic = "explore") {
           )
             .map(
               (key) =>
-                `<button data-buy="${key}" ${!c.shop[key] || state.gold < prices[key] || (key === "reveal" && state.exitFound) ? "disabled" : ""}>${icon(key === "heal" ? "well" : key === "reveal" ? "stairs" : key === "potion" ? "potion" : ITEM_DEFS[key]?.icon || "ward")}<span>${itemCategoryMarkup(key)}${labels[key]}<small>${!c.shop[key] ? "Sold out" : key === "reveal" && state.exitFound ? "Stairs already marked" : prices[key] + " gold · one in stock" + (ITEM_DEFS[key] && !state.bag[key] && Object.keys(state.bag).length>=3 ? " · BAG FULL" : "")}</small></span></button>`,
+                `<button data-buy="${key}" ${!c.shop[key] || state.gold < prices[key] || (key === "reveal" && state.exitFound) ? "disabled" : ""}>${icon(key === "heal" ? "well" : key === "reveal" ? "stairs" : key === "potion" ? "potion" : ITEM_DEFS[key]?.icon || "ward")}<span>${itemCategoryMarkup(key)}${c.premium===key?'<b class="premium-label">CHOICE STOCK</b>':''}${labels[key]}<small>${!c.shop[key] ? "Sold out" : key === "reveal" && state.exitFound ? "Stairs already marked" : prices[key] + " gold · one in stock" + (ITEM_DEFS[key] && !state.bag[key] && Object.keys(state.bag).length>=3 ? " · BAG FULL" : "")}</small></span></button>`,
             )
             .join(
               "",
@@ -26653,10 +28020,10 @@ function help(topic = "explore") {
           shopPurchasePending ||
           modalKind !== "shop" ||
           !shopCell ||
-          !Object.hasOwn(shopPrices(), key)
+          !Object.hasOwn(shopPrices(shopCell), key)
         )
           return;
-        let price = shopPrices()[key];
+        let price = shopPrices(shopCell)[key];
         if (
           !shopCell.shop[key] ||
           state.gold < price ||
@@ -27035,6 +28402,7 @@ function help(topic = "explore") {
         skipCriticals: false,
         combatEffects: "both",
         punMode: false,
+        navigationMode: false,
         ...FUTURE_OPTION_DEFAULTS,
       });
       function normalisePreferences(input = {}) {
@@ -27062,6 +28430,7 @@ function help(topic = "explore") {
           "fullScreenEffects",
           "skipCriticals",
           "punMode",
+          "navigationMode",
         ])
           if (typeof input[key] === "boolean") out[key] = input[key];
         for (const [key, values] of Object.entries({
@@ -28232,7 +29601,7 @@ function createRecordedMusic(context, bus) {
         }
         return id ? {h,id,reason} : null;
       }
-      const TRAIT_CHANCE = 0.3;
+      const TRAIT_CHANCE = 0.16;
       function awardTraitOccurrence(event, entries) {
         const candidates = entries
           .map(({ h, data }) => traitCandidate(h, event, data || {}))
@@ -28246,6 +29615,7 @@ function createRecordedMusic(context, bus) {
           );
         if (!candidates.length || Math.random() >= TRAIT_CHANCE) return false;
         const { h, id, reason } = pick(candidates);
+        if (id === "bookish" && Math.random() >= 0.3) return false;
         return grantTrait(h, id, reason);
       }
       function evaluateTraitEvent(h, event, data = {}) {
@@ -28263,17 +29633,39 @@ function createRecordedMusic(context, bus) {
 const notebookLayout = (() => {
   const desk = document.querySelector(".desk");
   const bar = document.getElementById("keyboard-bar");
-  let dirty = true, viewport = "", scale = null, heldViewport = null;
-  function hold() { heldViewport = `${innerWidth}:${innerHeight}`; }
-  function release() { if(heldViewport!==null){heldViewport=null;invalidate();requestFitUI();} }
-  function invalidate() { dirty = true; }
+  let dirty = true,
+    viewport = "",
+    scale = null,
+    heldViewport = null;
+  function hold() {
+    heldViewport = `${innerWidth}:${innerHeight}`;
+  }
+  function release() {
+    if (heldViewport !== null) {
+      heldViewport = null;
+      invalidate();
+      requestFitUI();
+    }
+  }
+  function invalidate() {
+    dirty = true;
+  }
   function needsFit(force, fitted) {
     // Choosing a replacement run changes keyboard prompts, not the expedition
     // underneath. Real resizing and explicit forced fits remain available.
-    if(!force&&heldViewport===`${innerWidth}:${innerHeight}`&&desk.classList.contains('fit-notebook')===fitted)return false;
-    return force || dirty || viewport !== `${innerWidth}:${innerHeight}` ||
+    if (
+      !force &&
+      heldViewport === `${innerWidth}:${innerHeight}` &&
+      desk.classList.contains("fit-notebook") === fitted
+    )
+      return false;
+    return (
+      force ||
+      dirty ||
+      viewport !== `${innerWidth}:${innerHeight}` ||
       desk.classList.contains("fit-notebook") !== fitted ||
-      desk.style.getPropertyValue("--desk-scale") !== scale;
+      desk.style.getPropertyValue("--desk-scale") !== scale
+    );
   }
   function fitted() {
     dirty = false;
@@ -28282,28 +29674,43 @@ const notebookLayout = (() => {
   }
   function syncBarHeight() {
     const height = bar.offsetHeight + "px";
-    if (document.documentElement.style.getPropertyValue("--keyboard-bar-height") !== height) {
-      document.documentElement.style.setProperty("--keyboard-bar-height", height);
+    if (
+      document.documentElement.style.getPropertyValue(
+        "--keyboard-bar-height",
+      ) !== height
+    ) {
+      document.documentElement.style.setProperty(
+        "--keyboard-bar-height",
+        height,
+      );
       invalidate();
     }
   }
-  let barContent = null, barEvent = null;
+  let barContent = null,
+    barEvent = null;
   function writeBar(next, event = false) {
-    if (typeof next === 'string') {
-      if(bar.innerHTML===next)return;
-      bar.innerHTML=next;barContent=null;invalidate();syncBarHeight();return;
+    if (typeof next === "string") {
+      if (bar.innerHTML === next) return;
+      bar.innerHTML = next;
+      barContent = null;
+      invalidate();
+      syncBarHeight();
+      return;
     }
-    const signature=next.field+'\n'+next.event;
-    if(barContent===signature&&barEvent===event)return;
-    barEvent=event;
-    if(barContent!==signature){
-      bar.innerHTML=`<div class="keyboard-context" data-context="field">${next.field}</div><div class="keyboard-context" data-context="event">${next.event}</div>`;
-      barContent=signature;invalidate();
+    const toggle = navigationBarToggle();
+    next = { field: next.field + toggle, event: next.event + toggle };
+    const signature = next.field + "\n" + next.event;
+    if (barContent === signature && barEvent === event) return;
+    barEvent = event;
+    if (barContent !== signature) {
+      bar.innerHTML = `<div class="keyboard-context" data-context="field">${next.field}</div><div class="keyboard-context" data-context="event">${next.event}</div>`;
+      barContent = signature;
+      invalidate();
     }
-    for(const node of bar.children){
-      const inactive=node.dataset.context!==(event?'event':'field');
-      if(node.inert!==inactive)node.inert=inactive;
-      node.setAttribute('aria-hidden',String(inactive));
+    for (const node of bar.children) {
+      const inactive = node.dataset.context !== (event ? "event" : "field");
+      if (node.inert !== inactive) node.inert = inactive;
+      node.setAttribute("aria-hidden", String(inactive));
     }
     syncBarHeight();
   }
@@ -28316,23 +29723,101 @@ const notebookLayout = (() => {
       const size = entry.borderBoxSize?.[0];
       const next = `${size?.inlineSize ?? entry.contentRect.width}:${size?.blockSize ?? entry.contentRect.height}`;
       if (dimensions.get(entry.target) === next) continue;
-      dimensions.set(entry.target, next); changed = true;
+      dimensions.set(entry.target, next);
+      changed = true;
       if (entry.target === bar) syncBarHeight();
     }
-    if (changed) { invalidate(); requestFitUI(); }
+    if (changed) {
+      invalidate();
+      requestFitUI();
+    }
   });
-  observer.observe(desk); observer.observe(bar);
+  observer.observe(desk);
+  observer.observe(bar);
   document.fonts.addEventListener("loadingdone", invalidate);
   return { needsFit, fitted, invalidate, writeBar, hold, release };
 })();
 
 function stayedInsideControl(event, control) {
-  return !!control && event.type === "pointerover" &&
-    event.relatedTarget instanceof Element && control.contains(event.relatedTarget);
+  return (
+    !!control &&
+    event.type === "pointerover" &&
+    event.relatedTarget instanceof Element &&
+    control.contains(event.relatedTarget)
+  );
+}
+
+// Text fitting is measured again only when its real input or available box changes.
+// Font completion and viewport dimensions are part of the key, so accessibility
+// and resizing retain their original fit; this is never a saved game cache.
+let textFitFrames = new WeakMap();
+document.fonts.addEventListener("loadingdone", () => {
+  textFitFrames = new WeakMap();
+});
+function textFitKey(el, max, min) {
+  return [
+    max,
+    min,
+    el.clientWidth,
+    el.clientHeight,
+    innerWidth,
+    innerHeight,
+    document.fonts.status,
+    el.innerHTML,
+  ].join("|");
+}
+
+// Compare only live tooltip inputs, never serialize a run's nested histories.
+function heroTooltipFingerprint(h) {
+  const foe = state.enemy,
+    artefact = state.artefacts.find((a) => a.id === state.equippedArtefact);
+  return [
+    h.id,
+    h.hp,
+    h.maxHp,
+    h.level,
+    h.xp,
+    h.points,
+    h.specialism,
+    h.equipment,
+    h.trait?.id,
+    h.trait?.reason,
+    h.charge,
+    h.fury,
+    h.rage,
+    h.anticipation,
+    h.stun,
+    h.stunWard,
+    h.poison?.turns,
+    h.poison?.damage,
+    h.stimulant?.turns,
+    h.stimulant?.power,
+    h.vulnerable?.createdAction,
+    h.fairySleep,
+    h.healingPenalty,
+    Object.values(h.stats || {}).join(","),
+    h.reels.map((r) => r.map((f) => f.type + f.tier).join(",")).join("/"),
+    state.party
+      .map((p) => [p.id, p.job, p.hp, p.maxHp, p.equipment, p.level].join(","))
+      .join("/"),
+    foe?.id,
+    foe?.hp,
+    foe?.maxHp,
+    state.block,
+    state.actionSerial,
+    state.steps,
+    state.finishedAt,
+    state.runRules.join(","),
+    artefact?.id,
+    artefact?.power,
+    Math.floor(Date.now() / 1000),
+  ].join("|");
 }
 // END GENERATED LAYOUT PERFORMANCE
       function fitText(el, max = 20, min = 11) {
         if (!el || !el.clientHeight || !el.clientWidth) return;
+        const key=textFitKey(el,max,min),cached=textFitFrames.get(el);
+        if(cached?.key===key && cached.font===el.style.fontSize)return;
         const overflows = () => {
           if (
             el.scrollHeight > el.clientHeight + 1 ||
@@ -28354,6 +29839,7 @@ function stayedInsideControl(event, control) {
         el.style.fontSize = max + "px";
         for (let size = max; size > min && overflows(); size--)
           el.style.fontSize = size - 1 + "px";
+        textFitFrames.set(el,{key:textFitKey(el,max,min),font:el.style.fontSize});
       }
       let fittingUI = false;
       function requestFitUI() {
@@ -28389,7 +29875,7 @@ function stayedInsideControl(event, control) {
       }
       function fitDialogs() {
         if ($("#spotlight").hidden && $("#overlay").hidden) return;
-        if (responsiveCampPage()) return;
+        if (responsiveCampPage() || fitArtefactLibrary()) return;
         const toolbar = $(".desk-top").getBoundingClientRect(),
           // Reserve a visible toolbar, including multiple wrapped rows on phones.
           // An off-screen toolbar must not displace the dialog.
@@ -28479,6 +29965,7 @@ function stayedInsideControl(event, control) {
       }
       function updateKeyboardBar() {
         const event = !$("#spotlight").hidden || !$("#overlay").hidden;
+        if(preferences().navigationMode){const prompts=navigationBarPrompts();notebookLayout.writeBar({field:prompts,event:prompts},event);return;}
         notebookLayout.writeBar({event:"<span><kbd>Tab</kbd> / <kbd>Shift Tab</kbd> choose</span><span><kbd>Enter</kbd> confirm highlighted button</span><span><kbd>Space</kbd> / <kbd>Esc</kbd> land reels</span><span><kbd>T</kbd> pace · <kbd>C</kbd> palette</span><span>Mouse: click buttons or rolling reels</span>",field:"<span><kbd>WASD</kbd> / <kbd>↑↓←→</kbd> move</span><span><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> spin · <kbd>Shift 1–3</kbd> heal</span><span><kbd>[</kbd><kbd>]</kbd> target · <kbd>E</kbd> edit</span><span><kbd>P</kbd> tonic · <kbd>B</kbd> bomb · <kbd>V</kbd> ward · <kbd>X</kbd> stairs · <kbd>R</kbd> revisit</span><span><kbd>O</kbd> options · <kbd>F</kbd> guide · <kbd>Y</kbd> bestiary · <kbd>T</kbd> pace · <kbd>C</kbd> palette · <kbd>M</kbd> log</span><span><kbd>Tab</kbd> / <kbd>Enter</kbd> navigate · Mouse: click</span>"}, event);
       }
       function keyboardShortcut(e) {
@@ -28976,7 +30463,7 @@ function stayedInsideControl(event, control) {
 
       function scaleEffects(base, multiplier) {
         return Object.fromEntries(
-          Object.entries(base).map(([k, n]) => [k, k === "selfharm" ? n : Math.ceil(n * multiplier)]),
+          Object.entries(base).map(([k, n]) => [k, k === "selfharm" ? n : k === "block" ? criticalBlockGain(n, multiplier) : Math.ceil(n * multiplier)]),
         );
       }
       function effectDetails(base) {
@@ -29009,6 +30496,7 @@ function stayedInsideControl(event, control) {
                   ? "bloodprice"
                   : k === "bash" ? "block" : ICONS[k] || k,
             value,
+            criticalRule: k === "block" ? "block" : "linear",
           }));
       }
 
@@ -29179,7 +30667,8 @@ function setupBattleOpening({ fresh = false } = {}) {
     h.surprised = false;
     h.initiative = null;
   });
-  const overgrown = state.map[state.position]?.terrain === "overgrown" &&
+  const overgrown =
+    state.map[state.position]?.terrain === "overgrown" &&
     !environmentLight(state.map, state.position, "clearings");
   const surpriseChance = TACTICS.surpriseChance + (overgrown ? 0.14 : 0);
   if (fresh && Math.random() < surpriseChance) {
@@ -29210,6 +30699,7 @@ function setupBattleOpening({ fresh = false } = {}) {
     planEnemyIntent(e);
     if (e.passive?.key === "veil") fogPartyReels(e);
   }
+  applyPendingFairyPranks();
 }
 function openingEligible(h) {
   return !state.opening?.firstRoll || !h.surprised;
@@ -29378,6 +30868,9 @@ function clearStuns(entity, amount, { all = false } = {}) {
 function clearBattleStatuses() {
   for (const entity of [...state.party, ...battleEnemies()]) {
     entity.rage = 0;
+    entity.fairySleep = 0;
+    delete entity.clotted;
+    entity.healingPenalty = null;
     entity.charge = 0;
     entity.anticipation = 0;
     if (entity.job !== "berserker" || !state.party.includes(entity))
@@ -29449,7 +30942,7 @@ async function tickPoison() {
       source =
         state.party.find((h) => h.id === poison.sourceId) ||
         state.graveyard.find((h) => h.id === poison.sourceId) ||
-        state.summonArchive?.find(h=>h.id===poison.sourceId);
+        state.summonArchive?.find((h) => h.id === poison.sourceId);
     if (hero >= 0)
       damageHero(hero, poison.damage, "Poison from " + poison.sourceName, {
         piercing: true,
@@ -29584,13 +31077,20 @@ function enemyShieldEl(e = state.enemy) {
   return $("#enemy-team-block");
 }
 function canEquipGear(h, gear) {
-  return !!h && !isSummon(h) && !!gear && (gear.jobs ? gear.jobs.includes(h.job) : !gear.job || gear.job === h.job);
+  return (
+    !!h &&
+    !isSummon(h) &&
+    !!gear &&
+    (gear.jobs ? gear.jobs.includes(h.job) : !gear.job || gear.job === h.job)
+  );
 }
 function equipmentScope(item) {
   return item?.equipment
-    ? item.jobs ? item.jobs.map(className).join(" / ") + " ONLY" : item.job
-      ? className(item.job) + " ONLY"
-      : "ALL CLASSES"
+    ? item.jobs
+      ? item.jobs.map(className).join(" / ") + " ONLY"
+      : item.job
+        ? className(item.job) + " ONLY"
+        : "ALL CLASSES"
     : "";
 }
 async function confirmShopOverflow(type, price) {
@@ -29631,6 +31131,11 @@ async function resumeOpeningEncounter() {
 
 function normaliseTacticalStatuses(entity) {
   normaliseBloodStatuses(entity);
+  entity.fairySleep = Math.min(
+    2,
+    Math.max(0, Math.floor(Number(entity.fairySleep) || 0)),
+  );
+  entity.healingPenalty = entity.healingPenalty === 0.5 ? 0.5 : null;
   entity.shadowLocks = Array.isArray(entity.shadowLocks)
     ? [...new Set(entity.shadowLocks.filter((k) => [0, 1, 2].includes(k)))]
     : [];
@@ -29817,7 +31322,9 @@ async function settleFuryLeech(h, recipients, flights) {
 const STIMULANT_TURNS = 3;
 const STIMULANT_OVERFLOW = 2;
 const stimulantDamageBonus = (e) =>
-  e.stimulant ? 1 + Math.floor(e.stimulant.power / 2) : 0;
+  e.stimulant
+    ? 1 + Math.floor(e.stimulant.power / 2) + Math.max(0, e.stimulant.power - 2)
+    : 0;
 const stimulantDefenceBonus = (e) =>
   e.stimulant ? 1 + Math.floor(e.stimulant.power / 5) : 0;
 function normaliseStimulant(entity) {
@@ -29880,14 +31387,7 @@ function applyStimulant(entity, amount) {
   );
 }
 function supportStimulantTarget(caster) {
-  const allies = state.party.filter((h) => alive(h) && h !== caster);
-  return (
-    allies.sort(
-      (a, b) =>
-        battleRollCount(b) - battleRollCount(a) ||
-        expectedHeroEffects(b).damage - expectedHeroEffects(a).damage,
-    )[0] || caster
-  );
+  return alive(state.party[state.target]) ? state.party[state.target] : caster;
 }
 function battleRollCount(h) {
   if (!h.battleMemo?.stats) return 0;
@@ -30102,6 +31602,9 @@ function updateBiomePresentation() {
   $("#floor-name").textContent = floorName();
   updateBiomeMargins();
   $("#floor-name").title = def.name;
+  $("#floor-name").dataset.tooltip =
+    def.name + ": " + biomeSummary(floorBiome());
+  $("#floor-name").tabIndex = 0;
   const key = $("#biome-key"),
     terrain = {
       overgrown: ["overgrown", "Overgrowth"],
@@ -30213,7 +31716,10 @@ function movementRoute(
         ? cells.filter(
             (i) =>
               i !== goal &&
-              (["enemy", "guardian", "stronghold", "trap"].includes(map[i].event) || environmentRoot(map[i])),
+              (["enemy", "guardian", "stronghold", "trap"].includes(
+                map[i].event,
+              ) ||
+                environmentRoot(map[i])),
           ).length * 1000
         : 0;
       const next = cost.get(key) + cells.length + danger;
@@ -30294,7 +31800,7 @@ async function biomeStep(i) {
   return expansionStep(i);
 }
 function biomeCoverArt(c) {
-  if(c.terrain === "brokenCrystal")return icon("brokenCrystal");
+  if (c.terrain === "brokenCrystal") return icon("brokenCrystal");
   if (["mudslide", "mudwall", "stalactite"].includes(c.terrain))
     return icon(c.terrain);
   if (["poisonMushroom", "explodingMushroom", "brittleIce"].includes(c.terrain))
@@ -30336,6 +31842,24 @@ function allTilesCanReachStairs(map) {
         queue.push(j);
       }
   return map.every((c, i) => c.wall || reached.has(i));
+}
+// Radius-one fields have at most nine cells per source, not a whole-map scan.
+// The same geometry feeds visual zones and their directional source trails.
+function crystalFieldGeometry(map = state.map) {
+  const sources = [],
+    covered = new Set(),
+    origins = new Map();
+  map.forEach((c, i) => {
+    if (c.terrain === "crystal") sources.push(i);
+  });
+  for (const source of sources)
+    for (const i of [source, ...neighbors(source, true)]) {
+      if (i !== source && (map[i].wall || !mapLineOfSight(map, source, i)))
+        continue;
+      covered.add(i);
+      if (!origins.has(i) || i === source) origins.set(i, source);
+    }
+  return { sources, covered, origins };
 }
 function crystalSources(origin = state.position, knownOnly = false) {
   return state.map
@@ -30418,7 +31942,7 @@ const BIOME_DISCOVERIES = Object.freeze({
     name: "Fairy ring",
     icon: "fairy",
     description:
-      "Choose healing or search for loot. Disturbing the ring may wake its guardian.",
+      "Choose healing or search for loot. A mischievous fairy may play a trick, or its guardian may wake.",
   },
   geode: {
     name: "Resonant geode",
@@ -30968,7 +32492,11 @@ async function resolveExpansionTile(c) {
         if (alive(h)) healHero(i, 4 + state.depth);
       });
     else await treasureRoll("chest");
-    if (state === run && Math.random() < 0.18) await expansionBattle();
+    if (state === run) {
+      const mischief = Math.random();
+      if (mischief < .4) await fairyPrank();
+      else if (mischief < .55) await expansionBattle();
+    }
   } else if (type === "rubble") {
     if (Math.random() < 0.22) await expansionBattle();
     else await treasureRoll("chest");
@@ -32009,7 +33537,10 @@ function environmentDescription(c) {
               : "hairline cracks; still traversable");
   }
   if (v.corridor)
-    return `Shifting corridor — walls change in ${corridorMovesRemaining(e.corridors.find(s=>s.tile===i),e)} moves`;
+    return `Shifting corridor — walls change in ${corridorMovesRemaining(
+      e.corridors.find((s) => s.tile === i),
+      e,
+    )} moves`;
   return "";
 }
 function environmentTileClasses(c, i) {
@@ -32071,7 +33602,10 @@ function environmentTileMarkup(c, i) {
 }
 function renderEnvironmentEdges() {
   const e = environmentState();
-  if (!e?.corridors.length) { paintMapDrawing("environment-connections", ""); return; }
+  if (!e?.corridors.length) {
+    paintMapDrawing("environment-connections", "");
+    return;
+  }
   const lines = [];
   for (const s of e.corridors)
     for (const [a, b] of s.edges) {
@@ -32084,15 +33618,21 @@ function renderEnvironmentEdges() {
         ay = Math.floor(a / W),
         bx = b % W,
         by = Math.floor(b / W);
-      lines.push(
-        {key:environmentEdgeKey(a,b),axis:ax===bx?"horizontal":"vertical",d:ax === bx
-          ? `M${ax + 0.05} ${Math.max(ay, by)}h.9`
-          : `M${Math.max(ax, bx)} ${ay + 0.05}v.9`},
-      );
+      lines.push({
+        key: environmentEdgeKey(a, b),
+        axis: ax === bx ? "horizontal" : "vertical",
+        d:
+          ax === bx
+            ? `M${ax + 0.05} ${Math.max(ay, by)}h.9`
+            : `M${Math.max(ax, bx)} ${ay + 0.05}v.9`,
+      });
     }
-  const markup = lines.map(({d,key,axis}) =>
-    `<g class="sliding-wall-piece ${axis}" data-sliding-edge="${key}"><path d="${d}" class="sliding-wall-paper"/><path d="${d}" class="sliding-wall-ink"/></g>`
-  ).join("");
+  const markup = lines
+    .map(
+      ({ d, key, axis }) =>
+        `<g class="sliding-wall-piece ${axis}" data-sliding-edge="${key}"><path d="${d}" class="sliding-wall-paper"/><path d="${d}" class="sliding-wall-ink"/></g>`,
+    )
+    .join("");
   paintMapDrawing("environment-connections", markup, () => {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.id = "environment-connections";
@@ -32148,15 +33688,42 @@ function environmentalFeedback(tiles, kind) {
       }
     }
   }
-  if(kind === 'corridor')for(const piece of document.querySelectorAll('.sliding-wall-piece')){
-    if(!piece.dataset.slidingEdge.split(':').map(Number).some(i=>visible.includes(i)))continue;
-    const vertical=piece.classList.contains('vertical');
-    animate(piece,[{transform:vertical?'scale(1,.03)':'scale(.03,1)'},{transform:vertical?'scale(1,1.04)':'scale(1.04,1)',offset:.8},{transform:'scale(1,1)'}],{duration:420,easing:'ease-out'});
-  }
-  if(kind === 'corridor-warning')for(const i of visible){
-    const drawing=$(`[data-tile="${i}"] .environment-corridor-art svg`);
-    animate(drawing,[{transform:'scale(1)',color:'var(--ink)'},{transform:'scale(1.3)',color:'var(--gold)',offset:.4},{transform:'scale(1)',color:'var(--ink)'}],{duration:500,juice:true});
-  }
+  if (kind === "corridor")
+    for (const piece of document.querySelectorAll(".sliding-wall-piece")) {
+      if (
+        !piece.dataset.slidingEdge
+          .split(":")
+          .map(Number)
+          .some((i) => visible.includes(i))
+      )
+        continue;
+      const vertical = piece.classList.contains("vertical");
+      animate(
+        piece,
+        [
+          { transform: vertical ? "scale(1,.03)" : "scale(.03,1)" },
+          {
+            transform: vertical ? "scale(1,1.04)" : "scale(1.04,1)",
+            offset: 0.8,
+          },
+          { transform: "scale(1,1)" },
+        ],
+        { duration: 420, easing: "ease-out" },
+      );
+    }
+  if (kind === "corridor-warning")
+    for (const i of visible) {
+      const drawing = $(`[data-tile="${i}"] .environment-corridor-art svg`);
+      animate(
+        drawing,
+        [
+          { transform: "scale(1)", color: "var(--ink)" },
+          { transform: "scale(1.3)", color: "var(--gold)", offset: 0.4 },
+          { transform: "scale(1)", color: "var(--ink)" },
+        ],
+        { duration: 500, juice: true },
+      );
+    }
   if (["seismic", "corridor", "collapse"].includes(kind)) {
     // A quake moves the map; a corridor shift moves only its drawn wall edges.
     shakeElement(
@@ -32183,9 +33750,41 @@ function renderEnvironmentStatus() {
     );
   if (e.corridors.length)
     notes.push(
-      `Walls shift in ${Math.min(...e.corridors.map(s=>corridorMovesRemaining(s,e)))} moves`,
+      `Walls shift in ${Math.min(...e.corridors.map((s) => corridorMovesRemaining(s, e)))} moves`,
     );
   if (notes.length) $("#map-status").textContent = notes.join(" · ");
+}
+
+function renderEnvironmentAuras() {
+  const e = environmentState();
+  let markup = "";
+  for (const [kind, color] of [
+    ["clearings", "#678b49"],
+    ["lanterns", "#b69243"],
+  ])
+    for (const source of e?.[kind] || []) {
+      if (
+        !state.map[source.tile]?.seen ||
+        (kind === "lanterns" && !source.active)
+      )
+        continue;
+      const x = (source.tile % W) + 0.5,
+        y = Math.floor(source.tile / W) + 0.5;
+      markup += `<circle class="landmark-aura-source" cx="${x}" cy="${y}" r=".27" style="--aura-ink:${color}"/>`;
+      for (const j of neighbors(source.tile)) {
+        if (!state.map[j]?.seen || state.map[j].wall) continue;
+        markup += `<path class="landmark-aura-flow" pathLength="1" style="--aura-ink:${color}" d="M${(j % W) + 0.5} ${Math.floor(j / W) + 0.5}L${x} ${y}"/>`;
+      }
+    }
+  paintMapDrawing("landmark-aura-map", markup, () => {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.id = "landmark-aura-map";
+    svg.classList.add("crystal-pulse-map");
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    svg.setAttribute("preserveAspectRatio", "none");
+    svg.setAttribute("aria-hidden", "true");
+    return svg;
+  });
 }
 // END GENERATED ENVIRONMENT PRESENTATION
       // BEGIN GENERATED WORLD EVENTS
@@ -32283,9 +33882,8 @@ function templePlacementSafe(map, center, start, stair) {
     trial.every((c,i)=>c.wall || reachable.has(i));
 }
 const WORLD_BALANCE = Object.freeze({
-  // About one temple in three complete ten-floor map sets.
-  // Safe enclosure rejection leaves about one temple-bearing run in three.
-  strongholdChance: .047,
+  // ~70% of complete ten-floor sets after safe-enclosure placement rejection.
+  strongholdChance: .14,
   shopChance: 0.46,
   marketChance: 0.7,
   riverChance: 0.41,
@@ -32293,11 +33891,12 @@ const WORLD_BALANCE = Object.freeze({
   relicWeight: 22,
 });
 async function minorTravelEvent(c) {
-  if (
-    state.steps - (state.lastMinorEventStep ?? -20) < 12 ||
-    Math.random() >= 0.025
-  )
-    return false;
+  if (state.steps - (state.lastMinorEventStep ?? -20) < 12) return false;
+  if (maybeBandits()) {
+    state.lastMinorEventStep = state.steps;
+    return banditEncounter();
+  }
+  if (Math.random() >= 0.025) return false;
   state.lastMinorEventStep = state.steps;
   const roll = Math.random(),
     kind =
@@ -32945,7 +34544,7 @@ function characterMoment(id, h) {
   );
   portraitMotion(entityArt(h), "talk");
   GameSound.play(def.kind === "heal" ? "heal" : "trait");
-  if (characterLuck() < 0.12)
+  if (characterLuck() < (def.trait === "bookish" ? 0.018 : 0.065))
     grantTrait(
       h,
       def.trait,
@@ -33804,16 +35403,7 @@ function clearShadowReels(h) {
 }
 
 function crystalInfluencedTiles() {
-  const result = new Set();
-  const sources = state.map
-    .map((c, i) => (c.seen && c.terrain === "crystal" ? i : -1))
-    .filter((i) => i >= 0);
-  for (const source of sources)
-    state.map.forEach((c, i) => {
-      if (!c.wall && tileDistance(i, source) <= EXPEDITION_TUNING.crystalRadius && lineOfSight(source, i))
-        result.add(i);
-    });
-  return result;
+  return new Set([...crystalFieldGeometry().covered].filter(i=>!state.map[i].wall));
 }
 
 async function fallingStoneFX(i){
@@ -33837,12 +35427,14 @@ function availableCompanions(except = null) {
       h !== except &&
       alive(h) &&
       !h.stun &&
+      !h.fairySleep &&
       openingEligible(h) &&
       !h.shadowRest,
   );
 }
 function heroLockReason(h) {
   if (!alive(h)) return "FALLEN";
+  if (h.fairySleep) return `FAIRY SLEEP · ${h.fairySleep} rolls`;
   if (!openingEligible(h)) return "SURPRISED · use a ready ally";
   if (h.shadowRest && availableCompanions(h).length)
     return "VEILED · use another ally";
@@ -33857,7 +35449,7 @@ function heroCannotRoll(h) {
     !alive(h) ||
     !openingEligible(h) ||
     (!!h.shadowRest && availableCompanions(h).length > 0) ||
-    (!!h.stun && availableCompanions(h).length > 0)
+    (!!(h.stun || h.fairySleep) && availableCompanions(h).length > 0)
   );
 }
 function reelLockMarkup(h) {
@@ -33865,7 +35457,7 @@ function reelLockMarkup(h) {
   if (!reason) return "";
   const kind = !alive(h)
     ? "fallen"
-    : h.stun
+    : h.stun || h.fairySleep
       ? "stun"
       : !openingEligible(h)
         ? "surprise"
@@ -33876,9 +35468,7 @@ function machineLockMarkup(kind, reason) {
   return `<div class="reel-unavailable ${kind}" role="status">${icon(kind === "stun" ? "stun" : kind === "shadow" ? "shadow" : kind === "fallen" ? "skull" : "surprise")}<strong>${reason}</strong></div>`;
 }
 function enemyReelLockMarkup(e) {
-  return e?.hp > 0 && e.stun
-    ? machineLockMarkup("stun", "STUNNED")
-    : "";
+  return e?.hp > 0 && e.stun ? machineLockMarkup("stun", "STUNNED") : "";
 }
 // Called by status-only updates too: recovery must remove the veil immediately,
 // without rebuilding a machine that might be spinning or holding its result.
@@ -33902,7 +35492,8 @@ function scheduleStunRecovery() {
   )
     return;
   const eligible = state.party.filter((h) => alive(h) && openingEligible(h));
-  if (!eligible.length || !eligible.every((h) => !!h.stun)) return;
+  if (!eligible.length || !eligible.every((h) => !!(h.stun || h.fairySleep)))
+    return;
   const run = state;
   soloStunTimer = setTimeout(
     () => {
@@ -33917,7 +35508,7 @@ function scheduleStunRecovery() {
       )
         return;
       const hero = state.party.find(
-        (h) => alive(h) && openingEligible(h) && h.stun,
+        (h) => alive(h) && openingEligible(h) && (h.stun || h.fairySleep),
       );
       if (hero && !availableCompanions(hero).length)
         spin(state.party.indexOf(hero));
@@ -33949,12 +35540,15 @@ async function missStunnedTurn(h, foes) {
   if (availableCompanions(h).length) return;
   state.actionSerial++;
   h.stats.turnsMissed++;
+  const sleeping = !!h.fairySleep;
   const machine = $("#machine-hero-" + state.party.indexOf(h));
   machine?.classList.add("stun-breaking");
   showHeroNotice(
     h,
-    "STUNNED · TURN LOST",
-    "Shaking free. Enemy clocks advance.",
+    sleeping ? "FAIRY SLEEP · TURN LOST" : "STUNNED · TURN LOST",
+    sleeping
+      ? "Waking up. Enemy clocks advance."
+      : "Shaking free. Enemy clocks advance.",
     "recovery",
   );
   GameSound.play("stunBreak");
@@ -33962,6 +35556,7 @@ async function missStunnedTurn(h, foes) {
   shakeElement(machine, 5, "recoil");
   await feedbackPause(skip ? 180 : 500);
   tryBreakStun(h, { missedAction: true });
+  advanceFairySleep();
   advanceRangerPatience(h, false);
   tickStimulant(h);
   finishOpeningRoll();
@@ -33972,7 +35567,9 @@ async function missStunnedTurn(h, foes) {
     await victory(foes[0]);
     return;
   }
-  log(`${h.name} loses a turn to stun and recovers. Enemy clocks advance.`);
+  log(
+    `${h.name} loses a turn to ${sleeping ? "fairy sleep" : "stun"}. Enemy clocks advance.`,
+  );
   await advanceEnemyClocks(foes);
   await showPendingCharacterMoments();
   if (!state.over && !livingEnemies().length) await victory(foes[0]);
@@ -34131,7 +35728,8 @@ function finishCombatLogGroup(group, report) {
     .filter((s) => ["poison", "stun", "rally", "stimulant"].includes(s.type))
     .map((s) => FACE_LABELS[s.type]);
   const extras = [...new Set(utility)];
-  logCombatSummary(group,
+  logCombatSummary(
+    group,
     `${group.hero} · ${group.activity} ×${report.shots.length}: ${damage.length ? damage.join(" + ") + " = " + report.damage + " damage; " : ""}${report.healing} HP restored; ${report.block} block${extras.length ? "; " + extras.join(", ") : ""}.`,
   );
   flushCombatLogEvents(group);
@@ -34165,7 +35763,16 @@ function finishHeroRollLog(group, h) {
     ...new Set(
       (roll?.symbols || [])
         .filter((f) =>
-          ["stun", "poison", "rally", "stimulant", "trick", "selfharm", "selfheal", "heal"].includes(f.type),
+          [
+            "stun",
+            "poison",
+            "rally",
+            "stimulant",
+            "trick",
+            "selfharm",
+            "selfheal",
+            "heal",
+          ].includes(f.type),
         )
         .map((f) => FACE_LABELS[f.type]),
     ),
@@ -34176,7 +35783,8 @@ function finishHeroRollLog(group, h) {
       ? classAbilityName(h)
       : "roll";
   const critical = Math.max(roll?.multiplier || 1, roll?.flurryMultiplier || 1);
-  logCombatSummary(group,
+  logCombatSummary(
+    group,
     `${h.name} · ${activity}${hits.length > 1 ? " ×" + hits.length : ""}${critical > 1 ? " · CRITICAL ×" + critical : ""}: ${hits.length > 1 ? hits.join(" + ") + " = " : ""}${damage} damage; ${healing} HP restored; ${group.block} block${powers.length ? "; marks: " + powers.join(", ") : ""}.`,
   );
   flushCombatLogEvents(group);
@@ -35380,108 +36988,174 @@ function enemyDeathPoof(e){
 // END GENERATED CLASS MOMENTS
 // BEGIN GENERATED EXPEDITION PRESENTATION
 // Semantic feedback colour is selected once, regardless of who emits the text.
-function feedbackKind(text, fallback='event') {
-  if(/\bstun(?:ned)?\b|\bsteady\b|unshaken|shake free|shake(?:s)? free/i.test(text))return 'stun';
-  if(/inspired|inspiration|heroic|keen eye|lesson learned|listen closely/i.test(text))return 'boon';
-  if(/poison|spore damage/i.test(text))return 'poison';
-  if(/stimulant|powered up|\bpower \d/i.test(text))return 'stimulant';
+function feedbackKind(text, fallback = "event") {
+  if (
+    /\bstun(?:ned)?\b|\bsteady\b|unshaken|shake free|shake(?:s)? free/i.test(
+      text,
+    )
+  )
+    return "stun";
+  if (
+    /inspired|inspiration|heroic|keen eye|lesson learned|listen closely/i.test(
+      text,
+    )
+  )
+    return "boon";
+  if (/poison|spore damage/i.test(text)) return "poison";
+  if (/stimulant|powered up|\bpower \d/i.test(text)) return "stimulant";
   return fallback;
 }
-const BIOME_MARGIN_PATHS=Object.freeze({
-  cave:'M19 5 10 27 21 49 8 73 20 101 9 131 20 160 8 187 20 216 10 246 19 278 9 309 20 341 11 375M11 27l17 5m-20 41 18-5m-17 63 15 3m-16 53 18-5m-16 67 16 4m-16 54 16-6',
-  overgrown:'M16 390Q1 345 18 300T16 210 18 120 16 5M16 342q-23-25-12-35 18 0 12 35m1-51q24-23 11-34-17 3-11 34m-1-66q-22-22-12-33 17 2 12 33m1-65q25-21 11-34-16 5-11 34m-2-68Q-7 67 4 56 22 60 15 92m2-56q24-25 11-34-17 4-11 34',
-  fungal:'M17 390V5M16 350v-25m-13 1q3-35 25-9l2 9Zm14-56v-19m-12 1q4-29 22-5l3 5Zm11-56v-23m-13 1q6-32 25-7l2 7Zm12-62v-24m-12 1q4-31 23-6l2 6Zm10-65V31m-12 1q4-26 23-5l2 5Z',
-  lava:'M8 0q12 35 0 66t0 68 0 69 0 69 0 68 0 50M17 0q10 30 0 64t0 68 0 70 0 69 0 69 0 50M26 0q-8 35 0 66t0 68 0 69 0 69 0 68 0 50M5 92l8 7m4 43 10-6m-22 64 8 7m4 54 10-6m-22 64 8 7m3 47 12-8',
-  ice:'M16 0v390M2 35l14-16 14 16-14 16Zm0 80 14-16 14 16-14 16Zm0 80 14-16 14 16-14 16Zm0 80 14-16 14 16-14 16Zm0 80 14-16 14 16-14 16ZM16 19v32m0 48v32m0 48v32m0 48v32m0 48v32',
-  crystal:'M9 390 3 350l13-22 13 22-6 40m-7-62v62M10 296 2 259l13-22 14 22-7 37m-7-59v59M10 204 2 167l13-22 14 22-7 37m-7-59v59M10 112 2 75l13-22 14 22-7 37m-7-59v59M16 16v18m-8-9h16',
-  unstable:'M5 0l7 44 5-44m5 0 7 30 2-30M3 101l10 37 5-37m5 0 6 23 3-23M3 200l10 37 5-37m5 0 6 23 3-23M3 300l10 37 5-37m5 0 6 23 3-23M8 66l8 8 9-8M8 167l8 8 9-8M8 267l8 8 9-8M8 367l8 8 9-8',
-  shadow:'M15 0q-23 39 0 76t0 77 0 77 0 77 0 83M24 0q-22 39 0 76t0 77 0 77 0 77 0 83M5 38l10 6m0 66 13 6M5 187l10 6m0 67 13 6M5 339l10 6',
-  maze:'M6 0v48h21V22H15v13M27 52v50H6V75h11v14M6 106v49h21v-27H15v13M27 160v49H6v-27h11v14M6 214v49h21v-27H15v13M27 268v49H6v-27h11v14M6 322v49h21v-27H15v13',
+const BIOME_MARGIN_PATHS = Object.freeze({
+  cave: "M19 5 10 27 21 49 8 73 20 101 9 131 20 160 8 187 20 216 10 246 19 278 9 309 20 341 11 375M11 27l17 5m-20 41 18-5m-17 63 15 3m-16 53 18-5m-16 67 16 4m-16 54 16-6",
+  overgrown:
+    "M16 390Q1 345 18 300T16 210 18 120 16 5M16 342q-23-25-12-35 18 0 12 35m1-51q24-23 11-34-17 3-11 34m-1-66q-22-22-12-33 17 2 12 33m1-65q25-21 11-34-16 5-11 34m-2-68Q-7 67 4 56 22 60 15 92m2-56q24-25 11-34-17 4-11 34",
+  fungal:
+    "M17 390V5M16 350v-25m-13 1q3-35 25-9l2 9Zm14-56v-19m-12 1q4-29 22-5l3 5Zm11-56v-23m-13 1q6-32 25-7l2 7Zm12-62v-24m-12 1q4-31 23-6l2 6Zm10-65V31m-12 1q4-26 23-5l2 5Z",
+  lava: "M8 0q12 35 0 66t0 68 0 69 0 69 0 68 0 50M17 0q10 30 0 64t0 68 0 70 0 69 0 69 0 50M26 0q-8 35 0 66t0 68 0 69 0 69 0 68 0 50M5 92l8 7m4 43 10-6m-22 64 8 7m4 54 10-6m-22 64 8 7m3 47 12-8",
+  ice: "M16 0v390M2 35l14-16 14 16-14 16Zm0 80 14-16 14 16-14 16Zm0 80 14-16 14 16-14 16Zm0 80 14-16 14 16-14 16Zm0 80 14-16 14 16-14 16ZM16 19v32m0 48v32m0 48v32m0 48v32m0 48v32",
+  crystal:
+    "M9 390 3 350l13-22 13 22-6 40m-7-62v62M10 296 2 259l13-22 14 22-7 37m-7-59v59M10 204 2 167l13-22 14 22-7 37m-7-59v59M10 112 2 75l13-22 14 22-7 37m-7-59v59M16 16v18m-8-9h16",
+  unstable:
+    "M5 0l7 44 5-44m5 0 7 30 2-30M3 101l10 37 5-37m5 0 6 23 3-23M3 200l10 37 5-37m5 0 6 23 3-23M3 300l10 37 5-37m5 0 6 23 3-23M8 66l8 8 9-8M8 167l8 8 9-8M8 267l8 8 9-8M8 367l8 8 9-8",
+  shadow:
+    "M15 0q-23 39 0 76t0 77 0 77 0 77 0 83M24 0q-22 39 0 76t0 77 0 77 0 77 0 83M5 38l10 6m0 66 13 6M5 187l10 6m0 67 13 6M5 339l10 6",
+  maze: "M6 0v48h21V22H15v13M27 52v50H6V75h11v14M6 106v49h21v-27H15v13M27 160v49H6v-27h11v14M6 214v49h21v-27H15v13M27 268v49H6v-27h11v14M6 322v49h21v-27H15v13",
 });
-function biomeMoteArt(theme,i){
-  const x=5+i%3*9,y=24+i*39;
-  const shapes={
-    overgrown:`<path d="M${x} ${y}q12-13 9 1-3 10-9 8Zm1 7 6-7" fill="var(--paper-shade)"/>`,
-    fungal:`<circle cx="${x+4}" cy="${y+4}" r="2"/><circle cx="${x}" cy="${y+11}" r="1.4"/><circle cx="${x+8}" cy="${y+14}" r="1.6"/>`,
-    lava:`<path d="M${x+4} ${y}q-9 13-1 15 9 0 1-15Z" fill="currentColor"/>`,
-    ice:`<path d="M${x+4} ${y}v14m-6-10 12 6m-12 0 12-6"/>`,
-    crystal:`<path d="m${x+4} ${y} 5 8-5 8-4-8Zm0 0v16"/>`,
-    unstable:`<path d="m${x} ${y+3} 6-3 5 8-5 5-7-4Z" fill="var(--paper-shade)"/>`,
-    shadow:`<path d="M${x} ${y}q15 6 3 13t4 12m-2-20q8 4 1 9"/>`,
-    maze:`<path d="M${x} ${y}h10v9H${x}Zm5 0v4m-5 1h10"/>`,
-    cave:`<path d="m${x} ${y} 5 5-3 6-5-5Z"/>`,
+function biomeMoteArt(theme, i) {
+  const x = 5 + (i % 3) * 9,
+    y = 24 + i * 39;
+  const shapes = {
+    overgrown: `<path d="M${x} ${y}q12-13 9 1-3 10-9 8Zm1 7 6-7" fill="var(--paper-shade)"/>`,
+    fungal: `<circle cx="${x + 4}" cy="${y + 4}" r="2"/><circle cx="${x}" cy="${y + 11}" r="1.4"/><circle cx="${x + 8}" cy="${y + 14}" r="1.6"/>`,
+    lava: `<path d="M${x + 4} ${y}q-9 13-1 15 9 0 1-15Z" fill="currentColor"/>`,
+    ice: `<path d="M${x + 4} ${y}v14m-6-10 12 6m-12 0 12-6"/>`,
+    crystal: `<path d="m${x + 4} ${y} 5 8-5 8-4-8Zm0 0v16"/>`,
+    unstable: `<path d="m${x} ${y + 3} 6-3 5 8-5 5-7-4Z" fill="var(--paper-shade)"/>`,
+    shadow: `<path d="M${x} ${y}q15 6 3 13t4 12m-2-20q8 4 1 9"/>`,
+    maze: `<path d="M${x} ${y}h10v9H${x}Zm5 0v4m-5 1h10"/>`,
+    cave: `<path d="m${x} ${y} 5 5-3 6-5-5Z"/>`,
   };
-  return shapes[theme]||shapes.cave;
+  return shapes[theme] || shapes.cave;
 }
-function updateBiomeMargins(){
-  const theme=floorBiome(),wrap=$('#map-wrap');if(!wrap)return;
-  if(wrap.dataset.marginBiome===theme)return;
-  wrap.dataset.marginBiome=theme;
-  wrap.querySelectorAll('.biome-margin').forEach(el=>el.remove());
-  for(const side of ['left','right']){
-    const el=document.createElement('div');el.className=`biome-margin ${side}`;el.setAttribute('aria-hidden','true');
-    el.innerHTML=`<svg class="pencil-art" viewBox="0 0 34 390" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="${pencilPath(BIOME_MARGIN_PATHS[theme],0.35)}"/><path opacity=".25" transform="translate(.7 .3)" d="${BIOME_MARGIN_PATHS[theme]}"/>${Array.from({length:9},(_,i)=>`<g class="margin-mote" style="--mote:${i}">${biomeMoteArt(theme,i)}</g>`).join('')}</svg>`;
+function updateBiomeMargins() {
+  const theme = floorBiome(),
+    wrap = $("#map-wrap");
+  if (!wrap) return;
+  if (wrap.dataset.marginBiome === theme) return;
+  wrap.dataset.marginBiome = theme;
+  wrap.querySelectorAll(".biome-margin").forEach((el) => el.remove());
+  for (const side of ["left", "right"]) {
+    const el = document.createElement("div");
+    el.className = `biome-margin ${side}`;
+    el.setAttribute("aria-hidden", "true");
+    el.innerHTML = `<svg class="pencil-art" viewBox="0 0 34 390" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="${pencilPath(BIOME_MARGIN_PATHS[theme], 0.35)}"/><path opacity=".25" transform="translate(.7 .3)" d="${BIOME_MARGIN_PATHS[theme]}"/>${Array.from({ length: 9 }, (_, i) => `<g class="margin-mote" style="--mote:${i}">${biomeMoteArt(theme, i)}</g>`).join("")}</svg>`;
     wrap.append(el);
   }
 }
-let mapHoverIndex=null;
-function mapTileDescription(c){
-  if(!c.seen)return tileName(c);
-  const environmental=environmentDescription(c);
-  if(environmental)return environmental+(c.event?` · ${c.event[0].toUpperCase()+c.event.slice(1)}${c.activated?" - activated":" - active"}`:"");
-  if(BIOME_DISCOVERIES[c.event])return BIOME_DISCOVERIES[c.event].name+' — '+BIOME_DISCOVERIES[c.event].description;
-  const extra={
-    poisonMushroom:'Poison mushrooms — spores harm the leading companion every time you cross.',
-    explodingMushroom:'Burstcap — explodes when you come within one tile. Roll to avoid its spores; it becomes an ordinary mushroom afterwards.',
-    brittleIce:'Brittle ice — slides like ice, then collapses into an impassable hole after you leave.',
-    hole:'Open hole — impassable. The ice has fallen away.',
-    gate:'Closed gate — a matching pressure plate opens this shortcut.',
-    openGate:'Open gate — a permanent shortcut.',
+let mapHoverIndex = null;
+function mapTileDescription(c) {
+  if (!c.seen) return tileName(c);
+  const environmental = environmentDescription(c);
+  if (environmental)
+    return (
+      environmental +
+      (c.event
+        ? ` · ${c.event[0].toUpperCase() + c.event.slice(1)}${c.activated ? " - activated" : " - active"}`
+        : "")
+    );
+  if (BIOME_DISCOVERIES[c.event])
+    return (
+      BIOME_DISCOVERIES[c.event].name +
+      " — " +
+      BIOME_DISCOVERIES[c.event].description
+    );
+  const extra = {
+    poisonMushroom:
+      "Poison mushrooms — spores harm the leading companion every time you cross.",
+    explodingMushroom:
+      "Burstcap — explodes when you come within one tile. Roll to avoid its spores; it becomes an ordinary mushroom afterwards.",
+    brittleIce:
+      "Brittle ice — slides like ice, then collapses into an impassable hole after you leave.",
+    hole: "Open hole — impassable. The ice has fallen away.",
+    gate: "Closed gate — a matching pressure plate opens this shortcut.",
+    openGate: "Open gate — a permanent shortcut.",
   };
-  if(extra[c.terrain])return extra[c.terrain];
-  if(c.lavaRiver)return c.terrain==='bridge'?'Lava bridge — a safe crossing above the molten river.':'Lava river — impassable molten rock. Cross on a bridge or use a tunnel.';
-  if(c.terrain==='crystal')return 'Quartz — blocks movement. Nearby fights can seal reels. Stand beside it and click to smash or leave.';
-  if(c.event==='tunnel'){const to=tunnelDestination(state.map,state.map.indexOf(c));return tileName(c)+(to!==null&&state.map[to].seen?' — linked to the highlighted entrance.':' — its other entrance is still unknown.');}
+  if (extra[c.terrain]) return extra[c.terrain];
+  if (c.lavaRiver)
+    return c.terrain === "bridge"
+      ? "Lava bridge — a safe crossing above the molten river."
+      : "Lava river — impassable molten rock. Cross on a bridge or use a tunnel.";
+  if (c.terrain === "crystal")
+    return "Quartz — blocks movement. Nearby fights can seal reels. Stand beside it and click to smash or leave.";
+  if (c.event === "tunnel") {
+    const to = tunnelDestination(state.map, state.map.indexOf(c));
+    return (
+      tileName(c) +
+      (to !== null && state.map[to].seen
+        ? " — linked to the highlighted entrance."
+        : " — its other entrance is still unknown.")
+    );
+  }
   return tileName(c);
 }
-function updateMapInspection(index=null){
-  mapHoverIndex=Number.isInteger(index)&&state.map[index]?index:null;
-  const i=mapHoverIndex??state.position;
-  $('#hover-name').textContent=mapTileDescription(state.map[i]);
-  document.querySelectorAll('.tile.inspect-hover,.tile.tunnel-linked').forEach(el=>el.classList.remove('inspect-hover','tunnel-linked'));
-  document.getElementById('tunnel-hover-link')?.remove();
-  if(mapHoverIndex===null)return;
-  $(`[data-tile="${i}"]`)?.classList.add('inspect-hover');
-  const to=tunnelDestination(state.map,i);
-  if(!state.map[i].seen||to===null||!state.map[to].seen)return;
-  $(`[data-tile="${to}"]`)?.classList.add('tunnel-linked');
-  const a={x:(i%W)+.5,y:Math.floor(i/W)+.5},b={x:(to%W)+.5,y:Math.floor(to/W)+.5};
-  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.id='tunnel-hover-link';svg.classList.add('map-link-overlay');svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.setAttribute('preserveAspectRatio','none');svg.setAttribute('aria-hidden','true');
-  svg.innerHTML=`<defs><marker id="tunnel-arrow" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="4" markerHeight="4" orient="auto"><path d="M1 1 6 4 1 7" fill="none"/></marker></defs><path d="M${a.x} ${a.y} Q${(a.x+b.x)/2} ${Math.max(.5,Math.min(a.y,b.y)-1)} ${b.x} ${b.y}" marker-end="url(#tunnel-arrow)"/>`;
-  $('#map-board').append(svg);
+function updateMapInspection(index = null) {
+  mapHoverIndex = Number.isInteger(index) && state.map[index] ? index : null;
+  const i = mapHoverIndex ?? state.position;
+  $("#hover-name").textContent = mapTileDescription(state.map[i]);
+  document
+    .querySelectorAll(".tile.inspect-hover,.tile.tunnel-linked")
+    .forEach((el) => el.classList.remove("inspect-hover", "tunnel-linked"));
+  document.getElementById("tunnel-hover-link")?.remove();
+  if (mapHoverIndex === null) return;
+  $(`[data-tile="${i}"]`)?.classList.add("inspect-hover");
+  const to = tunnelDestination(state.map, i);
+  if (!state.map[i].seen || to === null || !state.map[to].seen) return;
+  $(`[data-tile="${to}"]`)?.classList.add("tunnel-linked");
+  const a = { x: (i % W) + 0.5, y: Math.floor(i / W) + 0.5 },
+    b = { x: (to % W) + 0.5, y: Math.floor(to / W) + 0.5 };
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.id = "tunnel-hover-link";
+  svg.classList.add("map-link-overlay");
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  svg.setAttribute("preserveAspectRatio", "none");
+  svg.setAttribute("aria-hidden", "true");
+  svg.innerHTML = `<defs><marker id="tunnel-arrow" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="4" markerHeight="4" orient="auto"><path d="M1 1 6 4 1 7" fill="none"/></marker></defs><path d="M${a.x} ${a.y} Q${(a.x + b.x) / 2} ${Math.max(0.5, Math.min(a.y, b.y) - 1)} ${b.x} ${b.y}" marker-end="url(#tunnel-arrow)"/>`;
+  $("#map-board").append(svg);
 }
-function renderCrystalPulses(){
-  const sources=state.map.map((c,i)=>c.seen&&c.terrain==='crystal'?i:-1).filter(i=>i>=0);
-  // A union of affected cells: overlapping crystals never darken the same
-  // tile twice. Draw only the outer boundary, with no growing/overlaid squares.
-  const covered=new Set();
-  for(const i of sources)state.map.forEach((c,j)=>{
-    if(j===i||!c.wall&&tileDistance(j,i)<=EXPEDITION_TUNING.crystalRadius&&mapLineOfSight(state.map,i,j))covered.add(j);
-  });
-  let fill='',edge='';
-  for(const j of [...covered].sort((a,b)=>a-b)){
-    const x=j%W,y=Math.floor(j/W);
-    fill+=`M${x} ${y}h1v1h-1Z`;
-    if(y===0||!covered.has(j-W))edge+=`M${x} ${y}h1`;
-    if(x===W-1||!covered.has(j+1))edge+=`M${x+1} ${y}v1`;
-    if(y===H-1||!covered.has(j+W))edge+=`M${x+1} ${y+1}h-1`;
-    if(x===0||!covered.has(j-1))edge+=`M${x} ${y+1}v-1`;
+function renderCrystalPulses() {
+  const { sources, covered, origins } = crystalFieldGeometry();
+  let fill = "",
+    edge = "",
+    flow = "";
+  for (const j of covered) {
+    const source = origins.get(j);
+    const x = (j % W) + 0.5,
+      y = Math.floor(j / W) + 0.5;
+    if (source === undefined) continue;
+    if (source === j)
+      flow += `<circle class="quartz-source" cx="${x}" cy="${y}" r=".22"/>`;
+    else
+      flow += `<path class="quartz-flow" pathLength="1" d="M${x} ${y}L${(source % W) + 0.5} ${Math.floor(source / W) + 0.5}"/>`;
   }
-  const markup=covered.size?`<path class="quartz-pulse quartz-zone" data-zone-cells="${[...covered].sort((a,b)=>a-b).join(',')}" d="${fill}"/><path class="quartz-boundary" d="${edge}"/>`:'';
-  paintMapDrawing('crystal-pulse-map',markup,()=>{
-    const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
-    svg.id='crystal-pulse-map';svg.classList.add('crystal-pulse-map');
-    svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.setAttribute('preserveAspectRatio','none');svg.setAttribute('aria-hidden','true');
+  for (const j of [...covered].sort((a, b) => a - b)) {
+    const x = j % W,
+      y = Math.floor(j / W);
+    fill += `M${x} ${y}h1v1h-1Z`;
+    if (y === 0 || !covered.has(j - W)) edge += `M${x} ${y}h1`;
+    if (x === W - 1 || !covered.has(j + 1)) edge += `M${x + 1} ${y}v1`;
+    if (y === H - 1 || !covered.has(j + W)) edge += `M${x + 1} ${y + 1}h-1`;
+    if (x === 0 || !covered.has(j - 1)) edge += `M${x} ${y + 1}v-1`;
+  }
+  const markup = covered.size
+    ? `<path class="quartz-pulse quartz-zone" data-zone-cells="${[...covered].sort((a, b) => a - b).join(",")}" d="${fill}"/><path class="quartz-boundary" d="${edge}"/>${flow}`
+    : "";
+  paintMapDrawing("crystal-pulse-map", markup, () => {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.id = "crystal-pulse-map";
+    svg.classList.add("crystal-pulse-map");
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    svg.setAttribute("preserveAspectRatio", "none");
+    svg.setAttribute("aria-hidden", "true");
     return svg;
   });
 }
@@ -35676,6 +37350,7 @@ function portraitMotion(el, kind = "talk", enemy = false) {
             : 420,
     easing: "cubic-bezier(.2,.7,.3,1)",
   });
+  animation.playbackRate = 1 / classMotionTempo(state.party.find(h => entityArt(h) === el));
   animation.portraitMotion = true;
   portraitMotions.set(art, animation);
   animation.finished.catch(() => {});
@@ -35841,7 +37516,7 @@ function contributionType(symbol, owner) {
 }
 function contributes(symbol, wanted, owner) {
   const type = contributionType(symbol, owner);
-  if(wanted === "heal")return ["heal","selfheal"].includes(type);
+  if (wanted === "heal") return ["heal", "selfheal"].includes(type);
   return DAMAGE_TYPES.includes(wanted)
     ? DAMAGE_TYPES.includes(type)
     : type === wanted;
@@ -35870,7 +37545,9 @@ function effectSymbols(from, type, impact = {}) {
   const matches = (symbols || [])
     .map((s, i) => ({
       symbol: s,
-      origin: machine?.querySelector(`[data-reel="${impact.reelIndex ?? i}"] .slot-symbol`),
+      origin: machine?.querySelector(
+        `[data-reel="${impact.reelIndex ?? i}"] .slot-symbol`,
+      ),
     }))
     .filter((v) => accepts(v.symbol));
   return matches.length
@@ -35903,7 +37580,8 @@ function launchRolledSymbols(from, to, type, impact = {}) {
         node.className =
           "rolled-projectile " +
           type +
-          (impact.critical ? " critical-projectile" : "");
+          (impact.critical ? " critical-projectile" : "") +
+          (impact.stimulant ? " stim-projectile" : "");
         node.innerHTML = symbolMarkup(symbol);
         node.dataset.target = to.id;
         node.dataset.symbol = symbol.type;
@@ -35969,6 +37647,14 @@ function launchRolledSymbols(from, to, type, impact = {}) {
             );
             shakeElement(liveTarget, impact.critical ? 6 : 2);
             if (impact.critical) impactFlash(liveTarget, i);
+            if (impact.stimulant) {
+              burst(liveTarget, "gold", 14);
+              combatCallout(
+                liveTarget,
+                "STIM +" + impact.stimulant,
+                "stimulant",
+              );
+            }
             splash
               .animate(
                 [
@@ -35997,7 +37683,11 @@ function beam(from, to, type, impact = {}) {
   if (mode !== "beams")
     flights.push(launchRolledSymbols(from, to, type, impact));
   if (mode !== "icons") flights.push(drawBeam(from, to, type, impact));
-  const completed = Promise.all(flights);
+  const recipient =
+    type === "heal" ? state.party.find((h) => entityArt(h) === to) : null;
+  const completed = Promise.all(flights).then(
+    () => recipient && rejectedHealingFX(recipient),
+  );
   impact.flights?.push(completed);
   return completed;
 }
@@ -36021,7 +37711,7 @@ function impactNumberParts(value, type) {
           ? 2
           : type === "heal"
             ? POWER.heal * s.tier
-            : markDamage(s.type,s.tier) || 1,
+            : markDamage(s.type, s.tier) || 1,
       );
   if (weights.length < 2) return [];
   const total = weights.reduce((a, b) => a + b, 0),
@@ -36066,9 +37756,16 @@ function combatNumber(el, value, type) {
       type === "block"
         ? amount + " BLOCKED"
         : (type === "heal" ? "+" : "−") + amount;
-    if (["bleeding","bloodexchange","bloodseed"].includes(type)) {
+    if (["bleeding", "bloodexchange", "bloodseed"].includes(type)) {
       node.classList.add("bleeding");
-      const label=document.createElement("small");label.textContent=type==="bloodseed"?"BLOOD BLOOM":type==="bloodexchange"?"BLOOD EXCHANGE":"BLEEDING";node.append(label);
+      const label = document.createElement("small");
+      label.textContent =
+        type === "bloodseed"
+          ? "BLOOD BLOOM"
+          : type === "bloodexchange"
+            ? "BLOOD EXCHANGE"
+            : "BLEEDING";
+      node.append(label);
     }
     if (type === "poison") {
       const label = document.createElement("small");
@@ -36104,28 +37801,52 @@ function combatNumber(el, value, type) {
 }
 
 // Callouts name a real state change; they never capture input or move layout.
-function eventCriticalFX(options,details) {
-  if(!options.context)return;
-  const sheet=$("#stage-card");
-  const machine=sheet?.querySelector('.machine-shell:not(#machine-critical)');
-  if(!machine)return;
-  const danger=['trap','rockfall','mushroom','ruin'].includes(options.context)&&details.some(d=>['trap','damage'].includes(d.icon)&&d.value>0);
-  const kind=danger?'trap':options.context==='well'?'heal':details.some(d=>d.icon==='coin')?'gold':details.some(d=>['heal','blessing'].includes(d.icon))?'heal':'critical';
-  const color=getComputedStyle(document.documentElement).getPropertyValue(kind==='heal'?'--green':danger?'--red':'--gold').trim();
-  machine.dataset.criticalOutcome=kind;
-  animate(machine,[
-    {boxShadow:'0 0 0 0 transparent',filter:'brightness(1)'},
-    {boxShadow:`0 0 0 6px var(--gold),0 0 24px ${color}`,filter:'brightness(1.3)',offset:.22},
-    {boxShadow:`0 0 0 2px var(--gold),0 0 12px ${color}`,filter:'brightness(1.08)',offset:.6},
-    {boxShadow:'0 0 0 0 transparent',filter:'brightness(1)'},
-  ],{duration:750,juice:true});
-  burst(machine,kind==='heal'?'heal':danger?'damage':'gold',52);
-  screenFX(kind,1.25);
-  shakeElement(machine,4,'celebrate');
+function eventCriticalFX(options, details) {
+  if (!options.context) return;
+  const sheet = $("#stage-card");
+  const machine = sheet?.querySelector(".machine-shell:not(#machine-critical)");
+  if (!machine) return;
+  const danger =
+    ["trap", "rockfall", "mushroom", "ruin"].includes(options.context) &&
+    details.some((d) => ["trap", "damage"].includes(d.icon) && d.value > 0);
+  const kind = danger
+    ? "trap"
+    : options.context === "well"
+      ? "heal"
+      : details.some((d) => d.icon === "coin")
+        ? "gold"
+        : details.some((d) => ["heal", "blessing"].includes(d.icon))
+          ? "heal"
+          : "critical";
+  const color = getComputedStyle(document.documentElement)
+    .getPropertyValue(kind === "heal" ? "--green" : danger ? "--red" : "--gold")
+    .trim();
+  machine.dataset.criticalOutcome = kind;
+  animate(
+    machine,
+    [
+      { boxShadow: "0 0 0 0 transparent", filter: "brightness(1)" },
+      {
+        boxShadow: `0 0 0 6px var(--gold),0 0 24px ${color}`,
+        filter: "brightness(1.3)",
+        offset: 0.22,
+      },
+      {
+        boxShadow: `0 0 0 2px var(--gold),0 0 12px ${color}`,
+        filter: "brightness(1.08)",
+        offset: 0.6,
+      },
+      { boxShadow: "0 0 0 0 transparent", filter: "brightness(1)" },
+    ],
+    { duration: 750, juice: true },
+  );
+  burst(machine, kind === "heal" ? "heal" : danger ? "damage" : "gold", 52);
+  screenFX(kind, 1.25);
+  shakeElement(machine, 4, "celebrate");
 }
 function combatCallout(el, text, kind = "gold") {
   if (!el) return;
-  kind=feedbackKind(text,kind);
+  kind = feedbackKind(text, kind);
   const r = el.getBoundingClientRect(),
     node = document.createElement("div");
   node.className = "combat-callout " + kind;
@@ -36257,7 +37978,7 @@ function criticalFigures(details, multiplier) {
     marks = [...details].sort((a, b) => b.value - a.value).slice(0, 1);
   return {
     original: marks.reduce((n, d) => n + d.value, 0),
-    total: marks.reduce((n, d) => n + Math.ceil(d.value * multiplier), 0),
+    total: marks.reduce((n, d) => n + criticalEffectValue(d, multiplier), 0),
     label: marks.some((d) => d.icon === "coin")
       ? "GOLD"
       : marks.some((d) => ["heal", "blessing"].includes(d.icon))
@@ -36616,9 +38337,7 @@ function revealCriticalPayoff(region, details, multiplier) {
           : null;
         // Preserve live stats/text while avoiding repeated layout for the same
         // unchanged tooltip as the pointer crosses its illustration's paths.
-        const key = hero ? JSON.stringify([hero, state.party, state.enemy, state.runRules,
-          state.artefacts, state.equippedArtefact, state.steps, state.finishedAt,
-          Math.floor(Date.now() / 1000)]) : source.dataset.tooltip;
+        const key = hero ? heroTooltipFingerprint(hero) : source.dataset.tooltip;
         if (!statusTooltip.hidden && source === statusTooltipSource && key === statusTooltipKey && stayedInsideControl(event, source)) return;
         statusTooltipSource = source;
         statusTooltipKey = key;
@@ -36710,7 +38429,7 @@ function revealCriticalPayoff(region, details, multiplier) {
         if (b.hasAttribute("data-equip")) equipArtefact(b.dataset.equip);
         if (b.id === "artefact-slot") inspectArtefacts();
         if (b.hasAttribute("data-edit")) editor(Number(b.dataset.edit));
-        if (b.hasAttribute("data-target") && !busy) {
+        if (b.hasAttribute("data-target") && (!busy || travel)) {
           state.target = Number(b.dataset.target);
           renderParty();
           renderTargets();
@@ -37481,7 +39200,7 @@ function revealCriticalPayoff(region, details, multiplier) {
                 out.selfHeal += bloodrushHealing(h) * p;
               }
               if (h.job === "ranger") out.damage += rangerSealPower(h) * p;
-              if(h.job==="bloodbinder"){const seeds=bloodDetonationPlan().reduce((n,x)=>n+x.seeds,0);bloodBloomForecast.damage+=bloodDetonationPlan().reduce((n,x)=>n+Math.min(x.enemy.hp,x.seeds),0)*p;bloodBloomForecast.heal+=seeds*p;}
+              if(h.job==="bloodbinder"){const plans=bloodDetonationPlan(h);bloodBloomForecast.damage+=plans.reduce((n,x)=>n+Math.min(x.enemy.hp,x.seeds*BLOOD_BINDING.detonationDamage),0)*p;bloodBloomForecast.heal+=plans.reduce((n,x)=>n+seedHealingOffered(x.seeds*BLOOD_BINDING.detonationHealing,h),0)*p;}
               if(h.job==="necromancer"){out.harvest+=necromancerSealPower(h)*p;out.damage+=harvestSpellPower(necromancerSealPower(h))*p;}
             } else if (Object.hasOwn(out, t)) out[t] += POWER[t] * face.tier * p;
           }
@@ -37656,8 +39375,8 @@ function revealCriticalPayoff(region, details, multiplier) {
             (foes.length > 1 && (fx.crit > 0.1 || h.job === "mage") ? 1.35 : 1),
         );
         const healing =
-          Math.min(weakest.maxHp - weakest.hp, fx.heal) +
-          Math.min(health.missing, fx.teamHeal * health.party.length);
+          Math.min(autoHealingRecipient(health) ? autoHealingRecipient(health).h.maxHp-autoHealingRecipient(health).h.hp : 0, fx.heal) +
+          Math.min(health.party.filter(({h})=>canReceiveOrdinaryHealing(h)).reduce((n,{h})=>n+h.maxHp-h.hp,0), fx.teamHeal * health.party.filter(({h})=>canReceiveOrdinaryHealing(h)).length);
         const block = Math.min(fx.block, Math.max(0, partyBlockCap() - state.block), Math.max(0, threat * 1.2 - state.block));
         return (
           damage * (h.initiative && state.opening?.firstRoll ? 1.4 : 1) +
@@ -37838,17 +39557,15 @@ function revealCriticalPayoff(region, details, multiplier) {
             target = autoGearTarget(type);
             score = target >= 0 ? 100 : 0;
           } else if (["potion", "bandage", "ration"].includes(family)) {
-            const amount =
-                item.heal || Math.ceil(weakest.h.maxHp * item.healFraction),
-              efficient = missing >= amount * 0.75;
-            if (
-              (ratio < 0.32 || (efficient && ratio < 0.74)) &&
-              !(betterWell && ratio > 0.4)
-            )
-              score = Math.min(amount, missing) * (ratio < 0.32 ? 5 : 1);
+            const recipient=autoHealingRecipient(health);
+            if(recipient){
+              target=recipient.i;
+              const amount=item.heal || Math.ceil(recipient.h.maxHp*item.healFraction),missingHP=recipient.h.maxHp-recipient.h.hp,recipientRatio=recipient.h.hp/recipient.h.maxHp;
+              if((recipientRatio<.32 || missingHP>=amount*.75 && recipientRatio<.74)&&!(betterWell&&recipientRatio>.4))score=Math.min(amount,missingHP)*(recipientRatio<.32?5:1);
+            }
           } else if (family === "salve") {
             const actual = health.party.reduce(
-              (n, { h }) => n + Math.min(h.maxHp - h.hp, item.heal),
+              (n, { h }) => n + (canReceiveOrdinaryHealing(h) ? Math.min(h.maxHp - h.hp, item.heal) : 0),
               0,
             );
             if (
@@ -37971,7 +39688,7 @@ function revealCriticalPayoff(region, details, multiplier) {
       function autoShopButton() {
         if (shopPurchasePending || !shopCell) return null;
         const health = autoHealth(),
-          prices = shopPrices();
+          prices = shopPrices(shopCell);
         let best = null;
         for (const [key, count] of Object.entries(shopCell.shop)) {
           if (!count || state.gold < prices[key]) continue;
@@ -38192,6 +39909,9 @@ function revealCriticalPayoff(region, details, multiplier) {
               index >= 0
                 ? $(`#stage-card [data-stage-choice="replace:${index}"]`)
                 : $("#recruit-decline");
+          } else if (kind === "bandits") {
+            button = autoHealth().missing / Math.max(1, autoHealth().maximum) > .5 && state.gold>=35+state.depth*22 ? $("#bandit-pay") : $("#bandit-fight");
+          } else if (kind === "fairy-prank") { button = $("#stage-confirm");
           } else if (kind === "crystal-choice") {
             // Breaking quartz is free, removes its reel-sealing aura and opens
             // the tile. Use the real confirmation before releasing movement.
@@ -38446,7 +40166,7 @@ function revealCriticalPayoff(region, details, multiplier) {
         autoActing = true;
         try {
           const health = autoHealth();
-          state.target = health.weakest.i;
+          state.target = autoHealingRecipient(health)?.i ?? health.weakest.i;
           const foe = livingEnemies()
             .slice()
             .sort(
@@ -38863,7 +40583,7 @@ const CompanyIntro = (() => {
 })();
 // END GENERATED COMPANY STARTUP
       CompanyIntro.run(() => {
-        if (!load()) {
+        if (prepareUpdatedNotebook() || !load()) {
           newRun();
           openBook(true);
           chooseStartingClass(true);

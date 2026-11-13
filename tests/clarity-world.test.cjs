@@ -339,9 +339,9 @@ test("Iron Pennant adds once after critical scaling and once across a whole Punc
     return { raw: raw.block, scaled: scaled.block, first, again: state.block };
   });
   assert.equal(r.raw, 6);
-  assert.equal(r.scaled, 12);
-  assert.equal(r.first, 15);
-  assert.equal(r.again, 16);
+  assert.equal(r.scaled, 9);
+  assert.equal(r.first, 12);
+  assert.equal(r.again, 13);
 });
 
 test("blank inscription follows the chosen power; class prices and high-rank icons fit the workshop", async (t) => {

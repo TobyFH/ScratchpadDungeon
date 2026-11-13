@@ -13,7 +13,8 @@
     "review:clarity": "npm run check:ui && node tools/review-clarity.cjs",
     "review:living": "npm run check:ui && node tools/review-living-paper.cjs",
     "review:tuning": "npm run check:ui && node tools/review-curve-tuning.cjs",
-    "review:environment": "npm run check:ui && node tools/review-environment.cjs"
+    "review:environment": "npm run check:ui && node tools/review-environment.cjs",
+    "review:interactions": "npm run check:ui && node tools/review-paper-interactions.cjs"
   },
   "devDependencies": {
     "playwright": "1.58.2"

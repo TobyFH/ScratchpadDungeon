@@ -197,6 +197,9 @@ function updateBiomePresentation() {
   $("#floor-name").textContent = floorName();
   updateBiomeMargins();
   $("#floor-name").title = def.name;
+  $("#floor-name").dataset.tooltip =
+    def.name + ": " + biomeSummary(floorBiome());
+  $("#floor-name").tabIndex = 0;
   const key = $("#biome-key"),
     terrain = {
       overgrown: ["overgrown", "Overgrowth"],
@@ -308,7 +311,10 @@ function movementRoute(
         ? cells.filter(
             (i) =>
               i !== goal &&
-              (["enemy", "guardian", "stronghold", "trap"].includes(map[i].event) || environmentRoot(map[i])),
+              (["enemy", "guardian", "stronghold", "trap"].includes(
+                map[i].event,
+              ) ||
+                environmentRoot(map[i])),
           ).length * 1000
         : 0;
       const next = cost.get(key) + cells.length + danger;
@@ -389,7 +395,7 @@ async function biomeStep(i) {
   return expansionStep(i);
 }
 function biomeCoverArt(c) {
-  if(c.terrain === "brokenCrystal")return icon("brokenCrystal");
+  if (c.terrain === "brokenCrystal") return icon("brokenCrystal");
   if (["mudslide", "mudwall", "stalactite"].includes(c.terrain))
     return icon(c.terrain);
   if (["poisonMushroom", "explodingMushroom", "brittleIce"].includes(c.terrain))
@@ -431,6 +437,24 @@ function allTilesCanReachStairs(map) {
         queue.push(j);
       }
   return map.every((c, i) => c.wall || reached.has(i));
+}
+// Radius-one fields have at most nine cells per source, not a whole-map scan.
+// The same geometry feeds visual zones and their directional source trails.
+function crystalFieldGeometry(map = state.map) {
+  const sources = [],
+    covered = new Set(),
+    origins = new Map();
+  map.forEach((c, i) => {
+    if (c.terrain === "crystal") sources.push(i);
+  });
+  for (const source of sources)
+    for (const i of [source, ...neighbors(source, true)]) {
+      if (i !== source && (map[i].wall || !mapLineOfSight(map, source, i)))
+        continue;
+      covered.add(i);
+      if (!origins.has(i) || i === source) origins.set(i, source);
+    }
+  return { sources, covered, origins };
 }
 function crystalSources(origin = state.position, knownOnly = false) {
   return state.map

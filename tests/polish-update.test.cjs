@@ -200,7 +200,7 @@ test("stronger temperaments only change present effects and enemy floors 2–5 g
   assert.equal(r.early[5].hp, 43);
   assert.ok(r.early.slice(1, 5).every((x) => x.pressure >= 1.18));
 });
-test("temples stay enclosed and reachable, protect spawn and occur in about a third of complete runs", async (t) => {
+test("temples stay enclosed and reachable, protect spawn and occur in about seventy percent of complete runs", async (t) => {
   const p = await game(t);
   const r = await p.evaluate(() => {
     const random = Math.random;
@@ -247,7 +247,7 @@ test("temples stay enclosed and reachable, protect spawn and occur in about a th
     }
   });
   assert.ok(r.spawnProtected);
-  assert.ok(r.runs > 66 && r.runs < 135, JSON.stringify(r));
+  assert.ok(r.runs > 177 && r.runs < 246, JSON.stringify(r));
   assert.ok(r.temples >= r.runs);
 });
 test("selecting a foe retains its portrait, status nodes and the exact passive animation", async (t) => {

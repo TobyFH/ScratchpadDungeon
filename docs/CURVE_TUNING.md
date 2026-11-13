@@ -1,5 +1,8 @@
 # Encounter pace, recovery and exploration tuning
 
+> Current save-26 Seed, shield, stimulant, temple, UI and update rules are in
+> [PAPER_INTERACTIONS.md](PAPER_INTERACTIONS.md), which supersedes conflicting examples below.
+
 This supersedes earlier numeric examples about biome frequency, recruitment,
 nests, temperament, traits, stimulant limits and Mage recovery. It leaves raw
 rank powers, three-of-a-kind matching, critical pools, paid editing/refunds,

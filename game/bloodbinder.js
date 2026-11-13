@@ -1,35 +1,90 @@
-// Damage-triggered Seed stacks. One unit is one shared HP of healing.
+// Damage-triggered Seeds. Caster bonuses scale one shared healing pool per burst.
 // No gameplay cap or expiry; all direct hits, poison and items use damageEnemy.
 const BLOOD_BINDING = Object.freeze({
   selfCostRankStep: 2,
   seedHealing: 1,
-  detonationDamage: 1,
+  detonationDamage: 2,
+  detonationHealing: 2,
+  bloomBaseSeeds: 2,
+  bloomLevelStep: 2,
   maturityInterval: 4,
   maturityCap: 2,
 });
-const bloodSeedBonus = (h) => h?.job === "bloodbinder"
-  ? Math.min(BLOOD_BINDING.maturityCap,Math.floor(Math.max(0,(h.level||1)-1)/BLOOD_BINDING.maturityInterval)) + equipmentBonus(h,"seeds")
-  : 0;
+const bloodSeedBonus = (h) =>
+  h?.job === "bloodbinder"
+    ? Math.min(
+        BLOOD_BINDING.maturityCap,
+        Math.floor(
+          Math.max(0, (h.level || 1) - 1) / BLOOD_BINDING.maturityInterval,
+        ),
+      ) + equipmentBonus(h, "seeds")
+    : 0;
 function bloodSeedCount(e) {
   return Math.max(0, Math.floor(Number(e?.bloodSeeds?.count) || 0));
 }
+function bloodSeedOwner(id) {
+  return (
+    state.party.find((h) => h.id === id) ||
+    state.graveyard.find((h) => h.id === id) ||
+    state.summonArchive?.find((h) => h.id === id)
+  );
+}
+// FIFO source receipts prevent a second caster from taking credit for old Seeds.
+function bloodSeedSources(e) {
+  const count = bloodSeedCount(e),
+    sources = [],
+    record = e?.bloodSeeds;
+  let remaining = count;
+  for (const part of Array.isArray(record?.sources) ? record.sources : []) {
+    const n = Math.min(
+      remaining,
+      Math.max(0, Math.floor(Number(part.count) || 0)),
+    );
+    if (n) {
+      sources.push({
+        sourceId: part.sourceId ?? record.sourceId ?? null,
+        count: n,
+      });
+      remaining -= n;
+    }
+    if (!remaining) break;
+  }
+  if (remaining)
+    sources.push({ sourceId: record?.sourceId ?? null, count: remaining });
+  return sources;
+}
+function appendBloodSeeds(e, count, h) {
+  count = Math.min(
+    Number.MAX_SAFE_INTEGER - bloodSeedCount(e),
+    Math.max(0, Math.floor(count)),
+  );
+  if (!count) return;
+  const sources = bloodSeedSources(e),
+    last = sources.at(-1),
+    sourceId = h?.id ?? null;
+  if (last?.sourceId === sourceId) last.count += count;
+  else sources.push({ sourceId, count });
+  e.bloodSeeds = { count: bloodSeedCount(e) + count, sourceId, sources };
+}
 function normaliseBloodStatuses(e) {
-  const old = e.bleeding;
-  const count =
-    e.bloodSeeds?.count ??
-    (old
-      ? Math.max(1, Number(old.damage) || 1) *
-        Math.max(1, Number(old.turns) || 1)
-      : 0);
+  const old = e.bleeding,
+    count =
+      e.bloodSeeds?.count ??
+      (old
+        ? Math.max(1, Number(old.damage) || 1) *
+          Math.max(1, Number(old.turns) || 1)
+        : 0);
   const bounded = Number.isFinite(Number(count))
     ? Math.min(Number.MAX_SAFE_INTEGER, Math.max(0, Math.floor(Number(count))))
     : 0;
-  e.bloodSeeds = bounded
-    ? {
-        count: bounded,
-        sourceId: e.bloodSeeds?.sourceId ?? old?.sourceId ?? null,
-      }
-    : null;
+  if (bounded) {
+    e.bloodSeeds = {
+      ...e.bloodSeeds,
+      count: bounded,
+      sourceId: e.bloodSeeds?.sourceId ?? old?.sourceId ?? null,
+    };
+    e.bloodSeeds.sources = bloodSeedSources(e);
+  } else e.bloodSeeds = null;
   delete e.bleeding;
   delete e.clotted;
 }
@@ -48,7 +103,9 @@ function bloodSeedPlan(e, power, h, symbols = null) {
   return {
     added,
     count: Math.min(Number.MAX_SAFE_INTEGER, bloodSeedCount(e) + added),
-    hpCost: added ? Math.min(Math.max(0, h.hp - 1), bloodSeedCost(rawPower, symbols)) : 0,
+    hpCost: added
+      ? Math.min(Math.max(0, h.hp - 1), bloodSeedCost(rawPower, symbols))
+      : 0,
   };
 }
 function applyBloodSeed(e, power, h, { symbols = null } = {}) {
@@ -67,7 +124,7 @@ function applyBloodSeed(e, power, h, { symbols = null } = {}) {
       "bleeding",
     );
   }
-  e.bloodSeeds = { count: plan.count, sourceId: h.id };
+  appendBloodSeeds(e, plan.added, h);
   trackBloodFeedback(
     beam(entityArt(h), enemyArtEl(e), "bloodseed", {
       fromPortrait: true,
@@ -82,7 +139,24 @@ function applyBloodSeed(e, power, h, { symbols = null } = {}) {
   );
   return plan.added;
 }
+const bloomSeedsAdded = (h) =>
+  BLOOD_BINDING.bloomBaseSeeds +
+  Math.floor(Math.max(0, (h?.level || 1) - 1) / BLOOD_BINDING.bloomLevelStep);
+function seedHealingOffered(amount, h) {
+  if (!(amount > 0)) return 0;
+  if (!h) return Math.floor(amount);
+  return Math.max(
+    0,
+    classHealingPower(h, amount) +
+      passive("heal") +
+      equipmentBonus(h, "heal") +
+      traitBonus(h, "heal") +
+      lessonBonus("recovery") +
+      (h.specialism === "defence" ? HERO_TUNING.temperament : 0),
+  );
+}
 function distributeBloodHealing(amount, h, enemy = null) {
+  amount = seedHealingOffered(amount, h);
   const allocations = new Map(),
     hp = new Map(state.party.map((a) => [a, a.hp]));
   // Bound work by actual missing HP, never by an arbitrarily large stack.
@@ -124,36 +198,60 @@ function distributeBloodHealing(amount, h, enemy = null) {
 function consumeBloodSeeds(e, damage) {
   const used = Math.min(bloodSeedCount(e), Math.max(0, Math.floor(damage)));
   if (!used) return 0;
-  const owner =
-    state.party.find((h) => h.id === e.bloodSeeds.sourceId) ||
-    state.graveyard.find((h) => h.id === e.bloodSeeds.sourceId) ||
-    state.summonArchive?.find(h=>h.id===e.bloodSeeds.sourceId);
-  e.bloodSeeds.count -= used;
-  if (!e.bloodSeeds.count) e.bloodSeeds = null;
+  const sources = bloodSeedSources(e),
+    remaining = [];
+  let spend = used,
+    healed = 0;
+  for (const part of sources) {
+    const n = Math.min(spend, part.count);
+    spend -= n;
+    if (n)
+      healed += distributeBloodHealing(
+        n * BLOOD_BINDING.seedHealing,
+        bloodSeedOwner(part.sourceId),
+        e,
+      );
+    if (part.count > n) remaining.push({ ...part, count: part.count - n });
+  }
+  const left = bloodSeedCount(e) - used;
+  e.bloodSeeds = left
+    ? {
+        count: left,
+        sourceId: remaining.at(-1)?.sourceId ?? null,
+        sources: remaining,
+      }
+    : null;
   trackBloodFeedback(bloodSeedBurstFX(e, used));
-  const healed = distributeBloodHealing(
-    used * BLOOD_BINDING.seedHealing,
-    owner,
-    e,
-  );
   log(
     `${e.name} · Blood Seeds: ${used} burst; ${healed} HP shared among injured allies.`,
   );
   return used;
 }
-function bloodDetonationPlan() {
+function bloodDetonationPlan(h = null) {
   return battleEnemies()
-    .filter((e) => alive(e) && bloodSeedCount(e) > 0)
-    .map((e) => ({ enemy: e, seeds: bloodSeedCount(e) }));
+    .filter((e) => alive(e) && (h || bloodSeedCount(e) > 0))
+    .map((e) => ({
+      enemy: e,
+      seeds: bloodSeedCount(e) + (h ? bloomSeedsAdded(h) : 0),
+    }));
 }
 async function detonateBloodSeeds(h) {
   const run = state,
-    plan = bloodDetonationPlan();
+    plan = bloodDetonationPlan(h);
+  // Bloom plants free level-scaled marks first, without another HP offering.
+  for (const { enemy: e, seeds: count } of plan) {
+    appendBloodSeeds(e, count - bloodSeedCount(e), h);
+    syncEnemy(e);
+  }
+  if (plan.reduce((n, p) => n + p.seeds, 0) > 5)
+    await bloodBloomSignatureFX(h, plan);
+  if (state !== run) return { seeds: 0, damage: 0, healing: 0 };
   let damage = 0,
     healing = 0,
     seeds = 0;
   for (const { enemy: e, seeds: count } of plan) {
     if (state !== run || !alive(h)) break;
+    const sources = bloodSeedSources(e);
     e.bloodSeeds = null;
     seeds += count;
     trackBloodFeedback(bloodSeedBurstFX(e, count, true));
@@ -171,7 +269,12 @@ async function detonateBloodSeeds(h) {
     damage += n;
     h.stats.damageDealt += n;
     if (!alive(e)) h.stats.kills++;
-    healing += distributeBloodHealing(count * BLOOD_BINDING.seedHealing, h, e);
+    for (const part of sources)
+      healing += distributeBloodHealing(
+        part.count * BLOOD_BINDING.detonationHealing,
+        bloodSeedOwner(part.sourceId) || h,
+        e,
+      );
     combatCallout(enemyArtEl(e), `BLOOD BLOOM · ${count}`, "bleeding");
   }
   state.lastBloodDetonation = { heroId: h.id, seeds, damage, healing };
@@ -203,14 +306,18 @@ function bloodSeedForecast(h, power, e = state.enemy) {
       ),
     ),
     existing = bloodSeedCount(e);
-  const chance = 1-h.reels.reduce((p,r)=>p*(1-faceShare(r,["bloodseed"])),1);
-  const potential = Math.max(0, power) + bloodSeedBonus(h)*chance,
+  const chance =
+    1 - h.reels.reduce((p, r) => p * (1 - faceShare(r, ["bloodseed"])), 1);
+  const potential = Math.max(0, power) + bloodSeedBonus(h) * chance,
     demand = state.party
       .filter(alive)
       .reduce((n, a) => n + Math.max(1, expectedDirectMarkPower(a)), 0);
   return {
     damage: 0,
-    heal: Math.min(potential, Math.max(0, demand - existing)),
+    heal: seedHealingOffered(
+      Math.min(potential, Math.max(0, demand - existing)),
+      h,
+    ),
     cost,
     antiheal: 0,
   };
@@ -245,7 +352,7 @@ function bloodStatusMarkup(e) {
   return n
     ? statusBadge(
         "Blood Seeds",
-        `${n} Seeds ready. Each actual HP of damage consumes one Seed and shares one HP of healing among injured allies. No expiry or stack cap. Blood Bloom detonates all remaining Seeds for damage and shared healing.`,
+        `${n} Seeds ready. Each HP of enemy damage bursts one Seed, releasing shared healing strengthened by its Bloodbinder. Blood Bloom adds Seeds to every foe, then bursts all for 2 damage and 2 base healing each. No expiry or stack cap.`,
         "bleeding-badge",
         "bloodseed",
       )
@@ -264,6 +371,7 @@ function syncBloodSeedCounters() {
   state.party.forEach((h, i) => {
     if (h.job !== "bloodbinder") return;
     const node = $("#hero-" + i + " .machine-footnote");
-    if (node) node.textContent = bloodSeedCaption();
+    if (node && node.textContent !== bloodSeedCaption())
+      node.textContent = bloodSeedCaption();
   });
 }

@@ -48,7 +48,8 @@ function setupBattleOpening({ fresh = false } = {}) {
     h.surprised = false;
     h.initiative = null;
   });
-  const overgrown = state.map[state.position]?.terrain === "overgrown" &&
+  const overgrown =
+    state.map[state.position]?.terrain === "overgrown" &&
     !environmentLight(state.map, state.position, "clearings");
   const surpriseChance = TACTICS.surpriseChance + (overgrown ? 0.14 : 0);
   if (fresh && Math.random() < surpriseChance) {
@@ -79,6 +80,7 @@ function setupBattleOpening({ fresh = false } = {}) {
     planEnemyIntent(e);
     if (e.passive?.key === "veil") fogPartyReels(e);
   }
+  applyPendingFairyPranks();
 }
 function openingEligible(h) {
   return !state.opening?.firstRoll || !h.surprised;
@@ -247,6 +249,9 @@ function clearStuns(entity, amount, { all = false } = {}) {
 function clearBattleStatuses() {
   for (const entity of [...state.party, ...battleEnemies()]) {
     entity.rage = 0;
+    entity.fairySleep = 0;
+    delete entity.clotted;
+    entity.healingPenalty = null;
     entity.charge = 0;
     entity.anticipation = 0;
     if (entity.job !== "berserker" || !state.party.includes(entity))
@@ -318,7 +323,7 @@ async function tickPoison() {
       source =
         state.party.find((h) => h.id === poison.sourceId) ||
         state.graveyard.find((h) => h.id === poison.sourceId) ||
-        state.summonArchive?.find(h=>h.id===poison.sourceId);
+        state.summonArchive?.find((h) => h.id === poison.sourceId);
     if (hero >= 0)
       damageHero(hero, poison.damage, "Poison from " + poison.sourceName, {
         piercing: true,
@@ -453,13 +458,20 @@ function enemyShieldEl(e = state.enemy) {
   return $("#enemy-team-block");
 }
 function canEquipGear(h, gear) {
-  return !!h && !isSummon(h) && !!gear && (gear.jobs ? gear.jobs.includes(h.job) : !gear.job || gear.job === h.job);
+  return (
+    !!h &&
+    !isSummon(h) &&
+    !!gear &&
+    (gear.jobs ? gear.jobs.includes(h.job) : !gear.job || gear.job === h.job)
+  );
 }
 function equipmentScope(item) {
   return item?.equipment
-    ? item.jobs ? item.jobs.map(className).join(" / ") + " ONLY" : item.job
-      ? className(item.job) + " ONLY"
-      : "ALL CLASSES"
+    ? item.jobs
+      ? item.jobs.map(className).join(" / ") + " ONLY"
+      : item.job
+        ? className(item.job) + " ONLY"
+        : "ALL CLASSES"
     : "";
 }
 async function confirmShopOverflow(type, price) {
@@ -500,6 +512,11 @@ async function resumeOpeningEncounter() {
 
 function normaliseTacticalStatuses(entity) {
   normaliseBloodStatuses(entity);
+  entity.fairySleep = Math.min(
+    2,
+    Math.max(0, Math.floor(Number(entity.fairySleep) || 0)),
+  );
+  entity.healingPenalty = entity.healingPenalty === 0.5 ? 0.5 : null;
   entity.shadowLocks = Array.isArray(entity.shadowLocks)
     ? [...new Set(entity.shadowLocks.filter((k) => [0, 1, 2].includes(k)))]
     : [];
@@ -686,7 +703,9 @@ async function settleFuryLeech(h, recipients, flights) {
 const STIMULANT_TURNS = 3;
 const STIMULANT_OVERFLOW = 2;
 const stimulantDamageBonus = (e) =>
-  e.stimulant ? 1 + Math.floor(e.stimulant.power / 2) : 0;
+  e.stimulant
+    ? 1 + Math.floor(e.stimulant.power / 2) + Math.max(0, e.stimulant.power - 2)
+    : 0;
 const stimulantDefenceBonus = (e) =>
   e.stimulant ? 1 + Math.floor(e.stimulant.power / 5) : 0;
 function normaliseStimulant(entity) {
@@ -749,14 +768,7 @@ function applyStimulant(entity, amount) {
   );
 }
 function supportStimulantTarget(caster) {
-  const allies = state.party.filter((h) => alive(h) && h !== caster);
-  return (
-    allies.sort(
-      (a, b) =>
-        battleRollCount(b) - battleRollCount(a) ||
-        expectedHeroEffects(b).damage - expectedHeroEffects(a).damage,
-    )[0] || caster
-  );
+  return alive(state.party[state.target]) ? state.party[state.target] : caster;
 }
 function battleRollCount(h) {
   if (!h.battleMemo?.stats) return 0;

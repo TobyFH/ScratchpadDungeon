@@ -5,12 +5,14 @@ function availableCompanions(except = null) {
       h !== except &&
       alive(h) &&
       !h.stun &&
+      !h.fairySleep &&
       openingEligible(h) &&
       !h.shadowRest,
   );
 }
 function heroLockReason(h) {
   if (!alive(h)) return "FALLEN";
+  if (h.fairySleep) return `FAIRY SLEEP · ${h.fairySleep} rolls`;
   if (!openingEligible(h)) return "SURPRISED · use a ready ally";
   if (h.shadowRest && availableCompanions(h).length)
     return "VEILED · use another ally";
@@ -25,7 +27,7 @@ function heroCannotRoll(h) {
     !alive(h) ||
     !openingEligible(h) ||
     (!!h.shadowRest && availableCompanions(h).length > 0) ||
-    (!!h.stun && availableCompanions(h).length > 0)
+    (!!(h.stun || h.fairySleep) && availableCompanions(h).length > 0)
   );
 }
 function reelLockMarkup(h) {
@@ -33,7 +35,7 @@ function reelLockMarkup(h) {
   if (!reason) return "";
   const kind = !alive(h)
     ? "fallen"
-    : h.stun
+    : h.stun || h.fairySleep
       ? "stun"
       : !openingEligible(h)
         ? "surprise"
@@ -44,9 +46,7 @@ function machineLockMarkup(kind, reason) {
   return `<div class="reel-unavailable ${kind}" role="status">${icon(kind === "stun" ? "stun" : kind === "shadow" ? "shadow" : kind === "fallen" ? "skull" : "surprise")}<strong>${reason}</strong></div>`;
 }
 function enemyReelLockMarkup(e) {
-  return e?.hp > 0 && e.stun
-    ? machineLockMarkup("stun", "STUNNED")
-    : "";
+  return e?.hp > 0 && e.stun ? machineLockMarkup("stun", "STUNNED") : "";
 }
 // Called by status-only updates too: recovery must remove the veil immediately,
 // without rebuilding a machine that might be spinning or holding its result.
@@ -70,7 +70,8 @@ function scheduleStunRecovery() {
   )
     return;
   const eligible = state.party.filter((h) => alive(h) && openingEligible(h));
-  if (!eligible.length || !eligible.every((h) => !!h.stun)) return;
+  if (!eligible.length || !eligible.every((h) => !!(h.stun || h.fairySleep)))
+    return;
   const run = state;
   soloStunTimer = setTimeout(
     () => {
@@ -85,7 +86,7 @@ function scheduleStunRecovery() {
       )
         return;
       const hero = state.party.find(
-        (h) => alive(h) && openingEligible(h) && h.stun,
+        (h) => alive(h) && openingEligible(h) && (h.stun || h.fairySleep),
       );
       if (hero && !availableCompanions(hero).length)
         spin(state.party.indexOf(hero));
@@ -117,12 +118,15 @@ async function missStunnedTurn(h, foes) {
   if (availableCompanions(h).length) return;
   state.actionSerial++;
   h.stats.turnsMissed++;
+  const sleeping = !!h.fairySleep;
   const machine = $("#machine-hero-" + state.party.indexOf(h));
   machine?.classList.add("stun-breaking");
   showHeroNotice(
     h,
-    "STUNNED · TURN LOST",
-    "Shaking free. Enemy clocks advance.",
+    sleeping ? "FAIRY SLEEP · TURN LOST" : "STUNNED · TURN LOST",
+    sleeping
+      ? "Waking up. Enemy clocks advance."
+      : "Shaking free. Enemy clocks advance.",
     "recovery",
   );
   GameSound.play("stunBreak");
@@ -130,6 +134,7 @@ async function missStunnedTurn(h, foes) {
   shakeElement(machine, 5, "recoil");
   await feedbackPause(skip ? 180 : 500);
   tryBreakStun(h, { missedAction: true });
+  advanceFairySleep();
   advanceRangerPatience(h, false);
   tickStimulant(h);
   finishOpeningRoll();
@@ -140,7 +145,9 @@ async function missStunnedTurn(h, foes) {
     await victory(foes[0]);
     return;
   }
-  log(`${h.name} loses a turn to stun and recovers. Enemy clocks advance.`);
+  log(
+    `${h.name} loses a turn to ${sleeping ? "fairy sleep" : "stun"}. Enemy clocks advance.`,
+  );
   await advanceEnemyClocks(foes);
   await showPendingCharacterMoments();
   if (!state.over && !livingEnemies().length) await victory(foes[0]);
@@ -299,7 +306,8 @@ function finishCombatLogGroup(group, report) {
     .filter((s) => ["poison", "stun", "rally", "stimulant"].includes(s.type))
     .map((s) => FACE_LABELS[s.type]);
   const extras = [...new Set(utility)];
-  logCombatSummary(group,
+  logCombatSummary(
+    group,
     `${group.hero} · ${group.activity} ×${report.shots.length}: ${damage.length ? damage.join(" + ") + " = " + report.damage + " damage; " : ""}${report.healing} HP restored; ${report.block} block${extras.length ? "; " + extras.join(", ") : ""}.`,
   );
   flushCombatLogEvents(group);
@@ -333,7 +341,16 @@ function finishHeroRollLog(group, h) {
     ...new Set(
       (roll?.symbols || [])
         .filter((f) =>
-          ["stun", "poison", "rally", "stimulant", "trick", "selfharm", "selfheal", "heal"].includes(f.type),
+          [
+            "stun",
+            "poison",
+            "rally",
+            "stimulant",
+            "trick",
+            "selfharm",
+            "selfheal",
+            "heal",
+          ].includes(f.type),
         )
         .map((f) => FACE_LABELS[f.type]),
     ),
@@ -344,7 +361,8 @@ function finishHeroRollLog(group, h) {
       ? classAbilityName(h)
       : "roll";
   const critical = Math.max(roll?.multiplier || 1, roll?.flurryMultiplier || 1);
-  logCombatSummary(group,
+  logCombatSummary(
+    group,
     `${h.name} · ${activity}${hits.length > 1 ? " ×" + hits.length : ""}${critical > 1 ? " · CRITICAL ×" + critical : ""}: ${hits.length > 1 ? hits.join(" + ") + " = " : ""}${damage} damage; ${healing} HP restored; ${group.block} block${powers.length ? "; marks: " + powers.join(", ") : ""}.`,
   );
   flushCombatLogEvents(group);

@@ -92,9 +92,8 @@ function templePlacementSafe(map, center, start, stair) {
     trial.every((c,i)=>c.wall || reachable.has(i));
 }
 const WORLD_BALANCE = Object.freeze({
-  // About one temple in three complete ten-floor map sets.
-  // Safe enclosure rejection leaves about one temple-bearing run in three.
-  strongholdChance: .047,
+  // ~70% of complete ten-floor sets after safe-enclosure placement rejection.
+  strongholdChance: .14,
   shopChance: 0.46,
   marketChance: 0.7,
   riverChance: 0.41,
@@ -102,11 +101,12 @@ const WORLD_BALANCE = Object.freeze({
   relicWeight: 22,
 });
 async function minorTravelEvent(c) {
-  if (
-    state.steps - (state.lastMinorEventStep ?? -20) < 12 ||
-    Math.random() >= 0.025
-  )
-    return false;
+  if (state.steps - (state.lastMinorEventStep ?? -20) < 12) return false;
+  if (maybeBandits()) {
+    state.lastMinorEventStep = state.steps;
+    return banditEncounter();
+  }
+  if (Math.random() >= 0.025) return false;
   state.lastMinorEventStep = state.steps;
   const roll = Math.random(),
     kind =

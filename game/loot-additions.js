@@ -56,6 +56,18 @@ const SUPPLY_GRADES = Object.freeze([
   },
 ]);
 const EXTRA_SUPPLIES = Object.freeze({
+  sunderBomb: {
+    name: "Sundering ink",
+    icon: "bomb",
+    family: "bomb",
+    damageBonus: 1,
+    shieldBreak: true,
+    combat: true,
+    brief: "Damage + double shield damage",
+    description:
+      "Roll damage and poison with 1 bonus damage. Deals double damage to enemy block.",
+    minDepth: 3,
+  },
   clearingSalts: {
     name: "Clearing salts",
     icon: "antidote",
@@ -107,6 +119,16 @@ const EXTRA_SUPPLIES = Object.freeze({
   },
 });
 const EXTRA_EQUIPMENT = Object.freeze({
+  sunderingMaul: {
+    name: "Sundering maul",
+    icon: "heavy",
+    shieldBreak: 1,
+    jobs: ["fighter", "berserker", "ranger", "rogue"],
+    brief: "Double damage to shields",
+    description:
+      "Your direct attacks deal double damage to enemy block. HP damage is unchanged.",
+    minDepth: 3,
+  },
   bloodNeedle: {
     name: "Blood Needle",
     icon: "bloodseed",
@@ -178,7 +200,9 @@ const EXTRA_EQUIPMENT = Object.freeze({
   },
 });
 function equipmentLootEligible(item) {
-  const available = necromancerOwner() ? ["necromancer"] : heroJobs(state.runRules);
+  const available = necromancerOwner()
+    ? ["necromancer"]
+    : heroJobs(state.runRules);
   // This earned class cannot join another class's party.
   const jobs = item.jobs || (item.job ? [item.job] : null);
   return !jobs || jobs.some((job) => available.includes(job));

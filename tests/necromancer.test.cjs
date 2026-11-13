@@ -267,7 +267,7 @@ test("summons can be enemy targets and receive normal healing while the master c
       master: h.hp,
     };
   });
-  assert.equal(r.target, 1);
+  assert.equal(r.target, 0);
   assert.equal(r.masterHeal, 0);
   assert.equal(r.summonHeal, 3);
   assert.ok(r.after < r.before);
@@ -578,7 +578,7 @@ test("summons, their exact builds, wounds, passives and victim receipts survive 
   assert.equal(after.masterHp, 22);
   assert.equal(after.souls, 8);
   assert.ok(after.victim);
-  assert.equal(after.version, 25);
+  assert.equal(after.version, 26);
 });
 test("dead summons leave no burial or revive prompt; master death ends the expedition despite surviving summons", async (t) => {
   const p = await game(t);

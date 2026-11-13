@@ -17,7 +17,11 @@ async function settleBloodFeedback() {
 function bloodSeedBurstFX(e, count, detonation = false) {
   const host = enemyArtEl(e);
   if (!host?.isConnected) return Promise.resolve();
-  const rect = host.getBoundingClientRect(),
+  const seedIcon =
+    host.querySelector(".bleeding-badge svg") ||
+    host.querySelector(".bleeding-badge") ||
+    host;
+  const rect = seedIcon.getBoundingClientRect(),
     bursts = Math.min(18, count),
     run = state;
   const reduced =
@@ -29,11 +33,12 @@ function bloodSeedBurstFX(e, count, detonation = false) {
     node.setAttribute("aria-hidden", "true");
     node.dataset.effect = "blood-seed-burst";
     node.innerHTML =
-      icon("bloodseed") +
+      `<svg viewBox="0 0 40 40" fill="currentColor"><path d="m20 1 3 12 9-7-5 12 12 3-12 3 6 11-11-7-3 11-3-12-11 5 7-10-11-4 13-2-5-11 10 6Z"/></svg>` +
       (count > bursts ? `<small>×${Math.ceil(count / bursts)}</small>` : "");
     node.style.left =
-      rect.left + rect.width * (0.18 + fxRandom() * 0.64) + "px";
-    node.style.top = rect.top + rect.height * (0.18 + fxRandom() * 0.64) + "px";
+      rect.left + rect.width / 2 + (fxRandom() - 0.5) * 24 + "px";
+    node.style.top =
+      rect.top + rect.height / 2 + (fxRandom() - 0.5) * 24 + "px";
     document.body.append(node);
     const anim = node.animate(
       [
@@ -76,27 +81,44 @@ function bloodSeedBurstFX(e, count, detonation = false) {
     if (state !== run) return;
   });
 }
-function skeletonArtEl(s) { return entityArt(s); }
+function skeletonArtEl(s) {
+  return entityArt(s);
+}
 function soulMeterMarkup(h) {
-  if(h.job!=="necromancer"||isSummon(h))return "";
-  return `<div class="soul-meter" data-soul-owner="${h.id}" role="meter" aria-label="Souls" aria-valuemin="0" aria-valuemax="${soulCapacity(h)}" aria-valuenow="${Math.floor(h.souls||0)}" data-tooltip="Damage and Harvest gather Souls. A full bar raises a random ally in an empty party slot. With two summons, it heals the team instead. Consume a summon to heal yourself."><b>SOULS ${Math.floor(h.souls||0)}/${soulCapacity(h)}</b><span><i style="width:${100*(h.souls||0)/soulCapacity(h)}%"></i></span></div>`;
+  if (h.job !== "necromancer" || isSummon(h)) return "";
+  return `<div class="soul-meter" data-soul-owner="${h.id}" role="meter" aria-label="Souls" aria-valuemin="0" aria-valuemax="${soulCapacity(h)}" aria-valuenow="${Math.floor(h.souls || 0)}" data-tooltip="Damage and Harvest gather Souls. A full bar raises a random ally in an empty party slot. With two summons, it heals the team instead. Consume a summon to heal yourself."><b>SOULS ${Math.floor(h.souls || 0)}/${soulCapacity(h)}</b><span><i style="width:${(100 * (h.souls || 0)) / soulCapacity(h)}%"></i></span></div>`;
 }
 function skeletonSlotsMarkup(h) {
- return Array.from({length:Math.max(0,3-state.party.length)},(_,i)=>`<div class="empty-slot" data-skeleton-slot="${i}">${icon("skull")}<span>An undead ally can rise here.</span><small>Fill the Soul bar to summon.</small></div>`).join("");
+  return Array.from(
+    { length: Math.max(0, 3 - state.party.length) },
+    (_, i) =>
+      `<div class="empty-slot" data-skeleton-slot="${i}">${icon("skull")}<span>An undead ally can rise here.</span><small>Fill the Soul bar to summon.</small></div>`,
+  ).join("");
 }
-function summonCardMarkup(s,i) {
- const h=necromancerOwner(),passive=SUMMON_PASSIVES[s.summonPassive],offer=consumeSummonHealing(s,h),disabled=busy||state.over||!alive(s);
- return `<article class="hero summon-card ${s.job} ${injury(s)} ${state.target===i?'selected':''}" id="hero-${i}" data-hero-roll="${i}" tabindex="${state.enemy&&alive(s)?0:-1}" role="group" aria-label="${escapeHTML(s.name)} · click to roll"><div class="hero-dossier"><button class="portrait" id="portrait-${i}" data-hero-stats="${i}" data-spin="${i}" aria-label="Roll ${escapeHTML(s.name)}" ${disabled?'disabled':''}>${portraitArt(s.job,s)}${statusMarkup(s)}${specialismBadge(s)}</button><div class="hero-name">${escapeHTML(s.name)}<small>${summonRole(s)} · Lv.${s.level}</small></div><span class="summon-bound-note">Bound summon</span></div><div class="hero-controls"><div class="hero-title-line"><span class="hp-info">HP ${s.hp} / ${s.maxHp}</span><span class="injury">${s.stun?'stunned':injury(s)}</span></div>${healthMarkup(s)}${drawMachine('hero-'+i,s.last,{hero:i,disabled:disabled||!state.enemy||heroCannotRoll(s)})}<div class="summon-details"><span class="summon-passive" tabindex="0" aria-label="${passive?.name||'Returned'}" data-tooltip="${escapeHTML(passive?passive.name+': '+passive.text:'Returned with the marks of their former class.')}">${icon({venom:"poison",ambusher:"sword",carapace:"block",ward:"ward",arcane:"magic",mender:"heal",secondWind:"heal",volatile:"bomb"}[s.summonPassive]||"skull")}<span class="summon-passive-name">${passive?.name||'Returned'}</span></span><button class="consume-summon" data-consume-summon="${s.id}" aria-label="Consume ${escapeHTML(s.name)} to restore up to ${offer} Necromancer HP" data-tooltip="Sacrifice this summon to restore up to ${offer} HP to ${h?.name||'the Necromancer'}. Uses one action during battle. Reels cannot be edited." ${disabled||!alive(h)||(state.enemy&&(h.stun||heroCannotRoll(h)||!openingEligible(h)))?'disabled':''}>Consume · +${offer} HP</button></div></div></article>`;
+function summonCardMarkup(s, i) {
+  const h = necromancerOwner(),
+    passive = SUMMON_PASSIVES[s.summonPassive],
+    offer = consumeSummonHealing(s, h),
+    disabled = busy || state.over || !alive(s);
+  return `<article class="hero summon-card ${s.job} ${injury(s)} ${state.target === i ? "selected" : ""}" id="hero-${i}" data-hero-roll="${i}" tabindex="${state.enemy && alive(s) ? 0 : -1}" role="group" aria-label="${escapeHTML(s.name)} · click to roll"><div class="hero-dossier"><button class="portrait" id="portrait-${i}" data-hero-stats="${i}" data-spin="${i}" aria-label="Roll ${escapeHTML(s.name)}" ${disabled ? "disabled" : ""}>${portraitArt(s.job, s)}${statusMarkup(s)}${specialismBadge(s)}</button><div class="hero-name">${escapeHTML(s.name)}<small>${summonRole(s)} · Lv.${s.level}</small></div><span class="summon-bound-note">Bound summon</span></div><div class="hero-controls"><div class="hero-title-line"><span class="hp-info">HP ${s.hp} / ${s.maxHp}</span><span class="injury">${s.stun ? "stunned" : injury(s)}</span></div>${healthMarkup(s)}${drawMachine("hero-" + i, s.last, { hero: i, disabled: disabled || !state.enemy || heroCannotRoll(s) })}<div class="summon-details"><span class="summon-passive" tabindex="0" aria-label="${passive?.name || "Returned"}" data-tooltip="${escapeHTML(passive ? passive.name + ": " + passive.text : "Returned with the marks of their former class.")}">${icon({ venom: "poison", ambusher: "sword", carapace: "block", ward: "ward", arcane: "magic", mender: "heal", secondWind: "heal", volatile: "bomb" }[s.summonPassive] || "skull")}<span class="summon-passive-name">${passive?.name || "Returned"}</span></span><button class="consume-summon" data-consume-summon="${s.id}" aria-label="Consume ${escapeHTML(s.name)} to restore up to ${offer} Necromancer HP" data-tooltip="Sacrifice this summon to restore up to ${offer} HP to ${h?.name || "the Necromancer"}. Uses one action during battle. Reels cannot be edited." ${disabled || !alive(h) || (state.enemy && (h.stun || heroCannotRoll(h) || !openingEligible(h))) ? "disabled" : ""}>Consume · +${offer} HP</button></div></div></article>`;
 }
 function syncNecromancer(h) {
- if(h?.job!=="necromancer"||isSummon(h))return;
- const meter=document.querySelector(`[data-soul-owner="${h.id}"]`);
- if(meter){const t=document.createElement('template');t.innerHTML=soulMeterMarkup(h);meter.replaceWith(t.content);}
+  if (h?.job !== "necromancer" || isSummon(h)) return;
+  const meter = document.querySelector(`[data-soul-owner="${h.id}"]`);
+  if (meter) {
+    const t = document.createElement("template");
+    t.innerHTML = soulMeterMarkup(h);
+    meter.replaceWith(t.content);
+  }
 }
 function summonMomentFX(h, s, kind) {
   const host = skeletonArtEl(s) || entityArt(h);
   if (!host?.isConnected) return;
-  const rect = host.getBoundingClientRect(),
+  const seedIcon =
+    host.querySelector(".bleeding-badge svg") ||
+    host.querySelector(".bleeding-badge") ||
+    host;
+  const rect = seedIcon.getBoundingClientRect(),
     node = document.createElement("div");
   node.className = "summon-bone-flash";
   node.dataset.effect = "skeleton-" + kind;
@@ -149,7 +171,19 @@ function summonMomentFX(h, s, kind) {
     20,
   );
   shakeElement(host, kind === "guard" ? 5 : 2);
-  if(kind==="rise"||kind==="death"||kind==="consume")GameSound.cry(s.summonKind==="zombie"?s.job:({blade:"skull",guard:"golem",wisp:"ghost",cantor:"lich",bomber:"slime"}[s.summonKind]||"skull"),kind==="rise"?"enter":"death");
+  if (kind === "rise" || kind === "death" || kind === "consume")
+    GameSound.cry(
+      s.summonKind === "zombie"
+        ? s.job
+        : {
+            blade: "skull",
+            guard: "golem",
+            wisp: "ghost",
+            cantor: "lich",
+            bomber: "slime",
+          }[s.summonKind] || "skull",
+      kind === "rise" ? "enter" : "death",
+    );
   GameSound.play(
     kind === "rise" ? "poof" : kind === "death" ? "hit" : "shield",
   );
@@ -160,4 +194,71 @@ function skeletonRiseArt() {
 }
 function skeletonBonesArt() {
   return `<svg viewBox="0 0 120 100" class="pencil-art" fill="var(--paper)" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m18 76 66-27m-60 3 68 31m-56 1 51-10M11 72q-7-12 3-10 1-9 8-4m58-13q8-10 11-1 9-2 8 7M21 48q-9-5-9 4-8 5 1 10m76 17q10-8 12 1 7 2 3 8" fill="none"/><path d="M40 41q-10-32 17-34 29 2 18 33l-9 7-2 11H49l-1-12Z"/><path d="m46 23 9 9m0-9-9 9m17-9 8 8m0-8-8 8m-8 7 3-5 3 5m-8 10v10m7-10v10" fill="none"/></svg>`;
+}
+
+// Big blooms send blood outward before the existing Seed heals return to allies.
+async function bloodBloomSignatureFX(h, plan) {
+  const source = entityArt(h);
+  if (!source?.isConnected) return;
+  const run = state,
+    version = animationVersion,
+    stage = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  stage.classList.add("blood-bloom-signature");
+  stage.dataset.effect = "blood-bloom-signature";
+  stage.setAttribute("viewBox", `0 0 ${innerWidth} ${innerHeight}`);
+  stage.setAttribute("aria-hidden", "true");
+  const r = source.getBoundingClientRect(),
+    x = r.left + r.width / 2,
+    y = r.top + r.height / 2;
+  for (const { enemy: e } of plan) {
+    const to = enemyArtEl(e);
+    if (!to) continue;
+    const b = to.getBoundingClientRect(),
+      path = document.createElementNS(stage.namespaceURI, "path");
+    path.classList.add("blood-bloom-ray");
+    path.setAttribute(
+      "d",
+      `M${x} ${y}Q${(x + b.left + b.width / 2) / 2} ${Math.min(y, b.top) - 90} ${b.left + b.width / 2} ${b.top + b.height / 2}`,
+    );
+    path.setAttribute("pathLength", "1");
+    path.style.strokeDasharray = "1";
+    stage.append(path);
+  }
+  document.body.append(stage);
+  combatCallout(source, "BLOOD BLOOM!", "bloodseed");
+  screenFX("damage", 1.25);
+  GameSound.play("criticalBlood");
+  const duration =
+    skip || sceneFast || matchMedia("(prefers-reduced-motion: reduce)").matches
+      ? 110
+      : Math.max(200, 600 / Math.sqrt(pace()));
+  const motions = [...stage.children].map((path) => {
+    const a = path.animate(
+      [
+        { strokeDashoffset: 1, strokeWidth: 3, opacity: 0 },
+        { strokeDashoffset: 0.9, strokeWidth: 19, opacity: 1, offset: 0.2 },
+        { strokeDashoffset: 0, strokeWidth: 25, opacity: 1, offset: 0.6 },
+        { strokeDashoffset: -1, strokeWidth: 4, opacity: 0 },
+      ],
+      { duration, fill: "forwards" },
+    );
+    a.juice = true;
+    liveAnimations.add(a);
+    if (utilityOpen) {
+      a.pause();
+      a.utilityPaused = true;
+    }
+    return a.finished.catch(() => {}).finally(() => liveAnimations.delete(a));
+  });
+  try {
+    await Promise.all(motions);
+    if (state !== run || animationVersion !== version) return;
+    for (const { enemy: e } of plan) {
+      burst(enemyArtEl(e), "damage", 65);
+      shakeElement(enemyArtEl(e), 7, "critical");
+    }
+    shakeBook(5, "critical");
+  } finally {
+    stage.remove();
+  }
 }

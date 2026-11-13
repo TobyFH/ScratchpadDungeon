@@ -24,13 +24,14 @@ const ECONOMY = Object.freeze({
   mapDepth: 16,
   startingPurse: 150,
 });
-function shopPrices() {
+function shopPrices(cell = null) {
   return {
     ...Object.fromEntries(
       Object.entries(ITEM_DEFS).map(([type, item]) => [
         type,
         item.equipment
-          ? ECONOMY.equipmentBase + state.depth * ECONOMY.equipmentDepth
+          ? (ECONOMY.equipmentBase + state.depth * ECONOMY.equipmentDepth) *
+            (cell?.premium === type ? 2 : 1)
           : ECONOMY.supplyBase +
             (SUPPLY_PRICE_PREMIUM[item.family || type] || 0) +
             state.depth * ECONOMY.supplyDepth +

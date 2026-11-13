@@ -20,10 +20,16 @@ const POWER = Object.freeze({
   blank: 0,
 });
 const ATTACK_POWER = Object.freeze([0, 1, 2, 3, 4]);
-const markDamage = (type, tier = 1) => ATTACK_POWER[tier] * (type === "heavy" ? POWER.heavy : 1);
+const markDamage = (type, tier = 1) =>
+  ATTACK_POWER[tier] * (type === "heavy" ? POWER.heavy : 1);
 const PHYSICAL_TYPES = Object.freeze(["attack", "heavy"]);
 const DAMAGE_TYPES = Object.freeze([...PHYSICAL_TYPES, "magic"]);
-const OFFENSIVE_TYPES = Object.freeze([...DAMAGE_TYPES, "poison", "bloodseed", "harvest"]);
+const OFFENSIVE_TYPES = Object.freeze([
+  ...DAMAGE_TYPES,
+  "poison",
+  "bloodseed",
+  "harvest",
+]);
 const FACE_COST = Object.freeze({ 1: 1, 2: 3, 3: 6, 4: 10 });
 const CLASS_BALANCE = Object.freeze({
   fighter: {
@@ -51,8 +57,16 @@ const CLASS_BALANCE = Object.freeze({
     critical: [1.75, 2.5, 3, 4],
     path: "Blood Price builds Fury. Balance damage with healing and lifesteal.",
   },
-  bloodbinder: {hp:32,critical:[1.5,2,2.5,3],path:"Plant Seeds, then turn enemy damage into shared healing. Blood Bloom bursts every Seed."},
-  necromancer: {hp:22,critical:[1.5,1.75,2,2.5],path:"Gather Souls to raise allies with fixed reels. Roll their turns or consume them to heal."},
+  bloodbinder: {
+    hp: 32,
+    critical: [1.5, 2, 2.5, 3],
+    path: "Plant Seeds, then turn enemy damage into shared healing. Blood Bloom bursts every Seed.",
+  },
+  necromancer: {
+    hp: 22,
+    critical: [1.5, 1.75, 2, 2.5],
+    path: "Gather Souls to raise allies with fixed reels. Roll their turns or consume them to heal.",
+  },
   jester: {
     hp: 30,
     critical: [1.5, 2, 3, 4],
@@ -67,7 +81,7 @@ const CRITICAL_BALANCE = Object.freeze({
 function criticalPool(hero, { enemy = false, context = null } = {}) {
   if (context === "well") return CRITICAL_BALANCE.well;
   if (enemy) return CRITICAL_BALANCE.enemy;
-  if(isSummon(hero))return CLASS_BALANCE.necromancer.critical;
+  if (isSummon(hero)) return CLASS_BALANCE.necromancer.critical;
   return hero
     ? CLASS_BALANCE[hero.job]?.critical || CLASS_BALANCE.mage.critical
     : CRITICAL_BALANCE.loot;
@@ -193,7 +207,7 @@ const floorBalance = (depth) =>
 // Shorter endurance, steadier pressure: support teams get useful damage windows.
 const ENCOUNTER_TUNING = Object.freeze({
   earlyHitPressure: [1.08, 1.18, 1.18, 1.2, 1.2, 1.12, 1.1, 1, 1, 1],
-  earlyHealth: [1,1.04,1.04,1.04,1.04,1,1,1,1,1],
+  earlyHealth: [1, 1.04, 1.04, 1.04, 1.04, 1, 1, 1, 1, 1],
   eliteHealth: 1.18,
   strongholdHealth: 1.25,
   bulkyExcess: 0.7,
@@ -253,7 +267,9 @@ function enemyBalance(
   const stats = {
     maxHp: Math.ceil(
       (boss ? row.bossHp : row.hp * enemyEndurance(identity.hp || 1)) *
-        ENCOUNTER_TUNING.earlyHealth[Math.max(0,Math.min(9,Math.floor(depth)-1))] *
+        ENCOUNTER_TUNING.earlyHealth[
+          Math.max(0, Math.min(9, Math.floor(depth) - 1))
+        ] *
         (boss
           ? 1
           : (elite ? ENCOUNTER_TUNING.eliteHealth : 1) *
@@ -402,6 +418,7 @@ const ENEMY_PROFILES = {
     trait: "secondWind",
   },
   revenant: {
+    shieldBreaker: true,
     damage: 1.05,
     hp: 1.25,
     faces: [
@@ -530,6 +547,7 @@ const ENEMY_PROFILES = {
     trait: "split",
   },
   ashcolossus: {
+    shieldBreaker: true,
     name: "Ash colossus",
     minDepth: 8,
     maxDepth: 10,
@@ -584,14 +602,21 @@ function encounterXP(depth, enemy, count = 1) {
 
 // Bounded resources and complementary marks, shared by manual play and AI.
 const COMBAT_LIMITS = Object.freeze({
-  block: 20,
-  tankBlock: 30,
-  enemyBlock: 20,
-  bossBlock: 30,
+  block: 24,
+  tankBlock: 36,
+  enemyBlock: 24,
+  bossBlock: 36,
   stunWard: 2,
   stimulantPower: 8,
   punchlineShots: 6,
 });
+// Shield criticals improve defence without immediately saturating the cap.
+const criticalBlockGain = (power, multiplier) =>
+  Math.ceil(power * (1 + Math.max(0, multiplier - 1) * 0.4));
+const criticalEffectValue = (effect, multiplier) =>
+  effect.criticalRule === "block"
+    ? criticalBlockGain(effect.value, multiplier)
+    : Math.ceil(effect.value * multiplier);
 const partyBlockCap = () =>
   state.party.some((h) => alive(h) && h.job === "fighter")
     ? COMBAT_LIMITS.tankBlock
@@ -639,7 +664,10 @@ const CLASS_COMBOS = Object.freeze({
   },
 });
 function complementaryEffects(h, symbols) {
-  const has = (t) => symbols.some((f) => f.type === t || t === "attack" && f.type === "heavy"),
+  const has = (t) =>
+      symbols.some(
+        (f) => f.type === t || (t === "attack" && f.type === "heavy"),
+      ),
     fx = {};
   if (h.job === "fighter" && has("attack") && has("block")) fx.block = 2;
   if (h.job === "rogue" && has("attack") && (has("poison") || has("stun")))
@@ -725,7 +753,8 @@ function expectedComplementaryEffects(h) {
         a.reduce((p, x, k) => p * (1 - x - b[k]), 1),
     );
   };
-  if (h.job === "fighter") return { block: 2 * both(PHYSICAL_TYPES, ["block"]) };
+  if (h.job === "fighter")
+    return { block: 2 * both(PHYSICAL_TYPES, ["block"]) };
   if (h.job === "rogue")
     return { damage: both(PHYSICAL_TYPES, ["poison", "stun"]) };
   if (h.job === "ranger")

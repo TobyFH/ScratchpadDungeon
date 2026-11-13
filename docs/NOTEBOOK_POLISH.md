@@ -1,5 +1,8 @@
 # Earned classes, clearer combat and notebook polish
 
+> Current save-26 Seed, shield, stimulant, temple, UI and update rules are in
+> [PAPER_INTERACTIONS.md](PAPER_INTERACTIONS.md), which supersedes conflicting examples below.
+
 This pass keeps save version 24 and the existing pencil artwork. It supersedes
 older descriptions of free Necromancer starts, Rogue healing and +1 temperament
 bonuses. Sources below are embedded by `npm run build:ui`; never edit their

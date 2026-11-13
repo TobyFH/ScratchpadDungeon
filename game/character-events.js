@@ -154,7 +154,7 @@ function characterMoment(id, h) {
   );
   portraitMotion(entityArt(h), "talk");
   GameSound.play(def.kind === "heal" ? "heal" : "trait");
-  if (characterLuck() < 0.12)
+  if (characterLuck() < (def.trait === "bookish" ? 0.018 : 0.065))
     grantTrait(
       h,
       def.trait,

@@ -98,7 +98,7 @@ async function autoEvents(page) {
   await page.evaluate(() => {
     window.autoEventObserver = new MutationObserver(() => {
       let button = (window.campaignPortals ? document.querySelector("#tunnel-use:not(:disabled)") : null) || document.querySelector(
-        "#stage-confirm:not(:disabled),#recruit-accept:not(:disabled),#recruit-decline:not(:disabled),#well-use:not(:disabled),#tunnel-leave:not(:disabled),#ruin-examine:not(:disabled),#death-confirm:not(:disabled),#burial-confirm:not(:disabled),#revive-use:not(:disabled),#item-leave:not(:disabled),#biome-use:not(:disabled),#biome-leave:not(:disabled),#nest-loot:not(:disabled),#mushroom-roll:not(:disabled),#mushroom-confirm:not(:disabled)",
+        "#stage-confirm:not(:disabled),#bandit-fight:not(:disabled),#crystal-smash:not(:disabled),#recruit-accept:not(:disabled),#recruit-decline:not(:disabled),#well-use:not(:disabled),#tunnel-leave:not(:disabled),#ruin-examine:not(:disabled),#death-confirm:not(:disabled),#burial-confirm:not(:disabled),#revive-use:not(:disabled),#item-leave:not(:disabled),#biome-use:not(:disabled),#biome-leave:not(:disabled),#nest-loot:not(:disabled),#mushroom-roll:not(:disabled),#mushroom-confirm:not(:disabled)",
       );
       if (button && !document.querySelector("#spotlight").hidden)
         button.click();
@@ -148,6 +148,7 @@ async function faces(
   );
 }
 function blankFloor() {
+  state.banditSchedule = []; // This fixture disables unrelated optional travel encounters.
   state.lastMinorEventStep = state.steps + 10000;
   state.pursuerSpawned = true;
   state.map = state.map.map((c, i) => ({
@@ -1132,7 +1133,7 @@ test("save restores speed and artefacts and migrates the earlier Sunseed-era not
   });
   await p.reload();
   await p.evaluate(() => CompanyIntro.skip(true));
-  assert.equal(await p.evaluate(() => state.version), 25);
+  assert.equal(await p.evaluate(() => state.version), 26);
   assert.equal(await p.evaluate(() => state.speed), "skip");
   assert.equal(await p.evaluate(() => state.relic), undefined);
   assert.doesNotMatch(await p.locator("body").textContent(), /Sunseed/);
@@ -2222,7 +2223,7 @@ test("1000 distinct random floors have distant reachable stairs, optional connec
   );
   assert.ok(r.doubleRivers > 0 && r.doubleRivers < 30, JSON.stringify(r));
   assert.ok(r.ruins > 220 && r.ruins < 420, JSON.stringify(r));
-  assert.ok(r.strongholds > 15 && r.strongholds < 75, JSON.stringify(r));
+  assert.ok(r.strongholds > 80 && r.strongholds < 160, JSON.stringify(r));
 });
 
 test("route repair uses a bridge when a connected river separates spawn from the stairs", async (t) => {
@@ -3296,7 +3297,7 @@ test("older saved fights migrate to the gentler curve without losing wounds or e
     state.enemy.frequency = 1;
     state.party[0].reels[0][0] = { type: "attack", tier: 3, weight: 9 };
     const tuned=enemyBalance(state.depth,{...state.enemy,pair:false});
-    state.testExpectedSavedFoe={version:25,hp:Math.ceil(tuned.maxHp*.5),max:tuned.maxHp,damage:tuned.damage,strikes:tuned.strikes,frequency:tuned.frequency,face:3};
+    state.testExpectedSavedFoe={version:26,hp:Math.ceil(tuned.maxHp*.5),max:tuned.maxHp,damage:tuned.damage,strikes:tuned.strikes,frequency:tuned.frequency,face:3};
     const old = { ...state, version: 6 };
     localStorage.setItem("scratchpad-dungeon-v6", JSON.stringify(old));
     localStorage.removeItem(SAVE_KEY);
@@ -3727,7 +3728,7 @@ test("poison ticks for one armour-piercing damage per action, expires, and can w
       block: state.block,
       turns: state.enemy.poison.turns,
     })),
-    { hp: 49, enemy: 999, block: 30, turns: 2 },
+    { hp: 49, enemy: 999, block: 36, turns: 2 },
   );
   assert.equal(await p.locator("#portrait-0 .poison-badge").count(), 1);
   for (let n = 0; n < 2; n++) {
@@ -4559,7 +4560,7 @@ test("class-bound and generic equipment pieces work, can be dragged onto heroes,
     }
     return out;
   });
-  assert.equal(effects.length, 20);
+  assert.equal(effects.length, 21);
   assert.equal(effects.find((x) => x.type === "trailBow").damage, 5); // Prepared shot: physical + healing.
   assert.equal(effects.find((x) => x.type === "trailCloak").defence, 1);
   assert.ok(effects.find((x) => x.type === "ironSignet").damage >= 3);
@@ -5096,7 +5097,7 @@ test("version-nine fights adopt the stronger enemy curve without changing hero w
         .map((f) => f.tier),
     })),
     {
-      version: 25,
+      version: 26,
       autoplay: false,
       heroHp: 19,
       face: 4,
@@ -7542,7 +7543,7 @@ test("enemy hits strike the shared shield first and only HP overflow also target
   assert.equal(r.partial.block, 0);
 });
 
-test("team block tint grows to twenty while a living Tank caps actual protection at thirty", async (t) => {
+test("team block tint grows to twenty while a living Tank caps actual protection at thirty-six", async (t) => {
   const p = await game(t);
   await encounter(p);
   await p.addStyleTag({ content: ".team-block{transition:none!important}" });
@@ -7564,9 +7565,9 @@ test("team block tint grows to twenty while a living Tank caps actual protection
   });
   assert.deepEqual(
     r.map((x) => x.amount),
-    [0, 5, 20, 30],
+    [0, 5, 20, 36],
   );
-  assert.equal(r[3].text, "30");
+  assert.equal(r[3].text, "36");
   assert.notEqual(r[0].ink, r[1].ink);
   assert.notEqual(r[1].ink, r[2].ink);
   assert.equal(r[2].strength, "1");

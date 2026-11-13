@@ -1,3 +1,16 @@
+Read `docs/PAPER_INTERACTIONS.md` first for save-26 rules. Blood Bloom plants
+level-scaled Seeds on every foe, then detonates for 2 damage/2 base healing.
+Seed healing scales once per caster-owned shared pool; FIFO `sources` receipts
+preserve credit across multiple Bloodbinders. Plant ordinary Seeds after other
+roll effects. This supersedes all older fixed-one/no-bonus Seed instructions.
+Block caps are 24/36; critical block uses shared compressed scaling in actual
+rolls and payoff. `game/paper-interactions.js` owns release resets, fairy pranks,
+bandits and shop promotion; `ui/control-navigation.js` owns keyboard focus mode.
+Keep mouse usable, immutable hitboxes while travelling, and the explicit
+scrollable two-column artefact exception. Hidden quartz fields must render and
+apply consistently; directional aura trails are cosmetic. For incompatible
+updates bump `EXPEDITION_RELEASE` deliberately, preserving camp/settings data.
+
 Read `docs/SUMMONED_PARTY.md` first for current save-25 Necromancer rules.
 Bound summons now live in `state.party`, use manually chosen ordinary rolls,
 have fixed seeded reels and track the master's level ±1. Never restore automatic

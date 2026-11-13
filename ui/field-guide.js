@@ -16,7 +16,7 @@ const FIELD_GUIDE = Object.freeze([
     ['sword','Choose who acts.','Click a hero’s card or handle to roll. Repeat freely; enemy countdowns show when they attack.'],
     ['heal','Choose your targets.','Click an enemy to target attacks; choose an ally for healing. Self-healing stays with its caster.'],
     ['class','Three matches make a critical.','Match symbol and tier across three reels. A middle class symbol completes matching outer symbols.'],
-    ['block','Block protects everyone.','Everyone shares block, spent when it absorbs damage. The cap is 20, or 30 with a Tank.'],
+    ['block','Block protects everyone.','Everyone shares block, spent when it absorbs damage. The cap is 24, or 36 with a Tank.'],
     ['stun','Check status icons.','Stun stops actions; poison hurts over time; stimulants strengthen heroes. Hover icons for details.'],
     ['magic','Hit groups with strong rolls.','Critical attacks and tier III–IV attacks hit every enemy. Other powers follow their own targets.'],
   ])},
@@ -54,7 +54,7 @@ const FIELD_GUIDE = Object.freeze([
     ['coin','Keep gold between runs.','After clearing a floor, choose how much to bank. Banked gold survives failed runs.'],
     ['camp','Buy permanent upgrades.','Open Upgrades on the starting menu. Spend banked gold on stronger heroes, new classes and optional rules.'],
     ['safe','Adjust the game to suit you.','Options control sound and effects. Autofight fights; Autoplay also explores, uses supplies and improves reels.'],
-    ['sound','Read the Event log.','Hover underlined names for explanations. Reopen older battles. Keyboard shortcuts appear along the bottom.'],
+    ['sound','Read the Event log.','Hover underlined names for explanations. Reopen old battles. Use the bottom controls toggle to try directional focus with Confirm and Back.'],
   ])},
 ]);
 const GUIDE_ALIASES = Object.freeze({floors:'explore',statuses:'combat',buffs:'combat',openings:'combat',combos:'heroes',jester:'classes',mystery:'classes',companions:'classes',controls:'camp','event-log':'camp',roots:'biomes',crust:'biomes',faults:'biomes',landmarks:'biomes',ice:'biomes',crystal:'biomes',living:'biomes',shadow:'biomes',maze:'biomes','wild-finds':'explore'});

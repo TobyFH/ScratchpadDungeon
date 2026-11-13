@@ -313,16 +313,7 @@ function clearShadowReels(h) {
 }
 
 function crystalInfluencedTiles() {
-  const result = new Set();
-  const sources = state.map
-    .map((c, i) => (c.seen && c.terrain === "crystal" ? i : -1))
-    .filter((i) => i >= 0);
-  for (const source of sources)
-    state.map.forEach((c, i) => {
-      if (!c.wall && tileDistance(i, source) <= EXPEDITION_TUNING.crystalRadius && lineOfSight(source, i))
-        result.add(i);
-    });
-  return result;
+  return new Set([...crystalFieldGeometry().covered].filter(i=>!state.map[i].wall));
 }
 
 async function fallingStoneFX(i){

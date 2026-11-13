@@ -70,7 +70,7 @@ test("Seeds grow past the retired cap, do not expire on enemy turns, and cost no
     });
   assert.deepEqual(r, { seeds: 100000, hp: 1, dead: false });
 });
-test("actual HP damage consumes exactly one Seed per point, with one shared healing pool and no camp multiplier", async (t) => {
+test("actual HP damage consumes exactly one Seed per point, with one caster-bonused shared healing pool", async (t) => {
   const p = await game(t),
     r = await p.evaluate(() => {
       const h = state.party[0],
@@ -100,8 +100,8 @@ test("actual HP damage consumes exactly one Seed per point, with one shared heal
     first: 50,
     actual: 9,
     seeds: 41,
-    healing: 9,
-    stats: 9,
+    healing: 21,
+    stats: 21,
   });
 });
 test("poison, item-style piercing damage and overkill consume only actual HP damage", async (t) => {
@@ -127,9 +127,9 @@ test("poison, item-style piercing damage and overkill consume only actual HP dam
   assert.equal(r.poison, 47);
   assert.equal(r.n, 2);
   assert.equal(r.seeds, 45);
-  assert.equal(r.heal, 5);
+  assert.equal(r.heal, 9);
 });
-test("Blood Bloom bursts all enemies once, including overkill healing, without a critical or recovery multiplier", async (t) => {
+test("Blood Bloom bursts all enemies once, including overkill healing, with doubled base healing and one caster recovery bonus", async (t) => {
   const p = await game(t),
     r = await p.evaluate(async () => {
       const h = state.party[0];
@@ -150,12 +150,12 @@ test("Blood Bloom bursts all enemies once, including overkill healing, without a
         hpEnemies: state.enemies.map((e) => e.hp),
       };
     });
-  assert.deepEqual(r.receipt, { seeds: 50, damage: 10, healing: 50 });
-  assert.equal(r.hp, 51);
+  assert.deepEqual(r.receipt, { seeds: 54, damage: 10, healing: 132 });
+  assert.equal(r.hp, 133);
   assert.deepEqual(r.seeds, [0, 0]);
   assert.deepEqual(r.hpEnemies, [0, 0]);
 });
-test("a real mixed roll plants Seeds before its own spell damage, and a critical Bloom pays its HP cost only once", async (t) => {
+test("a real mixed roll plants Seeds after its own spell damage, and a critical Bloom pays its HP cost only once", async (t) => {
   const p = await game(t);
   const r = await p.evaluate(async () => {
     const h = state.party[0];
@@ -190,13 +190,14 @@ test("a real mixed roll plants Seeds before its own spell damage, and a critical
       raw: state.lastPlayerRoll.totals.bloodseed,
     };
   });
-  assert.equal(r.mixed.seeds, 0);
-  assert.equal(r.mixed.hp, 9);
+  assert.equal(r.mixed.seeds, 2);
+  assert.equal(r.mixed.hp, 7);
   assert.equal(r.mixed.damage, 4);
   assert.equal(r.cost, 4);
   assert.ok(r.multi > 1);
-  assert.equal(r.receipt.seeds, r.raw);
-  assert.equal(r.receipt.damage, r.raw);
+  assert.equal(r.receipt.seeds, 6);
+  assert.ok(r.raw > 4);
+  assert.equal(r.receipt.damage, 12);
 });
 test("Bloodbinder permissions, paid save migration and private Harvest faces stay consistent", async (t) => {
   const p = await game(t),

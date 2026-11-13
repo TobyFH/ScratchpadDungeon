@@ -310,8 +310,8 @@ function campProfile() {
 function necromancerUnlocked(profile = campProfile()) {
   return profile.dungeonCleared === true;
 }
-function recordDungeonVictory() {
-  if (!state?.won || state.depth !== 10) return false;
+function recordDungeonVictory(expedition = state) {
+  if (!expedition?.won || expedition.depth !== 10) return false;
   try {
     const p=readProfile();
     if (p.dungeonCleared) return false;

@@ -1,5 +1,8 @@
 # The Necromancer's bound party (save 25)
 
+> Current save-26 Seed, shield, stimulant, temple, UI and update rules are in
+> [PAPER_INTERACTIONS.md](PAPER_INTERACTIONS.md), which supersedes conflicting examples below.
+
 This replaces the automatic Skeleton/bodyguard rules from save 24. Necromancer
 availability is unchanged: defeat floor ten to earn it, never purchase or recruit
 it. Living adventurers still fear the Necromancer and always fight.

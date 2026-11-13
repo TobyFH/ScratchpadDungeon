@@ -187,6 +187,7 @@ function portraitMotion(el, kind = "talk", enemy = false) {
             : 420,
     easing: "cubic-bezier(.2,.7,.3,1)",
   });
+  animation.playbackRate = 1 / classMotionTempo(state.party.find(h => entityArt(h) === el));
   animation.portraitMotion = true;
   portraitMotions.set(art, animation);
   animation.finished.catch(() => {});

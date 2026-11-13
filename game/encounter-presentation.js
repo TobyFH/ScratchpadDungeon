@@ -15,7 +15,7 @@ const PUN_ENEMIES = Object.freeze({
   crook: "Notecrook",
   inkuisitor: "The Inkuisitor",
   protractor: "Velociprotractor",
-  postit: "Post-itler",
+  postit: "Sticky Bandit",
   stego: "Stegothesaurus",
   spelleton: "Spelleton",
   police: "Grammar Police",

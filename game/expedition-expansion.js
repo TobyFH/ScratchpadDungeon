@@ -28,7 +28,7 @@ const BIOME_DISCOVERIES = Object.freeze({
     name: "Fairy ring",
     icon: "fairy",
     description:
-      "Choose healing or search for loot. Disturbing the ring may wake its guardian.",
+      "Choose healing or search for loot. A mischievous fairy may play a trick, or its guardian may wake.",
   },
   geode: {
     name: "Resonant geode",
@@ -578,7 +578,11 @@ async function resolveExpansionTile(c) {
         if (alive(h)) healHero(i, 4 + state.depth);
       });
     else await treasureRoll("chest");
-    if (state === run && Math.random() < 0.18) await expansionBattle();
+    if (state === run) {
+      const mischief = Math.random();
+      if (mischief < .4) await fairyPrank();
+      else if (mischief < .55) await expansionBattle();
+    }
   } else if (type === "rubble") {
     if (Math.random() < 0.22) await expansionBattle();
     else await treasureRoll("chest");

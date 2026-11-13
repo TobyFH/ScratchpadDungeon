@@ -1,5 +1,8 @@
 # Bounded combat resources and complementary builds
 
+> Current save-26 Seed, shield, stimulant, temple, UI and update rules are in
+> [PAPER_INTERACTIONS.md](PAPER_INTERACTIONS.md), which supersedes conflicting examples below.
+
 > Current follow-up: [Curve and recovery tuning](CURVE_TUNING.md) supersedes
 > earlier numeric examples for enemies, recovery, traits, biomes and nests.
 

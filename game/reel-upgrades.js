@@ -22,8 +22,8 @@ const maxFaceTier = (type) =>
       ? 1
       : 3;
 const CLASS_PRICES = {
-  bloodbinder: {magic:1.1,heal:1,bloodseed:1.25,rally:1},
-  necromancer: {magic:1,poison:1,harvest:1.25},
+  bloodbinder: { magic: 1.1, heal: 1, bloodseed: 1.25, rally: 1 },
+  necromancer: { magic: 1, poison: 1, harvest: 1.25 },
   berserker: { heavy: 1.75, attack: 0.9, heal: 1, selfharm: 1 },
   ranger: {
     attack: 1,
@@ -113,50 +113,60 @@ const FACE_LABELS = Object.freeze({
   mystery: "Mystery ?",
 });
 const primaryFace = (h) =>
-  ["mage","bloodbinder"].includes(h.job)
+  ["mage", "bloodbinder"].includes(h.job)
     ? h.specialism === "defence"
       ? "heal"
       : "magic"
-    : h.job === "necromancer" ? "magic" : h.job === "fighter" && h.specialism === "defence"
-      ? "block"
-      : "attack";
+    : h.job === "necromancer"
+      ? "magic"
+      : h.job === "fighter" && h.specialism === "defence"
+        ? "block"
+        : "attack";
 function editableTypes(h) {
   return h.job === "jester"
-    ? EDITABLE_TYPES.filter((t) => !["stimulant", "selfharm", "heavy", "bloodseed", "harvest"].includes(t))
+    ? EDITABLE_TYPES.filter(
+        (t) =>
+          !["stimulant", "selfharm", "heavy", "bloodseed", "harvest"].includes(
+            t,
+          ),
+      )
     : [
         ...(CLASS_FACE_TYPES[h.job] ||
           EDITABLE_TYPES.filter((t) => !["selfharm", "trick"].includes(t))),
       ];
 }
 function faceDescription(face, h) {
-  const tier=face.tier||1;
-  if(face.type==='class')return classAbilityDescription(h);
-  if(face.type==='mystery')return mysteryDescription(h);
-  if(h && battleEnemies().includes(h)) {
-    if(DAMAGE_TYPES.includes(face.type))return `${markDamage(face.type,tier)} ${face.type==='magic'?'spell':'physical'} power toward a combined hit. Enemy strength: ${h.damage}.`;
-    if(face.type==='heal')return `${tier} enemy HP before bonuses.`;
+  const tier = face.tier || 1;
+  if (face.type === "class") return classAbilityDescription(h);
+  if (face.type === "mystery") return mysteryDescription(h);
+  if (h && battleEnemies().includes(h)) {
+    if (DAMAGE_TYPES.includes(face.type))
+      return `${markDamage(face.type, tier)} ${face.type === "magic" ? "spell" : "physical"} power toward a combined hit. Enemy strength: ${h.damage}.`;
+    if (face.type === "heal") return `${tier} enemy HP before bonuses.`;
   }
-  const target=tier>=3?'all enemies':'your target';
-  return {
-    attack:`Deal ${markDamage('attack',tier)} physical damage to ${target}.`,
-    heavy:`Deal ${markDamage('heavy',tier)} heavy physical damage to ${target}.`,
-    magic:`Deal ${ATTACK_POWER[tier]} spell damage to ${target}. May leave them Vulnerable (+25% next hit).`,
-    heal:`Restore ${POWER.heal*tier} HP to your healing target. May clear stun.`,
-    selfheal:`Restore ${POWER.selfheal*tier} HP to yourself. May clear stun.`,
-    block:`Gain ${POWER.block*tier} team block. Absorbs damage, then is spent. Cap: ${partyBlockCap()}.`,
-    stun:`${tier} stun power: stop one action and weaken shields. The target then resists stun for two actions.`,
-    poison:`${tier} poison power. Lasts up to 3 turns; further doses increase its damage.`,
-    stimulant:`${tier} stimulant power to yourself: more damage and resistance for up to 3 actions. Extra doses strengthen it.`,
-    rally:`${tier} stimulant power to your most-used ally, or yourself alone. Lasts up to 3 actions; extra doses strengthen it.`,
-    trick:`Gain ${tier} anticipation. At 6, Punchline fires six random marks from your reels.`,
-    selfharm:`Spend up to ${2*tier} HP to gain ${2+.5*tier} Fury per HP. Cannot kill you.`,
-    bloodseed:`Plant ${tier} Seeds${bloodSeedBonus(h)?` + ${bloodSeedBonus(h)} bonus per roll`:''}; pay ${bloodSeedCost(tier)} HP. Each HP of damage bursts one Seed for shared healing.`,
-    harvest:`${harvestSpellPower(tier)} spell power and ${tier*NECROMANCER.harvestSouls} Souls. Full bar: raise an ally, or heal the team when both summon slots are full.`,
-    blank:"Empty: no effect.",
-  }[face.type] || "A mark on this reel.";
+  const target = tier >= 3 ? "all enemies" : "your target";
+  return (
+    {
+      attack: `Deal ${markDamage("attack", tier)} physical damage to ${target}.`,
+      heavy: `Deal ${markDamage("heavy", tier)} heavy physical damage to ${target}.`,
+      magic: `Deal ${ATTACK_POWER[tier]} spell damage to ${target}. May leave them Vulnerable (+25% next hit).`,
+      heal: `Restore ${POWER.heal * tier} HP to your healing target. May clear stun.`,
+      selfheal: `Restore ${POWER.selfheal * tier} HP to yourself. May clear stun.`,
+      block: `Gain ${POWER.block * tier} team block. Absorbs damage, then is spent. Cap: ${partyBlockCap()}.`,
+      stun: `${tier} stun power: stop one action and weaken shields. The target then resists stun for two actions.`,
+      poison: `${tier} poison power. Lasts up to 3 turns; further doses increase its damage.`,
+      stimulant: `${tier} doses to yourself. Fills up to 3 actions; every 2 surplus doses raise potency, boosting damage and resistance.`,
+      rally: `${tier} doses to your selected heal target. Fills up to 3 actions; every 2 surplus doses raise potency, boosting damage and resistance.`,
+      trick: `Gain ${tier} anticipation. At 6, Punchline fires six random marks from your reels.`,
+      selfharm: `Spend up to ${2 * tier} HP to gain ${2 + 0.5 * tier} Fury per HP. Cannot kill you.`,
+      bloodseed: `Plant ${tier} Seeds${bloodSeedBonus(h) ? ` + ${bloodSeedBonus(h)} bonus per roll` : ""}; pay ${bloodSeedCost(tier)} HP. Planted after this roll’s damage. Later wounds burst Seeds for shared healing.`,
+      harvest: `${harvestSpellPower(tier)} spell power and ${tier * NECROMANCER.harvestSouls} Souls. Full bar: raise an ally, or heal the team when both summon slots are full.`,
+      blank: "Empty: no effect.",
+    }[face.type] || "A mark on this reel."
+  );
 }
 function classFacePrice(h, type, base) {
-  if(type === "selfheal") type = "heal";
+  if (type === "selfheal") type = "heal";
   return base
     ? Math.ceil(base * (CLASS_PRICES[h?.job]?.[type] || 1))
     : undefined;
@@ -420,4 +430,6 @@ function editFace(data, operation, destination = null) {
   editor(i);
 }
 
-function workshopAbilitySummary(h) {return classAbilityDescription(h);}
+function workshopAbilitySummary(h) {
+  return classAbilityDescription(h);
+}

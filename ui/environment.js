@@ -52,7 +52,10 @@ function environmentDescription(c) {
               : "hairline cracks; still traversable");
   }
   if (v.corridor)
-    return `Shifting corridor — walls change in ${corridorMovesRemaining(e.corridors.find(s=>s.tile===i),e)} moves`;
+    return `Shifting corridor — walls change in ${corridorMovesRemaining(
+      e.corridors.find((s) => s.tile === i),
+      e,
+    )} moves`;
   return "";
 }
 function environmentTileClasses(c, i) {
@@ -114,7 +117,10 @@ function environmentTileMarkup(c, i) {
 }
 function renderEnvironmentEdges() {
   const e = environmentState();
-  if (!e?.corridors.length) { paintMapDrawing("environment-connections", ""); return; }
+  if (!e?.corridors.length) {
+    paintMapDrawing("environment-connections", "");
+    return;
+  }
   const lines = [];
   for (const s of e.corridors)
     for (const [a, b] of s.edges) {
@@ -127,15 +133,21 @@ function renderEnvironmentEdges() {
         ay = Math.floor(a / W),
         bx = b % W,
         by = Math.floor(b / W);
-      lines.push(
-        {key:environmentEdgeKey(a,b),axis:ax===bx?"horizontal":"vertical",d:ax === bx
-          ? `M${ax + 0.05} ${Math.max(ay, by)}h.9`
-          : `M${Math.max(ax, bx)} ${ay + 0.05}v.9`},
-      );
+      lines.push({
+        key: environmentEdgeKey(a, b),
+        axis: ax === bx ? "horizontal" : "vertical",
+        d:
+          ax === bx
+            ? `M${ax + 0.05} ${Math.max(ay, by)}h.9`
+            : `M${Math.max(ax, bx)} ${ay + 0.05}v.9`,
+      });
     }
-  const markup = lines.map(({d,key,axis}) =>
-    `<g class="sliding-wall-piece ${axis}" data-sliding-edge="${key}"><path d="${d}" class="sliding-wall-paper"/><path d="${d}" class="sliding-wall-ink"/></g>`
-  ).join("");
+  const markup = lines
+    .map(
+      ({ d, key, axis }) =>
+        `<g class="sliding-wall-piece ${axis}" data-sliding-edge="${key}"><path d="${d}" class="sliding-wall-paper"/><path d="${d}" class="sliding-wall-ink"/></g>`,
+    )
+    .join("");
   paintMapDrawing("environment-connections", markup, () => {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.id = "environment-connections";
@@ -191,15 +203,42 @@ function environmentalFeedback(tiles, kind) {
       }
     }
   }
-  if(kind === 'corridor')for(const piece of document.querySelectorAll('.sliding-wall-piece')){
-    if(!piece.dataset.slidingEdge.split(':').map(Number).some(i=>visible.includes(i)))continue;
-    const vertical=piece.classList.contains('vertical');
-    animate(piece,[{transform:vertical?'scale(1,.03)':'scale(.03,1)'},{transform:vertical?'scale(1,1.04)':'scale(1.04,1)',offset:.8},{transform:'scale(1,1)'}],{duration:420,easing:'ease-out'});
-  }
-  if(kind === 'corridor-warning')for(const i of visible){
-    const drawing=$(`[data-tile="${i}"] .environment-corridor-art svg`);
-    animate(drawing,[{transform:'scale(1)',color:'var(--ink)'},{transform:'scale(1.3)',color:'var(--gold)',offset:.4},{transform:'scale(1)',color:'var(--ink)'}],{duration:500,juice:true});
-  }
+  if (kind === "corridor")
+    for (const piece of document.querySelectorAll(".sliding-wall-piece")) {
+      if (
+        !piece.dataset.slidingEdge
+          .split(":")
+          .map(Number)
+          .some((i) => visible.includes(i))
+      )
+        continue;
+      const vertical = piece.classList.contains("vertical");
+      animate(
+        piece,
+        [
+          { transform: vertical ? "scale(1,.03)" : "scale(.03,1)" },
+          {
+            transform: vertical ? "scale(1,1.04)" : "scale(1.04,1)",
+            offset: 0.8,
+          },
+          { transform: "scale(1,1)" },
+        ],
+        { duration: 420, easing: "ease-out" },
+      );
+    }
+  if (kind === "corridor-warning")
+    for (const i of visible) {
+      const drawing = $(`[data-tile="${i}"] .environment-corridor-art svg`);
+      animate(
+        drawing,
+        [
+          { transform: "scale(1)", color: "var(--ink)" },
+          { transform: "scale(1.3)", color: "var(--gold)", offset: 0.4 },
+          { transform: "scale(1)", color: "var(--ink)" },
+        ],
+        { duration: 500, juice: true },
+      );
+    }
   if (["seismic", "corridor", "collapse"].includes(kind)) {
     // A quake moves the map; a corridor shift moves only its drawn wall edges.
     shakeElement(
@@ -226,7 +265,39 @@ function renderEnvironmentStatus() {
     );
   if (e.corridors.length)
     notes.push(
-      `Walls shift in ${Math.min(...e.corridors.map(s=>corridorMovesRemaining(s,e)))} moves`,
+      `Walls shift in ${Math.min(...e.corridors.map((s) => corridorMovesRemaining(s, e)))} moves`,
     );
   if (notes.length) $("#map-status").textContent = notes.join(" · ");
+}
+
+function renderEnvironmentAuras() {
+  const e = environmentState();
+  let markup = "";
+  for (const [kind, color] of [
+    ["clearings", "#678b49"],
+    ["lanterns", "#b69243"],
+  ])
+    for (const source of e?.[kind] || []) {
+      if (
+        !state.map[source.tile]?.seen ||
+        (kind === "lanterns" && !source.active)
+      )
+        continue;
+      const x = (source.tile % W) + 0.5,
+        y = Math.floor(source.tile / W) + 0.5;
+      markup += `<circle class="landmark-aura-source" cx="${x}" cy="${y}" r=".27" style="--aura-ink:${color}"/>`;
+      for (const j of neighbors(source.tile)) {
+        if (!state.map[j]?.seen || state.map[j].wall) continue;
+        markup += `<path class="landmark-aura-flow" pathLength="1" style="--aura-ink:${color}" d="M${(j % W) + 0.5} ${Math.floor(j / W) + 0.5}L${x} ${y}"/>`;
+      }
+    }
+  paintMapDrawing("landmark-aura-map", markup, () => {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.id = "landmark-aura-map";
+    svg.classList.add("crystal-pulse-map");
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    svg.setAttribute("preserveAspectRatio", "none");
+    svg.setAttribute("aria-hidden", "true");
+    return svg;
+  });
 }

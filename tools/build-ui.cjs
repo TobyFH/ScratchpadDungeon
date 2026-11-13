@@ -25,7 +25,7 @@ const assets = (name) => {
   if (!mime) throw Error(`Unsupported UI asset: ${name}`);
   return `data:${mime};base64,${fs.readFileSync(file).toString("base64")}`;
 };
-const css = ["layout.css", "notebook.css", "combat-life.css", "terrain-motion.css", "expedition-presentation.css", "class-moments.css", "icon-reel-workshop.css", "environment.css", "company-intro.css", "soul-feedback.css", "ui-polish.css", "summoned-party.css"]
+const css = ["layout.css", "notebook.css", "combat-life.css", "terrain-motion.css", "expedition-presentation.css", "class-moments.css", "icon-reel-workshop.css", "environment.css", "company-intro.css", "soul-feedback.css", "ui-polish.css", "summoned-party.css", "paper-interactions.css"]
   .map((name) => {
     const content = read("ui/" + name).replace(
       /@asset\(([^)]+)\)/g,
@@ -90,6 +90,8 @@ for (const [label, file] of [
   ["BATTLE TACTICS", "game/battle-tactics.js"],
   ["BLOODBINDER", "game/bloodbinder.js"],
   ["NECROMANCER", "game/necromancer.js"],
+  ["PAPER INTERACTIONS", "game/paper-interactions.js"],
+  ["CONTROL NAVIGATION", "ui/control-navigation.js"],
   ["SOUL FEEDBACK", "ui/soul-feedback.js"],
   ["SUMMON ART", "ui/summon-art.js"],
   ["CREATURE VOICES", "ui/creature-voices.js"],

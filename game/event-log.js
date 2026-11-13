@@ -25,7 +25,7 @@ const WILDCARD_LOG_EVENTS = Object.freeze([
 const EVENT_LOG_TERMS = Object.freeze({
   "Blood Seed": "Stacks on one enemy without a cap or expiry. Each actual HP of damage consumes one Seed, providing one shared HP of healing. Planting costs the caster a little HP but cannot kill them.",
   "Blood Seeds": "Stacks on one enemy. Damage consumes one Seed per actual HP lost and shares that amount of healing across injured allies.",
-  "Blood Bloom": "Detonates every Seed on all enemies. Each Seed deals one damage and provides one shared healing; excess damage cannot multiply the healing again.",
+  "Blood Bloom": "Adds level-scaled Seeds to every enemy, then bursts all for 2 damage and 2 base shared healing each. The Bloodbinder’s healing bonuses strengthen the shared pool.",
   "Soul Harvest": "Enemy deaths restore 12% of that enemy's maximum HP to the Necromancer, capped at half the Necromancer's maximum HP. Ordinary healing is ineffective.",
   "Soul Call": "A full Soul bar raises a random ally with fixed reels. Choose which party member rolls. With both summon slots full, filling the bar heals the team instead.",
   "Consume": "Sacrifice a bound summon to restore the Necromancer’s HP. Costs one action during combat. Summon deaths do not trigger burial or resurrection prompts.",
@@ -61,7 +61,7 @@ const EVENT_LOG_TERMS = Object.freeze({
   "Stunned": "Cannot act until recovery. Other rolls help recovery: 60%, then guaranteed. If nobody can act, one missed turn advances enemy clocks.",
   "Stun": "Stops an action until recovery; shields can resist it. Recovery grants two own actions of stun protection.",
   "Steady": "Protected from stun for two own completed actions after recovering. Further stuns cannot immediately lock this character again.",
-  "Stimulant": "A short damage and resistance buff. Lasts at most three actions; extra doses strengthen it instead. Clears after battle.",
+  "Stimulant": "Boosts damage and resistance for up to three recipient actions. Every two doses beyond that duration raise potency. Clears after battle.",
   "Ally stimulant": "Applies stimulant to the selected living ally, even at full health; falls back to the caster if needed.",
   "Team block": "Shared protection absorbs incoming damage and is consumed as it protects. It has a party-size cap and clears after battle.",
   "Critical": "Three matching marks trigger a multiplier roll. The increased effects are applied to the original roll.",

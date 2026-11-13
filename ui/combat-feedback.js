@@ -11,7 +11,7 @@ function contributionType(symbol, owner) {
 }
 function contributes(symbol, wanted, owner) {
   const type = contributionType(symbol, owner);
-  if(wanted === "heal")return ["heal","selfheal"].includes(type);
+  if (wanted === "heal") return ["heal", "selfheal"].includes(type);
   return DAMAGE_TYPES.includes(wanted)
     ? DAMAGE_TYPES.includes(type)
     : type === wanted;
@@ -40,7 +40,9 @@ function effectSymbols(from, type, impact = {}) {
   const matches = (symbols || [])
     .map((s, i) => ({
       symbol: s,
-      origin: machine?.querySelector(`[data-reel="${impact.reelIndex ?? i}"] .slot-symbol`),
+      origin: machine?.querySelector(
+        `[data-reel="${impact.reelIndex ?? i}"] .slot-symbol`,
+      ),
     }))
     .filter((v) => accepts(v.symbol));
   return matches.length
@@ -73,7 +75,8 @@ function launchRolledSymbols(from, to, type, impact = {}) {
         node.className =
           "rolled-projectile " +
           type +
-          (impact.critical ? " critical-projectile" : "");
+          (impact.critical ? " critical-projectile" : "") +
+          (impact.stimulant ? " stim-projectile" : "");
         node.innerHTML = symbolMarkup(symbol);
         node.dataset.target = to.id;
         node.dataset.symbol = symbol.type;
@@ -139,6 +142,14 @@ function launchRolledSymbols(from, to, type, impact = {}) {
             );
             shakeElement(liveTarget, impact.critical ? 6 : 2);
             if (impact.critical) impactFlash(liveTarget, i);
+            if (impact.stimulant) {
+              burst(liveTarget, "gold", 14);
+              combatCallout(
+                liveTarget,
+                "STIM +" + impact.stimulant,
+                "stimulant",
+              );
+            }
             splash
               .animate(
                 [
@@ -167,7 +178,11 @@ function beam(from, to, type, impact = {}) {
   if (mode !== "beams")
     flights.push(launchRolledSymbols(from, to, type, impact));
   if (mode !== "icons") flights.push(drawBeam(from, to, type, impact));
-  const completed = Promise.all(flights);
+  const recipient =
+    type === "heal" ? state.party.find((h) => entityArt(h) === to) : null;
+  const completed = Promise.all(flights).then(
+    () => recipient && rejectedHealingFX(recipient),
+  );
   impact.flights?.push(completed);
   return completed;
 }
@@ -191,7 +206,7 @@ function impactNumberParts(value, type) {
           ? 2
           : type === "heal"
             ? POWER.heal * s.tier
-            : markDamage(s.type,s.tier) || 1,
+            : markDamage(s.type, s.tier) || 1,
       );
   if (weights.length < 2) return [];
   const total = weights.reduce((a, b) => a + b, 0),
@@ -236,9 +251,16 @@ function combatNumber(el, value, type) {
       type === "block"
         ? amount + " BLOCKED"
         : (type === "heal" ? "+" : "−") + amount;
-    if (["bleeding","bloodexchange","bloodseed"].includes(type)) {
+    if (["bleeding", "bloodexchange", "bloodseed"].includes(type)) {
       node.classList.add("bleeding");
-      const label=document.createElement("small");label.textContent=type==="bloodseed"?"BLOOD BLOOM":type==="bloodexchange"?"BLOOD EXCHANGE":"BLEEDING";node.append(label);
+      const label = document.createElement("small");
+      label.textContent =
+        type === "bloodseed"
+          ? "BLOOD BLOOM"
+          : type === "bloodexchange"
+            ? "BLOOD EXCHANGE"
+            : "BLEEDING";
+      node.append(label);
     }
     if (type === "poison") {
       const label = document.createElement("small");
@@ -274,28 +296,52 @@ function combatNumber(el, value, type) {
 }
 
 // Callouts name a real state change; they never capture input or move layout.
-function eventCriticalFX(options,details) {
-  if(!options.context)return;
-  const sheet=$("#stage-card");
-  const machine=sheet?.querySelector('.machine-shell:not(#machine-critical)');
-  if(!machine)return;
-  const danger=['trap','rockfall','mushroom','ruin'].includes(options.context)&&details.some(d=>['trap','damage'].includes(d.icon)&&d.value>0);
-  const kind=danger?'trap':options.context==='well'?'heal':details.some(d=>d.icon==='coin')?'gold':details.some(d=>['heal','blessing'].includes(d.icon))?'heal':'critical';
-  const color=getComputedStyle(document.documentElement).getPropertyValue(kind==='heal'?'--green':danger?'--red':'--gold').trim();
-  machine.dataset.criticalOutcome=kind;
-  animate(machine,[
-    {boxShadow:'0 0 0 0 transparent',filter:'brightness(1)'},
-    {boxShadow:`0 0 0 6px var(--gold),0 0 24px ${color}`,filter:'brightness(1.3)',offset:.22},
-    {boxShadow:`0 0 0 2px var(--gold),0 0 12px ${color}`,filter:'brightness(1.08)',offset:.6},
-    {boxShadow:'0 0 0 0 transparent',filter:'brightness(1)'},
-  ],{duration:750,juice:true});
-  burst(machine,kind==='heal'?'heal':danger?'damage':'gold',52);
-  screenFX(kind,1.25);
-  shakeElement(machine,4,'celebrate');
+function eventCriticalFX(options, details) {
+  if (!options.context) return;
+  const sheet = $("#stage-card");
+  const machine = sheet?.querySelector(".machine-shell:not(#machine-critical)");
+  if (!machine) return;
+  const danger =
+    ["trap", "rockfall", "mushroom", "ruin"].includes(options.context) &&
+    details.some((d) => ["trap", "damage"].includes(d.icon) && d.value > 0);
+  const kind = danger
+    ? "trap"
+    : options.context === "well"
+      ? "heal"
+      : details.some((d) => d.icon === "coin")
+        ? "gold"
+        : details.some((d) => ["heal", "blessing"].includes(d.icon))
+          ? "heal"
+          : "critical";
+  const color = getComputedStyle(document.documentElement)
+    .getPropertyValue(kind === "heal" ? "--green" : danger ? "--red" : "--gold")
+    .trim();
+  machine.dataset.criticalOutcome = kind;
+  animate(
+    machine,
+    [
+      { boxShadow: "0 0 0 0 transparent", filter: "brightness(1)" },
+      {
+        boxShadow: `0 0 0 6px var(--gold),0 0 24px ${color}`,
+        filter: "brightness(1.3)",
+        offset: 0.22,
+      },
+      {
+        boxShadow: `0 0 0 2px var(--gold),0 0 12px ${color}`,
+        filter: "brightness(1.08)",
+        offset: 0.6,
+      },
+      { boxShadow: "0 0 0 0 transparent", filter: "brightness(1)" },
+    ],
+    { duration: 750, juice: true },
+  );
+  burst(machine, kind === "heal" ? "heal" : danger ? "damage" : "gold", 52);
+  screenFX(kind, 1.25);
+  shakeElement(machine, 4, "celebrate");
 }
 function combatCallout(el, text, kind = "gold") {
   if (!el) return;
-  kind=feedbackKind(text,kind);
+  kind = feedbackKind(text, kind);
   const r = el.getBoundingClientRect(),
     node = document.createElement("div");
   node.className = "combat-callout " + kind;
@@ -427,7 +473,7 @@ function criticalFigures(details, multiplier) {
     marks = [...details].sort((a, b) => b.value - a.value).slice(0, 1);
   return {
     original: marks.reduce((n, d) => n + d.value, 0),
-    total: marks.reduce((n, d) => n + Math.ceil(d.value * multiplier), 0),
+    total: marks.reduce((n, d) => n + criticalEffectValue(d, multiplier), 0),
     label: marks.some((d) => d.icon === "coin")
       ? "GOLD"
       : marks.some((d) => ["heal", "blessing"].includes(d.icon))
